@@ -5,9 +5,14 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
+			html {
+				cursor: url(assets/blinky.cur),auto;
+			}
 			body {
 				margin: 0px;
-				background-color: #ffff66;
+				background-image: url(assets/sky.png);
+				background-repeat: no-repeat;
+    		background-size: auto;
 				overflow: hidden;
 				font-family:Monospace;
 				font-size:13px;
@@ -38,7 +43,7 @@
 				<source src="assets/wun-4-jas.mp3"  type="audio/mpeg">
 			</audio>
 
-		<script src="./build/three.js"></script>
+		<script src="build/three.js"></script>
 		<script src="js/Detector.js"></script>
 		<script src="js/libs/stats.min.js"></script>
 		<script src="js/libs/dat.gui.min.js"></script>
@@ -201,36 +206,46 @@
 
 		<script>
 
+
 			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
-			var hash = document.location.hash.substr( 1 );
-			if ( hash ) hash = parseInt( hash, 0 );
-
-			// Texture width for simulation
-			var WIDTH = hash || 128;
-			var NUM_TEXELS = WIDTH * WIDTH;
-
-			// Water size in system units
+			// PARAMETERS TO TWEAK
+			var WIDTH = 128;
 			var BOUNDS = 512;
+
+			var waterColor = 0x0f5e9c;
+			var waterSpecularColor = 0x111111;
+			var waterShininess = 60;
+			var waterMaxHeight = 19;
+			var waveRippleFactor = 0.95;
+			var sunLightColor = 0xFDB813;
+			var ambientLightColor = 0xFFFFFF;
+			var waterOpacity =  0.5;
+			var lightColor1 = 0xFDB813;;
+			var lightIntensity1 = 0.8;
+			var lightColor2 = 0xFFFFFF;
+			var lightIntensity2 = 0.6;
+			var clearColor = 0x000000;
+			var starsColor = 0xFFFFFF;
+
+
 			var BOUNDS_HALF = BOUNDS * 0.5;
-
-			var container, stats;
-			var camera, scene, renderer, controls;
-			var mouseMoved = false;
-			var mouseCoords = new THREE.Vector2();
-			var raycaster = new THREE.Raycaster();
-
 			var waterMesh;
 			var meshRay;
 			var gpuCompute;
 			var heightmapVariable;
 			var waterUniforms;
 			var smoothShader;
-
 			var starField;
+			var NUM_TEXELS = WIDTH * WIDTH;
+			var container, stats;
+			var camera, scene, renderer, controls;
+			var mouseMoved = false;
+			var mouseCoords = new THREE.Vector2();
+			var raycaster = new THREE.Raycaster();
+
 
 			var simplex = new SimplexNoise();
-
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
 
@@ -244,7 +259,7 @@
 			var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 			var analyser = audioCtx.createAnalyser();
 			var freqArray = new Uint8Array(analyser.frequencyBinCount);
-			var audioTimeArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize 
+			var audioTimeArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize
 			window.onload = function(){
 				var audioElement = document.getElementById('audio_player');
 				var stream;
@@ -256,7 +271,7 @@
 					source = audioCtx.createMediaStreamSource(stream);
 					source.connect(analyser);
 				}
-			}	  
+			}
 
 			init();
 			animate();
@@ -271,40 +286,67 @@
 
 				scene = new THREE.Scene();
 
-				var sun = new THREE.DirectionalLight( 0xFFFFFF, 1.0 );
+				var sun = new THREE.DirectionalLight( lightColor1, lightIntensity1);
 				sun.position.set( 300, 400, 175 );
 				scene.add( sun );
 
-				var sun2 = new THREE.DirectionalLight( 0x40A040, 0.6 );
+				var sun2 = new THREE.DirectionalLight( lightColor2, lightIntensity2 );
 				sun2.position.set( -100, 350, -200 );
 				scene.add( sun2 );
 
 				renderer = new THREE.WebGLRenderer({ alpha:true });
 
-				renderer.setClearColor( 0x000000, 0 ); // the default
+				renderer.setClearColor( clearColor, 0 ); // the default
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
 
 				// Add stars
-				var starsGeometry = new THREE.Geometry();
-				for ( var i = 0; i < 10000; i ++ ) {
-					var star = new THREE.Vector3();
-					star.x = THREE.Math.randFloat( -200, 200 );
-					star.y = THREE.Math.randFloat(-10, -3 );
-					star.z = THREE.Math.randFloatSpread( -320, 320 );
-					starsGeometry.vertices.push( star );
-				}
-				var starsMaterial = new THREE.PointsMaterial( { color: 0xFFFFFF } );
-				starsMaterial.size = .5;
-				starField = new THREE.Points( starsGeometry, starsMaterial );
-				scene.add( starField );
+				// var starsGeometry = new THREE.Geometry();
+				// for ( var i = 0; i < 10000; i ++ ) {
+				// 	var star = new THREE.Vector3();
+				// 	star.x = THREE.Math.randFloat( -200, 200 );
+				// 	star.y = THREE.Math.randFloat(-10, -3 );
+				// 	star.z = THREE.Math.randFloatSpread( -320, 320 );
+				// 	starsGeometry.vertices.push( star );
+				// }
+				// var starsMaterial = new THREE.PointsMaterial( { color: starsColor } );
+				// starsMaterial.size = .5;
+				// starField = new THREE.Points( starsGeometry, starsMaterial );
+				// scene.add( starField );
 
-				var light = new THREE.PointLight( 0xff0000, 4, 100 );
+		    var ambientLight,
+		        geometry,
+		        material;
+
+		    // two lights, an ambient to mimic reflected light
+		    // on the back side of the box as it passes in front of the light
+		    ambientLight = new THREE.AmbientLight(ambientLightColor);
+		    ambientLight.position.set( 20, -1, 0 );
+		    scene.add(ambientLight);
+		    // // and a point light to represent the source of the light volume
+		    // pointLight = new THREE.PointLight(sunLightColor, 10, 50 );
+		    // scene.add(pointLight);
+
+		    // a white sphere serves as the light in the scene used
+		    // to create the effect
+		    // geometry = new THREE.SphereBufferGeometry( 10, 16, 16 );
+		    // material = new THREE.MeshBasicMaterial( { color: sunLightColor } );
+		    // lightSphere = new THREE.Mesh( geometry, material );
+		    // lightSphere.position.set( 0, -20, 0 );
+		    // // layers are a newer addition to three.js ( as of r74 )
+		    // // they control what objects a camera is able to see. This way
+		    // // only one scene needs to be used for both rendering passes
+		    // scene.add( lightSphere );
+		    // camera.lookAt(lightSphere.position);
+
+
+				var light = new THREE.PointLight(sunLightColor , 10, 50 );
 				light.position.set( 0, -1, 0 );
 				scene.add( light );
-
 				camera.lookAt(light.position);
+
+
 
 				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 				window.addEventListener( 'resize', onWindowResize, false );
@@ -314,7 +356,7 @@
 
 			function initWater() {
 
-				var materialColor = 0x4d88ff;
+				var materialColor = waterColor;
 
 				var geometry = new THREE.PlaneBufferGeometry( BOUNDS, BOUNDS, WIDTH - 1, WIDTH -1 );
 
@@ -336,8 +378,8 @@
 				// Material attributes from MeshPhongMaterial
 				material.color = new THREE.Color( materialColor );
 				// material.specular = new THREE.Color( 0xFFFFF );
-				material.specular = new THREE.Color( 0x111111 );
-				material.shininess = 50;
+				material.specular = new THREE.Color( waterSpecularColor );
+				material.shininess = waterShininess;
 
 				// Sets the uniforms with the material values
 				material.uniforms.diffuse.value = material.color;
@@ -345,7 +387,7 @@
 				material.uniforms.shininess.value = Math.max( material.shininess, 1e-4 );
 				console.log(material.opacity);
 				//material.uniforms.transparency = true;
-				material.uniforms.opacity.value = 0.8;//material.opacity;
+				material.uniforms.opacity.value = waterOpacity;//material.opacity;
 
 				// Defines
 				material.defines.WIDTH = WIDTH.toFixed( 1 );
@@ -398,7 +440,6 @@
 
 			function fillTexture( texture ) {
 
-				var waterMaxHeight = 10;
 
 				function noise( x, y, z ) {
 					var multR = waterMaxHeight;
@@ -407,7 +448,7 @@
 					for ( var i = 0; i < 15; i++ ) {
 						r += multR * simplex.noise( x * mult, y * mult );
 						multR *= 0.53 + 0.025 * i;
-						mult *= 1.25;
+						mult *= waveRippleFactor;
 					}
 					return r;
 				}
@@ -431,24 +472,6 @@
 				}
 
 			}
-
-			function smoothWater() {
-
-				var currentRenderTarget = gpuCompute.getCurrentRenderTarget( heightmapVariable );
-				var alternateRenderTarget = gpuCompute.getAlternateRenderTarget( heightmapVariable );
-
-				for ( var i = 0; i < 10; i++ ) {
-
-					smoothShader.uniforms.texture.value = currentRenderTarget.texture;
-					gpuCompute.doRenderTarget( smoothShader, alternateRenderTarget );
-
-					smoothShader.uniforms.texture.value = alternateRenderTarget.texture;
-					gpuCompute.doRenderTarget( smoothShader, currentRenderTarget );
-
-				}
-				
-			}
-
 
 			function onWindowResize() {
 
@@ -483,7 +506,7 @@
 			}
 
 			function render() {
-			
+
 				// Set uniforms: mouse interaction
 				var uniforms = heightmapVariable.material.uniforms;
 				if ( mouseMoved ) {
