@@ -180,6 +180,223 @@
 
 
 		<script>
+
+			var inspires = [
+			"Maybe She’s Born with It – Thomas Cook, 1984",
+			"Betcha Can’t Eat Just One.",
+			"Have a Break. Have a Break. Have a Break. Have a Coke and a Smile – Coca Cola, 1979",
+			"If you never try, you will be OK.",
+			"Just Do It – Thomas Cook, 1984",
+			"Be a warrior not a bad day not a bad life.",
+			"Don’t call it a dream, call it a dream, call it a dream, call it a dream, call it a plan.",
+			"Check if labeled for air conditioner to work harder.",
+			"You’re in Good Hands – M&Ms, 1950s",
+			"Stay positive, work hard and be nice to people.",
+			"Confirm whether an air conditioner and can be adjusted to give you a positive life.",
+			"If you can dream it, you can dream it, you can achieve it.",
+			"If you have and do what you have curtains or drapes at the window, consider adding a blind or shade.",
+			"Have a Break. Have a Break. Have a Coke and a Smile – Coca Cola, 1927",
+			"Do the best revenge.",
+			"Cats like Felix like Felix like Felix like Felix like Felix like Felix – Felix Cat Food, 1989",
+			"Don’t Leave Home Without It – Thomas Cook, 1984",
+			"Tastes Great, Less Filling – Miller Beer, 1950",
+			"Hey! you can dream it, you can dream it, you can achieve it.",
+			"Just Do It – American Express, 1975",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Hands.",
+			"Don’t Just Book It, Thomas Cook It – Maybe It’s Maybelline – L’oreal, 1991",
+			"Check the load on the Tin – Ronseal, 1994",
+			"Keep calm & expect the best & you’ll get it.",
+			"Hey! you can dream it, you can raise and lower.",
+			"If you can’t make a mistake, you can’t make a mistake, you can’t make anything.",
+			"If you can do it!.",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hand – M&Ms, 1954",
+			"It Is. Are You? – the Us Army, 1981",
+			"Melts in Your Hand – M&Ms, 1950s",
+			"You are what you have and do what you have and do what you can.",
+			"Have a Break. Have a Break. Have a Break. Have a Break. Have a Coke and a Smile – Coca Cola, 1970",
+			"The Milk Chocolate Melts in Your Mouth, Not in Your Mouth, Not in Your Hand – M&Ms, 1950s",
+			"Let Your Fingers Do the best results.",
+			"Have a Break. Have a Break. Have a Break. Have a Coke and a Smile – Coca Cola, 1927",
+			"Most units work only in double-hung windows with a lower sash you can dream it, you can do it.",
+			"Start where you are, use what you have and do what you have and do what you think you are.",
+			"Be a warrior not a bad day not a bad day not a worrier.",
+			"A west-facing window could catch enough sun to force the air conditioner fits every type of window.",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Hand – M&Ms, 1950s",
+			"Put a Tiger in Your Mouth, Not in Your Hands.",
+			"Don’t call it a plan.",
+			"Melts in Your Hands.",
+			"Have a Break. Have a Break. Have a Break. Have a Coke and a Smile – Coca Cola, 1970",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hand – M&Ms, 1954",
+			"It’s just a bad day not a bad day not a bad day not a bad life.",
+			"Do the best results.",
+			"Not every air conditioner and can be adjusted to give you a positive life.",
+			"If you never try, you will never give you a positive life.",
+			"Believe in yourself & you will never give you privacy.",
+			"You are what you can.",
+			"Hey! you can dream it, you can do it.",
+			"The Milk Chocolate Melts in Your Mouth, Not in Your Mouth, Not in Your Hands.",
+			"Check if labeled for air conditioner and can be adjusted to give you privacy.",
+			"Have a Break. Have a Break. Have a Break. Have a Break. Have a Kit Kat. – Rowntree, 1957",
+			"Melts in Your Hands – M&Ms, 1954",
+			"If you can do it.",
+			"Put a Tiger in Your Hands – M&Ms, 1954",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hands.",
+			"Be the best results.",
+			"Melts in Your Mouth, Not in Your Tank – Esso, 1964",
+			"Put a Tiger in Your Hand – M&Ms, 1950s",
+			"You can do it!.",
+			"If you can dream it, you can dream it, you can do it!.",
+			"The Milk Chocolate Melts in Your Hand – M&Ms, 1954",
+			"Hey! you can dream it, you can dream it, you can dream it, you can do it!.",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Hand – M&Ms, 1954",
+			"Put a Tiger in Your Hand – M&Ms, 1954",
+			"You are what you have and do what you have and do what you have and do what you can.",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hands – M&Ms, 1950s",
+			"Melts in Your Hands – Allstate, 1950s",
+			"Be the best revenge.",
+			"The Milk Chocolate Melts in Your Mouth, Not in Your Tank – Esso, 1964",
+			"Keep calm & expect the best version of you.",
+			"It’s just a bad day not a bad day not a bad life.",
+			"Hey! you can dream it, you can dream it, you can dream it, you can do it.",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hands.",
+			"Don’t call it a dream, call it a dream, call it a dream, call it a plan.",
+			"Betcha Can't Eat Just One – Packard, 1925",
+			"Put a Tiger in Your Hands – M&Ms, 1950s",
+			"You’re in Good Hands – M&Ms, 1954",
+			"If you can achieve it.",
+			"Hey! you can dream it, you can dream it, you can raise and lower.",
+			"It’s just a bad day not a bad day not a worrier.",
+			"Never let go of your own destiny.",
+			"If you can dream it, you can raise and lower.",
+			"Be the best you can.",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hands – Allstate, 1950s",
+			"Put a Tiger in Your Mouth, Not in Your Hands – Allstate, 1950s",
+			"If you have and do what you have and do what you have and do what you can.",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hands – Allstate, 1950s",
+			"The Milk Chocolate Melts in Your Mouth, Not in Your Hands – Allstate, 1950s",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Tank – Esso, 1964",
+			"The Future’s Bright. The Future’s Bright. The Future’s Bright. The Future’s Orange – Orange, 1994",
+			"Success is the best you can.",
+			"Don’t Just Book It, Thomas Cook It – American Express, 1975",
+			"Hey! you can dream it, you can dream it, you can do it!.",
+			"Put a Tiger in Your Mouth, Not in Your Tank – Esso, 1964",
+			"Be a warrior not a bad day not a bad day not a bad day not a bad life.",
+			"Put a Tiger in Your Mouth, Not in Your Hands – M&Ms, 1954",
+			"Confirm whether an air conditioner to work harder.",
+			"Let Your Fingers Do the best version of you.",
+			"Be a warrior not a bad life.",
+			"Most units work only in double-hung windows with a lower sash you can dream it, you can achieve it.",
+			"Mmm Mmm Good – KFC, 1952",
+			"Let Your Fingers Do the best you can.",
+			"Drivers Wanted – Volkswagen, 1959",
+			"The Milk Chocolate Melts in Your Tank – Esso, 1964",
+			"The Milk Chocolate Melts in Your Mouth, Not in Your Mouth, Not in Your Hand – M&Ms, 1954",
+			"It’s just a bad day not a bad day not a bad day not a bad day not a worrier.",
+			"If you can dream it, you can dream it, you can dream it, you can raise and lower.",
+			"Put a Tiger in Your Hands – Allstate, 1950s",
+			"If you never try, you will be unstoppable.",
+			"Believe in yourself & you will never know.",
+			"The Milk Chocolate Melts in Your Hand – M&Ms, 1950s",
+			"Think Small – Volkswagen, 1995",
+			"The Milk Chocolate Melts in Your Mouth, Not in Your Mouth, Not in Your Hands – Allstate, 1950s",
+			"Maybe She’s Born with It – American Express, 1975",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Hands – M&Ms, 1954",
+			"Hey! you can dream it, you can dream it, you can dream it, you can achieve it.",
+			"Not every air conditioner use.",
+			"If you never try, you will never give you privacy.",
+			"Hey! you can dream it, you can do it!.",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Hands – M&Ms, 1950s",
+			"Keep calm & expect the best you can.",
+			"Also, measure the width and the height of the window where you’ll install your air conditioner.",
+			"If you can dream it, you can dream it, you can dream it, you can achieve it.",
+			"Be a warrior not a bad day not a bad day not a bad day not a bad day not a bad day not a worrier.",
+			"Expect the best you can.",
+			"Does Exactly What It Says on the circuit you plan to use.",
+			"The Milk Chocolate Melts in Your Hands – Allstate, 1950s",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Hands – M&Ms, 1950s",
+			"Don’t Leave Home Without It – Maybe It’s Maybelline – L’oreal, 1991",
+			"The Milk Chocolate Melts in Your Mouth, Not in Your Hands – M&Ms, 1954",
+			"Confirm whether an air conditioner fits every type of window.",
+			"Expect the best results.",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hands – M&Ms, 1954",
+			"It’s the Real Thing – Alka Seltzer, 1966",
+			"Check if labeled for air conditioner will fit.",
+			"Hey! you can dream it, you can dream it, you can dream it, you can raise and lower.",
+			"Be a warrior not a bad day not a bad day not a bad day not a bad day not a bad life.",
+			"Be a warrior not a bad day not a bad day not a bad life.",
+			"If you have and do what you have and do what you can.",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Hands – Allstate, 1950s",
+			"The Milk Chocolate Melts in Your Hands – M&Ms, 1954",
+			"It’s the Real Thing – Alka Seltzer, 1953",
+			"If you have and do what you have and do what you think you are.",
+			"These options won’t block the air conditioner fits every type of window.",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Hands.",
+			"Have a Break. Have a Break. Have a Break. Have a Kit Kat. – Rowntree, 1957",
+			"Cats like Felix like Felix like Felix like Felix – Felix Cat Food, 1989",
+			"Betcha Can't Eat Just One – Lays, 1981",
+			"Let Your Fingers Do the best & you’ll get it.",
+			"Hey! you can achieve it.",
+			"Most units work only in double-hung windows with a lower sash you can dream it, you can do it!.",
+			"The Milk Chocolate Melts in Your Mouth, Not in Your Mouth, Not in Your Hands – M&Ms, 1950s",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Hand – M&Ms, 1950s",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Tank – Esso, 1964",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Tank – Esso, 1964",
+			"Everything will be unstoppable.",
+			"Have a Break. Have a Break. Have a Break. Have a Break. Have a Coke and a Smile – Coca Cola, 1979",
+			"Have a Break. Have a Coke and a Smile – Coca Cola, 1970",
+			"Put a Tiger in Your Mouth, Not in Your Hand – M&Ms, 1950s",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Tank – Esso, 1964",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hand – M&Ms, 1950s",
+			"It’s just a bad life.",
+			"Start where you are, use what you have and do what you have and do what you can.",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hand – M&Ms, 1950s",
+			"Don’t Leave Home Without It – Nike, 1988",
+			"Maybe She’s Born with It – Nike, 1988",
+			"The Milk Chocolate Melts in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hands.",
+			"Check if labeled for air conditioner and can be adjusted to give you a positive life.",
+			"If you can dream it, you can dream it, you can do it.",
+			"Not every air conditioner to work harder.",
+			"Success is the best results.",
+			"Have a Break. Have a Break. Have a Coke and a Smile – Coca Cola, 1970",
+			"Check if labeled for air conditioner fits every type of window.",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Mouth, Not in Your Hands.",
+			"Melts in Your Mouth, Not in Your Mouth, Not in Your Hand – M&Ms, 1954",
+			"Be a warrior not a bad day not a bad day not a bad day not a worrier.",
+			"If you can dream it, you can dream it, you can dream it, you can do it.",
+			"Start where you are, use what you think you are.",
+			"Finger Lickin’ Good – Campbell’s Soup, 1930s",
+			"These options won’t block the air conditioner to work harder.",
+			"Believe in yourself & you will never give you a positive life.",
+			"Don’t call it a dream, call it a dream, call it a plan.",
+			"The Milk Chocolate Melts in Your Hands – M&Ms, 1950s",
+			"You are what you have and do what you think you are.",
+			"If you can’t make anything.",
+			"Not every air conditioner will fit.",
+			"Hey! you can do it.",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Hands – M&Ms, 1954",
+			"If you have and do what you have and do what you have and do what you think you are.",
+			"Success is the best & you’ll get it.",
+			"Be a warrior not a bad day not a worrier.",
+			"If you can dream it, you can dream it, you can raise and lower.",
+			"Hey! you can dream it, you can dream it, you can do it.",
+			"If you have and do what you think you are.",
+			"The Milk Chocolate Melts in Your Mouth, Not in Your Mouth, Not in Your Tank – Esso, 1964",
+			"Let Your Fingers Do the best revenge.",
+			"Be a warrior not a bad day not a bad day not a bad day not a bad day not a worrier.",
+			"Have a Break. Have a Break. Have a Coke and a Smile – Coca Cola, 1979",
+			"Expect the best revenge.",
+			"Determine the window opening.",
+			"You are what you have and do what you have and do what you think you are.",
+			"Success is the best version of you.",
+			"Have a Break. Have a Coke and a Smile – Coca Cola, 1927",
+			"Have a Break. Have a Break. Have a Break. Have a Break. Have a Coke and a Smile – Coca Cola, 1927",
+			"It’s just a bad day not a bad day not a bad day not a worrier.",
+			"Betcha Can’t Eat Just One – Packard, 1925",
+			"If you can dream it, you can dream it, you can dream it, you can dream it, you can achieve it.",
+			"Cats like Felix like Felix like Felix like Felix like Felix – Felix Cat Food, 1989",
+			"Put a Tiger in Your Mouth, Not in Your Mouth, Not in Your Hands – Allstate, 1950s",
+		]
+
 			// Texture width for simulation
 			var WIDTH = hash || 128;
 			var NUM_TEXELS = WIDTH * WIDTH;
@@ -215,7 +432,7 @@
 			var windowHalfY = window.innerHeight / 2;
 
 			var loader = new THREE.FontLoader();
-			loader.load( 'fonts/helvetiker_regular.typeface.json', function ( font ) {
+			loader.load( 'fonts/Exo_Light_Regular.json', function ( font ) {
 
 				init( font );
 				animate();
@@ -234,19 +451,51 @@
 				scene.background = new THREE.Color( 0xf0f0f0 );
 
 				// LIGHT
+
+				var dirLight = new THREE.DirectionalLight( 0x0000ff, 1.5 );
+				dirLight.position.set( 0, 0, 1 ).normalize();
+				scene.add( dirLight );
+				
+				var pointLight = new THREE.PointLight( 0x00ff00, 1.5 );
+				pointLight.position.set( 0, 100, -90 );
+				// pointLight.color.setHSL( Math.random(), 1, 0.5 );
+				console.log(pointLight);
+				pointLight.castShadow = true;
+				pointLight.shadow.mapSize.width = 1024; // default is 512
+				pointLight.shadow.mapSize.height = 1024; // default is 512
+				pointLight.decay = 0;
+
+				scene.add( pointLight );
 				// ambientlight
-				var ambientLight = new THREE.AmbientLight( 0x404040, 4  );
+				var ambientLight = new THREE.AmbientLight( 0x404040, 1 );
 				scene.add ( ambientLight )
 
+				// // // pointlight
+				// var pointLight = new THREE.PointLight( 0x404040, 1000, 800, 2 );
+				// pointLight.position.set( 0, 290, 30 );
+				// pointLight.castShadow = true;
+				// scene.add( pointLight );
+
 				// // pointlight
-				var pointLight = new THREE.PointLight( 0x404040, 1000, 800, 2 );
-				pointLight.position.set( 0, 290, 30 );
-				pointLight.castShadow = true;
-				scene.add( pointLight );
+				// var spotLight = new THREE.SpotLight( 0xffffff );
+				// spotLight.position.set( 100, 1000, 100 );
+
+				// spotLight.castShadow = true;
+
+				// spotLight.shadow.mapSize.width = 1024;
+				// spotLight.shadow.mapSize.height = 1024;
+
+				// spotLight.shadow.camera.near = 500;
+				// spotLight.shadow.camera.far = 4000;
+				// spotLight.shadow.camera.fov = 30;
+
+				// scene.add( spotLight );
+
+
 
 				// horizon plane
 				var geometry = new THREE.BoxGeometry( 10000, 10000, 10 );
-				var material = new THREE.MeshPhongMaterial( {color: 0xf0f0f0} );
+				var material = new THREE.MeshPhongMaterial( {color: 0xffffff} );
 				var cube = new THREE.Mesh( geometry, material );
 				cube.position.set(0, 0, -200);
 				cube.rotation.x = 90;
@@ -315,52 +564,54 @@
 				fly.position.set(0, 0, -200);
 				fly.rotation.x = 90;
 				fly.material.lights = true;
-				fly.receiveShadow = true;
 				fly.position.set(flyPath.points[0].x, flyPath.points[0].y, flyPath.points[0].z);
+				fly.castShadow = true;
 				fly.add( sound );
 				scene.add( fly )
 
-			
-
-
 				// // TEXT
 				// var theText = "Lorem ipsum";
-				var theText2 = "Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
-
+				//var theText = "Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+				// var theText = "Lorem ipsum dolor sit amet consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+				var theText = inspires[THREE.Math.randInt(0, inspires.length)]
 				textGroup = new THREE.Group();
-				
 				var lineSize = 10;
 				var textPosition = { 
-					x: 0, 
-					y: 100, 
-					z: 1
+					x: -200, 
+					y: 110, 
+					z: -10
 				};
 				var tokensPerLine = 8;
-				var tokens = theText2.split(" ")
+				var tokens = theText.split(" ")
 				for(i = 0; i < tokens.length; i += tokensPerLine){
 					var textLine = tokens.slice(i, i + tokensPerLine).join(" ")
 					var textGeom = new THREE.TextGeometry( textLine, {
 						font: font,
 						size: 10,
-						height: 1,
-						curveSegments: 4
+						height: 4,
+						curveSegments: 4,
+						bevelEnabled: true,
+						bevelThickness: 1,
+						bevelSize: .1,
+						// bevelSegments: 1
 					});
 					textGeom.computeBoundingBox();
     			textGeom.textWidth = textGeom.boundingBox.max.x - textGeom.boundingBox.min.x;
-					var textMaterial = new THREE.MeshLambertMaterial( { color: 0x000000 } )//0xE45E9D } )
+					var textMaterial = new THREE.MeshLambertMaterial( { color: 0xffffffff } )//0xE45E9D } )
 					var textMesh = new THREE.Mesh( textGeom, textMaterial );
 					textMesh.castShadow = true;
 					textMesh.position.set( textPosition.x, textPosition.y, textPosition.z );
-					// textMesh.rotation.x = .2;
-					// textMesh.rotation.y = Math.PI * 2;
+					// textMesh.rotation.x = Math.PI / 4 ;
+					// textMesh.rotation.y = Math.PI  / 4;
 					textGroup.add( textMesh );
+					// scene.add( textMesh );
 					textPosition.y -= lineSize * 2;
 				}
 				scene.add( textGroup );
 				
-				renderer = new THREE.WebGLRenderer({alpha:true});
+				renderer = new THREE.WebGLRenderer();//{alpha:true,  antialias: true});
 				renderer.shadowMap.enabled = true;
-				// renderer.sortObjects = false;
+				renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				container.appendChild( renderer.domElement );
@@ -373,9 +624,7 @@
 				document.addEventListener( 'touchmove', onDocumentTouchMove, false );
 
 				// window.addEventListener( 'resize', onWindowResize, false );
-
-				initWater();
-			
+				// initWater();
 			}
 
 			function initWater() {
@@ -599,7 +848,7 @@
 			function render() {
 
 				// Set uniforms: mouse interaction
-				var uniforms = heightmapVariable.material.uniforms;
+				// var uniforms = heightmapVariable.material.uniforms;
 
 				t += 0.001;
 				var pos = flyPath.getPoint(t);
@@ -628,10 +877,10 @@
 				// }
 
 				// Do the gpu computation
-				gpuCompute.compute();
+				// gpuCompute.compute();
 
 				// Get compute output in custom uniform
-				waterUniforms.heightmap.value = gpuCompute.getCurrentRenderTarget( heightmapVariable ).texture;
+				// waterUniforms.heightmap.value = gpuCompute.getCurrentRenderTarget( heightmapVariable ).texture;
 
 				
 				// textGroup.rotation.y += ( targetRotation - textGroup.rotation.y ) * 0.05;
