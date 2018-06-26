@@ -34,8 +34,8 @@
 	</head>
 	<body>
 
-			<audio id="audio_player" loop="loop" >
-				<source src="assets/wun-4-jas.mp3"  type="audio/mpeg">
+			<audio id="audio_player" loop="loop" autoplay="">
+				<source src="assets/wun-4-jas.mp3"  type="audio/mpeg">				
 			</audio>
 
 		<script src="./build/three.js"></script>
@@ -213,7 +213,7 @@
 			// Water size in system units
 			var BOUNDS = 512;
 			var BOUNDS_HALF = BOUNDS * 0.5;
-
+			
 			var container, stats;
 			var camera, scene, renderer, controls;
 			var mouseMoved = false;
@@ -227,6 +227,8 @@
 			var waterUniforms;
 			var smoothShader;
 
+			var stream;
+
 			var starField;
 
 			var simplex = new SimplexNoise();
@@ -239,24 +241,17 @@
 				location.reload();
 				return false;
 			}
-
-
 			var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 			var analyser = audioCtx.createAnalyser();
 			var freqArray = new Uint8Array(analyser.frequencyBinCount);
 			var audioTimeArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize 
 			window.onload = function(){
 				var audioElement = document.getElementById('audio_player');
-				var stream;
-				var source;
-				audioElement.play();
-				console.log(audioElement);
-				stream = audioElement.captureStream();
-				stream.onactive = function(){
-					source = audioCtx.createMediaStreamSource(stream);
-					source.connect(analyser);
-				}
-			}	  
+				stream = audioElement.mozCaptureStream();
+				source = audioCtx.createMediaStreamSource(stream);
+				source.connect(analyser);	
+				source.connect(audioCtx.destination);
+			}
 
 			init();
 			animate();
@@ -343,7 +338,6 @@
 				material.uniforms.diffuse.value = material.color;
 				material.uniforms.specular.value = material.specular;
 				material.uniforms.shininess.value = Math.max( material.shininess, 1e-4 );
-				console.log(material.opacity);
 				//material.uniforms.transparency = true;
 				material.uniforms.opacity.value = 0.8;//material.opacity;
 
@@ -483,9 +477,11 @@
 			}
 
 			function render() {
-			
-				// Set uniforms: mouse interaction
+				
 				var uniforms = heightmapVariable.material.uniforms;
+				
+				// Set uniforms: mouse interaction
+				
 				if ( mouseMoved ) {
 
 					this.raycaster.setFromCamera( mouseCoords, camera );
@@ -504,7 +500,10 @@
 					mouseMoved = false;
 				}
 				else {
-					uniforms.mousePos.value.set( 10000, 10000 );
+						analyser.getByteFrequencyData(freqArray);
+						var x = freqArray[600];
+						var y = freqArray[100] - 100;
+						uniforms.mousePos.value.set(x, y)
 				}
 
 				// Do the gpu computation
@@ -513,11 +512,8 @@
 				// Get compute output in custom uniform
 				waterUniforms.heightmap.value = gpuCompute.getCurrentRenderTarget( heightmapVariable ).texture;
 
-				// Render
 				renderer.render( scene, camera );
-
 			}
-
 		</script>
 
 
