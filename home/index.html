@@ -420,6 +420,7 @@
 			var fly;
 			// var flyPath;
 			var flyPath; //TODO rename
+			var flyPathObjet;
 			var textGroup;
 
 			var targetRotation = 0;
@@ -503,71 +504,8 @@
 				cube.receiveShadow = true;
 				scene.add( cube )
 
-				//Create a closed wavey loop
-				var flyPathVertices = []
-				var numFlyPathVertices = 20;
-				var numFlyPathPoints = 200;
-				var maxX = 150;
-				var minX = -150;
-				var maxY = 50;
-				var minY = 0;
-				var maxZ = 250;
-				var minZ = -150;
 
-				for (i = 0; i < numFlyPathVertices; i ++){
-					if(i == 0) { 
-						// ensure fly starts at min
-						flyPathVertices.push(new THREE.Vector3(minX, minY, minZ));
-					} else if (i == numFlyPathVertices / 2){
-						// ensure fly paths center
-						flyPathVertices.push(new THREE.Vector3(0, 0, 0));
-					} else if (i == numFlyPathVertices - 1){
-						// ensure fly loop ends at max
-						flyPathVertices.push(new THREE.Vector3(maxX, maxY, maxZ));
-					} else {
-						var randVect3 = new THREE.Vector3(
-							THREE.Math.randInt(minX, maxX),
-							THREE.Math.randInt(minY, maxY),
-							THREE.Math.randInt(minZ, maxZ)
-						);
-						flyPathVertices.push(randVect3)
-					}
-				}
-				
-				flyPath = new THREE.CatmullRomCurve3(flyPathVertices);
-				var flyPathPoints = flyPath.getPoints( numFlyPathPoints );
-				var flyPathGeom = new THREE.BufferGeometry().setFromPoints( flyPathPoints );
-				var flyPathMaterial = new THREE.LineBasicMaterial( { color : 0x000000, transparent: true } );
-				flyPathMaterial.opacity = 0;
-				var flyPathObject = new THREE.Line( flyPathGeom, flyPathMaterial );
-				scene.add (flyPathObject);
 
-				// fly sound
-				// create an AudioListener and add it to the camera
-				var listener = new THREE.AudioListener();
-				camera.add( listener );
-				// create the PositionalAudio object (passing in the listener)
-				var sound = new THREE.PositionalAudio( listener );
-				// load a sound and set it as the PositionalAudio object's buffer
-				sound.loop = true;
-				var audioLoader = new THREE.AudioLoader();
-				audioLoader.load( 'assets/fly.mp3', function( buffer ) {
-					sound.setBuffer( buffer );
-					sound.setRefDistance( 20 );
-					sound.play();
-				});
-				
-				// fly
-				var flyGeom = new THREE.BoxGeometry( 1, 1, 1 );
-				var flyMaterial = new THREE.MeshPhongMaterial( {color: 0x000000} );
-				fly = new THREE.Mesh( flyGeom, flyMaterial );
-				fly.position.set(0, 0, -200);
-				fly.rotation.x = 90;
-				fly.material.lights = true;
-				fly.position.set(flyPath.points[0].x, flyPath.points[0].y, flyPath.points[0].z);
-				fly.castShadow = true;
-				fly.add( sound );
-				scene.add( fly )
 
 				// // TEXT
 				// var theText = "Lorem ipsum";
@@ -623,8 +561,79 @@
 				document.addEventListener( 'touchstart', onDocumentTouchStart, false );
 				document.addEventListener( 'touchmove', onDocumentTouchMove, false );
 
+				initFly();
 				// window.addEventListener( 'resize', onWindowResize, false );
 				// initWater();
+			}
+
+			function generateFlyPath() {
+				var flyPathVertices = []
+				var numFlyPathVertices = 20;
+				var numFlyPathPoints = 200;
+				var maxX = 250;
+				var minX = -250;
+				var maxY = 50;
+				var minY = 0;
+				var maxZ = 350;
+				var minZ = -250;
+				for (i = 0; i < numFlyPathVertices; i ++){
+					if(i == 0) { 
+						// ensure fly starts at min
+						flyPathVertices.push(new THREE.Vector3(minX, minY, minZ));
+					} else if (i == numFlyPathVertices / 2){
+						// ensure fly paths center
+						flyPathVertices.push(new THREE.Vector3(0, 0, 0));
+					} else if (i == numFlyPathVertices - 1){
+						// ensure fly loop ends at max
+						flyPathVertices.push(new THREE.Vector3(maxX, maxY, maxZ));
+					} else {
+						var randVect3 = new THREE.Vector3(
+							THREE.Math.randInt(minX, maxX),
+							THREE.Math.randInt(minY, maxY),
+							THREE.Math.randInt(minZ, maxZ)
+						);
+						flyPathVertices.push(randVect3)
+					}
+				}
+				flyPath = new THREE.CatmullRomCurve3(flyPathVertices);
+				var flyPathPoints = flyPath.getPoints( numFlyPathPoints );
+				var flyPathGeom = new THREE.BufferGeometry().setFromPoints( flyPathPoints );
+				var flyPathMaterial = new THREE.LineBasicMaterial( { color : 0x000000, transparent: true } );
+				flyPathMaterial.opacity = 0;
+				flyPathObject = new THREE.Line( flyPathGeom, flyPathMaterial );
+			}
+
+			function initFly() {
+				//Create a closed wavey loop
+				generateFlyPath()
+				scene.add (flyPathObject);
+
+				// fly sound
+				// create an AudioListener and add it to the camera
+				var listener = new THREE.AudioListener();
+				camera.add( listener );
+				// create the PositionalAudio object (passing in the listener)
+				var sound = new THREE.PositionalAudio( listener );
+				// load a sound and set it as the PositionalAudio object's buffer
+				sound.loop = true;
+				var audioLoader = new THREE.AudioLoader();
+				audioLoader.load( 'assets/fly.mp3', function( buffer ) {
+					sound.setBuffer( buffer );
+					sound.setRefDistance( 20 );
+					sound.play();
+				});
+				
+				// fly
+				var flyGeom = new THREE.BoxGeometry( 1, 1, 1 );
+				var flyMaterial = new THREE.MeshPhongMaterial( {color: 0x000000} );
+				fly = new THREE.Mesh( flyGeom, flyMaterial );
+				fly.position.set(0, 0, -200);
+				fly.rotation.x = 90;
+				fly.material.lights = true;
+				fly.position.set(flyPath.points[0].x, flyPath.points[0].y, flyPath.points[0].z);
+				fly.castShadow = true;
+				fly.add( sound );
+				scene.add( fly )
 			}
 
 			function initWater() {
