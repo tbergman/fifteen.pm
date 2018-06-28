@@ -420,7 +420,7 @@
 			var fly;
 			// var flyPath;
 			var flyPath; //TODO rename
-			var flyPathObjet;
+			var flyPathObject;
 			var textGroup;
 
 			var targetRotation = 0;
@@ -492,8 +492,6 @@
 
 				// scene.add( spotLight );
 
-
-
 				// horizon plane
 				var geometry = new THREE.BoxGeometry( 10000, 10000, 10 );
 				var material = new THREE.MeshPhongMaterial( {color: 0xffffff} );
@@ -503,8 +501,6 @@
 				cube.material.lights = true;
 				cube.receiveShadow = true;
 				scene.add( cube )
-
-
 
 
 				// // TEXT
@@ -564,6 +560,10 @@
 				initFly();
 				// window.addEventListener( 'resize', onWindowResize, false );
 				// initWater();
+				// new flight path every n seconds
+				setInterval(function () {
+            updateFlyPath();
+      	}, 5000);
 			}
 
 			function generateFlyPath() {
@@ -578,8 +578,15 @@
 				var minZ = -250;
 				for (i = 0; i < numFlyPathVertices; i ++){
 					if(i == 0) { 
-						// ensure fly starts at min
+						// if (fly !== undefined && flyPath !== undefined){
+						// 	//var end = flyPath.points.length - 1
+						// 	console.log("RESET")
+						// 	flyPathVertices.push(new THREE.Vector3(maxX, maxY, maxZ))
+						// 	//flyPathVertices.push(new THREE.Vector3(flyPath.points[end].x, flyPath.points[end].y, flyPath.points[end].z));
+						// } else {
+							// ensure fly starts at min
 						flyPathVertices.push(new THREE.Vector3(minX, minY, minZ));
+						// }
 					} else if (i == numFlyPathVertices / 2){
 						// ensure fly paths center
 						flyPathVertices.push(new THREE.Vector3(0, 0, 0));
@@ -600,14 +607,17 @@
 				var flyPathGeom = new THREE.BufferGeometry().setFromPoints( flyPathPoints );
 				var flyPathMaterial = new THREE.LineBasicMaterial( { color : 0x000000, transparent: true } );
 				flyPathMaterial.opacity = 0;
+				if (flyPathObject !== undefined) {
+					scene.remove(flyPathObject);
+				}
 				flyPathObject = new THREE.Line( flyPathGeom, flyPathMaterial );
+				scene.add (flyPathObject);
 			}
 
 			function initFly() {
 				//Create a closed wavey loop
 				generateFlyPath()
-				scene.add (flyPathObject);
-
+				
 				// fly sound
 				// create an AudioListener and add it to the camera
 				var listener = new THREE.AudioListener();
@@ -617,11 +627,14 @@
 				// load a sound and set it as the PositionalAudio object's buffer
 				sound.loop = true;
 				var audioLoader = new THREE.AudioLoader();
-				audioLoader.load( 'assets/fly.mp3', function( buffer ) {
+				audioLoader.load( 'assets/fly.wav', function( buffer ) {
 					sound.setBuffer( buffer );
+					// sound.setLoop( true );
 					sound.setRefDistance( 20 );
+					sound.setVolume(.2);
 					sound.play();
 				});
+				
 				
 				// fly
 				var flyGeom = new THREE.BoxGeometry( 1, 1, 1 );
@@ -633,8 +646,13 @@
 				fly.position.set(flyPath.points[0].x, flyPath.points[0].y, flyPath.points[0].z);
 				fly.castShadow = true;
 				fly.add( sound );
-				scene.add( fly )
+				scene.add( fly );
 			}
+
+			function updateFlyPath() {
+				generateFlyPath();
+			}
+
 
 			function initWater() {
 
@@ -843,13 +861,8 @@
 			function animate() {
 
 				requestAnimationFrame( animate );
-
-
-				
-
 				render();
 				// stats.update();
-
 			}
 
 			var t = 0;
@@ -894,7 +907,6 @@
 				
 				// textGroup.rotation.y += ( targetRotation - textGroup.rotation.y ) * 0.05;
 				renderer.render( scene, camera );
-
 			}
 
 		</script>
