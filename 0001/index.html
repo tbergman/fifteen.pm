@@ -40,7 +40,7 @@
 	<body>
 
 			<audio id="audio_player" loop="loop" autoplay="">
-				<source src="assets/wun-4-jas.mp3"  type="audio/mpeg">				
+				<source src="assets/wun-4-jas.mp3"  type="audio/mpeg">
 			</audio>
 
 		<script src="build/three.js"></script>
@@ -252,12 +252,12 @@
 			var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 			var analyser = audioCtx.createAnalyser();
 			var freqArray = new Uint8Array(analyser.frequencyBinCount);
-			var audioTimeArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize 
+			var audioTimeArray = new Uint8Array(analyser.fftSize); // Uint8Array should be the same length as the fftSize
 			window.onload = function(){
 				var audioElement = document.getElementById('audio_player');
-				stream = audioElement.mozCaptureStream();
+				stream = audioElement.captureStream();
 				source = audioCtx.createMediaStreamSource(stream);
-				source.connect(analyser);	
+				source.connect(analyser);
 				source.connect(audioCtx.destination);
 			}
 
@@ -334,7 +334,7 @@
 				// var light = new THREE.PointLight(sunLightColor , 10, 50 );
 				// light.position.set( 0, -1, 0 );
 				// scene.add( light );
-				
+
 				var light = new THREE.PointLight( 0xff0000, 4, 100 );
 				light.position.set( 0, -1, 0 );
 				scene.add( light );
@@ -498,9 +498,9 @@
 
 			function render() {
 				var uniforms = heightmapVariable.material.uniforms;
-				
+
 				// Set uniforms: mouse interaction
-				
+
 				if ( mouseMoved ) {
 
 					this.raycaster.setFromCamera( mouseCoords, camera );
