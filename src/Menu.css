@@ -1,0 +1,80 @@
+.menu {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.links ul {
+    width: 20rem;
+    list-style-type: none;
+}
+
+.links ul li {
+    text-transform: uppercase;
+    cursor: pointer;
+    padding-bottom: 10px;
+}
+
+.links ul li:hover {
+    color: #ff00ff;
+    transition: color ease 0.5s;
+}
+
+main {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.links-wrapper {
+    display: flex;
+    width: 100vw;
+    margin-top: 10rem;
+    align-items: flex-start;
+}
+
+.message {
+    display: block;
+    font-size: 15px;
+    width: 50%;
+}
+
+/* SVG Morph */
+.morph-wrap {
+    z-index: -1;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+
+.morph {
+    position: absolute;
+    height: 100%;
+    fill: var(--background-color-2);
+    flex: none;
+    opacity: 0.8;
+}
+
+@media screen and (max-width: 50em) {
+
+}
+
+@media screen and (max-width: 40em) {
+
+}
+
+@media screen and (max-width: 36em) {
+
+}
+
+@media screen and (max-width: 32em) {
+
+}
+
+@media screen and (max-width: 28em) {
+
+}

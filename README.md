@@ -1,11 +1,26 @@
-gltd-releases
-===============
+## Welcome to gltd
 
-source code for gltd sites
+GLTD is GLTD
+
+### Get started
 
 
-releases
-==========
+```
+npm i  // installs dependencies from packages.json
 
-- [0001 Jahcepth - Wun 4 Jas](0001/README.md)
+yarn start // run app
 
+yarn build // production ready code
+
+yarn test // runs testing suite
+
+
+```
+
+### Deploy
+
+Users [`react-deploy-s3`](https://github.com/orionsoft/react-deploy-s3)
+
+```
+react-deploy-s3 setup
+```
