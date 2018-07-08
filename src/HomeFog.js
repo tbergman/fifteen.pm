@@ -11,6 +11,7 @@ const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight - 2 * MARGIN;
 const WORLD_WIDTH = 256;
 const WORLD_DEPTH = 256;
+const MIN_CAMERA_Y = 450;
 const NEAR = .5;
 const FAR = 1000;
 const NUM_FLIES = 10;
@@ -26,20 +27,19 @@ class Home extends PureComponent {
     this.fogVector3 = new THREE.Vector3(0, 0, 0);
     this.sun = new THREE.Vector3(1, 1, 1);
     this.fogTexture = new THREE.CanvasTexture(this.generateTexture(this.fogData, WORLD_WIDTH, WORLD_DEPTH));
-    this.fogMesh = new THREE.Mesh(this.fogGeometry, new THREE.MeshBasicMaterial({map: this.fogTexture}));
+    this.fogMesh = new THREE.Mesh(
+      this.fogGeometry,
+      new THREE.MeshBasicMaterial({map: this.fogTexture, transparent: true, opacity: .9}));
 
     this.camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, NEAR, FAR);
-    this.camera.position.y = this.fogData[WORLD_WIDTH / 2 + WORLD_DEPTH / 2 * WORLD_WIDTH] + 300; //* 10 + 400;
-    this.cameraPosRef = new THREE.Vector3();
-
+    this.camera.position.y = this.fogData[WORLD_WIDTH / 2 + WORLD_DEPTH / 2 * WORLD_WIDTH] * 10 + 400;
     this.controls = new FirstPersonControls(this.camera);
-
+    this.controls.lookSpeed = 0.4;
+    this.controls.movementSpeed = 20;
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x363dc2);
     this.scene.fog = new THREE.FogExp2(0x363dc2, 0.0025);
-
     this.renderer = new THREE.WebGLRenderer();
-
     this.flyGroup = new THREE.Group();
     this.flies = [];
     this.flyPaths = [];
@@ -65,17 +65,15 @@ class Home extends PureComponent {
   }
 
   init = () => {
-    const {camera, controls, fogGeometry, fogTexture, fogMesh, scene, renderer, fogData, cameraPosRef} = this;
+    const {controls, fogGeometry, fogTexture, fogMesh, scene, renderer, fogData} = this;
+
     const container = document.getElementById('container');
-
-    this.cameraPosRef = this.cameraPosRef.add(camera.position);
     fogGeometry.rotateX(-Math.PI / 2);
-
     controls.movementSpeed = 150;
     controls.lookSpeed = 0.1;
 
     let vertices = fogGeometry.attributes.position.array;
-    for (var i = 0, j = 0, l = vertices.length; i < l; i++, j += 3) {
+    for (let i = 0, j = 0, l = vertices.length; i < l; i++, j += 3) {
       vertices[j + 1] = fogData[i] * 10;
     }
 
@@ -92,9 +90,7 @@ class Home extends PureComponent {
     const {camera, renderer, controls} = this;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
     renderer.setSize(window.innerWidth, window.innerHeight);
-
     controls.handleResize();
   }, 100);
 
@@ -133,9 +129,11 @@ class Home extends PureComponent {
 
   generateFly = (flyPath) => {
     const {camera} = this;
-    //Create a closed wavey loop
-    let flyGeometry = new THREE.SphereGeometry(.01, .25, .25);
-    let flyMaterial = new THREE.MeshPhongMaterial({color: 0xFFFF00, transparent: true, opacity: .5});
+
+    let flyGeometry = new THREE.BoxGeometry(.01, .01, .01);
+    let flyMaterial = new THREE.MeshPhongMaterial(
+      {color: 0x000000, transparent: false, opacity: 1}
+    );
     let fly = new THREE.Mesh(flyGeometry, flyMaterial);
     // fly sound
     // create an AudioListener and add it to the camera
@@ -143,16 +141,19 @@ class Home extends PureComponent {
     camera.add(listener);
     // create the PositionalAudio object (passing in the listener)
     let sound = new THREE.PositionalAudio(listener);
-    sound.setVolume(.01);
+    let buffSource = sound.context.createBufferSource();
+    buffSource.connect(generatePitchShiftProcessor(sound));
     let audioLoader = new THREE.AudioLoader();
+    sound.setVolume(.01);
+    sound.loop = true;
     audioLoader.load('assets/fly.wav', (buffer) => {
       sound.setBuffer(buffer);
       sound.setRefDistance(20);
       sound.play();
     });
-    let buffSource = sound.context.createBufferSource();
-    buffSource.connect(generatePitchShiftProcessor(sound));
-    sound.loop = true;
+
+
+
     fly.material.lights = true;
     fly.position.set(
       flyPath.points[0].x,
@@ -160,23 +161,18 @@ class Home extends PureComponent {
       flyPath.points[0].z
     );
     fly.castShadow = true;
-
-    let light = new THREE.PointLight( 0xff0000, 10, 1000 );
-
-    fly.add( light );
-
     fly.add(sound);
     return fly;
 
   }
 
   generateFogHeight(width, height) {
-    var size = width * height, data = new Uint8Array(size),
-      perlin = new ImprovedNoise(), quality = .1, z = Math.random() * 100;
-    for (var j = 0; j < 4; j++) {
-      for (var i = 0; i < size; i++) {
-        var x = i % width, y = ~~(i / width);
-        data[i] += Math.abs(perlin.noise(x / quality, y / quality, z) * quality * 1.75);
+    let size = width * height, data = new Uint8Array(size),
+      perlin = new ImprovedNoise(), quality = 1, z = Math.random() * 100;
+    for (let j = 0; j < 4; j++) {
+      for (let i = 0; i < size; i++) {
+        let x = i % width, y = ~~(i / width);
+        data[i] += Math.abs(perlin.noise(x / quality, y / quality, z) * quality * .75);
       }
       quality *= 5;
     }
@@ -202,7 +198,7 @@ class Home extends PureComponent {
 
     for (var i = 0, j = 0, l = imageData.length; i < l; i += 4, j++) {
       fogVector3.x = data[j - 2] - data[j + 2];
-      fogVector3.y = 2;
+      fogVector3.y = 1;
       fogVector3.z = data[j - width * 2] - data[j + width * 2];
       fogVector3.normalize();
 
@@ -245,11 +241,16 @@ class Home extends PureComponent {
     this.animateFly();
 
     this.controls.update(this.clock.getDelta());
+    if ( this.camera.position.y < MIN_CAMERA_Y ) {
+      this.camera.position.y = MIN_CAMERA_Y;
+    }
+
     this.renderer.render(this.scene, this.camera);
+    console.log(this.camera.position)
   }
 
   animateFly = () => {
-    this.flyRadianPosition += THREE.Math.randFloat(0.000005, .00003);
+    this.flyRadianPosition += .0003;
     for (let i = 0; i < NUM_FLIES; i++) {
       let flyPos = this.flyPaths[i].getPoint(this.flyRadianPosition);
       this.flies[i].position.copy(flyPos);
@@ -261,7 +262,8 @@ class Home extends PureComponent {
       <div
         id="container"
         ref={element => this.container = element}
-      ></div>
+      >
+      </div>
     );
   }
 }
