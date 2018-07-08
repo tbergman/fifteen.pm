@@ -6,9 +6,9 @@ import debounce from 'lodash/debounce';
 import './Release.css';
 import Player from '../Player';
 import {isFirefox, isChrome} from '../Utils/BrowserDetection';
-import * as heightMapFragmentShader from 'raw-loader!glslify-loader!../Utils/Shaders/heightMapFragmentShader.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
 
-console.log('height', heightMapFragmentShader);
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 const WATER_WIDTH = 128;

@@ -1,12 +1,6 @@
-export default
-`#include <common>
-
 uniform vec2 mousePos;
 uniform float mouseSize;
 uniform float viscosityConstant;
-
-#define deltaTime ( 1.0 / 60.0 )
-#define GRAVITY_CONSTANT ( resolution.x * deltaTime * 3.0 )
 
 void main()	{
 
@@ -27,18 +21,18 @@ void main()	{
 
     float sump = north.x + south.x + east.x + west.x - 4.0 * heightmapValue.x;
 
-    float accel = sump * GRAVITY_CONSTANT;
+    float accel = sump * resolution.x * 1.0 / 60.0  * 3.0;
 
     // Dynamics
     heightmapValue.y += accel;
-    heightmapValue.x += heightmapValue.y * deltaTime;
+    heightmapValue.x += heightmapValue.y * 1.0 / 60.0 ;
 
     // Viscosity
     heightmapValue.x += sump * viscosityConstant;
 
     // Mouse influence
-    float mousePhase = clamp( length( ( uv - vec2( 0.5 ) ) * BOUNDS - vec2( mousePos.x, - mousePos.y ) ) * PI / mouseSize, 0.0, PI );
+    float mousePhase = clamp( length( ( uv - vec2( 0.5 ) ) * BOUNDS - vec2( mousePos.x, - mousePos.y ) ) * 3.14 / mouseSize, 0.0, 3.14 );
     heightmapValue.x += cos( mousePhase ) + 1.0;
 
     gl_FragColor = heightmapValue;
-}`;
+}
