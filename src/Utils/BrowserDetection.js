@@ -5,7 +5,7 @@ export var isOpera = !!window.opr || !!window.opera || navigator.userAgent.index
 export var isFirefox = typeof InstallTrigger !== 'undefined';
 
 // Safari 3.0+ "[object HTMLElementConstructor]"
-export var isSafari = /constructor/i.test(window.HTMLElement) || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari']);
+export var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 // Internet Explorer 6-11
 export var isIE = /*@cc_on!@*/false || !!document.documentMode;

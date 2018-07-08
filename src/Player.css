@@ -19,6 +19,7 @@
     font-weight: bold;
     letter-spacing: 10px;
     fill: #ffffff;
+    stroke: #ffffff;
 }
 
 #player svg {
@@ -108,3 +109,33 @@
     stroke-line-join: round;
     stroke-line-cap: round;
 }
+
+
+.button {
+    border: 0;
+    background: transparent;
+    box-sizing: border-box;
+    width: 0;
+    height: 24px;
+    opacity: 0.5;
+    border-color: transparent transparent transparent #FFFFFF;
+    transition: 500ms all ease;
+    -webkit-transition: 500ms all ease;
+    cursor: pointer;
+    border-style: solid;
+    border-width: 10px 0 12px 20px;
+    position: absolute;
+    margin-top: 50px;
+    left: 48px;
+}
+
+.button.paused {
+     border-style: double;
+     border-width: 0px 0 0px 20px;
+ }
+
+.button:hover {
+     opacity: 1;
+     border-color: transparent transparent transparent #FFFFFF;
+ }
+
