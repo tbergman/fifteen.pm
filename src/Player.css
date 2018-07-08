@@ -127,6 +127,7 @@
     position: absolute;
     margin-top: 50px;
     left: 48px;
+    outline: none;
 }
 
 .button.paused {
