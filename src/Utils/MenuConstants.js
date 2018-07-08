@@ -131,10 +131,15 @@ export const SHAPES = [
 
 export const RELEASE_LINKS = [
   {name:'home', relPath: "/", path: "/", message: "Welcome to Globally LTD."},
-  {name:'yahceph', relPath: "/1", path: '1',  message: '"Wun 4 Jas" is made possible by viewers like you.'}
+  {name:'yahceph', relPath: "/1", path: '1',  message: '"Wun 4 Jas" is made possible by viewers like you.', bandcampLink: "https://gltd.bandcamp.com/track/wun-4-jas"}
 ]
 
 export const MENU_MESSAGES = {
   "/": "Welcome to Globally LTD.",
   "/1": '"Wun 4 Jas" is made possible by viewers like you.'
+}
+
+export const MENU_BANDCAMP = {
+  "/": null,
+  "/1": 'https://gltd.bandcamp.com/track/wun-4-jas'
 }

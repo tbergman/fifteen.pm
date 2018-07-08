@@ -1,31 +1,28 @@
-import React, {Component} from 'react';
-import pure from 'recompose/pure';
+import React, {PureComponent} from 'react';
 import anime from './Utils/Anime.min.js';
-import {SHAPES, RELEASE_LINKS, MENU_MESSAGES} from './Utils/MenuConstants';
+import {SHAPES, RELEASE_LINKS, MENU_MESSAGES, MENU_BANDCAMP} from './Utils/MenuConstants';
 import './Menu.css';
 
-class Menu extends Component {
+class Menu extends PureComponent {
   state = {
     shapeIndex: 3,
     message: MENU_MESSAGES[window.location.pathname],
+    bandcampLink: MENU_BANDCAMP[window.location.pathname],
   }
 
-  // shouldComponentUpdate() {
-  //   return false;
-  // }
-
   componentDidMount() {
+    this.windowLocation = window.location.pathname;
     this.animateMenu();
   }
 
   handleLinkMouseOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(e.target.dataset.idx);
-    console.log(MENU_MESSAGES[e.target.dataset.to]);
+    const {idx, rel} = e.target.dataset;
     this.setState({
-      shapeIndex: e.target.dataset.idx,
-      message: MENU_MESSAGES[e.target.dataset.rel],
+      shapeIndex: idx,
+      message: MENU_MESSAGES[rel],
+      bandcampLink: MENU_BANDCAMP[rel],
     }, () => {
       this.animateMenu();
     });
@@ -44,7 +41,7 @@ class Menu extends Component {
     e.preventDefault();
     e.stopPropagation();
     this.setState({
-      message: MENU_MESSAGES[window.location.pathname],
+      message: MENU_MESSAGES[this.windowLocation],
     });
     window.location = e.target.dataset.to;
   }
@@ -96,8 +93,8 @@ class Menu extends Component {
     return (
       <div className="links">
         <ul>
-          {RELEASE_LINKS.map((link, idx) => {
-            return  <li
+          {RELEASE_LINKS.map((link, idx) =>
+            <li
               className={window.location.pathname === link.relPath ? 'active' : ''}
               key={idx}
               data-idx={idx + 1}
@@ -107,17 +104,15 @@ class Menu extends Component {
               onClick={this.handleLinkClick}>
               {link.name}
             </li>
-          }
-
           )}
           <li>{this.state.message}</li>
         </ul>
+        {this.state.bandcampLink && <a className="bandcamp" target="_blank" href={this.state.bandcampLink}>listen</a>}
       </div>
     );
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className="menu">
         {this.renderMenu()}
