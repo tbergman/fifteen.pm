@@ -32,10 +32,12 @@ class Home extends PureComponent {
       new THREE.MeshBasicMaterial({map: this.fogTexture, transparent: true, opacity: .9}));
 
     this.camera = new THREE.PerspectiveCamera(75, SCREEN_WIDTH / SCREEN_HEIGHT, NEAR, FAR);
-    this.camera.position.y = this.fogData[WORLD_WIDTH / 2 + WORLD_DEPTH / 2 * WORLD_WIDTH] * 10 + 400;
+    this.camera.position.y = 450;//this.fogData[WORLD_WIDTH / 2 + WORLD_DEPTH / 2 * WORLD_WIDTH] * 10 + 200; //* 10 + 400;
+
     this.controls = new FirstPersonControls(this.camera);
-    this.controls.lookSpeed = 0.4;
+    this.controls.lookSpeed = 0.1;
     this.controls.movementSpeed = 20;
+
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x363dc2);
     this.scene.fog = new THREE.FogExp2(0x363dc2, 0.0025);
@@ -45,7 +47,9 @@ class Home extends PureComponent {
     this.flyPaths = [];
     this.flyRadianPosition = 0;
     for (let i = 0; i < NUM_FLIES; i++) {
-      let flyPath = this.generateFlyPath();
+      console.log("pos", this.camera.position)
+      let flyPath = this.generateFlyPath(this.camera.position);
+      console.log("flypath", flyPath.points[0])
       this.flyPaths.push(flyPath);
       let fly = this.generateFly(flyPath);
       this.flies.push(fly);
@@ -94,23 +98,23 @@ class Home extends PureComponent {
     controls.handleResize();
   }, 100);
 
-  generateFlyPath = () => {
+  generateFlyPath = (pos) => {
     let flyPathVertices = [];
     let numFlyPathVertices = 200;
-    let cameraPos = this.camera.position;
-    let maxX = 5 + cameraPos.x;
-    let minX = -1 + cameraPos.x;
-    let maxY = 1 + cameraPos.y;
-    let minY = 0 + cameraPos.y;
-    let maxZ = 2 + cameraPos.z;
-    let minZ = -10 + cameraPos.z;
+    // let cameraPos = this.camera.position;
+    let maxX = 5 + pos.x;
+    let minX = -1 + pos.x;
+    let maxY = 1 + pos.y;
+    let minY = 0 + pos.y;
+    let maxZ = 2 + pos.z;
+    let minZ = -10 + pos.z;
     for (let i = 0; i < numFlyPathVertices; i++) {
       if (i === numFlyPathVertices / 2) {
         // ensure fly path goes through center
         flyPathVertices.push(new THREE.Vector3(
-          cameraPos.x,
-          cameraPos.y,
-          cameraPos.z + NEAR
+          pos.x,
+          pos.y,
+          pos.z + NEAR
         )); // don't go str8 thru camera
       }
       let randVect3 = new THREE.Vector3(
@@ -118,7 +122,7 @@ class Home extends PureComponent {
         THREE.Math.randInt(minY, maxY),
         THREE.Math.randInt(minZ, maxZ)
       );
-      if (cameraPos.distanceTo(randVect3) < NEAR) {
+      if (pos.distanceTo(randVect3) < NEAR) {
         // nudge the position off the center
         randVect3.y += NEAR;
       }
@@ -130,12 +134,18 @@ class Home extends PureComponent {
   generateFly = (flyPath) => {
     const {camera} = this;
 
-    let flyGeometry = new THREE.BoxGeometry(.01, .01, .01);
+    let flyGeometry = new THREE.SphereGeometry(.08, .01, .01);
     let flyMaterial = new THREE.MeshPhongMaterial(
-      {color: 0x000000, transparent: false, opacity: 1}
-    );
+      {color: 0xFFFF00, transparent: true, opacity: .2});
+
     let fly = new THREE.Mesh(flyGeometry, flyMaterial);
-    // fly sound
+
+    let light = new THREE.PointLight( 0xff0000, 10, 1000 );
+    fly.add( light );
+
+    fly.material.lights = true;
+    fly.castShadow = true;
+
     // create an AudioListener and add it to the camera
     let listener = new THREE.AudioListener();
     camera.add(listener);
@@ -151,17 +161,15 @@ class Home extends PureComponent {
       sound.setRefDistance(20);
       sound.play();
     });
+    fly.add(sound);
 
-
-
-    fly.material.lights = true;
     fly.position.set(
       flyPath.points[0].x,
       flyPath.points[0].y,
       flyPath.points[0].z
     );
-    fly.castShadow = true;
-    fly.add(sound);
+
+
     return fly;
 
   }
@@ -244,9 +252,9 @@ class Home extends PureComponent {
     if ( this.camera.position.y < MIN_CAMERA_Y ) {
       this.camera.position.y = MIN_CAMERA_Y;
     }
-
+    console.log(this.camera.position);
     this.renderer.render(this.scene, this.camera);
-    console.log(this.camera.position)
+
   }
 
   animateFly = () => {

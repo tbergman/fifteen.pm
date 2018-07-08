@@ -105,6 +105,12 @@ module.exports = {
     ],
   },
   module: {
+    loaders: [
+      {
+        test: /\.glsl$/,
+        loader: 'webpack-glsl',
+      }
+    ],
     strictExportPresence: true,
     rules: [
       // TODO: Disable require.ensure as it's not a standard language feature.

@@ -28,7 +28,7 @@ export function generatePitchShiftProcessor(sound, pitchRatio=undefined) {
     var inputData = event.inputBuffer.getChannelData(0);
     var outputData = event.outputBuffer.getChannelData(0);
 
-    for (i = 0; i < inputData.length; i++) {
+    for (let i = 0; i < inputData.length; i++) {
 
       // Apply the window to the input buffer
       inputData[i] *= this.grainWindow[i];

@@ -22,6 +22,7 @@ class Menu extends PureComponent {
     this.setState({
       shapeIndex: idx,
       message: MENU_MESSAGES[rel],
+      currentRel: rel,
       bandcampLink: MENU_BANDCAMP[rel],
     }, () => {
       this.animateMenu();
@@ -89,13 +90,20 @@ class Menu extends PureComponent {
     );
   }
 
+  renderPurchaseLink() {
+    if (window.location.pathname === this.state.currentRel && this.state.bandcampLink) {
+      return  <a className="bandcamp" target="_blank" href={this.state.bandcampLink}>purchase</a>
+    }
+  }
+
+
   renderLinks() {
     return (
       <div className="links">
         <ul>
           {RELEASE_LINKS.map((link, idx) =>
             <li
-              className={window.location.pathname === link.relPath ? 'active' : ''}
+              className={ window.location.pathname === link.relPath ? 'active' : ''}
               key={idx}
               data-idx={idx + 1}
               data-to={link.path}
@@ -107,7 +115,7 @@ class Menu extends PureComponent {
           )}
           <li>{this.state.message}</li>
         </ul>
-        {this.state.bandcampLink && <a className="bandcamp" target="_blank" href={this.state.bandcampLink}>listen</a>}
+        {this.renderPurchaseLink()}
       </div>
     );
   }

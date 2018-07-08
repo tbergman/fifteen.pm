@@ -136,7 +136,7 @@ export const RELEASE_LINKS = [
 
 export const MENU_MESSAGES = {
   "/": "Welcome to Globally LTD.",
-  "/1": '"Wun 4 Jas" is made possible by viewers like you.'
+  "/1": "Yahceph's production debut, \"wun 4 jas\", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode."
 }
 
 export const MENU_BANDCAMP = {
