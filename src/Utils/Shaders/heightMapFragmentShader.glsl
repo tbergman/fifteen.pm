@@ -1,4 +1,5 @@
-#include <common>
+export default
+`#include <common>
 
 uniform vec2 mousePos;
 uniform float mouseSize;
@@ -40,4 +41,4 @@ void main()	{
     heightmapValue.x += cos( mousePhase ) + 1.0;
 
     gl_FragColor = heightmapValue;
-}
+}`;
