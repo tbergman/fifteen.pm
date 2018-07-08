@@ -134,25 +134,23 @@ class Home extends PureComponent {
   generateFly = (flyPath) => {
     const {camera} = this;
     //Create a closed wavey loop
-    let flyGeometry = new THREE.BoxGeometry(.01, .01, .01);
-    let flyMaterial = new THREE.MeshPhongMaterial({color: 0x000000, transparent: false, opacity: 1});
+    let flyGeometry = new THREE.SphereGeometry(.01, .25, .25);
+    let flyMaterial = new THREE.MeshPhongMaterial({color: 0xFFFF00, transparent: true, opacity: .5});
     let fly = new THREE.Mesh(flyGeometry, flyMaterial);
     // fly sound
     // create an AudioListener and add it to the camera
-    var listener = new THREE.AudioListener();
+    let listener = new THREE.AudioListener();
     camera.add(listener);
     // create the PositionalAudio object (passing in the listener)
-    var sound = new THREE.PositionalAudio(listener);
+    let sound = new THREE.PositionalAudio(listener);
     sound.setVolume(.01);
-    var audioLoader = new THREE.AudioLoader();
+    let audioLoader = new THREE.AudioLoader();
     audioLoader.load('assets/fly.wav', (buffer) => {
-
       sound.setBuffer(buffer);
-      // sound.setLoop( true );
       sound.setRefDistance(20);
       sound.play();
     });
-    var buffSource = sound.context.createBufferSource();
+    let buffSource = sound.context.createBufferSource();
     buffSource.connect(generatePitchShiftProcessor(sound));
     sound.loop = true;
     fly.material.lights = true;
@@ -162,6 +160,11 @@ class Home extends PureComponent {
       flyPath.points[0].z
     );
     fly.castShadow = true;
+
+    let light = new THREE.PointLight( 0xff0000, 10, 1000 );
+
+    fly.add( light );
+
     fly.add(sound);
     return fly;
 
@@ -246,10 +249,10 @@ class Home extends PureComponent {
   }
 
   animateFly = () => {
-    this.flyRadianPosition += .0003;
+    this.flyRadianPosition += THREE.Math.randFloat(0.000005, .00003);
     for (let i = 0; i < NUM_FLIES; i++) {
       let flyPos = this.flyPaths[i].getPoint(this.flyRadianPosition);
-      this.flies[i].position.copy(flyPos);//.add(cameraPosDelta));//nextFlyPos);
+      this.flies[i].position.copy(flyPos);
     }
   }
 
