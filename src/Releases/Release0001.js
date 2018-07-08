@@ -7,6 +7,10 @@ import './Release.css';
 import Player from '../Player';
 import {isFirefox, isChrome} from '../Utils/BrowserDetection';
 
+
+
+const heightMapFragmentShader = require('glslify!raw!../Utils/Shaders/heightMapFragmentShader.glsl');
+//const heightMapFragmentShader = require('raw-loader!../Utils/Shaders/heightMapFragmentShader.glsl');
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 const WATER_WIDTH = 128;
@@ -153,7 +157,9 @@ class Release0001 extends PureComponent {
 
     this.fillTexture(heightmap0);
 
-    this.heightmapVariable = this.gpuCompute.addVariable("heightmap", document.getElementById('heightmapFragmentShader').textContent, heightmap0);
+    // this.heightmapVariable = this.gpuCompute.addVariable("heightmap", document.getElementById('heightmapFragmentShader').textContent, heightmap0);
+
+    this.heightmapVariable = this.gpuCompute.addVariable("heightmap",heightMapFragmentShader, heightmap0);
 
     this.gpuCompute.setVariableDependencies(this.heightmapVariable, [this.heightmapVariable]);
 

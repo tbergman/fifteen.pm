@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "glslify": "^6.2.1",
+    "glslify-loader": "^1.0.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",
@@ -17,6 +19,7 @@
   "devDependencies": {
     "gpucomputationrender-threejs": "^1.0.0",
     "lodash": "^4.17.10",
+    "raw-loader": "^0.5.1",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
     "react-three-renderer": "^3.2.4",
