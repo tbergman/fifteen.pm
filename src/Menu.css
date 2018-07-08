@@ -39,6 +39,10 @@ main {
     width: 50%;
 }
 
+.menuText{
+    
+}
+
 /* SVG Morph */
 .morph-wrap {
     z-index: -1;
