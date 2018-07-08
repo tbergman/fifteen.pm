@@ -7,11 +7,12 @@ import './Menu.css';
 class Menu extends Component {
   state = {
     shapeIndex: 3,
+    message: MENU_MESSAGES[window.location.pathname],
   }
 
-  shouldComponentUpdate() {
-    return false;
-  }
+  // shouldComponentUpdate() {
+  //   return false;
+  // }
 
   componentDidMount() {
     this.animateMenu();
@@ -20,11 +21,11 @@ class Menu extends Component {
   handleLinkMouseOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
-
+    console.log(e.target.dataset.idx);
+    console.log(MENU_MESSAGES[e.target.dataset.to]);
     this.setState({
       shapeIndex: e.target.dataset.idx,
-      message: e.target.dataset.message,
-      name: e.target.dataset.name,
+      message: MENU_MESSAGES[e.target.dataset.rel],
     }, () => {
       this.animateMenu();
     });
@@ -42,6 +43,9 @@ class Menu extends Component {
   handleLinkClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    this.setState({
+      message: MENU_MESSAGES[window.location.pathname],
+    });
     window.location = e.target.dataset.to;
   }
 
@@ -92,43 +96,37 @@ class Menu extends Component {
     return (
       <div className="links">
         <ul>
-          {RELEASE_LINKS.map((link, idx) =>
-            <li key={idx}
-                data-idx={idx + 1}
-                data-to={link.path}
-                data-message={link.message}
-                data-name={link.name}
-                onMouseOver={this.handleLinkMouseOver}
-                onClick={this.handleLinkClick}>
-              {link.name}</li>
+          {RELEASE_LINKS.map((link, idx) => {
+            return  <li
+              className={window.location.pathname === link.relPath ? 'active' : ''}
+              key={idx}
+              data-idx={idx + 1}
+              data-to={link.path}
+              data-rel={link.relPath}
+              onMouseOver={this.handleLinkMouseOver}
+              onClick={this.handleLinkClick}>
+              {link.name}
+            </li>
+          }
+
           )}
+          <li>{this.state.message}</li>
         </ul>
       </div>
     );
   }
 
-  renderMenuText() {
-    console.log(window.location.pathname);
-    return (
-      <div className="text">
-        {MENU_MESSAGES[window.location.pathname]}
-      </div>
-    )
-  }
-
   render() {
+    console.log(this.state);
     return (
       <div className="menu">
         {this.renderMenu()}
         <div className="links-wrapper">
           {this.renderLinks()}
         </div>
-        <div className="menuText">
-          {this.renderMenuText()}
-        </div>
       </div>
     );
   }
 }
 
-export default pure(Menu);
+export default Menu;

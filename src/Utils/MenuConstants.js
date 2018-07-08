@@ -130,8 +130,8 @@ export const SHAPES = [
 ];
 
 export const RELEASE_LINKS = [
-  {name:'0 - home', path: "/", message: "Make space for sounds."},
-  {name:'1 - yahceph', path: '1',  message: "Wun 4 Jas"}
+  {name:'home', relPath: "/", path: "/", message: "Welcome to Globally LTD."},
+  {name:'yahceph', relPath: "/1", path: '1',  message: '"Wun 4 Jas" is made possible by viewers like you.'}
 ]
 
 export const MENU_MESSAGES = {
