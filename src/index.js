@@ -5,6 +5,7 @@ import App from './App';
 import Header from './Header';
 import Release0001 from './Releases/Release0001';
 import MorphingBalls from "./Releases/MorphingBalls";
+import Network from "./Releases/Network";
 
 import registerServiceWorker from './registerServiceWorker';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
@@ -16,6 +17,7 @@ ReactDOM.render(
       <Route exact path="/" component={App} />
       <Route path="/gltd" component={MorphingBalls} />
       <Route path="/1" component={Release0001} />
+      <Route path="/network" component={Network} />
     </div>
   </Router>,
   document.getElementById('root')

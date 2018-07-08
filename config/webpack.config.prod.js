@@ -135,6 +135,10 @@ module.exports = {
         include: paths.appSrc,
       },
       {
+        test: /\.glsl$/,
+        loader: require.resolve('webpack-glsl-loader'),
+      },
+      {
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall
         // back to the "file" loader at the end of the loader list.
@@ -148,10 +152,6 @@ module.exports = {
               limit: 10000,
               name: 'static/media/[name].[hash:8].[ext]',
             },
-          },
-          {
-            test: /\.glsl$/,
-            loader: require.resolve('webpack-glsl-loader'),
           },
           // Process JS with Babel.
           {
