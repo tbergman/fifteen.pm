@@ -98,5 +98,7 @@ main {
 }
 
 @media screen and (max-width: 28em) {
-
+    .links-wrapper {
+        margin-top: 6.5rem;
+    }
 }
