@@ -28,13 +28,19 @@ class Network extends Component {
 
     this.light = new THREE.DirectionalLight( 0xdfebff, 1 );
     this.loader = new THREE.TextureLoader();
+
+
+    this.simulate = Cloth.simulate;
     this.clothTexture = this.loader.load( 'assets/circuit_pattern.png' );
     this.clothTexture.anisotropy = 16;
+
     this.clothMaterial = new THREE.MeshLambertMaterial( {
       map: this.clothTexture,
       side: THREE.DoubleSide,
       alphaTest: 0.5
     });
+
+    this.clothGeometry = Cloth.clothGeometry;
 
     this.object = new THREE.Mesh( this.clothGeometry, this.clothMaterial );
     this.object.customDepthMaterial = new THREE.MeshDepthMaterial( {
@@ -43,30 +49,25 @@ class Network extends Component {
       alphaTest: 0.5
     });
 
-    this.ballGeo = new THREE.SphereBufferGeometry( Cloth.ballSize, 32, 16 );
-    this.ballMaterial = new THREE.MeshLambertMaterial();
+    this.sphere = Cloth.sphere;
+    this.ballPosition = Cloth.ballPosition;
 
-    this.sphere = new THREE.Mesh( this.ballGeo, this.ballMaterial );
-
-    this.groundMaterial = new THREE.MeshLambertMaterial( { map: this.groundTexture } );
+    this.groundMaterial = new THREE.MeshLambertMaterial( { map: this.groundTexture, color: '#000000' } );
     this.groundMesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 20000, 20000 ), this.groundMaterial );
 
     this.poleGeo = new THREE.BoxBufferGeometry( 5, 375, 5 );
     this.poleMat = new THREE.MeshLambertMaterial();
     this.poleMesh = new THREE.Mesh( this.poleGeo, this.poleMat );
+    this.poleMesh2 = new THREE.Mesh( this.poleGeo, this.poleMat );
 
     this.poleMatMesh = new THREE.Mesh( new THREE.BoxBufferGeometry( 255, 5, 5 ), this.poleMat );
 
     this.gg = new THREE.BoxBufferGeometry( 10, 10, 10 );
     this.ggMesh = new THREE.Mesh( this.gg, this.poleMat );
-
+    this.ggMesh2 = new THREE.Mesh( this.gg, this.poleMat );
     this.renderer = new THREE.WebGLRenderer( { antialias: true } );
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
     this.windForce = Cloth.windForce;
-    this.cloth = Cloth.cloth;
-    this.clothGeometry = Cloth.clothGeometry;
-    this.simulate = Cloth.simulate;
-    this.ballPosition = Cloth.ballPosition;
   }
 
   componentDidMount() {
@@ -76,7 +77,7 @@ class Network extends Component {
   }
 
   init = () => {
-    const {scene, camera, light, ambientLight, object, sphere, groundMesh, poleMesh, controls, poleMatMesh, ggMesh, renderer} = this;
+    const {scene, camera, light, ambientLight, object, sphere, groundMesh, poleMesh, poleMesh2, controls, poleMatMesh, ggMesh, ggMesh2, renderer} = this;
     const d = 300;
 
     camera.position.set( 1000, 50, 1500 );
@@ -94,7 +95,7 @@ class Network extends Component {
     light.shadow.camera.far = 1000;
     scene.add( light );
 
-    object.position.set( 0, 0, 0 );
+    object.position.set( 0, -250, 0 );
     object.castShadow = true;
     scene.add( object );
 
@@ -102,7 +103,7 @@ class Network extends Component {
     sphere.receiveShadow = true;
     scene.add( sphere );
 
-    this.groundTexture = this.loader.load( 'textures/terrain/grasslight-big.jpg' );
+    this.groundTexture = this.loader.load( 'assets/circuit_pattern.png' );
     this.groundTexture.wrapS = this.groundTexture.wrapT = THREE.RepeatWrapping;
     this.groundTexture.repeat.set( 25, 25 );
     this.groundTexture.anisotropy = 16;
@@ -112,11 +113,17 @@ class Network extends Component {
     groundMesh.receiveShadow = true;
     scene.add( groundMesh );
 
-    poleMesh.position.x = 125;
+    poleMesh.position.x = 425;
     poleMesh.position.y = - 62;
     poleMesh.receiveShadow = true;
     poleMesh.castShadow = true;
     scene.add( poleMesh );
+
+    poleMesh2.position.x = - 425;
+    poleMesh2.position.y = - 62;
+    poleMesh2.receiveShadow = true;
+    poleMesh2.castShadow = true;
+    scene.add( poleMesh2 );
 
     poleMatMesh.position.y = - 250 + ( 750 / 2 );
     poleMatMesh.position.x = 0;
@@ -124,11 +131,20 @@ class Network extends Component {
     poleMatMesh.castShadow = true;
     scene.add( poleMatMesh );
 
-    ggMesh.position.y = - 250;
-    ggMesh.position.x = 125;
-    ggMesh.receiveShadow = true;
-    ggMesh.castShadow = true;
-    scene.add( ggMesh );
+    var gg = new THREE.BoxBufferGeometry( 10, 10, 10 );
+    var mesh = new THREE.Mesh( gg, this.poleMat );
+    mesh.position.y = - 250;
+    mesh.position.x = 125;
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    scene.add( mesh );
+
+    var mesh = new THREE.Mesh( gg, this.poleMat );
+    mesh.position.y = - 250;
+    mesh.position.x = - 125;
+    mesh.receiveShadow = true;
+    mesh.castShadow = true;
+    scene.add( mesh );
 
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
@@ -158,7 +174,7 @@ class Network extends Component {
 
     var time = Date.now();
 
-    var windStrength = Math.cos( time / 7000 ) * 20 + 40;
+    var windStrength = Math.cos( time / 700 ) * 20 + 40;
 
     windForce.set( Math.sin( time / 2000 ), Math.cos( time / 3000 ), Math.sin( time / 1000 ) )
     windForce.normalize()
@@ -171,15 +187,15 @@ class Network extends Component {
   renderScene = () => {
     const {clothGeometry, sphere, renderer, ballPosition, scene, camera} = this;
 
-    var p = this.cloth.particles;
+    var p = Cloth.cloth.particles;
 
     for ( var i = 0, il = p.length; i < il; i ++ ) {
       clothGeometry.vertices[ i ].copy( p[ i ].position );
     }
 
-    clothGeometry.verticesNeedUpdate = true;
-    clothGeometry.computeFaceNormals();
-    clothGeometry.computeVertexNormals();
+    // clothGeometry.verticesNeedUpdate = true;
+    // clothGeometry.computeFaceNormals();
+    // clothGeometry.computeVertexNormals();
 
     sphere.position.copy( ballPosition );
 
