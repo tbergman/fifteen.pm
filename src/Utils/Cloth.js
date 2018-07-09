@@ -17,7 +17,7 @@ export const DRAG = 1 - DAMPING;
 export const MASS = 0.1;
 export const restDistance = 25;
 
-export const xSegs = 10;
+export const xSegs = 42;
 export const ySegs = 10;
 
 export const clothFunction = plane( restDistance * xSegs, restDistance * ySegs );
@@ -290,7 +290,6 @@ export function simulate( time ) {
 
   ballPosition.z = - Math.sin( Date.now() / 600 ) * 700; //+ 40;
   ballPosition.y = Math.cos( Date.now() / 600 ) * 400; //+ 40;
-
   ballPosition.x = Math.cos( Date.now() / 400 ) * 10;
 
   if ( sphere.visible ) {
