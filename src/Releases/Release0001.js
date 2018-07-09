@@ -173,21 +173,30 @@ class Release0001 extends PureComponent {
   }
 
   addAudio = () => {
-    const {audioStream} = this;
     window.onload = () => {
       if (isFirefox === true) {
         this.audioStream = this.audioElement.mozCaptureStream();
       } else if (isChrome) {
         this.audioStream = this.audioElement.captureStream();
       }
+
       if (this.audioStream !== undefined) {
-        this.audioStream.onactive = () => {
-          let source = this.audioCtx.createMediaStreamSource(this.audioStream);
-          source.connect(this.audioAnalyser);
-          source.connect(this.audioCtx.destination);
-        };
+        if (isChrome) {
+            this.audioStream.onactive = () => {
+                this.createAudioSource();
+            };
+        }
+        else {
+            this.createAudioSource();
+        }
       }
     }
+  }
+
+  createAudioSource = () => {
+    let source = this.audioCtx.createMediaStreamSource(this.audioStream);
+    source.connect(this.audioAnalyser);
+    source.connect(this.audioCtx.destination);
   }
 
   addSun = () => {
