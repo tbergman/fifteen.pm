@@ -39,25 +39,30 @@ export const wind = true;
 export const windStrength = 2;
 export const windForce = new THREE.Vector3( 0, 0, 0 );
 
-export const ballPosition = new THREE.Vector3( 0, - 45, 0 );
+export const ballPosition = new THREE.Vector3( 0, 250, 0 );
 export const ballSize = 60; //40
 
 export const tmpForce = new THREE.Vector3();
 
 var lastTime;
 
-export const ballGeo = new THREE.SphereBufferGeometry( ballSize, 32, 16 );
-export const ballMaterial = new THREE.MeshLambertMaterial();
+var ballGeo = new THREE.SphereBufferGeometry( ballSize, 32, 16 );
+var ballMaterial = new THREE.MeshLambertMaterial();
+
 export const sphere = new THREE.Mesh( ballGeo, ballMaterial );
 
 export function plane( width, height ) {
+
   return function ( u, v, target ) {
+
     var x = ( u - 0.5 ) * width;
     var y = ( v + 0.5 ) * height;
     var z = 0;
 
     target.set( x, y, z );
+
   };
+
 }
 
 export function Particle( x, y, z, mass ) {
@@ -107,7 +112,7 @@ Particle.prototype.integrate = function ( timesq ) {
 };
 
 
-export const diff = new THREE.Vector3();
+var diff = new THREE.Vector3();
 
 export function satisfyConstraints( p1, p2, distance ) {
 
@@ -199,21 +204,21 @@ export function Cloth( w, h ) {
 
 
   // for (v=0;v<h;v++) {
-  // 	for (u=0;u<w;u++) {
+  //  for (u=0;u<w;u++) {
 
-  // 		constraints.push([
-  // 			particles[index(u, v)],
-  // 			particles[index(u+1, v+1)],
-  // 			diagonalDist
-  // 		]);
+  //    constraints.push([
+  //      particles[index(u, v)],
+  //      particles[index(u+1, v+1)],
+  //      diagonalDist
+  //    ]);
 
-  // 		constraints.push([
-  // 			particles[index(u+1, v)],
-  // 			particles[index(u, v+1)],
-  // 			diagonalDist
-  // 		]);
+  //    constraints.push([
+  //      particles[index(u+1, v)],
+  //      particles[index(u, v+1)],
+  //      diagonalDist
+  //    ]);
 
-  // 	}
+  //  }
   // }
 
 
@@ -278,16 +283,15 @@ export function simulate( time ) {
   il = constraints.length;
 
   for ( i = 0; i < il; i ++ ) {
-
     constraint = constraints[ i ];
     satisfyConstraints( constraint[ 0 ], constraint[ 1 ], constraint[ 2 ] );
-
   }
-
   // Ball Constraints
 
-  ballPosition.z = - Math.sin( Date.now() / 600 ) * 90; //+ 40;
-  ballPosition.x = Math.cos( Date.now() / 400 ) * 70;
+  ballPosition.z = - Math.sin( Date.now() / 600 ) * 700; //+ 40;
+  ballPosition.y = Math.cos( Date.now() / 600 ) * 400; //+ 40;
+
+  ballPosition.x = Math.cos( Date.now() / 400 ) * 10;
 
   if ( sphere.visible ) {
 
@@ -303,11 +307,8 @@ export function simulate( time ) {
         pos.copy( ballPosition ).add( diff );
 
       }
-
     }
-
   }
-
 
   // Floor Constraints
 
@@ -333,4 +334,6 @@ export function simulate( time ) {
     p.previous.copy( p.original );
 
   }
+
+
 }
