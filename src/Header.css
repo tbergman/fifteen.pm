@@ -1,0 +1,64 @@
+.header {
+    position: absolute;
+    background: transparent;
+    cursor: pointer;
+    z-index: 100;
+}
+
+.logo-wrapper {
+    cursor: pointer;
+    position: absolute;
+    width: 100px;
+}
+
+.logo-wrapper svg {
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    width: 75px;
+    height: 75px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+#logo-light {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0px;
+    border-radius: 100%;
+    background-color: white;
+    opacity: 0.2;
+    -webkit-filter: blur(20px);
+}
+
+#logo-light:hover {
+    background-color: black;
+    opacity: 0.2;
+}
+
+@keyframes rot {
+    from {
+        transform: rotate(0deg)
+        translate(-150px)
+        rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg)
+        translate(-150px)
+        rotate(-360deg);
+    }
+}
+
+.smile {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 200px;
+    left: 50%;
+    margin: -20px;
+    font-size: 100px;
+    animation: rot 3s infinite linear;
+}

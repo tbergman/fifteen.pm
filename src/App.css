@@ -1,0 +1,37 @@
+*,
+*::after,
+*::before {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  position: fixed;
+}
+
+body {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  margin: 0;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 500;
+  color: #fff;
+  background-color: #363dc2;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+  color: #ffffff;
+  outline: none;
+}
+
+a:hover,
+a:focus {
+  outline: none;
+}
