@@ -1,13 +1,13 @@
 import React, {PureComponent} from 'react';
 import anime from './Utils/Anime.min.js';
-import {SHAPES, RELEASE_LINKS, MENU_MESSAGES, MENU_BANDCAMP} from './Utils/MenuConstants';
+import {SHAPES, RELEASE_LINKS, MENU_MESSAGES} from './Utils/MenuConstants';
 import './Menu.css';
 
 class Menu extends PureComponent {
   state = {
     shapeIndex: 3,
     message: MENU_MESSAGES[window.location.pathname],
-    bandcampLink: MENU_BANDCAMP[window.location.pathname],
+    currentRel: window.location.pathname
   }
 
   componentDidMount() {
@@ -22,8 +22,7 @@ class Menu extends PureComponent {
     this.setState({
       shapeIndex: idx,
       message: MENU_MESSAGES[rel],
-      currentRel: rel,
-      bandcampLink: MENU_BANDCAMP[rel],
+      currentRel: rel
     }, () => {
       this.animateMenu();
     });
@@ -90,20 +89,13 @@ class Menu extends PureComponent {
     );
   }
 
-  renderPurchaseLink() {
-    if (window.location.pathname === this.state.currentRel && this.state.bandcampLink) {
-      return  <a className="bandcamp" target="_blank" href={this.state.bandcampLink}>purchase</a>
-    }
-  }
-
-
   renderLinks() {
     return (
       <div className="links">
         <ul>
           {RELEASE_LINKS.map((link, idx) =>
             <li
-              className={ window.location.pathname === link.relPath ? 'active' : ''}
+              className={ this.windowLocation === link.relPath ? 'active' : ''}
               key={idx}
               data-idx={idx + 1}
               data-to={link.path}
@@ -115,7 +107,6 @@ class Menu extends PureComponent {
           )}
           <li>{this.state.message}</li>
         </ul>
-        {this.renderPurchaseLink()}
       </div>
     );
   }

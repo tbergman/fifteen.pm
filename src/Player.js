@@ -14,7 +14,6 @@ class Player extends Component {
 
   onClick = (e) => {
     e.preventDefault();
-    console.log('clicked');
     if(!this.state.paused) {
       this.audioPlayer.play();
     } else {
@@ -25,7 +24,6 @@ class Player extends Component {
   }
 
   render() {
-    console.log('this', this.state.paused);
     return (
       <div id="player-container">
         <div id="player">

@@ -1,0 +1,26 @@
+.purchase-container {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    z-index: 100000000;
+    text-transform: uppercase;
+}
+
+.purchase-container:hover a {
+    cursor: pointer;
+    color: #363dc2;
+    opacity: 1.0;
+}
+
+#purchase-icon-link {
+    font-size: 45px;
+    line-height: 36px;
+    opacity: 0.8;
+}
+
+

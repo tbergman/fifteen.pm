@@ -5,6 +5,7 @@ import {GPUComputationRenderer} from "../Utils/GPUComputationRenderer";
 import debounce from 'lodash/debounce';
 import './Release.css';
 import Player from '../Player';
+import Purchase from '../Purchase';
 import {isFirefox, isChrome} from '../Utils/BrowserDetection';
 /* eslint import/no-webpack-loader-syntax: off */
 import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
@@ -325,6 +326,7 @@ class Release0001 extends PureComponent {
           }}
         />
         <Player/>
+        <Purchase/>
       </Fragment>
     );
   }
