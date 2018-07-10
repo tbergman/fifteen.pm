@@ -17,8 +17,8 @@ export const DRAG = 1 - DAMPING;
 export const MASS = 0.1;
 export const restDistance = 25;
 
-export const xSegs = 42;
-export const ySegs = 10;
+export const xSegs = 62;
+export const ySegs = 14;
 
 export const clothFunction = plane( restDistance * xSegs, restDistance * ySegs );
 
@@ -39,7 +39,7 @@ export const wind = true;
 export const windStrength = 2;
 export const windForce = new THREE.Vector3( 0, 0, 0 );
 
-export const ballPosition = new THREE.Vector3( 0, 250, 0 );
+export const ballPosition = new THREE.Vector3( 0, 200, 0 );
 export const ballSize = 60; //40
 
 export const tmpForce = new THREE.Vector3();
@@ -284,16 +284,15 @@ export function simulate( time ) {
 
   for ( i = 0; i < il; i ++ ) {
     constraint = constraints[ i ];
-    satisfyConstraints( constraint[ 0 ], constraint[ 1 ], constraint[ 2 ] );
+    satisfyConstraints( constraint[ 1 ], constraint[ 1 ], constraint[ 2 ] );
   }
-  // Ball Constraints
 
-  ballPosition.z = - Math.sin( Date.now() / 600 ) * 700; //+ 40;
-  ballPosition.y = Math.cos( Date.now() / 600 ) * 400; //+ 40;
-  ballPosition.x = Math.cos( Date.now() / 400 ) * 10;
+  // Ball Constraints
+  ballPosition.z = Math.sin( Date.now() / 600 ) * 1500; //+ 40;
+  ballPosition.y = Math.cos( Date.now() / 600 ) * 600 - 200;
+  ballPosition.x = Math.sin( Date.now() / 500 ) * 1000;
 
   if ( sphere.visible ) {
-
     for ( particles = cloth.particles, i = 0, il = particles.length; i < il; i ++ ) {
 
       particle = particles[ i ];
