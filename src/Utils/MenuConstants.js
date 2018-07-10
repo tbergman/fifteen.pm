@@ -139,7 +139,3 @@ export const MENU_MESSAGES = {
   "/1": "Yahceph's production debut, \"wun 4 jas\", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode."
 }
 
-export const MENU_BANDCAMP = {
-  "/": null,
-  "/1": 'https://gltd.bandcamp.com/track/wun-4-jas'
-}

@@ -1,0 +1,22 @@
+#purchase-container {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000000;
+    color: #ffffff;
+}
+
+#purchase-link {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 45px;
+    line-height: 32px;
+}
+
+#purchase-container a:hover {
+    cursor: pointer;
+    color: #363dc2;
+}
