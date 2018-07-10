@@ -14,13 +14,15 @@ class Purchase extends PureComponent {
 
   render() {
     return (
-      <div id="purchase-container">
-        <a id="purchase-link"
+      <div className="purchase-container">
+        <a id="purchase-icon-link"
+           className="purchase-link"
            target="_blank"
            href={this.state.bandcampLink}>
           ☻
         </a>
-        <a
+        <a id="purchase-text-link"
+           className="purchase-link"
            target="_blank"
            href={this.state.bandcampLink}>
           buy me

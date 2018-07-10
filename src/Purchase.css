@@ -1,4 +1,4 @@
-#purchase-container {
+.purchase-container {
     position: absolute;
     bottom: 30px;
     right: 30px;
@@ -6,17 +6,21 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1000000;
     color: #ffffff;
+    z-index: 100000000;
+    text-transform: uppercase;
 }
 
-#purchase-link {
-    font-family: 'Roboto Mono', monospace;
-    font-size: 45px;
-    line-height: 32px;
-}
-
-#purchase-container a:hover {
+.purchase-container:hover a {
     cursor: pointer;
     color: #363dc2;
+    opacity: 1.0;
 }
+
+#purchase-icon-link {
+    font-size: 45px;
+    line-height: 36px;
+    opacity: 0.8;
+}
+
+
