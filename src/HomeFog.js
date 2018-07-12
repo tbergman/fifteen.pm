@@ -47,9 +47,9 @@ class Home extends PureComponent {
     this.flyPaths = [];
     this.flyRadianPosition = 0;
     for (let i = 0; i < NUM_FLIES; i++) {
-      console.log("pos", this.camera.position)
+
       let flyPath = this.generateFlyPath(this.camera.position);
-      console.log("flypath", flyPath.points[0])
+
       this.flyPaths.push(flyPath);
       let fly = this.generateFly(flyPath);
       this.flies.push(fly);
@@ -252,7 +252,7 @@ class Home extends PureComponent {
     if ( this.camera.position.y < MIN_CAMERA_Y ) {
       this.camera.position.y = MIN_CAMERA_Y;
     }
-    console.log(this.camera.position);
+
     this.renderer.render(this.scene, this.camera);
 
   }
