@@ -1,45 +1,81 @@
-import React, { Component } from 'react';
-import {isSafari} from "./Utils/BrowserDetection";
+import React, {Component} from 'react';
+import ReactHowler from 'react-howler';
+import {isMobileSafari, isChrome} from "./Utils/BrowserDetection";
 import './Player.css';
+
 
 class Player extends Component {
 
   state = {
-    paused: !isSafari,
+    playing: true
   }
 
   componentDidMount() {
-    this.audioPlayer = document.getElementById('audio-player');
+    this.player.autoplay = true;
+    this.isAutoplayBlocked = (window.Howler.state == 'suspended' && isChrome) || isMobileSafari();
+    if (this.isAutoplayBlocked) {
+      this.setState({
+        playing: false
+      })
+    }
+  }
+
+  handlePlay = () => {
+    if (this.isAutoplayBlocked) {
+      // for autoplay-disabled browser,
+      // manually trigger play only on first touch
+      this.player.play()
+      this.isAutoplayBlocked = false;
+    }
+    this.setState({
+      playing: true
+    })
+  }
+
+  handlePause = () => {
+    this.setState({
+      playing: false
+    })
   }
 
   onClick = (e) => {
     e.preventDefault();
-    if(!this.state.paused) {
-      this.audioPlayer.play();
+    if (this.state.playing) {
+      this.handlePause();
     } else {
-      this.audioPlayer.pause();
+      this.handlePlay();
     }
-    this.setState({ paused: !this.state.paused});
-
   }
 
   render() {
+    const {playing} = this.state;
+    const {src, playerText} = this.props;
     return (
       <div id="player-container">
         <div id="player">
+          <ReactHowler
+            src={src}
+            preoad={true}
+            playing={playing}
+            ref={ref => this.player = ref}
+            loop={true}
+          />
           <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300">
             <defs>
-                <path id="circlePath" d=" M 150, 150 m -60, 0 a 60,60 0 0,1 120,0 a 60,60 0 0,1 -120,0 "/>
+              <path id="circlePath" d=" M 150, 150 m -60, 0 a 60,60 0 0,1 120,0 a 60,60 0 0,1 -120,0 "/>
             </defs>
             <circle cx="100" cy="100" r="50" fill="none" stroke="none"/>
             <g>
-                <use xlinkHref="#circlePath" fill="none"/>
-                <text fill="#000">
-                    <textPath xlinkHref="#circlePath">YAHCEPH</textPath>
-                </text>
+              <use xlinkHref="#circlePath" fill="none"/>
+              <text fill="#000">
+                <textPath xlinkHref="#circlePath">{playerText}</textPath>
+              </text>
             </g>
           </svg>
-          <button onClick={this.onClick} className={this.state.paused ? 'button paused' : 'button'}></button>
+          <button
+            onClick={this.onClick}
+            className={playing ? 'button paused' : 'button'}
+          />
         </div>
       </div>
     );
