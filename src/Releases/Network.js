@@ -53,13 +53,28 @@ class Network extends Component {
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 
     this.createText();
-
+    this.createRoom();
   }
 
   componentDidMount() {
     window.addEventListener( 'resize', this.onWindowResize, false );
     this.init();
     this.animate();
+  }
+
+  createRoom = () => {
+    const {scene} = this;
+    const geometry = new THREE.BoxGeometry( 10000, 10000, 10000 );
+    geometry.faces.forEach( face => face.color.setHex( Math.random()));
+
+    const material = new THREE.MeshNormalMaterial();
+    material.side = THREE.DoubleSide;
+
+    const roomMesh = new THREE.Mesh(geometry, material);
+    roomMesh.flipSided = true;
+    this.roomMesh = roomMesh;
+
+    scene.add(this.roomMesh);
   }
 
   createText = () => {
@@ -101,7 +116,7 @@ class Network extends Component {
     scene.add( groundMesh ); // add ground to scene
 
     // controls
-    controls.maxPolarAngle = Math.PI * 0.5;
+    //controls.maxPolarAngle = Math.PI * 0.5;
     controls.minDistance = 1000;
     controls.maxDistance = 5000;
 
@@ -123,8 +138,7 @@ class Network extends Component {
     const {light, ambientLight, directionalLight, scene} = this;
     // lights
     scene.add( light );
-    scene.add( ambientLight );
-
+    scene.add( ambientLight );  
     directionalLight.position.set( 50, 200, 100 );
     directionalLight.position.multiplyScalar( 1.3 );
     directionalLight.castShadow = true;
