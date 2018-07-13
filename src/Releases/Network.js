@@ -82,8 +82,10 @@ class Network extends Component {
 
     const { scene, camera, light, ambientLight, directionalLight, groundMesh, pole1, pole2, renderer, controls } = this;
 
-    // camera
-    camera.position.set( 0, 50, 600 );
+    // // camera
+    // camera.position.set( 0, 50, 600 );
+    camera.position.y = 450;
+    camera.position.z = 2200;
 
     // lights
     scene.add( light );
@@ -151,15 +153,7 @@ class Network extends Component {
     controls.maxPolarAngle = Math.PI * 0.5;
     controls.minDistance = 1000;
     controls.maxDistance = 5000;
-
-    //
-
-
-    sphere.visible = ! true;
-
   }
-
-//
 
   onWindowResize = debounce(() => {
     const { camera, renderer } = this;
@@ -190,19 +184,25 @@ class Network extends Component {
     const { scene, camera, renderer } = this;
 
     var p = cloth.particles;
-
     for ( var i = 0, il = p.length; i < il; i ++ ) {
-
       clothGeometry.vertices[ i ].copy( p[ i ].position );
-
     }
 
     clothGeometry.verticesNeedUpdate = true;
     clothGeometry.computeFaceNormals();
     clothGeometry.computeVertexNormals();
+
     console.log('ball',ballPosition);
     console.log('sphere', sphere.position);
     sphere.position.copy( ballPosition );
+
+    /* LETS ROTATE, WHY NOT */
+    // let timer = Date.now() * 0.0002;
+    // let cameraRadius = Math.sqrt(camera.position.x*camera.position.x + camera.position.z*camera.position.z);
+    // camera.position.x = Math.cos( timer ) * cameraRadius;
+    // camera.position.z = Math.sin( timer ) * cameraRadius;
+
+    camera.lookAt( scene.position );
     renderer.render( scene, camera );
   }
 
