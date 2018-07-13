@@ -10,6 +10,6 @@ let ballMaterial = new THREE.MeshLambertMaterial();
 let sphere = new THREE.Mesh( ballGeo, ballMaterial );
 sphere.castShadow = true;
 sphere.receiveShadow = true;
-sphere.visible = true;
+sphere.visible;
 
 export { ballPosition, ballSize, sphere };
