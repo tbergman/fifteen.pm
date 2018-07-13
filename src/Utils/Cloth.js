@@ -286,9 +286,13 @@ function simulate( time ) {
   }
 
   // Ball Constraints
+  // Ball Constraints
+  // ballPosition.z = Math.sin( Date.now() / 600 ) * 1500; //+ 40;
+  // ballPosition.y = Math.cos( Date.now() / 600 ) * 600 - 200;
+  // ballPosition.x = Math.sin( Date.now() / 500 ) * 1000;
+  // Ball Constraints
   ballPosition.z = - Math.sin( Date.now() / 600 ) * 90 ; //+ 40;
   ballPosition.x = Math.cos( Date.now() / 400 ) * 70;
-
 
   if ( sphere.visible ) {
 

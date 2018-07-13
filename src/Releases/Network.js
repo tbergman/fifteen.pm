@@ -10,16 +10,16 @@ import * as THREE from 'three';
 import './Release.css';
 import debounce from 'lodash/debounce';
 
+/* this handles number of segments in cloth , TO DO fix this */
 let pinsFormation = [];
 
 let pinsArr = [];
-  for (let i=0; i<51; i++) {
-    pinsArr.push(i);
-  }
+for (let i=0; i<51; i++) {
+  pinsArr.push(i);
+}
 
 service.pins = pinsArr;
 pinsFormation.push( service.pins );
-
 service.pins = pinsFormation[ 0 ];
 
 
@@ -51,6 +51,7 @@ class Network extends Component {
     this.renderer = new THREE.WebGLRenderer( { antialias: true } );
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 
+    this.createText();
   }
 
   componentDidMount() {
@@ -59,13 +60,30 @@ class Network extends Component {
     this.animate();
   }
 
+  createText = () => {
+    const fontJson = require("../fonts/helvetiker_bold.typeface.json");
+    const font = new THREE.Font(fontJson);
+    var textGeo = new THREE.TextGeometry("Network", {
+      font: font,
+      size: 70,
+      height: 10,
+      curveSegments: 2,
+      bevelEnabled: true,
+      weight: 1,
+    });
+    var textMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
+    var mesh = new THREE.Mesh(textGeo, textMaterial);
+    mesh.position.set(200, -245, 0);
+    this.scene.add(mesh);
+  }
+
   init = () => {
     if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
     const { scene, camera, light, ambientLight, directionalLight, groundMesh, pole1, pole2, renderer, controls } = this;
 
     // camera
-    camera.position.set( 0, 50, 2500 );
+    camera.position.set( 0, 50, 600 );
 
     // lights
     scene.add( light );
@@ -93,6 +111,8 @@ class Network extends Component {
     scene.add( clothMesh );
 
     // sphere
+    sphere.castShadow = true;
+    sphere.receiveShadow = true;
     scene.add( sphere );
 
     // ground mesh
@@ -180,24 +200,10 @@ class Network extends Component {
     clothGeometry.verticesNeedUpdate = true;
     clothGeometry.computeFaceNormals();
     clothGeometry.computeVertexNormals();
-
+    console.log('ball',ballPosition);
+    console.log('sphere', sphere.position);
     sphere.position.copy( ballPosition );
     renderer.render( scene, camera );
-  }
-
-  toggleWind = (e) => {
-    e.preventDefault();
-    service.wind = !service.wind;
-  }
-
-  toggleSphereVisible = (e) => {
-    e.preventDefault();
-    sphere.visible = !sphere.visible;
-  }
-
-  togglePins = (e) => {
-    e.preventDefault();
-    service.pins = pinsFormation[ ~~ ( Math.random() * pinsFormation.length ) ];
   }
 
   render() {
