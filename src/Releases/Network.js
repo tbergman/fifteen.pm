@@ -1,255 +1,208 @@
-import React, {Component} from 'react';
-import * as THREE from 'three';
-import {OrbitControls} from '../Utils/OrbitControls';
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+import { ballSize, cloth, clothFunction, clothGeometry, clothMesh, simulate, windForce } from "../Utils/Cloth";
+import { Detector } from "../Utils/Detector";
+import { OrbitControls } from "../Utils/OrbitControls";
+import { ballPosition, sphere } from "../Utils/Sphere";
+import { service } from "../Utils/service";
 
+import * as THREE from 'three';
 import './Release.css';
 import debounce from 'lodash/debounce';
-import * as Cloth from "../Utils/Cloth";
-import {plane} from "../Utils/Cloth";
 
-const SCREEN_WIDTH = window.innerWidth;
-const SCREEN_HEIGHT = window.innerHeight;
+let pinsFormation = [];
 
-class Network extends Component {
-  shouldComponentUpdate() {
-    return false;
+let pinsArr = [];
+  for (let i=0; i<51; i++) {
+    pinsArr.push(i);
   }
 
-  constructor(props, context) {
-    super(props, context);
+service.pins = pinsArr;
+pinsFormation.push( service.pins );
 
-    this.clock = new THREE.Clock();
-    this.camera = new THREE.PerspectiveCamera( 30, SCREEN_WIDTH  / SCREEN_HEIGHT, 1, 10000 );
+service.pins = pinsFormation[ 0 ];
 
+
+class Network extends Component {
+  constructor() {
+    super();
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.Fog( 0x363dc2, 500, 10000 );
+    this.scene.background = new THREE.Color( 0x000000);
+    this.scene.fog = new THREE.Fog( 0x000000, 500, 10000 );
 
-    this.loader = new THREE.TextureLoader();
-
-    // this.sphere = Cloth.sphere;
-    // this.ballPosition = Cloth.ballPosition;
-
-    this.renderer = new THREE.WebGLRenderer( { antialias: true, devicePixelRatio: 1 } );
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-
+    this.camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 10000 );
+    this.light = new THREE.AmbientLight( 0x666666 );
     this.ambientLight = new THREE.AmbientLight( 0x666666 );
-    this.light = new THREE.DirectionalLight( 0xdfebff, 1.75 );
+    this.directionalLight = new THREE.DirectionalLight( 0xdfebff, 1 );
 
-    this.clothMaterial = new THREE.MeshPhongMaterial( {
-      color: 0xaa2929,
-      specular: 0x030303,
-      wireframeLinewidth: 2,
-      //map: clothTexture,
-      side: THREE.DoubleSide,
-      alphaTest: 0.5
-    } );
-
-    // cloth geometry
-    // the geometry contains all the points and faces of an object
-    this.clothInitialPosition = this.plane( 500, 500 );
-    this.cloth = Cloth.cloth;
-
-    this.clothGeometry = new THREE.ParametricGeometry( this.clothInitialPosition , this.cloth.w, this.cloth.h);
-    // cloth mesh
-    // a mesh takes the geometry and applies a material to it
-    // so a mesh = geometry + material
-    this.clothObject = new THREE.Mesh( this.clothGeometry, this.clothMaterial );
-
-    // ground material
     this.groundMaterial = new THREE.MeshPhongMaterial(
       {
-        color: 0x000000,//0x3c3c3c,
+        color: 0x02002f,//0x3c3c3c,
         specular: 0x404761//0x3c3c3c//,
         //map: groundTexture
       } );
-
     this.groundMesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 20000, 20000 ), this.groundMaterial );
-
-    // poles
 
     this.poleGeo = new THREE.BoxGeometry( 5, 250+125, 5 );
     this.poleMat = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0x111111, shininess: 100, side: THREE.DoubleSide} );
     this.pole1 = new THREE.Mesh( this.poleGeo, this.poleMat );
     this.pole2 = new THREE.Mesh( this.poleGeo, this.poleMat );
-    this.pole3 = new THREE.Mesh( this.poleGeo, this.poleMat );
-    this.pole4 = new THREE.Mesh( this.poleGeo, this.poleMat );
+
+    this.renderer = new THREE.WebGLRenderer( { antialias: true } );
+    this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+
   }
 
   componentDidMount() {
-    window.addEventListener('resize', this.onWindowResize, false);
-
+    window.addEventListener( 'resize', this.onWindowResize, false );
     this.init();
     this.animate();
-
   }
 
   init = () => {
-    const {scene, camera, ambientLight, light, controls, renderer, clothGeometry, clothObject, groundMesh, pole1, pole2, pole3, pole4} = this;
+    if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
+    const { scene, camera, light, ambientLight, directionalLight, groundMesh, pole1, pole2, renderer, controls } = this;
 
-    camera.position.y = 450;
-    camera.position.z = 1500;
-    camera.lookAt( scene.position );
-    scene.add( camera );
+    // camera
+    camera.position.set( 0, 50, 2500 );
 
-    // sphere.castShadow = true;
-    // sphere.receiveShadow = true;
-    // scene.add(sphere);
+    // lights
+    scene.add( light );
+    scene.add( ambientLight );
 
-    renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    renderer.setClearColor( scene.fog.color );
-    renderer.gammaInput = true;
-    renderer.gammaOutput = true;
-    renderer.shadowMap.enabled = true;
+    directionalLight.position.set( 50, 200, 100 );
+    directionalLight.position.multiplyScalar( 1.3 );
 
-    controls.maxPolarAngle = Math.PI * 0.5;
-    controls.minDistance = 1000;
-    controls.maxDistance = 5000;
+    directionalLight.castShadow = true;
 
-    light.position.set( 50, 200, 100 );
-    light.position.multiplyScalar( 1.3 );
-    light.castShadow = true;
-    // light.shadowCameraVisible = true;
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
-    scene.add(light);
-    scene.add(ambientLight);
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
 
-    clothGeometry.dynamic = true;
+    var d = 300;
 
-    clothObject.position.set( 0, 0, 0 );
-    clothObject.castShadow = true;
-    scene.add( clothObject ); // add cloth to the scene
+    directionalLight.shadow.camera.left = - d;
+    directionalLight.shadow.camera.right = d;
+    directionalLight.shadow.camera.top = d;
+    directionalLight.shadow.camera.bottom = - d;
 
+    directionalLight.shadow.camera.far = 1000;
+
+    scene.add( directionalLight );
+
+    scene.add( clothMesh );
+
+    // sphere
+    scene.add( sphere );
+
+    // ground mesh
     groundMesh.position.y = -250;
     groundMesh.rotation.x = - Math.PI / 2;
     groundMesh.receiveShadow = true;
     scene.add( groundMesh ); // add ground to scene
 
-    pole1.position.x = -250;
-    pole1.position.z = 250;
-    pole1.position.y = -(125-125/2);
+    pole1.position.x = -750;
+    pole1.position.z = 0;
+    pole1.position.y = -60;
     pole1.receiveShadow = true;
     pole1.castShadow = true;
     scene.add( pole1 );
 
-    pole2.position.x = 250;
-    pole2.position.z = 250;
-    pole2.position.y = -(125-125/2);
+    pole2.position.x = 750;
+    pole2.position.z = 0;
+    pole2.position.y = -60;
     pole2.receiveShadow = true;
     pole2.castShadow = true;
     scene.add( pole2 );
+    // renderer
 
-    pole3.position.x = 250;
-    pole3.position.z = -250;
-    pole3.position.y = -(125-125/2);
-    pole3.receiveShadow = true;
-    pole3.castShadow = true;
-    scene.add( pole3 );
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.shadowMap.renderSingleSided = false;
 
-    pole4.position.x = -250;
-    pole4.position.z = -250;
-    pole4.position.y = -62;
-    pole4.receiveShadow = true;
-    pole4.castShadow = true;
-    scene.add( pole4 );
+    this.container.appendChild( renderer.domElement );
 
-    // pinCloth sets how the cloth is pinned
-    Cloth.pinCloth('Corners');
+    renderer.gammaInput = true;
+    renderer.gammaOutput = true;
 
-    const fontJson = require("../fonts/helvetiker_bold.typeface.json");
-    const font = new THREE.Font(fontJson);
-    var textGeo = new THREE.TextGeometry("Network", {
-      font: font,
-      size: 130,
-      height: 1,
-      curveSegments: 4,
-      bevelEnabled: true
-    });
-    var textMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
-    var mesh = new THREE.Mesh(textGeo, textMaterial);
-    mesh.position.set(-100, -280, 0);
-    this.scene.add(mesh);
+    renderer.shadowMap.enabled = true;
 
-    this.container.appendChild(renderer.domElement);
+    // controls
+    controls.maxPolarAngle = Math.PI * 0.5;
+    controls.minDistance = 1000;
+    controls.maxDistance = 5000;
+
+    //
+
+
+    sphere.visible = ! true;
+
   }
+
+//
 
   onWindowResize = debounce(() => {
-    const {camera, renderer} = this;
-    camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+    const { camera, renderer } = this;
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-  }, 100);
+    renderer.setSize( window.innerWidth, window.innerHeight );
 
-  plane = ( width, height ) => {
+  }, 1000);
 
-    return function( u, v ) {
-
-      var x = u * width - width/2;
-      var y = 125; //height/2;
-      var z = v * height - height/2;
-
-      return new THREE.Vector3( x, y, z );
-
-    };
-
-  }
   animate = () => {
-    requestAnimationFrame(this.animate);
 
+    requestAnimationFrame( this.animate );
 
     var time = Date.now();
 
-    Cloth.simulate(time); // run physics simulation to create new positions of cloth
+    var windStrength = Math.cos( time / 7000 ) * 20 + 40;
+
+    windForce.set( Math.sin( time / 2000 ), Math.cos( time / 3000 ), Math.sin( time / 1000 ) )
+    windForce.normalize()
+    windForce.multiplyScalar( windStrength );
+
+    simulate( time );
     this.renderScene();
   }
 
-  wireFrame = () =>{
-    const {poleMat, clothMaterial, ballMaterial} = this;
-    poleMat.wireframe = !poleMat.wireframe;
-    clothMaterial.wireframe = !clothMaterial.wireframe;
-    ballMaterial.wireframe = !ballMaterial.wireframe;
-
-  }
-
   renderScene = () => {
-    const {sphere, renderer, scene, camera, clothGeometry} = this;
+    const { scene, camera, renderer } = this;
 
+    var p = cloth.particles;
 
-    // update position of the cloth
-    // i.e. copy positions from the particles (i.e. result of physics simulation)
-    // to the cloth geometry
-    // update position of the cloth
-    // i.e. copy positions from the particles (i.e. result of physics simulation)
-    // to the cloth geometry
-    var p = this.cloth.particles;
     for ( var i = 0, il = p.length; i < il; i ++ ) {
 
-      clothGeometry.vertices[ i ] =  p[ i ].position;
+      clothGeometry.vertices[ i ].copy( p[ i ].position );
+
     }
 
-    // recalculate cloth normals
+    clothGeometry.verticesNeedUpdate = true;
     clothGeometry.computeFaceNormals();
     clothGeometry.computeVertexNormals();
 
-    clothGeometry.normalsNeedUpdate = true;
-    clothGeometry.verticesNeedUpdate = true;
-
-    // // update sphere position from ball position
-    // sphere.position.copy( ballPosition );
-    //
-    // sphere.position.copy(ballPosition);
-    renderer.render(scene, camera);
+    sphere.position.copy( ballPosition );
+    renderer.render( scene, camera );
   }
 
+  toggleWind = (e) => {
+    e.preventDefault();
+    service.wind = !service.wind;
+  }
+
+  toggleSphereVisible = (e) => {
+    e.preventDefault();
+    sphere.visible = !sphere.visible;
+  }
+
+  togglePins = (e) => {
+    e.preventDefault();
+    service.pins = pinsFormation[ ~~ ( Math.random() * pinsFormation.length ) ];
+  }
 
   render() {
     return (
-      <div
-        id="container"
-        ref={element => this.container = element}
-      ></div>
+      <div ref={element => this.container = element } />
     );
   }
 }
