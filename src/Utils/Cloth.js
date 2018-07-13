@@ -287,17 +287,15 @@ function simulate( time ) {
 
   // Ball Constraints
   // Ball Constraints
-  ballPosition.z = Math.sin( Date.now() / 600 ) * 1000; //+ 40;
-  ballPosition.y = Math.cos( Date.now() / 600 ) * 600 - 200;
-  ballPosition.x = Math.sin( Date.now() / 500 ) * 1000;
+  // ballPosition.z = Math.sin( Date.now() / 600 ) * 1000; //+ 40;
+  // ballPosition.y = Math.cos( Date.now() / 600 ) * 600 - 200;
+  // ballPosition.x = Math.sin( Date.now() / 500 ) * 1000;
   // Ball Constraints
-  // ballPosition.z = - Math.sin( Date.now() / 600 ) * 90 ; //+ 40;
-  // ballPosition.x = Math.cos( Date.now() / 400 ) * 70;
+  ballPosition.z = - Math.sin( Date.now() / 600 ) * 90 + 0 ; //+ 40;
+  ballPosition.x = Math.cos( Date.now() / 400 ) * 400;
 
   if ( sphere.visible ) {
-
     for ( particles = cloth.particles, i = 0, il = particles.length; i < il; i ++ ) {
-
       particle = particles[ i ];
       var pos = particle.position;
       diff.subVectors( pos, ballPosition );
@@ -306,26 +304,21 @@ function simulate( time ) {
         // collided
         diff.normalize().multiplyScalar( ballSize );
         pos.copy( ballPosition ).add( diff );
-
       }
-
     }
-
   }
 
-
-  // Floor Constraints
+  /*
+    This determines how for down the cloth should drop
+   */
 
   for ( particles = cloth.particles, i = 0, il = particles.length; i < il; i ++ ) {
 
     particle = particles[ i ];
     pos = particle.position;
-    if ( pos.y < - 250 ) {
-
-      pos.y = - 250;
-
+    if ( pos.y < - 260 ) {
+      pos.y = - 260;
     }
-
   }
 
   // Pin Constraints
