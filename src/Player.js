@@ -5,11 +5,28 @@ import './Player.css';
 
 
 class Player extends Component {
+
   state = {
-    playing: isMobileSafari() ? false : true
+    playing: isMobileSafari() ? false : true,
+  }
+
+  componentDidMount() {
+    if (this.isSuspended()) {
+      this.setState({
+        playing: false
+      })
+    }
+  }
+
+  isSuspended = () => {
+    return window.Howler.state == 'suspended';
   }
 
   handlePlay = () => {
+    if (this.isSuspended()) {
+      console.log('playing suspended player!')
+      this.player.play()
+    }
     this.setState({
       playing: true
     })
@@ -22,8 +39,6 @@ class Player extends Component {
   }
 
   onClick = (e) => {
-    console.log(this.player)
-    console.log(this.player.howler)
     e.preventDefault();
     if (this.state.playing) {
       this.handlePause();
@@ -38,8 +53,10 @@ class Player extends Component {
         <div id="player">
           <ReactHowler
             src={this.props.src}
+            preoad={true}
             playing={this.state.playing}
             ref={ref => this.player = ref}
+            loop={true}
           />
           <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300">
             <defs>
