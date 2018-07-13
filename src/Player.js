@@ -1,31 +1,31 @@
 import React, {Component} from 'react';
 import ReactHowler from 'react-howler';
-import {isMobileSafari} from "./Utils/BrowserDetection";
+import {isMobileSafari, isChrome} from "./Utils/BrowserDetection";
 import './Player.css';
 
 
 class Player extends Component {
 
   state = {
-    playing: isMobileSafari() ? false : true,
+    playing: true
   }
 
   componentDidMount() {
-    if (this.isSuspended()) {
+    this.player.autoplay = true;
+    this.isAutoplayBlocked = (window.Howler.state == 'suspended' && isChrome) || isMobileSafari();
+    if (this.isAutoplayBlocked) {
       this.setState({
         playing: false
       })
     }
   }
 
-  isSuspended = () => {
-    return window.Howler.state == 'suspended';
-  }
-
   handlePlay = () => {
-    if (this.isSuspended()) {
-      console.log('playing suspended player!')
+    if (this.isAutoplayBlocked) {
+      // for autoplay-disabled browser,
+      // manually trigger play only on first touch
       this.player.play()
+      this.isAutoplayBlocked = false;
     }
     this.setState({
       playing: true
@@ -48,13 +48,15 @@ class Player extends Component {
   }
 
   render() {
+    const {playing} = this.state;
+    const {src, playerText} = this.props;
     return (
       <div id="player-container">
         <div id="player">
           <ReactHowler
-            src={this.props.src}
+            src={src}
             preoad={true}
-            playing={this.state.playing}
+            playing={playing}
             ref={ref => this.player = ref}
             loop={true}
           />
@@ -66,13 +68,13 @@ class Player extends Component {
             <g>
               <use xlinkHref="#circlePath" fill="none"/>
               <text fill="#000">
-                <textPath xlinkHref="#circlePath">{this.props.playerText}</textPath>
+                <textPath xlinkHref="#circlePath">{playerText}</textPath>
               </text>
             </g>
           </svg>
           <button
             onClick={this.onClick}
-            className={this.state.playing ? 'button paused' : 'button'}
+            className={playing ? 'button paused' : 'button'}
           />
         </div>
       </div>
