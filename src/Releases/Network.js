@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import { ballSize, cloth, clothFunction, clothGeometry, clothMesh, simulate, windForce } from "../Utils/Cloth";
+import { cloth, clothGeometry, clothMesh, simulate, windForce } from "../Utils/Cloth";
 import { Detector } from "../Utils/Detector";
 import { OrbitControls } from "../Utils/OrbitControls";
 import { ballPosition, sphere } from "../Utils/Sphere";
@@ -38,11 +38,12 @@ class Network extends Component {
     this.groundMaterial = new THREE.MeshPhongMaterial(
       {
         color: 0x02002f,//0x3c3c3c,
-        specular: 0x404761//0x3c3c3c//,
+        specular: 0x404761, //0x3c3c3c//,
         //map: groundTexture
       } );
     this.groundMesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 20000, 20000 ), this.groundMaterial );
 
+    // net poles
     this.poleGeo = new THREE.BoxGeometry( 5, 250+125, 5 );
     this.poleMat = new THREE.MeshPhongMaterial( { color: 0xffffff, specular: 0x111111, shininess: 100, side: THREE.DoubleSide} );
     this.pole1 = new THREE.Mesh( this.poleGeo, this.poleMat );
@@ -52,6 +53,7 @@ class Network extends Component {
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 
     this.createText();
+
   }
 
   componentDidMount() {
@@ -63,7 +65,7 @@ class Network extends Component {
   createText = () => {
     const fontJson = require("../fonts/helvetiker_bold.typeface.json");
     const font = new THREE.Font(fontJson);
-    var textGeo = new THREE.TextGeometry("Network", {
+    const textGeo = new THREE.TextGeometry("Network", {
       font: font,
       size: 70,
       height: 10,
@@ -71,46 +73,21 @@ class Network extends Component {
       bevelEnabled: true,
       weight: 1,
     });
-    var textMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
-    var mesh = new THREE.Mesh(textGeo, textMaterial);
-    mesh.position.set(200, -245, 0);
-    this.scene.add(mesh);
+    const textMaterial = new THREE.MeshPhongMaterial({color: 0xff0000});
+    const texMesh = new THREE.Mesh(textGeo, textMaterial);
+    texMesh.position.set(200, -245, 0);
+    this.scene.add(texMesh);
   }
 
   init = () => {
     if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
-    const { scene, camera, light, ambientLight, directionalLight, groundMesh, pole1, pole2, renderer, controls } = this;
+    const { scene, camera, groundMesh, controls } = this;
 
     // // camera
-    // camera.position.set( 0, 50, 600 );
     camera.position.y = 450;
     camera.position.z = 2200;
-
-    // lights
-    scene.add( light );
-    scene.add( ambientLight );
-
-    directionalLight.position.set( 50, 200, 100 );
-    directionalLight.position.multiplyScalar( 1.3 );
-
-    directionalLight.castShadow = true;
-
-    directionalLight.shadow.mapSize.width = 1024;
-    directionalLight.shadow.mapSize.height = 1024;
-
-    var d = 300;
-
-    directionalLight.shadow.camera.left = - d;
-    directionalLight.shadow.camera.right = d;
-    directionalLight.shadow.camera.top = d;
-    directionalLight.shadow.camera.bottom = - d;
-
-    directionalLight.shadow.camera.far = 1000;
-
-    scene.add( directionalLight );
-
-    scene.add( clothMesh );
+    camera.lookAt( scene.position );
 
     // sphere
     sphere.castShadow = true;
@@ -122,6 +99,51 @@ class Network extends Component {
     groundMesh.rotation.x = - Math.PI / 2;
     groundMesh.receiveShadow = true;
     scene.add( groundMesh ); // add ground to scene
+
+    // controls
+    controls.maxPolarAngle = Math.PI * 0.5;
+    controls.minDistance = 1000;
+    controls.maxDistance = 5000;
+
+    this.addRenderer();
+    this.addLights();
+    this.addNet();  // cloth mesh and poles
+  }
+
+  onWindowResize = debounce(() => {
+    const { camera, renderer } = this;
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+  }, 1000);
+
+  addLights = () => {
+    const {light, ambientLight, directionalLight, scene} = this;
+    // lights
+    scene.add( light );
+    scene.add( ambientLight );
+
+    directionalLight.position.set( 50, 200, 100 );
+    directionalLight.position.multiplyScalar( 1.3 );
+    directionalLight.castShadow = true;
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
+
+    let d = 300; // direction
+    directionalLight.shadow.camera.left = - d;
+    directionalLight.shadow.camera.right = d;
+    directionalLight.shadow.camera.top = d;
+    directionalLight.shadow.camera.bottom = - d;
+    directionalLight.shadow.camera.far = 1000;
+    scene.add( directionalLight );
+  }
+
+  addNet = () => {
+    const { pole1, pole2, scene } = this;
+
+    scene.add( clothMesh );
 
     pole1.position.x = -750;
     pole1.position.z = 0;
@@ -136,8 +158,11 @@ class Network extends Component {
     pole2.receiveShadow = true;
     pole2.castShadow = true;
     scene.add( pole2 );
-    // renderer
+  }
 
+  addRenderer = () => {
+    const {renderer} = this;
+    // renderer
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.shadowMap.renderSingleSided = false;
@@ -146,32 +171,26 @@ class Network extends Component {
 
     renderer.gammaInput = true;
     renderer.gammaOutput = true;
-
     renderer.shadowMap.enabled = true;
-
-    // controls
-    controls.maxPolarAngle = Math.PI * 0.5;
-    controls.minDistance = 1000;
-    controls.maxDistance = 5000;
   }
 
-  onWindowResize = debounce(() => {
-    const { camera, renderer } = this;
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize( window.innerWidth, window.innerHeight );
-
-  }, 1000);
+  updateCloth = () => {
+    var p = cloth.particles;
+    for ( var i = 0, il = p.length; i < il; i ++ ) {
+      clothGeometry.vertices[ i ].copy( p[ i ].position );
+    }
+    clothGeometry.verticesNeedUpdate = true;
+    clothGeometry.computeFaceNormals();
+    clothGeometry.computeVertexNormals();
+  }
 
   animate = () => {
 
     requestAnimationFrame( this.animate );
 
-    var time = Date.now();
+    let time = Date.now();
 
-    var windStrength = Math.cos( time / 7000 ) * 20 + 40;
-
+    let windStrength = Math.cos( time / 7000 ) * 20 + 40;
     windForce.set( Math.sin( time / 2000 ), Math.cos( time / 3000 ), Math.sin( time / 1000 ) )
     windForce.normalize()
     windForce.multiplyScalar( windStrength );
@@ -183,26 +202,14 @@ class Network extends Component {
   renderScene = () => {
     const { scene, camera, renderer } = this;
 
-    var p = cloth.particles;
-    for ( var i = 0, il = p.length; i < il; i ++ ) {
-      clothGeometry.vertices[ i ].copy( p[ i ].position );
-    }
-
-    clothGeometry.verticesNeedUpdate = true;
-    clothGeometry.computeFaceNormals();
-    clothGeometry.computeVertexNormals();
-
-    console.log('ball',ballPosition);
-    console.log('sphere', sphere.position);
-    sphere.position.copy( ballPosition );
-
     /* LETS ROTATE, WHY NOT */
     // let timer = Date.now() * 0.0002;
     // let cameraRadius = Math.sqrt(camera.position.x*camera.position.x + camera.position.z*camera.position.z);
     // camera.position.x = Math.cos( timer ) * cameraRadius;
     // camera.position.z = Math.sin( timer ) * cameraRadius;
 
-    camera.lookAt( scene.position );
+    this.updateCloth();
+    sphere.position.copy( ballPosition );
     renderer.render( scene, camera );
   }
 
