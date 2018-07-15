@@ -6,7 +6,6 @@ import debounce from 'lodash/debounce';
 import './Release.css';
 import Player from '../Player';
 import Purchase from '../Purchase';
-import {isFirefox, isChrome} from '../Utils/BrowserDetection';
 /* eslint import/no-webpack-loader-syntax: off */
 import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
 
@@ -51,9 +50,10 @@ class Release0001 extends PureComponent {
     this.meshRay = new THREE.Mesh(this.geometryRay, new THREE.MeshBasicMaterial({color: 0xFFFFFF, visible: false}));
     this.gpuCompute = new GPUComputationRenderer(WATER_WIDTH, WATER_WIDTH, this.renderer);
     this.mousePos = new THREE.Vector2(10000, 10000);
-    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    this.audioAnalyser = this.audioCtx.createAnalyser();
-    this.freqArray = new Uint8Array(this.audioAnalyser.frequencyBinCount);
+    //this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    //this.audioAnalyser = this.audioCtx.createAnalyser();
+
+    // this.freqArray = new Uint8Array(this.audioAnalyser.frequencyBinCount);
     this.light = new THREE.PointLight(0xff0000, 4, 100);
     this.sun = new THREE.DirectionalLight(lightColor1, lightIntensity1);
     this.sun2 = new THREE.DirectionalLight(lightColor2, lightIntensity2);
@@ -94,9 +94,9 @@ class Release0001 extends PureComponent {
 
   onDocumentMouseMove = (event) => {
     if (event.touches) {
-        this.setMouseCoords(event.touches[0].clientX, event.touches[0].clientY);
+      this.setMouseCoords(event.touches[0].clientX, event.touches[0].clientY);
     } else {
-        this.setMouseCoords(event.clientX, event.clientY);
+      this.setMouseCoords(event.clientX, event.clientY);
     }
   };
 
@@ -158,7 +158,7 @@ class Release0001 extends PureComponent {
 
     // this.heightmapVariable = this.gpuCompute.addVariable("heightmap", document.getElementById('heightmapFragmentShader').textContent, heightmap0);
 
-    this.heightmapVariable = this.gpuCompute.addVariable("heightmap",heightMapFragmentShader, heightmap0);
+    this.heightmapVariable = this.gpuCompute.addVariable("heightmap", heightMapFragmentShader, heightmap0);
 
     this.gpuCompute.setVariableDependencies(this.heightmapVariable, [this.heightmapVariable]);
 
@@ -174,30 +174,10 @@ class Release0001 extends PureComponent {
   }
 
   addAudio = () => {
-    window.onload = () => {
-      if (isFirefox === true) {
-        this.audioStream = this.audioElement.mozCaptureStream();
-      } else if (isChrome) {
-        this.audioStream = this.audioElement.captureStream();
-      }
-
-      if (this.audioStream !== undefined) {
-        if (isChrome) {
-            this.audioStream.onactive = () => {
-                this.createAudioSource();
-            };
-        }
-        else {
-            this.createAudioSource();
-        }
-      }
-    }
-  }
-
-  createAudioSource = () => {
-    let source = this.audioCtx.createMediaStreamSource(this.audioStream);
-    source.connect(this.audioAnalyser);
-    source.connect(this.audioCtx.destination);
+    this.audioAnalyser = window.Howler.ctx.createAnalyser();
+    window.Howler.masterGain.connect(this.audioAnalyser);
+    this.audioAnalyser.connect(window.Howler.ctx.destination);
+    this.freqArray = new Uint8Array(this.audioAnalyser.frequencyBinCount);
   }
 
   addSun = () => {
@@ -266,7 +246,6 @@ class Release0001 extends PureComponent {
     this.renderScene();
   }
 
-
   renderScene = () => {
     const {gpuCompute, renderer, camera, mouseCoords, meshRay, raycaster, audioAnalyser, freqArray, scene} = this;
     const uniforms = this.heightmapVariable.material.uniforms;
@@ -285,16 +264,10 @@ class Release0001 extends PureComponent {
       this.mouseMoved = false;
     }
     else {
-      if (this.audioStream !== undefined) {
-        this.audioAnalyser.getByteFrequencyData(freqArray);
-        let x = this.freqArray[600];
-        let y = this.freqArray[100] - 100;
-        uniforms.mousePos.value.set(x, y)
-      } else {
-        let randX = THREE.Math.randInt(20, 40);
-        let randY = THREE.Math.randInt(-10, 10);
-        uniforms.mousePos.value.set(randX, randY)
-      }
+       audioAnalyser.getByteFrequencyData(freqArray);
+       let x = freqArray[600];
+       let y = freqArray[100] - 100;
+       uniforms.mousePos.value.set(x, y)
     }
 
     // Do the gpu computation
