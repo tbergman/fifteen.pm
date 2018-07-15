@@ -2,28 +2,68 @@ import React, { Component } from 'react';
 import {isSafari} from "./Utils/BrowserDetection";
 import './Player.css';
 
-class Player extends Component {
 
+
+
+class Player extends Component {
+  // safari blocks auto-play
   state = {
     paused: !isSafari,
   }
 
   componentDidMount() {
     this.audioPlayer = document.getElementById('audio-player');
+    this.updateState()
+  }
+
+  isPlaying = (e) => {
+    // Check if the audio is playing
+    return this.audioPlayer.duration > 0
+            && !this.audioPlayer.paused
+            && !this.audioPlayer.ended;
+  }
+
+  resetPlayer = () => {
+    if (!this.isPlaying()) {
+      this.setState({paused: true});
+    }
+    else {
+      if (this.state.paused) {
+        this.setState({paused: false});
+      }
+    }
+  }
+
+  updateState = () => {
+    this.resetPlayer();
+    setTimeout(this.updateState, 300);
+  }
+
+  handlePlay = () => {
+    this.audioPlayer.play();
+    this.setState({ paused: false});
+  }
+
+  handlePause = () => {
+    this.audioPlayer.pause();
+    this.setState({ paused: true});
   }
 
   onClick = (e) => {
     e.preventDefault();
-    if(!this.state.paused) {
+    if(!this.isPlaying()) {
       this.audioPlayer.play();
-    } else {
-      this.audioPlayer.pause();
+      this.setState
     }
-    this.setState({ paused: !this.state.paused});
-
+    if(!this.state.paused) {
+      this.handlePause()
+    } else {
+      this.handlePlay();
+    }
   }
 
   render() {
+    const {props, state, onClick} = this;
     return (
       <div id="player-container">
         <div id="player">
@@ -35,11 +75,14 @@ class Player extends Component {
             <g>
                 <use xlinkHref="#circlePath" fill="none"/>
                 <text fill="#000">
-                    <textPath xlinkHref="#circlePath">YAHCEPH</textPath>
+                    <textPath xlinkHref="#circlePath">{props.message}</textPath>
                 </text>
             </g>
           </svg>
-          <button onClick={this.onClick} className={this.state.paused ? 'button paused' : 'button'}></button>
+          <button onClick={onClick} className={state.paused ? 'button' : 'button paused'}></button>
+          <audio id="audio-player" loop autoPlay ref={props.inputRef} preload="none">
+            <source src={props.src} type={props.type}/>
+          </audio>
         </div>
       </div>
     );

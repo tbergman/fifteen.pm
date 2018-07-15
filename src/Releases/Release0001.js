@@ -309,15 +309,6 @@ class Release0001 extends PureComponent {
   render() {
     return (
       <Fragment>
-        <audio
-          id="audio-player"
-          loop
-          autoPlay
-          ref={(element) => {
-            this.audioElement = element
-          }}>
-          <source src="assets/wun-4-jas.mp3" type="audio/mpeg"/>
-        </audio>
         <div
           className="release"
           id="release001"
@@ -325,7 +316,11 @@ class Release0001 extends PureComponent {
             this.mount = mount
           }}
         />
-        <Player/>
+        <Player
+          src='assets/0001-yahceph.mp3'
+          type='audio/mpeg'
+          message='YAHCEPH'
+          inputRef={el => this.audioElement = el}/>
         <Purchase/>
       </Fragment>
     );
