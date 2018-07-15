@@ -20,4 +20,6 @@ export var isChrome = !!window.chrome && !!window.chrome.webstore;
 export var isBlink = (isChrome || isOpera) && !!window.CSS;
 
 
-
+export function isMobileSafari() {
+  return /iP(ad|hone|od).+Version\/[\d\.]+.*Safari/i.test(navigator.userAgent);
+}
