@@ -4,17 +4,21 @@ import './Player.css';
 
 
 class Player extends Component {
+
+  // Assume autplay does not work.
   state = {
-    playing: true
+    paused: true
   }
 
   componentDidMount() {
     this.audioPlayer = document.getElementById('audio-player');
-    this.updateState()
+
+    this.audioPlayer.addEventListener('playing', this.resetPlayer, false)
   }
 
   isPlaying = (e) => {
     // Check if the audio is playing
+
     return this.audioPlayer.duration > 0
             && !this.audioPlayer.paused
             && !this.audioPlayer.ended;
@@ -29,11 +33,6 @@ class Player extends Component {
         this.setState({paused: false});
       }
     }
-  }
-
-  updateState = () => {
-    this.resetPlayer();
-    setTimeout(this.updateState, 300);
   }
 
   handlePlay = () => {
