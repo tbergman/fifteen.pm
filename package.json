@@ -50,9 +50,11 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "deploy-dev": "mkdir -p tmp && cp -R build tmp && gzip -r tmp && aws --profile gltd s3 cp --recursive tmp/ s3://dev.globally.ltd/ && rm -rf tmp",
-    "deploy-prod": "mkdir -p tmp && cp -R build tmp && gzip -r tmp && aws --profile gltd s3 cp --recursive tmp/ s3://globally.ltd/ && rm -rf tmp",
+    "deploy-dev":  "sh scripts/deploy.sh gltd s3://dev.globally.ltd E2RNC34S3LB4YH",
+    "deploy-prod": "sh scripts/deploy.sh gltd s3://globally.ltd     E36B2H2DAB37RY"
   },
+
+
   "devDependencies": {
     "gpucomputationrender-threejs": "^1.0.0",
     "lodash": "^4.17.10",
