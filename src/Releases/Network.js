@@ -44,8 +44,8 @@ class Network extends Component {
     this.scene.fog = new THREE.Fog( 0x000000, 500, 10000 );
 
     this.camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 10000 );
-    this.light = new THREE.AmbientLight( 0x666666 );
-    this.ambientLight = new THREE.AmbientLight( 0x666666 );
+    this.light = new THREE.AmbientLight( 0x111111 );
+    this.ambientLight = new THREE.AmbientLight( 0x111111 );
     this.directionalLight = new THREE.DirectionalLight( 0xdfebff, 1 );
 
     this.groundMaterial = new THREE.MeshPhongMaterial(
@@ -54,7 +54,7 @@ class Network extends Component {
         specular: 0x404761, //0x3c3c3c//,
         //map: groundTexture
       } );
-    this.groundMesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), this.groundMaterial );
+    this.groundMesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 6000, 6000 ), this.groundMaterial );
 
     // net poles
     this.poleGeo = new THREE.BoxGeometry( 5, 250+125, 5 );
@@ -66,7 +66,7 @@ class Network extends Component {
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 
     this.createText();
-    this.createRoom();
+    //this.createRoom();
     this.spotLight1 = this.createSpotlight( 0xFF7F00 );
     this.spotLight2 = this.createSpotlight( 0x00FF7F );
     this.spotLight3 = this.createSpotlight( 0x7F00FF );
@@ -83,17 +83,18 @@ class Network extends Component {
 
   createRoom = () => {
     const {scene} = this;
-    const geometry = new THREE.BoxGeometry( 5000, 5000, 5000 );
-    geometry.faces.forEach( face => face.color.setHex( 0x000000));
+    const geometry = new THREE.BoxGeometry( 6000, 2000, 6000 );
+    //geometry.faces.forEach( face => face.color.setHex( 0x000000));
 
     const material = new THREE.MeshNormalMaterial({
       transparent: false,
       receiveShadow: true,
+      color: 0x000000,
     });
     material.side = THREE.DoubleSide;
 
     const roomMesh = new THREE.Mesh(geometry, material);
-    roomMesh.flipSided = true;
+    roomMesh.flipSided = false;
     this.roomMesh = roomMesh;
 
     scene.add(this.roomMesh);
@@ -114,20 +115,6 @@ class Network extends Component {
     const texMesh = new THREE.Mesh(textGeo, textMaterial);
     texMesh.position.set(200, -245, 0);
     this.scene.add(texMesh);
-  }
-
-  tween = ( light ) =>  {
-    new TWEEN.Tween( light ).to( {
-      angle: ( Math.random() * 0.7 ) + 0.1,
-      penumbra: Math.random() + 1
-    }, Math.random() * 3000 + 2000 )
-    .easing( TWEEN.Easing.Quadratic.Out ).start();
-    new TWEEN.Tween( light.position ).to( {
-      x: ( Math.random() * 30 ) - 15,
-      y: ( Math.random() * 10 ) + 15,
-      z: ( Math.random() * 30 ) - 15
-    }, Math.random() * 3000 + 2000 )
-    .easing( TWEEN.Easing.Quadratic.Out ).start();
   }
 
   init = () => {
@@ -195,15 +182,15 @@ class Network extends Component {
   createSpotlight = ( color ) => {
     var newObj = new THREE.SpotLight( color, 2 );
     newObj.castShadow = true;
-    newObj.angle = 0.3;
+    newObj.angle = 0.8;
     newObj.penumbra = 0.2;
-    newObj.decay = 2;
-    newObj.distance = 450;
+    newObj.decay = 0;
+    newObj.distance = 500;
     newObj.shadow.mapSize.width = 1024;
     newObj.shadow.mapSize.height = 1024;
 
     newObj.shadow.camera.near = 500;
-    newObj.shadow.camera.far = 4000;
+    newObj.shadow.camera.far = 5000;
     newObj.shadow.camera.fov = 30;
     return newObj;
   }
@@ -217,6 +204,20 @@ class Network extends Component {
     
     scene.add( spotLight1, spotLight2, spotLight3 );
     scene.add( lightHelper1, lightHelper2, lightHelper3 );
+  }
+
+  tween = ( light ) =>  {
+    new TWEEN.Tween( light ).to( {
+      angle: ( Math.random() * 0.7 ) + 0.1,
+      penumbra: Math.random() + 1
+    }, Math.random() * 3000 + 2000 )
+    .easing( TWEEN.Easing.Quadratic.Out ).start();
+    new TWEEN.Tween( light.position ).to( {
+      x: ( Math.random() * 100 ) - 150,
+      y: ( Math.random() * 100 ) + 450,
+      z: ( Math.random() * 100 ) - 150
+    }, Math.random() * 10000 + 2000 )
+    .easing( TWEEN.Easing.Quadratic.Out ).start();
   }
 
   addNet = () => {
