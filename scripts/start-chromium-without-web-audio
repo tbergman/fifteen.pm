@@ -1,7 +1,0 @@
-#!/bin/sh
-
-set -x
-set -e
-
-/Applications/Chromium.app/Contents/MacOS/Chromium \
-  --disable-features=PreloadMediaEngagementData,AutoplayIgnoreWebAudio,MediaEngagementBypassAutoplayPolicies
