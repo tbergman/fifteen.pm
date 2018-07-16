@@ -319,7 +319,7 @@ class Release0001 extends PureComponent {
         <Player
           src='assets/0001-yahceph.mp3'
           type='audio/mpeg'
-          message='YAHCEPH'
+          message='YAHCEPTH'
           inputRef={el => this.audioElement = el}/>
         <Purchase/>
       </Fragment>
