@@ -156,7 +156,7 @@ class Home extends PureComponent {
     let audioLoader = new THREE.AudioLoader();
     sound.setVolume(.01);
     sound.loop = true;
-    audioLoader.load('assets/fly.wav', (buffer) => {
+    audioLoader.load('assets/fly.mp3', (buffer) => {
       sound.setBuffer(buffer);
       sound.setRefDistance(20);
       sound.play();
