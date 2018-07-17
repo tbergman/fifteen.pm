@@ -263,10 +263,15 @@ class Network extends Component {
     this.scene.background = new THREE.Color(0x000000);
     this.scene.fog = new THREE.Fog(0x000000, 500, 10000);
 
-    this.camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 10000);
-    this.light = new THREE.AmbientLight(0x111111);
-    this.ambientLight = new THREE.AmbientLight(0x111111);
-    this.directionalLight = new THREE.DirectionalLight(0xdfebff, 1);
+
+    this.camera = new THREE.PerspectiveCamera( 30, window.innerWidth / window.innerHeight, 1, 10000 );
+    this.light = new THREE.AmbientLight( 0x888888);
+    
+    // this.ambientLight = new THREE.AmbientLight( 0xFFFF00, 10000 );
+    // this.scene.add( this.ambientLight );
+
+    this.directionalLight = new THREE.DirectionalLight( 0xdfebff, 1 );
+
 
     this.groundMaterial = new THREE.MeshPhongMaterial(
       {
@@ -291,6 +296,7 @@ class Network extends Component {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     this.createText();
+
     //this.createRoom();
     this.spotLight1 = this.createSpotlight(0xFF7F00);
     this.spotLight2 = this.createSpotlight(0x00FF7F);
@@ -301,6 +307,7 @@ class Network extends Component {
     this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     this.audioAnalyser = this.audioCtx.createAnalyser();
     this.freqArray = new Uint8Array(this.audioAnalyser.frequencyBinCount);
+
   }
 
   componentDidMount() {
@@ -311,19 +318,30 @@ class Network extends Component {
 
   createRoom = () => {
     const {scene} = this;
+
     const geometry = new THREE.BoxGeometry(6000, 2000, 6000);
     //geometry.faces.forEach( face => face.color.setHex( 0x000000));
 
     const material = new THREE.MeshNormalMaterial({
       transparent: false,
       receiveShadow: true,
-      color: 0x000000,
+      color: 0xFFFF00,
+      // side: THREE.BackSide
     });
     material.side = THREE.DoubleSide;
+    material.opacity = .5;
 
     const roomMesh = new THREE.Mesh(geometry, material);
-    roomMesh.flipSided = false;
+    // roomMesh.flipSided = true;
     this.roomMesh = roomMesh;
+
+    
+
+    
+
+    // let light = THREE.PointLight( 0xFFFF00, 1000, 0)
+
+    // this.roomMesh.add(light);
 
     scene.add(this.roomMesh);
   }
@@ -352,8 +370,9 @@ class Network extends Component {
 
     // // camera
     camera.position.y = 350;
-    camera.position.z = 200;
-    camera.lookAt(scene.position);
+    camera.position.z = 500;
+    camera.maxDistance = 600;
+    //camera.lookAt( scene.position );
 
     // sphere
     sphere.castShadow = true;
@@ -368,8 +387,8 @@ class Network extends Component {
 
     // controls
     //controls.maxPolarAngle = Math.PI * 0.5;
-    controls.minDistance = 1000;
-    controls.maxDistance = 5000;
+    controls.minDistance = 500;
+    controls.maxDistance = 4000;
 
     this.addRenderer();
     this.addLights();
@@ -391,9 +410,9 @@ class Network extends Component {
   addLights = () => {
     const {light, ambientLight, directionalLight, scene} = this;
     // lights
-    scene.add(light);
-    //scene.add( ambientLight );  
-    directionalLight.position.set(0, 200, 100);
+    scene.add( light );
+    // scene.add( ambientLight );  
+    directionalLight.position.set( 0, 200, 100 );
     // directionalLight.position.multiplyScalar( 1.3 );
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 1024;
@@ -405,7 +424,7 @@ class Network extends Component {
     directionalLight.shadow.camera.top = d;
     directionalLight.shadow.camera.bottom = -d;
     directionalLight.shadow.camera.far = 2000;
-    //scene.add( directionalLight );
+    // scene.add( directionalLight );
   }
 
   createSpotlight = (color) => {
@@ -417,10 +436,10 @@ class Network extends Component {
     newObj.distance = 500;
     newObj.shadow.mapSize.width = 1024;
     newObj.shadow.mapSize.height = 1024;
-
     newObj.shadow.camera.near = 500;
     newObj.shadow.camera.far = 5000;
     newObj.shadow.camera.fov = 30;
+
     return newObj;
   }
 
