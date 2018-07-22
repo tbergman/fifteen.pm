@@ -38,7 +38,6 @@
     "resolve": "1.6.0",
     "style-loader": "0.19.0",
     "sw-precache-webpack-plugin": "0.11.4",
-    "three": "^0.94.0",
     "url-loader": "0.6.2",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.4",
@@ -50,13 +49,13 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
-    "deploy-dev":  "sh scripts/deploy.sh gltd s3://dev.globally.ltd E2RNC34S3LB4YH",
+    "deploy-dev": "sh scripts/deploy.sh gltd s3://dev.globally.ltd E2RNC34S3LB4YH",
     "deploy-prod": "sh scripts/deploy.sh gltd s3://globally.ltd     E36B2H2DAB37RY",
     "start-chromium-without-web-audio": "sh scripts/start-chromium-without-web-audio.sh",
     "encode-release": "sh scripts/encode-release.sh"
   },
-
   "devDependencies": {
+    "cannon": "^0.6.2",
     "gpucomputationrender-threejs": "^1.0.0",
     "lodash": "^4.17.10",
     "react-router": "^4.3.1",

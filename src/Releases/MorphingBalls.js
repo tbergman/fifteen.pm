@@ -35,7 +35,7 @@ class MorphingBalls extends Component {
     this.vblur = new ShaderPass( VerticalTiltShiftShader );
     this.renderModel = new RenderPass( this.scene, this.camera );
     this.composer = new EffectComposer( this.renderer, this.renderTarget );
-    this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+    this.controls = new OrbitControls( this.camera );
   }
 
   componentDidMount() {
@@ -73,10 +73,8 @@ class MorphingBalls extends Component {
       camera.rotation.z = 0.1;
 
       // CONTROLS
-      controls.minDistance = 200;
-      controls.maxDistance = 1500;
-      controls.minPolarAngle = 0; // radians
-      controls.maxPolarAngle = Math.PI/2; // radians
+      controls.target.set( 0, 2, 0 );
+      controls.update();
 
       // LIGHTS
       light.position.set( 0.5, 0.5, 1 );
