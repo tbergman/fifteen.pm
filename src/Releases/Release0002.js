@@ -1,9 +1,8 @@
 import React, {Component, Fragment} from 'react';
-import {render} from 'react-dom';
 import {cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth, windForce} from "../Utils/Cloth";
 import {Detector} from "../Utils/Detector";
 import Player from '../Player';
-import {ballPosition, sphere} from "../Utils/Sphere";
+import Purchase from '../Purchase';
 import {service} from "../Utils/service";
 import {CannonDebugRenderer} from "../Utils/CannonDebugRenderer.js";
 
@@ -258,7 +257,7 @@ TWEEN.Interpolation = {
   }
 };
 
-class Network extends Component {
+class Release0002 extends Component {
   constructor() {
     super();
     this.scene = new THREE.Scene();
@@ -929,20 +928,25 @@ class Network extends Component {
   render() {
     return (
       <Fragment>
-        <audio
-          id="audio-player"
-          loop
-          autoPlay
-          ref={(element) => {
-            this.audioElement = element
-          }}>
-          <source src="assets/year-unknown-timer-PRE_MASTER_REPLACE.wav" type="audio/wav"/>
-        </audio>
+        {/*<audio*/}
+          {/*id="audio-player"*/}
+          {/*loop*/}
+          {/*autoPlay*/}
+          {/*ref={(element) => {*/}
+            {/*this.audioElement = element*/}
+          {/*}}>*/}
+          {/*<source src="assets/year-unknown-timer-PRE_MASTER_REPLACE.wav" type="audio/wav"/>*/}
+        {/*</audio>*/}
         <div ref={element => this.container = element}/>
-        <Player/>
+        <Player
+        src='assets/year-unknown-timer-PRE_MASTER_REPLACE.wav'
+        type='audio/wav'
+        message='YEARUNKNOWN'
+        inputRef={el => this.audioElement = el}/>
+        <Purchase/>
       </Fragment>
     );
   }
 }
 
-export default Network;
+export default Release0002;
