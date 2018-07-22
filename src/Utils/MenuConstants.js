@@ -130,12 +130,14 @@ export const SHAPES = [
 ];
 
 export const RELEASE_LINKS = [
-  {name:'home', relPath: "/", path: "/", message: "Welcome to Globally LTD."},
-  {name:'yahceph', relPath: "/1", path: '1',  message: '"Wun 4 Jas" is made possible by viewers like you.', bandcampLink: "https://gltd.bandcamp.com/track/wun-4-jas"}
+  {name:'home', relPath: "/", path: "/"},
+  {name:'yahceph', relPath: "/1", path: '1'},
+  {name:'year unknown', relPath: "/2", path: '2'}
 ]
 
 export const MENU_MESSAGES = {
   "/": "Welcome to Globally LTD.",
-  "/1": "Yahceph's production debut, \"wun 4 jas\", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode."
+  "/1": "Yahceph's production debut, \"wun 4 jas\", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.",
+  "/2": "I LIKE TURTLES"
 }
 

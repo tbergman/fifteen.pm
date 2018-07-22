@@ -8,7 +8,7 @@ import Player from '../Player';
 import Purchase from '../Purchase';
 import {isFirefox, isChrome} from '../Utils/BrowserDetection';
 /* eslint import/no-webpack-loader-syntax: off */
-import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
+// import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -41,7 +41,7 @@ class Release0001 extends PureComponent {
       ]),
       vertexShader: document.getElementById('waterVertexShader').textContent,
       fragmentShader: THREE.ShaderChunk['meshphong_frag'],
-      transparent: true
+      transparent: true,
     });
     this.shaderMaterial.color = new THREE.Color(waterColor);
     this.shaderMaterial.specular = new THREE.Color(waterSpecularColor);
@@ -49,6 +49,7 @@ class Release0001 extends PureComponent {
     this.waterMesh = new THREE.Mesh(this.geometry, this.shaderMaterial);
     this.geometryRay = new THREE.PlaneBufferGeometry(WATER_BOUNDS, WATER_BOUNDS, 1, 1);
     this.meshRay = new THREE.Mesh(this.geometryRay, new THREE.MeshBasicMaterial({color: 0xFFFFFF, visible: false}));
+
     this.gpuCompute = new GPUComputationRenderer(WATER_WIDTH, WATER_WIDTH, this.renderer);
     this.mousePos = new THREE.Vector2(10000, 10000);
     this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -156,9 +157,9 @@ class Release0001 extends PureComponent {
 
     this.fillTexture(heightmap0);
 
-    // this.heightmapVariable = this.gpuCompute.addVariable("heightmap", document.getElementById('heightmapFragmentShader').textContent, heightmap0);
+    this.heightmapVariable = this.gpuCompute.addVariable("heightmap", document.getElementById('heightmapFragmentShader').textContent, heightmap0);
 
-    this.heightmapVariable = this.gpuCompute.addVariable("heightmap",heightMapFragmentShader, heightmap0);
+    // this.heightmapVariable = this.gpuCompute.addVariable("heightmap",heightMapFragmentShader, heightmap0);
 
     this.gpuCompute.setVariableDependencies(this.heightmapVariable, [this.heightmapVariable]);
 
