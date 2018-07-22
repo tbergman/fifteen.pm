@@ -295,9 +295,9 @@ function simulateCloth(time, freqArray, ballPosition, ballBody, ballSize, sphere
   // ballPosition.x = Math.cos( Date.now() / 400 ) * 400;
 
 
-  console.log(cloth.particles.length)
+  // console.log(cloth.particles.length)
 
-    // particles.length ==  
+    // particles.length ==
 
     for (particles = cloth.particles, i = 0, il = particles.length; i < il; i++) {
       particle = particles[i];
