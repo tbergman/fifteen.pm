@@ -939,8 +939,8 @@ class Release0002 extends Component {
         {/*</audio>*/}
         <div ref={element => this.container = element}/>
         <Player
-        src='assets/year-unknown-timer-PRE_MASTER_REPLACE.wav'
-        type='audio/wav'
+        src='assets/0002-yearunknown.mp3'
+        type='audio/mpeg'
         message='YEAR UNKNOWN'
         inputRef={el => this.audioElement = el}/>
         <Purchase/>
