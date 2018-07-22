@@ -282,9 +282,9 @@ class Release0002 extends Component {
     this.spotLight4 = this.createSpotlight(0x7F00FF);
     this.spotLight5 = this.createSpotlight(0x7F00FF);
 
-    this.spotLight1.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(60, 1, 1, 10000));
-    this.spotLight2.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(60, 1, 1, 10000));
-    this.spotLight3.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(60, 1, 1, 10000));
+    this.spotLight1.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(60, 1, 1, 1000));
+    this.spotLight2.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(60, 1, 1, 1000));
+    this.spotLight3.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(60, 1, 1, 1000));
 
     this.clock = new THREE.Clock();
     this.raycaster = new THREE.Raycaster();
@@ -321,7 +321,7 @@ class Release0002 extends Component {
   }
 
   init = () => {
-    const {scene, camera, controls} = this;
+    const {controls} = this;
     this.initCannon();
     if (!Detector.webgl) Detector.addGetWebGLMessage();
 
@@ -366,13 +366,13 @@ class Release0002 extends Component {
   }
 
   initCannon = () => {
-    this.timeStep = 1 / 60;
+    this.timeStep = 1 / 40;
     this.world = new CANNON.World();
     this.world.gravity.set(0, -1500, 0);
     this.world.broadphase = new CANNON.NaiveBroadphase();
-    this.world.solver.iterations = 10;
-    //this.world.add(clothBody);
-    //this.hardMaterials.push(clothPhysMaterial);
+    this.world.solver.iterations = 1;
+    this.world.add(clothBody);
+    this.hardMaterials.push(clothPhysMaterial);
     this.cannonDebugRenderer = new CannonDebugRenderer( this.scene, this.world );
   }
 
@@ -380,7 +380,7 @@ class Release0002 extends Component {
     this.ballRadius = 60;
     // physics
     let shape = new CANNON.Sphere(this.ballRadius);
-    let mass = 1;//0.000000000000000000000001;
+    let mass = 1;
 
     let sphereMaterial = new CANNON.Material();
 
@@ -827,10 +827,10 @@ class Release0002 extends Component {
       if (this.isView1) {
         this.rotateCamera(time);
       }
-      let windStrength = Math.cos(time / 7000) * 20 + 40;
-      windForce.set(Math.sin(time / 2000), Math.cos(time / 3000), Math.sin(time / 1000))
-      windForce.normalize()
-      windForce.multiplyScalar(windStrength);
+      // let windStrength = Math.cos(time / 7000) * 20 + 40;
+      // windForce.set(Math.sin(time / 2000), Math.cos(time / 3000), Math.sin(time / 1000))
+      // windForce.normalize()
+      // windForce.multiplyScalar(windStrength);
       this.animateBulbLights(time);
       simulateCloth(time, this.freqArray, this.sphere.position, this.body, this.ballRadius, this.sphere);
       this.renderScene();
@@ -852,20 +852,11 @@ class Release0002 extends Component {
     const {camera, scene, raycaster, mouse} = this;
     raycaster.setFromCamera(mouse, camera);
     let intersects = raycaster.intersectObjects(scene.children);
-    // console.log('have we intersected with ball?', this.firstHitMouseHackComplete);
     for (let i = 0; i < intersects.length; i++) {
       if (intersects[i].object.name === "volleyball") {
-        // if (this.firstHitMouseHackComplete) { // this hack has something to do with initial mouse pos and initial sphere pos both being at center, presumably
-          // if (this.camera.position.distanceTo(intersects[i].object.position) < 2000){
-          let rayCasterBodyPos = intersects[i].point;
-          rayCasterBodyPos.z += 5;
-
-          this.raycasterBody.position.copy(intersects[i].point);
-          //this.raycasterBody.position.z -= 200;
-          // }
-        // } else {
-        //   this.firstHitMouseHackComplete = true;/**/
-        // }
+        let rayCasterBodyPos = intersects[i].point;
+        rayCasterBodyPos.z += 5;
+        this.raycasterBody.position.copy(intersects[i].point);
       }
     }
   }
@@ -928,21 +919,12 @@ class Release0002 extends Component {
   render() {
     return (
       <Fragment>
-        {/*<audio*/}
-          {/*id="audio-player"*/}
-          {/*loop*/}
-          {/*autoPlay*/}
-          {/*ref={(element) => {*/}
-            {/*this.audioElement = element*/}
-          {/*}}>*/}
-          {/*<source src="assets/year-unknown-timer-PRE_MASTER_REPLACE.wav" type="audio/wav"/>*/}
-        {/*</audio>*/}
         <div ref={element => this.container = element}/>
         <Player
-        src='assets/0002-yearunknown.mp3'
-        type='audio/mpeg'
-        message='YEAR UNKNOWN'
-        inputRef={el => this.audioElement = el}/>
+          src='assets/year-unknown-timer-PRE_MASTER_REPLACE.wav'
+          type='audio/wav'
+          message='YEAR UNKNOWN'
+          inputRef={el => this.audioElement = el}/>
         <Purchase/>
       </Fragment>
     );
