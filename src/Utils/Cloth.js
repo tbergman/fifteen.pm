@@ -395,7 +395,7 @@ let clothGeometry = new THREE.ParametricGeometry(clothFunction, cloth.w, cloth.h
 let clothMaterial = new THREE.MeshPhongMaterial({
   color: 0xaa2929,
   specular: 0x030303,
-  wireframeLinewidth: 2,
+  wireframeLinewidth: 1,
   //map: clothTexture,
   side: THREE.DoubleSide,
   alphaTest: 0.5,
