@@ -10,7 +10,7 @@ import * as CANNON from 'cannon';
 import * as THREE from 'three';
 import './Release.css';
 import debounce from 'lodash/debounce';
-import {isChrome, isFirefox} from "../Utils/BrowserDetection";
+import {isMobile} from "../Utils/BrowserDetection";
 import {OrbitControls} from "../Utils/OrbitControls";
 
 /* this handles number of segments in cloth , TO DO fix this */
@@ -25,6 +25,7 @@ service.pins = pinsArr;
 pinsFormation.push(service.pins);
 service.pins = pinsFormation[0];
 
+// TODO... Someday clean up this shitty hackish code. jk. not really.
 // tween.js - http://github.com/sole/tween.js
 'use strict';
 var TWEEN = TWEEN || function () {
@@ -260,11 +261,15 @@ TWEEN.Interpolation = {
 class Release0002 extends Component {
   constructor() {
     super();
+    //
+    this.bpm = 145;
+    this.beatTime = (60 / 145) * 1000;
+
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
 
     this.camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 10000);
-    this.light = new THREE.AmbientLight(0x888888);
+    this.light = new THREE.AmbientLight(0xFFFFFF);
 
     // net poles
     this.poleGeo = new THREE.BoxGeometry(5, 250 + 125, 5);
@@ -275,12 +280,9 @@ class Release0002 extends Component {
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-    // this.createText();
     this.spotLight1 = this.createSpotlight(0xFF7F00);
     this.spotLight2 = this.createSpotlight(0x00FF7F);
     this.spotLight3 = this.createSpotlight(0x7F00FF);
-    this.spotLight4 = this.createSpotlight(0x7F00FF);
-    this.spotLight5 = this.createSpotlight(0x7F00FF);
 
     this.spotLight1.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(60, 1, 1, 1000));
     this.spotLight2.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(60, 1, 1, 1000));
@@ -291,10 +293,6 @@ class Release0002 extends Component {
     this.mouse = new THREE.Vector2(9999, 9999);
     this.firstHitMouseHackComplete = false;
 
-    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    this.audioAnalyser = this.audioCtx.createAnalyser();
-    this.freqArray = new Uint8Array(this.audioAnalyser.frequencyBinCount);
-    //
     this.hardMaterials = [];
 
     this.startTime = Date.now();
@@ -302,10 +300,11 @@ class Release0002 extends Component {
     this.views = [
       this.getView1,
       this.getView2,
+      this.getView6,
       this.getView5,
+      this.getView7,
       this.getView4,
       this.getView3,
-      this.getView6
     ];
   }
 
@@ -330,9 +329,9 @@ class Release0002 extends Component {
     //camera.maxDistance = 600;
     //camera.lookAt( scene.position );
     // controls
-    controls.maxPolarAngle = Math.PI;
+    //controls.maxPolarAngle = Math.PI;
     // controls.minDistance = 10;
-    controls.maxDistance = 1800;
+    controls.maxDistance = 5000;
 
     this.addRenderer();
     this.addNet();  // cloth mesh and poles
@@ -340,22 +339,23 @@ class Release0002 extends Component {
     this.addBulbLights();
     this.addSpotLights();
     this.animateSpotLights();
-    this.addAudio();
     this.createRaycasterBody();
     this.createRoom();
     this.createSphere();
 
-    setInterval(() => this.updateAudioInterference(), 100);
+    setInterval(() => this.strobeBulbLights(), this.beatTime / 4);
 
-    let count = 0;
-    setInterval(() => {
-      if (count >= 4){
-        count = 0;
-      } else {
-        count += 1;
-      }
-      this.views[count]();
-    }, 5000);
+    if (!isMobile) {
+      let count = 0;
+      setInterval(() => {
+        if (count >= this.views.length - 1) {
+          count = 0;
+        } else {
+          count += 1;
+        }
+        this.views[count]();
+      }, this.beatTime * 16);
+    }
   }
 
   onMouseMove = (event) => {
@@ -373,7 +373,7 @@ class Release0002 extends Component {
     this.world.solver.iterations = 1;
     this.world.add(clothBody);
     this.hardMaterials.push(clothPhysMaterial);
-    this.cannonDebugRenderer = new CannonDebugRenderer( this.scene, this.world );
+    this.cannonDebugRenderer = new CannonDebugRenderer(this.scene, this.world);
   }
 
   createSphere = () => {
@@ -413,40 +413,24 @@ class Release0002 extends Component {
 
     // visual
     let ballGeo = new THREE.SphereBufferGeometry(this.ballRadius, 32, 16);
-    let ballMaterial = new THREE.MeshPhongMaterial({
-      color: 0x000000,
-      specular: 0x111111,
-      side: THREE.DoubleSide,
-      shininess: 1250
+
+    let ballMaterial = new THREE.MeshLambertMaterial({
+      color: 0xaa2929,
+      specular: 0x030303,
+      wireframeLinewidth: 10,
+      alphaTest: 0.5,
+      transparent: true,
+      wireframe: true,
     });
+
+    // sphere properties
     this.sphere = new THREE.Mesh(ballGeo, ballMaterial);
-    // this.body.position.copy(this.sphere.position.copy);
     this.sphere.castShadow = true;
     this.sphere.receiveShadow = true;
     this.sphere.visible = true;
     this.sphere.name = "volleyball";
+
     this.scene.add(this.sphere);
-  }
-
-  addAudio = () => {
-    window.onload = () => {
-      if (isFirefox === true) {
-        this.audioStream = this.audioElement.mozCaptureStream();
-      } else if (isChrome) {
-        this.audioStream = this.audioElement.captureStream();
-      }
-
-      if (this.audioStream !== undefined) {
-        if (isChrome) {
-          this.audioStream.onactive = () => {
-            this.createAudioSource();
-          };
-        }
-        else {
-          this.createAudioSource();
-        }
-      }
-    }
   }
 
   createAudioSource = () => {
@@ -458,9 +442,9 @@ class Release0002 extends Component {
   addBulbLights = () => {
     const {scene} = this;
 
-    const sphere = new THREE.SphereBufferGeometry(10, 10, 10);
+    const sphere = new THREE.SphereBufferGeometry(3, 3, 3);
 
-    const bulbLight1 = new THREE.PointLight(0x363dc2, 20, 2000, 10);
+    const bulbLight1 = new THREE.PointLight(0x363dc2, 10, 2000, 10);
     bulbLight1.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
       emissive: 0x363dc2,
       emissiveIntensity: 1,
@@ -468,7 +452,7 @@ class Release0002 extends Component {
     })));
     bulbLight1.position.set(-1900, -250, -1950);
 
-    const bulbLight2 = new THREE.PointLight(0x7F00FF, 20, 2000, 10);
+    const bulbLight2 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
     bulbLight2.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
       emissive: 0x7F00FF,
       emissiveIntensity: 1,
@@ -476,15 +460,15 @@ class Release0002 extends Component {
     })));
     bulbLight2.position.set(1900, 750, -1950);
 
-    const bulbLight3 = new THREE.PointLight(0x00FF7F, 20, 2000, 10);
+    const bulbLight3 = new THREE.PointLight(0x363dc2, 10, 2000, 10);
     bulbLight3.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
-      emissive: 0x00FF7F,
+      emissive: 0x363dc2,
       emissiveIntensity: 1,
       color: 0x000000
     })));
     bulbLight3.position.set(-1900, -250, 1950);
 
-    const bulbLight4 = new THREE.PointLight(0x7F00FF, 20, 2000, 10);
+    const bulbLight4 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
     bulbLight4.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
       emissive: 0x7F00FF,
       emissiveIntensity: 1,
@@ -492,15 +476,15 @@ class Release0002 extends Component {
     })));
     bulbLight4.position.set(1900, 750, 1950);
 
-    const bulbLight5 = new THREE.PointLight(0x00FF7F, 20, 2000, 10);
+    const bulbLight5 = new THREE.PointLight(0x363dc2, 10, 2000, 10);
     bulbLight5.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
-      emissive: 0x00FF7F,
+      emissive: 0x363dc2,
       emissiveIntensity: 1,
       color: 0x000000
     })));
-    bulbLight5.position.set(1900, -250, -1950);
+    bulbLight5.position.set(1900, -250, -1800);
 
-    const bulbLight6 = new THREE.PointLight(0x7F00FF, 20, 2000, 10);
+    const bulbLight6 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
     bulbLight6.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
       emissive: 0x7F00FF,
       emissiveIntensity: 1,
@@ -508,15 +492,15 @@ class Release0002 extends Component {
     })));
     bulbLight6.position.set(1900, 750, -1950);
 
-    const bulbLight7 = new THREE.PointLight(0x00FF7F, 20, 2000, 10);
+    const bulbLight7 = new THREE.PointLight(0x363dc2, 10, 2000, 10);
     bulbLight7.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
-      emissive: 0x00FF7F,
+      emissive: 0x363dc2,
       emissiveIntensity: 1,
       color: 0x000000
     })));
     bulbLight7.position.set(-1900, -250, 1950);
 
-    const bulbLight8 = new THREE.PointLight(0x7F00FF, 20, 2000, 10);
+    const bulbLight8 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
     bulbLight8.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
       emissive: 0x7F00FF,
       emissiveIntensity: 1,
@@ -526,23 +510,24 @@ class Release0002 extends Component {
 
     this.bulbLights = [];
     this.bulbLights.push(this.bulbLight1 = bulbLight1);
-    this.bulbLights.push(this.bulbLight2 = bulbLight2);
-    this.bulbLights.push(this.bulbLight3 = bulbLight3);
-    this.bulbLights.push(this.bulbLight4 = bulbLight4);
-    this.bulbLights.push(this.bulbLight5 = bulbLight5);
-    this.bulbLights.push(this.bulbLight6 = bulbLight6);
     this.bulbLights.push(this.bulbLight7 = bulbLight7);
-    this.bulbLights.push(this.bulbLight8 = bulbLight8);
-
     scene.add(this.bulbLight1);
-    scene.add(this.bulbLight2);
-    scene.add(this.bulbLight3);
-    scene.add(this.bulbLight4);
-    scene.add(this.bulbLight5);
-    scene.add(this.bulbLight6);
     scene.add(this.bulbLight7);
-    scene.add(this.bulbLight8);
 
+    if (this.renderer.capabilities.maxVaryings > 8) {
+      this.bulbLights.push(this.bulbLight2 = bulbLight2);
+      this.bulbLights.push(this.bulbLight3 = bulbLight3);
+      this.bulbLights.push(this.bulbLight4 = bulbLight4);
+      this.bulbLights.push(this.bulbLight5 = bulbLight5);
+      this.bulbLights.push(this.bulbLight6 = bulbLight6);
+      this.bulbLights.push(this.bulbLight8 = bulbLight8);
+      scene.add(this.bulbLight2);
+      scene.add(this.bulbLight3);
+      scene.add(this.bulbLight4);
+      scene.add(this.bulbLight5);
+      scene.add(this.bulbLight6);
+      scene.add(this.bulbLight8);
+    }
   }
 
   createRaycasterBody = () => {
@@ -615,9 +600,9 @@ class Release0002 extends Component {
     // activate all these room objects as planes, this particular body causes the
     // sphere to fly towards and past it into positive z.
     let wall2PhysPos = new CANNON.Vec3(0, roomYPos, roomWidth / 2);
-    let wall2Axis = new CANNON.Vec3(0, 0, 0);
-    // let wall2Angle = 1; //-Math.PI; //-Math.PI/2;
-    this.hardMaterials.push(this.createSurface(wall2PhysPos, roomWidth, roomDepth, wall2Axis));
+    let wall2Axis = new CANNON.Vec3(1, 0, 0);
+    let wall2Angle = Math.PI;
+    this.hardMaterials.push(this.createSurface(wall2PhysPos, roomWidth, roomDepth, wall2Axis, wall2Angle));
 
     let wall3PhysPos = new CANNON.Vec3(roomDepth / 2, roomYPos, 0);
     let wall3Axis = new CANNON.Vec3(0, 1, 0);  // -.5 ?
@@ -688,6 +673,15 @@ class Release0002 extends Component {
     this.isView1 = false;
   }
 
+  getView7 = () => {
+    this.camera.position.x = 0;
+    this.camera.position.z = 0;
+    this.camera.position.y = 4500;
+    this.camera.lookAt(new THREE.Vector3());
+    this.camera.fov = 100;
+    this.isView1 = false;
+  }
+
   onWindowResize = debounce(() => {
     const {camera, renderer} = this;
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -697,35 +691,27 @@ class Release0002 extends Component {
 
   addLights = () => {
     const {light, scene} = this;
-    // lights
     scene.add(light);
   }
 
   createSpotlight = (color) => {
-    var newObj = new THREE.SpotLight(color, 2);
-    newObj.castShadow = true;
-    newObj.angle = 0.8;
-    newObj.penumbra = 0.2;
-    newObj.decay = 0;
-    newObj.distance = 300;
-    newObj.shadow.mapSize.width = 1024;
-    newObj.shadow.mapSize.height = 1024;
-    // newObj.shadow.camera.near = 500;
-    // newObj.shadow.camera.far = 10000;
-    // newObj.shadow.camera.fov = 30;
-    return newObj;
+    var spotlight = new THREE.SpotLight(color, 2);
+    spotlight.castShadow = true;
+    spotlight.angle = 0.8;
+    spotlight.penumbra = 0.2;
+    spotlight.decay = 0;
+    spotlight.distance = 300;
+    spotlight.shadow.mapSize.width = 1024;
+    spotlight.shadow.mapSize.height = 1024;
+    return spotlight;
   }
 
   addSpotLights = () => {
-    const {scene, spotLight1, spotLight2, spotLight3, spotLight4, spotLight5} = this;
+    const {scene, spotLight1, spotLight2, spotLight3} = this;
 
     spotLight1.position.set(150, 250, 450);
     spotLight2.position.set(0, 250, 350);
     spotLight3.position.set(-150, 250, 450);
-
-    spotLight4.position.set(-150, 250, 450);
-    spotLight4.target = this.sphere;
-    spotLight5.position.set(-150, 250, 450);
 
     scene.add(spotLight1, spotLight2, spotLight3);
   }
@@ -746,16 +732,8 @@ class Release0002 extends Component {
 
   addNet = () => {
     const {pole1, pole2, scene} = this;
+    // TODO soft body
     // reference: https://github.com/schteppe/goo-cannon-softbody
-    // let physMaterial = new CANNON.Material({});
-    // let clothBody = new CANNON.Body({
-    //  mass: 0,
-    //  material: physMaterial,
-    //  position: position
-    // });
-    // body.addShape(new CANNON.Box( new CANNON.Vec3(width, height, 50)));
-    // body.quaternion.setFromAxisAngle(axis, angle);
-    // this.world.addBody(body);
     scene.add(clothMesh);
 
     pole1.position.x = -750;
@@ -801,40 +779,36 @@ class Release0002 extends Component {
     tween(spotLight1);
     tween(spotLight2);
     tween(spotLight3);
-    setTimeout(this.animateSpotLights, 5000);
+    setTimeout(this.animateSpotLights, this.beatTime * 4);
   }
 
   animateBulbLights = (time) => {
     this.bulbLight1.position.x = Math.cos(time * 0.0009) * 1000 + 250;
-    this.bulbLight2.position.x = Math.cos(time * 0.0009) * 1000 + 250;
-
-    this.bulbLight3.position.x = Math.cos(time * 0.0009) * 1000 + 250;
-    this.bulbLight4.position.x = Math.cos(time * 0.0009) * 1000 + 250;
-
-    this.bulbLight5.position.z = Math.cos(time * 0.0009) * 1000 + 250;
-    this.bulbLight6.position.z = Math.cos(time * 0.0009) * 1000 + 250;
-
     this.bulbLight7.position.z = Math.cos(time * 0.0009) * 1000 + 250;
-    this.bulbLight8.position.z = Math.cos(time * 0.0009) * 1000 + 250;
+    if (this.renderer.capabilities.maxVaryings > 8) {
+      this.bulbLight2.position.x = Math.cos(time * 0.0009) * 1000 + 250;
+      this.bulbLight3.position.x = Math.cos(time * 0.0009) * 1000 + 250;
+      this.bulbLight4.position.x = Math.cos(time * 0.0009) * 1000 + 250;
+      this.bulbLight5.position.z = Math.cos(time * 0.0009) * 1000 + 250;
+      this.bulbLight6.position.z = Math.cos(time * 0.0009) * 1000 + 250;
+      this.bulbLight8.position.z = Math.cos(time * 0.0009) * 1000 + 250;
+    }
   }
 
   animate = () => {
     requestAnimationFrame(this.animate);
 
+    let time = Date.now();
+    this.controls.update(time - this.startTime);
+
     if (!this.audioElement.paused) {
-      let time = Date.now();
-      this.controls.update(time - this.startTime);
       if (this.isView1) {
         this.rotateCamera(time);
       }
-      // let windStrength = Math.cos(time / 7000) * 20 + 40;
-      // windForce.set(Math.sin(time / 2000), Math.cos(time / 3000), Math.sin(time / 1000))
-      // windForce.normalize()
-      // windForce.multiplyScalar(windStrength);
       this.animateBulbLights(time);
-      simulateCloth(time, this.freqArray, this.sphere.position, this.body, this.ballRadius, this.sphere);
+      simulateCloth(time, this.sphere.position, this.body, this.ballRadius, this.sphere);
       this.renderScene();
-    } else if (!this.state.renderedOnce){
+    } else if (!this.state.renderedOnce) {
       this.renderScene();
       this.setState({renderedOnce: true});
     }
@@ -862,18 +836,9 @@ class Release0002 extends Component {
   }
 
 
-  updateAudioInterference = () => {
-    // TODO
-    // assume logarithmic scale along an x-axis of length 1024
-    // but the fft array is linear, so dominated by the hi end
-    // this will be a good performance solution: https://stackoverflow.com/questions/35799286/get-logarithmic-bytefrequencydata-from-audio#comment59309437_35800484
-    // let freqIdx = Math.floor(
-    let freqThresh = 170;
-    let freqIdx = 96;
+  strobeBulbLights = () => {
     for (let i = 0; i < this.bulbLights.length; i++) {
-      // this.audioAnalyser.getByteFrequencyData(this.freqArray);
-      // this.bulbLights[i].power = this.freqArray[freqIdx] / 100;
-      this.bulbLights[i].power = Math.random() > 0.5 ? .0001 : 10000.0 ;
+      this.bulbLights[i].power = Math.random() > 0.5 ? .0001 : 10000.0;
     }
   }
 
@@ -919,13 +884,15 @@ class Release0002 extends Component {
   render() {
     return (
       <Fragment>
-        <div ref={element => this.container = element}/>
-        <Player
-          src='assets/0002-yearunknown.mp3'
-          type='audio/mpeg'
-          message='YEAR UNKNOWN'
-          inputRef={el => this.audioElement = el}/>
-        <Purchase/>
+        <div className="release">
+          <div ref={element => this.container = element}/>
+          <Player
+            src='assets/0002-yearunknown.mp3'
+            type='audio/mpeg'
+            message='YEAR UNKNOWN'
+            inputRef={el => this.audioElement = el}/>
+          <Purchase/>
+        </div>
       </Fragment>
     );
   }
