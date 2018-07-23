@@ -50,4 +50,6 @@ yarn deploy-prod # deploys to production site
 
 We make heavy use of [BrowserStack](https://browserstack.com) for cross-browser and device testing.
 
-[![browser stack](public/assets/browser-stack-logo.png)](https://www.browserstack.com/)
+<a href="https://www.browserstack.com/" target="_blank">
+  <img src="public/assets/browser-stack-logo.png"/>
+</a>
