@@ -48,7 +48,7 @@ class Player extends Component {
   onClick = (e) => {
     e.preventDefault();
     if(!this.isPlaying()) {
-      this.handlePlay();
+      this.audioPlayer.play();
     }
     if(!this.state.paused) {
       this.handlePause();
