@@ -231,7 +231,7 @@ function Cloth(w, h) {
 
 }
 
-function simulateCloth(time, freqArray, ballPosition, ballBody, ballSize, sphere) {
+function simulateCloth(time, ballPosition, ballBody, ballSize, sphere) {
 
   if (!lastTime) {
 
