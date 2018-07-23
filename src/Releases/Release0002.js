@@ -268,7 +268,7 @@ class Release0002 extends Component {
     this.scene.background = new THREE.Color(0x000000);
 
     this.camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 10000);
-    this.light = new THREE.AmbientLight(0x888888);
+    this.light = new THREE.AmbientLight(0xFFFFFF);
 
     // net poles
     this.poleGeo = new THREE.BoxGeometry(5, 250 + 125, 5);
@@ -323,7 +323,7 @@ class Release0002 extends Component {
     if (!Detector.webgl) Detector.addGetWebGLMessage();
 
     // camera
-    this.getView1();
+    this.getView2();
     //camera.maxDistance = 600;
     //camera.lookAt( scene.position );
     // controls
@@ -343,15 +343,15 @@ class Release0002 extends Component {
 
     setInterval(() => this.strobeBulbLights(), this.beatTime / 4);
 
-    let count = 0;
-    setInterval(() => {
-      if (count >= this.views.length - 1){
-        count = 0;
-      } else {
-        count += 1;
-      }
-      this.views[count]();
-    }, this.beatTime * 8);
+    // let count = 0;
+    // setInterval(() => {
+    //   if (count >= this.views.length - 1){
+    //     count = 0;
+    //   } else {
+    //     count += 1;
+    //   }
+    //   this.views[count]();
+    // }, this.beatTime * 16);
   }
 
   onMouseMove = (event) => {
@@ -411,7 +411,7 @@ class Release0002 extends Component {
     let ballGeo = new THREE.SphereBufferGeometry(this.ballRadius, 32, 16);
 
     // glossy sphere from: https://medium.com/@soffritti.pierfrancesco/glossy-spheres-in-three-js-bfd2785d4857
-    var ballMaterial = new THREE.MeshStandardMaterial({ color: "#eae0c8", roughness: 1 });
+    var ballMaterial = new THREE.MeshStandardMaterial({ color: "#ff00ff", roughness: 1, metalness: 1.0 });
     var image = document.createElement('img');
     var envMap = new THREE.Texture(image);
     image.onload = function()  {
@@ -421,15 +421,15 @@ class Release0002 extends Component {
     envMap.mapping = THREE.SphericalReflectionMapping;
     ballMaterial.envMap = envMap;
 
-    // roughnessMap
-    var image = document.createElement('img');
-    var roughnessMap = new THREE.Texture(image);
-    image.onload = function()  {
-        roughnessMap.needsUpdate = true;
-    };
-    image.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NTc3MiwgMjAxNC8wMS8xMy0xOTo0NDowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjYzNjk1NjkxQjY0MjExRTY4QTg3RDcxOTNDQkE1RkRGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjYzNjk1NjkyQjY0MjExRTY4QTg3RDcxOTNDQkE1RkRGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NjM2OTU2OEZCNjQyMTFFNjhBODdENzE5M0NCQTVGREYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NjM2OTU2OTBCNjQyMTFFNjhBODdENzE5M0NCQTVGREYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5WU2ohAAAAH0lEQVR42mJgoDVg/P//P0kamBgGHRj1w0jxA0CAAQBKrgwBw+YutwAAAABJRU5ErkJggg==';
-    roughnessMap.magFilter = THREE.NearestFilter;
-    ballMaterial.roughnessMap = roughnessMap;
+    // // roughnessMap
+    // var image = document.createElement('img');
+    // var roughnessMap = new THREE.Texture(image);
+    // image.onload = function()  {
+    //     roughnessMap.needsUpdate = true;
+    // };
+    // image.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NTc3MiwgMjAxNC8wMS8xMy0xOTo0NDowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIDIwMTQgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjYzNjk1NjkxQjY0MjExRTY4QTg3RDcxOTNDQkE1RkRGIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjYzNjk1NjkyQjY0MjExRTY4QTg3RDcxOTNDQkE1RkRGIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NjM2OTU2OEZCNjQyMTFFNjhBODdENzE5M0NCQTVGREYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6NjM2OTU2OTBCNjQyMTFFNjhBODdENzE5M0NCQTVGREYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz5WU2ohAAAAH0lEQVR42mJgoDVg/P//P0kamBgGHRj1w0jxA0CAAQBKrgwBw+YutwAAAABJRU5ErkJggg==';
+    // roughnessMap.magFilter = THREE.NearestFilter;
+    // ballMaterial.roughnessMap = roughnessMap;
 
     // sphere properties
     this.sphere = new THREE.Mesh(ballGeo, ballMaterial);
@@ -460,80 +460,80 @@ class Release0002 extends Component {
     })));
     bulbLight1.position.set(-1900, -250, -1950);
 
-    const bulbLight2 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
-    bulbLight2.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
-      emissive: 0x7F00FF,
-      emissiveIntensity: 1,
-      color: 0x000000
-    })));
-    bulbLight2.position.set(1900, 750, -1950);
+    // const bulbLight2 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
+    // bulbLight2.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
+    //   emissive: 0x7F00FF,
+    //   emissiveIntensity: 1,
+    //   color: 0x000000
+    // })));
+    // bulbLight2.position.set(1900, 750, -1950);
 
-    const bulbLight3 = new THREE.PointLight(0x00FF7F, 10, 2000, 10);
+    const bulbLight3 = new THREE.PointLight(0x363dc2, 10, 2000, 10);
     bulbLight3.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
-      emissive: 0x00FF7F,
+      emissive: 0x363dc2,
       emissiveIntensity: 1,
       color: 0x000000
     })));
     bulbLight3.position.set(-1900, -250, 1950);
 
-    const bulbLight4 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
-    bulbLight4.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
-      emissive: 0x7F00FF,
-      emissiveIntensity: 1,
-      color: 0x000000
-    })));
-    bulbLight4.position.set(1900, 750, 1950);
+    // const bulbLight4 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
+    // bulbLight4.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
+    //   emissive: 0x7F00FF,
+    //   emissiveIntensity: 1,
+    //   color: 0x000000
+    // })));
+    // bulbLight4.position.set(1900, 750, 1950);
 
-    const bulbLight5 = new THREE.PointLight(0x00FF7F, 10, 2000, 10);
+    const bulbLight5 = new THREE.PointLight(0xff00ff, 10, 2000, 10);
     bulbLight5.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
-      emissive: 0x00FF7F,
+      emissive: 0xff00ff,
       emissiveIntensity: 1,
       color: 0x000000
     })));
-    bulbLight5.position.set(1900, -250, -1950);
+    bulbLight5.position.set(1900, -250, -1800);
 
-    const bulbLight6 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
-    bulbLight6.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
-      emissive: 0x7F00FF,
-      emissiveIntensity: 1,
-      color: 0x000000
-    })));
-    bulbLight6.position.set(1900, 750, -1950);
+    // const bulbLight6 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
+    // bulbLight6.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
+    //   emissive: 0x7F00FF,
+    //   emissiveIntensity: 1,
+    //   color: 0x000000
+    // })));
+    // bulbLight6.position.set(1900, 750, -1950);
 
-    const bulbLight7 = new THREE.PointLight(0x00FF7F, 10, 2000, 10);
+    const bulbLight7 = new THREE.PointLight(0xff00ff, 10, 2000, 10);
     bulbLight7.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
-      emissive: 0x00FF7F,
+      emissive: 0xff00ff,
       emissiveIntensity: 1,
       color: 0x000000
     })));
     bulbLight7.position.set(-1900, -250, 1950);
 
-    const bulbLight8 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
-    bulbLight8.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
-      emissive: 0x7F00FF,
-      emissiveIntensity: 1,
-      color: 0x000000
-    })));
-    bulbLight8.position.set(-1900, 750, 1950);
+    // const bulbLight8 = new THREE.PointLight(0x7F00FF, 10, 2000, 10);
+    // bulbLight8.add(new THREE.Mesh(sphere, new THREE.MeshStandardMaterial({
+    //   emissive: 0x7F00FF,
+    //   emissiveIntensity: 1,
+    //   color: 0x000000
+    // })));
+    // bulbLight8.position.set(-1900, 750, 1950);
 
     this.bulbLights = [];
     this.bulbLights.push(this.bulbLight1 = bulbLight1);
-    this.bulbLights.push(this.bulbLight2 = bulbLight2);
+    // this.bulbLights.push(this.bulbLight2 = bulbLight2);
     this.bulbLights.push(this.bulbLight3 = bulbLight3);
-    this.bulbLights.push(this.bulbLight4 = bulbLight4);
+    // this.bulbLights.push(this.bulbLight4 = bulbLight4);
     this.bulbLights.push(this.bulbLight5 = bulbLight5);
-    this.bulbLights.push(this.bulbLight6 = bulbLight6);
+    // this.bulbLights.push(this.bulbLight6 = bulbLight6);
     this.bulbLights.push(this.bulbLight7 = bulbLight7);
-    this.bulbLights.push(this.bulbLight8 = bulbLight8);
+    // this.bulbLights.push(this.bulbLight8 = bulbLight8);
 
     scene.add(this.bulbLight1);
-    scene.add(this.bulbLight2);
+    // scene.add(this.bulbLight2);
     scene.add(this.bulbLight3);
-    scene.add(this.bulbLight4);
+    // scene.add(this.bulbLight4);
     scene.add(this.bulbLight5);
-    scene.add(this.bulbLight6);
+    // scene.add(this.bulbLight6);
     scene.add(this.bulbLight7);
-    scene.add(this.bulbLight8);
+    // scene.add(this.bulbLight8);
 
   }
 
@@ -607,9 +607,9 @@ class Release0002 extends Component {
     // activate all these room objects as planes, this particular body causes the
     // sphere to fly towards and past it into positive z.
     let wall2PhysPos = new CANNON.Vec3(0, roomYPos, roomWidth / 2);
-    let wall2Axis = new CANNON.Vec3(0, 0, 0);
-    // let wall2Angle = 1; //-Math.PI; //-Math.PI/2;
-    this.hardMaterials.push(this.createSurface(wall2PhysPos, roomWidth, roomDepth, wall2Axis));
+    let wall2Axis = new CANNON.Vec3(1, 0, 0);
+    let wall2Angle = Math.PI;
+    this.hardMaterials.push(this.createSurface(wall2PhysPos, roomWidth, roomDepth, wall2Axis, wall2Angle));
 
     let wall3PhysPos = new CANNON.Vec3(roomDepth / 2, roomYPos, 0);
     let wall3Axis = new CANNON.Vec3(0, 1, 0);  // -.5 ?
@@ -790,16 +790,16 @@ class Release0002 extends Component {
 
   animateBulbLights = (time) => {
     this.bulbLight1.position.x = Math.cos(time * 0.0009) * 1000 + 250;
-    this.bulbLight2.position.x = Math.cos(time * 0.0009) * 1000 + 250;
+    // this.bulbLight2.position.x = Math.cos(time * 0.0009) * 1000 + 250;
 
     this.bulbLight3.position.x = Math.cos(time * 0.0009) * 1000 + 250;
-    this.bulbLight4.position.x = Math.cos(time * 0.0009) * 1000 + 250;
+    // this.bulbLight4.position.x = Math.cos(time * 0.0009) * 1000 + 250;
 
     this.bulbLight5.position.z = Math.cos(time * 0.0009) * 1000 + 250;
-    this.bulbLight6.position.z = Math.cos(time * 0.0009) * 1000 + 250;
+    // this.bulbLight6.position.z = Math.cos(time * 0.0009) * 1000 + 250;
 
     this.bulbLight7.position.z = Math.cos(time * 0.0009) * 1000 + 250;
-    this.bulbLight8.position.z = Math.cos(time * 0.0009) * 1000 + 250;
+    // this.bulbLight8.position.z = Math.cos(time * 0.0009) * 1000 + 250;
   }
 
   animate = () => {
