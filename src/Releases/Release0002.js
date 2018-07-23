@@ -323,7 +323,7 @@ class Release0002 extends Component {
     if (!Detector.webgl) Detector.addGetWebGLMessage();
 
     // camera
-    this.getView2();
+    this.getView1();
     //camera.maxDistance = 600;
     //camera.lookAt( scene.position );
     // controls
@@ -343,15 +343,15 @@ class Release0002 extends Component {
 
     setInterval(() => this.strobeBulbLights(), this.beatTime / 4);
 
-    // let count = 0;
-    // setInterval(() => {
-    //   if (count >= this.views.length - 1){
-    //     count = 0;
-    //   } else {
-    //     count += 1;
-    //   }
-    //   this.views[count]();
-    // }, this.beatTime * 16);
+    let count = 0;
+    setInterval(() => {
+      if (count >= this.views.length - 1){
+        count = 0;
+      } else {
+        count += 1;
+      }
+      this.views[count]();
+    }, this.beatTime * 16);
   }
 
   onMouseMove = (event) => {
