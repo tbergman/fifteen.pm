@@ -6,30 +6,32 @@ import Player from '../Player';
 import Purchase from '../Purchase';
 import {isFirefox, isChrome} from '../Utils/BrowserDetection';
 
+const BPM = 145;
+const BEAT_TIME = (60 / BPM) * 7400;
+const SCREEN_WIDTH = window.innerWidth;
+const SCREEN_HEIGHT = window.innerHeight;
+const RADIUS = 450;
+
 class Release0003 extends PureComponent {
   constructor() {
     super();
-    this.bpm = 145;
-    this.beatTime = (60 / 145) * 1000;
-    this.screenWidth = window.innerWidth;
-    this.screenHeight = window.innerHeight;
+
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xFFFFFF);
-    this.camera = new THREE.PerspectiveCamera(80, this.screenWidth / this.screenHeight, 1, 3000);
+    this.camera = new THREE.PerspectiveCamera(80, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000);
     this.camera.position.z = 1000;
-    this.radius = 450;
 
+    this.numLines = 1000;
     this.scratches = this.constructLines();
-    let useOrbs = false;//true;
-    this.orbs = this.constructLines(useOrbs);
+    this.orbs = this.constructLines(true);
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.setSize(this.screenWidth, this.screenHeight);
+    this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
   }
 
   state = {
-    showOrbs: true
+    showOrbs: true,
   }
 
   componentDidMount() {
@@ -41,22 +43,31 @@ class Release0003 extends PureComponent {
   }
 
   init = () => {
-    // this.scene.add(new THREE.BoxGeometry(10, 10, 10));
-    this.toggleView();
-
+    for (let i = 0; i < this.scratches.length; i++) {
+      this.scene.add(this.orbs[i]);
+    }
+    this.toggleViews();
     this.container.appendChild(this.renderer.domElement);
   }
 
-  toggleView = () => {
+  toggleViews = () => {
     setInterval(() => {
-      let newArr = this.state.showOrbs ? this.orbs : this.scratches
-      let oldArr = !this.state.showOrbs ? this.orbs : this.scratches
+      const {showOrbs} = this.state;
+      let newArr = [];
+      let oldArr = [];
+      //if (showOrbs) {
+      newArr = this.orbs;
+      oldArr = this.scratches;
+      // } else {
+      //     newArr = this.scratches;
+      //     oldArr = this.orbs;
+      // }
       for (let i = 0; i < this.scratches.length; i++) {
         this.scene.remove(oldArr[i]);
         this.scene.add(newArr[i]);
       }
-      this.setState({showOrbs: !this.state.showOrbs})
-    }, this.beatTime / 4.0);
+      this.setState({showOrbs: !this.state.showOrbs});
+    }, BEAT_TIME);
   }
 
   constructLines = (makeCircles) => {
@@ -64,8 +75,8 @@ class Release0003 extends PureComponent {
       [1, 0x666666, 1, 2],
       [2, 0x111111, 1, 1],
       [3, 0xaaaaaa, 0.75, 1],
-      [4, 0xffaa00, 0.5, 1],
-      [5, 0x000833, 0.8, 1],
+      [4, 0x222222, 0.5, 1],
+      [5, 0xeeeeee, 0.8, 1],
       [4, 0xaaaaaa, 0.75, 2],
       [3, 0x000000, 0.5, 1],
       [2, 0x000000, 0.25, 1],
@@ -79,7 +90,7 @@ class Release0003 extends PureComponent {
       let line = new THREE.LineSegments(geometry, material);
       line.scale.x = line.scale.y = line.scale.z = p[0];
       line.userData.originalScale = p[0];
-      // line.rotation.y = Math.random() * Math.PI;
+      line.rotation.z = Math.random() * Math.PI;
       line.updateMatrix();
       lines.push(line)
     }
@@ -90,20 +101,36 @@ class Release0003 extends PureComponent {
     var geometry = new THREE.BufferGeometry();
     var vertices = [];
     var vertex = new THREE.Vector3();
-    for (let i = 0; i < 1500; i++) {
-      vertex.x = Math.random() * 2 - 1;
-      vertex.y = 1; //Math.random() * 2 - 1;
-      vertex.z = Math.random() * 2 - 1;
+    console.log(this.numLines);
+    for (let i = 0; i < this.numLines; i++) {
+      this.renderFlatCircles(vertex);
+      // this.renderScratches(vertex);
       vertex.normalize();
-      vertex.multiplyScalar(this.radius);
+      vertex.multiplyScalar(RADIUS);
       vertices.push(vertex.x, vertex.y, vertex.z);
       if (makeCircles) {
-        vertex.multiplyScalar(this.radius);
+        vertex.multiplyScalar(0.5);
         vertices.push(vertex.x, vertex.y, vertex.z);
       }
     }
     geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     return geometry;
+  }
+
+  renderFlatCircles(vertex) {
+    vertex.x = Math.random() * 2 - 1;
+    vertex.y = 0;
+    vertex.z = Math.random() * 2 - 1;
+
+    return vertex;
+  }
+
+  renderScratches(vertex) {
+    vertex.x = Math.random() * 2 - 1;
+    vertex.y = Math.random() * 2;
+    vertex.z = Math.random() * 2 - 1;
+
+    return vertex;
   }
 
   componentWillUnmount() {
@@ -116,9 +143,7 @@ class Release0003 extends PureComponent {
   }
 
   onWindowResize = debounce(() => {
-    const WIDTH = window.innerWidth;
-    const HEIGHT = window.innerHeight;
-    this.renderer.setSize(WIDTH, HEIGHT);
+    this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
   }, 100);
 
 
@@ -164,29 +189,29 @@ class Release0003 extends PureComponent {
     for (let i = 0; i < this.scene.children.length; i++) {
       let object = this.scene.children[i];
       if (object.isLine) {
-      //   if (i % 2 === 0) {
-      //     object.rotation.x = -time
-      //   } else {
-      //     // determines rotation direction
-      //     // // if (i % 2) {
-      //     object.rotation.x = time
-      //     //object.rotation.y = -time// * 30//  Math.tan(30);	// * Math.tan(30) + 10// ( i < 4 ? ( i + 1 ) : - ( i + 1 ) );
-      //     // // } else {
-      //     // 	object.rotation.x =  time * Math.tan(3) + 10;// time * ( i < 4 ? ( i + 1 ) : - ( i + 1 ) );
-      //   }
-      //   if (i % 3 === 0) {
-      //     // object.position.y = time * .1;
-      //     // object.position.x = time * .1;
-      //     // object.position.z = time * .1;
-      //     // if ( i % 2 ) {
-      //     var scale = .5	//object.userData.originalScale * ( i / 5 + 1 ) * ( 1 + 0.5 * Math.cos( 7 * time ) );
-      //     // // pulsates spheres
-      //     // //object.scale.x = object.scale.y =
-      //     object.scale.y = scale;
-      //   } else {
-      //     object.scale.y = .1
-      //   }
-      //   //}
+        if (i % 2 === 0) {
+          object.rotation.x = -time
+        } else {
+          // determines rotation direction
+          // // if (i % 2) {
+          object.rotation.x = time
+          //object.rotation.y = -time// * 30//  Math.tan(30);	// * Math.tan(30) + 10// ( i < 4 ? ( i + 1 ) : - ( i + 1 ) );
+          // // } else {
+          // 	object.rotation.x =  time * Math.tan(3) + 10;// time * ( i < 4 ? ( i + 1 ) : - ( i + 1 ) );
+        }
+        if (i % 3 === 0) {
+          // object.position.y = time * .1;
+          // object.position.x = time * .1;
+          // object.position.z = time * .1;
+          // if ( i % 2 ) {
+          var scale = .5	//object.userData.originalScale * ( i / 5 + 1 ) * ( 1 + 0.5 * Math.cos( 7 * time ) );
+          // // pulsates spheres
+          // //object.scale.x = object.scale.y =
+          object.scale.y = scale;
+        } else {
+          object.scale.y = .1
+        }
+        //}
       }
     }
     this.renderer.render(this.scene, this.camera);
