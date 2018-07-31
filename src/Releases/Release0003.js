@@ -20,32 +20,16 @@ class Release0003 extends PureComponent {
     this.radius = 450;
 
     this.scratches = this.constructLines();
-    let useOrbs = true;
+    let useOrbs = false;//true;
     this.orbs = this.constructLines(useOrbs);
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(this.screenWidth, this.screenHeight);
+  }
 
-
-    setInterval(() => {
-      let newArr = [];
-      let oldArr = [];
-      if (useOrbs) {
-        newArr = this.orbs;
-        oldArr = this.scratches;
-        useOrbs = false
-      } else {
-        newArr = this.scratches;
-        oldArr = this.orbs;
-        useOrbs = true
-      }
-      for (let i = 0; i < this.scratches.length; i++) {
-        this.scene.remove(oldArr[i]);
-        this.scene.add(newArr[i]);
-      }
-    }, this.beatTime / 2.0);
-
+  state = {
+    showOrbs: true
   }
 
   componentDidMount() {
@@ -58,7 +42,21 @@ class Release0003 extends PureComponent {
 
   init = () => {
     // this.scene.add(new THREE.BoxGeometry(10, 10, 10));
+    this.toggleView();
+
     this.container.appendChild(this.renderer.domElement);
+  }
+
+  toggleView = () => {
+    setInterval(() => {
+      let newArr = this.state.showOrbs ? this.orbs : this.scratches
+      let oldArr = !this.state.showOrbs ? this.orbs : this.scratches
+      for (let i = 0; i < this.scratches.length; i++) {
+        this.scene.remove(oldArr[i]);
+        this.scene.add(newArr[i]);
+      }
+      this.setState({showOrbs: !this.state.showOrbs})
+    }, this.beatTime / 4.0);
   }
 
   constructLines = (makeCircles) => {
@@ -100,7 +98,7 @@ class Release0003 extends PureComponent {
       vertex.multiplyScalar(this.radius);
       vertices.push(vertex.x, vertex.y, vertex.z);
       if (makeCircles) {
-        vertex.multiplyScalar(0.8);
+        vertex.multiplyScalar(this.radius);
         vertices.push(vertex.x, vertex.y, vertex.z);
       }
     }
@@ -166,29 +164,29 @@ class Release0003 extends PureComponent {
     for (let i = 0; i < this.scene.children.length; i++) {
       let object = this.scene.children[i];
       if (object.isLine) {
-        if (i % 2 === 0) {
-          object.rotation.x = -time
-        } else {
-          // determines rotation direction
-          // // if (i % 2) {
-          object.rotation.x = time
-          //object.rotation.y = -time// * 30//  Math.tan(30);	// * Math.tan(30) + 10// ( i < 4 ? ( i + 1 ) : - ( i + 1 ) );
-          // // } else {
-          // 	object.rotation.x =  time * Math.tan(3) + 10;// time * ( i < 4 ? ( i + 1 ) : - ( i + 1 ) );
-        }
-        if (i % 3 === 0) {
-          // object.position.y = time * .1;
-          // object.position.x = time * .1;
-          // object.position.z = time * .1;
-          // if ( i % 2 ) {
-          var scale = .5	//object.userData.originalScale * ( i / 5 + 1 ) * ( 1 + 0.5 * Math.cos( 7 * time ) );
-          // // pulsates spheres
-          // //object.scale.x = object.scale.y =
-          object.scale.y = scale;
-        } else {
-          object.scale.y = .1
-        }
-        //}
+      //   if (i % 2 === 0) {
+      //     object.rotation.x = -time
+      //   } else {
+      //     // determines rotation direction
+      //     // // if (i % 2) {
+      //     object.rotation.x = time
+      //     //object.rotation.y = -time// * 30//  Math.tan(30);	// * Math.tan(30) + 10// ( i < 4 ? ( i + 1 ) : - ( i + 1 ) );
+      //     // // } else {
+      //     // 	object.rotation.x =  time * Math.tan(3) + 10;// time * ( i < 4 ? ( i + 1 ) : - ( i + 1 ) );
+      //   }
+      //   if (i % 3 === 0) {
+      //     // object.position.y = time * .1;
+      //     // object.position.x = time * .1;
+      //     // object.position.z = time * .1;
+      //     // if ( i % 2 ) {
+      //     var scale = .5	//object.userData.originalScale * ( i / 5 + 1 ) * ( 1 + 0.5 * Math.cos( 7 * time ) );
+      //     // // pulsates spheres
+      //     // //object.scale.x = object.scale.y =
+      //     object.scale.y = scale;
+      //   } else {
+      //     object.scale.y = .1
+      //   }
+      //   //}
       }
     }
     this.renderer.render(this.scene, this.camera);
