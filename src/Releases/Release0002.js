@@ -887,7 +887,7 @@ class Release0002 extends Component {
         <div className="release">
           <div ref={element => this.container = element}/>
           <Player
-            src='assets/0002-yearunknown.mp3'
+            src='https://api.soundcloud.com/tracks/475418370/stream?client_id=ad6375f4b6bc0bcaee8edf53ab37e7f2'
             type='audio/mpeg'
             message='YEAR UNKNOWN'
             inputRef={el => this.audioElement = el}/>

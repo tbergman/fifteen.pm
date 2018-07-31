@@ -318,7 +318,7 @@ class Release0001 extends PureComponent {
           }}
         />
         <Player
-          src='assets/0001-yahceph.mp3'
+          src='https://api.soundcloud.com/tracks/466084773/stream?client_id=ad6375f4b6bc0bcaee8edf53ab37e7f2'
           type='audio/mpeg'
           message='YAHCEPH'
           inputRef={el => this.audioElement = el}/>
