@@ -10,7 +10,7 @@ export function AudioStreamer(audioElement) {
 
   function captureStream(elt, ctx, analyser) {
     let stream;
-    if (isFirefox === true) {
+    if (isFirefox) {
       stream = elt.mozCaptureStream();
     } else if (isChrome) {
       stream = elt.captureStream();
