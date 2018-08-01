@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 import './Release.css';
 import Player from '../Player';
 import Purchase from '../Purchase';
-import {isFirefox, isChrome} from '../Utils/BrowserDetection';
+import {AudioStreamer} from "../Utils/Audio/AudioStreamer";
 /* eslint import/no-webpack-loader-syntax: off */
 // import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
 
@@ -49,6 +49,7 @@ class Release0001 extends PureComponent {
     this.waterMesh = new THREE.Mesh(this.geometry, this.shaderMaterial);
     this.geometryRay = new THREE.PlaneBufferGeometry(WATER_BOUNDS, WATER_BOUNDS, 1, 1);
     this.meshRay = new THREE.Mesh(this.geometryRay, new THREE.MeshBasicMaterial({color: 0xFFFFFF, visible: false}));
+
 
     this.gpuCompute = new GPUComputationRenderer(WATER_WIDTH, WATER_WIDTH, this.renderer);
     this.mousePos = new THREE.Vector2(10000, 10000);
@@ -95,9 +96,9 @@ class Release0001 extends PureComponent {
 
   onDocumentMouseMove = (event) => {
     if (event.touches) {
-        this.setMouseCoords(event.touches[0].clientX, event.touches[0].clientY);
+      this.setMouseCoords(event.touches[0].clientX, event.touches[0].clientY);
     } else {
-        this.setMouseCoords(event.clientX, event.clientY);
+      this.setMouseCoords(event.clientX, event.clientY);
     }
   };
 
@@ -113,7 +114,7 @@ class Release0001 extends PureComponent {
     this.addAmbientLight();
     this.addWater();
     this.addLight();
-    this.addAudio();
+    this.initAudioProps();
 
     this.mount.appendChild(this.renderer.domElement);
   }
@@ -174,31 +175,9 @@ class Release0001 extends PureComponent {
     }
   }
 
-  addAudio = () => {
-    window.onload = () => {
-      if (isFirefox === true) {
-        this.audioStream = this.audioElement.mozCaptureStream();
-      } else if (isChrome) {
-        this.audioStream = this.audioElement.captureStream();
-      }
-
-      if (this.audioStream !== undefined) {
-        if (isChrome) {
-            this.audioStream.onactive = () => {
-                this.createAudioSource();
-            };
-        }
-        else {
-            this.createAudioSource();
-        }
-      }
-    }
-  }
-
-  createAudioSource = () => {
-    let source = this.audioCtx.createMediaStreamSource(this.audioStream);
-    source.connect(this.audioAnalyser);
-    source.connect(this.audioCtx.destination);
+  initAudioProps = () => {
+    this.audioStream = new AudioStreamer(this.audioElement);
+    this.freqArray = new Uint8Array(this.audioStream.analyser.frequencyBinCount);
   }
 
   addSun = () => {
@@ -286,8 +265,8 @@ class Release0001 extends PureComponent {
       this.mouseMoved = false;
     }
     else {
-      if (this.audioStream !== undefined) {
-        this.audioAnalyser.getByteFrequencyData(freqArray);
+      if (this.audioStream.stream !== undefined) {
+        this.audioStream.analyser.getByteFrequencyData(freqArray);
         let x = this.freqArray[600];
         let y = this.freqArray[100] - 100;
         uniforms.mousePos.value.set(x, y)
