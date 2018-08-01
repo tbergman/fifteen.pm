@@ -53,9 +53,6 @@ class Release0001 extends PureComponent {
 
     this.gpuCompute = new GPUComputationRenderer(WATER_WIDTH, WATER_WIDTH, this.renderer);
     this.mousePos = new THREE.Vector2(10000, 10000);
-    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    this.audioAnalyser = this.audioCtx.createAnalyser();
-    this.freqArray = new Uint8Array(this.audioAnalyser.frequencyBinCount);
     this.light = new THREE.PointLight(0xff0000, 4, 100);
     this.sun = new THREE.DirectionalLight(lightColor1, lightIntensity1);
     this.sun2 = new THREE.DirectionalLight(lightColor2, lightIntensity2);

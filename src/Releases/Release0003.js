@@ -5,6 +5,7 @@ import './Release.css';
 import Player from '../Player';
 import Purchase from '../Purchase';
 import {isFirefox, isChrome} from '../Utils/BrowserDetection';
+import {AudioStreamer} from "../Utils/Audio/AudioStreamer";
 
 const BPM = 145;
 const BEAT_TIME = (60 / BPM) * 7400;
@@ -47,6 +48,7 @@ class Release0003 extends PureComponent {
       this.scene.add(this.orbs[i]);
     }
     this.toggleViews();
+    this.initAudioProps();
     this.container.appendChild(this.renderer.domElement);
   }
 
@@ -68,6 +70,11 @@ class Release0003 extends PureComponent {
       }
       this.setState({showOrbs: !this.state.showOrbs});
     }, BEAT_TIME);
+  }
+
+  initAudioProps = () => {
+    this.audioStream = new AudioStreamer(this.audioElement);
+    this.freqArray = new Uint8Array(this.audioStream.analyser.frequencyBinCount);
   }
 
   constructLines = (makeCircles) => {
@@ -152,33 +159,6 @@ class Release0003 extends PureComponent {
   }
 
 
-  addAudio = () => {
-    window.onload = () => {
-      if (isFirefox === true) {
-        this.audioStream = this.audioElement.mozCaptureStream();
-      } else if (isChrome) {
-        this.audioStream = this.audioElement.captureStream();
-      }
-
-      if (this.audioStream !== undefined) {
-        if (isChrome) {
-          this.audioStream.onactive = () => {
-            this.createAudioSource();
-          };
-        }
-        else {
-          this.createAudioSource();
-        }
-      }
-    }
-  }
-
-  createAudioSource = () => {
-    let source = this.audioCtx.createMediaStreamSource(this.audioStream);
-    source.connect(this.audioAnalyser);
-    source.connect(this.audioCtx.destination);
-  }
-
   animate = () => {
     this.frameId = window.requestAnimationFrame(this.animate);
     this.renderScene();
@@ -186,6 +166,8 @@ class Release0003 extends PureComponent {
 
   renderScene = () => {
     let time = Date.now() * 0.001;
+    this.audioStream.analyser.getByteFrequencyData(this.freqArray);
+    console.log(this.freqArray)
     for (let i = 0; i < this.scene.children.length; i++) {
       let object = this.scene.children[i];
       if (object.isLine) {
@@ -223,7 +205,7 @@ class Release0003 extends PureComponent {
         <div className="release">
           <div ref={element => this.container = element}/>
           <Player
-            src='assets/0002-yearunknown.mp3'
+            src='https://api.soundcloud.com/tracks/478997367/stream?secret_token=s-0gJfK&client_id=ad6375f4b6bc0bcaee8edf53ab37e7f2'
             type='audio/mpeg'
             message='OTHERE'
             inputRef={el => this.audioElement = el}/>
