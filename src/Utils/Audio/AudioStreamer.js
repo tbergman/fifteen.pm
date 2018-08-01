@@ -7,8 +7,6 @@ export function AudioStreamer(audioElement) {
   window.onload = () => {
     this.stream = captureStream(this.audioElement, this.audioCtx, this.analyser);
   };
-  console.log("HERE", this.stream)
-
 
   function captureStream(elt, ctx, analyser) {
     let stream;
@@ -35,6 +33,5 @@ export function AudioStreamer(audioElement) {
     source.connect(analyser);
     source.connect(ctx.destination);
   }
-
 }
 
