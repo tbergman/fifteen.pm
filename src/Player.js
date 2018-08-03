@@ -4,6 +4,9 @@ import './Player.css';
 
 
 class Player extends Component {
+  static defaultProps = {
+    fillColor: '#ffffff',
+  }
 
   // Assume autplay does not work.
   state = {
@@ -58,25 +61,26 @@ class Player extends Component {
   }
 
   render() {
-    const {props, state, onClick} = this;
+    const {paused} = this.state;
+    const {message, inputRef, src, type, fillColor} = this.props;
     return (
       <div id="player-container">
         <div id="player">
-          <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300">
+          <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" fill={fillColor}>
             <defs>
               <path id="circlePath" d=" M 150, 150 m -60, 0 a 60,60 0 0,1 120,0 a 60,60 0 0,1 -120,0 "/>
             </defs>
             <circle cx="100" cy="100" r="50" fill="none" stroke="none"/>
             <g>
                 <use xlinkHref="#circlePath" fill="none"/>
-                <text fill="#000">
-                    <textPath xlinkHref="#circlePath">{props.message}</textPath>
+                <text fill="#000" stroke="red">
+                    <textPath xlinkHref="#circlePath" fill={fillColor}>{message}</textPath>
                 </text>
             </g>
           </svg>
-          <div onClick={onClick} className={state.paused ? 'button' : 'button paused'}/>
-          <audio id="audio-player" loop autoPlay crossOrigin="anonymous" ref={props.inputRef}>
-            <source src={props.src} type={props.type}/>
+          <div onClick={this.onClick} className={paused ? 'button' : 'button paused'}/>
+          <audio id="audio-player" loop autoPlay crossOrigin="anonymous" ref={inputRef}>
+            <source src={src} type={type}/>
           </audio>
         </div>
       </div>
