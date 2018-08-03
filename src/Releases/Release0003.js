@@ -275,8 +275,10 @@ class Release0003 extends PureComponent {
                     src='https://api.soundcloud.com/tracks/480414720/stream?secret_token=s-HRFYz&client_id=ad6375f4b6bc0bcaee8edf53ab37e7f2'
                     type='audio/mpeg'
                     message='OTHERE'
-                    inputRef={el => this.audioElement = el}/>
-                <Purchase/>
+                    inputRef={el => this.audioElement = el}
+                    fillColor="red"
+                />
+                <Purchase fillColor="red" />
               </div>
             </Fragment>
         );

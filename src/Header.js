@@ -20,7 +20,6 @@ class Header extends Component {
 
   render() {
     const {showMenu} = this.state;
-
     return (
       <div className="header">
         <Logo onClick={this.onClick}/>
