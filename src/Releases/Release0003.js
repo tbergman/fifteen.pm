@@ -248,7 +248,6 @@ class Release0003 extends PureComponent {
   renderByTrackSection = () => {
     const {allOrbs} = this.state;
     let currentTime = this.audioStream.audioCtx.currentTime;
-
     // you need to check for intro_start since we're looping audio
     if (currentTime >= INTRO_START && currentTime < INTRO_END && allOrbs) {
       this.removeAllButFirstOrb();
@@ -283,6 +282,7 @@ class Release0003 extends PureComponent {
 
   renderOrbs = () => {
     this.renderByTrackSection();
+
 
     let volBuckets = this.getVolBuckets();
 
