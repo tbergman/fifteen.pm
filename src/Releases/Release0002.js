@@ -891,7 +891,7 @@ class Release0002 extends Component {
             type='audio/mpeg'
             message='YEAR UNKNOWN'
             inputRef={el => this.audioElement = el}/>
-          <Purchase/>
+          <Purchase href='https://gltd.bandcamp.com/track/timer'/>
         </div>
       </Fragment>
     );

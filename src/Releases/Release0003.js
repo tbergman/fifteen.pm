@@ -339,7 +339,7 @@ class Release0003 extends PureComponent {
             inputRef={el => this.audioElement = el}
             fillColor="red"
           />
-          <Purchase fillColor="red"/>
+          <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/TODO'/>
         </div>
       </Fragment>
     );
