@@ -33,9 +33,6 @@ class Release0003 extends PureComponent {
     this.scene.background = new THREE.Color(0xFFFFFF);
     this.camera = new THREE.PerspectiveCamera(80, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000);
     this.camera.position.z = 1000;
-
-    this.numLines = 800;
-
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -79,6 +76,7 @@ class Release0003 extends PureComponent {
       numSpheres: 3,
       color: 0x000000,
       scale: 2,
+      numLines: 800,
       radiusScale: 1,
       scalarOffset: 1.1,
       makeScratchy: true,
@@ -90,6 +88,7 @@ class Release0003 extends PureComponent {
       numSpheres: 20,
       color: 0xf0f0f0,
       scale: 3,
+      numLines: 800,
       radiusScale: 2,
       scalarOffset: 1.1,
       makeSphere: false,
@@ -101,6 +100,7 @@ class Release0003 extends PureComponent {
       numSpheres: 3,
       color: 0xaaaaaa,
       scale: 1,
+      numLines: 800,
       radiusScale: 2,
       scalarOffset: 1.1,
       makeSphere: false,
@@ -158,7 +158,7 @@ class Release0003 extends PureComponent {
     let geometry = new THREE.BufferGeometry();
     let vertices = [];
     let vertex = new THREE.Vector3();
-    for (let i = 0; i < this.numLines; i++) {
+    for (let i = 0; i < params.numLines; i++) {
       vertex.x = Math.random() * 2 - 1;
       vertex.y = params.makeSphere && idx == 0 ? Math.random() * 2 - 1 : 0;
       vertex.z = Math.random() * 2 - 1;
