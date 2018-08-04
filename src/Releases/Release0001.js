@@ -298,7 +298,7 @@ class Release0001 extends PureComponent {
           type='audio/mpeg'
           message='YAHCEPH'
           inputRef={el => this.audioElement = el}/>
-        <Purchase/>
+        <Purchase href='https://gltd.bandcamp.com/track/wun-4-jas'/>
       </Fragment>
     );
   }
