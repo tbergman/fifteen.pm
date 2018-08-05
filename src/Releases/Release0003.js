@@ -13,7 +13,7 @@ const BASS = "bass";
 const MIDS = "mids";
 
 // Filter frequency constants
-const MIN_FILTER_FREQ = 150;
+const MIN_FILTER_FREQ = 50;
 const MAX_FILTER_FREQ = 12000;
 const MIN_FILTER_RANGE = 0;
 const MAX_FILTER_RANGE = 0.3;
@@ -25,6 +25,9 @@ const RADIUS = 280;
 // Some moments in the song (in seconds)
 const SYNTHS_SWIRLS = [33, 36, 38];
 const INTRO_START = 0;
+const BASS_ENTERS = 0;
+const MID_ENTERS = 19;
+const TREBLE_ENTERS = 38;
 const INTRO_END = 77;
 const INTERLUDE_2_START = 161;
 const INTERLUDE_2_END = 167;
@@ -97,7 +100,8 @@ class Release0003 extends PureComponent {
   initOrbs = () => {
     let bassParams = {
       numSpheres: 3,
-      color: 0x000000,
+      offFilterColor: 0x000000,
+      onFilterColor: 0xFFFFFF,
       scale: 2,
       numLines: 800,
       radiusScale: 1,
@@ -109,7 +113,8 @@ class Release0003 extends PureComponent {
 
     let midParams = {
       numSpheres: 20,
-      color: 0xf0f0f0,
+      offFilterColor: 0xe3e3e3,
+      onFilterColor: 0xa4a4a4,
       scale: 3,
       numLines: 800,
       radiusScale: 2,
@@ -121,7 +126,8 @@ class Release0003 extends PureComponent {
 
     let trebleParams = {
       numSpheres: 3,
-      color: 0xaaaaaa,
+      offFilterColor: 0xaaaaaa,
+      onFilterColor: 0x555555,
       scale: 1,
       numLines: 800,
       radiusScale: 2,
@@ -157,22 +163,22 @@ class Release0003 extends PureComponent {
     this.midOrbs = this.initOrbsGroup(midParams);
     this.orbs = [this.trebleOrbs, this.bassOrbs, this.midOrbs];
     // initially only add some of the orbs
-    for (let orbGroup of this.orbs) {
-      for (let orb of orbGroup) {
-        if (orb.userData.idx === 0) {
-          this.scene.add(orb);
-          orb.userData.inScene = true;
-        } else {
-          orb.userData.inScene = false;
-        }
-      }
-    }
+    // for (let orbGroup of this.orbs) {
+    //   for (let orb of orbGroup) {
+    //     if (orb.userData.idx === 0) {
+    //       this.scene.add(orb);
+    //       orb.userData.inScene = true;
+    //     } else {
+    //       orb.userData.inScene = false;
+    //     }
+    //   }
+    // }
   }
 
   initOrbsGroup = (params) => {
     let orbs = [];
     for (let i = 0; i < params.numSpheres; ++i) {
-      let material = new THREE.LineBasicMaterial({color: params.color});
+      let material = new THREE.LineBasicMaterial({color: params.offFilterColor});
       let geometry = this.createOrbGeometry(params, i);
       let orb = new THREE.LineSegments(geometry, material);
       orb.scale.x = orb.scale.y = orb.scale.z = params.scale;
@@ -181,6 +187,8 @@ class Release0003 extends PureComponent {
       orb.updateMatrix();
       orb.name = params.name;
       orb.userData.idx = i;
+      orb.userData.offFilterColor = params.offFilterColor;
+      orb.userData.onFilterColor = params.onFilterColor;
       orbs.push(orb)
     }
     return orbs;
@@ -298,13 +306,28 @@ class Release0003 extends PureComponent {
     this.setState({allOrbs: false});
   }
 
+
+  handleIntroOrbGroup = (currentTime, entranceTime, orbGroup) => {
+    if (currentTime > entranceTime && !orbGroup[0].userData.inScene) {
+      this.scene.add(orbGroup[0]);
+      orbGroup[0].userData.inScene = true;
+    }
+  }
+
+  handleIntroOrbs = (currentTime) => {
+    this.handleIntroOrbGroup(currentTime, BASS_ENTERS, this.bassOrbs);
+    this.handleIntroOrbGroup(currentTime, MID_ENTERS, this.midOrbs);
+    this.handleIntroOrbGroup(currentTime, TREBLE_ENTERS, this.trebleOrbs);
+  }
+
   renderByTrackSection = () => {
     const {allOrbs} = this.state;
     let currentTime = this.audioElement.currentTime;
 
     // you need to check for intro_start since we're looping audio
-    if (currentTime >= INTRO_START && currentTime < INTRO_END && allOrbs) {
-      this.removeAllButFirstOrb();
+    if (currentTime >= INTRO_START && currentTime < INTRO_END) {//} && allOrbs) {
+      this.handleIntroOrbs(currentTime);
+
     }
 
     if (currentTime >= INTRO_END && currentTime < INTERLUDE_2_START && !allOrbs) {
@@ -397,15 +420,16 @@ class Release0003 extends PureComponent {
     for (let i = 0; i < intersects.length; i++) {
       if (intersects[i].object.name === 'filterSphere') {
         this.scene.background = new THREE.Color(0x000000);
-        let range = Math.abs(this.mouse.x) + Math.abs(this.mouse.y);
+        let range = Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y));
+        // console.log(Math.log(1 + range));
         this.audioStream.filter.frequency.value = this.scaleFreq(range)
         this.audioStream.filter.Q.value = FILTER_RESONANCE;
         onLoPassSphere = true;
         for (let orbGroup of this.orbs) {
           for (let orb of orbGroup) {
-            orb.material.color.setHex(0xFFFFFF);
-            }
+            orb.material.color.setHex(orb.userData.onFilterColor);
           }
+        }
       }
     }
     if (!onLoPassSphere) {
@@ -414,7 +438,7 @@ class Release0003 extends PureComponent {
       this.audioStream.filter.Q.value = 0;
       for (let orbGroup of this.orbs) {
         for (let orb of orbGroup) {
-          orb.material.color.setHex(0x000000);
+          orb.material.color.setHex(orb.userData.offFilterColor);
         }
       }
     }
