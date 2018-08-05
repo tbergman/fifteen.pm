@@ -24,7 +24,7 @@ const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 const RADIUS = 280;
 // Some moments in the song (in seconds)
-const SYNTHS_SWIRLS = [33, 36, 38];
+const SYNTHS_SWIRLS = [2, 3, 4, 5, 33, 36, 38];
 const INTRO_START = 0;
 const BASS_ENTERS = 0;
 const MID_ENTERS = 19;
@@ -53,8 +53,7 @@ class Release0003 extends PureComponent {
   }
 
   state = {
-    allOrbs: false,
-    loPass: false
+    allOrbs: false
   }
 
   componentDidMount() {
@@ -109,7 +108,7 @@ class Release0003 extends PureComponent {
       numLines: 800,
       radiusScale: 1,
       scalarOffset: 1.1,
-      makeScratchy: true,
+      // makeScratchy: true,
       makeSphere: true,
       name: BASS
     };
@@ -123,7 +122,7 @@ class Release0003 extends PureComponent {
       radiusScale: 2,
       scalarOffset: 1.1,
       makeSphere: false,
-      makeScratchy: false,
+      // makeScratchy: false,
       name: MIDS
     };
 
@@ -136,7 +135,7 @@ class Release0003 extends PureComponent {
       radiusScale: 2,
       scalarOffset: 1.1,
       makeSphere: false,
-      makeScratchy: false,
+      // makeScratchy: false,
       name: TREBLE
     };
 
@@ -151,22 +150,38 @@ class Release0003 extends PureComponent {
     // }
     //
     // this.canUHearOrbs = this.initOrbsGroup(canUHearParams)
-    this.trebleOrbs = this.initOrbsGroup(trebleParams);
-    this.bassOrbs = this.initOrbsGroup(bassParams);
-    // add an invisible sphere for raycasting
-    let geometry = new THREE.SphereGeometry(RADIUS);
+    // this.trebleOrbs = this.initOrbsGroup(trebleParams);
+    // this.bassOrbs = this.initOrbsGroup(bassParams);
+    // this.midOrbs = this.initOrbsGroup(midParams);
+    // this.trebleScratchy = this.initOrbsGroup(trebleParams, true);
+    // this.midScratchy = this.initOrbsGroup(midParams, true);
+    // this.bassScratchy = this.initOrbsGroup(bassParams, true);
 
-    var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.0});
-    var sphere = new THREE.Mesh(geometry, material);
-    sphere.name = "filterSphere";
-    // sphere.position = new THREE.Vector3();
-    this.scene.add(sphere);
+    // this.orbs = {
+    //   clean: [this.trebleOrbs, this.bassOrbs, this.midOrbs],
+    //   scratchy:
+    //
+    // }
+
+    this.cleanOrbs = {
+      treble: this.initOrbsGroup(trebleParams),
+      bass: this.initOrbsGroup(bassParams),
+      mid: this.initOrbsGroup(midParams)
+    };
+
+    this.scratchyOrbs = {
+      treble: this.initOrbsGroup(trebleParams, true),
+      bass: this.initOrbsGroup(bassParams, true),
+      mid: this.initOrbsGroup(midParams, true)
+    };
+
+    this.onOrbs = this.cleanOrbs;
+    this.offOrbs = this.scratchyOrbs;
 
 
-    this.midOrbs = this.initOrbsGroup(midParams);
-    this.orbs = [this.trebleOrbs, this.bassOrbs, this.midOrbs];
-    // initially only add some of the orbs
-    // for (let orbGroup of this.orbs) {
+    // this.scratchyOrbs = [this.trebleScratchy, this.bassScratchy, this.midScratchy];
+    // initially only add some of the cleanOrbs
+    // for (let orbGroup of this.cleanOrbs) {
     //   for (let orb of orbGroup) {
     //     if (orb.userData.idx === 0) {
     //       this.scene.add(orb);
@@ -176,13 +191,21 @@ class Release0003 extends PureComponent {
     //     }
     //   }
     // }
+
+    // FILTER SPHERE add an invisible sphere for raycasting (TODO move)
+    let geometry = new THREE.SphereGeometry(RADIUS);
+    var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.0});
+    var sphere = new THREE.Mesh(geometry, material);
+    sphere.name = "filterSphere";
+    // sphere.position = new THREE.Vector3();
+    this.scene.add(sphere);
   }
 
-  initOrbsGroup = (params) => {
+  initOrbsGroup = (params, scratchy) => {
     let orbs = [];
     for (let i = 0; i < params.numSpheres; ++i) {
       let material = new THREE.LineBasicMaterial({color: params.offFilterColor});
-      let geometry = this.createOrbGeometry(params, i);
+      let geometry = this.createOrbGeometry(params, i, scratchy);
       let orb = new THREE.LineSegments(geometry, material);
       orb.scale.x = orb.scale.y = orb.scale.z = params.scale;
       orb.rotation.z = Math.random() * Math.PI;
@@ -197,7 +220,7 @@ class Release0003 extends PureComponent {
     return orbs;
   }
 
-  createOrbGeometry = (params, idx) => {
+  createOrbGeometry = (params, idx, scratchy) => {
     let geometry = new THREE.BufferGeometry();
     let vertices = [];
     let vertex = new THREE.Vector3();
@@ -208,10 +231,10 @@ class Release0003 extends PureComponent {
       vertex.normalize();
       vertex.multiplyScalar(RADIUS * params.radiusScale);
       vertices.push(vertex.x, vertex.y, vertex.z);
-      // if (idx > 0 || !params.makeScratchy) {
-      vertex.multiplyScalar(params.scalarOffset);
-      vertices.push(vertex.x, vertex.y, vertex.z);
-      // }
+      if (!scratchy) {
+        vertex.multiplyScalar(params.scalarOffset);
+        vertices.push(vertex.x, vertex.y, vertex.z);
+      }
     }
     geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     return geometry;
@@ -288,7 +311,7 @@ class Release0003 extends PureComponent {
   }
 
   addAllOrbs = () => {
-    for (let orbGroup of this.orbs) {
+    for (let orbGroup of this.onOrbs) {
       for (let orb of orbGroup) {
         if (!orb.userData.inScene) {
           this.scene.add(orb);
@@ -300,7 +323,7 @@ class Release0003 extends PureComponent {
   }
 
   removeAllButFirstOrb = () => {
-    for (let orbGroup of this.orbs) {
+    for (let orbGroup of this.onOrbs) {
       for (let orb of orbGroup) {
         if (orb.userData.idx !== 0) {
           this.scene.remove(orb);
@@ -320,14 +343,41 @@ class Release0003 extends PureComponent {
   }
 
   handleIntroOrbs = (currentTime) => {
-    this.handleIntroOrbGroup(currentTime, BASS_ENTERS, this.bassOrbs);
-    this.handleIntroOrbGroup(currentTime, MID_ENTERS, this.midOrbs);
-    this.handleIntroOrbGroup(currentTime, TREBLE_ENTERS, this.trebleOrbs);
+    this.handleIntroOrbGroup(currentTime, BASS_ENTERS, this.onOrbs.bass);
+    this.handleIntroOrbGroup(currentTime, MID_ENTERS, this.onOrbs.mid);
+    this.handleIntroOrbGroup(currentTime, TREBLE_ENTERS, this.onOrbs.treble);
   }
+
+  setOrbs = (currentTime) => {
+    let timeBuffer = .2;
+    for (let swirl of SYNTHS_SWIRLS) {
+      if (Math.abs(currentTime - swirl) < timeBuffer) {
+        return [this.scratchyOrbs, this.cleanOrbs];
+      }
+    }
+    return [this.cleanOrbs, this.scratchyOrbs];
+  }
+
+  toggleOrbs = (currentTime) => {
+    [this.onOrbs, this.offOrbs] = this.setOrbs(currentTime);
+    for (let orbGroup in this.offOrbs) {
+      for (let orb of this.offOrbs[orbGroup]) {
+        orb.visible = false;
+      }
+    }
+    for (let orbGroup in this.onOrbs) {
+      for (let orb of this.onOrbs[orbGroup]) {
+        orb.visible = true;
+      }
+    }
+  }
+
 
   renderByTrackSection = () => {
     const {allOrbs} = this.state;
     let currentTime = this.audioElement.currentTime;
+
+    this.toggleOrbs(currentTime);
 
     // you need to check for intro_start since we're looping audio
     if (currentTime >= INTRO_START && currentTime < INTRO_END) {//} && allOrbs) {
@@ -368,7 +418,7 @@ class Release0003 extends PureComponent {
     let freqBuckets = this.getFreqBuckets();
     // explicit for loops to avoid checking for types/names
     // these are the flat gray circles directly orbiting the center black core
-    for (let orb of this.trebleOrbs) {
+    for (let orb of this.onOrbs.treble) {
       let rotationDenominator = this.state.allOrbs ? 3.0 : 16.0;
       let rotationDirection = THREE.Math.randInt(-1, 1) > 0 ? 1 : -1;
       orb.rotation.x += BEAT_TIME / rotationDenominator;// * rotationDirection;
@@ -383,8 +433,8 @@ class Release0003 extends PureComponent {
       // }
     }
 
-    // these are the background lightest colored orbs
-    for (let orb of this.midOrbs) {
+    // these are the background lightest colored cleanOrbs
+    for (let orb of this.onOrbs.mid) {
       let midVol = (volBuckets[this.midIndex1] + volBuckets[this.midIndex2]) / 2.0;
       let midRotation = 0;
       if (midVol < this.midThresh) {
@@ -397,8 +447,8 @@ class Release0003 extends PureComponent {
       orb.rotation.z += midRotation;
     }
 
-    // these are the dark orbs in the center
-    for (let orb of this.bassOrbs) {
+    // these are the dark cleanOrbs in the center
+    for (let orb of this.onOrbs.bass) {
       orb.rotation.x += -BEAT_TIME / 16.0;
       let bassVol = volBuckets[this.bassIndex];
       if (bassVol > this.bassThresh) {
@@ -426,25 +476,24 @@ class Release0003 extends PureComponent {
       if (intersects[i].object.name === 'filterSphere') {
         this.scene.background = new THREE.Color(0x000000);
         let range = Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y));
-        // console.log(Math.log(1 + range));
-        this.audioStream.filter.frequency.value = this.scaleFreq(range)
+        this.audioStream.filter.frequency.value = this.scaleFreq(range);
         this.audioStream.filter.Q.value = FILTER_RESONANCE;
         onLoPassSphere = true;
-        for (let orbGroup of this.orbs) {
-          for (let orb of orbGroup) {
+        for (let orbGroup in this.onOrbs) {
+          for (let orb of this.onOrbs[orbGroup]) {
             orb.material.color.setHex(orb.userData.onFilterColor);
           }
         }
       }
-    }
+   }
     if (!onLoPassSphere) {
       this.scene.background = new THREE.Color(0xFFFFFF);
       this.audioStream.filter.frequency.value = 20000;
       this.audioStream.filter.Q.value = 0;
-      for (let orbGroup of this.orbs) {
-        for (let orb of orbGroup) {
-          orb.material.color.setHex(orb.userData.offFilterColor);
-        }
+      for (let orbGroup in this.onOrbs) {
+        for (let orb of this.onOrbs[orbGroup]) {
+           orb.material.color.setHex(orb.userData.offFilterColor);
+         }
       }
     }
   }
