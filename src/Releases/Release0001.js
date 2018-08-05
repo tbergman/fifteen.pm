@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 import './Release.css';
 import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
-import {AudioStreamer} from "../Utils/Audio/AudioStreamer";
+import AudioStreamer from "../Utils/Audio/AudioStreamer";
 /* eslint import/no-webpack-loader-syntax: off */
 // import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
 
