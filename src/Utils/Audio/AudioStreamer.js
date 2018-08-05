@@ -1,37 +1,30 @@
-import {isChrome, isFirefox} from "../BrowserDetection";
+class AudioStreamer {
+  
+  // A class which handles Web Audio API Interaction given an Audio Element
 
-export function AudioStreamer(audioElement) {
-  this.audioElement = audioElement;
-  this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  this.analyser = this.audioCtx.createAnalyser();
-  window.onload = () => {
-    this.stream = captureStream(this.audioElement, this.audioCtx, this.analyser);
-  };
+  constructor(audioElement) {
+    this.element = audioElement
+    this.context = new (window.AudioContext || window.webkitAudioContext)();
 
-  function captureStream(elt, ctx, analyser) {
-    let stream;
-    if (isFirefox) {
-      stream = elt.mozCaptureStream();
-    } else if (isChrome) {
-      stream = elt.captureStream();
-    }
-    if (stream !== undefined) {
-      if (isChrome) {
-        stream.onactive = () => {
-          createAudioSource(ctx, analyser, stream);
-        };
-      }
-      else {
-        createAudioSource(ctx, analyser, stream);
-      }
-      return stream;
-    }
+    // init nodes
+    this.analyser = this.context.createAnalyser();
+    this.filter   = this.context.createBiquadFilter();
+    
+    // set defaults which will be unnoticeable
+    this.filter.frequency.value = 25000;
+    this.filter.type = "lowpass";
+    this.source = undefined;
   }
-
-  function createAudioSource(ctx, analyser, stream) {
-    let source = ctx.createMediaStreamSource(stream);
-    source.connect(analyser);
-    source.connect(ctx.destination);
+  
+  // TODO: figure out how to parameterize connection / routing of Nodes
+  connect() {
+    window.onload = () => {
+      this.source = this.context.createMediaElementSource(this.element);
+      this.source.connect(this.analyser);
+      this.analyser.connect(this.filter);
+      this.filter.connect(this.context.destination);
+    }
   }
 }
 
+export {AudioStreamer};

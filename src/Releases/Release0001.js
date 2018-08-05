@@ -4,7 +4,7 @@ import {SimplexNoise} from '../Utils/SimplexNoise';
 import {GPUComputationRenderer} from "../Utils/GPUComputationRenderer";
 import debounce from 'lodash/debounce';
 import './Release.css';
-import Player from '../Player';
+import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
 import {AudioStreamer} from "../Utils/Audio/AudioStreamer";
 /* eslint import/no-webpack-loader-syntax: off */
@@ -174,6 +174,7 @@ class Release0001 extends PureComponent {
 
   initAudioProps = () => {
     this.audioStream = new AudioStreamer(this.audioElement);
+    this.audioStream.connect();
     this.freqArray = new Uint8Array(this.audioStream.analyser.frequencyBinCount);
   }
 
@@ -293,8 +294,8 @@ class Release0001 extends PureComponent {
             this.mount = mount
           }}
         />
-        <Player
-          src='https://api.soundcloud.com/tracks/466084773/stream?client_id=ad6375f4b6bc0bcaee8edf53ab37e7f2'
+        <SoundcloudPlayer
+          trackId='466084773'
           type='audio/mpeg'
           message='YAHCEPH'
           inputRef={el => this.audioElement = el}/>
