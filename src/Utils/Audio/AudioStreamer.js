@@ -27,4 +27,4 @@ class AudioStreamer {
   }
 }
 
-export {AudioStreamer};
+export default AudioStreamer;

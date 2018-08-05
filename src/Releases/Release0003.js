@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce';
 import './Release.css';
 import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
-import {AudioStreamer} from "../Utils/Audio/AudioStreamer";
+import AudioStreamer from "../Utils/Audio/AudioStreamer";
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);
