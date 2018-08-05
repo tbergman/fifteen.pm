@@ -21,7 +21,7 @@ class SoundcloudPlayer extends Component {
   }
 
   render() {
-    const {message, inputRef, trackId, type, secretToken, fillColor} = this.props;
+    const {message, inputRef, trackId, secretToken, fillColor} = this.props;
     return (
       <Player             
         src={this.formatSoundcloudSrc(trackId, secretToken)}
