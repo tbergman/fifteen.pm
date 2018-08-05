@@ -5,6 +5,7 @@ import './Release.css';
 import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
+import {OrbitControls} from "../Utils/OrbitControls";
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);
@@ -47,6 +48,8 @@ class Release0003 extends PureComponent {
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.startTime = Date.now();
   }
 
   state = {
@@ -248,6 +251,8 @@ class Release0003 extends PureComponent {
 
   animate = () => {
     this.frameId = window.requestAnimationFrame(this.animate);
+    let time = Date.now();
+    this.controls.update(time - this.startTime);
     this.renderScene();
   }
 
