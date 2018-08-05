@@ -23,8 +23,7 @@ const FILTER_RESONANCE = 15;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 const RADIUS = 280;
-// Some moments in the song (in seconds)
-const SYNTHS_SWIRLS = [2, 3, 4, 5, 33, 36, 38];
+
 const INTRO_START = 0;
 const INTRO_END = 77;
 const BASS_ENTERS = 0;
@@ -37,6 +36,27 @@ const INTERLUDE_3_START = 242;
 const INTERLUDE_3_END = 247;
 const OUTRO_START = 306;
 const CAN_U_HEAR = 169;
+const SONG_LENGTH = 328;
+const N_RANDOM_MOMENTS = 50;
+
+let getRandomMoments = (len, size) => {
+    var arr = [];
+    for (var j = 0; j <= len; j++) {
+        arr.push(j);
+    }
+    let shuffled = arr.slice(0), i = arr.length, temp, index;
+    while (i--) {
+        index = Math.floor((i + 1) * Math.random());
+        temp = shuffled[index];
+        shuffled[index] = shuffled[i];
+        shuffled[i] = temp;
+    }
+    return shuffled.slice(0, size);
+}
+
+// Some moments in the song (in seconds)
+const SCRATCHY_MOMENTS = getRandomMoments(SONG_LENGTH, N_RANDOM_MOMENTS);
+
 
 class Release0003 extends PureComponent {
   constructor() {
@@ -160,7 +180,7 @@ class Release0003 extends PureComponent {
 
     this.scratchyOrbs = {
       treble: this.initOrbsGroup(trebleParams, true),
-      bass: this.initOrbsGroup(bassParams, true),
+      bass: this.initOrbsGroup(bassParams),
       mid: this.initOrbsGroup(midParams, true)
     };
 
@@ -249,7 +269,7 @@ class Release0003 extends PureComponent {
 
   animate = () => {
     this.frameId = window.requestAnimationFrame(this.animate);
-    let time = Date.now();
+    let time =Date.now();
     this.controls.update(time - this.startTime);
     this.renderScene();
   }
@@ -325,7 +345,7 @@ class Release0003 extends PureComponent {
 
   getOrbs = (currentTime) => {
     let timeBuffer = .2;
-    for (let swirl of SYNTHS_SWIRLS) {
+    for (let swirl of SCRATCHY_MOMENTS) {
       if (Math.abs(currentTime - swirl) < timeBuffer) {
         return [this.scratchyOrbs, this.smoothOrbs];
       }
