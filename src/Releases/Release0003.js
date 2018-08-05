@@ -26,10 +26,11 @@ const RADIUS = 280;
 // Some moments in the song (in seconds)
 const SYNTHS_SWIRLS = [2, 3, 4, 5, 33, 36, 38];
 const INTRO_START = 0;
+const INTRO_END = 77;
 const BASS_ENTERS = 0;
 const MID_ENTERS = 19;
 const TREBLE_ENTERS = 38;
-const INTRO_END = 77;
+
 const INTERLUDE_2_START = 161;
 const INTERLUDE_2_END = 167;
 const INTERLUDE_3_START = 242;
@@ -285,8 +286,8 @@ class Release0003 extends PureComponent {
   }
 
   addAllOrbs = () => {
-    for (let orbGroup of this.onOrbs) {
-      for (let orb of orbGroup) {
+    for (let orbGroup in this.onOrbs) {
+      for (let orb of this.onOrbs[orbGroup]) {
         if (!orb.userData.inScene) {
           this.scene.add(orb);
           orb.userData.inScene = true;
@@ -297,8 +298,8 @@ class Release0003 extends PureComponent {
   }
 
   removeAllButFirstOrb = () => {
-    for (let orbGroup of this.onOrbs) {
-      for (let orb of orbGroup) {
+    for (let orbGroup in this.onOrbs) {
+      for (let orb of this.onOrbs[orbGroup]) {
         if (orb.userData.idx !== 0) {
           this.scene.remove(orb);
           orb.userData.inScene = false;
@@ -322,7 +323,7 @@ class Release0003 extends PureComponent {
     this.handleIntroOrbGroup(currentTime, TREBLE_ENTERS, this.onOrbs.treble);
   }
 
-  setOrbs = (currentTime) => {
+  getOrbs = (currentTime) => {
     let timeBuffer = .2;
     for (let swirl of SYNTHS_SWIRLS) {
       if (Math.abs(currentTime - swirl) < timeBuffer) {
@@ -333,7 +334,7 @@ class Release0003 extends PureComponent {
   }
 
   toggleOrbs = (currentTime) => {
-    [this.onOrbs, this.offOrbs] = this.setOrbs(currentTime);
+    [this.onOrbs, this.offOrbs] = this.getOrbs(currentTime);
     for (let orbGroup in this.offOrbs) {
       for (let orb of this.offOrbs[orbGroup]) {
         orb.visible = false;
