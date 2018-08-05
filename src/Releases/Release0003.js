@@ -11,11 +11,19 @@ const BEAT_TIME = (60 / BPM);
 const TREBLE = "treble";
 const BASS = "bass";
 const MIDS = "mids";
+
+// Filter frequency constants
+const MIN_FILTER_FREQ = 150;
+const MAX_FILTER_FREQ = 12000;
+const MIN_FILTER_RANGE = 0;
+const MAX_FILTER_RANGE = 0.3;
+const FILTER_RESONANCE = 15;
+
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
-const RADIUS = 250;
+const RADIUS = 280;
 // Some moments in the song (in seconds)
-const SYNTHS_ENTER = 33;
+const SYNTHS_SWIRLS = [33, 36, 38];
 const INTRO_START = 0;
 const INTRO_END = 77;
 const INTERLUDE_2_START = 161;
@@ -39,12 +47,14 @@ class Release0003 extends PureComponent {
   }
 
   state = {
-    allOrbs: false
+    allOrbs: false,
+    loPass: false
   }
 
   componentDidMount() {
-    window.addEventListener("touchstart", this.onDocumentMouseMove, false);
-    window.addEventListener("touchmove", this.onDocumentMouseMove, false);
+    // window.addEventListener("touchstart", this.onDocumentMouseMove, false);
+    window.addEventListener('mousemove', this.onMouseMove, false);
+    // window.addEventListener("touchmove", this.onDocumentMouseMove, false);
     window.addEventListener('resize', this.onWindowResize, false);
     this.init();
     this.animate();
@@ -66,14 +76,22 @@ class Release0003 extends PureComponent {
     // this.audioStream.filter.Q.value = 2.5;
     this.volArray = new Uint8Array(this.audioStream.analyser.fftSize);
     this.numVolBuckets = 4;
+    this.volBucketSize = this.volArray.length / this.numVolBuckets;
+
+    this.freqArray = new Uint8Array(this.audioStream.analyser.frequencyBinCount);
+    this.numFreqBuckets = 64;
+    this.freqBucketSize = this.freqArray.length / this.numFreqBuckets;
+
     this.bassIndex = 0; // the vol bucket indices, assigned by freq range
     this.midIndex1 = 1;
     this.midIndex2 = 2;
     this.trebIndex = 3;
-    this.bassThresh = 100; // a val
+    this.bassThresh = 100;
     this.midThresh = 130;
     this.trebThresh = 140.0;
     this.normalizingConst = 200.0;
+
+
   }
 
   initOrbs = () => {
@@ -126,6 +144,16 @@ class Release0003 extends PureComponent {
     // this.canUHearOrbs = this.initOrbsGroup(canUHearParams)
     this.trebleOrbs = this.initOrbsGroup(trebleParams);
     this.bassOrbs = this.initOrbsGroup(bassParams);
+    // add an invisible sphere for raycasting
+    let geometry = new THREE.SphereGeometry(RADIUS);
+
+    var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.0});
+    var sphere = new THREE.Mesh(geometry, material);
+    sphere.name = "filterSphere";
+    // sphere.position = new THREE.Vector3();
+    this.scene.add(sphere);
+
+
     this.midOrbs = this.initOrbsGroup(midParams);
     this.orbs = [this.trebleOrbs, this.bassOrbs, this.midOrbs];
     // initially only add some of the orbs
@@ -142,7 +170,6 @@ class Release0003 extends PureComponent {
   }
 
   initOrbsGroup = (params) => {
-
     let orbs = [];
     for (let i = 0; i < params.numSpheres; ++i) {
       let material = new THREE.LineBasicMaterial({color: params.color});
@@ -165,14 +192,14 @@ class Release0003 extends PureComponent {
     let vertex = new THREE.Vector3();
     for (let i = 0; i < params.numLines; i++) {
       vertex.x = Math.random() * 2 - 1;
-      vertex.y = params.makeSphere && idx == 0 ? Math.random() * 2 - 1 : 0;
+      vertex.y = params.makeSphere && idx === 0 ? Math.random() * 2 - 1 : 0;
       vertex.z = Math.random() * 2 - 1;
       vertex.normalize();
       vertex.multiplyScalar(RADIUS * params.radiusScale);
       vertices.push(vertex.x, vertex.y, vertex.z);
       // if (idx > 0 || !params.makeScratchy) {
-        vertex.multiplyScalar(params.scalarOffset);
-        vertices.push(vertex.x, vertex.y, vertex.z);
+      vertex.multiplyScalar(params.scalarOffset);
+      vertices.push(vertex.x, vertex.y, vertex.z);
       // }
     }
     geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
@@ -181,13 +208,13 @@ class Release0003 extends PureComponent {
 
   initRaycaster = () => {
     this.raycaster = new THREE.Raycaster();
-    this.mouse = new THREE.Vector2();
+    this.mouse = new THREE.Vector2(100, 100);
   }
 
   componentWillUnmount() {
     this.stop();
     window.addEventListener('mousemove', this.onMouseMove, false);
-    window.raddEventListener('resize', this.onWindowResize, false);
+    window.addEventListener('resize', this.onWindowResize, false);
     window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
     window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
     this.container.removeChild(this.renderer.domElement);
@@ -197,10 +224,8 @@ class Release0003 extends PureComponent {
 
     // calculate mouse position in normalized device coordinates
     // (-1 to +1) for both components
-
-    this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;;
-    this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   }
 
   onWindowResize = debounce(() => {
@@ -218,7 +243,7 @@ class Release0003 extends PureComponent {
     this.renderScene();
   }
 
-  getAverageVolume = (start, end, array) => {
+  getAverage = (start, end, array) => {
     let values = 0;
     let average;
     // get all the frequency amplitudes
@@ -229,16 +254,24 @@ class Release0003 extends PureComponent {
     return average;
   }
 
-  getVolBuckets = () => {
+  getBuckets = (numBuckets, bucketSize, array) => {
     let buckets = [];
-    let bucketSize = this.volArray.length / this.numVolBuckets;
-    this.audioStream.analyser.getByteTimeDomainData(this.volArray);
-    for (let i = 0; i < this.numVolBuckets; i++) {
+    for (let i = 0; i < numBuckets; i++) {
       let start = i * bucketSize;
       let end = (i + 1) * bucketSize - 1;
-      buckets.push(this.getAverageVolume(start, end, this.volArray))
+      buckets.push(this.getAverage(start, end, array))
     }
     return buckets;
+  }
+
+  getFreqBuckets = () => {
+    this.audioStream.analyser.getByteFrequencyData(this.freqArray);
+    return this.getBuckets(this.numFreqBuckets, this.freqBucketSize, this.volArray)
+  }
+
+  getVolBuckets = () => {
+    this.audioStream.analyser.getByteTimeDomainData(this.volArray);
+    return this.getBuckets(this.numVolBuckets, this.volBucketSize, this.volArray)
   }
 
   addAllOrbs = () => {
@@ -264,7 +297,7 @@ class Release0003 extends PureComponent {
     }
     this.setState({allOrbs: false});
   }
-  
+
   renderByTrackSection = () => {
     const {allOrbs} = this.state;
     let currentTime = this.audioElement.currentTime;
@@ -304,7 +337,7 @@ class Release0003 extends PureComponent {
   renderOrbs = () => {
     this.renderByTrackSection();
     let volBuckets = this.getVolBuckets();
-
+    let freqBuckets = this.getFreqBuckets();
     // explicit for loops to avoid checking for types/names
     // these are the flat gray circles directly orbiting the center black core
     for (let orb of this.trebleOrbs) {
@@ -312,9 +345,14 @@ class Release0003 extends PureComponent {
       let rotationDirection = THREE.Math.randInt(-1, 1) > 0 ? 1 : -1;
       orb.rotation.x += BEAT_TIME / rotationDenominator;// * rotationDirection;
       let trebVol = volBuckets[this.trebIndex];
-      if (trebVol > this.trebThresh) {
-        orb.scale.x = orb.scale.y = orb.scale.z = trebVol / this.normalizingConst;
-      }
+      let chordFreqIdx = 16;
+      let chordFreqVal = freqBuckets[chordFreqIdx];
+      // if (chordFreqVal > 350) {
+      orb.scale.x = orb.scale.y = orb.scale.z = chordFreqVal / 310;
+      // }
+      // if (trebVol > this.trebThresh) {
+      //   orb.scale.x = orb.scale.y = orb.scale.z = trebVol / this.normalizingConst;
+      // }
     }
 
     // these are the background lightest colored orbs
@@ -341,23 +379,43 @@ class Release0003 extends PureComponent {
     }
   }
 
+
+  scaleFreq = (range) => {
+    return (MAX_FILTER_FREQ - MIN_FILTER_FREQ) *
+      (range - MIN_FILTER_RANGE) / (MAX_FILTER_RANGE - MIN_FILTER_RANGE) + MIN_FILTER_FREQ;
+  }
+
   applyFilter = () => {
     const {raycaster, mouse, camera, scene} = this;
 
     // update the picking ray with the camera and mouse position
-    raycaster.setFromCamera( mouse, camera );
+    raycaster.setFromCamera(mouse, camera);
 
-    // calculate objects intersecting the picking ray
-    var intersects = raycaster.intersectObjects( scene.children);
-    for ( var i = 0; i < intersects.length; i++ ) {
-      if (intersects[ i ].object.name == 'bass') {
-        if (this.audioStream.filter.frequency.value !== 1000) {
-          this.audioStream.filter.frequency.value = 1000;
-        } else {
-          this.audioStream.filter.frequency.value = 20000;
+    //// calculate objects intersecting the picking ray
+    let intersects = raycaster.intersectObjects(scene.children);
+    let onLoPassSphere = false;
+    for (let i = 0; i < intersects.length; i++) {
+      if (intersects[i].object.name === 'filterSphere') {
+        this.scene.background = new THREE.Color(0x000000);
+        let range = Math.abs(this.mouse.x) + Math.abs(this.mouse.y);
+        this.audioStream.filter.frequency.value = this.scaleFreq(range)
+        this.audioStream.filter.Q.value = FILTER_RESONANCE;
+        onLoPassSphere = true;
+        for (let orbGroup of this.orbs) {
+          for (let orb of orbGroup) {
+            orb.material.color.setHex(0xFFFFFF);
+            }
+          }
+      }
+    }
+    if (!onLoPassSphere) {
+      this.scene.background = new THREE.Color(0xFFFFFF);
+      this.audioStream.filter.frequency.value = 20000;
+      this.audioStream.filter.Q.value = 0;
+      for (let orbGroup of this.orbs) {
+        for (let orb of orbGroup) {
+          orb.material.color.setHex(0x000000);
         }
-        console.log('intersection!!');
-        console.log(intersects[ i ].object.userData.idx);
       }
     }
   }
