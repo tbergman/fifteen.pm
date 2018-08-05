@@ -2,7 +2,7 @@ import React, {PureComponent, Fragment} from 'react';
 import * as THREE from "three";
 import debounce from 'lodash/debounce';
 import './Release.css';
-import Player from '../Player';
+import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
 import {AudioStreamer} from "../Utils/Audio/AudioStreamer";
 
@@ -58,7 +58,10 @@ class Release0003 extends PureComponent {
 
   initAudioProps = () => {
     this.audioStream = new AudioStreamer(this.audioElement);
+    this.audioStream.connect();
     this.audioStream.analyser.fftSize = 256;
+    this.audioStream.filter.type = "lowpass";
+    this.audioStream.filter.frequency.value = 25000;
     this.volArray = new Uint8Array(this.audioStream.analyser.fftSize);
     this.numVolBuckets = 4;
     this.bassIndex = 0; // the vol bucket indices, assigned by freq range
@@ -247,7 +250,7 @@ class Release0003 extends PureComponent {
   
   renderByTrackSection = () => {
     const {allOrbs} = this.state;
-    let currentTime = this.audioStream.audioCtx.currentTime;
+    let currentTime = this.audioStream.context.currentTime;
     // you need to check for intro_start since we're looping audio
     if (currentTime >= INTRO_START && currentTime < INTRO_END && allOrbs) {
       this.removeAllButFirstOrb();
@@ -282,8 +285,6 @@ class Release0003 extends PureComponent {
 
   renderOrbs = () => {
     this.renderByTrackSection();
-
-
     let volBuckets = this.getVolBuckets();
 
     // explicit for loops to avoid checking for types/names
@@ -332,9 +333,9 @@ class Release0003 extends PureComponent {
       <Fragment>
         <div className="release">
           <div ref={element => this.container = element}/>
-          <Player
-            src='https://api.soundcloud.com/tracks/480414720/stream?secret_token=s-HRFYz&client_id=ad6375f4b6bc0bcaee8edf53ab37e7f2'
-            type='audio/mpeg'
+          <SoundcloudPlayer
+            trackId='480414720'
+            secretToken='s-HRFYz'
             message='OTHERE'
             inputRef={el => this.audioElement = el}
             fillColor="red"

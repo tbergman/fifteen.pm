@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth, windForce} from "../Utils/Cloth";
 import {Detector} from "../Utils/Detector";
-import Player from '../Player';
+import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
 import {service} from "../Utils/service";
 import {CannonDebugRenderer} from "../Utils/CannonDebugRenderer.js";
@@ -431,12 +431,6 @@ class Release0002 extends Component {
     this.sphere.name = "volleyball";
 
     this.scene.add(this.sphere);
-  }
-
-  createAudioSource = () => {
-    let source = this.audioCtx.createMediaStreamSource(this.audioStream);
-    source.connect(this.audioAnalyser);
-    source.connect(this.audioCtx.destination);
   }
 
   addBulbLights = () => {
@@ -886,9 +880,8 @@ class Release0002 extends Component {
       <Fragment>
         <div className="release">
           <div ref={element => this.container = element}/>
-          <Player
-            src='https://api.soundcloud.com/tracks/475418370/stream?client_id=ad6375f4b6bc0bcaee8edf53ab37e7f2'
-            type='audio/mpeg'
+          <SoundcloudPlayer
+            trackId='475418370'
             message='YEAR UNKNOWN'
             inputRef={el => this.audioElement = el}/>
           <Purchase href='https://gltd.bandcamp.com/track/timer'/>
