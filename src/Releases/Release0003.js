@@ -149,21 +149,9 @@ class Release0003 extends PureComponent {
     //   name: "can_u_hear"
     // }
     //
-    // this.canUHearOrbs = this.initOrbsGroup(canUHearParams)
-    // this.trebleOrbs = this.initOrbsGroup(trebleParams);
-    // this.bassOrbs = this.initOrbsGroup(bassParams);
-    // this.midOrbs = this.initOrbsGroup(midParams);
-    // this.trebleScratchy = this.initOrbsGroup(trebleParams, true);
-    // this.midScratchy = this.initOrbsGroup(midParams, true);
-    // this.bassScratchy = this.initOrbsGroup(bassParams, true);
 
-    // this.orbs = {
-    //   clean: [this.trebleOrbs, this.bassOrbs, this.midOrbs],
-    //   scratchy:
-    //
-    // }
 
-    this.cleanOrbs = {
+    this.smoothOrbs = {
       treble: this.initOrbsGroup(trebleParams),
       bass: this.initOrbsGroup(bassParams),
       mid: this.initOrbsGroup(midParams)
@@ -175,22 +163,8 @@ class Release0003 extends PureComponent {
       mid: this.initOrbsGroup(midParams, true)
     };
 
-    this.onOrbs = this.cleanOrbs;
+    this.onOrbs = this.smoothOrbs;
     this.offOrbs = this.scratchyOrbs;
-
-
-    // this.scratchyOrbs = [this.trebleScratchy, this.bassScratchy, this.midScratchy];
-    // initially only add some of the cleanOrbs
-    // for (let orbGroup of this.cleanOrbs) {
-    //   for (let orb of orbGroup) {
-    //     if (orb.userData.idx === 0) {
-    //       this.scene.add(orb);
-    //       orb.userData.inScene = true;
-    //     } else {
-    //       orb.userData.inScene = false;
-    //     }
-    //   }
-    // }
 
     // FILTER SPHERE add an invisible sphere for raycasting (TODO move)
     let geometry = new THREE.SphereGeometry(RADIUS);
@@ -352,10 +326,10 @@ class Release0003 extends PureComponent {
     let timeBuffer = .2;
     for (let swirl of SYNTHS_SWIRLS) {
       if (Math.abs(currentTime - swirl) < timeBuffer) {
-        return [this.scratchyOrbs, this.cleanOrbs];
+        return [this.scratchyOrbs, this.smoothOrbs];
       }
     }
-    return [this.cleanOrbs, this.scratchyOrbs];
+    return [this.smoothOrbs, this.scratchyOrbs];
   }
 
   toggleOrbs = (currentTime) => {
@@ -433,7 +407,7 @@ class Release0003 extends PureComponent {
       // }
     }
 
-    // these are the background lightest colored cleanOrbs
+    // these are the background lightest colored smoothOrbs
     for (let orb of this.onOrbs.mid) {
       let midVol = (volBuckets[this.midIndex1] + volBuckets[this.midIndex2]) / 2.0;
       let midRotation = 0;
@@ -447,7 +421,7 @@ class Release0003 extends PureComponent {
       orb.rotation.z += midRotation;
     }
 
-    // these are the dark cleanOrbs in the center
+    // these are the dark smoothOrbs in the center
     for (let orb of this.onOrbs.bass) {
       orb.rotation.x += -BEAT_TIME / 16.0;
       let bassVol = volBuckets[this.bassIndex];
