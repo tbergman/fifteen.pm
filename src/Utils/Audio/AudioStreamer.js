@@ -16,7 +16,7 @@ class AudioStreamer {
     this.source = undefined;
   }
   
-  // TODO: figure out how to parameterize connection / routing of Nodes
+  // build signal path on-demand
   connect() {
     window.onload = () => {
       this.source = this.context.createMediaElementSource(this.element);
@@ -25,6 +25,8 @@ class AudioStreamer {
       this.filter.connect(this.context.destination);
     }
   }
+
+  // TODO: function for disconnecting.
 }
 
 export default AudioStreamer;

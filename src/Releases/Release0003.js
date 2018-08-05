@@ -53,6 +53,7 @@ class Release0003 extends PureComponent {
   init = () => {
     this.initAudioProps();
     this.initOrbs();
+    this.initRaycaster();
     this.container.appendChild(this.renderer.domElement);
   }
 
@@ -62,6 +63,7 @@ class Release0003 extends PureComponent {
     this.audioStream.analyser.fftSize = 256;
     this.audioStream.filter.type = "lowpass";
     this.audioStream.filter.frequency.value = 25000;
+    // this.audioStream.filter.Q.value = 2.5;
     this.volArray = new Uint8Array(this.audioStream.analyser.fftSize);
     this.numVolBuckets = 4;
     this.bassIndex = 0; // the vol bucket indices, assigned by freq range
@@ -177,13 +179,28 @@ class Release0003 extends PureComponent {
     return geometry;
   }
 
+  initRaycaster = () => {
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
+  }
+
   componentWillUnmount() {
     this.stop();
-    window.removeEventListener('mousemove', this.onDocumentMouseMove, false);
-    window.removeEventListener('resize', this.onWindowResize, false);
+    window.addEventListener('mousemove', this.onMouseMove, false);
+    window.raddEventListener('resize', this.onWindowResize, false);
     window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
     window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
     this.container.removeChild(this.renderer.domElement);
+  }
+
+  onMouseMove = (event) => {
+
+    // calculate mouse position in normalized device coordinates
+    // (-1 to +1) for both components
+
+    this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;;
+    this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
   }
 
   onWindowResize = debounce(() => {
@@ -250,7 +267,8 @@ class Release0003 extends PureComponent {
   
   renderByTrackSection = () => {
     const {allOrbs} = this.state;
-    let currentTime = this.audioStream.context.currentTime;
+    let currentTime = this.audioElement.currentTime;
+
     // you need to check for intro_start since we're looping audio
     if (currentTime >= INTRO_START && currentTime < INTRO_END && allOrbs) {
       this.removeAllButFirstOrb();
@@ -323,8 +341,30 @@ class Release0003 extends PureComponent {
     }
   }
 
+  applyFilter = () => {
+    const {raycaster, mouse, camera, scene} = this;
+
+    // update the picking ray with the camera and mouse position
+    raycaster.setFromCamera( mouse, camera );
+
+    // calculate objects intersecting the picking ray
+    var intersects = raycaster.intersectObjects( scene.children);
+    for ( var i = 0; i < intersects.length; i++ ) {
+      if (intersects[ i ].object.name == 'bass') {
+        if (this.audioStream.filter.frequency.value !== 1000) {
+          this.audioStream.filter.frequency.value = 1000;
+        } else {
+          this.audioStream.filter.frequency.value = 20000;
+        }
+        console.log('intersection!!');
+        console.log(intersects[ i ].object.userData.idx);
+      }
+    }
+  }
+
   renderScene = () => {
     this.renderOrbs();
+    this.applyFilter();
     this.renderer.render(this.scene, this.camera);
   }
 

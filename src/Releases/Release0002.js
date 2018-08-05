@@ -820,6 +820,7 @@ class Release0002 extends Component {
     const {camera, scene, raycaster, mouse} = this;
     raycaster.setFromCamera(mouse, camera);
     let intersects = raycaster.intersectObjects(scene.children);
+
     for (let i = 0; i < intersects.length; i++) {
       if (intersects[i].object.name === "volleyball") {
         let rayCasterBodyPos = intersects[i].point;
