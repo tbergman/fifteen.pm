@@ -19,7 +19,7 @@ const MIN_FILTER_FREQ = 50;
 const MAX_FILTER_FREQ = 12000;
 const MIN_FILTER_RANGE = 0;
 const MAX_FILTER_RANGE = 0.3;
-const FILTER_RESONANCE = 15;
+const FILTER_RESONANCE = 12;
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
@@ -70,8 +70,7 @@ class Release0003 extends PureComponent {
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.startTime = Date.now();
+
   }
 
   state = {
@@ -80,9 +79,10 @@ class Release0003 extends PureComponent {
 
   componentDidMount() {
     // window.addEventListener("touchstart", this.onDocumentMouseMove, false);
-    window.addEventListener('mousemove', this.onMouseMove, false);
-    window.addEventListener("touchstart", this.onTouchMove, false);
     window.addEventListener('resize', this.onWindowResize, false);
+    window.addEventListener('mousemove', this.onDocumentMouseMove, false);
+    window.addEventListener("touchstart", this.onDocumentMouseMove, false);
+    window.addEventListener("touchmove", this.onDocumentMouseMove, false);
     this.init();
     this.animate();
   }
@@ -91,7 +91,15 @@ class Release0003 extends PureComponent {
     this.initAudioProps();
     this.initOrbs();
     this.initRaycaster();
+    this.initOrbitContols();
     this.container.appendChild(this.renderer.domElement);
+  }
+
+  initOrbitContols = () => {
+    if (!isMobile) {
+      this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+      this.startTime = Date.now();    
+    }
   }
 
   initAudioProps = () => {
@@ -240,27 +248,27 @@ class Release0003 extends PureComponent {
 
   componentWillUnmount() {
     this.stop();
-    window.addEventListener('mousemove', this.onMouseMove, false);
-    window.addEventListener('resize', this.onWindowResize, false);
-    window.removeEventListener("touchstart", this.onTouchMove, false);
-    window.removeEventListener("touchmove", this.onTouchMove, false);
-    window.removeEventListener("touchend", this.onTouchMove, false);
+    window.removeEventListener('resize', this.onWindowResize, false);
+    window.removeEventListener('mousemove', this.onDocumentMouseMove, false);
+    window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
+    window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
-  onMouseMove = (event) => {
-
-    // calculate mouse position in normalized device coordinates
-    // (-1 to +1) for both components
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  setMouseCoords = (x, y) => {
+    this.mouse.x = (x / this.renderer.domElement.clientWidth) * 2 - 1;
+    this.mouse.y = -(y / this.renderer.domElement.clientHeight) * 2 + 1;
+    this.mouseMoved = true;
   }
 
-  onTouchMove = (event) => {
-
-    this.mouse.x = (event.changedTouches[0].clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.changedTouches[0].clientY / window.innerHeight) * 2 + 1;
-  }
+  onDocumentMouseMove = (event) => {
+    // event.preventDefault();
+    if (event.touches) {
+      this.setMouseCoords(event.touches[0].clientX, event.touches[0].clientY);
+    } else {
+      this.setMouseCoords(event.clientX, event.clientY);
+    }
+  };
 
   onWindowResize = debounce(() => {
     const WIDTH = window.innerWidth;
@@ -268,7 +276,7 @@ class Release0003 extends PureComponent {
     this.renderer.setSize(WIDTH, HEIGHT);
     this.camera.aspect = WIDTH / HEIGHT;
     this.camera.updateProjectionMatrix();
-  }, 100);
+  }, 50);
 
   stop = () => {
     cancelAnimationFrame(this.frameId);
@@ -276,8 +284,6 @@ class Release0003 extends PureComponent {
 
   animate = () => {
     this.frameId = window.requestAnimationFrame(this.animate);
-    let time = Date.now();
-    this.controls.update(time - this.startTime);
     this.renderScene();
   }
 
@@ -374,6 +380,12 @@ class Release0003 extends PureComponent {
     }
   }
 
+  updateOrbitControls = () => {
+    if (this.startTime !== undefined) {
+      let time = Date.now();
+      this.controls.update(time - this.startTime);
+    }
+  }
 
   renderByTrackSection = (currentTime) => {
     const {allOrbs} = this.state;
@@ -538,6 +550,7 @@ class Release0003 extends PureComponent {
 
   renderScene = () => {
     this.renderOrbs();
+    this.updateOrbitControls();
     this.applyFilter();
     this.renderer.render(this.scene, this.camera);
   }
