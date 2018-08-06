@@ -242,8 +242,9 @@ class Release0003 extends PureComponent {
     this.stop();
     window.addEventListener('mousemove', this.onMouseMove, false);
     window.addEventListener('resize', this.onWindowResize, false);
-    window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
-    window.removeEventListener("touchend", this.onDocumentMouseMove, false);
+    window.removeEventListener("touchstart", this.onTouchMove, false);
+    window.removeEventListener("touchmove", this.onTouchMove, false);
+    window.removeEventListener("touchend", this.onTouchMove, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
