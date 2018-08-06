@@ -74,7 +74,7 @@ class Player extends Component {
                 </text>
             </g>
           </svg>
-          <button onClick={onClick} className={state.paused ? 'button' : 'button paused'}></button>
+          <div onClick={onClick} className={state.paused ? 'button' : 'button paused'}/>
           <audio id="audio-player" loop autoPlay crossOrigin="anonymous" ref={props.inputRef}>
             <source src={props.src} type={props.type}/>
           </audio>
