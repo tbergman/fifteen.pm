@@ -521,6 +521,7 @@ class Release0003 extends PureComponent {
     let currentTime = this.audioElement.currentTime;
     this.renderByTrackSection(currentTime);
     if (isSafari) {
+      console.log('Safari render!')
       this.renderOrbsSansAnalyser(currentTime);
     } else {
     this.renderOrbsWithAnalyser();
@@ -544,8 +545,10 @@ class Release0003 extends PureComponent {
     let onLoPassSphere = false;
     for (let i = 0; i < intersects.length; i++) {
       if (intersects[i].object.name === 'filterSphere') {
+        console.log('intersection!')
         this.scene.background = new THREE.Color(0x000000);
         let range = Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y));
+        console.log(range);
         this.audioStream.filter.frequency.value = this.scaleFreq(range);
         this.audioStream.filter.Q.value = FILTER_RESONANCE;
         onLoPassSphere = true;
