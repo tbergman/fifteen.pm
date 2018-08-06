@@ -20,6 +20,7 @@ const MAX_FILTER_FREQ = 12000;
 const MIN_FILTER_RANGE = 0;
 const MAX_FILTER_RANGE = 0.3;
 const FILTER_RESONANCE = 14;
+const FILTER_RADIUS_BUFFER = -10;
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
@@ -198,7 +199,7 @@ class Release0003 extends PureComponent {
     this.offOrbs = this.scratchyOrbs;
 
     // FILTER SPHERE add an invisible sphere for raycasting (TODO move)
-    let geometry = new THREE.SphereGeometry(RADIUS);
+    let geometry = new THREE.SphereGeometry(RADIUS + FILTER_RADIUS_BUFFER);
     var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.0});
     var sphere = new THREE.Mesh(geometry, material);
     sphere.name = "filterSphere";
@@ -443,7 +444,6 @@ class Release0003 extends PureComponent {
     if (currentTime >= OUTRO_START && allOrbs) {
       this.removeAllButFirstOrb();
     }
-
 
   }
 
