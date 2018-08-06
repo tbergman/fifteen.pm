@@ -19,7 +19,7 @@ const MIN_FILTER_FREQ = 50;
 const MAX_FILTER_FREQ = 12000;
 const MIN_FILTER_RANGE = 0;
 const MAX_FILTER_RANGE = 0.3;
-const FILTER_RESONANCE = 12;
+const FILTER_RESONANCE = 14;
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
