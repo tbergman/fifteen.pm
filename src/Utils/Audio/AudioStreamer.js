@@ -7,18 +7,15 @@ class AudioStreamer {
   constructor(audioElement) {
     this.element = audioElement
     this.context = new (window.AudioContext || window.webkitAudioContext)();
-
-    if (!isSafari) { 
-      // init nodes
-      this.analyser = this.context.createAnalyser();
-      this.filter   = this.context.createBiquadFilter();
-      this.filter.frequency.value = 25000;
-      this.filter.type = "lowpass";
-    }
+    this.analyser = this.context.createAnalyser();
+    this.filter   = this.context.createBiquadFilter();
+    this.filter.frequency.value = 25000;
+    this.filter.type = "lowpass";
     this.source = undefined;
   }
   
-  // build signal path on-demand
+  // build signal path on-demand 
+  // exclude safari
   connect() {
     if (!isSafari) { 
       window.onload = () => {
