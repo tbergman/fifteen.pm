@@ -86,7 +86,6 @@ class Release0003 extends PureComponent {
     window.addEventListener("resize", this.onWindowResize, false);
     window.addEventListener("mousemove", this.onMouseMove, false);
     window.addEventListener("touchstart", this.onTouchStart, false);
-    window.removeEventListener("touchmove", this.onTouchMove, false);
     window.addEventListener("touchend", this.onTouchEnd, false);
     this.init();
     this.animate();
@@ -256,14 +255,13 @@ class Release0003 extends PureComponent {
     window.removeEventListener("resize", this.onWindowResize, false);
     window.removeEventListener("mousemove", this.onMouseMove, false);
     window.removeEventListener("touchstart", this.onTouchStart, false);
-    window.removeEventListener("touchmove", this.onTouchMove, false);
     window.removeEventListener("touchend", this.onTouchEnd, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
   setMouseCoords = (x, y) => {
-    this.mouse.x = (x / this.renderer.domElement.clientWidth) * 2 - 1;
-    this.mouse.y = -(y / this.renderer.domElement.clientHeight) * 2 + 1;
+    this.mouse.x = (x / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(y / window.innerHeight) * 2 + 1;
     this.mouseMoved = true;
   }
 
