@@ -6,6 +6,7 @@ import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
+import {isMobile, isSafari} from "../Utils/BrowserDetection";
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);
@@ -40,18 +41,18 @@ const SONG_LENGTH = 328;
 const N_RANDOM_MOMENTS = 50;
 
 let getRandomMoments = (len, size) => {
-    var arr = [];
-    for (var j = 0; j <= len; j++) {
-        arr.push(j);
-    }
-    let shuffled = arr.slice(0), i = arr.length, temp, index;
-    while (i--) {
-        index = Math.floor((i + 1) * Math.random());
-        temp = shuffled[index];
-        shuffled[index] = shuffled[i];
-        shuffled[i] = temp;
-    }
-    return shuffled.slice(0, size);
+  var arr = [];
+  for (var j = 0; j <= len; j++) {
+    arr.push(j);
+  }
+  let shuffled = arr.slice(0), i = arr.length, temp, index;
+  while (i--) {
+    index = Math.floor((i + 1) * Math.random());
+    temp = shuffled[index];
+    shuffled[index] = shuffled[i];
+    shuffled[i] = temp;
+  }
+  return shuffled.slice(0, size);
 }
 
 // Some moments in the song (in seconds)
@@ -268,7 +269,7 @@ class Release0003 extends PureComponent {
 
   animate = () => {
     this.frameId = window.requestAnimationFrame(this.animate);
-    let time =Date.now();
+    let time = Date.now();
     this.controls.update(time - this.startTime);
     this.renderScene();
   }
@@ -367,9 +368,8 @@ class Release0003 extends PureComponent {
   }
 
 
-  renderByTrackSection = () => {
+  renderByTrackSection = (currentTime) => {
     const {allOrbs} = this.state;
-    let currentTime = this.audioElement.currentTime;
 
     this.toggleOrbs(currentTime);
 
@@ -406,28 +406,20 @@ class Release0003 extends PureComponent {
 
   }
 
-  renderOrbs = () => {
-    this.renderByTrackSection();
+  renderOrbsWithAnalyser = () => {
     let volBuckets = this.getVolBuckets();
     let freqBuckets = this.getFreqBuckets();
     // explicit for loops to avoid checking for types/names
     // these are the flat gray circles directly orbiting the center black core
     for (let orb of this.onOrbs.treble) {
       let rotationDenominator = this.state.allOrbs ? 3.0 : 16.0;
-      let rotationDirection = THREE.Math.randInt(-1, 1) > 0 ? 1 : -1;
-      orb.rotation.x += BEAT_TIME / rotationDenominator;// * rotationDirection;
-      let trebVol = volBuckets[this.trebIndex];
+      orb.rotation.x += BEAT_TIME / rotationDenominator;
       let chordFreqIdx = 16;
       let chordFreqVal = freqBuckets[chordFreqIdx];
-      // if (chordFreqVal > 350) {
       orb.scale.x = orb.scale.y = orb.scale.z = chordFreqVal / 310;
-      // }
-      // if (trebVol > this.trebThresh) {
-      //   orb.scale.x = orb.scale.y = orb.scale.z = trebVol / this.normalizingConst;
-      // }
     }
 
-    // these are the background lightest colored smoothOrbs
+    // these are the background lightest colored orbs
     for (let orb of this.onOrbs.mid) {
       let midVol = (volBuckets[this.midIndex1] + volBuckets[this.midIndex2]) / 2.0;
       let midRotation = 0;
@@ -441,13 +433,58 @@ class Release0003 extends PureComponent {
       orb.rotation.z += midRotation;
     }
 
-    // these are the dark smoothOrbs in the center
+    // these are the dark center orbs
     for (let orb of this.onOrbs.bass) {
       orb.rotation.x += -BEAT_TIME / 16.0;
       let bassVol = volBuckets[this.bassIndex];
       if (bassVol > this.bassThresh) {
         orb.scale.x = orb.scale.y = orb.scale.z = bassVol / this.normalizingConst;
       }
+    }
+  }
+
+  renderOrbsSansAnalyser = (currentTime) => {
+    let beatPos = Math.floor(currentTime / BEAT_TIME * 8) % 4;
+    let smallScale = .65;
+    let medScale = .70;
+    let largeScale = .75;
+    let scale = smallScale;
+    if (beatPos % 4 === 0) {
+      scale = largeScale;
+    } else if (beatPos % 2 === 0){
+      scale = medScale;
+    }
+
+    // these are the middle orbs
+    for (let orb of this.onOrbs.treble) {
+      let rotationDenominator = this.state.allOrbs ? 3.0 : 16.0;
+      orb.rotation.x += BEAT_TIME / rotationDenominator;
+      orb.scale.x = orb.scale.y = orb.scale.z = scale;
+    }
+
+    // these are the background lightest colored orbs
+    for (let orb of this.onOrbs.mid) {
+      let midRotation = 0;
+      midRotation = BEAT_TIME / 8.0;
+      orb.rotation.x += midRotation;
+      orb.rotation.y += midRotation;
+      orb.rotation.z += midRotation;
+    }
+
+    // these are the center orbs
+    for (let orb of this.onOrbs.bass) {
+      orb.rotation.x += -BEAT_TIME / 16.0;
+      orb.scale.x = orb.scale.y = orb.scale.z = scale;
+    }
+  }
+
+  renderOrbs = () => {
+    let currentTime = this.audioElement.currentTime;
+    this.renderByTrackSection(currentTime);
+    if (isSafari) {
+      this.renderOrbsSansAnalyser(currentTime);
+    } else {
+      this.renderOrbsWithAnalyser();
     }
   }
 
@@ -479,15 +516,15 @@ class Release0003 extends PureComponent {
           }
         }
       }
-   }
+    }
     if (!onLoPassSphere) {
       this.scene.background = new THREE.Color(0xFFFFFF);
       this.audioStream.filter.frequency.value = 20000;
       this.audioStream.filter.Q.value = 0;
       for (let orbGroup in this.onOrbs) {
         for (let orb of this.onOrbs[orbGroup]) {
-           orb.material.color.setHex(orb.userData.offFilterColor);
-         }
+          orb.material.color.setHex(orb.userData.offFilterColor);
+        }
       }
     }
   }
