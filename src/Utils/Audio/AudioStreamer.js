@@ -19,6 +19,7 @@ class AudioStreamer {
   connect() {
     if (!isSafari) { 
       window.onload = () => {
+        console.log('Audio stream connection!')
         this.source = this.context.createMediaElementSource(this.element);
         this.source.connect(this.analyser);
         this.analyser.connect(this.filter);
