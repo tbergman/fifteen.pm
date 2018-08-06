@@ -258,6 +258,8 @@ class Release0003 extends PureComponent {
     const WIDTH = window.innerWidth;
     const HEIGHT = window.innerHeight;
     this.renderer.setSize(WIDTH, HEIGHT);
+    this.camera.aspect = WIDTH / HEIGHT;
+    this.camera.updateProjectionMatrix();
   }, 100);
 
   stop = () => {
