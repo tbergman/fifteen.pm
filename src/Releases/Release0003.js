@@ -15,7 +15,7 @@ const BASS = "bass";
 const MIDS = "mids";
 
 // Filter frequency constants
-const MIN_FILTER_FREQ = 50;
+const MIN_FILTER_FREQ = 100;
 const MAX_FILTER_FREQ = 12000;
 const MIN_FILTER_RANGE = 0;
 const MAX_FILTER_RANGE = 0.3;
@@ -25,7 +25,8 @@ const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 const RADIUS = 280;
 
-const INTRO_START = 0;
+// Some moments in the song (in seconds)
+const INTRO_START = -1;
 const INTRO_END = 77;
 const BASS_ENTERS = 0;
 const MID_ENTERS = 19;
@@ -55,9 +56,13 @@ let getRandomMoments = (len, size) => {
   return shuffled.slice(0, size);
 }
 
-// Some moments in the song (in seconds)
+const SCRATCHY_TIME_BUFFERS = [
+  BEAT_TIME / 6,
+  BEAT_TIME / 4,
+  BEAT_TIME / 2, 
+  BEAT_TIME
+];
 const SCRATCHY_MOMENTS = getRandomMoments(SONG_LENGTH, N_RANDOM_MOMENTS);
-
 
 class Release0003 extends PureComponent {
   constructor() {
@@ -70,7 +75,6 @@ class Release0003 extends PureComponent {
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-
   }
 
   state = {
@@ -78,11 +82,11 @@ class Release0003 extends PureComponent {
   }
 
   componentDidMount() {
-    // window.addEventListener("touchstart", this.onDocumentMouseMove, false);
-    window.addEventListener('resize', this.onWindowResize, false);
-    window.addEventListener('mousemove', this.onDocumentMouseMove, false);
-    window.addEventListener("touchstart", this.onDocumentMouseMove, false);
-    window.addEventListener("touchmove", this.onDocumentMouseMove, false);
+    window.addEventListener("resize", this.onWindowResize, false);
+    window.addEventListener("mousemove", this.onMouseMove, false);
+    window.addEventListener("touchstart", this.onTouchStart, false);
+    window.removeEventListener("touchmove", this.onTouchMove, false);
+    window.addEventListener("touchend", this.onTouchEnd, false);
     this.init();
     this.animate();
   }
@@ -248,10 +252,11 @@ class Release0003 extends PureComponent {
 
   componentWillUnmount() {
     this.stop();
-    window.removeEventListener('resize', this.onWindowResize, false);
-    window.removeEventListener('mousemove', this.onDocumentMouseMove, false);
-    window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
-    window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
+    window.removeEventListener("resize", this.onWindowResize, false);
+    window.removeEventListener("mousemove", this.onMouseMove, false);
+    window.removeEventListener("touchstart", this.onTouchStart, false);
+    window.removeEventListener("touchmove", this.onTouchMove, false);
+    window.removeEventListener("touchend", this.onTouchEnd, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
@@ -261,14 +266,30 @@ class Release0003 extends PureComponent {
     this.mouseMoved = true;
   }
 
-  onDocumentMouseMove = (event) => {
+  onMouseMove = (event) => {
+    this.setMouseCoords(event.clientX, event.clientY);
+  };
+
+  onTouchStart = (event) => {
     // event.preventDefault();
     if (event.touches) {
       this.setMouseCoords(event.touches[0].clientX, event.touches[0].clientY);
-    } else {
-      this.setMouseCoords(event.clientX, event.clientY);
     }
   };
+
+  onTouchMove = (event) => {
+    // event.preventDefault();
+    if (event.touches) {
+      this.setMouseCoords(event.touches[0].clientX, event.touches[0].clientY);
+    }
+  };
+
+  // turn off filter if no touch
+  onTouchEnd = (event) => {
+    // event.preventDefault();
+    this.mouse.x = 100;
+    this.mouse.y = 100;
+  }
 
   onWindowResize = debounce(() => {
     const WIDTH = window.innerWidth;
@@ -357,7 +378,7 @@ class Release0003 extends PureComponent {
   }
 
   getOrbs = (currentTime) => {
-    let timeBuffer = .2;
+    let timeBuffer = SCRATCHY_TIME_BUFFERS[Math.floor(Math.random() * SCRATCHY_TIME_BUFFERS.length)];
     for (let swirl of SCRATCHY_MOMENTS) {
       if (Math.abs(currentTime - swirl) < timeBuffer) {
         return [this.scratchyOrbs, this.smoothOrbs];
@@ -381,7 +402,7 @@ class Release0003 extends PureComponent {
   }
 
   updateOrbitControls = () => {
-    if (this.startTime !== undefined) {
+    if (!isMobile) {
       let time = Date.now();
       this.controls.update(time - this.startTime);
     }
@@ -389,7 +410,7 @@ class Release0003 extends PureComponent {
 
   renderByTrackSection = (currentTime) => {
     const {allOrbs} = this.state;
-
+    // console.log(currentTime);
     this.toggleOrbs(currentTime);
 
     // you need to check for intro_start since we're looping audio
@@ -503,7 +524,7 @@ class Release0003 extends PureComponent {
     if (isSafari) {
       this.renderOrbsSansAnalyser(currentTime);
     } else {
-      this.renderOrbsWithAnalyser();
+    this.renderOrbsWithAnalyser();
     }
   }
 
@@ -538,7 +559,7 @@ class Release0003 extends PureComponent {
     }
     if (!onLoPassSphere) {
       this.scene.background = new THREE.Color(0xFFFFFF);
-      this.audioStream.filter.frequency.value = 20000;
+      this.audioStream.filter.frequency.value = 22000;
       this.audioStream.filter.Q.value = 0;
       for (let orbGroup in this.onOrbs) {
         for (let orb of this.onOrbs[orbGroup]) {

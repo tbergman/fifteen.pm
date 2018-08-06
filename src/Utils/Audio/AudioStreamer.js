@@ -9,7 +9,7 @@ class AudioStreamer {
     this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.analyser = this.context.createAnalyser();
     this.filter   = this.context.createBiquadFilter();
-    this.filter.frequency.value = 25000;
+    this.filter.frequency.value = 22000;
     this.filter.type = "lowpass";
     this.source = undefined;
   }
@@ -19,7 +19,6 @@ class AudioStreamer {
   connect() {
     if (!isSafari) { 
       window.onload = () => {
-        console.log('STREAMING AUDIO!');
         this.source = this.context.createMediaElementSource(this.element);
         this.source.connect(this.analyser);
         this.analyser.connect(this.filter);
