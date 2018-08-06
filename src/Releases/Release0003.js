@@ -6,7 +6,6 @@ import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
-import {isSafari} from "../Utils/BrowserDetection";
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);
@@ -98,9 +97,6 @@ class Release0003 extends PureComponent {
     this.audioStream = new AudioStreamer(this.audioElement);
     this.audioStream.connect();
     this.audioStream.analyser.fftSize = 256;
-    // this.audioStream.filter.type = "lowpass";
-    // this.audioStream.filter.frequency.value = 25000;
-    // this.audioStream.filter.Q.value = 2.5;
     this.volArray = new Uint8Array(this.audioStream.analyser.fftSize);
     this.numVolBuckets = 4;
     this.volBucketSize = this.volArray.length / this.numVolBuckets;
@@ -472,10 +468,8 @@ class Release0003 extends PureComponent {
       if (intersects[i].object.name === 'filterSphere') {
         this.scene.background = new THREE.Color(0x000000);
         let range = Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y));
-        if (!isSafari) {
-          this.audioStream.filter.frequency.value = this.scaleFreq(range);
-          this.audioStream.filter.Q.value = FILTER_RESONANCE;
-        }
+        this.audioStream.filter.frequency.value = this.scaleFreq(range);
+        this.audioStream.filter.Q.value = FILTER_RESONANCE;
         onLoPassSphere = true;
         for (let orbGroup in this.onOrbs) {
           for (let orb of this.onOrbs[orbGroup]) {
@@ -486,10 +480,8 @@ class Release0003 extends PureComponent {
    }
     if (!onLoPassSphere) {
       this.scene.background = new THREE.Color(0xFFFFFF);
-      if (!isSafari) {
-        this.audioStream.filter.frequency.value = 20000;
-        this.audioStream.filter.Q.value = 0;
-      }
+      this.audioStream.filter.frequency.value = 20000;
+      this.audioStream.filter.Q.value = 0;
       for (let orbGroup in this.onOrbs) {
         for (let orb of this.onOrbs[orbGroup]) {
            orb.material.color.setHex(orb.userData.offFilterColor);
