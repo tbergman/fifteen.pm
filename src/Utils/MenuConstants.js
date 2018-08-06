@@ -138,6 +138,6 @@ export const RELEASE_LINKS = [
 export const MENU_MESSAGES = {
   "/": "Welcome to Globally LTD.",
   "/1": "Yahceph's production debut, \"wun 4 jas\", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.",
-  "/2": "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly club smash."
+  "/2": "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly beat disturbance."
 }
 
