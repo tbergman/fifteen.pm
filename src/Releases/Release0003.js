@@ -410,7 +410,8 @@ class Release0003 extends PureComponent {
 
   renderByTrackSection = (currentTime) => {
     const {allOrbs} = this.state;
-    // console.log(currentTime);
+
+    // toggle orbs
     this.toggleOrbs(currentTime);
 
     // you need to check for intro_start since we're looping audio
