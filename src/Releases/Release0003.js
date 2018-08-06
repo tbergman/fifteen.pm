@@ -38,7 +38,7 @@ const INTERLUDE_3_END = 247;
 const OUTRO_START = 306;
 const CAN_U_HEAR = 169;
 const SONG_LENGTH = 328;
-const N_RANDOM_MOMENTS = 50;
+const N_RANDOM_MOMENTS = 66;
 
 let getRandomMoments = (len, size) => {
   var arr = [];
@@ -81,7 +81,7 @@ class Release0003 extends PureComponent {
   componentDidMount() {
     // window.addEventListener("touchstart", this.onDocumentMouseMove, false);
     window.addEventListener('mousemove', this.onMouseMove, false);
-    // window.addEventListener("touchmove", this.onDocumentMouseMove, false);
+    window.addEventListener("touchstart", this.onTouchMove, false);
     window.addEventListener('resize', this.onWindowResize, false);
     this.init();
     this.animate();
@@ -243,7 +243,7 @@ class Release0003 extends PureComponent {
     window.addEventListener('mousemove', this.onMouseMove, false);
     window.addEventListener('resize', this.onWindowResize, false);
     window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
-    window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
+    window.removeEventListener("touchend", this.onDocumentMouseMove, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
@@ -253,6 +253,12 @@ class Release0003 extends PureComponent {
     // (-1 to +1) for both components
     this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  }
+
+  onTouchMove = (event) => {
+
+    this.mouse.x = (event.changedTouches[0].clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.changedTouches[0].clientY / window.innerHeight) * 2 + 1;
   }
 
   onWindowResize = debounce(() => {
