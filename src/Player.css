@@ -79,7 +79,7 @@
     width: 0;
     height: 24px;
     opacity: 0.5;
-    border-color: transparent transparent transparent #FFFFFF;
+    border-color: transparent transparent transparent #red;
     transition: 500ms all ease;
     -webkit-transition: 500ms all ease;
     cursor: pointer;
@@ -101,4 +101,3 @@
      opacity: 1;
      border-color: transparent transparent transparent #FFFFFF;
  }
-

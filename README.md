@@ -31,7 +31,7 @@ TODO ...
 ```
 git clone https://github.com/gltd/releases.git
 cd releases/
-npm i
+yarn install
 ```
 
 ## Starting a Development Server
