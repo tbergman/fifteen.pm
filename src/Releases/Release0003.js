@@ -17,7 +17,7 @@ const MIDS = "mids";
 // Filter frequency constants
 const HOVER_MIN_FILTER_FREQ = 100;
 const HOVER_MAX_FILTER_FREQ = 12000;
-const FLYTHRU_MIN_FILTER_FREQ = 50;
+const FLYTHRU_MIN_FILTER_FREQ = 80;
 const FLYTHRU_MAX_FILTER_FREQ = 6000;
 const FILTER_RESONANCE = 11;
 const FILTER_RADIUS_BUFFER = -10;
