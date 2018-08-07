@@ -4,9 +4,9 @@ import {SimplexNoise} from '../Utils/SimplexNoise';
 import {GPUComputationRenderer} from "../Utils/GPUComputationRenderer";
 import debounce from 'lodash/debounce';
 import './Release.css';
-import Player from '../Player';
+import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
-import {AudioStreamer} from "../Utils/Audio/AudioStreamer";
+import AudioStreamer from "../Utils/Audio/AudioStreamer";
 /* eslint import/no-webpack-loader-syntax: off */
 // import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
 
@@ -53,9 +53,6 @@ class Release0001 extends PureComponent {
 
     this.gpuCompute = new GPUComputationRenderer(WATER_WIDTH, WATER_WIDTH, this.renderer);
     this.mousePos = new THREE.Vector2(10000, 10000);
-    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    this.audioAnalyser = this.audioCtx.createAnalyser();
-    this.freqArray = new Uint8Array(this.audioAnalyser.frequencyBinCount);
     this.light = new THREE.PointLight(0xff0000, 4, 100);
     this.sun = new THREE.DirectionalLight(lightColor1, lightIntensity1);
     this.sun2 = new THREE.DirectionalLight(lightColor2, lightIntensity2);
@@ -70,6 +67,7 @@ class Release0001 extends PureComponent {
     window.addEventListener("touchstart", this.onDocumentMouseMove, false);
     window.addEventListener("touchmove", this.onDocumentMouseMove, false);
     window.addEventListener('resize', this.onWindowResize, false);
+    window.addEventListener("load", this.onLoad, false);
     this.init();
     this.animate();
   }
@@ -80,6 +78,7 @@ class Release0001 extends PureComponent {
     window.removeEventListener('resize', this.onWindowResize, false);
     window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
     window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
+    window.removeEventListener("load", this.onLoad, false);
     this.mount.removeChild(this.renderer.domElement);
   }
 
@@ -101,6 +100,10 @@ class Release0001 extends PureComponent {
       this.setMouseCoords(event.clientX, event.clientY);
     }
   };
+
+  onLoad = (event) => {
+    this.audioStream.connect()
+  }
 
   init = () => {
     const {camera, renderer} = this;
@@ -296,12 +299,12 @@ class Release0001 extends PureComponent {
             this.mount = mount
           }}
         />
-        <Player
-          src='https://api.soundcloud.com/tracks/466084773/stream?client_id=ad6375f4b6bc0bcaee8edf53ab37e7f2'
+        <SoundcloudPlayer
+          trackId='466084773'
           type='audio/mpeg'
           message='YAHCEPH'
           inputRef={el => this.audioElement = el}/>
-        <Purchase/>
+        <Purchase href='https://gltd.bandcamp.com/track/wun-4-jas'/>
       </Fragment>
     );
   }

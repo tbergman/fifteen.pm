@@ -1,11 +1,9 @@
 import React, {PureComponent} from "react";
-import {PURCHASE_BANDCAMP} from "./Utils/PurchaseConstants";
 import './Purchase.css'
 
 class Purchase extends PureComponent {
-
-  state = {
-    bandcampLink: PURCHASE_BANDCAMP[window.location.pathname]
+  static defaultProps = {
+    fillColor: '#ffffff',
   }
 
   componentDidMount() {
@@ -13,18 +11,23 @@ class Purchase extends PureComponent {
   }
 
   render() {
+    const {fillColor, href} = this.props;
     return (
       <div className="purchase-container">
         <a id="purchase-icon-link"
            className="purchase-link"
            target="_blank"
-           href={this.state.bandcampLink}>
+           href={href}
+           style={{color: fillColor}}
+        >
           ☻
         </a>
         <a id="purchase-text-link"
            className="purchase-link"
            target="_blank"
-           href={this.state.bandcampLink}>
+           href={href}
+           style={{color: fillColor}}
+        >
           buy me
         </a>
       </div>

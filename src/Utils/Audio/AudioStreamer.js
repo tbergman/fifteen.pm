@@ -1,37 +1,32 @@
-import {isChrome, isFirefox} from "../BrowserDetection";
+import {isChrome, isFirefox, isSafari} from "../BrowserDetection";
 
-export function AudioStreamer(audioElement) {
-  this.audioElement = audioElement;
-  this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  this.analyser = this.audioCtx.createAnalyser();
-  window.onload = () => {
-    this.stream = captureStream(this.audioElement, this.audioCtx, this.analyser);
-  };
+class AudioStreamer {
+  
+  // A class which handles Web Audio API Interaction given an Audio Element
 
-  function captureStream(elt, ctx, analyser) {
-    let stream;
-    if (isFirefox) {
-      stream = elt.mozCaptureStream();
-    } else if (isChrome) {
-      stream = elt.captureStream();
-    }
-    if (stream !== undefined) {
-      if (isChrome) {
-        stream.onactive = () => {
-          createAudioSource(ctx, analyser, stream);
-        };
-      }
-      else {
-        createAudioSource(ctx, analyser, stream);
-      }
-      return stream;
+  constructor(audioElement) {
+    this.element = audioElement
+    this.context = new (window.AudioContext || window.webkitAudioContext)();
+    this.analyser = this.context.createAnalyser();
+    this.filter   = this.context.createBiquadFilter();
+    this.filter.frequency.value = 22000;
+    this.filter.type = "lowpass";
+    this.source = undefined;
+    this.deactivated = isSafari;
+  }
+  
+  // build signal path on-demand 
+  // exclude safari
+  connect() {
+    if (!this.deactivated) {
+        this.source = this.context.createMediaElementSource(this.element);
+        this.source.connect(this.analyser);
+        this.analyser.connect(this.filter);
+        this.filter.connect(this.context.destination);
     }
   }
 
-  function createAudioSource(ctx, analyser, stream) {
-    let source = ctx.createMediaStreamSource(stream);
-    source.connect(analyser);
-    source.connect(ctx.destination);
-  }
+  // TODO: function for disconnecting.
 }
 
+export default AudioStreamer;
