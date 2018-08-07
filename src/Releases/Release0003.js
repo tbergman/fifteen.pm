@@ -562,9 +562,11 @@ class Release0003 extends PureComponent {
     //// calculate objects intersecting the picking ray
     let intersects = raycaster.intersectObjects(scene.children);
     let onLoPassSphere = false;
+    // first check if the mouse has intersected with the inner sphere
     for (let i = 0; i < intersects.length; i++) {
       if (intersects[i].object.name === 'filterSphere') {
         this.scene.background = new THREE.Color(0x000000);
+
         let freq = this.scaleFreq(Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y)));
         this.audioStream.filter.frequency.value = freq;
         this.audioStream.filter.Q.value = FILTER_RESONANCE;
@@ -576,6 +578,15 @@ class Release0003 extends PureComponent {
         }
       }
     }
+
+    // second, check if the camera is within the radius of the inner sphere
+    if (Math.abs(this.camera.position.z) < RADIUS){
+      let freq = this.scaleFreq( Math.abs(this.camera.position.z) / RADIUS.toFixed(1) / 2.0 );
+      this.audioStream.filter.frequency.value = freq;
+      this.audioStream.filter.Q.value = FILTER_RESONANCE;
+      onLoPassSphere = true;
+    }
+
     if (!onLoPassSphere) {
       this.scene.background = new THREE.Color(0xFFFFFF);
       this.audioStream.filter.frequency.value = 22000;
