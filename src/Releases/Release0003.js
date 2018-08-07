@@ -15,8 +15,10 @@ const BASS = "bass";
 const MIDS = "mids";
 
 // Filter frequency constants
-const MIN_FILTER_FREQ = 100;
-const MAX_FILTER_FREQ = 12000;
+const HOVER_MIN_FILTER_FREQ = 100;
+const HOVER_MAX_FILTER_FREQ = 12000;
+const FLYTHRU_MIN_FILTER_FREQ = 50;
+const FLYTHRU_MAX_FILTER_FREQ = 6000;
 const FILTER_RESONANCE = 11;
 const FILTER_RADIUS_BUFFER = -10;
 
@@ -546,9 +548,9 @@ class Release0003 extends PureComponent {
   }
 
 
-  scaleFreq = (range, minFilterRange, maxFilterRange) => {
-    return (MAX_FILTER_FREQ - MIN_FILTER_FREQ) *
-      (range - minFilterRange) / (maxFilterRange - minFilterRange) + MIN_FILTER_FREQ;
+  scaleFreq = (range, minFilterRange, maxFilterRange, targetFilterMinRange, targetFilterMaxRange) => {
+    return (targetFilterMaxRange - targetFilterMinRange) *
+      (range - minFilterRange) / (maxFilterRange - minFilterRange) + targetFilterMinRange;
   }
 
   applyFilter = () => {
@@ -566,7 +568,7 @@ class Release0003 extends PureComponent {
         this.scene.background = new THREE.Color(0x000000);
         let minFilterRange = 0.0;
         let maxFilterRange = 0.3;
-        let freq = this.scaleFreq(Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y)), minFilterRange, maxFilterRange);
+        let freq = this.scaleFreq(Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y)), minFilterRange, maxFilterRange, HOVER_MIN_FILTER_FREQ, HOVER_MAX_FILTER_FREQ);
         this.audioStream.filter.frequency.value = freq;
         this.audioStream.filter.Q.value = FILTER_RESONANCE;
         onLoPassSphere = true;
@@ -579,10 +581,10 @@ class Release0003 extends PureComponent {
     }
 
     // second, check if the camera is within the radius of the inner sphere
-    if (Math.abs(this.camera.position.z) < RADIUS){
+    if (Math.abs(this.camera.position.z) < (RADIUS + FILTER_RADIUS_BUFFER)){
       let minFilterRange = 0.0;
-      let maxFilterRange = RADIUS;
-      let freq = this.scaleFreq( Math.abs(this.camera.position.z), minFilterRange, maxFilterRange);
+      let maxFilterRange = (RADIUS + FILTER_RADIUS_BUFFER);
+      let freq = this.scaleFreq( Math.abs(this.camera.position.z), minFilterRange, maxFilterRange, FLYTHRU_MIN_FILTER_FREQ, FLYTHRU_MAX_FILTER_FREQ);
       this.audioStream.filter.frequency.value = freq;
       this.audioStream.filter.Q.value = FILTER_RESONANCE;
       onLoPassSphere = true;
