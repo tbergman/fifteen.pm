@@ -18,13 +18,13 @@ class AudioStreamer {
   // exclude safari
   connect() {
     if (!isSafari) { 
-      window.onload = () => {
+      // window.onload = () => {
         console.log('Audio stream connection!')
         this.source = this.context.createMediaElementSource(this.element);
         this.source.connect(this.analyser);
         this.analyser.connect(this.filter);
         this.filter.connect(this.context.destination);
-      }
+      // }
     }
   }
 
