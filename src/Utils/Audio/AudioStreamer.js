@@ -12,19 +12,17 @@ class AudioStreamer {
     this.filter.frequency.value = 22000;
     this.filter.type = "lowpass";
     this.source = undefined;
+    this.deactivated = isSafari && !(isChrome || isFirefox);
   }
   
   // build signal path on-demand 
   // exclude safari
   connect() {
-    if (!isSafari) { 
-      // window.onload = () => {
-        console.log('Audio stream connection!')
+    if (!this.deactivated) {
         this.source = this.context.createMediaElementSource(this.element);
         this.source.connect(this.analyser);
         this.analyser.connect(this.filter);
         this.filter.connect(this.context.destination);
-      // }
     }
   }
 
