@@ -6,7 +6,7 @@ import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
-import {isMobile, isSafari} from "../Utils/BrowserDetection";
+import {isMobile} from "../Utils/BrowserDetection";
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);
@@ -540,10 +540,10 @@ class Release0003 extends PureComponent {
   renderOrbs = () => {
     let currentTime = this.audioElement.currentTime;
     this.renderByTrackSection(currentTime);
-    if (isSafari) {
+    if (this.audioStream.deactivated) {
       this.renderOrbsSansAnalyser(currentTime);
     } else {
-    this.renderOrbsWithAnalyser();
+      this.renderOrbsWithAnalyser();
     }
   }
 
@@ -593,6 +593,10 @@ class Release0003 extends PureComponent {
     this.updateOrbitControls();
     this.applyFilter();
     this.renderer.render(this.scene, this.camera);
+  }
+
+  safariDebuggerLog = (msg) => {
+    document.getElementById("log").innerHTML = msg;
   }
 
   render() {
