@@ -78,7 +78,7 @@ const SCRATCHY_TIME_BUFFERS = [
   BEAT_TIME
 ];
 const SCRATCHY_MOMENTS = getRandomMoments(SONG_LENGTH, N_SCRATCHY_MOMENTS)
-                                  .filter(m => !isInterlude(m) && m < NO_SCRATCHY_MOMENTS_BEFORE);
+                                  .filter(m => !isInterlude(m) || m >= NO_SCRATCHY_MOMENTS_BEFORE);
 
 class Release0003 extends PureComponent {
   constructor() {
