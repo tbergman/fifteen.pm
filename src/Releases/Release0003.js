@@ -582,7 +582,7 @@ class Release0003 extends PureComponent {
     if (Math.abs(this.camera.position.z) < RADIUS){
       let minFilterRange = 0.0;
       let maxFilterRange = RADIUS;
-      let freq = this.scaleFreq( RADIUS - Math.abs(this.camera.position.z), minFilterRange, maxFilterRange);
+      let freq = this.scaleFreq( Math.abs(this.camera.position.z), minFilterRange, maxFilterRange);
       this.audioStream.filter.frequency.value = freq;
       this.audioStream.filter.Q.value = FILTER_RESONANCE;
       onLoPassSphere = true;
