@@ -19,7 +19,7 @@ const MIN_FILTER_FREQ = 100;
 const MAX_FILTER_FREQ = 12000;
 const MIN_FILTER_RANGE = 0;
 const MAX_FILTER_RANGE = 0.3;
-const FILTER_RESONANCE = 14;
+const FILTER_RESONANCE = 11;
 const FILTER_RADIUS_BUFFER = -10;
 
 const SCREEN_WIDTH = window.innerWidth;
@@ -30,9 +30,11 @@ const RADIUS = 280;
 const INTRO_START = -1;
 const INTRO_END = 77;
 const BASS_ENTERS = 0;
-const MID_ENTERS = 19;
-const TREBLE_ENTERS = 38;
+const MID_ENTERS = 14;
+const TREBLE_ENTERS = 28;
 
+const INTERLUDE_1_START = 71;
+const INTERLUDE_1_END = 77;
 const INTERLUDE_2_START = 161;
 const INTERLUDE_2_END = 167;
 const INTERLUDE_3_START = 242;
@@ -40,9 +42,9 @@ const INTERLUDE_3_END = 247;
 const OUTRO_START = 306;
 const CAN_U_HEAR = 169;
 const SONG_LENGTH = 328;
-const N_RANDOM_MOMENTS = 66;
 const USE_ORBIT_CONTROLS_ON_MOBILE = true;
 
+// Scratchy moment generation
 let getRandomMoments = (len, size) => {
   var arr = [];
   for (var j = 0; j <= len; j++) {
@@ -58,13 +60,27 @@ let getRandomMoments = (len, size) => {
   return shuffled.slice(0, size);
 }
 
+const isInterlude = (x) => {
+  if (x > INTERLUDE_1_START && x <= INTERLUDE_1_END) {
+    return true;
+  }
+  if (x > INTERLUDE_2_START && x <= INTERLUDE_2_END) {
+    return true;
+  } else if (x > INTERLUDE_3_START && x <= INTERLUDE_3_END) {
+    return true
+  }
+  return false;
+}
+
+const N_SCRATCHY_MOMENTS = 66;
+const NO_SCRATCHY_MOMENTS_BEFORE = 32;
 const SCRATCHY_TIME_BUFFERS = [
-  BEAT_TIME / 6,
   BEAT_TIME / 4,
   BEAT_TIME / 2, 
   BEAT_TIME
 ];
-const SCRATCHY_MOMENTS = getRandomMoments(SONG_LENGTH, N_RANDOM_MOMENTS);
+const SCRATCHY_MOMENTS = getRandomMoments(SONG_LENGTH, N_SCRATCHY_MOMENTS)
+                                  .filter(m => !isInterlude(m) && m < NO_SCRATCHY_MOMENTS_BEFORE);
 
 class Release0003 extends PureComponent {
   constructor() {
@@ -382,8 +398,8 @@ class Release0003 extends PureComponent {
 
   getOrbs = (currentTime) => {
     let timeBuffer = SCRATCHY_TIME_BUFFERS[Math.floor(Math.random() * SCRATCHY_TIME_BUFFERS.length)];
-    for (let swirl of SCRATCHY_MOMENTS) {
-      if (Math.abs(currentTime - swirl) < timeBuffer) {
+    for (let moment of SCRATCHY_MOMENTS) {
+      if (Math.abs(currentTime - moment) < timeBuffer) {
         return [this.scratchyOrbs, this.smoothOrbs];
       }
     }
@@ -525,7 +541,6 @@ class Release0003 extends PureComponent {
     let currentTime = this.audioElement.currentTime;
     this.renderByTrackSection(currentTime);
     if (isSafari) {
-      console.log('Safari render!')
       this.renderOrbsSansAnalyser(currentTime);
     } else {
     this.renderOrbsWithAnalyser();
@@ -549,11 +564,9 @@ class Release0003 extends PureComponent {
     let onLoPassSphere = false;
     for (let i = 0; i < intersects.length; i++) {
       if (intersects[i].object.name === 'filterSphere') {
-        console.log('intersection!')
         this.scene.background = new THREE.Color(0x000000);
-        let range = Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y));
-        console.log(range);
-        this.audioStream.filter.frequency.value = this.scaleFreq(range);
+        let freq = this.scaleFreq(Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y)));
+        this.audioStream.filter.frequency.value = freq;
         this.audioStream.filter.Q.value = FILTER_RESONANCE;
         onLoPassSphere = true;
         for (let orbGroup in this.onOrbs) {
