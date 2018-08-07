@@ -72,8 +72,8 @@ const isInterlude = (x) => {
   return false;
 }
 
-const N_SCRATCHY_MOMENTS = 66;
-const NO_SCRATCHY_MOMENTS_BEFORE = 32;
+const N_SCRATCHY_MOMENTS = 58;
+const NO_SCRATCHY_MOMENTS_BEFORE = 46;
 const SCRATCHY_TIME_BUFFERS = [
   BEAT_TIME / 4,
   BEAT_TIME / 2, 

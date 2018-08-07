@@ -12,7 +12,7 @@ class AudioStreamer {
     this.filter.frequency.value = 22000;
     this.filter.type = "lowpass";
     this.source = undefined;
-    this.deactivated = isSafari && !(isChrome || isFirefox);
+    this.deactivated = isSafari;
   }
   
   // build signal path on-demand 

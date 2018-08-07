@@ -15,6 +15,7 @@ export var isEdge = !isIE && !!window.StyleMedia;
 
 // Chrome 1+
 export var isChrome = !!window.chrome && !!window.chrome.webstore;
+// export var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 
 // Blink engine detection
 export var isBlink = (isChrome || isOpera) && !!window.CSS;
