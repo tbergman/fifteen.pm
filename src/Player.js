@@ -78,7 +78,7 @@ class Player extends Component {
                 </text>
             </g>
           </svg>
-          <div onClick={this.onClick} className={paused ? 'button' : 'button paused'}/>
+          <div onClick={this.onClick} className={paused ? 'button' : 'button paused'} style={{borderColor: `transparent transparent transparent ${fillColor}`}}/>
           <audio id="audio-player" loop autoPlay crossOrigin="anonymous" ref={inputRef}>
             <source src={src} type={type}/>
           </audio>
