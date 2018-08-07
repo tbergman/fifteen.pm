@@ -226,6 +226,8 @@ class Release0003 extends PureComponent {
     // add first sphere
     this.scene.add(this.smoothOrbs.bass[0])
     this.smoothOrbs.bass[0].userData.inScene = true;
+    this.scene.add(this.scratchyOrbs.bass[0])
+    this.scratchyOrbs.bass[0].userData.inScene = false;
   }
 
   initOrbsGroup = (params, scratchy) => {
