@@ -566,7 +566,6 @@ class Release0003 extends PureComponent {
     for (let i = 0; i < intersects.length; i++) {
       if (intersects[i].object.name === 'filterSphere') {
         this.scene.background = new THREE.Color(0x000000);
-
         let freq = this.scaleFreq(Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y)));
         this.audioStream.filter.frequency.value = freq;
         this.audioStream.filter.Q.value = FILTER_RESONANCE;
