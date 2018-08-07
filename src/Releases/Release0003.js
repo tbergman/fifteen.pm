@@ -28,8 +28,8 @@ const RADIUS = 280;
 const INTRO_START = -1;
 const INTRO_END = 77;
 const BASS_ENTERS = 0;
-const MID_ENTERS = 14;
-const TREBLE_ENTERS = 28;
+const MID_ENTERS = 15;
+const TREBLE_ENTERS = 29;
 
 const INTERLUDE_1_START = 71;
 const INTERLUDE_1_END = 77;
