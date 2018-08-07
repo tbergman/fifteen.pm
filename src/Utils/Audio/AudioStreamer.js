@@ -17,7 +17,7 @@ class AudioStreamer {
   // build signal path on-demand 
   // exclude safari
   connect() {
-    if (!isSafari) { 
+    if (!isSafari && !isChrome && !isFirefox) { 
       // window.onload = () => {
         console.log('Audio stream connection!')
         this.source = this.context.createMediaElementSource(this.element);
