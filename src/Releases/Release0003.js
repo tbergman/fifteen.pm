@@ -17,8 +17,6 @@ const MIDS = "mids";
 // Filter frequency constants
 const MIN_FILTER_FREQ = 100;
 const MAX_FILTER_FREQ = 12000;
-const MIN_FILTER_RANGE = 0;
-const MAX_FILTER_RANGE = 0.3;
 const FILTER_RESONANCE = 11;
 const FILTER_RADIUS_BUFFER = -10;
 
@@ -548,9 +546,9 @@ class Release0003 extends PureComponent {
   }
 
 
-  scaleFreq = (range) => {
+  scaleFreq = (range, minFilterRange, maxFilterRange) => {
     return (MAX_FILTER_FREQ - MIN_FILTER_FREQ) *
-      (range - MIN_FILTER_RANGE) / (MAX_FILTER_RANGE - MIN_FILTER_RANGE) + MIN_FILTER_FREQ;
+      (range - minFilterRange) / (maxFilterRange - minFilterRange) + MIN_FILTER_FREQ;
   }
 
   applyFilter = () => {
@@ -566,7 +564,9 @@ class Release0003 extends PureComponent {
     for (let i = 0; i < intersects.length; i++) {
       if (intersects[i].object.name === 'filterSphere') {
         this.scene.background = new THREE.Color(0x000000);
-        let freq = this.scaleFreq(Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y)));
+        let minFilterRange = 0.0;
+        let maxFilterRange = 0.3;
+        let freq = this.scaleFreq(Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y)), minFilterRange, maxFilterRange);
         this.audioStream.filter.frequency.value = freq;
         this.audioStream.filter.Q.value = FILTER_RESONANCE;
         onLoPassSphere = true;
@@ -580,7 +580,9 @@ class Release0003 extends PureComponent {
 
     // second, check if the camera is within the radius of the inner sphere
     if (Math.abs(this.camera.position.z) < RADIUS){
-      let freq = this.scaleFreq( Math.abs(this.camera.position.z) / RADIUS.toFixed(1) / 2.0 );
+      let minFilterRange = 0.0;
+      let maxFilterRange = RADIUS;
+      let freq = this.scaleFreq( RADIUS - Math.abs(this.camera.position.z), minFilterRange, maxFilterRange);
       this.audioStream.filter.frequency.value = freq;
       this.audioStream.filter.Q.value = FILTER_RESONANCE;
       onLoPassSphere = true;
