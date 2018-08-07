@@ -601,17 +601,18 @@ class Release0003 extends PureComponent {
 
   render() {
     return (
+      
       <Fragment>
         <div className="release">
           <div ref={element => this.container = element}/>
           <SoundcloudPlayer
-            trackId='480414720'
-            secretToken='s-HRFYz'
+            trackId='482138307'
+            secretToken='s-mDQEf'
             message='OTHERE'
             inputRef={el => this.audioElement = el}
             fillColor="red"
           />
-          <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-go-to-the-beach'/>
+          <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
         </div>
       </Fragment>
     );
