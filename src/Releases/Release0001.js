@@ -67,6 +67,7 @@ class Release0001 extends PureComponent {
     window.addEventListener("touchstart", this.onDocumentMouseMove, false);
     window.addEventListener("touchmove", this.onDocumentMouseMove, false);
     window.addEventListener('resize', this.onWindowResize, false);
+    window.addEventListener("load", this.onLoad, false);
     this.init();
     this.animate();
   }
@@ -77,6 +78,7 @@ class Release0001 extends PureComponent {
     window.removeEventListener('resize', this.onWindowResize, false);
     window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
     window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
+    window.removeEventListener("load", this.onLoad, false);
     this.mount.removeChild(this.renderer.domElement);
   }
 
@@ -98,6 +100,10 @@ class Release0001 extends PureComponent {
       this.setMouseCoords(event.clientX, event.clientY);
     }
   };
+
+  onLoad = (event) => {
+    this.audioStream.connect()
+  }
 
   init = () => {
     const {camera, renderer} = this;
@@ -174,7 +180,6 @@ class Release0001 extends PureComponent {
 
   initAudioProps = () => {
     this.audioStream = new AudioStreamer(this.audioElement);
-    this.audioStream.connect();
     this.freqArray = new Uint8Array(this.audioStream.analyser.frequencyBinCount);
   }
 
