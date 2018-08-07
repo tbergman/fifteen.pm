@@ -41,6 +41,7 @@ const OUTRO_START = 306;
 const CAN_U_HEAR = 169;
 const SONG_LENGTH = 328;
 const N_RANDOM_MOMENTS = 66;
+const USE_ORBIT_CONTROLS_ON_MOBILE = true;
 
 let getRandomMoments = (len, size) => {
   var arr = [];
@@ -76,6 +77,7 @@ class Release0003 extends PureComponent {
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+    this.orbitControlsActivated = false;
   }
 
   state = {
@@ -85,8 +87,9 @@ class Release0003 extends PureComponent {
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
     window.addEventListener("mousemove", this.onMouseMove, false);
-    window.addEventListener("touchstart", this.onTouchStart, false);
+    window.addEventListener("touchstart", this.onTouch, false);
     window.addEventListener("touchend", this.onTouchEnd, false);
+    window.addEventListener("load", this.onLoad, false);
     this.init();
     this.animate();
   }
@@ -100,15 +103,15 @@ class Release0003 extends PureComponent {
   }
 
   initOrbitContols = () => {
-    if (!isMobile) {
+    if (!isMobile || USE_ORBIT_CONTROLS_ON_MOBILE) {
       this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-      this.startTime = Date.now();    
+      this.startTime = Date.now();
+      this.orbitControlsActivated = true;    
     }
   }
 
   initAudioProps = () => {
     this.audioStream = new AudioStreamer(this.audioElement);
-    this.audioStream.connect();
     this.audioStream.analyser.fftSize = 256;
     this.volArray = new Uint8Array(this.audioStream.analyser.fftSize);
     this.numVolBuckets = 4;
@@ -204,6 +207,9 @@ class Release0003 extends PureComponent {
     sphere.name = "filterSphere";
     // sphere.position = new THREE.Vector3();
     this.scene.add(sphere);
+    // add first sphere
+    this.scene.add(this.smoothOrbs.bass[0])
+    this.smoothOrbs.bass[0].userData.inScene = true;
   }
 
   initOrbsGroup = (params, scratchy) => {
@@ -254,8 +260,9 @@ class Release0003 extends PureComponent {
     this.stop();
     window.removeEventListener("resize", this.onWindowResize, false);
     window.removeEventListener("mousemove", this.onMouseMove, false);
-    window.removeEventListener("touchstart", this.onTouchStart, false);
+    window.removeEventListener("touchstart", this.onTouch, false);
     window.removeEventListener("touchend", this.onTouchEnd, false);
+    window.removeEventListener("load", this.onLoad, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
@@ -265,18 +272,15 @@ class Release0003 extends PureComponent {
     this.mouseMoved = true;
   }
 
+  onLoad = (event) => {
+    this.audioStream.connect()
+  }
+
   onMouseMove = (event) => {
     this.setMouseCoords(event.clientX, event.clientY);
   };
 
-  onTouchStart = (event) => {
-    // event.preventDefault();
-    if (event.touches) {
-      this.setMouseCoords(event.touches[0].clientX, event.touches[0].clientY);
-    }
-  };
-
-  onTouchMove = (event) => {
+  onTouch = (event) => {
     // event.preventDefault();
     if (event.touches) {
       this.setMouseCoords(event.touches[0].clientX, event.touches[0].clientY);
@@ -371,7 +375,7 @@ class Release0003 extends PureComponent {
   }
 
   handleIntroOrbs = (currentTime) => {
-    this.handleIntroOrbGroup(currentTime, BASS_ENTERS, this.onOrbs.bass);
+    // this.handleIntroOrbGroup(currentTime, BASS_ENTERS, this.onOrbs.bass);
     this.handleIntroOrbGroup(currentTime, MID_ENTERS, this.onOrbs.mid);
     this.handleIntroOrbGroup(currentTime, TREBLE_ENTERS, this.onOrbs.treble);
   }
@@ -401,7 +405,7 @@ class Release0003 extends PureComponent {
   }
 
   updateOrbitControls = () => {
-    if (!isMobile) {
+    if (this.orbitControlsActivated) {
       let time = Date.now();
       this.controls.update(time - this.startTime);
     }
