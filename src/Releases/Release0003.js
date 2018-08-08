@@ -20,7 +20,7 @@ const HOVER_MAX_FILTER_FREQ = 12000;
 const FLYTHRU_MIN_FILTER_FREQ = 80;
 const FLYTHRU_MAX_FILTER_FREQ = 6000;
 const FILTER_RESONANCE = 11;
-const FILTER_RADIUS_BUFFER = -10;
+const FILTER_RADIUS_BUFFER = -40;
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
@@ -115,6 +115,7 @@ class Release0003 extends PureComponent {
     this.initOrbs();
     this.initRaycaster();
     this.initOrbitContols();
+    // this.initGridHelper();
     this.container.appendChild(this.renderer.domElement);
   }
 
@@ -124,6 +125,11 @@ class Release0003 extends PureComponent {
       this.startTime = Date.now();
       this.orbitControlsActivated = true;    
     }
+  }
+
+  initGridHelper = () => {
+    this.gridHelper = new THREE.GridHelper( 1000, 1000 );
+    this.scene.add( this.gridHelper );
   }
 
   initAudioProps = () => {
@@ -308,8 +314,8 @@ class Release0003 extends PureComponent {
   // turn off filter if no touch
   onTouchEnd = (event) => {
     // event.preventDefault();
-    this.mouse.x = 100;
-    this.mouse.y = 100;
+    this.mouse.x = 10000;
+    this.mouse.y = 10000;
   }
 
   onWindowResize = debounce(() => {
@@ -564,32 +570,52 @@ class Release0003 extends PureComponent {
     //// calculate objects intersecting the picking ray
     let intersects = raycaster.intersectObjects(scene.children);
     let onLoPassSphere = false;
+
     // first check if the mouse has intersected with the inner sphere
-    for (let i = 0; i < intersects.length; i++) {
-      if (intersects[i].object.name === 'filterSphere') {
-        this.scene.background = new THREE.Color(0x000000);
-        let minFilterRange = 0.0;
-        let maxFilterRange = 0.3;
-        let freq = this.scaleFreq(Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y)), minFilterRange, maxFilterRange, HOVER_MIN_FILTER_FREQ, HOVER_MAX_FILTER_FREQ);
-        this.audioStream.filter.frequency.value = freq;
-        this.audioStream.filter.Q.value = FILTER_RESONANCE;
-        onLoPassSphere = true;
-        for (let orbGroup in this.onOrbs) {
-          for (let orb of this.onOrbs[orbGroup]) {
-            orb.material.color.setHex(orb.userData.onFilterColor);
-          }
+    if (Math.abs(this.camera.position.z) < (RADIUS + FILTER_RADIUS_BUFFER) && 
+        Math.abs(this.camera.position.x) < (RADIUS + FILTER_RADIUS_BUFFER) &&
+        Math.abs(this.camera.position.y) < (RADIUS + FILTER_RADIUS_BUFFER)) {
+      let minFilterRange = 0.0;
+      let maxFilterRange = (RADIUS + FILTER_RADIUS_BUFFER);
+      let adj = Math.max(Math.abs(this.camera.position.z), Math.abs(this.camera.position.y), Math.abs(this.camera.position.x));
+      let freq = this.scaleFreq(adj, minFilterRange, maxFilterRange, FLYTHRU_MIN_FILTER_FREQ, FLYTHRU_MAX_FILTER_FREQ);
+      this.audioStream.filter.frequency.value = freq;
+      this.audioStream.filter.Q.value = FILTER_RESONANCE;
+      onLoPassSphere = true;
+      this.scene.background = new THREE.Color(0x000000);
+      for (let orbGroup in this.onOrbs) {
+        for (let orb of this.onOrbs[orbGroup]) {
+          orb.material.color.setHex(orb.userData.onFilterColor);
+        }
+      }
+    } else {
+      this.scene.background = new THREE.Color(0xFFFFFF);
+      for (let orbGroup in this.onOrbs) {
+        for (let orb of this.onOrbs[orbGroup]) {
+          orb.material.color.setHex(orb.userData.offFilterColor);
         }
       }
     }
 
     // second, check if the camera is within the radius of the inner sphere
-    if (Math.abs(this.camera.position.z) < (RADIUS + FILTER_RADIUS_BUFFER)){
-      let minFilterRange = 0.0;
-      let maxFilterRange = (RADIUS + FILTER_RADIUS_BUFFER);
-      let freq = this.scaleFreq( Math.abs(this.camera.position.z), minFilterRange, maxFilterRange, FLYTHRU_MIN_FILTER_FREQ, FLYTHRU_MAX_FILTER_FREQ);
-      this.audioStream.filter.frequency.value = freq;
-      this.audioStream.filter.Q.value = FILTER_RESONANCE;
-      onLoPassSphere = true;
+    if (!onLoPassSphere) { 
+      for (let i = 0; i < intersects.length; i++) {
+        if (intersects[i].object.name === 'filterSphere') {
+          this.scene.background = new THREE.Color(0x000000);
+          let minFilterRange = 0.0;
+          let maxFilterRange = 0.3;
+          let adj = Math.log(1 + Math.abs(this.mouse.x) + Math.abs(this.mouse.y));
+          let freq = this.scaleFreq(adj, minFilterRange, maxFilterRange, HOVER_MIN_FILTER_FREQ, HOVER_MAX_FILTER_FREQ);
+          this.audioStream.filter.frequency.value = freq;
+          this.audioStream.filter.Q.value = FILTER_RESONANCE;
+          onLoPassSphere = true;
+          for (let orbGroup in this.onOrbs) {
+            for (let orb of this.onOrbs[orbGroup]) {
+              orb.material.color.setHex(orb.userData.onFilterColor);
+            }
+          }
+        }
+      }
     }
 
     if (!onLoPassSphere) {
@@ -623,7 +649,6 @@ class Release0003 extends PureComponent {
           <div ref={element => this.container = element}/>
           <SoundcloudPlayer
             trackId='482138307'
-            secretToken='s-mDQEf'
             message='OTHERE'
             inputRef={el => this.audioElement = el}
             fillColor="red"
