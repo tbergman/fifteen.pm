@@ -20,11 +20,9 @@ class Release0004 extends PureComponent {
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
     this.camera.target = new THREE.Vector3(0, 0, 0);
     this.scene = new THREE.Scene();
-    // this.scene.background = new THREE.Color(0xFFFFFF);
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    // this.orbitControlsActivated = false;
   }
 
 
@@ -78,7 +76,7 @@ class Release0004 extends PureComponent {
     this.video.height = 360;
     this.video.loop = true;
     this.video.muted = true;
-    this.video.src = 'assets/test.webm'; //pano.webm';
+    this.video.src = 'assets/straps.webm'; //pano.webm';
     this.video.setAttribute('webkit-playsinline', 'webkit-playsinline');
     this.video.play();
 
