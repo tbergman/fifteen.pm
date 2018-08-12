@@ -8,15 +8,13 @@ import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
 import {isMobile} from "../Utils/BrowserDetection";
 
-const BPM = 130;
+const BPM = 117;
 const BEAT_TIME = (60 / BPM);
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
-const VIDEO_PLAYBACK_RATE = 0.2;
-const VIDEO_NUMBER = 2;
-const ROTATION_SPEED = 0.0075;
-const A_CROSS_FADER_BUFFER = 1.65;
-const B_CROSS_FADER_BUFFER = 1.65;
+const ROTATION_SPEED = 0.004;
+const A_CROSS_FADER_BUFFER = BEAT_TIME * 4;
+const B_CROSS_FADER_BUFFER = BEAT_TIME * 4;
 
 const SCENES = [
   {
@@ -27,7 +25,7 @@ const SCENES = [
     loop: false,
     muted: false,
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.7,
     color: 0xFFFFFF,
     playbackRate: 0.5,
     target: new THREE.Vector3(4, -50, 1),
@@ -44,7 +42,7 @@ const SCENES = [
     loop: false,
     muted: true,
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.7,
     color: 0xFFFFFF,
     playbackRate: 0.5,
     target: new THREE.Vector3(4, -35, 1),
@@ -61,7 +59,7 @@ const SCENES = [
     loop: false,
     muted: true,
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.7,
     color: 0xFFFFFF,
     playbackRate: 0.5,
     target: new THREE.Vector3(4, -35, 1),
@@ -78,7 +76,7 @@ const SCENES = [
     loop: false,
     muted: true,
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.7,
     color: 0xFFFFFF,
     playbackRate: 0.5,
     target: new THREE.Vector3(4, -35, 1),
@@ -96,6 +94,7 @@ class Release0004 extends PureComponent {
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
     this.camera.target = new THREE.Vector3(0,0,0);
     this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color( 0xffffff );
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.renderer.setClearColor(0xffffff, 0);
@@ -217,7 +216,6 @@ class Release0004 extends PureComponent {
       this.AVideo.muted = props.muted;
       this.AVideo.autoplay = true;
       this.AVideo.playbackRate = props.playbackRate;
-      this.AVideo.currentTime = 36623;
       this.AVideo.play();
       this.activeChannel = opts.channel;
       let texture = new THREE.VideoTexture(this.AVideo);
@@ -244,7 +242,6 @@ class Release0004 extends PureComponent {
       this.BVideo.muted = props.muted;
       this.BVideo.autoplay = true;
       this.BVideo.playbackRate = props.playbackRate;
-      this.BVideo.currentTime = 36623;
       this.BVideo.play();
       this.activeChannel = opts.channel; 
       let texture = new THREE.VideoTexture(this.BVideo);
