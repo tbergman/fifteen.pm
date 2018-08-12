@@ -15,30 +15,30 @@ const SCREEN_HEIGHT = window.innerHeight;
 const VIDEO_PLAYBACK_RATE = 0.2;
 const VIDEO_NUMBER = 2;
 const ROTATION_SPEED = 0.0075;
-const A_CROSS_FADER_BUFFER = 0.35;
+const A_CROSS_FADER_BUFFER = 1.65;
 const B_CROSS_FADER_BUFFER = 1.65;
 
 const SCENES = [
   {
     src: 'assets/straps-0.webm',
-    geometry: new THREE.SphereBufferGeometry(500, 60, 40),
+    geometry: new THREE.SphereBufferGeometry(500, 10000, 40),
     width: 640,
     height: 360,
     loop: false,
-    muted: true,
+    muted: false,
     transparent: true,
     opacity: 0.9,
     color: 0xFFFFFF,
     playbackRate: 0.5,
     target: new THREE.Vector3(4, -50, 1),
     camera_x: 1,
-    camera_y: -48,
+    camera_y: -90,
     camera_z: 6,
     scaleNotCalled: true
   },
   {
     src: 'assets/straps-0.webm',
-    geometry: new THREE.BoxBufferGeometry(500, 250, 125),
+    geometry: new THREE.BoxBufferGeometry(500, 500, 500),
     width: 640,
     height: 360,
     loop: false,
@@ -49,26 +49,44 @@ const SCENES = [
     playbackRate: 0.5,
     target: new THREE.Vector3(4, -35, 1),
     camera_x: 1,
-    camera_y: -48,
-    camera_z: 6,
+    camera_y: -45,
+    camera_z: 10,
     scaleNotCalled: true
   },
   {
     src: 'assets/straps-0.webm',
-    geometry: new THREE.SphereBufferGeometry(40, 60, 500),
+    geometry: new THREE.SphereBufferGeometry(500, 60, 60),
     width: 640,
     height: 360,
     loop: false,
+    muted: true,
     transparent: true,
     opacity: 0.9,
     color: 0xFFFFFF,
     playbackRate: 0.5,
     target: new THREE.Vector3(4, -35, 1),
-    camera_x: 4,
-    camera_y: -50,
-    camera_z: -1,
+    camera_x: 1,
+    camera_y: -75,
+    camera_z: 6,
     scaleNotCalled: true
-  }
+  },
+  {
+    src: 'assets/straps-0.webm',
+    geometry: new THREE.BoxBufferGeometry(250, 500, 750),
+    width: 640,
+    height: 360,
+    loop: false,
+    muted: true,
+    transparent: true,
+    opacity: 0.9,
+    color: 0xFFFFFF,
+    playbackRate: 0.5,
+    target: new THREE.Vector3(4, -35, 1),
+    camera_x: 1,
+    camera_y: -45,
+    camera_z: 10,
+    scaleNotCalled: true
+  },
 ];
 
 class Release0004 extends PureComponent {
@@ -101,7 +119,8 @@ class Release0004 extends PureComponent {
     this.BVideo = document.createElement('video');
     this.BCrossFaderOn = false;
     this.ACrossFaderOn = false;
-    this.old_mesh = undefined;
+    this.AMesh = undefined;
+    this.BMesh = undefined;
     // var size = 2000;
     // var divisions = 200;
     // var gridHelper = new THREE.GridHelper( size, divisions );
@@ -112,7 +131,7 @@ class Release0004 extends PureComponent {
 
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
-    // window.addEventListener("mousemove", this.onMouseMove, false);
+    window.addEventListener("mousemove", this.onMouseMove, false);
     window.addEventListener("touchstart", this.onTouch, false);
     window.addEventListener("touchend", this.onTouchEnd, false);
     window.addEventListener("load", this.onLoad, false);
@@ -142,7 +161,7 @@ class Release0004 extends PureComponent {
       // console.log(this.ACrossFaderOn);
       if (!this.ACrossFaderOn) {
               console.log('switch to B');
-              console.log(this.AVideo.duration);
+              console.log(this.AVideo.currentTime);
               this.swapScene({channel: 'B'});
               this.ACrossFaderOn = true;
               this.scene.remove(this.AMesh);
@@ -157,7 +176,7 @@ class Release0004 extends PureComponent {
     if ( this.BVideo.currentTime  >=  this.BEnd && this.BEnd !== NaN) {
       if (!this.BCrossFaderOn) {
               console.log('switch to A');
-              console.log(this.BVideo.duration);
+              console.log(this.BVideo.currentTime);
               this.swapScene({channel: 'A'});
               this.BCrossFaderOn = true;
               this.scene.remove(this.BMesh);
@@ -188,16 +207,13 @@ class Release0004 extends PureComponent {
       props.geometry.scale(-1, 1, 1);
       props.scaleNotCalled = false;
     }
-    // console.log(props);
-    // invert the geometry on the x-axis so that all of the faces point inward
-
     // this.renderer.setPixelRatio(window.devicePixelRatio);
     if (opts.channel == 'A') {
       this.AVideo.src = props.src; 
       this.AVideo.crossOrigin = 'anonymous';
       this.AVideo.width = props.width;
       this.AVideo.height = props.height;
-      this.AVideo.loop =  false;
+      this.AVideo.loop =  props.loop;
       this.AVideo.muted = props.muted;
       this.AVideo.autoplay = true;
       this.AVideo.playbackRate = props.playbackRate;
@@ -224,7 +240,7 @@ class Release0004 extends PureComponent {
       this.BVideo.crossOrigin = 'anonymous';
       this.BVideo.width = props.width;
       this.BVideo.height = props.height;
-      this.BVideo.loop =  false;
+      this.BVideo.loop =  props.loop;
       this.BVideo.muted = props.muted;
       this.BVideo.autoplay = true;
       this.BVideo.playbackRate = props.playbackRate;
@@ -274,13 +290,14 @@ class Release0004 extends PureComponent {
     this.onPointerDownPointerY = event.clientY;
     this.onPointerDownLon = this.lon;
     this.onPointerDownLat = this.lat;
+    this.isUserInteracting = true;
   }
 
   onDocumentMouseMove = (event) => {
     if (this.isUserInteracting === true) {
       this.lon = (this.onPointerDownPointerX - event.clientX) * 0.1 + this.onPointerDownLon;
       this.lat = (event.clientY - this.onPointerDownPointerY) * 0.1 + this.onPointerDownLat;
-
+      this.isUserInteracting = true;
     }
   }
 
@@ -289,6 +306,7 @@ class Release0004 extends PureComponent {
   }
 
   onDocumentMouseWheel = (event) => {
+    this.isUserInteracting = true;
     this.distance += event.deltaY * 0.05;
     this.distance = THREE.Math.clamp(this.distance, 1, 50);
   }
