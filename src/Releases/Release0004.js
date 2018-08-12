@@ -12,6 +12,8 @@ const BPM = 130;
 const BEAT_TIME = (60 / BPM);
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
+const VIDEO_PLAYBACK_RATE = 0.2;
+const VIDEO_NUMBER = 2;
 
 class Release0004 extends PureComponent {
   constructor() {
@@ -20,36 +22,11 @@ class Release0004 extends PureComponent {
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
     this.camera.target = new THREE.Vector3(0, 0, 0);
     this.scene = new THREE.Scene();
+    this.video = document.createElement('video');
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-  }
-
-
-  componentDidMount() {
-    window.addEventListener("resize", this.onWindowResize, false);
-    // window.addEventListener("mousemove", this.onMouseMove, false);
-    window.addEventListener("touchstart", this.onTouch, false);
-    window.addEventListener("touchend", this.onTouchEnd, false);
-    window.addEventListener("load", this.onLoad, false);
-    document.addEventListener('mousedown', this.onDocumentMouseDown, false);
-    document.addEventListener('mousemove', this.onDocumentMouseMove, false);
-    document.addEventListener('mouseup', this.onDocumentMouseUp, false);
-    document.addEventListener('wheel', this.onDocumentMouseWheel, false);
-    this.init();
-    this.animate();
-  }
-
-  init = () => {
-    this.initAudioProps();
-    this.demoExample();
-    this.container.appendChild(this.renderer.domElement);
-  }
-
-
-  demoExample = () => {
-    var camera, scene, renderer;
-
+    this.mesh = undefined;
     this.lat = 0;
     this.lon = 0;
     this.onMouseDownLon = 0;
@@ -65,31 +42,69 @@ class Release0004 extends PureComponent {
     this.onPointerDownPointerY = 0;
     this.onPointerDownLon = 0;
     this.onPointerDownLat = 0;
+    this.idx = 0;
 
-    var geometry = new THREE.SphereBufferGeometry(500, 60, 40);
+  }
+
+
+  componentDidMount() {
+    window.addEventListener("resize", this.onWindowResize, false);
+    // window.addEventListener("mousemove", this.onMouseMove, false);
+    window.addEventListener("touchstart", this.onTouch, false);
+    window.addEventListener("touchend", this.onTouchEnd, false);
+    window.addEventListener("load", this.onLoad, false);
+    document.addEventListener('mousedown', this.onDocumentMouseDown, false);
+    document.addEventListener('mousemove', this.onDocumentMouseMove, false);
+    document.addEventListener('mouseup', this.onDocumentMouseUp, false);
+    document.addEventListener('wheel', this.onDocumentMouseWheel, false);
+    this.video.addEventListener('ended', this.renderVideo, false);
+    this.init();
+    this.animate();
+  }
+
+  init = () => {
+    this.initAudioProps();
+    this.renderVideo();
+    this.container.appendChild(this.renderer.domElement);
+  }
+
+
+  renderVideo = () => {
+    let src =  `assets/straps-${this.idx}.webm`;
+    console.log('rendering video', src);    
+    if (this.idx == 1) {
+      this.geometry = new THREE.SphereBufferGeometry(500, 60, 40);
+    } else {
+      this.geometry = new THREE.BoxBufferGeometry(500, 60, 40);
+    }
     // invert the geometry on the x-axis so that all of the faces point inward
-    geometry.scale(-1, 1, 1);
+    this.geometry.scale(-1, 1, 1);
 
-    this.video = document.createElement('video');
     this.video.crossOrigin = 'anonymous';
     this.video.width = 640;
     this.video.height = 360;
-    this.video.loop = true;
-    this.video.muted = true;
-    this.video.src = 'assets/straps.webm'; //pano.webm';
+    // this.video.loop = true;
+    this.video.muted = false;
+    this.video.playbackRate = VIDEO_PLAYBACK_RATE;
+
+    this.video.src = src; //pano.webm';
     this.video.setAttribute('webkit-playsinline', 'webkit-playsinline');
     this.video.play();
 
-    let texture = new THREE.VideoTexture(this.video);
-    texture.minFilter = THREE.LinearFilter;
-    texture.format = THREE.RGBFormat;
-    let material = new THREE.MeshBasicMaterial({map: texture});
-    let mesh = new THREE.Mesh(geometry, material);
-
-    this.scene.add(mesh);
-
-
-    this.container.appendChild(this.renderer.domElement);
+    this.texture = new THREE.VideoTexture(this.video);
+    this.texture.minFilter = THREE.LinearFilter;
+    this.texture.format = THREE.RGBFormat;
+    this.material = new THREE.MeshBasicMaterial({map: this.texture});
+    let newMesh = new THREE.Mesh(this.geometry, this.material);
+    this.scene.add(newMesh);
+     if (this.mesh !== undefined) {
+      this.scene.remove(this.mesh);
+    }
+    this.mesh = newMesh;
+    this.idx += 1 
+    if (this.idx == VIDEO_NUMBER) { 
+      this.idx = 0;
+    }
   }
 
 
@@ -124,7 +139,7 @@ class Release0004 extends PureComponent {
     window.removeEventListener("touchstart", this.onTouch, false);
     window.removeEventListener("touchend", this.onTouchEnd, false);
     window.removeEventListener("load", this.onLoad, false);
-
+    this.video.removeEventListener('ended', this.renderVideo, false);
 
     this.container.removeChild(this.renderer.domElement);
   }
@@ -262,7 +277,7 @@ class Release0004 extends PureComponent {
         <div className="release">
           <div ref={element => this.container = element}/>
           <SoundcloudPlayer
-            trackId='482138307'
+            trackId='267037220'
             message='BODEGA CHILL'
             inputRef={el => this.audioElement = el}
             fillColor="red"
