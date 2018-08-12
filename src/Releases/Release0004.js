@@ -10,11 +10,11 @@ import {isMobile} from "../Utils/BrowserDetection";
 
 const BPM = 117;
 const BEAT_TIME = (60 / BPM);
-const SCREEN_WIDTH = window.innerWidth;
-const SCREEN_HEIGHT = window.innerHeight;
-const ROTATION_SPEED = 0.004;
-const A_CROSS_FADER_BUFFER = BEAT_TIME * 4;
-const B_CROSS_FADER_BUFFER = BEAT_TIME * 4;
+const WIDTH = window.innerWidth;
+const HEIGHT = window.innerHeight;
+const ROTATION_SPEED = 0.00475;
+const A_CROSS_FADER_BUFFER = BEAT_TIME * 2;
+const B_CROSS_FADER_BUFFER = BEAT_TIME * 2;
 
 const SCENES = [
   {
@@ -42,7 +42,7 @@ const SCENES = [
     loop: false,
     muted: true,
     transparent: true,
-    opacity: 0.7,
+    opacity: 0.87,
     color: 0xFFFFFF,
     playbackRate: 0.5,
     target: new THREE.Vector3(4, -35, 1),
@@ -59,7 +59,7 @@ const SCENES = [
     loop: false,
     muted: true,
     transparent: true,
-    opacity: 0.7,
+    opacity: 0.87,
     color: 0xFFFFFF,
     playbackRate: 0.5,
     target: new THREE.Vector3(4, -35, 1),
@@ -76,7 +76,7 @@ const SCENES = [
     loop: false,
     muted: true,
     transparent: true,
-    opacity: 0.7,
+    opacity: 0.87,
     color: 0xFFFFFF,
     playbackRate: 0.5,
     target: new THREE.Vector3(4, -35, 1),
@@ -96,7 +96,7 @@ class Release0004 extends PureComponent {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color( 0xffffff );
     this.renderer = new THREE.WebGLRenderer({antialias: true});
-    this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+    this.renderer.setSize(WIDTH, HEIGHT);
     this.renderer.setClearColor(0xffffff, 0);
     this.lat = 0;
     this.lon = 0;
@@ -164,6 +164,7 @@ class Release0004 extends PureComponent {
               this.swapScene({channel: 'B'});
               this.ACrossFaderOn = true;
               this.scene.remove(this.AMesh);
+              this.isUserInteracting = false;
       }
     }
   }
@@ -179,6 +180,7 @@ class Release0004 extends PureComponent {
               this.swapScene({channel: 'A'});
               this.BCrossFaderOn = true;
               this.scene.remove(this.BMesh);
+              this.isUserInteracting = false;
       }
 
     }
@@ -196,6 +198,57 @@ class Release0004 extends PureComponent {
     // this.swapScene();
 
   }
+  addAVideo = (props) => {
+    this.AVideo.src = props.src; 
+    this.AVideo.crossOrigin = 'anonymous';
+    this.AVideo.width = props.width;
+    this.AVideo.height = props.height;
+    this.AVideo.loop =  props.loop;
+    this.AVideo.muted = props.muted;
+    this.AVideo.autoplay = true;
+    this.AVideo.playbackRate = props.playbackRate;
+    this.AVideo.play();
+    this.activeChannel = 'A';
+    let texture = new THREE.VideoTexture(this.AVideo);
+    texture.minFilter = THREE.LinearFilter;
+    texture.format = THREE.RGBFormat;
+    let material = new THREE.MeshBasicMaterial({map: texture, transparent: props.transparent, opacity: props.opacity});
+    let mesh =  new THREE.Mesh(props.geometry, material);
+    this.camera.position.x = props.camera_x;
+    this.camera.position.y = props.camera_y;
+    this.camera.position.z = props.camera_z;
+    this.camera.target = props.target;
+    this.camera.lookAt(this.camera.target);
+    this.AMesh = mesh;
+    this.AMesh.renderOrder = 1;
+    this.scene.add(this.AMesh);
+  }
+
+  addBVideo = (props) => {
+    this.BVideo.src = props.src; 
+    this.BVideo.crossOrigin = 'anonymous';
+    this.BVideo.width = props.width;
+    this.BVideo.height = props.height;
+    this.BVideo.loop =  props.loop;
+    this.BVideo.muted = props.muted;
+    this.BVideo.autoplay = true;
+    this.BVideo.playbackRate = props.playbackRate;
+    this.BVideo.play();
+    this.activeChannel = 'B'; 
+    let texture = new THREE.VideoTexture(this.BVideo);
+    texture.minFilter = THREE.LinearFilter;
+    texture.format = THREE.RGBFormat;
+    let material = new THREE.MeshBasicMaterial({map: texture, transparent: props.transparent, opacity: props.opacity});
+    let mesh =  new THREE.Mesh(props.geometry, material);
+    this.camera.position.x = props.camera_x;
+    this.camera.position.y = props.camera_y;
+    this.camera.position.z = props.camera_z;
+    this.camera.target = props.target;
+    this.camera.lookAt(this.camera.target);
+    this.BMesh = mesh;
+    this.BMesh.renderOrder = 1;
+    this.scene.add(this.BMesh);
+  }
   swapScene = (opts) => {
 
     if (this.idx >= SCENES.length) { 
@@ -208,58 +261,9 @@ class Release0004 extends PureComponent {
     }
     // this.renderer.setPixelRatio(window.devicePixelRatio);
     if (opts.channel == 'A') {
-      this.AVideo.src = props.src; 
-      this.AVideo.crossOrigin = 'anonymous';
-      this.AVideo.width = props.width;
-      this.AVideo.height = props.height;
-      this.AVideo.loop =  props.loop;
-      this.AVideo.muted = props.muted;
-      this.AVideo.autoplay = true;
-      this.AVideo.playbackRate = props.playbackRate;
-      this.AVideo.play();
-      this.activeChannel = opts.channel;
-      let texture = new THREE.VideoTexture(this.AVideo);
-      texture.minFilter = THREE.LinearFilter;
-      texture.format = THREE.RGBFormat;
-      let material = new THREE.MeshBasicMaterial({map: texture, transparent: props.transparent, opacity: props.opacity});
-      let mesh =  new THREE.Mesh(props.geometry, material);
-      mesh.name = 'new_vid_mesh';
-      this.camera.position.x = props.camera_x;
-      this.camera.position.y = props.camera_y;
-      this.camera.position.z = props.camera_z;
-      this.camera.target = props.target;
-      this.camera.lookAt(this.camera.target);
-      mesh.name = 'AMesh';
-      this.AMesh = mesh;
-      this.AMesh.renderOrder = 2;
-      this.scene.add(this.AMesh);
+      this.addAVideo(props);
     } else {
-      this.BVideo.src = props.src; 
-      this.BVideo.crossOrigin = 'anonymous';
-      this.BVideo.width = props.width;
-      this.BVideo.height = props.height;
-      this.BVideo.loop =  props.loop;
-      this.BVideo.muted = props.muted;
-      this.BVideo.autoplay = true;
-      this.BVideo.playbackRate = props.playbackRate;
-      this.BVideo.play();
-      this.activeChannel = opts.channel; 
-      let texture = new THREE.VideoTexture(this.BVideo);
-      texture.minFilter = THREE.LinearFilter;
-      texture.format = THREE.RGBFormat;
-      let material = new THREE.MeshBasicMaterial({map: texture, transparent: props.transparent, opacity: props.opacity});
-      let mesh =  new THREE.Mesh(props.geometry, material);
-      this.camera.position.x = props.camera_x;
-      this.camera.position.y = props.camera_y;
-      this.camera.position.z = props.camera_z;
-      this.camera.target = props.target;
-      this.camera.lookAt(this.camera.target);
-      mesh.name = 'vid_mesh';
-      this.BMesh = mesh;
-      this.BMesh.renderOrder = 1;
-      this.AMesh.renderOrder = 0;
-      this.scene.add(this.BMesh);
-      
+      this.addBVideo(props);
     }
 
   this.idx += 1;
@@ -345,12 +349,8 @@ class Release0004 extends PureComponent {
       this.camera.position.x = x * Math.cos(ROTATION_SPEED) + z * Math.sin(ROTATION_SPEED);
       this.camera.position.z = z * Math.cos(ROTATION_SPEED) - x * Math.sin(ROTATION_SPEED);
     }
-    // console.log(this.camera.position.x, this.camera.position.y, this.camera.position.z);
     this.camera.lookAt(this.camera.target);
     this.renderer.render(this.scene, this.camera);
-
-    // console.log(this.camera.position.x, this.camera.position.y, this.camera.position.z);
-    // console.log(this.distance, this.lat, this.lon);
   }
 
   render() {
