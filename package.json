@@ -53,7 +53,11 @@
     "deploy-dev": "sh scripts/deploy.sh gltd s3://dev.globally.ltd E2RNC34S3LB4YH",
     "deploy-prod": "sh scripts/deploy.sh gltd s3://globally.ltd     E36B2H2DAB37RY",
     "start-chromium-without-web-audio": "sh scripts/start-chromium-without-web-audio.sh",
-    "encode-release": "sh scripts/encode-release.sh"
+    "encode-release": "sh scripts/encode-release.sh",
+    "mp4-to-webm": "sh scripts/mp4-to-webm.sh",
+    "dual-fisheye-to-equirectangular": "sh scripts/dual-fisheye-to-equirectangular.sh",
+    "download-assets": "sh scripts/download-assets.sh gltd",
+    "upload-assets": "sh scripts/download-assets.sh"
   },
   "devDependencies": {
     "cannon": "^0.6.2",
