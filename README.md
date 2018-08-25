@@ -26,6 +26,20 @@ Here's a brief overview of some key Components:
 
 TODO ...
 
+## Release Asset Management
+
+We host our assets for our releases (audio, images, video, 3D models, etc) at [assets.globally.ltd](https://assets.globally.ltd). To keep these out of version control, we store all release assets under [`public/assets/releases`](public/assets/releases) and sync them via the following commands:
+
+To sync production assets locally
+```
+yarn download-assets
+```
+
+To sync local assets to prod
+```
+yarn upload-assets
+```
+
 ## Installation
 
 ```
@@ -45,9 +59,3 @@ yarn start # opens a browser to localhost:3000
 yarn deploy-dev  # deploys to staging site
 yarn deploy-prod # deploys to production site
 ```
-
-## Browser Testing
-
-We make heavy use of [BrowserStack](https://browserstack.com) for cross-browser and device testing.
-[![Browser Stack](https://github.com/gltd/releases/raw/master/public/assets/browserstack-logo.png)](https://www.browserstack.com/)
-
