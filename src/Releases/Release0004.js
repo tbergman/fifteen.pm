@@ -7,6 +7,7 @@ import Purchase from '../Purchase';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
 import {isMobile} from "../Utils/BrowserDetection";
+import {FBXLoader} from "../Utils/FBXLoader.js"
 
 const BPM = 117;
 const BEAT_TIME = (60 / BPM);
@@ -91,13 +92,28 @@ class Release0004 extends PureComponent {
   constructor() {
     super();
     this.container = document.getElementById('container');
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-    this.camera.target = new THREE.Vector3(0,0,0);
+
+    this.camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+    this.camera.position.set( 100, 200, 300 );
+
+    // this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
+    // this.camera.target = new THREE.Vector3(0,0,0);
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color( 0xffffff );
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setSize(WIDTH, HEIGHT);
     this.renderer.setClearColor(0xffffff, 0);
+    this.controls = new OrbitControls( this.camera );
+    this.controls.target.set( 0, 100, 0 );
+    this.controls.update();
+
+
+
+    let light0 = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+    light0.position.set( 0, 200, 0 );
+    this.scene.add( light0 );
+
+
     this.lat = 0;
     this.lon = 0;
     this.onMouseDownLon = 0;
@@ -149,7 +165,27 @@ class Release0004 extends PureComponent {
   init = () => {
     this.container.appendChild(this.renderer.domElement);
     this.swapScene({channel: 'A'});
+  this.initFloatingObjects();
 
+  }
+
+  initFloatingObjects = () => {
+
+    var loader = new FBXLoader();
+    console.log(loader);
+    this.chips1 = {}
+
+
+
+    loader.load('assets/models/doritos/Doritos_01.fbx', object => {
+      // this.chips1 = object;
+      // this.chips1.position.set(1, 1, 10)
+      // console.log("IN LOAD", this.scene);
+      // console.log("IN LOAD", this.chips1);
+      this.chips1 = object
+      this.scene.add(object);
+      // this.camera.lookAt(this.chips1);
+    });
   }
 
   crossFaderA = () => {
@@ -159,12 +195,12 @@ class Release0004 extends PureComponent {
     if (this.AVideo.currentTime  >= this.AEnd && this.AEnd !== NaN) {
       // console.log(this.ACrossFaderOn);
       if (!this.ACrossFaderOn) {
-              console.log('switch to B');
-              console.log(this.AVideo.currentTime);
-              this.swapScene({channel: 'B'});
-              this.ACrossFaderOn = true;
-              this.scene.remove(this.AMesh);
-              this.isUserInteracting = false;
+        console.log('switch to B');
+        console.log(this.AVideo.currentTime);
+        this.swapScene({channel: 'B'});
+        this.ACrossFaderOn = true;
+        this.scene.remove(this.AMesh);
+        this.isUserInteracting = false;
       }
     }
   }
@@ -175,12 +211,12 @@ class Release0004 extends PureComponent {
     // console.log('B Limit',  this.BEnd);
     if ( this.BVideo.currentTime  >=  this.BEnd && this.BEnd !== NaN) {
       if (!this.BCrossFaderOn) {
-              console.log('switch to A');
-              console.log(this.BVideo.currentTime);
-              this.swapScene({channel: 'A'});
-              this.BCrossFaderOn = true;
-              this.scene.remove(this.BMesh);
-              this.isUserInteracting = false;
+        console.log('switch to A');
+        console.log(this.BVideo.currentTime);
+        this.swapScene({channel: 'A'});
+        this.BCrossFaderOn = true;
+        this.scene.remove(this.BMesh);
+        this.isUserInteracting = false;
       }
 
     }
@@ -199,7 +235,7 @@ class Release0004 extends PureComponent {
 
   }
   addAVideo = (props) => {
-    this.AVideo.src = props.src; 
+    this.AVideo.src = props.src;
     this.AVideo.crossOrigin = 'anonymous';
     this.AVideo.width = props.width;
     this.AVideo.height = props.height;
@@ -225,7 +261,7 @@ class Release0004 extends PureComponent {
   }
 
   addBVideo = (props) => {
-    this.BVideo.src = props.src; 
+    this.BVideo.src = props.src;
     this.BVideo.crossOrigin = 'anonymous';
     this.BVideo.width = props.width;
     this.BVideo.height = props.height;
@@ -234,7 +270,7 @@ class Release0004 extends PureComponent {
     this.BVideo.autoplay = true;
     this.BVideo.playbackRate = props.playbackRate;
     this.BVideo.play();
-    this.activeChannel = 'B'; 
+    this.activeChannel = 'B';
     let texture = new THREE.VideoTexture(this.BVideo);
     texture.minFilter = THREE.LinearFilter;
     texture.format = THREE.RGBFormat;
@@ -251,9 +287,9 @@ class Release0004 extends PureComponent {
   }
   swapScene = (opts) => {
 
-    if (this.idx >= SCENES.length) { 
+    if (this.idx >= SCENES.length) {
       this.idx = 0;
-    }  
+    }
     let props = SCENES[this.idx];
     if (props.scaleNotCalled) {
       props.geometry.scale(-1, 1, 1);
@@ -266,8 +302,8 @@ class Release0004 extends PureComponent {
       this.addBVideo(props);
     }
 
-  this.idx += 1;
-    
+    this.idx += 1;
+
   }
 
   componentWillUnmount() {
@@ -336,20 +372,20 @@ class Release0004 extends PureComponent {
 
   renderScene = () => {
 
-    if (this.isUserInteracting) {
-      this.lat = Math.max( - 85, Math.min( 85, this.lat ) );
-      this.phi = THREE.Math.degToRad( 90 - this.lat );
-      this.theta = THREE.Math.degToRad( this.lon );
-      this.camera.position.x = this.distance * Math.sin( this.phi ) * Math.cos( this.theta );
-      this.camera.position.y = this.distance * Math.cos( this.phi );
-      this.camera.position.z = this.distance * Math.sin( this.phi ) * Math.sin( this.theta );
-    } else {
-      let x = this.camera.position.x;
-      let z = this.camera.position.z;
-      this.camera.position.x = x * Math.cos(ROTATION_SPEED) + z * Math.sin(ROTATION_SPEED);
-      this.camera.position.z = z * Math.cos(ROTATION_SPEED) - x * Math.sin(ROTATION_SPEED);
-    }
-    this.camera.lookAt(this.camera.target);
+    // if (this.isUserInteracting) {
+    //   this.lat = Math.max( - 85, Math.min( 85, this.lat ) );
+    //   this.phi = THREE.Math.degToRad( 90 - this.lat );
+    //   this.theta = THREE.Math.degToRad( this.lon );
+    //   this.camera.position.x = this.distance * Math.sin( this.phi ) * Math.cos( this.theta );
+    //   this.camera.position.y = this.distance * Math.cos( this.phi );
+    //   this.camera.position.z = this.distance * Math.sin( this.phi ) * Math.sin( this.theta );
+    // } else {
+      // let x = this.camera.position.x;
+      // let z = this.camera.position.z;
+      // this.camera.position.x = x * Math.cos(ROTATION_SPEED) + z * Math.sin(ROTATION_SPEED);
+      // this.camera.position.z = z * Math.cos(ROTATION_SPEED) - x * Math.sin(ROTATION_SPEED);
+    // }
+    // this.camera.lookAt(this.camera.target);
     this.renderer.render(this.scene, this.camera);
   }
 
