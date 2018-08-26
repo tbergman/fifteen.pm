@@ -1,7 +1,7 @@
 const PROD_ASSET_URL = 'https://assets.globally.ltd'
 const LOCAL_ASSET_URL = 'assets/releases'
 
-export const assetPath = ({path, local:true}) => {
+export const assetPath = ({path, local}) => {
   if (local) {
     return `${LOCAL_ASSET_URL}/${path}`
   } else {
