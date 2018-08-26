@@ -64,7 +64,7 @@ const assetPath4Videos = (p) => {
   return assetPath4("videos/" + p);
 }
 ```
-**NOTE**: In development this path will be prefixed by `/assets/releases`. In production, it will by prefixed by `https://assets.globally.ltd`
+**NOTE**: In development this path will be prefixed by `/assets/releases`. In production, it will by prefixed by `https://assets.globally.ltd/`
 
 ## Installation
 
