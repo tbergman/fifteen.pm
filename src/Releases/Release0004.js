@@ -40,7 +40,8 @@ const SCENES = [
     camera_x: 1,
     camera_y: -90,
     camera_z: 6,
-    scaleNotCalled: true
+    scaleNotCalled: true,
+    bodegaScale: 9.0
   },
   // {
   //   src: 'assets/straps-0.webm',
@@ -95,38 +96,46 @@ const SCENES = [
   // },
 ];
 
+const CURRENT_SCENE = SCENES[0];// tmp
+
 const FLOATING_OBJECTS = [
   {
     url: 'assets/releases/4/models/Doritos_01.fbx',
-    object: undefined,
-    physics: undefined,
+    mass: 1,
+    // object: undefined,
+    // physics: undefined,
 
   },
-   {
-     url: 'assets/releases/4/models/Doritos_02.fbx',
-     object: undefined,
-     physics: undefined,
-   },
-   {
-     url: 'assets/releases/4/models/Doritos_03.fbx',
-     object: undefined,
-     physics: undefined,
-   },
-   {
-     url: 'assets/releases/4/models/Doritos_04.fbx',
-     object: undefined,
-     physics: undefined,
-   },
-   {
-     url: 'assets/releases/4/models/Doritos_05.fbx',
-     object: undefined,
-     physics: undefined,
-   },
-   {
-     url: 'assets/releases/4/models/Doritos_06.fbx',
-     object: undefined,
-     physics: undefined,
-   }
+  {
+    url: 'assets/releases/4/models/Doritos_02.fbx',
+    mass: 10,
+    // object: undefined,
+    // physics: undefined,
+  },
+  {
+    url: 'assets/releases/4/models/Doritos_03.fbx',
+    mass: 1,
+    // object: undefined,
+    // physics: undefined,
+  },
+  {
+    url: 'assets/releases/4/models/Doritos_04.fbx',
+    mass: 1,
+    // object: undefined,
+    // physics: undefined,
+  },
+  {
+    url: 'assets/releases/4/models/Doritos_05.fbx',
+    mass: 1,
+    // object: undefined,
+    // physics: undefined,
+  },
+  {
+    url: 'assets/releases/4/models/Doritos_06.fbx',
+    mass: 1,
+    // object: undefined,
+    // physics: undefined,
+  }
 
 ]
 
@@ -135,9 +144,7 @@ class Release0004 extends PureComponent {
     super();
     this.container = document.getElementById('container');
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
-    // this.camera.position.set(100, 200, 300);
-    // this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-    // this.camera.target = new THREE.Vector3(0,0,0);
+
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xffffff);
     this.renderer = new THREE.WebGLRenderer({antialias: true});
@@ -178,8 +185,7 @@ class Release0004 extends PureComponent {
     // this.scene.add( gridHelper );
     this.tmpObjectsList = [];
   }
-
-
+  
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
     window.addEventListener("mousemove", this.onMouseMove, false);
@@ -190,10 +196,6 @@ class Release0004 extends PureComponent {
     document.addEventListener('mousemove', this.onDocumentMouseMove, false);
     document.addEventListener('mouseup', this.onDocumentMouseUp, false);
     document.addEventListener('wheel', this.onDocumentMouseWheel, false);
-    // this.AVideo.addEventListener('ended', this.removeSceneA, false);
-    // this.AVideo.addEventListener('timeupdate', this.crossFaderA, false);
-    // this.BVideo.addEventListener('ended', this.removeSceneB, false);
-    // this.BVideo.addEventListener('timeupdate', this.crossFaderB, false);
     this.init();
     this.animate();
   }
@@ -202,141 +204,93 @@ class Release0004 extends PureComponent {
     this.initCannon();
     this.container.appendChild(this.renderer.domElement);
     this.swapScene({channel: 'A'});
-
-
-    this.initRoomSurfaces();
     this.initFloatingObjects();
-    // this.initContactMaterials();
+    this.initContactMaterials();
   }
 
   initCannon = () => {
-    this.timeStep = 1 / 20;
+    this.timeStep = 1 / 30;
     this.world = new CANNON.World();
     this.world.gravity.set(0, 0, 0);
     this.world.broadphase = new CANNON.NaiveBroadphase();
     this.world.solver.iterations = 1;
-    // this.world.add(clothBody);
-    // this.hardMaterials.push(clothPhysMaterial);
     this.cannonDebugRenderer = new CannonDebugRenderer(this.scene, this.world);
   }
 
-  initRoomSurfaces = () => {
-    this.initRoomSurface()
-  }
-
-  initRoomSurface = () => {
-    // let position, width, height, axis;
-    // let angle = 1;
-    //   // physics
-    // let position = new CANNON.Vec3(0, 0, 0);
-    // let physMaterial = new CANNON.Material({});
-    // let body = new CANNON.Body({
-    //   mass: 0,
-    //   material: physMaterial,
-    //   position: position
-    // });
-    // body.addShape(new CANNON.Sphere(500)); // found from boundingbox assignment/check
-    // // body.quaternion.setFromAxisAngle(axis, angle);
-    // this.world.addBody(body);
-    //   // visual
-    //   const geometry = new THREE.PlaneGeometry(width, height);
-    //   geometry.faces.forEach(face => face.color = 0x000000);
-    //   const material = new THREE.MeshStandardMaterial({
-    //     emissive: 0x000000,
-    //     emissiveIntensity: 1,
-    //     //side: THREE.DoubleSide,
-    //     // transparent: true,
-    //     // alphaTest: 0.1,
-    //     // opacity: 0.9,
-    //     color: 0x000000
-    //   });
-    //   const mesh = new THREE.Mesh(geometry, material);
-    //   // mesh.flipSided = false;
-    //   mesh.receiveShadow = true;
-    //   mesh.castShadow = false;
-    //   this.scene.add(mesh);
-    //   // combine
-    //   mesh.position.copy(body.position);
-    //   mesh.quaternion.copy(body.quaternion);
-    //   return physMaterial;
-    // }
-  }
-
   initFloatingObjects = () => {
-
     for (let i = 0; i < FLOATING_OBJECTS.length; i++) {
-      this.initFloatingObject(FLOATING_OBJECTS[i])
+      this.initFloatingObject(FLOATING_OBJECTS[i], i)
     }
   }
 
-  initFloatingObject = (floatingObject) => {
-    var loader = new FBXLoader();
+  initFloatingObject = (floatingObject, i) => {
+
+    let loader = new FBXLoader();
     loader.load(floatingObject.url, object => {
       floatingObject.object = object;
-      // this.chips1Graphics = object;
-      // TODO SET POSITION
-      floatingObject.object.children[0].position.set(0, 0, 0);
+
+      let offset = 10;
+      let xPos = i + offset;
+      let yPos = i + offset;
+      let zPos = i + offset;
+
+      floatingObject.object.children[0].position.set(xPos, yPos, zPos);
+      this.setFloatingObjectScale(floatingObject.object);
       this.scene.add(floatingObject.object);
-      floatingObject.object.scale.set(10, 10, 10);
-      // TODO TMP THIS CAUSES A BUG REMOVE
-      this.camera.lookAt(floatingObject.object.children[0]);
-      // this.chips1 = object;
-      // this.chips1.position.set(1, 1, 10)
-      this.ballRadius = 1; // TODO
-      let shape = new CANNON.Sphere(this.ballRadius);
-      let mass = 1;
+
+      let floater = floatingObject.object.children[0];
+      this.camera.lookAt(floater); // TODO TMP THIS CAUSES THE NEED TO CLICK TO SEE BUG, IS JUST FOR DEVVING, REMOVE
+      floater.geometry.computeBoundingBox();
+      let floaterSize = floater.geometry.boundingBox.getSize();
+      let physicsSize = new CANNON.Vec3(floaterSize.x/2.0, floaterSize.y/2.0, floaterSize.z/2.0);
+      let shape = new CANNON.Box(physicsSize);
+      let mass = floatingObject.mass;
       let material = new CANNON.Material();
       floatingObject.physics = new CANNON.Body({
         mass: mass,
         material: material,
-        position: new CANNON.Vec3(0, 0, 0)
+        position: new CANNON.Vec3(xPos, yPos, zPos)
       });
 
       floatingObject.physics.addShape(shape);
-      // this.chips1Physics.linearDamping = 0.01;
       floatingObject.physics.velocity.set(0, -30, -1);
-      floatingObject.physics.angularVelocity.set(0, 0, -.01);
-      // this.chips1Physics.angularDamping = 0.5;
+      floatingObject.physics.linearDamping = 0.01;
+      floatingObject.physics.angularVelocity.set(0, 0, 0);
+      floatingObject.physics.angularDamping = 0.5;
       this.world.addBody(floatingObject.physics);
-
-      // this.camera.lookAt(this.chips1);
     });
   }
 
+  setFloatingObjectScale= (obj)=> {
+    let curScene = CURRENT_SCENE; // TODO swap with func getCurrentScene();
+    obj.scale.multiplyScalar(curScene.bodegaScale);
+  }
 
+  initContactMaterials = () => {
+    let allLoaded = true;
+    for (let i = 0; i < FLOATING_OBJECTS.length; i++) {
+      if (typeof FLOATING_OBJECTS[i].object === "undefined" || typeof FLOATING_OBJECTS[i].physics === "undefined") {
+        allLoaded = false;
+      }
+    }
+    if (!allLoaded) {
+      setTimeout(() => {
+        this.initContactMaterials(FLOATING_OBJECTS)
+      }, 250);
+    } else {
+      for (let i = 0; i < FLOATING_OBJECTS.length; i++) {
+        for (let j = 0; j < FLOATING_OBJECTS.length; j++) {
+          if (i === j) continue;
+          let contactMaterial = new CANNON.ContactMaterial(FLOATING_OBJECTS[i].physics.material, FLOATING_OBJECTS[j].physics.material, {
+            friction: 0.0,
+            restitution: 10
+          });
+          this.world.addContactMaterial(contactMaterial);
+        }
+      }
+    }
+  }
 
-  // initFloatingObject = (floatingObject) => {
-  //   var loader = new FBXLoader();
-  //   loader.load(floatingObject.url, object => {
-  //     this.chips1Graphics = object;
-  //     // TODO SET POSITION
-  //     this.chips1Graphics.children[0].position.set(0, 0, 0);
-  //     this.scene.add(this.chips1Graphics);
-  //     this.chips1Graphics.scale.set(10, 10, 10);
-  //     // TODO TMP THIS CAUSES A BUG REMOVE
-  //     this.camera.lookAt(this.chips1Graphics.children[0]);
-  //     // this.chips1 = object;
-  //     // this.chips1.position.set(1, 1, 10)
-  //     this.ballRadius = this.chips1Graphics;
-  //     let shape = new CANNON.Sphere(this.ballRadius);
-  //     let mass = 1;
-  //     let material = new CANNON.Material();
-  //     this.chips1Physics = new CANNON.Body({
-  //       mass: mass,
-  //       material: material,
-  //       position: new CANNON.Vec3(0, 0, 0)
-  //     });
-  //
-  //     this.chips1Physics.addShape(shape);
-  //     // this.chips1Physics.linearDamping = 0.01;
-  //     this.chips1Physics.velocity.set(0, -30, -1);
-  //     this.chips1Physics.angularVelocity.set(0, 0, -.01);
-  //     // this.chips1Physics.angularDamping = 0.5;
-  //     this.world.addBody(this.chips1Physics);
-  //
-  //     // this.camera.lookAt(this.chips1);
-  //   });
-  // }
 
   crossFaderA = () => {
     this.AEnd = this.AVideo.duration - A_CROSS_FADER_BUFFER;
@@ -374,6 +328,7 @@ class Release0004 extends PureComponent {
 
   }
   addAVideo = (props) => {
+    props.geometry.computeBoundingBox(); // TODO not sure where to put this.
     this.AVideo.src = props.src;
     this.AVideo.crossOrigin = 'anonymous';
     // this.AVideo.width = props.width;
@@ -396,8 +351,6 @@ class Release0004 extends PureComponent {
     // this.camera.lookAt(this.camera.target);
     this.AMesh = mesh;
     this.AMesh.renderOrder = 1;
-    this.videoABasicBoundingBox = new THREE.Box3().setFromObject(this.AMesh);
-
     this.scene.add(this.AMesh);
   }
 
@@ -422,7 +375,6 @@ class Release0004 extends PureComponent {
     this.camera.position.y = props.camera_y;
     this.camera.position.z = props.camera_z;
     this.camera.target = props.target;
-    // this.camera.lookAt(this.camera.target);
     this.BMesh = mesh;
     this.BMesh.renderOrder = 1;
     this.scene.add(this.BMesh);
@@ -531,6 +483,7 @@ class Release0004 extends PureComponent {
 
 
   clampVelocity = (body) => {
+    // TODO how to do this elegantly?
     if (body.velocity.x > MAX_VELOCITY) {
       body.velocity.x = MAX_VELOCITY
     }
@@ -551,45 +504,43 @@ class Release0004 extends PureComponent {
     }
   }
 
-  checkObjVelocity = () => {
-
-  }
 
   checkRoomCollisions = (floatingObject) => {
-    // still haven't figured out how you would add a physics object to the 'room' as a single object like a sphere or a cube and handle collisions no the interior of the cube. it seems like it should be easy but i think that primitive objects like spheres and cubes are solid.
+    // TODO we need to make a hollowed out object to have the space itself act as a physics collision object
 
+    let curScene = CURRENT_SCENE; // TODO switch out with this.getCurrentScene()
+    let curBBox = curScene.geometry.boundingBox;
     // TODO use the logic here to create hollowed out geometries
-    if (floatingObject.object.position.y <= this.videoABasicBoundingBox.min.y) {
+    if (floatingObject.object.position.y <= curBBox.min.y) {
       console.log("THE OBJ IS Y LESS THAN THE VIDEO")
-      floatingObject.physics.position.y = this.videoABasicBoundingBox.min.y + 1;
+      floatingObject.physics.position.y = curBBox.min.y + 1;
       floatingObject.physics.velocity.y *= -1;
     }
-    if (floatingObject.object.position.y >= this.videoABasicBoundingBox.max.y) {
+    if (floatingObject.object.position.y >= curBBox.max.y) {
       console.log("THE OBJ IS Y GREATER THAN THE VIDEO")
-      floatingObject.physics.position.y = this.videoABasicBoundingBox.max.y - 1;
+      floatingObject.physics.position.y = curBBox.max.y - 1;
       floatingObject.physics.velocity.y *= -1;
     }
-    if (floatingObject.object.position.x <= this.videoABasicBoundingBox.min.x) {
+    if (floatingObject.object.position.x <= curBBox.min.x) {
       console.log("THE OBJ IS X LESS THAN THE VIDEO")
-      floatingObject.physics.position.x = this.videoABasicBoundingBox.min.x + 1;
+      floatingObject.physics.position.x = curBBox.min.x + 1;
       floatingObject.physics.velocity.x *= -1;
     }
-    if (floatingObject.object.position.x >= this.videoABasicBoundingBox.max.x) {
+    if (floatingObject.object.position.x >= curBBox.max.x) {
       console.log("THE OBJ IS X GREATER THAN THE VIDEO")
-      floatingObject.physics.position.x = this.videoABasicBoundingBox.max.x - 1;
+      floatingObject.physics.position.x = curBBox.max.x - 1;
       floatingObject.physics.velocity.x *= -1;
     }
-    if (floatingObject.object.position.z <= this.videoABasicBoundingBox.min.z) {
+    if (floatingObject.object.position.z <= curBBox.min.z) {
       console.log("THE OBJ IS Z GREATER THAN THE VIDEO")
-      floatingObject.physics.position.z = this.videoABasicBoundingBox.min.z + 1;
+      floatingObject.physics.position.z = curBBox.min.z + 1;
       floatingObject.physics.velocity.z *= -1;
     }
-    if (floatingObject.object.position.z >= this.videoABasicBoundingBox.max.z) {
+    if (floatingObject.object.position.z >= curBBox.max.z) {
       console.log("THE OBJ IS Z LESS THAN THE VIDEO")
-      floatingObject.physics.position.z = this.videoABasicBoundingBox.max.z - 1;
+      floatingObject.physics.position.z = curBBox.max.z - 1;
       floatingObject.physics.velocity.z *= -1;
     }
-    // console.log("CHIPS POS", this.chips1Graphics.position);
   }
 
   animate = () => {
@@ -598,21 +549,6 @@ class Release0004 extends PureComponent {
   }
 
   renderScene = () => {
-
-    // if (this.isUserInteracting) {
-    //   this.lat = Math.max( - 85, Math.min( 85, this.lat ) );
-    //   this.phi = THREE.Math.degToRad( 90 - this.lat );
-    //   this.theta = THREE.Math.degToRad( this.lon );
-    //   this.camera.position.x = this.distance * Math.sin( this.phi ) * Math.cos( this.theta );
-    //   this.camera.position.y = this.distance * Math.cos( this.phi );
-    //   this.camera.position.z = this.distance * Math.sin( this.phi ) * Math.sin( this.theta );
-    // } else {
-    // let x = this.camera.position.x;
-    // let z = this.camera.position.z;
-    // this.camera.position.x = x * Math.cos(ROTATION_SPEED) + z * Math.sin(ROTATION_SPEED);
-    // this.camera.position.z = z * Math.cos(ROTATION_SPEED) - x * Math.sin(ROTATION_SPEED);
-    // }
-    // this.camera.lookAt(this.camera.target);
     this.renderer.render(this.scene, this.camera);
     this.updatePhysics();
   }
