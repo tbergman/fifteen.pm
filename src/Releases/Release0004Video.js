@@ -9,7 +9,7 @@ import {isMobile} from "../Utils/BrowserDetection";
 import debounce from "lodash/debounce";
 import { assetPath } from "../Utils/assets";
 
-const LOCAL = true;
+const LOCAL = false;
 const BPM = 130;
 const RANGE = 1000;
 const BEAT_TIME = (60 / BPM);
@@ -17,12 +17,16 @@ const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
 const assetPath4 = (p) => {
-  return assetPath({path:"4/" + p, local: LOCAL});
+  return assetPath("4/" + p);
+}
+
+const assetPath4Videos = (p) => {
+  return assetPath4("videos/" + p);
 }
 
 const BODEGAS = [
   {
-    src: assetPath4('videos/er-99-cts-broadway-1.webm'),
+    src: assetPath4Videos('er-99-cts-broadway-1.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [500, 0, 0],
     transparent: false,
@@ -33,7 +37,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-bag-1.webm'),
+    src: assetPath4Videos('er-bag-1.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [-500, 0, 0],
     transparent: false,
@@ -44,7 +48,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-bodega-chill-2.webm'),
+    src: assetPath4Videos('er-bodega-chill-2.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [0, 500, 0],
     transparent: false,
@@ -55,7 +59,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-big-boi-bitcoin-brian.webm'),
+    src: assetPath4Videos('er-big-boi-bitcoin-brian.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [0, -500, 0],
     transparent: false,
@@ -66,7 +70,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-cholulita-bite.webm'),
+    src: assetPath4Videos('er-cholulita-bite.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [0, 0, 500],
     transparent: false,
@@ -77,7 +81,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-broadway-tvs-n-elbows.webm'),
+    src: assetPath4Videos('er-broadway-tvs-n-elbows.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [0, 0, -500],
     transparent: false,
@@ -88,7 +92,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-broadway-spread.webm'),
+    src: assetPath4Videos('er-broadway-spread.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [250, 0, 0],
     transparent: false,
@@ -99,7 +103,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-broadway-bongs.webm'),
+    src: assetPath4Videos('er-broadway-bongs.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [-250, 0, 0],
     transparent: false,
@@ -110,7 +114,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-broadway-fridge-door.webm'),
+    src: assetPath4Videos('er-broadway-fridge-door.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [0, 250, 0],
     transparent: false,
@@ -121,7 +125,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-day-and-night-pringles.webm'),
+    src: assetPath4Videos('er-day-and-night-pringles.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [0, -250, 0],
     transparent: false,
@@ -133,7 +137,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-eric-mini-market-central-ave.webm'),
+    src: assetPath4Videos('er-eric-mini-market-central-ave.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [0, 0, 250],
     transparent: false,
@@ -144,7 +148,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-broadway-bougie-ceiling-fan.webm'),
+    src: assetPath4Videos('er-broadway-bougie-ceiling-fan.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [250, 250, 0],
     transparent: false,
@@ -155,7 +159,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-mr-kiwi-cat-in-the-cabbage.webm'),
+    src: assetPath4Videos('er-mr-kiwi-cat-in-the-cabbage.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [-250, 250, 0],
     transparent: false,
@@ -166,7 +170,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-pomegranite-deli.webm'),
+    src: assetPath4Videos('er-pomegranite-deli.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [-250, -250, 0],
     transparent: false,
@@ -178,7 +182,7 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4('videos/er-99-cts-broadway-5.webm'),
+    src: assetPath4Videos('er-99-cts-broadway-5.webm'),
     geometry: new THREE.SphereBufferGeometry(125, 125, 125),
     position: [-250, -250, 0],
     transparent: false,
@@ -362,8 +366,8 @@ class Release0004Video extends PureComponent {
         <div className="release">
           <div ref={element => this.container = element}/>
           <SoundcloudPlayer
-            trackId='482138307'
-            message='OTHERE'
+            trackId='267037220'
+            message='BODEGA CHILL'
             inputRef={el => this.audioElement = el}
             fillColor="red"
           />
