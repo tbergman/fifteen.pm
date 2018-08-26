@@ -63,6 +63,8 @@ const assetPath4 = (p) => {
 const assetPath4Videos = (p) => {
   return assetPath4("videos/" + p);
 }
+
+let videoSrc = assetPath4Videos('er-99-cts-broadway-1.webm');
 ```
 **NOTE**: In development this path will be prefixed by `/assets/releases`. In production, it will by prefixed by `https://assets.globally.ltd/`
 
