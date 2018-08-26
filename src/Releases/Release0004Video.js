@@ -17,7 +17,7 @@ const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
 const assetPath4 = (p) => {
-  return assetPath4( "4/" + p, LOCAL);
+  return assetPath({path:"4/" + p, local: LOCAL});
 }
 
 const BODEGAS = [
@@ -115,7 +115,8 @@ const BODEGAS = [
     position: [0, 250, 0],
     transparent: false,
     opacity: 1,
-     visible: false,
+    axis: new THREE.Vector3(1, 0, 0).normalize(),
+    angle: 0.01,
     color: 0xFFFFFF,
     playbackRate: 1
   },
@@ -139,7 +140,6 @@ const BODEGAS = [
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.01,
-    visible: false,
     color: 0xFFFFFF,
     playbackRate: 1
   },
@@ -151,7 +151,6 @@ const BODEGAS = [
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.01,
-    visible: false,
     color: 0xFFFFFF,
     playbackRate: 1
   },
@@ -163,7 +162,6 @@ const BODEGAS = [
     opacity: 1,
     axis: new THREE.Vector3(0, 0, 1).normalize(),
     angle: 0.01,
-    visible: false,
     color: 0xFFFFFF,
     playbackRate: 1
   },
