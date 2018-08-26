@@ -30,26 +30,26 @@ TODO ...
 
 We host our assets for our releases (audio, images, video, 3D models, etc) at [assets.globally.ltd](https://assets.globally.ltd). To keep these out of version control, we store all release assets under [`public/assets/releases`](public/assets/releases) and sync them via the following commands:
 
-To sync production assets locally:
+#### To sync production assets locally:
 
 ```
 yarn download-assets
 ```
 
-To sync local assets to prod:
+#### To sync local assets to prod:
 
 ```
 yarn upload-assets
 ```
 
-To remove an asset from local and production:
+#### To remove an asset from local and production:
 
 ```
 yarn remove-asset "4/videos/file.webm"
 ```
 **NOTE**: Use a path relative to `/public/assets/releases` or `s3://assets.globally.ltd/`
 
-To access an asset in a Release Component, follow this pattern:
+#### To access an asset in a Release Component, follow this pattern:
 
 ```js
 import { assetPath } from "../Utils/assets";
