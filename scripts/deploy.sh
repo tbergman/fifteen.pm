@@ -3,9 +3,10 @@
 set -x
 set -e
 
+
 rm -rf tmp/;
 rm -rf build/;
-node scripts/build.js
+NODE_ENV='production' && node scripts/build.js
 rm -rf build/assets/releases/;
 mkdir -p tmp
 cp -R build/ tmp

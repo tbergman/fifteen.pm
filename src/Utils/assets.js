@@ -1,9 +1,9 @@
 const PROD_ASSET_URL = 'https://assets.globally.ltd'
-const LOCAL_ASSET_URL = 'assets/releases'
+const DEV_ASSET_URL = '/assets/releases'
 
-export const assetPath = ({path, local}) => {
-  if (local) {
-    return `${LOCAL_ASSET_URL}/${path}`
+export const assetPath = (path) => {
+  if (process.env.NODE_ENV === 'development') {
+    return `${DEV_ASSET_URL}/${path}`
   } else {
     return `${PROD_ASSET_URL}/${path}`
   }
