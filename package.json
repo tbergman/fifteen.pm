@@ -57,7 +57,8 @@
     "mp4-to-webm": "sh scripts/mp4-to-webm.sh",
     "dual-fisheye-to-equirectangular": "sh scripts/dual-fisheye-to-equirectangular.sh",
     "download-assets": "sh scripts/download-assets.sh gltd",
-    "upload-assets": "sh scripts/upload-assets.sh gltd"
+    "upload-assets": "sh scripts/upload-assets.sh gltd",
+    "remove-asset": "sh scripts/remove-asset.sh gltd"
   },
   "devDependencies": {
     "cannon": "^0.6.2",
