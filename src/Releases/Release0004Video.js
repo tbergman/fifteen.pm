@@ -27,7 +27,7 @@ const assetPath4Videos = (p) => {
 const BODEGAS = [
   {
     src: assetPath4Videos('er-99-cts-broadway-1.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [500, 0, 0],
     transparent: false,
     opacity: 1,
@@ -38,7 +38,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-bag-1.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [-500, 0, 0],
     transparent: false,
     opacity: 1,
@@ -49,7 +49,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-bodega-chill-2.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [0, 500, 0],
     transparent: false,
     opacity: 1,
@@ -60,7 +60,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-big-boi-bitcoin-brian.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [0, -500, 0],
     transparent: false,
     opacity: 1,
@@ -71,7 +71,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-cholulita-bite.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [0, 0, 500],
     transparent: false,
     opacity: 1,
@@ -82,7 +82,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-tvs-n-elbows.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [0, 0, -500],
     transparent: false,
     opacity: 1,
@@ -93,7 +93,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-spread.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [250, 0, 0],
     transparent: false,
     opacity: 1,
@@ -104,7 +104,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-bongs.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [-250, 0, 0],
     transparent: false,
     opacity: 1,
@@ -115,7 +115,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-fridge-door.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [0, 250, 0],
     transparent: false,
     opacity: 1,
@@ -126,7 +126,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-day-and-night-pringles.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [0, -250, 0],
     transparent: false,
     opacity: 1,
@@ -138,7 +138,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-eric-mini-market-central-ave.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [0, 0, 250],
     transparent: false,
     opacity: 1,
@@ -149,7 +149,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-bougie-ceiling-fan.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [250, 250, 0],
     transparent: false,
     opacity: 1,
@@ -160,7 +160,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-mr-kiwi-cat-in-the-cabbage.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [-250, 250, 0],
     transparent: false,
     opacity: 1,
@@ -171,7 +171,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-pomegranite-deli.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [-250, -250, 0],
     transparent: false,
     opacity: 1,
@@ -183,7 +183,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-99-cts-broadway-5.webm'),
-    geometry: new THREE.SphereBufferGeometry(125, 125, 125),
+    geometry: new THREE.SphereBufferGeometry(120, 120, 120),
     position: [-250, -250, 0],
     transparent: false,
     opacity: 1,
@@ -262,7 +262,6 @@ class Release0004Video extends PureComponent {
     video.crossOrigin = 'anonymous';
     video.loop = true;
     video.muted = true;
-    // video.autoplay = true;
     video.playbackRate = props.playbackRate;
     let texture = new THREE.VideoTexture(video);
     texture.minFilter = THREE.LinearFilter;
@@ -277,6 +276,7 @@ class Release0004Video extends PureComponent {
     videoMesh.rotation.y = Math.sin(0.6);
     videoMesh.userData.video = video;
     videoMesh.userData.props = props;
+    videoMesh.userData.texture = texture;
     return videoMesh;
   }
 
@@ -287,6 +287,21 @@ class Release0004Video extends PureComponent {
         this.videos.children[i].userData.props.axis,
         this.videos.children[i].userData.props.angle);
       this.videos.children[i].applyQuaternion(this.quaternion);
+    }
+  }
+
+  pauseVideos = () => {
+    for (var i = 0; i < this.videos.children.length; i++) {
+      this.videos.children[i].userData.video.pause();
+    }
+  }
+
+  deallocateVideos = () => {
+    // RE: https://stackoverflow.com/questions/20997669/memory-leak-in-three-js
+    for (let i =0; i < this.videos.children.length; i++) {
+        this.scene.remove(this.videos.children[i]);
+        this.renderer.deallocateObject(this.videos.children[i].object);
+        this.renderer.deallocateTexture(this.videos.children[i].texture);
     }
   }
 
@@ -318,9 +333,7 @@ class Release0004Video extends PureComponent {
     this.raycaster.setFromCamera(this.mouse, this.camera);
     let intersects = this.raycaster.intersectObjects( this.videos.children );
     // stop all other videos
-    for (var i = 0; i < this.videos.children.length; i++) {
-      this.videos.children[i].userData.video.pause();
-    }
+    this.pauseVideos();
     // start the video we've clicked on an zoom to camera.
     for( var i = 0; i < intersects.length; i++ ) {
       var intersection = intersects[ i ];
@@ -340,6 +353,7 @@ class Release0004Video extends PureComponent {
 
   stop = () => {
     cancelAnimationFrame(this.frameId);
+    this.deallocateVideos();
   }
 
   updateOrbitControls = () => {
