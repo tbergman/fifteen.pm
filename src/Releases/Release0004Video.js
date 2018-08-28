@@ -5,6 +5,7 @@ import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
+import {PointerLockControls} from "../Utils/PointerLockControls.js"
 import {isMobile} from "../Utils/BrowserDetection";
 import debounce from "lodash/debounce";
 import {assetPath} from "../Utils/assets";
@@ -261,8 +262,18 @@ class Release0004Video extends PureComponent {
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+
     this.quaternion = new THREE.Quaternion();
-    this.controls = new OrbitControls(this.camera);
+
+    this.controls = new PointerLockControls( this.camera );
+    this.controls.enabled = true;
+    
+    this.scene.add( this.controls.getObject() );
+    // this.controls = new OrbitControls(this.camera);
+    // this.controls.screenSpacePanning = true;
+    // this.controls.autoRotate = false;
+    // this.controls.enablePan = true;
+    // this.controls.enableZoom = false;
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector3();
     this.curBodegaIdx = 0;
@@ -339,11 +350,7 @@ class Release0004Video extends PureComponent {
     }
     this.wormholePath = new THREE.CatmullRomCurve3(pathVertices);
     this.wormholePath.closed = true;
-    this.wormholePath.arcLengthDivisions = numPathVertices; // this didnt work in class init
-
-
-
-    // this.wormholePath.curveType = "catmullrom";
+    this.wormholePath.arcLengthDivisions = numPathVertices;
     this.visualizeWormhole(); // for devving
   }
 
@@ -351,21 +358,17 @@ class Release0004Video extends PureComponent {
     // let points = this.wormholePath.getPoints(this.wormholePath.arcLengthDivisions);
     let geometry = new THREE.Geometry();
     geometry.vertices = this.wormholePath.getSpacedPoints(100);//this.wormholePath.arcLengthDivisions);
-    // let geometry = new THREE.BufferGeometry().setFromPoints(points);
     let material = new THREE.LineBasicMaterial({color: 0xff0000});
     let curveObject = new THREE.Line(geometry, material);
     this.scene.add(curveObject);
   };
-
-   indexOnWormholePath = (bodegaIdx) => {
-     return Math.floor(this.wormholePath.points.length / (bodegaIdx + 1)) - 1;
-   }
 
   initBodegas = () => {
     let bodegaPositions = this.wormholePath.getPoints(BODEGAS.length);
     for (let i = 0; i < BODEGAS.length; i++) {
       let props = BODEGAS[i];
       props.geometry.scale(-1, 1, 1);
+      props.geometry.computeBoundingBox();
       let videoMesh = this.initBodegaMesh(props);
       let videoPos = bodegaPositions[i];
       videoMesh.position.set(videoPos.x, videoPos.y, videoPos.z);
@@ -449,27 +452,22 @@ class Release0004Video extends PureComponent {
     this.renderScene();
   }
 
-  enteredCurBodega = (holePos) => {
-
-  }
-
   updateCameraPos = () => {
     if (this.state.inWormhole === true) {
       this.cameraRadians += .0003;
       let holePos = this.wormholePath.getPoint(this.cameraRadians);
       this.camera.position.set(holePos.x, holePos.y, holePos.z);
-      // console.log("WORM HOLE POINT", holePos);
-      // console.log("NEXT BODEGA POS", this.bodegas.children[this.curBodegaIdx].position)
-      // console.log("TANGENT", this.wormholePath.getTangent(this.cameraRadians));
-      // if (-1){
-        // this.setState({inWormhole: false});
-      // }
+      let curBodega = this.bodegas.children[this.curBodegaIdx]
+      let distanceFromBodega = this.camera.position.distanceTo(curBodega.position);
+      if (distanceFromBodega < (curBodega.geometry.boundingBox.getSize().x / 20)){
+        this.setState({inWormhole: false});
+      }
     }
   }
 
   renderScene = () => {
     this.rotateBodegas();
-    this.updateOrbitControls();
+    // this.updateOrbitControls();
     this.updateCameraPos();
     this.renderer.render(this.scene, this.camera);
   }
