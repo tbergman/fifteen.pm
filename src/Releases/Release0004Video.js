@@ -50,7 +50,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-bag-1.webm'),
-    geometry: new THREE.SphereBufferGeometry(2000 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: new THREE.SphereBufferGeometry(5000 * Math.random(), 120 * Math.random(), 120 * Math.random()),
     position: [-500, 0, 0],
     transparent: false,
     opacity: 1,
