@@ -7,7 +7,7 @@ import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
 import {isMobile} from "../Utils/BrowserDetection";
 import debounce from "lodash/debounce";
-import { assetPath } from "../Utils/assets";
+import {assetPath} from "../Utils/assets";
 
 const BPM = 130;
 const RANGE = 1000;
@@ -23,11 +23,13 @@ const assetPath4Videos = (p) => {
   return assetPath4("videos/" + p);
 }
 
+const WORLD_UNIT = 500;
+
 const BODEGAS = [
   {
     src: assetPath4Videos('er-99-cts-broadway-1.webm'),
     geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
-    position: [500, 0, 0],
+    position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
@@ -38,7 +40,7 @@ const BODEGAS = [
   {
     src: assetPath4Videos('er-bag-1.webm'),
     geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
-    position: [-500, 0, 0],
+    position: [-WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
@@ -49,7 +51,7 @@ const BODEGAS = [
   {
     src: assetPath4Videos('er-bodega-chill-2.webm'),
     geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
-    position: [0, 500, 0],
+    position: [0, WORLD_UNIT, 0],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
@@ -60,7 +62,7 @@ const BODEGAS = [
   {
     src: assetPath4Videos('er-big-boi-bitcoin-brian.webm'),
     geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
-    position: [0, -500, 0],
+    position: [0, -WORLD_UNIT, 0],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
@@ -71,7 +73,7 @@ const BODEGAS = [
   {
     src: assetPath4Videos('er-cholulita-bite.webm'),
     geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
-    position: [0, 0, 500],
+    position: [0, 0, WORLD_UNIT],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
@@ -82,7 +84,7 @@ const BODEGAS = [
   {
     src: assetPath4Videos('er-broadway-tvs-n-elbows.webm'),
     geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
-    position: [0, 0, -500],
+    position: [0, 0, -WORLD_UNIT],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
@@ -194,6 +196,58 @@ const BODEGAS = [
   }
 ];
 
+const FLOATING_OBJECTS = [
+  {
+    url: 'assets/releases/4/models/Doritos_01.fbx',
+    mass: 1,
+    relativeScale: 1,
+    object: undefined,
+    physics: undefined,
+  },
+  {
+    url: 'assets/releases/4/models/Doritos_02.fbx',
+    mass: 1,
+    relativeScale: 1,
+    object: undefined,
+    physics: undefined,
+  },
+  {
+    url: 'assets/releases/4/models/Doritos_03.fbx',
+    mass: 1,
+    relativeScale: 1,
+    object: undefined,
+    physics: undefined,
+  },
+  {
+    url: 'assets/releases/4/models/Doritos_04.fbx',
+    mass: 1,
+    relativeScale: 1,
+    object: undefined,
+    physics: undefined,
+  },
+  {
+    url: 'assets/releases/4/models/Doritos_05.fbx',
+    mass: 1,
+    relativeScale: 1,
+    object: undefined,
+    physics: undefined,
+  },
+  {
+    url: 'assets/releases/4/models/Doritos_06.fbx',
+    mass: 1,
+    relativeScale: 1,
+    object: undefined,
+    physics: undefined,
+  },
+  {
+    url: 'assets/releases/4/models/Doritos_06.fbx',
+    mass: 5,
+    relativeScale: .01,
+    object: undefined,
+    physics: undefined,
+  }
+];
+
 class Release0004Video extends PureComponent {
   constructor() {
     super();
@@ -211,7 +265,10 @@ class Release0004Video extends PureComponent {
     this.controls = new OrbitControls(this.camera);
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector3();
-    this.currentBodega = undefined;
+    this.curBodegaIdx = 0;
+    this.prevBodega = undefined;
+    this.wormholePath = undefined;
+    this.cameraRadians = 0;
     // var size = 2000;
     // var divisions = 200;
     // var gridHelper = new THREE.GridHelper( size, divisions );
@@ -219,9 +276,13 @@ class Release0004Video extends PureComponent {
     this.bodegas = new THREE.Object3D();
   }
 
+  state = {
+    inWormhole: false
+  }
+
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
-    window.addEventListener('mousedown', this.onMouseDown, false );
+    window.addEventListener('mousedown', this.onMouseDown, false);
     window.addEventListener("load", this.onLoad, false);
     this.init();
     this.animate();
@@ -230,12 +291,13 @@ class Release0004Video extends PureComponent {
   componentWillUnmount() {
     this.stop();
     window.removeEventListener("resize", this.onWindowResize, false);
-    window.removeEventListener('mousedown', this.onMouseDown, false );
+    window.removeEventListener('mousedown', this.onMouseDown, false);
     window.removeEventListener("load", this.onLoad, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
   init = () => {
+    this.initWormholePath();
     this.initBodegas();
     this.container.appendChild(this.renderer.domElement);
   }
@@ -248,8 +310,8 @@ class Release0004Video extends PureComponent {
     this.camera.updateProjectionMatrix();
   }, 50);
 
-  onMouseDown  = ( e ) => {
-    this.switchBodega();
+  onMouseDown = (e) => {
+    this.enterWormhole();
   }
 
   onLoad = (event) => {
@@ -261,16 +323,53 @@ class Release0004Video extends PureComponent {
     this.deallocateBodegas();
   }
 
+  initWormholePath = () => {
+    let pathVertices = [];
+    let numPathVertices = 30;
+    let maxVertexDistance = 240;
+    pathVertices.push(new THREE.Vector3(0, 0, 0));
+    for (let i = 1; i < numPathVertices; i++) {
+      let prevPos = pathVertices[i - 1];
+      let randVect3 = new THREE.Vector3(
+        THREE.Math.randInt(prevPos.x - maxVertexDistance, prevPos.x + maxVertexDistance),
+        THREE.Math.randInt(prevPos.y - maxVertexDistance, prevPos.y + maxVertexDistance),
+        THREE.Math.randInt(prevPos.z - maxVertexDistance, prevPos.z + maxVertexDistance)
+      );
+      pathVertices.push(randVect3)
+    }
+    this.wormholePath = new THREE.CatmullRomCurve3(pathVertices)
+    this.wormholePath.closed = true;
+    this.wormholePath.arcLengthDivisions = numPathVertices; // this didnt work in class init
+    // this.wormholePath.curveType = "catmullrom";
+    this.visualizeWormhole(); // for devving
+  }
+
+  visualizeWormhole = () => {
+    // let points = this.wormholePath.getPoints(this.wormholePath.arcLengthDivisions);
+    let geometry = new THREE.Geometry();
+    geometry.vertices = this.wormholePath.getSpacedPoints(100);//this.wormholePath.arcLengthDivisions);
+    // let geometry = new THREE.BufferGeometry().setFromPoints(points);
+    let material = new THREE.LineBasicMaterial({color: 0xff0000});
+    let curveObject = new THREE.Line(geometry, material);
+    this.scene.add(curveObject);
+  };
+
+  indexOnWormholePath = (bodegaIdx) => {
+    return Math.floor(this.wormholePath.points.length / (bodegaIdx + 1)) - 1;
+  }
+
   initBodegas = () => {
     for (let i = 0; i < BODEGAS.length; i++) {
       let props = BODEGAS[i];
       props.geometry.scale(-1, 1, 1);
       let videoMesh = this.initBodegaMesh(props);
-      videoMesh.position.set(...props.position);
+      let wormHoleIndex = this.indexOnWormholePath(i);
+      let videoPos = this.wormholePath.points[wormHoleIndex];
+      videoMesh.position.set(videoPos.x, videoPos.y, videoPos.z);
       this.bodegas.add(videoMesh);
     }
     this.scene.add(this.bodegas);
-  };
+  }
 
   initBodegaMesh = (props) => {
     let video = document.createElement('video');
@@ -297,7 +396,7 @@ class Release0004Video extends PureComponent {
   }
 
   rotateBodegas = () => {
-    for (let i =0; i < this.bodegas.children.length; i++) {
+    for (let i = 0; i < this.bodegas.children.length; i++) {
       this.quaternion.setFromAxisAngle(
         this.bodegas.children[i].userData.props.axis,
         this.bodegas.children[i].userData.props.angle);
@@ -313,29 +412,28 @@ class Release0004Video extends PureComponent {
 
   deallocateBodegas = () => {
     // RE: https://stackoverflow.com/questions/20997669/memory-leak-in-three-js
-    for (let i =0; i < this.bodegas.children.length; i++) {
-        this.scene.remove(this.bodegas.children[i]);
-        this.renderer.deallocateObject(this.bodegas.children[i].object);
-        this.renderer.deallocateTexture(this.bodegas.children[i].texture);
+    for (let i = 0; i < this.bodegas.children.length; i++) {
+      this.scene.remove(this.bodegas.children[i]);
+      this.renderer.deallocateObject(this.bodegas.children[i].object);
+      this.renderer.deallocateTexture(this.bodegas.children[i].texture);
     }
   }
 
-  switchBodega = () => {
-    this.currentBodega = this.randomBodega();
-    this.flyToBodega(this.currentBodega);
+  advanceBodega = () => {
+    this.prevBodegaIdx = this.curBodegaIdx;
+    this.curBodegaIdx = this.prevBodegaIdx + 1 === this.bodegas.children.length ? 0 : this.prevBodegaIdx + 1;
   }
 
   randomBodega = () => {
-    return this.bodegas.children[Math.floor(Math.random()*this.bodegas.children.length)];
+    return this.bodegas.children[Math.floor(Math.random() * this.bodegas.children.length)];
   }
 
-  flyToBodega = (bodega) => {
-    this.camera.position.x = bodega.position.x;
-    this.camera.position.y = bodega.position.y;
-    this.camera.position.z = bodega.position.z;
-    this.pauseBodegas();
-    bodega.userData.video.play();
-  }
+  enterWormhole = () => {
+    this.advanceBodega();
+    // this.pauseBodegas();
+    // bodega.userData.video.play();
+    this.setState({inWormhole: true});
+  };
 
   updateOrbitControls = () => {
     let time = Date.now();
@@ -347,9 +445,23 @@ class Release0004Video extends PureComponent {
     this.renderScene();
   }
 
+  updateCameraPos = () => {
+    if (this.state.inWormhole === true) {
+      this.cameraRadians += .0003;
+      let holePos = this.wormholePath.getPoint(this.cameraRadians);
+      this.camera.position.set(holePos.x, holePos.y, holePos.z);
+      // TODO
+      // if (this.camera.position >= this.bodegas.children[this.curBodegaIdx].position) {
+      //   console.log("EXIT WORMHOLE")
+      // this.setState({inWormhole: false});
+      // }
+    }
+  }
+
   renderScene = () => {
     this.rotateBodegas();
     this.updateOrbitControls();
+    this.updateCameraPos();
     this.renderer.render(this.scene, this.camera);
   }
 
