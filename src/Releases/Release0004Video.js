@@ -329,9 +329,9 @@ class Release0004Video extends PureComponent {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
     this.camera = new THREE.PerspectiveCamera(80, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000);
-    this.camera.position.x = 200;
-    this.camera.position.y = 600;
-    this.camera.position.z = 1000;
+    this.camera.position.x = 0;
+    this.camera.position.y = 0;
+    this.camera.position.z = 0;
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -579,6 +579,9 @@ class Release0004Video extends PureComponent {
       this.scene.remove(this.scene.children[i]);
       this.renderer.deallocateObject(this.scene.children[i]);
     }
+  }
+  setCameraAtCurrentBodega = () => {
+    this.camera.position.set(this.bodegas.children[this.state.curBodegaIdx].position);
   }
 
   playCurrentBodega = () => {
