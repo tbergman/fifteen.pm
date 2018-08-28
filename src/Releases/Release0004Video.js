@@ -413,7 +413,7 @@ class Release0004Video extends PureComponent {
 
   stop = () => {
     cancelAnimationFrame(this.frameId);
-    this.deallocateBodegas();
+    this.deallocate();
   }
 
   initCannon = () => {
@@ -573,12 +573,11 @@ class Release0004Video extends PureComponent {
     }
   }
 
-  deallocateBodegas = () => {
+  deallocate = () => {
     // RE: https://stackoverflow.com/questions/20997669/memory-leak-in-three-js
-    for (let i = 0; i < this.bodegas.children.length; i++) {
-      this.scene.remove(this.bodegas.children[i]);
-      this.renderer.deallocateObject(this.bodegas.children[i].object);
-      this.renderer.deallocateTexture(this.bodegas.children[i].texture);
+    for (let i = 0; i < this.scene.children.length; i++) {
+      this.scene.remove(this.scene.children[i]);
+      this.renderer.deallocateObject(this.scene.children[i]);
     }
   }
 
