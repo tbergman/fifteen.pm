@@ -337,9 +337,12 @@ class Release0004Video extends PureComponent {
       );
       pathVertices.push(randVect3)
     }
-    this.wormholePath = new THREE.CatmullRomCurve3(pathVertices)
+    this.wormholePath = new THREE.CatmullRomCurve3(pathVertices);
     this.wormholePath.closed = true;
     this.wormholePath.arcLengthDivisions = numPathVertices; // this didnt work in class init
+
+
+
     // this.wormholePath.curveType = "catmullrom";
     this.visualizeWormhole(); // for devving
   }
@@ -354,17 +357,17 @@ class Release0004Video extends PureComponent {
     this.scene.add(curveObject);
   };
 
-  indexOnWormholePath = (bodegaIdx) => {
-    return Math.floor(this.wormholePath.points.length / (bodegaIdx + 1)) - 1;
-  }
+   indexOnWormholePath = (bodegaIdx) => {
+     return Math.floor(this.wormholePath.points.length / (bodegaIdx + 1)) - 1;
+   }
 
   initBodegas = () => {
+    let bodegaPositions = this.wormholePath.getPoints(BODEGAS.length);
     for (let i = 0; i < BODEGAS.length; i++) {
       let props = BODEGAS[i];
       props.geometry.scale(-1, 1, 1);
       let videoMesh = this.initBodegaMesh(props);
-      let wormHoleIndex = this.indexOnWormholePath(i);
-      let videoPos = this.wormholePath.points[wormHoleIndex];
+      let videoPos = bodegaPositions[i];
       videoMesh.position.set(videoPos.x, videoPos.y, videoPos.z);
       this.bodegas.add(videoMesh);
     }
@@ -429,6 +432,7 @@ class Release0004Video extends PureComponent {
   }
 
   enterWormhole = () => {
+    console.log("ENTER WORMHOLE")
     this.advanceBodega();
     // this.pauseBodegas();
     // bodega.userData.video.play();
@@ -445,15 +449,20 @@ class Release0004Video extends PureComponent {
     this.renderScene();
   }
 
+  enteredCurBodega = (holePos) => {
+
+  }
+
   updateCameraPos = () => {
     if (this.state.inWormhole === true) {
       this.cameraRadians += .0003;
       let holePos = this.wormholePath.getPoint(this.cameraRadians);
       this.camera.position.set(holePos.x, holePos.y, holePos.z);
-      // TODO
-      // if (this.camera.position >= this.bodegas.children[this.curBodegaIdx].position) {
-      //   console.log("EXIT WORMHOLE")
-      // this.setState({inWormhole: false});
+      // console.log("WORM HOLE POINT", holePos);
+      // console.log("NEXT BODEGA POS", this.bodegas.children[this.curBodegaIdx].position)
+      // console.log("TANGENT", this.wormholePath.getTangent(this.cameraRadians));
+      // if (-1){
+        // this.setState({inWormhole: false});
       // }
     }
   }
@@ -467,16 +476,15 @@ class Release0004Video extends PureComponent {
 
   render() {
     return (
-
       <Fragment>
         <div className="release">
           <div ref={element => this.container = element}/>
-          <SoundcloudPlayer
-            trackId='267037220'
-            message='BODEGA CHILL'
-            inputRef={el => this.audioElement = el}
-            fillColor="red"
-          />
+          {/*<SoundcloudPlayer*/}
+            {/*trackId='267037220'*/}
+            {/*message='BODEGA CHILL'*/}
+            {/*inputRef={el => this.audioElement = el}*/}
+            {/*fillColor="red"*/}
+          {/*/>*/}
           <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
         </div>
       </Fragment>
