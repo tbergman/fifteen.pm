@@ -18,6 +18,12 @@ const RANGE = 1000;
 const BEAT_TIME = (60 / BPM);
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
+const VIDEO_STATE_PLAYING = 'playing';
+const VIDEO_STATE_PAUSED = 'paused';
+const MIND_STATE_CHILLIN = 'chillin';
+const MIND_STATE_EXITING = 'exiting';
+const MIND_STATE_FLYING = 'flying';
+const MIND_STATE_ENTERING = 'entering';
 
 const assetPath4 = (p) => {
   return assetPath("4/" + p);
@@ -31,49 +37,24 @@ const assetPath4Models = (p) => {
   return assetPath4("models/" + p);
 }
 
+const randSphere = (x) => {
+  return new THREE.SphereBufferGeometry(
+    x ,
+    x ,
+    x
+  )
+};
+
+const WORLD_UNIT = 500;
 const MAX_VELOCITY = 10;
 const MIN_VELOCITY = -10;
-
 const CRAZY_GREEN_BODEGA_IDX = 1;
 
 const BODEGAS = [
   {
     src: assetPath4Videos('er-99-cts-broadway-1.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
-    position: [500, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('er-bag-1.webm'),
-    geometry: new THREE.SphereBufferGeometry(5000 * Math.random(), 120 * Math.random(), 120 * Math.random()),
-    position: [-500, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('er-bodega-chill-2.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
-    position: [0, 500, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('er-big-boi-bitcoin-brian.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
-    position: [0, -500, 0],
+    geometry: randSphere(50),
+    position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
@@ -83,7 +64,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-cholulita-bite.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [0, 0, 500],
     transparent: false,
     opacity: 1,
@@ -94,7 +75,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-tvs-n-elbows.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [0, 0, -500],
     transparent: false,
     opacity: 1,
@@ -105,7 +86,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-spread.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [250, 0, 0],
     transparent: false,
     opacity: 1,
@@ -116,7 +97,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-bongs.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [-250, 0, 0],
     transparent: false,
     opacity: 1,
@@ -127,7 +108,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-fridge-door.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [0, 250, 0],
     transparent: false,
     opacity: 1,
@@ -138,7 +119,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-day-and-night-pringles.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [0, -250, 0],
     transparent: false,
     opacity: 1,
@@ -150,7 +131,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-eric-mini-market-central-ave.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [0, 0, 250],
     transparent: false,
     opacity: 1,
@@ -161,7 +142,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-bougie-ceiling-fan.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [250, 250, 0],
     transparent: false,
     opacity: 1,
@@ -172,7 +153,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-mr-kiwi-cat-in-the-cabbage.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [-250, 250, 0],
     transparent: false,
     opacity: 1,
@@ -183,7 +164,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-pomegranite-deli.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [-250, -250, 0],
     transparent: false,
     opacity: 1,
@@ -195,13 +176,24 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-99-cts-broadway-5.webm'),
-    geometry: new THREE.SphereBufferGeometry(120 * Math.random(), 120 * Math.random(), 120 * Math.random()),
+    geometry: randSphere(50),
     position: [-250, -250, 0],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 0, 1).normalize(),
     angle: 0.01,
     visible: false,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('er-big-boi-bitcoin-brian.webm'),
+    geometry: randSphere(50),
+    position: [0, -500, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
     color: 0xFFFFFF,
     playbackRate: 1
   }
@@ -337,13 +329,14 @@ class Release0004Video extends PureComponent {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
     this.camera = new THREE.PerspectiveCamera(80, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000);
-    this.camera.position.x = 200;
-    this.camera.position.y = 600;
-    this.camera.position.z = 1000;
+    this.camera.position.x = 0;
+    this.camera.position.y = 0;
+    this.camera.position.z = 0;
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.quaternion = new THREE.Quaternion();
+
 
     let light0 = new THREE.HemisphereLight(0xffffff, 0x444444);
     light0.position.set(0, 200, 0);
@@ -359,8 +352,6 @@ class Release0004Video extends PureComponent {
     // this.controls.enableZoom = false;
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector3();
-    this.curBodegaIdx = 0;
-    this.prevBodegaIdx = -1;
     this.wormholePath = undefined;
     this.cameraRadians = 0;
     // var size = 2000;
@@ -371,7 +362,11 @@ class Release0004Video extends PureComponent {
   }
 
   state = {
-    inWormhole: false
+    inWormhole: false,
+    curBodegaIdx: 0,
+    prevBodegaIdx: 0,
+    curVideoState: VIDEO_STATE_PAUSED,
+    mindState: MIND_STATE_CHILLIN
   }
 
   componentDidMount() {
@@ -407,7 +402,9 @@ class Release0004Video extends PureComponent {
   }, 50);
 
   onMouseDown = (e) => {
-    this.enterWormhole();
+    if (this.state.mindState === MIND_STATE_CHILLIN) {
+      this.enterWormhole();
+    }
   }
 
   onLoad = (event) => {
@@ -416,7 +413,7 @@ class Release0004Video extends PureComponent {
 
   stop = () => {
     cancelAnimationFrame(this.frameId);
-    this.deallocateBodegas();
+    this.deallocate();
   }
 
   initCannon = () => {
@@ -527,6 +524,7 @@ class Release0004Video extends PureComponent {
       this.bodegas.add(videoMesh);
     }
     this.scene.add(this.bodegas);
+    this.computeBodegaBBoxes();
   }
 
   initBodegaMesh = (props) => {
@@ -553,6 +551,13 @@ class Release0004Video extends PureComponent {
     return bodegaMesh;
   }
 
+  computeBodegaBBoxes = () => {
+    for (let i = 0; i < this.bodegas.children.length; i++) {
+      this.bodegas.children[i].userData.bbox = new THREE.Box3(new THREE.Vector3(), new THREE.Vector3());
+      this.bodegas.children[i].userData.bbox.setFromObject(this.bodegas.children[i]);
+    }
+  }
+
   rotateBodegas = () => {
     for (let i = 0; i < this.bodegas.children.length; i++) {
       this.quaternion.setFromAxisAngle(
@@ -568,22 +573,23 @@ class Release0004Video extends PureComponent {
     }
   }
 
-  deallocateBodegas = () => {
+  deallocate = () => {
     // RE: https://stackoverflow.com/questions/20997669/memory-leak-in-three-js
-    for (let i = 0; i < this.bodegas.children.length; i++) {
-      this.scene.remove(this.bodegas.children[i]);
-      this.renderer.deallocateObject(this.bodegas.children[i].object);
-      this.renderer.deallocateTexture(this.bodegas.children[i].texture);
+    for (let i = 0; i < this.scene.children.length; i++) {
+      this.scene.remove(this.scene.children[i]);
+      this.renderer.deallocateObject(this.scene.children[i]);
     }
   }
+  setCameraAtCurrentBodega = () => {
+    this.camera.position.set(this.bodegas.children[this.state.curBodegaIdx].position);
+  }
 
-  advanceBodega = () => {
-    this.prevBodegaIdx = this.curBodegaIdx;
-    this.curBodegaIdx = this.prevBodegaIdx + 1 === this.bodegas.children.length ? 0 : this.prevBodegaIdx + 1;
-    if (this.prevBodegaIdx >= 0 && this.prevBodegaIdx != CRAZY_GREEN_BODEGA_IDX) { // TODO - green vid hack
-      this.bodegas.children[this.prevBodegaIdx].userData.video.pause();
-    }
-    this.bodegas.children[this.curBodegaIdx].userData.video.play();
+  playCurrentBodega = () => {
+    this.bodegas.children[this.state.curBodegaIdx].userData.video.play();
+  }
+
+  pausePreviousBodega = () => {
+    this.bodegas.children[this.state.prevBodegaIdx].userData.video.pause();
   }
 
   randomBodega = () => {
@@ -591,8 +597,16 @@ class Release0004Video extends PureComponent {
   }
 
   enterWormhole = () => {
-    this.advanceBodega();
-    this.setState({inWormhole: true});
+    // console.log('exiting')
+    this.setState({
+      mindState: MIND_STATE_EXITING,
+      prevBodegaIdx: this.state.curBodegaIdx,
+      curBodegaIdx: this.state.curBodegaIdx + 1 === this.bodegas.children.length ? 0 : this.state.curBodegaIdx + 1
+    })
+    // console.log('source bodega:');
+    // console.log(this.bodegas.children[this.state.prevBodegaIdx].userData.props.src)
+    // console.log('target bodega:');
+    // console.log(this.bodegas.children[this.state.curBodegaIdx].userData.props.src)
   };
 
   updateOrbitControls = () => {
@@ -607,14 +621,49 @@ class Release0004Video extends PureComponent {
   }
 
   updateCameraPos = () => {
-    if (this.state.inWormhole === true) {
+    let curBodega = this.bodegas.children[this.state.curBodegaIdx];
+    let prevBodega = this.bodegas.children[this.state.prevBodegaIdx];
+    let distanceFromBodega = this.camera.position.distanceTo(curBodega.position);
+
+    // have we arrived at the next bodega?
+    // todo: fix this constant
+    if (distanceFromBodega < 7 &&
+        this.state.mindState !== MIND_STATE_EXITING &&
+        this.state.mindState !== MIND_STATE_CHILLIN) {
+      // console.log('chillin')
+      this.setState({ mindState: MIND_STATE_CHILLIN });
+    }
+    // are we in transit ?
+    if (this.state.mindState !== MIND_STATE_CHILLIN) {
       this.cameraRadians += .0003;
       let holePos = this.wormholePath.getPoint(this.cameraRadians);
       this.camera.position.set(holePos.x, holePos.y, holePos.z);
-      let curBodega = this.bodegas.children[this.curBodegaIdx]
-      let distanceFromBodega = this.camera.position.distanceTo(curBodega.position);
-      if (distanceFromBodega < (curBodega.geometry.boundingBox.getSize().x / 20)) {
-        this.setState({inWormhole: false});
+
+      // check if we're exiting the previous bodega
+      if (this.state.mindState !== MIND_STATE_EXITING &&
+          this.state.mindState !== MIND_STATE_FLYING &&
+           prevBodega.userData.bbox.containsPoint(this.camera.position)) {
+        // console.log('exiting')
+        this.setState({ mindState: MIND_STATE_EXITING });
+      // check if were in space
+      } else if (this.state.mindState !== MIND_STATE_FLYING &&
+                 this.state.mindState !== MIND_STATE_ENTERING) {
+        // console.log('flying')
+        this.pauseBodegas();
+        this.setState({
+          curVideoState: VIDEO_STATE_PAUSED,
+          mindState: MIND_STATE_FLYING
+        });
+      }
+      // check if we're entering the next bodega
+      if(this.state.mindState !== MIND_STATE_ENTERING &&
+         curBodega.userData.bbox.containsPoint(this.camera.position)) {
+        // console.log('entering')
+        this.setState({ mindState: MIND_STATE_ENTERING });
+        if (this.state.curVideoState !== VIDEO_STATE_PLAYING) {
+          this.playCurrentBodega();
+          this.setState({curVideoState: VIDEO_STATE_PLAYING });
+        }
       }
     }
   }
