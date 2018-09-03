@@ -5,8 +5,11 @@
 set -x
 set -e
 
-ffmpeg -i $1 \
+input="$1"
+output=`echo "${input//.mp4/-er.mp4}"`
+
+ffmpeg -i $input \
        -i scripts/xmap_samsung_gear_2560x1280.pgm \
        -i scripts/ymap_samsung_gear_2560x1280.pgm \
        -lavfi remap \
-       $2
+       $output
