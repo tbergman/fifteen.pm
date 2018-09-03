@@ -12,6 +12,7 @@ import {assetPath} from "../Utils/assets";
 import * as CANNON from "cannon";
 import {CannonDebugRenderer} from "../Utils/CannonDebugRenderer";
 import {FBXLoader} from "../Utils/FBXLoader";
+import {FirstPersonControls} from '../Utils/FirstPersonControls';
 
 const BPM = 130;
 const RANGE = 1000;
@@ -48,12 +49,165 @@ const randSphere = (x) => {
 const WORLD_UNIT = 500;
 const MAX_VELOCITY = 10;
 const MIN_VELOCITY = -10;
-const CRAZY_GREEN_BODEGA_IDX = 1;
 
 const BODEGAS = [
   {
+    src: assetPath4Videos('bushwick-qmart-er.webm'),
+    geometry: new THREE.TetrahedronBufferGeometry( 10, 0 ),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('evergreen-bike-passing-newport-sign-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('food-bazaar-parking-lot-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('johnson-roof-jon-phone-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('johnson-roof-skyline-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('johnson-street-cars-lot-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('broadway-big-boi-bitcoin-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('myrtle-aisle-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('myrtle-central-girl-notices-cat-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('myrtle-red-bull-fridge-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('myrtle-door-close-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('myrtle-twin-ceiling-fans-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('myrtle-omg-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
+    src: assetPath4Videos('vernon-church-er.webm'),
+    geometry: randSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  {
     src: assetPath4Videos('er-99-cts-broadway-1.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -64,7 +218,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-cholulita-bite.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [0, 0, 500],
     transparent: false,
     opacity: 1,
@@ -75,7 +229,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-tvs-n-elbows.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [0, 0, -500],
     transparent: false,
     opacity: 1,
@@ -86,40 +240,29 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-spread.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [250, 0, 0],
     transparent: false,
     opacity: 1,
-    axis: new THREE.Vector3(1, 0, 0).normalize(),
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.01,
     color: 0xFFFFFF,
     playbackRate: 1
   },
   {
     src: assetPath4Videos('er-broadway-bongs.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [-250, 0, 0],
     transparent: false,
     opacity: 1,
-    axis: new THREE.Vector3(1, 0, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('er-broadway-fridge-door.webm'),
-    geometry: randSphere(50),
-    position: [0, 250, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(1, 0, 0).normalize(),
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.01,
     color: 0xFFFFFF,
     playbackRate: 1
   },
   {
     src: assetPath4Videos('er-day-and-night-pringles.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [0, -250, 0],
     transparent: false,
     opacity: 1,
@@ -131,7 +274,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-eric-mini-market-central-ave.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [0, 0, 250],
     transparent: false,
     opacity: 1,
@@ -142,7 +285,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-bougie-ceiling-fan.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [250, 250, 0],
     transparent: false,
     opacity: 1,
@@ -153,22 +296,22 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-mr-kiwi-cat-in-the-cabbage.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [-250, 250, 0],
     transparent: false,
     opacity: 1,
-    axis: new THREE.Vector3(0, 0, 1).normalize(),
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.01,
     color: 0xFFFFFF,
     playbackRate: 1
   },
   {
     src: assetPath4Videos('er-pomegranite-deli.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [-250, -250, 0],
     transparent: false,
     opacity: 1,
-    axis: new THREE.Vector3(0, 0, 1).normalize(),
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.01,
     visible: false,
     color: 0xFFFFFF,
@@ -176,19 +319,19 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-99-cts-broadway-5.webm'),
-    geometry: randSphere(50),
+    geometry: randSphere(25),
     position: [-250, -250, 0],
     transparent: false,
     opacity: 1,
-    axis: new THREE.Vector3(0, 0, 1).normalize(),
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.01,
     visible: false,
     color: 0xFFFFFF,
     playbackRate: 1
   },
   {
-    src: assetPath4Videos('er-big-boi-bitcoin-brian.webm'),
-    geometry: randSphere(50),
+    src: assetPath4Videos('er-pomegranite-ice-box.webm'),
+    geometry: randSphere(25),
     position: [0, -500, 0],
     transparent: false,
     opacity: 1,
@@ -338,6 +481,8 @@ class Release0004Video extends PureComponent {
     this.quaternion = new THREE.Quaternion();
 
 
+
+
     let light0 = new THREE.HemisphereLight(0xffffff, 0x444444);
     light0.position.set(0, 200, 0);
     this.scene.add(light0);
@@ -350,6 +495,11 @@ class Release0004Video extends PureComponent {
     // this.controls.autoRotate = false;
     // this.controls.enablePan = true;
     // this.controls.enableZoom = false;
+
+    // this.controls = new FirstPersonControls( this.camera );
+    // this.controls.lookSpeed = 0.1;
+    // this.controls.movementSpeed = 100;
+    // this.clock = new THREE.Clock( true );
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector3();
     this.wormholePath = undefined;
@@ -391,6 +541,7 @@ class Release0004Video extends PureComponent {
     this.initFloaters();
     this.initBodegas();
     this.container.appendChild(this.renderer.domElement);
+    this.playCurrentBodega();
   }
 
   onWindowResize = debounce(() => {
@@ -585,11 +736,24 @@ class Release0004Video extends PureComponent {
   }
 
   playCurrentBodega = () => {
-    this.bodegas.children[this.state.curBodegaIdx].userData.video.play();
+    let {video, texture, props} = this.bodegas.children[this.state.curBodegaIdx].userData;
+    video.play();
+    // update the video at 24 fps
+    // https://github.com/mrdoob/three.js/issues/13379
+    // let interval = setInterval( function () {
+    //   if ( video.readyState >= video.HAVE_CURRENT_DATA ) {
+    //     texture.needsUpdate = true;
+    //   }
+    // }, 1000 / 24 );
+    // this.bodegas.children[this.state.curBodegaIdx].userData.interval = interval;
+
   }
 
   pausePreviousBodega = () => {
-    this.bodegas.children[this.state.prevBodegaIdx].userData.video.pause();
+    let {video, interval} =  this.bodegas.children[this.state.prevBodegaIdx].userData;
+    video.pause();
+    // clear frame update interval
+    // clearInterval(interval);
   }
 
   randomBodega = () => {
@@ -649,7 +813,10 @@ class Release0004Video extends PureComponent {
       } else if (this.state.mindState !== MIND_STATE_FLYING &&
                  this.state.mindState !== MIND_STATE_ENTERING) {
         // console.log('flying')
-        this.pauseBodegas();
+        // play next bodega once were in space
+        if (this.state.curVideoState !== VIDEO_STATE_PLAYING) {
+          this.playCurrentBodega();
+          this.setState({curVideoState: VIDEO_STATE_PLAYING });
         this.setState({
           curVideoState: VIDEO_STATE_PAUSED,
           mindState: MIND_STATE_FLYING
@@ -659,18 +826,16 @@ class Release0004Video extends PureComponent {
       if(this.state.mindState !== MIND_STATE_ENTERING &&
          curBodega.userData.bbox.containsPoint(this.camera.position)) {
         // console.log('entering')
+        // pause previous bodega when we're entering the next one
+        this.pausePreviousBodega();
         this.setState({ mindState: MIND_STATE_ENTERING });
-        if (this.state.curVideoState !== VIDEO_STATE_PLAYING) {
-          this.playCurrentBodega();
-          this.setState({curVideoState: VIDEO_STATE_PLAYING });
         }
       }
     }
   }
 
   updateControls = () => {
-    // this.controls.isOnObject( false );
-    // this.controls.update( Date.now() - this.time );
+    this.controls.update( this.clock.getDelta() );
   }
 
   updateFloaters = () => {
@@ -755,7 +920,7 @@ class Release0004Video extends PureComponent {
 
   renderScene = () => {
     this.rotateBodegas();
-    this.updateControls();
+    // this.updateControls();
     this.updateCameraPos();
     this.updatePhysics();
     this.renderer.render(this.scene, this.camera);
