@@ -38,7 +38,7 @@ const assetPath4Models = (p) => {
   return assetPath4("models/" + p);
 }
 
-const randSphere = (x) => {
+const makeSphere = (x) => {
   return new THREE.SphereBufferGeometry(
     x ,
     x ,
@@ -51,6 +51,7 @@ const MAX_VELOCITY = 10;
 const MIN_VELOCITY = -10;
 
 const BODEGAS = [
+
   {
     src: assetPath4Videos('bushwick-qmart-er.webm'),
     geometry: new THREE.TetrahedronBufferGeometry( 10, 0 ),
@@ -64,7 +65,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('evergreen-bike-passing-newport-sign-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -75,7 +76,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('food-bazaar-parking-lot-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -86,7 +87,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('johnson-roof-jon-phone-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -97,7 +98,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('johnson-roof-skyline-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -108,7 +109,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('johnson-street-cars-lot-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -119,7 +120,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('broadway-big-boi-bitcoin-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -130,7 +131,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('myrtle-aisle-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -141,7 +142,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('myrtle-central-girl-notices-cat-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -152,7 +153,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('myrtle-red-bull-fridge-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -163,7 +164,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('myrtle-door-close-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -174,7 +175,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('myrtle-twin-ceiling-fans-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -185,7 +186,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('myrtle-omg-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -196,7 +197,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('vernon-church-er.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -207,7 +208,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-99-cts-broadway-1.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
@@ -218,7 +219,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-cholulita-bite.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [0, 0, 500],
     transparent: false,
     opacity: 1,
@@ -229,7 +230,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-tvs-n-elbows.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [0, 0, -500],
     transparent: false,
     opacity: 1,
@@ -240,7 +241,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-spread.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [250, 0, 0],
     transparent: false,
     opacity: 1,
@@ -251,7 +252,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-broadway-bongs.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [-250, 0, 0],
     transparent: false,
     opacity: 1,
@@ -262,7 +263,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-day-and-night-pringles.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [0, -250, 0],
     transparent: false,
     opacity: 1,
@@ -273,19 +274,8 @@ const BODEGAS = [
     playbackRate: 1
   },
   {
-    src: assetPath4Videos('er-eric-mini-market-central-ave.webm'),
-    geometry: randSphere(25),
-    position: [0, 0, 250],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
     src: assetPath4Videos('er-broadway-bougie-ceiling-fan.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [250, 250, 0],
     transparent: false,
     opacity: 1,
@@ -296,7 +286,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-mr-kiwi-cat-in-the-cabbage.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [-250, 250, 0],
     transparent: false,
     opacity: 1,
@@ -307,7 +297,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-pomegranite-deli.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [-250, -250, 0],
     transparent: false,
     opacity: 1,
@@ -319,7 +309,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-99-cts-broadway-5.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [-250, -250, 0],
     transparent: false,
     opacity: 1,
@@ -331,7 +321,7 @@ const BODEGAS = [
   },
   {
     src: assetPath4Videos('er-pomegranite-ice-box.webm'),
-    geometry: randSphere(25),
+    geometry: makeSphere(25),
     position: [0, -500, 0],
     transparent: false,
     opacity: 1,
@@ -637,7 +627,7 @@ class Release0004Video extends PureComponent {
   initWormholePath = () => {
     let pathVertices = [];
     let numPathVertices = 30;
-    let maxVertexDistance = 240;
+    let maxVertexDistance = 60;
     pathVertices.push(new THREE.Vector3(0, 0, 0));
     for (let i = 1; i < numPathVertices; i++) {
       let prevPos = pathVertices[i - 1];
@@ -931,14 +921,14 @@ class Release0004Video extends PureComponent {
       <Fragment>
         <div className="release">
           <div ref={element => this.container = element}/>
-          <SoundcloudPlayer
-            trackId='267037220'
-            message='BODEGA CHILL'
-            inputRef={el => this.audioElement = el}
-            fillColor="red"
-          />
-          <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
         </div>
+        <SoundcloudPlayer
+          trackId='267037220'
+          message='BODEGA CHILL'
+          inputRef={el => this.audioElement = el}
+          fillColor="red"
+        />
+        <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
       </Fragment>
     );
   }
