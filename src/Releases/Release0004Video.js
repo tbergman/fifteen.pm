@@ -51,95 +51,7 @@ const MAX_VELOCITY = 10;
 const MIN_VELOCITY = -10;
 
 const BODEGAS = [
-
-  {
-    src: assetPath4Videos('bushwick-qmart-er.webm'),
-    geometry: new THREE.TetrahedronBufferGeometry( 10, 0 ),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('evergreen-bike-passing-newport-sign-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('food-bazaar-parking-lot-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('johnson-roof-jon-phone-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('johnson-roof-skyline-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('johnson-street-cars-lot-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('broadway-big-boi-bitcoin-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('myrtle-aisle-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
+  // 1
   {
     src: assetPath4Videos('myrtle-central-girl-notices-cat-er.webm'),
     geometry: makeSphere(25),
@@ -151,105 +63,7 @@ const BODEGAS = [
     color: 0xFFFFFF,
     playbackRate: 1
   },
-  {
-    src: assetPath4Videos('myrtle-red-bull-fridge-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('myrtle-door-close-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('myrtle-twin-ceiling-fans-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('myrtle-omg-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('vernon-church-er.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('er-99-cts-broadway-1.webm'),
-    geometry: makeSphere(25),
-    position: [WORLD_UNIT, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('er-cholulita-bite.webm'),
-    geometry: makeSphere(25),
-    position: [0, 0, 500],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('er-broadway-tvs-n-elbows.webm'),
-    geometry: makeSphere(25),
-    position: [0, 0, -500],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('er-broadway-spread.webm'),
-    geometry: makeSphere(25),
-    position: [250, 0, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
+  // 2
   {
     src: assetPath4Videos('er-broadway-bongs.webm'),
     geometry: makeSphere(25),
@@ -261,22 +75,11 @@ const BODEGAS = [
     color: 0xFFFFFF,
     playbackRate: 1
   },
+  // 3
   {
-    src: assetPath4Videos('er-day-and-night-pringles.webm'),
+    src: assetPath4Videos('evergreen-bike-passing-newport-sign-er.webm'),
     geometry: makeSphere(25),
-    position: [0, -250, 0],
-    transparent: false,
-    opacity: 1,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
-    visible: false,
-    color: 0xFFFFFF,
-    playbackRate: 1
-  },
-  {
-    src: assetPath4Videos('er-broadway-bougie-ceiling-fan.webm'),
-    geometry: makeSphere(25),
-    position: [250, 250, 0],
+    position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
@@ -284,10 +87,11 @@ const BODEGAS = [
     color: 0xFFFFFF,
     playbackRate: 1
   },
+  // 4
   {
-    src: assetPath4Videos('er-mr-kiwi-cat-in-the-cabbage.webm'),
+    src: assetPath4Videos('er-eric-mini-market-central-ave.webm'),
     geometry: makeSphere(25),
-    position: [-250, 250, 0],
+    position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
@@ -295,6 +99,55 @@ const BODEGAS = [
     color: 0xFFFFFF,
     playbackRate: 1
   },
+  // 5
+  {
+    src: assetPath4Videos('myrtle-red-bull-fridge-er.webm'),
+    geometry: makeSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  // 6
+  {
+    src: assetPath4Videos('myrtle-door-close-er.webm'),
+    geometry: makeSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  // 7
+  {
+    src: assetPath4Videos('myrtle-omg-er.webm'),
+    geometry: makeSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  // 8
+  {
+    src: assetPath4Videos('er-pomegranite-ice-box.webm'),
+    geometry: makeSphere(25),
+    position: [0, -500, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  // 9
   {
     src: assetPath4Videos('er-pomegranite-deli.webm'),
     geometry: makeSphere(25),
@@ -307,6 +160,69 @@ const BODEGAS = [
     color: 0xFFFFFF,
     playbackRate: 1
   },
+  // 10
+  {
+    src: assetPath4Videos('broadway-big-boi-bitcoin-er.webm'),
+    geometry: makeSphere(25),
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  // 11
+  {
+    src: assetPath4Videos('er-day-and-night-pringles.webm'),
+    geometry: makeSphere(25),
+    position: [0, -250, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    visible: false,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  // 12
+  {
+    src: assetPath4Videos('er-broadway-tvs-n-elbows.webm'),
+    geometry: makeSphere(25),
+    position: [0, 0, -500],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  // 13
+  {
+    src: assetPath4Videos('er-cholulita-bite.webm'),
+    geometry: makeSphere(25),
+    position: [0, 0, 500],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  // 14
+  {
+    src: assetPath4Videos('er-99-cts-broadway-1.webm'),
+    geometry: makeSphere(25),
+    position: [-250, -250, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    visible: false,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  // 15
   {
     src: assetPath4Videos('er-99-cts-broadway-5.webm'),
     geometry: makeSphere(25),
@@ -319,10 +235,23 @@ const BODEGAS = [
     color: 0xFFFFFF,
     playbackRate: 1
   },
+  // 16
   {
-    src: assetPath4Videos('er-pomegranite-ice-box.webm'),
+    src: assetPath4Videos('food-bazaar-parking-lot-er.webm'),
     geometry: makeSphere(25),
-    position: [0, -500, 0],
+    position: [WORLD_UNIT, 0, 0],
+    transparent: false,
+    opacity: 1,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    color: 0xFFFFFF,
+    playbackRate: 1
+  },
+  // 17
+  {
+    src: assetPath4Videos('johnson-roof-jon-phone-er.webm'),
+    geometry: makeSphere(25),
+    position: [WORLD_UNIT, 0, 0],
     transparent: false,
     opacity: 1,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
