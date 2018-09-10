@@ -21,6 +21,8 @@ export const FirstPersonControls = function( object, domElement ) {
 
   this.activeLook = true;
 
+  this.mouseMotionActive = true;
+
   this.heightSpeed = false;
   this.heightCoef = 1.0;
   this.heightMin = 0.0;
@@ -74,7 +76,6 @@ export const FirstPersonControls = function( object, domElement ) {
   };
 
   this.onMouseDown = function ( event ) {
-
     if ( this.domElement !== document ) {
 
       this.domElement.focus();
@@ -84,7 +85,7 @@ export const FirstPersonControls = function( object, domElement ) {
     event.preventDefault();
     event.stopPropagation();
 
-    if ( this.activeLook ) {
+    if ( this.activeLook && this.mouseMotionActive ) {
 
       switch ( event.button ) {
 
@@ -104,7 +105,7 @@ export const FirstPersonControls = function( object, domElement ) {
     event.preventDefault();
     event.stopPropagation();
 
-    if ( this.activeLook ) {
+    if ( this.activeLook && this.mouseMotionActive ) {
 
       switch ( event.button ) {
 
@@ -120,6 +121,7 @@ export const FirstPersonControls = function( object, domElement ) {
   };
 
   this.onMouseMove = function ( event ) {
+
     let e;
     if (event.touches) {
       e = event.touches[0];
