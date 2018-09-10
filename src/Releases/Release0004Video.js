@@ -3,16 +3,10 @@ import * as THREE from "three";
 import './Release.css';
 import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
-import AudioStreamer from "../Utils/Audio/AudioStreamer";
-import {OrbitControls} from "../Utils/OrbitControls";
-import {PointerLockControls} from "../Utils/PointerLockControls.js"
-import {isMobile} from "../Utils/BrowserDetection";
 import debounce from "lodash/debounce";
 import {assetPath} from "../Utils/assets";
-import * as CANNON from "cannon";
-import {CannonDebugRenderer} from "../Utils/CannonDebugRenderer";
-import {FBXLoader} from "../Utils/FBXLoader";
 import {FirstPersonControls} from '../Utils/FirstPersonControls';
+import GLTFLoader from 'three-gltf-loader';
 
 const BPM = 130;
 const RANGE = 1000;
@@ -38,10 +32,14 @@ const assetPath4Models = (p) => {
   return assetPath4("models/" + p);
 }
 
+const assetPath4Images = (p) => {
+  return assetPath4("images/" + p)
+}
+
 const makeSphere = (x) => {
   return new THREE.SphereBufferGeometry(
-    x ,
-    x ,
+    x,
+    x,
     x
   )
 };
@@ -263,7 +261,16 @@ const BODEGAS = [
 
 const FLOATERS = [
   {
-    url: assetPath4Models('Doritos_01.fbx'),
+    url: assetPath4Models('green_lighter.gltf'),
+    mass: 1,
+    relativeScale: .1,
+    object: undefined,
+    physics: undefined,
+    bbox: undefined,
+  },
+  // remove
+  {
+    url: assetPath4Models('half_sub.gltf'),
     mass: 1,
     relativeScale: 1,
     object: undefined,
@@ -271,7 +278,7 @@ const FLOATERS = [
     bbox: undefined,
   },
   {
-    url: assetPath4Models('Doritos_02.fbx'),
+    url: assetPath4Models('doritos_spicy_nacho.gltf'),
     mass: 1,
     relativeScale: 1,
     object: undefined,
@@ -279,7 +286,7 @@ const FLOATERS = [
     bbox: undefined,
   },
   {
-    url: assetPath4Models('Doritos_03.fbx'),
+    url: assetPath4Models('doritos_cool_ranch.gltf'),
     mass: 1,
     relativeScale: 1,
     object: undefined,
@@ -287,7 +294,7 @@ const FLOATERS = [
     bbox: undefined,
   },
   {
-    url: assetPath4Models('Doritos_04.fbx'),
+    url: assetPath4Models('doritos_spicy_sweet_chili.gltf'),
     mass: 1,
     relativeScale: 1,
     object: undefined,
@@ -295,7 +302,7 @@ const FLOATERS = [
     bbox: undefined,
   },
   {
-    url: assetPath4Models('Doritos_05.fbx'),
+    url: assetPath4Models('doritos_salsa_verde.gltf'),
     mass: 1,
     relativeScale: 1,
     object: undefined,
@@ -303,7 +310,7 @@ const FLOATERS = [
     bbox: undefined,
   },
   {
-    url: assetPath4Models('Doritos_06.fbx'),
+    url: assetPath4Models('doritos_nacho_cheese.gltf'),
     mass: 1,
     relativeScale: 1,
     object: undefined,
@@ -311,77 +318,13 @@ const FLOATERS = [
     bbox: undefined,
   },
   {
-    url: assetPath4Models('Doritos_06.fbx'),
-    mass: 5,
-    relativeScale: 1,
-    object: undefined,
-    physics: undefined,
-    bbox: undefined,
-  }, /////////// REPEAT STARTS HERE
-  {
-    url: assetPath4Models('Doritos_01.fbx'),
+    url: assetPath4Models('half_sub.gltf'),
     mass: 1,
-    relativeScale: 1,
+    relativeScale: 100,
     object: undefined,
     physics: undefined,
     bbox: undefined,
   },
-  {
-    url: assetPath4Models('Doritos_02.fbx'),
-    mass: 1,
-    relativeScale: 1,
-    object: undefined,
-    physics: undefined,
-    bbox: undefined,
-  },
-  {
-    url: assetPath4Models('Doritos_03.fbx'),
-    mass: 1,
-    relativeScale: 1,
-    object: undefined,
-    physics: undefined,
-    bbox: undefined,
-  },
-  {
-    url: assetPath4Models('Doritos_04.fbx'),
-    mass: 1,
-    relativeScale: 1,
-    object: undefined,
-    physics: undefined,
-    bbox: undefined,
-  },
-  {
-    url: assetPath4Models('Doritos_05.fbx'),
-    mass: 1,
-    relativeScale: 1,
-    object: undefined,
-    physics: undefined,
-    bbox: undefined,
-  },
-  {
-    url: assetPath4Models('Doritos_06.fbx'),
-    mass: 1,
-    relativeScale: 1,
-    object: undefined,
-    physics: undefined,
-    bbox: undefined,
-  },
-  {
-    url: assetPath4Models('Doritos_06.fbx'),
-    mass: 5,
-    relativeScale: 1,
-    object: undefined,
-    physics: undefined,
-    bbox: undefined,
-  },
-  {
-    url: assetPath4Models('Doritos_01.fbx'),
-    mass: 1,
-    relativeScale: 1,
-    object: undefined,
-    physics: undefined,
-    bbox: undefined,
-  }
 ];
 
 class Release0004Video extends PureComponent {
@@ -393,34 +336,27 @@ class Release0004Video extends PureComponent {
     this.camera = new THREE.PerspectiveCamera(80, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000);
     this.camera.position.x = 0;
     this.camera.position.y = 0;
-    this.camera.position.z = 0;
+    this.camera.position.z = -30;
+    this.camera.lookAt(new THREE.Vector3());
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.quaternion = new THREE.Quaternion();
 
-
-
-
+    this.clock = new THREE.Clock();
     let light0 = new THREE.HemisphereLight(0xffffff, 0x444444);
     light0.position.set(0, 200, 0);
     this.scene.add(light0);
 
-    // this.controls = new PointerLockControls( this.camera );
-    // this.controls.enabled = true;
-    // this.scene.add( this.controls.getObject() );
-    // this.controls = new OrbitControls(this.camera);
-    // this.controls.screenSpacePanning = true;
-    // this.controls.autoRotate = false;
-    // this.controls.enablePan = true;
-    // this.controls.enableZoom = false;
 
-    // this.controls = new FirstPersonControls( this.camera );
-    // this.controls.lookSpeed = 0.1;
-    // this.controls.movementSpeed = 100;
-    // this.clock = new THREE.Clock( true );
-    this.raycaster = new THREE.Raycaster();
-    this.mouse = new THREE.Vector3();
+    this.controls = new FirstPersonControls(this.camera);
+    this.controls.lookSpeed = 0.08;
+    this.controls.movementSpeed = 180;
+    this.controls.enabled = true;
+    this.controls.mouseMotionActive = false;
+
+    // this.raycaster = new THREE.Raycaster();
+    // this.mouse = new THREE.Vector3();
     this.wormholePath = undefined;
     this.cameraRadians = 0;
     // var size = 2000;
@@ -431,7 +367,6 @@ class Release0004Video extends PureComponent {
   }
 
   state = {
-    inWormhole: false,
     curBodegaIdx: 0,
     prevBodegaIdx: 0,
     curVideoState: VIDEO_STATE_PAUSED,
@@ -440,7 +375,7 @@ class Release0004Video extends PureComponent {
 
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
-    window.addEventListener('mousedown', this.onMouseDown, false);
+    window.addEventListener('click', this.onClick, false);
     window.addEventListener("load", this.onLoad, false);
     this.init();
     this.animate();
@@ -449,13 +384,13 @@ class Release0004Video extends PureComponent {
   componentWillUnmount() {
     this.stop();
     window.removeEventListener("resize", this.onWindowResize, false);
-    window.removeEventListener('mousedown', this.onMouseDown, false);
+    window.removeEventListener('click', this.onClick, false);
     window.removeEventListener("load", this.onLoad, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
   init = () => {
-    this.initCannon();
+    // this.initCannon();
     this.initWormholePath();
     this.initFloaters();
     this.initBodegas();
@@ -471,7 +406,9 @@ class Release0004Video extends PureComponent {
     this.camera.updateProjectionMatrix();
   }, 50);
 
-  onMouseDown = (e) => {
+  onClick = (e) => {
+    console.log("MOSUE DOWN", this.state.mindState, MIND_STATE_CHILLIN)
+    e.preventDefault();
     if (this.state.mindState === MIND_STATE_CHILLIN) {
       this.enterWormhole();
     }
@@ -486,14 +423,14 @@ class Release0004Video extends PureComponent {
     this.deallocate();
   }
 
-  initCannon = () => {
-    this.timeStep = 1 / 30;
-    this.world = new CANNON.World();
-    this.world.gravity.set(0, 0, 0);
-    this.world.broadphase = new CANNON.NaiveBroadphase();
-    this.world.solver.iterations = 1;
-    this.cannonDebugRenderer = new CannonDebugRenderer(this.scene, this.world);
-  }
+  // initCannon = () => {
+  //   this.timeStep = 1 / 30;
+  //   this.world = new CANNON.World();
+  //   this.world.gravity.set(0, 0, 0);
+  //   this.world.broadphase = new CANNON.NaiveBroadphase();
+  //   this.world.solver.iterations = 1;
+  //   this.cannonDebugRenderer = new CannonDebugRenderer(this.scene, this.world);
+  // }
 
   initFloaters = () => {
     let floaterPositions = this.wormholePath.getPoints(FLOATERS.length);
@@ -504,59 +441,57 @@ class Release0004Video extends PureComponent {
 
 
   initFloater = (floater, floaterPos) => {
-    let loader = new FBXLoader();
+    // let loader = new FBXLoader();
+    const loader = new GLTFLoader();
     loader.load(floater.url, object => {
-      floater.object = object;
+      floater.object = object.scene;
       floater.object.scale.multiplyScalar(floater.relativeScale);
       floater.object.position.set(floaterPos.x, floaterPos.y, floaterPos.z);
       this.scene.add(floater.object);
       let floaterChild = floater.object.children[0];
-      floaterChild.geometry.computeBoundingBox();
+      // floaterChild.geometry.computeBoundingBox();
       floaterChild.position.set(0, 0, 0);//floaterPos.x, floaterPos.y, floaterPos.z);
-      let floaterSize = floaterChild.geometry.boundingBox.getSize();
-      let physicsSize = new CANNON.Vec3(floaterSize.x / 2.0, floaterSize.y / 2.0, floaterSize.z / 2.0);
-      let shape = new CANNON.Box(physicsSize);
-      let mass = floater.mass;
-      let material = new CANNON.Material();
-      floater.physics = new CANNON.Body({
-        mass: mass,
-        material: material,
-        position: new CANNON.Vec3(floaterPos.x, floaterPos.y, floaterPos.z)
-      });
-
-      floater.physics.addShape(shape);
-      let polarity = THREE.Math.randInt(-1, 1) > 0 ? 1 : -1;
-      let velocityUnit = 1;
-      let velocity = polarity * velocityUnit;
-      floater.physics.velocity.set(velocity, velocity, velocity);
-      floater.physics.linearDamping = 0.01;
-      floater.physics.angularVelocity.set(velocity, velocity, velocity );
-      floater.physics.angularDamping = 0.5;
-      this.world.addBody(floater.physics);
-
-
+      // let floaterSize = floaterChild.geometry.boundingBox.getSize();
+      // let physicsSize = new CANNON.Vec3(floaterSize.x / 2.0, floaterSize.y / 2.0, floaterSize.z / 2.0);
+      // let shape = new CANNON.Box(physicsSize);
+      // let mass = floater.mass;
+      // let material = new CANNON.Material();
+      // floater.physics = new CANNON.Body({
+      //   mass: mass,
+      //   material: material,
+      //   position: new CANNON.Vec3(floaterPos.x, floaterPos.y, floaterPos.z)
+      // });
+      // floater.physics.addShape(shape);
+      // let polarity = THREE.Math.randInt(-1, 1) > 0 ? 1 : -1;
+      // let velocityUnit = 1;
+      // let velocity = polarity * velocityUnit;
+      // floater.physics.velocity.set(velocity, velocity, velocity);
+      // floater.physics.linearDamping = 0.01;
+      // floater.physics.angularVelocity.set(velocity, velocity, velocity );
+      // floater.physics.angularDamping = 0.5;
+      // this.world.addBody(floater.physics);
       // create physics bounding box
-      let pos = floater.object.position;
-      let boxSize = 30;
-      floater.bbox = new THREE.Box3(
-        new THREE.Vector3(
-          -Math.abs(pos.x - boxSize),
-          -Math.abs(pos.y - boxSize),
-          -Math.abs(pos.z - boxSize)
-        ),
-        new THREE.Vector3(
-          Math.abs(pos.x + boxSize),
-          Math.abs(pos.y + boxSize),
-          Math.abs(pos.z + boxSize)
-        )
-      )
+      // let pos = floater.object.position;
+      // let boxSize = 30;
+      // floater.bbox = new THREE.Box3(
+      //   new THREE.Vector3(
+      //     -Math.abs(pos.x - boxSize),
+      //     -Math.abs(pos.y - boxSize),
+      //     -Math.abs(pos.z - boxSize)
+      //   ),
+      //   new THREE.Vector3(
+      //     Math.abs(pos.x + boxSize),
+      //     Math.abs(pos.y + boxSize),
+      //     Math.abs(pos.z + boxSize)
+      //   )
+      // )
     });
   }
 
   initWormholePath = () => {
     let pathVertices = [];
     let numPathVertices = 30;
-    let maxVertexDistance = 60;
+    let maxVertexDistance = 160;
     pathVertices.push(new THREE.Vector3(0, 0, 0));
     for (let i = 1; i < numPathVertices; i++) {
       let prevPos = pathVertices[i - 1];
@@ -576,6 +511,9 @@ class Release0004Video extends PureComponent {
   visualizeWormhole = () => {
     // let points = this.wormholePath.getPoints(this.wormholePath.arcLengthDivisions);
     let geometry = new THREE.Geometry();
+    // let texture = new THREE.TextureLoader().load(assetPath4Images('kitkat.png'));
+    // let material = new THREE.MeshBasicMaterial( { map: texture } );
+    // console.log(material);
     geometry.vertices = this.wormholePath.getSpacedPoints(100);//this.wormholePath.arcLengthDivisions);
     let material = new THREE.LineBasicMaterial({color: 0xff0000});
     let curveObject = new THREE.Line(geometry, material);
@@ -657,7 +595,7 @@ class Release0004Video extends PureComponent {
   playCurrentBodega = () => {
     let {video, texture, props} = this.bodegas.children[this.state.curBodegaIdx].userData;
     video.play();
-    // update the video at 24 fps
+    // update the video at 24 fps or pre-process in ffmpeg
     // https://github.com/mrdoob/three.js/issues/13379
     // let interval = setInterval( function () {
     //   if ( video.readyState >= video.HAVE_CURRENT_DATA ) {
@@ -669,7 +607,7 @@ class Release0004Video extends PureComponent {
   }
 
   pausePreviousBodega = () => {
-    let {video, interval} =  this.bodegas.children[this.state.prevBodegaIdx].userData;
+    let {video, interval} = this.bodegas.children[this.state.prevBodegaIdx].userData;
     video.pause();
     // clear frame update interval
     // clearInterval(interval);
@@ -686,10 +624,8 @@ class Release0004Video extends PureComponent {
       prevBodegaIdx: this.state.curBodegaIdx,
       curBodegaIdx: this.state.curBodegaIdx + 1 === this.bodegas.children.length ? 0 : this.state.curBodegaIdx + 1
     })
-    // console.log('source bodega:');
-    // console.log(this.bodegas.children[this.state.prevBodegaIdx].userData.props.src)
-    // console.log('target bodega:');
-    // console.log(this.bodegas.children[this.state.curBodegaIdx].userData.props.src)
+    this.pauseBodegas();
+
   };
 
   updateOrbitControls = () => {
@@ -711,50 +647,61 @@ class Release0004Video extends PureComponent {
     // have we arrived at the next bodega?
     // todo: fix this constant
     if (distanceFromBodega < 7 &&
-        this.state.mindState !== MIND_STATE_EXITING &&
-        this.state.mindState !== MIND_STATE_CHILLIN) {
+      this.state.mindState !== MIND_STATE_EXITING &&
+      this.state.mindState !== MIND_STATE_CHILLIN) {
       // console.log('chillin')
-      this.setState({ mindState: MIND_STATE_CHILLIN });
+      this.setState({mindState: MIND_STATE_CHILLIN});
     }
     // are we in transit ?
     if (this.state.mindState !== MIND_STATE_CHILLIN) {
+
       this.cameraRadians += .0003;
       let holePos = this.wormholePath.getPoint(this.cameraRadians);
       this.camera.position.set(holePos.x, holePos.y, holePos.z);
 
       // check if we're exiting the previous bodega
       if (this.state.mindState !== MIND_STATE_EXITING &&
-          this.state.mindState !== MIND_STATE_FLYING &&
-           prevBodega.userData.bbox.containsPoint(this.camera.position)) {
+        this.state.mindState !== MIND_STATE_FLYING &&
+        prevBodega.userData.bbox.containsPoint(this.camera.position)) {
         // console.log('exiting')
-        this.setState({ mindState: MIND_STATE_EXITING });
-      // check if were in space
+
+
+        this.setState({mindState: MIND_STATE_EXITING});
+        // check if were in space
       } else if (this.state.mindState !== MIND_STATE_FLYING &&
-                 this.state.mindState !== MIND_STATE_ENTERING) {
+        this.state.mindState !== MIND_STATE_ENTERING) {
         // console.log('flying')
         // play next bodega once were in space
+        // this.controls.enabled = false;
+
+
+        this.camera.lookAt(curBodega.position);
+        // console.log(prevBodega);
         if (this.state.curVideoState !== VIDEO_STATE_PLAYING) {
           this.playCurrentBodega();
-          this.setState({curVideoState: VIDEO_STATE_PLAYING });
-        this.setState({
-          curVideoState: VIDEO_STATE_PAUSED,
-          mindState: MIND_STATE_FLYING
-        });
-      }
-      // check if we're entering the next bodega
-      if(this.state.mindState !== MIND_STATE_ENTERING &&
-         curBodega.userData.bbox.containsPoint(this.camera.position)) {
-        // console.log('entering')
-        // pause previous bodega when we're entering the next one
-        this.pausePreviousBodega();
-        this.setState({ mindState: MIND_STATE_ENTERING });
+          this.setState({curVideoState: VIDEO_STATE_PLAYING});
+          this.setState({
+            curVideoState: VIDEO_STATE_PAUSED,
+            mindState: MIND_STATE_FLYING
+          });
+        }
+        // check if we're entering the next bodega
+        if (this.state.mindState !== MIND_STATE_ENTERING &&
+          curBodega.userData.bbox.containsPoint(this.camera.position)) {
+          // console.log('entering')
+          // pause previous bodega when we're entering the next one
+
+          this.pausePreviousBodega();
+          this.setState({mindState: MIND_STATE_ENTERING});
         }
       }
     }
   }
 
   updateControls = () => {
-    this.controls.update( this.clock.getDelta() );
+    if (this.state.mindState === MIND_STATE_CHILLIN) {
+      this.controls.update(this.clock.getDelta());
+    }
   }
 
   updateFloaters = () => {
@@ -763,85 +710,88 @@ class Release0004Video extends PureComponent {
     }
   }
 
-  clampVelocity = (body) => {
-    // TODO how to do this elegantly?
-    if (body.velocity.x > MAX_VELOCITY) {
-      body.velocity.x = MAX_VELOCITY
-    }
-    if (body.velocity.x < MIN_VELOCITY) {
-      body.velocity.x = MIN_VELOCITY
-    }
-    if (body.velocity.y > MAX_VELOCITY) {
-      body.velocity.y = MAX_VELOCITY
-    }
-    if (body.velocity.y < MIN_VELOCITY) {
-      body.velocity.y = MIN_VELOCITY
-    }
-    if (body.velocity.z > MAX_VELOCITY) {
-      body.velocity.z = MAX_VELOCITY
-    }
-    if (body.velocity.z < MIN_VELOCITY) {
-      body.velocity.z = MIN_VELOCITY
-    }
-  }
+  // clampVelocity = (body) => {
+  //   // TODO how to do this elegantly?
+  //   if (body.velocity.x > MAX_VELOCITY) {
+  //     body.velocity.x = MAX_VELOCITY
+  //   }
+  //   if (body.velocity.x < MIN_VELOCITY) {
+  //     body.velocity.x = MIN_VELOCITY
+  //   }
+  //   if (body.velocity.y > MAX_VELOCITY) {
+  //     body.velocity.y = MAX_VELOCITY
+  //   }
+  //   if (body.velocity.y < MIN_VELOCITY) {
+  //     body.velocity.y = MIN_VELOCITY
+  //   }
+  //   if (body.velocity.z > MAX_VELOCITY) {
+  //     body.velocity.z = MAX_VELOCITY
+  //   }
+  //   if (body.velocity.z < MIN_VELOCITY) {
+  //     body.velocity.z = MIN_VELOCITY
+  //   }
+  // }
 
-  checkRoomCollisions = (floater, idx) => {
-    // TODO we need to make a hollowed out object to have the space itself act as a physics collision object
-    // let curScene = CURRENT_SCENE; // TODO switch out with this.getCurrentScene()
-
-    if (floater.object.position.y <= floater.bbox.min.y) {
-      // console.log("THE OBJ IS Y LESS THAN THE VIDEO", idx)
-      floater.physics.position.y = floater.bbox.min.y + 1;
-      floater.physics.velocity.y *= -1;
-    }
-    if (floater.object.position.y >= floater.bbox.max.y) {
-      // console.log("THE OBJ IS Y GREATER THAN THE VIDEO", idx)
-      floater.physics.position.y = floater.bbox.max.y - 1;
-      floater.physics.velocity.y *= -1;
-    }
-    if (floater.object.position.x <= floater.bbox.min.x) {
-      // console.log("THE OBJ IS X LESS THAN THE VIDEO", idx)
-      floater.physics.position.x = floater.bbox.min.x + 1;
-      floater.physics.velocity.x *= -1;
-    }
-    if (floater.object.position.x >= floater.bbox.max.x) {
-      // console.log("THE OBJ IS X GREATER THAN THE VIDEO", idx)
-      floater.physics.position.x = floater.bbox.max.x - 1;
-      floater.physics.velocity.x *= -1;
-    }
-    if (floater.object.position.z <= floater.bbox.min.z) {
-      // console.log("THE OBJ IS Z GREATER THAN THE VIDEO",idx)
-      floater.physics.position.z = floater.bbox.min.z + 1;
-      floater.physics.velocity.z *= -1;
-    }
-    if (floater.object.position.z >= floater.bbox.max.z) {
-      // console.log("THE OBJ IS Z LESS THAN THE VIDEO", idx)
-      floater.physics.position.z = floater.bbox.max.z - 1;
-      floater.physics.velocity.z *= -1;
-    }
-  }
+  // checkRoomCollisions = (floater, idx) => {
+  //   // TODO we need to make a hollowed out object to have the space itself act as a physics collision object
+  //   // let curScene = CURRENT_SCENE; // TODO switch out with this.getCurrentScene()
+  //
+  //   if (floater.object.position.y <= floater.bbox.min.y) {
+  //     // console.log("THE OBJ IS Y LESS THAN THE VIDEO", idx)
+  //     floater.physics.position.y = floater.bbox.min.y + 1;
+  //     floater.physics.velocity.y *= -1;
+  //   }
+  //   if (floater.object.position.y >= floater.bbox.max.y) {
+  //     // console.log("THE OBJ IS Y GREATER THAN THE VIDEO", idx)
+  //     floater.physics.position.y = floater.bbox.max.y - 1;
+  //     floater.physics.velocity.y *= -1;
+  //   }
+  //   if (floater.object.position.x <= floater.bbox.min.x) {
+  //     // console.log("THE OBJ IS X LESS THAN THE VIDEO", idx)
+  //     floater.physics.position.x = floater.bbox.min.x + 1;
+  //     floater.physics.velocity.x *= -1;
+  //   }
+  //   if (floater.object.position.x >= floater.bbox.max.x) {
+  //     // console.log("THE OBJ IS X GREATER THAN THE VIDEO", idx)
+  //     floater.physics.position.x = floater.bbox.max.x - 1;
+  //     floater.physics.velocity.x *= -1;
+  //   }
+  //   if (floater.object.position.z <= floater.bbox.min.z) {
+  //     // console.log("THE OBJ IS Z GREATER THAN THE VIDEO",idx)
+  //     floater.physics.position.z = floater.bbox.min.z + 1;
+  //     floater.physics.velocity.z *= -1;
+  //   }
+  //   if (floater.object.position.z >= floater.bbox.max.z) {
+  //     // console.log("THE OBJ IS Z LESS THAN THE VIDEO", idx)
+  //     floater.physics.position.z = floater.bbox.max.z - 1;
+  //     floater.physics.velocity.z *= -1;
+  //   }
+  // }
 
   updateFloater = (floater, idx) => {
     if (floater.object !== undefined) {
-      this.checkRoomCollisions(floater, idx);
-      this.clampVelocity(floater.physics);
-      // Copy coordinates from Cannon.js to Three.js
-      floater.object.position.copy(floater.physics.position);
-      floater.object.quaternion.copy(floater.physics.quaternion);
+      floater.object.rotateX(.001);
+      floater.object.rotateY(.001);
+      // floater.rotation.x += Math.PI / 2;
+      // this.checkRoomCollisions(floater, idx);
+      // this.clampVelocity(floater.physics);
+      // // Copy coordinates from Cannon.js to Three.js
+      // floater.object.position.copy(floater.physics.position);
+      // floater.object.quaternion.copy(floater.physics.quaternion);
     }
   }
-
-  updatePhysics = () => {
-    // Step the physics world
-    this.world.step(this.timeStep);
-    this.updateFloaters();
-  }
+  //
+  // updatePhysics = () => {
+  //   // Step the physics world
+  //   this.world.step(this.timeStep);
+  // }
 
   renderScene = () => {
     this.rotateBodegas();
-    // this.updateControls();
+    this.updateFloaters();
+    this.updateControls();
     this.updateCameraPos();
-    this.updatePhysics();
+    // this.updatePhysics();
     this.renderer.render(this.scene, this.camera);
   }
 
@@ -851,12 +801,12 @@ class Release0004Video extends PureComponent {
         <div className="release">
           <div ref={element => this.container = element}/>
         </div>
-        <SoundcloudPlayer
-          trackId='267037220'
-          message='BODEGA CHILL'
-          inputRef={el => this.audioElement = el}
-          fillColor="red"
-        />
+        {/*<SoundcloudPlayer*/}
+        {/*trackId='267037220'*/}
+        {/*message='JONNY JONNY CANNON'*/}
+        {/*inputRef={el => this.audioElement = el}*/}
+        {/*fillColor="red"*/}
+        {/*/>*/}
         <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
       </Fragment>
     );
