@@ -127,17 +127,18 @@ export const SHAPES = [
   }
 ];
 
-export const RELEASE_LINKS = [
-  {name: 'home', relPath: "/", path: "/"},
-  {name: 'yahceph', relPath: "/1", path: '1'},
-  {name: 'year unknown', relPath: "/2", path: '2'},
-  {name: 'othere', relPath: "/3", path: '3'}
-]
-
-export const MENU_MESSAGES = {
-  "/": "Welcome to Globally LTD.",
-  "/1": "Yahceph's production debut, \"wun 4 jas\", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.",
-  "/2": "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly beat disturbance.",
-  "/3":  "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound."
+export const MENU_CONTENT = {
+  "/": {
+    "message": "Welcome to Globally LTD.",
+  },
+  "/1": {
+    "message": "Yahceph's production debut, \"wun 4 jas\", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.",
+  },
+  "/2": {
+    "message": "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly beat disturbance.",
+  },
+  "/3":  {
+    "message": "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
+  }
 }
 
