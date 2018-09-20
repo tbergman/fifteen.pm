@@ -1,12 +1,12 @@
 import React, {PureComponent} from 'react';
 import anime from './Utils/Anime.min.js';
-import {SHAPES, RELEASE_LINKS, MENU_MESSAGES} from './Utils/MenuConstants';
+import {SHAPES, RELEASE_LINKS, MENU_CONTENT} from './Utils/MenuConstants';
 import './Menu.css';
 
 class Menu extends PureComponent {
   state = {
     shapeIndex: 3,
-    message: MENU_MESSAGES[window.location.pathname],
+    message: MENU_CONTENT[window.location.pathname].message,
     currentRel: window.location.pathname
   }
 
@@ -21,7 +21,7 @@ class Menu extends PureComponent {
     const {idx, rel} = e.target.dataset;
     this.setState({
       shapeIndex: idx,
-      message: MENU_MESSAGES[rel],
+      message: MENU_CONTENT[rel].message,
       currentRel: rel
     }, () => {
       this.animateMenu();
@@ -41,7 +41,7 @@ class Menu extends PureComponent {
     e.preventDefault();
     e.stopPropagation();
     this.setState({
-      message: MENU_MESSAGES[this.windowLocation],
+      message: MENU_CONTENT[this.windowLocation],
     });
     window.location = e.target.dataset.to;
   }
@@ -90,21 +90,10 @@ class Menu extends PureComponent {
   }
 
   renderLinks() {
+    let contents = MENU_CONTENT[this.windowLocation];
     return (
       <div className="links">
         <ul>
-          {RELEASE_LINKS.map((link, idx) =>
-            <li
-              className={ this.windowLocation === link.relPath ? 'active' : ''}
-              key={idx}
-              data-idx={idx + 1}
-              data-to={link.path}
-              data-rel={link.relPath}
-              onMouseOver={this.handleLinkMouseOver}
-              onClick={this.handleLinkClick}>
-              {link.name}
-            </li>
-          )}
           <li>{this.state.message}</li>
         </ul>
       </div>

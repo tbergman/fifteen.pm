@@ -1,12 +1,13 @@
 import React, {Component, Fragment} from 'react';
-import HomeFog from './HomeFog';
+import HomeReleases from './HomeReleases';
 import './App.css';
 
 class App extends Component {
+
   render () {
     return (
       <Fragment>
-        <HomeFog />
+        <HomeReleases />
       </Fragment>
     );
   }
