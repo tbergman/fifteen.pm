@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import './Releases/Release.css';
 import {BendModifier} from './Utils/BendModifier.js';
 import debounce from 'lodash/debounce';
+import {FresnelShader} from "./Utils/FresnelShader";
 
 import nav from './nav.js';
 
@@ -109,12 +110,35 @@ class Home extends PureComponent {
   initReleaseObj = (meta) => {
     let radius = 5;
     let geometry = new THREE.SphereBufferGeometry(radius, radius * 4, radius * 4);
-    let texture = new THREE.TextureLoader().load(meta.imageURL);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.x = 2;
-    texture.repeat.y = 4;
-    let material = new THREE.MeshBasicMaterial({map: texture});
+    // let geometry = new THREE.SphereGeometry( 100, 32, 16 );
+
+    // let texture = new THREE.TextureLoader().load(meta.imageURL);
+    // texture.wrapS = THREE.RepeatWrapping;
+    // texture.wrapT = THREE.RepeatWrapping;
+    // texture.repeat.x = 2;
+    // texture.repeat.y = 4;
+
+    let urls = ["./assets/shared/images/purple-clouds.png",
+      "./assets/shared/images/purple-clouds.png",
+      "./assets/shared/images/purple-clouds.png",
+      "./assets/shared/images/purple-clouds.png"
+    ];
+    let textureCube = new THREE.CubeTextureLoader().load(urls);
+    textureCube.format = THREE.RGBFormat;
+
+    // scene.background = textureCube;
+
+    let shader = FresnelShader;
+    let uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+    uniforms["tCube"].value = textureCube;
+    let material = new THREE.ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: shader.vertexShader,
+      fragmentShader: shader.fragmentShader
+    });
+
+
+    // let material = new THREE.MeshBasicMaterial({map: texture});
     let mesh = new THREE.Mesh(geometry, material);
     // mesh.position.set(meta.start.x, meta.start.y, meta.start.z);
     mesh.position.x = Math.random() * (4 * radius + meta.idx);
