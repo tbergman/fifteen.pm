@@ -251,7 +251,7 @@ class Release0001 extends PureComponent {
 
 
   renderScene = () => {
-    const {gpuCompute, renderer, camera, mouseCoords, meshRay, raycaster, audioAnalyser, freqArray, scene} = this;
+    const {gpuCompute, renderer, camera, mouseCoords, meshRay, raycaster, freqArray, scene} = this;
     const uniforms = this.heightmapVariable.material.uniforms;
 
     if (this.mouseMoved) {

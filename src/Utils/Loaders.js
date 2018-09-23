@@ -43,6 +43,8 @@ export const loadVideo = ({ geometry, url, position, loop, muted, playbackRate }
 
 // initialize an object of type 'gltf', with callbacks for success + errors
 export const loadGLTF = ({url, relativeScale, position, rotateX, onSuccess, onError}) => {
+
+  // TODO needs dependency injection
   const loader = new GLTFLoader();
   loader.load(url, object => {
     object.scene.scale.multiplyScalar(relativeScale);
@@ -53,4 +55,6 @@ export const loadGLTF = ({url, relativeScale, position, rotateX, onSuccess, onEr
     object.scene.position.set(...position);
     onSuccess(object.scene);
   }, onError);
+
+
 }

@@ -596,7 +596,7 @@ export const MarchingCubes = function ( resolution, material, enableUvs, enableC
 
     // here is where triangles are created
 
-    while ( triTable[ cubeindex + i ] != - 1 ) {
+    while ( triTable[ cubeindex + i ] !== - 1 ) {
 
       o1 = cubeindex + i;
       o2 = o1 + 1;
