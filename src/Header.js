@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Logo from './Logo';
-import Info from './Info';
+import Menu from './Menu';
 
 import './Header.css';
 
@@ -8,9 +8,9 @@ class Header extends Component {
 
   render() {
     return (
-      <div className="header">
+      <div>
         <Logo/>
-        <Info/>
+        <Menu />
       </div>
     );
   }
