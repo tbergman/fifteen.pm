@@ -1,36 +1,33 @@
 import React, {PureComponent, Fragment} from 'react';
 import * as THREE from 'three';
 import './Releases/Release.css';
-import {BendModifier} from './Utils/BendModifier.js';
 import debounce from 'lodash/debounce';
 import {FresnelShader} from "./Utils/FresnelShader";
+import {loadGLTF} from './Utils/Loaders';
 
 import nav from './nav.js';
 
+const DEFAULT_RADIUS = 3;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
-const RELEASE_FONT_URL = './assets/fonts/gentilis_bold.typeface.json';
 const RELEASES = [
   {
     path: "/1",
     name: "YAHCEPH",
     imageURL: "./assets/releases/1/images/home.png",
-    idx: 1, // the order of the releases
-    fontURL: RELEASE_FONT_URL
+    radius: DEFAULT_RADIUS + Math.random(),
   },
   {
     path: "/2",
     name: "YEAR UNKNOWN",
     imageURL: "./assets/releases/2/images/home.png",
-    idx: 2,
-    fontURL: RELEASE_FONT_URL
+    radius: DEFAULT_RADIUS + Math.random() * 2,
   },
   {
     path: "/3",
     name: "OTHERE",
     imageURL: "./assets/releases/3/images/home.png",
-    idx: 3,
-    fontURL: RELEASE_FONT_URL
+    radius: DEFAULT_RADIUS + Math.random() * 3,
   }
 ];
 
@@ -45,7 +42,6 @@ class Home extends PureComponent {
     this.camera.position.z = 30;
     this.camera.lookAt(new THREE.Vector3());
     this.releaseObjs = [];
-    this.modifier = new BendModifier();
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -57,7 +53,6 @@ class Home extends PureComponent {
     window.addEventListener('resize', this.onWindowResize, false);
     window.addEventListener('click', this.onClick, false);
     window.addEventListener('mousemove', this.onMouseMove, false);
-    console.log(this.props);
     this.init();
     this.animate();
   }
@@ -82,6 +77,7 @@ class Home extends PureComponent {
     // calculate objects intersecting the picking ray
     let intersects = raycaster.intersectObjects(scene.children);
     for (let i = 0; i < intersects.length; i++) {
+      document.body.style.cursor = "pointer";
       let path = intersects[i].object.userData.path;
       // TODO: proper react-router path/nav
       // nav(path);
@@ -99,68 +95,64 @@ class Home extends PureComponent {
     for (let i in RELEASES) {
       let releaseMeta = RELEASES[i];
       let mesh = this.initReleaseObj(releaseMeta);
-      let text = this.initReleaseText(mesh.position, releaseMeta)
-      this.releaseObjs.push({
-        mesh: mesh,
-        text: text
-      });
+      this.releaseObjs.push({mesh: mesh});
+      this.initReleaseText(releaseMeta, mesh.position, i);
     }
   }
 
-  initReleaseObj = (meta) => {
-    let radius = 5;
-    let geometry = new THREE.SphereBufferGeometry(radius, radius * 4, radius * 4);
-    // let geometry = new THREE.SphereGeometry( 100, 32, 16 );
-
-    // let texture = new THREE.TextureLoader().load(meta.imageURL);
-    // texture.wrapS = THREE.RepeatWrapping;
-    // texture.wrapT = THREE.RepeatWrapping;
-    // texture.repeat.x = 2;
-    // texture.repeat.y = 4;
-
-    let urls = ["./assets/shared/images/purple-clouds.png",
-      "./assets/shared/images/purple-clouds.png",
-      "./assets/shared/images/purple-clouds.png",
-      "./assets/shared/images/purple-clouds.png"
-    ];
+  initFresnelShaderMaterial = (urls) => {
     let textureCube = new THREE.CubeTextureLoader().load(urls);
     textureCube.format = THREE.RGBFormat;
-
-    // scene.background = textureCube;
-
+    textureCube.minFilter = THREE.NearestFilter;
     let shader = FresnelShader;
     let uniforms = THREE.UniformsUtils.clone(shader.uniforms);
     uniforms["tCube"].value = textureCube;
-    let material = new THREE.ShaderMaterial({
+    return new THREE.ShaderMaterial({
       uniforms: uniforms,
       vertexShader: shader.vertexShader,
       fragmentShader: shader.fragmentShader
     });
+  }
 
-
-    // let material = new THREE.MeshBasicMaterial({map: texture});
+  initReleaseObj = (meta) => {
+    let geometry = new THREE.SphereBufferGeometry(meta.radius, meta.radius * 4, meta.radius * 4);
+    geometry.computeBoundingSphere()
+    let urls = Array(6).fill("assets/shared/images/purple-clouds.jpg");
+    let material = this.initFresnelShaderMaterial(urls);
     let mesh = new THREE.Mesh(geometry, material);
-    // mesh.position.set(meta.start.x, meta.start.y, meta.start.z);
-    mesh.position.x = Math.random() * (4 * radius + meta.idx);
-    mesh.position.y = Math.random() * (4 * radius + meta.idx);
-    mesh.position.z = Math.random() * (4 * radius + meta.idx);
-    mesh.scale.x = mesh.scale.y = mesh.scale.z = .5;
+    mesh.scale.x = mesh.scale.y = mesh.scale.z = 1 - Math.random() * .001;
     mesh.name = meta.name;
     mesh.userData.path = meta.path;
     this.scene.add(mesh);
     return mesh;
   }
 
-  initReleaseText = (pos, meta) => {
-    // TODO We could do something like this --> https://codepen.io/collection/ABaxyy/#
+  initReleaseText = (meta, pos, i) => {
+    // TODO We could do something like this eventually --> https://codepen.io/collection/ABaxyy/#
+    let textURL = "assets/releases/2/objects/text.gltf";
+    let gltfOpts = {
+      url: textURL,
+      position: [pos.x, pos.y, pos.z],
+      relativeScale: 1,
+      onSuccess: (obj) => {
+        this.releaseObjs[i].text = obj.children[0];
+        this.releaseObjs[i].text.material.side = THREE.DoubleSide;
+        this.releaseObjs[i].text.rotation.x = Math.random() * .001;
+        this.releaseObjs[i].text.rotation.z = Math.random() * .001;
+        this.releaseObjs[i].text.userData.polarity = THREE.Math.randInt(-1, 1) > 0 ? 1 : -1;
+        this.releaseObjs[i].text.userData.rotationSpeed = Math.random() * .005;
+        let urls = Array(6).fill("assets/shared/images/dark-purple-clouds.jpg");
+        this.releaseObjs[i].text.material = this.initFresnelShaderMaterial(urls);
+        this.scene.add(obj);
+      }
+    }
+    loadGLTF(gltfOpts);
   }
-
 
   initRaycaster = () => {
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2(100, 100);
   }
-
 
   onWindowResize = debounce(() => {
     const {camera, renderer} = this;
@@ -174,17 +166,39 @@ class Home extends PureComponent {
     this.renderScene();
   }
 
-  renderScene = () => {
+  renderCursorStyle = () => {
+    const {raycaster, mouse, camera, scene} = this;
+    // mouse over
+    raycaster.setFromCamera(mouse, camera);
+    let intersects = raycaster.intersectObjects(scene.children);
+    if (intersects.length) {
+      document.body.style.cursor = "pointer";
+    } else {
+      document.body.style.cursor = "default";
+    }
+  }
+
+  renderReleaseLinks = () => {
     let timer = 0.0001 * Date.now();
     for (let i = 0, il = this.releaseObjs.length; i < il; i++) {
       let mesh = this.releaseObjs[i].mesh;
-      // let text = this.releaseObjs[i].text;
-      mesh.position.x = 10 * Math.cos(timer + i);
+      mesh.position.x = 20 * Math.cos(timer + i);
       mesh.position.y = 10 * Math.sin(timer + i * 1.1);
-      // text.position.x = mesh.position.x + 10;
-      // text.position.y = mesh.position.y + 10;
+      let text = this.releaseObjs[i].text;
+      if (text !== undefined) { // TODO ensure defined by this point
+        text.position.x = mesh.position.x;// + 10;
+        text.position.y = mesh.position.y - mesh.geometry.boundingSphere.radius - 2;
+        text.position.z = mesh.position.z;
+        text.rotation.y += text.userData.rotationSpeed * text.userData.polarity;//rotationIncrement * wobblePolarity;
+      }
     }
-    this.renderer.render(this.scene, this.camera);
+  }
+
+  renderScene = () => {
+    const {renderer, camera, scene} = this;
+    this.renderCursorStyle();
+    this.renderReleaseLinks();
+    renderer.render(scene, camera);
   }
 
 
