@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {isMobileSafari, isChrome} from "./Utils/BrowserDetection";
 import './Player.css';
 
 
