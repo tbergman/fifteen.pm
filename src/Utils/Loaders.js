@@ -36,11 +36,12 @@ export const loadImage = ({ geometry, url, name, invert, position, rotateX, rota
 
 //  initialize an object of type 'video'
 export const loadVideo = ({
-  geometry, url, name, position, loop, muted, invert, volume,
+  geometry, url, name, position, loop, muted, mimetype, invert, volume,
   computeBoundingSphere, playbackRate, rotateX, rotateY, rotateZ  }) => {
   // initialize video element
   let videoElement = document.createElement('video');
   videoElement.src = url;
+  videoElement.type = mimetype;
   videoElement.crossOrigin = 'anonymous';
   videoElement.loop = loop;
   videoElement.muted = muted;

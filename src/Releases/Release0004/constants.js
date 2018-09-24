@@ -63,6 +63,7 @@ export const PLANETS = [
   // 1
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'cat-girl-world',
     url: assetPath4Videos('myrtle-central-girl-notices-cat-er.mp4'),
     geometry: makeSphere(100),
@@ -89,6 +90,7 @@ export const PLANETS = [
   // 2
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'broadway-bongs-video',
     url: assetPath4Videos('er-broadway-bongs.mp4'),
     geometry: makeSphere(75),
@@ -115,6 +117,7 @@ export const PLANETS = [
   // 3
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'evergreen-bike-passing-newport-sign-video',
     url: assetPath4Videos('evergreen-bike-passing-newport-sign-er.mp4'),
     geometry: makeSphere(200),
@@ -141,6 +144,7 @@ export const PLANETS = [
   // 4
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'eric-mini-market-central-video',
     url: assetPath4Videos('er-eric-mini-market-central-ave.mp4'),
     geometry: makeSphere(33),
@@ -157,6 +161,7 @@ export const PLANETS = [
   // 5
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'myrtle-red-bull-fridge-video',
     url: assetPath4Videos('myrtle-red-bull-fridge-er.mp4'),
     geometry: makeSphere(40),
@@ -183,6 +188,7 @@ export const PLANETS = [
   // 6
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'myrtle-omg-video',
     url: assetPath4Videos('myrtle-omg-er.mp4'),
     geometry: makeSphere(120),
@@ -209,6 +215,7 @@ export const PLANETS = [
   // 7
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'pomegranite-ice-box-video',
     url: assetPath4Videos('er-pomegranite-ice-box.mp4'),
     geometry: makeSphere(100),
@@ -235,6 +242,7 @@ export const PLANETS = [
   // 8
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'broadway-big-boi-bitcoin-video',
     url: assetPath4Videos('broadway-big-boi-bitcoin-er.mp4'),
     geometry: makeSphere(50),
@@ -261,6 +269,7 @@ export const PLANETS = [
   // 9
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'day-and-night-pringles-video',
     url: assetPath4Videos('er-day-and-night-pringles.mp4'),
     geometry: makeSphere(40),
@@ -288,6 +297,7 @@ export const PLANETS = [
   // 11
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'broadway-tv-elbows-video',
     url: assetPath4Videos('er-broadway-tvs-n-elbows.mp4'),
     geometry: makeSphere(80),
@@ -304,6 +314,7 @@ export const PLANETS = [
   // 12
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: '99-cts-broadway-1-video',
     url: assetPath4Videos('er-99-cts-broadway-1.mp4'),
     geometry: makeSphere(40),
@@ -330,6 +341,7 @@ export const PLANETS = [
   // 13
   {
     type: 'video',
+    mimetype: 'video/mp4',
     name: 'johnson-roof-jon-phone-video',
     url: assetPath4Videos('johnson-roof-jon-phone-er.mp4'),
     geometry: makeSphere(200),
@@ -345,10 +357,10 @@ export const PLANETS = [
       {
         type: 'gltf',
         axis: new THREE.Vector3(1, 0, 0),
-        theta: 0.01,
+        theta: 0.012,
         name: 'cool-ranch-moon',
         url: assetPath4Objects('doritos/doritos_cool_ranch.gltf'),
-        position: [-325, -200, -325],
+        position: [1300, 0, -1000],
         relativeScale: 1,
       }
     ]
