@@ -2,7 +2,7 @@ import * as THREE from "three";
 import GLTFLoader from 'three-gltf-loader';
 
 //  initialize an object of type 'image'
-export const loadImage = ({ geometry, url, position }) => {
+export const loadImage = ({ geometry, url, name, position }) => {
 
   // create material from image texture
   let texture = new THREE.TextureLoader().load(url);
@@ -13,11 +13,12 @@ export const loadImage = ({ geometry, url, position }) => {
   // create mesh from material and geometry
   let imageMesh = new THREE.Mesh(geometry, material);
   imageMesh.position.set(...position);
+  imageMesh.name = name;
   return imageMesh;
 }
 
 //  initialize an object of type 'video'
-export const loadVideo = ({ geometry, url, position, loop, muted, playbackRate }) => {
+export const loadVideo = ({ geometry, url, name, position, loop, muted, playbackRate }) => {
   // initialize video element
   let videoElement = document.createElement('video');
   videoElement.src = url;
@@ -38,12 +39,12 @@ export const loadVideo = ({ geometry, url, position, loop, muted, playbackRate }
   geometry.scale(-1, 1, 1);
   // set position
   videoMesh.position.set(...position);
+  videoMesh.name = name;
   return videoMesh;
 }
 
 // initialize an object of type 'gltf', with callbacks for success + errors
-export const loadGLTF = ({url, relativeScale, position, rotateX, onSuccess, onError}) => {
-  const loader = new GLTFLoader();
+export const loadGLTF = ({url, name, relativeScale, position, pivotPoint, loader, onSuccess, onError}) => {
   loader.load(url, object => {
     object.scene.scale.multiplyScalar(relativeScale);
     object.scene.position.set(...position);
@@ -51,6 +52,7 @@ export const loadGLTF = ({url, relativeScale, position, rotateX, onSuccess, onEr
     // floaterChild.geometry.computeBoundingBox();
     child.position.set(0, 0, 0);
     object.scene.position.set(...position);
-    onSuccess(object.scene);
+    object.name = name;
+    onSuccess(object);
   }, onError);
 }
