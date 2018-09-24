@@ -8,7 +8,7 @@ import Release0001 from './Releases/Release0001';
 import MorphingBalls from "./Releases/MorphingBalls";
 import Release0002 from "./Releases/Release0002";
 import Release0003 from "./Releases/Release0003";
-import Release0004 from "./Releases/Release0004";
+import Release0004 from "./Releases/Release0004/index";
 import registerServiceWorker from './registerServiceWorker';
 import {Router, Route} from 'react-router-dom';
 
