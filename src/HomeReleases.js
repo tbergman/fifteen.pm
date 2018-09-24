@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce';
 import {FresnelShader} from "./Utils/FresnelShader";
 import {loadGLTF} from './Utils/Loaders';
 
-import nav from './nav.js';
+// import nav from './nav.js';
 
 const DEFAULT_RADIUS = 3;
 const SCREEN_WIDTH = window.innerWidth;
@@ -14,20 +14,23 @@ const RELEASES = [
   {
     path: "/1",
     name: "YAHCEPH",
-    imageURL: "./assets/releases/1/images/home.png",
+    imageURL: "./assets/releases/1/images/home.jpg",
     radius: DEFAULT_RADIUS + Math.random(),
+    textURL: "assets/releases/1/objects/text.gltf"
   },
   {
     path: "/2",
     name: "YEAR UNKNOWN",
     imageURL: "./assets/releases/2/images/home.png",
     radius: DEFAULT_RADIUS + Math.random() * 2,
+    textURL: "assets/releases/2/objects/text.gltf"
   },
   {
     path: "/3",
     name: "OTHERE",
     imageURL: "./assets/releases/3/images/home.png",
     radius: DEFAULT_RADIUS + Math.random() * 3,
+    textURL: "assets/releases/3/objects/text.gltf"
   }
 ];
 
@@ -117,7 +120,9 @@ class Home extends PureComponent {
   initReleaseObj = (meta) => {
     let geometry = new THREE.SphereBufferGeometry(meta.radius, meta.radius * 4, meta.radius * 4);
     geometry.computeBoundingSphere()
-    let urls = Array(6).fill("assets/shared/images/purple-clouds.jpg");
+    let urls = Array(6).fill("assets/releases/0/images/purple-clouds.jpg");
+    console.log(meta.imageURL);
+    // let urls = Array(6).fill(meta.imageURL);
     let material = this.initFresnelShaderMaterial(urls);
     let mesh = new THREE.Mesh(geometry, material);
     mesh.scale.x = mesh.scale.y = mesh.scale.z = 1 - Math.random() * .001;
@@ -129,9 +134,8 @@ class Home extends PureComponent {
 
   initReleaseText = (meta, pos, i) => {
     // TODO We could do something like this eventually --> https://codepen.io/collection/ABaxyy/#
-    let textURL = "assets/releases/2/objects/text.gltf";
     let gltfOpts = {
-      url: textURL,
+      url: meta.textURL,
       position: [pos.x, pos.y, pos.z],
       relativeScale: 1,
       onSuccess: (obj) => {
@@ -141,7 +145,7 @@ class Home extends PureComponent {
         this.releaseObjs[i].text.rotation.z = Math.random() * .001;
         this.releaseObjs[i].text.userData.polarity = THREE.Math.randInt(-1, 1) > 0 ? 1 : -1;
         this.releaseObjs[i].text.userData.rotationSpeed = Math.random() * .005;
-        let urls = Array(6).fill("assets/shared/images/dark-purple-clouds.jpg");
+        let urls = Array(6).fill("assets/releases/0/images/dark-purple-clouds.jpg");
         this.releaseObjs[i].text.material = this.initFresnelShaderMaterial(urls);
         this.scene.add(obj);
       }
