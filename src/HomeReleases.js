@@ -16,21 +16,24 @@ const RELEASES = [
     name: "YAHCEPH",
     imageURL: "./assets/releases/1/images/home.jpg",
     radius: DEFAULT_RADIUS + Math.random(),
-    textURL: "assets/releases/1/objects/text.gltf"
+    textURL: "assets/releases/1/objects/text.gltf",
+    soundURL: "assets/releases/0/sounds/chord-root-shorter.wav"
   },
   {
     path: "/2",
     name: "YEAR UNKNOWN",
     imageURL: "./assets/releases/2/images/home.png",
     radius: DEFAULT_RADIUS + Math.random() * 2,
-    textURL: "assets/releases/2/objects/text.gltf"
+    textURL: "assets/releases/2/objects/text.gltf",
+    soundURL: "assets/releases/0/sounds/chord-fourth-shorter.wav"
   },
   {
     path: "/3",
     name: "OTHERE",
     imageURL: "./assets/releases/3/images/home.png",
     radius: DEFAULT_RADIUS + Math.random() * 3,
-    textURL: "assets/releases/3/objects/text.gltf"
+    textURL: "assets/releases/3/objects/text.gltf",
+    soundURL: "assets/releases/0/sounds/chord-fifth-shorter.wav"
   }
 ];
 
@@ -102,9 +105,26 @@ class Home extends PureComponent {
     for (let i in RELEASES) {
       let releaseMeta = RELEASES[i];
       let mesh = this.initReleaseObj(releaseMeta);
+      this.initReleaseSound(releaseMeta, mesh);
       this.releaseObjs.push({mesh: mesh});
       this.initReleaseText(releaseMeta, mesh.position, i);
     }
+  }
+
+  initReleaseSound = (meta, obj) => {
+    const {camera} = this;
+    let listener = new THREE.AudioListener();
+    camera.add(listener);
+    // create the PositionalAudio object (passing in the listener)
+    let sound = new THREE.PositionalAudio(listener);
+    let audioLoader = new THREE.AudioLoader();
+    sound.setVolume(0.25);
+    audioLoader.load(meta.soundURL, (buffer) => {
+      sound.setBuffer(buffer);
+      sound.setRefDistance(20);
+    });
+    obj.add(sound);
+    obj.userData.sound = sound; // TODO how to reference sound properly
   }
 
   initFresnelShaderMaterial = (urls) => {
@@ -180,6 +200,12 @@ class Home extends PureComponent {
     let intersects = raycaster.intersectObjects(scene.children);
     if (intersects.length || isMobile) {
       document.body.style.cursor = "pointer";
+      // Play a sound!
+      for (let i = 0; i < intersects.length; i++) {
+        if (!intersects[i].object.userData.sound.isPlaying) {
+          intersects[i].object.userData.sound.play();
+        }
+      }
     } else {
       document.body.style.cursor = "default";
     }
@@ -196,7 +222,7 @@ class Home extends PureComponent {
         text.position.x = mesh.position.x;// + 10;
         text.position.y = mesh.position.y - mesh.geometry.boundingSphere.radius - 2;
         text.position.z = mesh.position.z;
-        text.rotation.y += text.userData.rotationSpeed * text.userData.polarity;//rotationIncrement * wobblePolarity;
+        text.rotation.y += text.userData.rotationSpeed * text.userData.polarity;
       }
     }
   }
