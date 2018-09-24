@@ -1,546 +1,706 @@
 import React, {PureComponent, Fragment} from 'react';
 import * as THREE from "three";
-import debounce from 'lodash/debounce';
 import './Release.css';
 import SoundcloudPlayer from '../SoundcloudPlayer';
 import Purchase from '../Purchase';
-import AudioStreamer from "../Utils/Audio/AudioStreamer";
-import {OrbitControls} from "../Utils/OrbitControls";
-import {isMobile} from "../Utils/BrowserDetection";
-import {FBXLoader} from "../Utils/FBXLoader.js"
-import * as CANNON from "cannon";
-import {clothBody, clothPhysMaterial} from "../Utils/Cloth";
-import {CannonDebugRenderer} from "../Utils/CannonDebugRenderer";
+import debounce from "lodash/debounce";
+import {assetPath} from "../Utils/assets";
+import {FirstPersonControls} from '../Utils/FirstPersonControls';
+import {loadVideo, loadImage, loadGLTF} from '../Utils/Loaders';
+import GLTFLoader from 'three-gltf-loader';
 
-const BPM = 117;
-const BEAT_TIME = (60 / BPM);
-const WIDTH = window.innerWidth;
-const HEIGHT = window.innerHeight;
-const ROTATION_SPEED = 0.00475;
-const A_CROSS_FADER_BUFFER = BEAT_TIME * 2;
-const B_CROSS_FADER_BUFFER = BEAT_TIME * 2;
+const SCREEN_WIDTH = window.innerWidth;
+const SCREEN_HEIGHT = window.innerHeight;
 
-const MAX_VELOCITY = 50;
-const MIN_VELOCITY = -50;
+const VIDEO_STATE_PLAYING = 'playing';
+const VIDEO_STATE_PAUSED = 'paused';
+const MIND_STATE_CHILLIN_THRESHOLD = 5;
+const MIND_STATE_CHILLIN = 'chillin';
+const MIND_STATE_EXITING = 'exiting';
+const MIND_STATE_FLYING = 'flying';
+const MIND_STATE_ENTERING = 'entering';
 
 
-const SCENES = [
+const assetPath4 = (p) => {
+  return assetPath("4/" + p);
+}
+
+const assetPath4Videos = (p) => {
+  return assetPath4("videos/" + p);
+}
+
+const assetPath4Models = (p) => {
+  return assetPath4("models/" + p);
+}
+
+const assetPath4Images = (p) => {
+  return assetPath4("images/" + p)
+}
+
+const makeSphere = (x) => {
+  return new THREE.SphereBufferGeometry(x, x, x);
+};
+
+const getRandomInt = (max) => {
+  return Math.floor(Math.random() * Math.floor(max));
+};
+
+const SUN = {
+  type: 'gltf',
+  name: 'sun',
+  url: assetPath4Models('half_sub/scene.gltf'),
+  position: [0, 0, 0],
+  relativeScale: 125,
+  rotateX: .01
+}
+
+const ASTEROIDS = [
   {
-    src: 'assets/straps-0.webm',
-    geometry: new THREE.SphereBufferGeometry(500, 500, 500),
-    // width: 1640,
-    // height: 60,
-    loop: true,
-    muted: false,
-    transparent: true,
-    opacity: 0.7,
-    color: 0xFFFFFF,
-    playbackRate: 0.5,
-    // target: new THREE.Vector3(4, -50, 1),
-    camera_x: 1,
-    camera_y: -90,
-    camera_z: 6,
-    scaleNotCalled: true,
-    bodegaScale: 9.0
+    type: 'gltf',
+    name: 'chip-asteroid',
+    url: assetPath4Models('potato_chip/scene.gltf'),
+    position: [-300, -100, 500],
+    rotateX: 0.01,
+    rotateY: 0.005,
+    rotateZ: -0.001,
+    relativeScale: 100,
   },
-  // {
-  //   src: 'assets/straps-0.webm',
-  //   geometry: new THREE.BoxBufferGeometry(500, 500, 500),
-  //   width: 640,
-  //   height: 360,
-  //   loop: false,
-  //   muted: true,
-  //   transparent: true,
-  //   opacity: 0.87,
-  //   color: 0xFFFFFF,
-  //   playbackRate: 0.5,
-  //   target: new THREE.Vector3(4, -35, 1),
-  //   camera_x: 1,
-  //   camera_y: -45,
-  //   camera_z: 10,
-  //   scaleNotCalled: true
-  // },
-  // {
-  //   src: 'assets/straps-0.webm',
-  //   geometry: new THREE.SphereBufferGeometry(500, 60, 60),
-  //   width: 640,
-  //   height: 360,
-  //   loop: false,
-  //   muted: true,
-  //   transparent: true,
-  //   opacity: 0.87,
-  //   color: 0xFFFFFF,
-  //   playbackRate: 0.5,
-  //   target: new THREE.Vector3(4, -35, 1),
-  //   camera_x: 1,
-  //   camera_y: -75,
-  //   camera_z: 6,
-  //   scaleNotCalled: true
-  // },
-  // {
-  //   src: 'assets/straps-0.webm',
-  //   geometry: new THREE.BoxBufferGeometry(250, 500, 750),
-  //   width: 640,
-  //   height: 360,
-  //   loop: false,
-  //   muted: true,
-  //   transparent: true,
-  //   opacity: 0.87,
-  //   color: 0xFFFFFF,
-  //   playbackRate: 0.5,
-  //   target: new THREE.Vector3(4, -35, 1),
-  //   camera_x: 1,
-  //   camera_y: -45,
-  //   camera_z: 10,
-  //   scaleNotCalled: true
-  // },
+  {
+    type: 'gltf',
+    name: 'cig-asteroid',
+    url: assetPath4Models('cigarette/scene.gltf'),
+    position: [0, 200, -800],
+    rotateX: 0.001,
+    rotateY: -0.005,
+    rotateZ: 0.01,
+    relativeScale: 50,
+  }
+]
+
+const PLANETS = [
+  // 1
+  {
+    type: 'video',
+    name: 'cat-girl-world',
+    url: assetPath4Videos('myrtle-central-girl-notices-cat-er.webm'),
+    geometry: makeSphere(100),
+    position: [-800, 0, -800],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.005,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.005,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'cardboard-box-moon',
+        url: assetPath4Models('cardboard_box_sealed/scene.gltf'),
+        position: [-800, 0, -1050],
+        relativeScale: 25,
+      }
+    ]
+  },
+  // 2
+  {
+    type: 'video',
+    name: 'broadway-bongs-video',
+    url: assetPath4Videos('er-broadway-bongs.webm'),
+    geometry: makeSphere(75),
+    position: [800, -100, -200],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.007,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'vape-moon',
+        url: assetPath4Models('vape/scene.gltf'),
+        position: [800, -100, -450],
+        relativeScale: 3.5,
+      }
+    ]
+  },
+  // 3
+  {
+    type: 'video',
+    name: 'evergreen-bike-passing-newport-sign-video',
+    url: assetPath4Videos('evergreen-bike-passing-newport-sign-er.webm'),
+    geometry: makeSphere(200),
+    position: [-500, 200, 900],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.005,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'cigarette-box-moon',
+        url: assetPath4Models('marlboro_cigarettes/scene.gltf'),
+        position: [-700, 200, 1150],
+        relativeScale: 2,
+      }
+    ]
+  },
+  // 4
+  {
+    type: 'video',
+    name: 'eric-mini-market-central-video',
+    url: assetPath4Videos('er-eric-mini-market-central-ave.webm'),
+    geometry: makeSphere(33),
+    position: [-250, -200, -250],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.005,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'cool-ranch-moon',
+        url: assetPath4Models('doritos/doritos_cool_ranch.gltf'),
+        position: [-250, -200, -325],
+        relativeScale: 1,
+      }
+    ]
+  },
+  // 5
+  {
+    type: 'video',
+    name: 'myrtle-red-bull-fridge-video',
+    url: assetPath4Videos('myrtle-red-bull-fridge-er.webm'),
+    geometry: makeSphere(40),
+    position: [800, 300, 800],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.01,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'soda-can-moon',
+        url: assetPath4Models('soda_can/scene.gltf'),
+        position: [700, 300, 700],
+        relativeScale: 3,
+      }
+    ]
+  },
+  // 6
+  {
+    type: 'video',
+    name: 'myrtle-omg-video',
+    url: assetPath4Videos('myrtle-omg-er.webm'),
+    geometry: makeSphere(120),
+    position: [200, -300, 600],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.005,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'doritos-nacho-cheese-moon',
+        url: assetPath4Models('doritos/doritos_nacho_cheese.gltf'),
+        position: [200, -300, 350],
+        relativeScale: 3,
+      }
+    ]
+  },
+  // 7
+  {
+    type: 'video',
+    name: 'pomegranite-ice-box-video',
+    url: assetPath4Videos('er-pomegranite-ice-box.webm'),
+    geometry: makeSphere(100),
+    position: [-900, 200, 300],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.03,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'drumstick-moon',
+        url: assetPath4Models('drumstick/scene.gltf'),
+        position: [-700, 200, 200],
+        relativeScale: 33,
+      }
+    ]
+  },
+  // 8
+  {
+    type: 'video',
+    name: 'broadway-big-boi-bitcoin-video',
+    url: assetPath4Videos('broadway-big-boi-bitcoin-er.webm'),
+    geometry: makeSphere(50),
+    position: [100, -550, -500],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.005,
+    moons: []
+  },
+  // 9
+  {
+    type: 'video',
+    name: 'day-and-night-pringles-video',
+    url: assetPath4Videos('er-day-and-night-pringles.webm'),
+    geometry: makeSphere(40),
+    position: [300, 150, -200],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.005,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'pringles-moon',
+        url: assetPath4Models('pringles/scene.gltf'),
+        position: [350, 150, -250],
+        relativeScale: 0.25,
+      }
+    ]
+  },
+  // 10
+  {
+    type: 'video',
+    name: 'cholulita-bite-video',
+    url: assetPath4Videos('er-cholulita-bite.webm'),
+    geometry: makeSphere(40),
+    position: [-500, -100, -400],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.005,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'hot-sauce-moon',
+        url: assetPath4Models('hot_sauce/scene.gltf'),
+        position: [-600, -100, -300],
+        relativeScale: 5,
+      }
+    ]
+  },
+  // 11
+  {
+    type: 'video',
+    name: '99-cts-broadway-1-video',
+    url: assetPath4Videos('er-99-cts-broadway-1.webm'),
+    geometry: makeSphere(40),
+    position: [300, 450, 300],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.005,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'tp-moon',
+        url: assetPath4Models('simple_toilet_paper/scene.gltf'),
+        position: [-350, 450, -350],
+        relativeScale: 20,
+      }
+    ]
+  },
+  // 12
+  {
+    type: 'video',
+    name: 'johnson-roof-jon-phone-video',
+    url: assetPath4Videos('johnson-roof-jon-phone-er.webm'),
+    geometry: makeSphere(200),
+    position: [1000, 0, -1000],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    axis: new THREE.Vector3(0, 1, 0).normalize(),
+    angle: 0.005,
+    moons: [
+      {
+        type: 'gltf',
+        theta: 0.01,
+        name: 'beer-moon',
+        url: assetPath4Models('german_beer_bottle_with_crown_cap/scene.gltf'),
+        position: [800, 0, -800],
+        relativeScale: 1,
+      }
+    ]
+  }
 ];
 
-const CURRENT_SCENE = SCENES[0];// tmp
+// define gltf loading manager
+let manager = new THREE.LoadingManager();
+manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+  // console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
+manager.onLoad = function ( ) {
+  console.log( 'Loading complete!');
+};
+manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+  // console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
 
-const FLOATING_OBJECTS = [
-  {
-    url: 'assets/releases/4/models/Doritos_01.fbx',
-    mass: 1,
-    // object: undefined,
-    // physics: undefined,
+};
+manager.onError = function ( url ) {
+  // console.log( 'There was an error loading ' + url );
+};
 
-  },
-  {
-    url: 'assets/releases/4/models/Doritos_02.fbx',
-    mass: 10,
-    // object: undefined,
-    // physics: undefined,
-  },
-  {
-    url: 'assets/releases/4/models/Doritos_03.fbx',
-    mass: 1,
-    // object: undefined,
-    // physics: undefined,
-  },
-  {
-    url: 'assets/releases/4/models/Doritos_04.fbx',
-    mass: 1,
-    // object: undefined,
-    // physics: undefined,
-  },
-  {
-    url: 'assets/releases/4/models/Doritos_05.fbx',
-    mass: 1,
-    // object: undefined,
-    // physics: undefined,
-  },
-  {
-    url: 'assets/releases/4/models/Doritos_06.fbx',
-    mass: 1,
-    // object: undefined,
-    // physics: undefined,
-  }
-
-]
+// define gltf loader
+let loader = new GLTFLoader( manager );
 
 class Release0004 extends PureComponent {
   constructor() {
     super();
-    this.container = document.getElementById('container');
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
-
+    this.startTime = new Date();
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xffffff);
+    this.scene.background = new THREE.Color(0x000000);
+    this.camera = new THREE.PerspectiveCamera(80, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000);
     this.renderer = new THREE.WebGLRenderer({antialias: true});
-    this.renderer.setSize(WIDTH, HEIGHT);
-    this.renderer.setClearColor(0xffffff, 0);
-    this.controls = new OrbitControls(this.camera);
-    this.controls.target.set(0, 0, 0);
-    this.controls.update();
-    let light0 = new THREE.HemisphereLight(0xffffff, 0x444444);
-    light0.position.set(0, 200, 0);
-    this.scene.add(light0);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    this.lat = 0;
-    this.lon = 0;
-    this.onMouseDownLon = 0;
-    this.texture_placeholder;
-    this.isUserInteracting = false;
-    this.onMouseDownMouseX = 0;
-    this.onMouseDownMouseY = 0;
-    this.onMouseDownLat = 0;
-    this.phi = 0;
-    this.theta = 0;
-    this.distance = 50;
-    this.onPointerDownPointerX = 0;
-    this.onPointerDownPointerY = 0;
-    this.onPointerDownLon = 0;
-    this.onPointerDownLat = 0;
-    this.idx = 0;
-    this.AVideo = document.createElement('video');
-    this.BVideo = document.createElement('video');
-    this.BCrossFaderOn = false;
-    this.ACrossFaderOn = false;
-    this.AMesh = undefined;
-    this.BMesh = undefined;
-    // var size = 2000;
-    // var divisions = 200;
-    // var gridHelper = new THREE.GridHelper( size, divisions );
-    // this.scene.add( gridHelper );
-    this.tmpObjectsList = [];
+    this.clock = new THREE.Clock();
+    let light0 = new THREE.HemisphereLight(0xffffff, 0x444444);
+    light0.position.set(0, 1000, 0);
+    // let light1 = new THREE.HemisphereLight(0xffffff, 0x444444);
+    // light1.position.set(1000, 0, 1000);
+    // this.scene.add(light1);
+    let light2 = new THREE.HemisphereLight(0xffffff, 0x444444);
+    light2.position.set(500, -1000, 500);
+    this.scene.add(light2);
+
+    this.controls = new FirstPersonControls(this.camera);
+    this.controls.lookSpeed = 0.08;
+    this.controls.movementSpeed = 200;
+    this.controls.enabled = true;
+    this.controls.mouseMotionActive = false;
+
+    // this.raycaster = new THREE.Raycaster();
+    // this.mouse = new THREE.Vector3();
+    this.quaternion = new THREE.Quaternion();
+    this.raycaster = new THREE.Raycaster()
+    this.path = undefined;
+    this.cameraRadians = 0;
+    this.objects = {};
   }
-  
+
+  state = {
+    curPlanetIdx: 0,
+    prevPlanetIdx: 0,
+    curVideoState: VIDEO_STATE_PAUSED,
+    mindState: MIND_STATE_FLYING,
+    isLoaded: false
+  }
+
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
-    window.addEventListener("mousemove", this.onMouseMove, false);
-    window.addEventListener("touchstart", this.onTouch, false);
-    window.addEventListener("touchend", this.onTouchEnd, false);
-    window.addEventListener("load", this.onLoad, false);
-    document.addEventListener('mousedown', this.onDocumentMouseDown, false);
-    document.addEventListener('mousemove', this.onDocumentMouseMove, false);
-    document.addEventListener('mouseup', this.onDocumentMouseUp, false);
-    document.addEventListener('wheel', this.onDocumentMouseWheel, false);
+    this.renderer.domElement.addEventListener("click", this.onClick, false);
+    this.renderer.domElement.addEventListener("load", this.onLoad, false);
     this.init();
     this.animate();
-  }
-
-  init = () => {
-    this.initCannon();
-    this.container.appendChild(this.renderer.domElement);
-    this.swapScene({channel: 'A'});
-    this.initFloatingObjects();
-    this.initContactMaterials();
-  }
-
-  initCannon = () => {
-    this.timeStep = 1 / 30;
-    this.world = new CANNON.World();
-    this.world.gravity.set(0, 0, 0);
-    this.world.broadphase = new CANNON.NaiveBroadphase();
-    this.world.solver.iterations = 1;
-    this.cannonDebugRenderer = new CannonDebugRenderer(this.scene, this.world);
-  }
-
-  initFloatingObjects = () => {
-    for (let i = 0; i < FLOATING_OBJECTS.length; i++) {
-      this.initFloatingObject(FLOATING_OBJECTS[i], i)
-    }
-  }
-
-  initFloatingObject = (floatingObject, i) => {
-
-    let loader = new FBXLoader();
-    loader.load(floatingObject.url, object => {
-      floatingObject.object = object;
-
-      let offset = 10;
-      let xPos = i + offset;
-      let yPos = i + offset;
-      let zPos = i + offset;
-
-      floatingObject.object.children[0].position.set(xPos, yPos, zPos);
-      this.setFloatingObjectScale(floatingObject.object);
-      this.scene.add(floatingObject.object);
-
-      let floater = floatingObject.object.children[0];
-      this.camera.lookAt(floater); // TODO TMP THIS CAUSES THE NEED TO CLICK TO SEE BUG, IS JUST FOR DEVVING, REMOVE
-      floater.geometry.computeBoundingBox();
-      let floaterSize = floater.geometry.boundingBox.getSize();
-      let physicsSize = new CANNON.Vec3(floaterSize.x/2.0, floaterSize.y/2.0, floaterSize.z/2.0);
-      let shape = new CANNON.Box(physicsSize);
-      let mass = floatingObject.mass;
-      let material = new CANNON.Material();
-      floatingObject.physics = new CANNON.Body({
-        mass: mass,
-        material: material,
-        position: new CANNON.Vec3(xPos, yPos, zPos)
-      });
-
-      floatingObject.physics.addShape(shape);
-      floatingObject.physics.velocity.set(0, -30, -1);
-      floatingObject.physics.linearDamping = 0.01;
-      floatingObject.physics.angularVelocity.set(0, 0, 0);
-      floatingObject.physics.angularDamping = 0.5;
-      this.world.addBody(floatingObject.physics);
-    });
-  }
-
-  setFloatingObjectScale= (obj)=> {
-    let curScene = CURRENT_SCENE; // TODO swap with func getCurrentScene();
-    obj.scale.multiplyScalar(curScene.bodegaScale);
-  }
-
-  initContactMaterials = () => {
-    let allLoaded = true;
-    for (let i = 0; i < FLOATING_OBJECTS.length; i++) {
-      if (typeof FLOATING_OBJECTS[i].object === "undefined" || typeof FLOATING_OBJECTS[i].physics === "undefined") {
-        allLoaded = false;
-      }
-    }
-    if (!allLoaded) {
-      setTimeout(() => {
-        this.initContactMaterials(FLOATING_OBJECTS)
-      }, 250);
-    } else {
-      for (let i = 0; i < FLOATING_OBJECTS.length; i++) {
-        for (let j = 0; j < FLOATING_OBJECTS.length; j++) {
-          if (i === j) continue;
-          let contactMaterial = new CANNON.ContactMaterial(FLOATING_OBJECTS[i].physics.material, FLOATING_OBJECTS[j].physics.material, {
-            friction: 0.0,
-            restitution: 10
-          });
-          this.world.addContactMaterial(contactMaterial);
-        }
-      }
-    }
-  }
-
-
-  crossFaderA = () => {
-    this.AEnd = this.AVideo.duration - A_CROSS_FADER_BUFFER;
-    if (this.AVideo.currentTime >= this.AEnd && this.AEnd !== NaN) {
-      if (!this.ACrossFaderOn) {
-        this.swapScene({channel: 'B'});
-        this.ACrossFaderOn = true;
-        this.scene.remove(this.AMesh);
-        this.isUserInteracting = false;
-      }
-    }
-  }
-
-  crossFaderB = () => {
-    this.BEnd = (this.BVideo.duration - B_CROSS_FADER_BUFFER);
-    if (this.BVideo.currentTime >= this.BEnd && this.BEnd !== NaN) {
-      if (!this.BCrossFaderOn) {
-        this.swapScene({channel: 'A'});
-        this.BCrossFaderOn = true;
-        this.scene.remove(this.BMesh);
-        this.isUserInteracting = false;
-      }
-
-    }
-  }
-  removeSceneA = () => {
-    this.BCrossFaderOn = false;
-    this.scene.remove(this.AMesh);
-  }
-
-  removeSceneB = () => {
-    this.ACrossFaderOn = false;
-    this.scene.remove(this.BMesh);
-    // this.swapScene();
-
-  }
-  addAVideo = (props) => {
-    props.geometry.computeBoundingBox(); // TODO not sure where to put this.
-    this.AVideo.src = props.src;
-    this.AVideo.crossOrigin = 'anonymous';
-    // this.AVideo.width = props.width;
-    // this.AVideo.height = props.height;
-    this.AVideo.loop = props.loop;
-    this.AVideo.muted = props.muted;
-    this.AVideo.autoplay = true;
-    this.AVideo.playbackRate = props.playbackRate;
-    this.AVideo.play();
-    this.activeChannel = 'A';
-    let texture = new THREE.VideoTexture(this.AVideo);
-    texture.minFilter = THREE.LinearFilter;
-    texture.format = THREE.RGBFormat;
-    let material = new THREE.MeshBasicMaterial({map: texture, transparent: props.transparent, opacity: props.opacity});
-    let mesh = new THREE.Mesh(props.geometry, material);
-    this.camera.position.x = props.camera_x;
-    this.camera.position.y = props.camera_y;
-    this.camera.position.z = props.camera_z;
-    this.camera.target = props.target;
-    // this.camera.lookAt(this.camera.target);
-    this.AMesh = mesh;
-    this.AMesh.renderOrder = 1;
-    this.scene.add(this.AMesh);
-  }
-
-  addBVideo = (props) => {
-    this.BVideo.src = props.src;
-    this.BVideo.crossOrigin = 'anonymous';
-    /*this.BVideo.width = props.width;*/
-    // this.BVideo.height = props.height;
-    this.BVideo.loop = props.loop;
-    this.BVideo.muted = props.muted;
-    this.BVideo.autoplay = true;
-    this.BVideo.playbackRate = props.playbackRate;
-    this.BVideo.play();
-    this.activeChannel = 'B';
-    let texture = new THREE.VideoTexture(this.BVideo);
-    texture.minFilter = THREE.LinearFilter;
-    texture.format = THREE.RGBFormat;
-    let material = new THREE.MeshBasicMaterial(
-      {map: texture, transparent: props.transparent, opacity: props.opacity});
-    let mesh = new THREE.Mesh(props.geometry, material);
-    this.camera.position.x = props.camera_x;
-    this.camera.position.y = props.camera_y;
-    this.camera.position.z = props.camera_z;
-    this.camera.target = props.target;
-    this.BMesh = mesh;
-    this.BMesh.renderOrder = 1;
-    this.scene.add(this.BMesh);
-  }
-
-  swapScene = (opts) => {
-    if (this.idx >= SCENES.length) {
-      this.idx = 0;
-    }
-    let props = SCENES[this.idx];
-    if (props.scaleNotCalled) {
-      props.geometry.scale(-1, 1, 1);
-      props.scaleNotCalled = false;
-    }
-    // this.renderer.setPixelRatio(window.devicePixelRatio);
-    if (opts.channel === 'A') {
-      this.addAVideo(props);
-    } else {
-      this.addBVideo(props);
-    }
-
-    this.idx += 1;
-
   }
 
   componentWillUnmount() {
     this.stop();
     window.removeEventListener("resize", this.onWindowResize, false);
-    window.removeEventListener("mousemove", this.onMouseMove, false);
-    window.removeEventListener("touchstart", this.onTouch, false);
-    window.removeEventListener("touchend", this.onTouchEnd, false);
-    window.removeEventListener("load", this.onLoad, false);
-    this.AVideo.removeEventListener('ended', this.removeSceneA, false);
-    this.AVideo.removeEventListener('timeupdate', this.crossFaderA, false);
-    this.BVideo.removeEventListener('ended', this.removeSceneB, false);
-    this.BVideo.removeEventListener('timeupdate', this.crossFaderB, false);
+    this.renderer.domElement.removeEventListener("click", this.onClick, false);
+    this.renderer.domElement.removeEventListener("load", this.onLoad, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
-  onDocumentMouseDown = (event) => {
-    event.preventDefault();
-    this.isUserInteracting = true;
-    this.onPointerDownPointerX = event.clientX;
-    this.onPointerDownPointerY = event.clientY;
-    this.onPointerDownLon = this.lon;
-    this.onPointerDownLat = this.lat;
-    this.isUserInteracting = true;
+  init = () => {
+    this.initObject(SUN);
+    this.initPlanets();
+    this.initAsteroids();
+    this.initPath();
+    this.container.appendChild(this.renderer.domElement);
+    this.playCurPlanet();
   }
 
-  onDocumentMouseMove = (event) => {
-    if (this.isUserInteracting === true) {
-      this.lon = (this.onPointerDownPointerX - event.clientX) * 0.1 + this.onPointerDownLon;
-      this.lat = (event.clientY - this.onPointerDownPointerY) * 0.1 + this.onPointerDownLat;
-      this.isUserInteracting = true;
-    }
-  }
-
-  onDocumentMouseUp = () => {
-    this.isUserInteracting = false;
-  }
-
-  onDocumentMouseWheel = (event) => {
-    this.isUserInteracting = true;
-    this.distance += event.deltaY * 0.05;
-    this.distance = THREE.Math.clamp(this.distance, 1, 50);
-  }
 
   onWindowResize = debounce(() => {
-    const WIDTH = window.innerWidth;
-    const HEIGHT = window.innerHeight;
-    this.renderer.setSize(WIDTH, HEIGHT);
-    this.camera.aspect = WIDTH / HEIGHT;
+    this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+    this.camera.aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
     this.camera.updateProjectionMatrix();
   }, 50);
 
+  onClick = (e) => {
+    e.preventDefault();
+    if (this.state.mindState === MIND_STATE_CHILLIN) {
+      console.log('entering wormhole!')
+      this.enterWormhole();
+    }
+  }
 
   onLoad = (event) => {
-    // this.audioStream.connect();
+    console.log('loaded!')
   }
 
   stop = () => {
     cancelAnimationFrame(this.frameId);
-  }
-
-  updatePhysics = () => {
-    // Step the physics world
-    this.world.step(this.timeStep);
-    this.updateFloatingObjects();
-  }
-
-  updateFloatingObjects = () => {
-    for (let i = 0; i < FLOATING_OBJECTS.length; i++) {
-      this.updateFloatingObject(FLOATING_OBJECTS[i]);
+    // RE: https://stackoverflow.com/questions/20997669/memory-leak-in-three-js
+    for (let i = 0; i < this.scene.children.length; i++) {
+      this.scene.remove(this.scene.children[i]);
+      this.renderer.deallocateObject(this.scene.children[i]);
     }
   }
 
-  updateFloatingObject = (floatingObject) => {
-    if (floatingObject.object !== undefined) {
-      this.checkRoomCollisions(floatingObject);
-      this.clampVelocity(floatingObject.physics);
-      // Copy coordinates from Cannon.js to Three.js
-      floatingObject.object.position.copy(floatingObject.physics.position);
-      floatingObject.object.quaternion.copy(floatingObject.physics.quaternion);
+  addObjectToScene = (obj) => {
+    console.log('adding object', obj.name)
+    this.scene.add(obj.scene);
+    this.objects[obj.name] = obj;
+  }
+
+  initPath = () => {
+    // add starting point
+    let pathVertices = [new THREE.Vector3(-900, 0, -900)];
+    for (let i = 0; i < PLANETS.length; i++) {
+      pathVertices.push(new THREE.Vector3(...PLANETS[i].position));
+    }
+    // add sun and asteroids
+    pathVertices.push(new THREE.Vector3(0, 0, 0));
+    for (let i = 0; i < ASTEROIDS.length; i++) {
+      pathVertices.push(new THREE.Vector3(...ASTEROIDS[i].position));
+    }
+    this.path = new THREE.CatmullRomCurve3(pathVertices);
+    this.path.closed = true;
+    this.path.arcLengthDivisions = PLANETS.length;
+    this.visualizePath();
+  }
+
+  visualizePath = () => {
+    // let points = this.wormholePath.getElementsByTagName('')Points(this.wormholePath.arcLengthDivisions);
+    let geometry = new THREE.Geometry();
+    // let texture = new THREE.TextureLoader().load(assetPath4Images('kitkat.png'));
+    // let material = new THREE.MeshBasicMaterial( { map: texture } );
+    // console.log(material);
+    geometry.vertices = this.path.getSpacedPoints(100);//this.wormholePath.arcLengthDivisions);
+    let material = new THREE.LineBasicMaterial({color: 0xff0000});
+    let curveObject = new THREE.Line(geometry, material);
+    this.scene.add(curveObject);
+  };
+
+  initObject = (obj) => {
+    let output;
+    if (obj.type === 'gltf') {
+      output = loadGLTF({...obj, loader: loader, onSuccess: (x) => {this.addObjectToScene(x)} });
+    } else if (obj.type === 'video') {
+      output = loadVideo({...obj, computeBoundingSphere: true});
+      this.scene.add(output);
+      this.objects[obj.name] = output;
+    } else if (obj.type === 'image') {
+      output = loadImage(obj);
+      this.scene.add(output);
+      this.objects[obj.name] = output;
+    }
+    output = this.objects[obj.name];
+    return output;
+  }
+
+  initAsteroids = () => {
+    for (let i = 0; i < ASTEROIDS.length; i++) {
+      this.initObject(ASTEROIDS[i]);
     }
   }
 
+  // planet utils
 
-  clampVelocity = (body) => {
-    // TODO how to do this elegantly?
-    if (body.velocity.x > MAX_VELOCITY) {
-      body.velocity.x = MAX_VELOCITY
-    }
-    if (body.velocity.x < MIN_VELOCITY) {
-      body.velocity.x = MIN_VELOCITY
-    }
-    if (body.velocity.y > MAX_VELOCITY) {
-      body.velocity.y = MAX_VELOCITY
-    }
-    if (body.velocity.y < MIN_VELOCITY) {
-      body.velocity.y = MIN_VELOCITY
-    }
-    if (body.velocity.z > MAX_VELOCITY) {
-      body.velocity.z = MAX_VELOCITY
-    }
-    if (body.velocity.z < MIN_VELOCITY) {
-      body.velocity.z = MIN_VELOCITY
+  initPlanet = (obj) => {
+    this.initObject(obj);
+    for (let i = 0; i < obj.moons.length; i++) {
+      this.initObject(obj.moons[i]);
     }
   }
 
+  initPlanets = () => {
+    for (let i = 0; i < PLANETS.length; i++) {
+      this.initPlanet(PLANETS[i]);
+    }
+  }
 
-  checkRoomCollisions = (floatingObject) => {
-    // TODO we need to make a hollowed out object to have the space itself act as a physics collision object
+  getPlanetByIdx = (idx) => {
+    return this.objects[PLANETS[idx].name];
+  }
 
-    let curScene = CURRENT_SCENE; // TODO switch out with this.getCurrentScene()
-    let curBBox = curScene.geometry.boundingBox;
-    // TODO use the logic here to create hollowed out geometries
-    if (floatingObject.object.position.y <= curBBox.min.y) {
-      console.log("THE OBJ IS Y LESS THAN THE VIDEO")
-      floatingObject.physics.position.y = curBBox.min.y + 1;
-      floatingObject.physics.velocity.y *= -1;
+  getCurPlanet = () => {
+    return this.getPlanetByIdx(this.state.curPlanetIdx);
+  }
+
+  getPrevPlanet = () => {
+    return this.getPlanetByIdx(this.state.prevPlanetIdx);
+  }
+
+  playCurPlanet = () => {
+     this.getCurPlanet().userData.video.play();
+  }
+
+  pausePrevPlanet = () => {
+    this.getPrevPlanet().userData.video.pause();
+  }
+
+  pausePlanets = () => {
+    for (var i = 0; i < PLANETS.length; i++) {
+      if (i !== this.state.prevPlanetIdx) {
+        this.getPlanetByIdx(i).userData.video.pause();
+      }
     }
-    if (floatingObject.object.position.y >= curBBox.max.y) {
-      console.log("THE OBJ IS Y GREATER THAN THE VIDEO")
-      floatingObject.physics.position.y = curBBox.max.y - 1;
-      floatingObject.physics.velocity.y *= -1;
+  }
+  // state transitions
+  enterWormhole = () => {
+    // console.log('exiting')
+    this.setState({
+      mindState: MIND_STATE_EXITING,
+      prevPlanetIdx: this.state.curPlanetIdx,
+      curPlanetIdx: this.state.curPlanetIdx + 1 === PLANETS.length ? 0 : this.state.curPlanetIdx + 1
+    })
+  };
+
+  // updaters
+  updateSun = () => {
+    let sun = this.objects[SUN.name];
+    if (sun !== undefined) {
+      sun.scene.rotation.x += 0.01
     }
-    if (floatingObject.object.position.x <= curBBox.min.x) {
-      console.log("THE OBJ IS X LESS THAN THE VIDEO")
-      floatingObject.physics.position.x = curBBox.min.x + 1;
-      floatingObject.physics.velocity.x *= -1;
+  }
+
+  updateAsteroids = () => {
+    for (let i = 0; i < ASTEROIDS.length; i++) {
+      let asteroid = this.objects[ASTEROIDS[i].name];
+      if (asteroid !== undefined) {
+        asteroid.scene.rotation.x += ASTEROIDS[i].rotateX;
+        asteroid.scene.rotation.y += ASTEROIDS[i].rotateY;
+        asteroid.scene.rotation.z += ASTEROIDS[i].rotateZ;
+      }
     }
-    if (floatingObject.object.position.x >= curBBox.max.x) {
-      console.log("THE OBJ IS X GREATER THAN THE VIDEO")
-      floatingObject.physics.position.x = curBBox.max.x - 1;
-      floatingObject.physics.velocity.x *= -1;
+  }
+
+  updatePlanets = () => {
+    for (let i = 0; i < PLANETS.length; i++) {
+     let planet = this.getPlanetByIdx(i);
+      this.quaternion.setFromAxisAngle(PLANETS[i].axis, PLANETS[i].angle);
+      planet.applyQuaternion(this.quaternion);
     }
-    if (floatingObject.object.position.z <= curBBox.min.z) {
-      console.log("THE OBJ IS Z GREATER THAN THE VIDEO")
-      floatingObject.physics.position.z = curBBox.min.z + 1;
-      floatingObject.physics.velocity.z *= -1;
+  }
+
+  updateMoons = () => {
+    for (let i = 0; i < PLANETS.length; i++) {
+      let planet = PLANETS[i];
+      for (let j = 0; j < planet.moons.length; j++) {
+        let moonName = planet.moons[j].name;
+        let moon = this.objects[moonName];
+        if (moon !== undefined) {
+          let position = new THREE.Vector3(...planet.position);
+          let axis = new THREE.Vector3(1, 0, 0);
+          let pointIsWorld = true;// false;
+          this.rotateAboutPoint(
+            moon.scene.children[0],
+            position,
+            axis,
+            planet.moons[j].theta,
+            pointIsWorld);
+        }
+      }
     }
-    if (floatingObject.object.position.z >= curBBox.max.z) {
-      console.log("THE OBJ IS Z LESS THAN THE VIDEO")
-      floatingObject.physics.position.z = curBBox.max.z - 1;
-      floatingObject.physics.velocity.z *= -1;
+  }
+
+  isCameraInObject = (obj) => {
+    this.raycaster.set(this.camera.position, new THREE.Vector3(1,1,1));
+    let intersects = this.raycaster.intersectObject(obj);
+    if( intersects.length %2 === 1) { // Points is in objet
+      return true;
+    } else {
+      return false;
     }
+  }
+
+  updateCameraPos = () => {
+    let curPlanet = this.getCurPlanet();
+    let prevPlanet = this.getPrevPlanet();
+    let distanceFromPlanet = this.camera.position.distanceTo(curPlanet.position);
+
+    // have we arrived at the next Planet?
+    // todo: fix this constant
+    if (distanceFromPlanet < MIND_STATE_CHILLIN_THRESHOLD &&
+      this.state.mindState !== MIND_STATE_EXITING &&
+      this.state.mindState !== MIND_STATE_CHILLIN) {
+      console.log('chillin!')
+      this.setState({mindState: MIND_STATE_CHILLIN});
+    }
+    // are we in transit ?
+    if (this.state.mindState !== MIND_STATE_CHILLIN) {
+
+      // check if we're exiting the previous Planet
+      if (this.state.mindState !== MIND_STATE_FLYING) {
+        console.log('flying')
+        // play next Planet once were in space
+        // this.controls.enabled = false;
+
+
+        // this.camera.lookAt(curPlanet.position);
+        // console.log(prevPlanet);
+        if (this.state.curVideoState !== VIDEO_STATE_PLAYING) {
+          this.pausePlanets();
+          this.playCurPlanet();
+          this.setState({curVideoState: VIDEO_STATE_PLAYING});
+          this.setState({
+            curVideoState: VIDEO_STATE_PAUSED,
+            mindState: MIND_STATE_FLYING
+          });
+        }
+      }
+
+      this.cameraRadians += .0003;
+      let holePos = this.path.getPoint(this.cameraRadians);
+      this.camera.position.set(holePos.x, holePos.y, holePos.z);
+    }
+  }
+
+  rotateAboutPoint = (obj, point, axis, theta, pointIsWorld) => {
+    pointIsWorld = (pointIsWorld === undefined)? false : pointIsWorld;
+
+    if(pointIsWorld){
+      obj.parent.localToWorld(obj.position); // compensate for world coordinate
+    }
+
+    obj.position.sub(point); // remove the offset
+    obj.position.applyAxisAngle(axis, theta); // rotate the POSITION
+    obj.position.add(point); // re-add the offset
+
+    if(pointIsWorld){
+      obj.parent.worldToLocal(obj.position); // undo world coordinates compensation
+    }
+
+    obj.rotateOnAxis(axis, theta); // rotate the OBJECT
   }
 
   animate = () => {
@@ -549,28 +709,31 @@ class Release0004 extends PureComponent {
   }
 
   renderScene = () => {
+    this.controls.update(this.clock.getDelta());
+    this.updateSun();
+    this.updatePlanets();
+    this.updateMoons();
+    this.updateAsteroids();
+    this.updateCameraPos();
     this.renderer.render(this.scene, this.camera);
-    this.updatePhysics();
   }
 
   render() {
     return (
-
       <Fragment>
         <div className="release">
           <div ref={element => this.container = element}/>
-          <SoundcloudPlayer
-            trackId='267037220'
-            message='BODEGA CHILL'
-            inputRef={el => this.audioElement = el}
-            fillColor="red"
-          />
-          <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
         </div>
+        <SoundcloudPlayer
+        trackId='267037220'
+        message='JON CANNON'
+        inputRef={el => this.audioElement = el}
+        fillColor="red"
+        />
+        <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
       </Fragment>
     );
   }
 }
-
 
 export default Release0004;
