@@ -44,10 +44,33 @@ yarn upload-assets
 
 #### To remove an asset from local and production:
 
+**NOTE**: Use a path relative to `/public/assets/releases` or `s3://assets.globally.ltd/`
+
 ```
 yarn remove-asset "4/videos/file.webm"
 ```
-**NOTE**: Use a path relative to `/public/assets/releases` or `s3://assets.globally.ltd/`
+
+#### To reset local assets using assets on s3:
+
+**WARNING**: This will delete all your local assets. Make sure you know what you're doing!
+
+```
+yarn reset-local-assets-from-s3
+```
+
+#### To reset s3 assets using local assets:
+
+**WARNING**: This will delete all your s3 assets. Make sure you know what you're doing!
+
+```
+yarn reset-s3-assets-from-local
+```
+
+#### To sync local assets to prod:
+
+```
+yarn upload-assets
+```
 
 #### To access an asset in a Release Component, follow this pattern:
 
