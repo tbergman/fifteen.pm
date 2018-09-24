@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import {makeSphere, assetPath4Objects, assetPath4Videos} from './utils'
+import {isMobile} from '../../Utils/BrowserDetection';
 
 export const SCREEN_WIDTH = window.innerWidth;
 export const SCREEN_HEIGHT = window.innerHeight;
@@ -8,7 +9,7 @@ export const FIRST_PERSON_CONTROL_SPEED = 0.15;
 export const FIRST_PERSON_CONTROL_MOVEMENT = 133;
 export const STARTING_POINT = [-950, -10, -950];
 export const PROGRESS_EMOJI = ["🥤", "🥪", "🐈", "🌆", "<br/>", "◎"];
-export const MAX_START_PROGRESS_LENGTH = 13;
+export const MAX_START_PROGRESS_LENGTH = 5;
 export const MIN_LOAD_TIME = 10;
 export const VIDEO_STATE_PLAYING = 'playing';
 export const VIDEO_STATE_PAUSED = 'paused';
@@ -72,7 +73,7 @@ export const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.005,
-    muted: false,
+    muted: isMobile,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.0,
     moons: [
