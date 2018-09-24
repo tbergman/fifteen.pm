@@ -119,19 +119,21 @@ class Release0004 extends PureComponent {
 
     this.manager.onStart = ( url, itemsLoaded, itemsTotal ) => {
       this.emojiProgress = "";
-      this.progressBar.innerHTML = "⟅ loading ⟆<br/><br/>";
+      this.progressBar.innerHTML = "⟅ loading ⟆<br/>";
     };
 
-    this.manager.onProgress = ( url, itemsLoaded, itemsTotal , oddText, eventText) => {
+    this.manager.onProgress = ( url, itemsLoaded, itemsTotal) => {
       this.emojiProgress += randomChoice(C.PROGRESS_EMOJI);
       let loadingText = "";
       if (itemsLoaded % 2 === 0) {
-        loadingText = "⟆ loading ⟅<br/><br/>";
+        loadingText = "⟆ loading ⟅<br/>";
       } else {
-        loadingText = "⟅ loading ⟆<br/><br/>";
+        loadingText = "⟅ loading ⟆<br/>";
       }
       // reset
-      if (itemsLoaded == C.MAX_START_PROGRESS_LENGTH) {
+      if (itemsLoaded >= itemsTotal) {
+        this.emojiProgress = "";
+      } else if (this.emojiProgress.length >= C.MAX_START_PROGRESS_LENGTH) {
         this.emojiProgress = "";
       }
       this.progressBar.innerHTML = loadingText + this.emojiProgress;
@@ -139,7 +141,7 @@ class Release0004 extends PureComponent {
 
     this.manager.onLoad = ( ) => {
       this.setState({ isLoaded: true });
-      this.progressBar.innerHTML = "⟆ starting ⟅<br/><br/>";
+      this.progressBar.innerHTML = "⟆ starting ⟅<br/>";
 
     };
     this.manager.onError = ( url ) => {
@@ -255,9 +257,9 @@ class Release0004 extends PureComponent {
       this.emojiProgress += randomChoice(C.PROGRESS_EMOJI);
       let startingText = "";
       if (this.emojiProgress.length % 2 === 0) {
-        startingText = "⟆ starting ⟅<br/><br/>";
+        startingText = "⟆ loading ⟅<br/>";
       } else {
-        startingText = "⟅ starting ⟆<br/><br/>";
+        startingText = "⟅ loading ⟆<br/>";
       }
       if (this.emojiProgress.length >= C.MAX_START_PROGRESS_LENGTH) {
         this.emojiProgress = "";
