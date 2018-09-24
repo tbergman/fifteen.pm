@@ -141,7 +141,7 @@ class Release0004 extends PureComponent {
 
     this.manager.onLoad = ( ) => {
       this.setState({ isLoaded: true });
-      this.progressBar.innerHTML = "⟆ starting ⟅<br/>";
+      this.progressBar.innerHTML = "";
 
     };
     this.manager.onError = ( url ) => {
@@ -373,7 +373,7 @@ class Release0004 extends PureComponent {
   renderScene = () => {
     if (this.state.isLoaded) {
       this.controls.update(this.clock.getDelta());
-      this.updateStartProgress();
+      // this.updateStartProgress();
       this.updateSun();
       this.updatePlanets();
       this.updateMoons();
