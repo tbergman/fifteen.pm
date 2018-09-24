@@ -36,17 +36,26 @@ export const loadImage = ({ geometry, url, name, invert, position, rotateX, rota
 
 //  initialize an object of type 'video'
 export const loadVideo = ({
-  geometry, url, name, position, loop, muted, mimetype, invert, volume,
-  computeBoundingSphere, playbackRate, rotateX, rotateY, rotateZ  }) => {
+    geometry, url, name, position, loop,
+    muted, mimetype, invert, volume, sources,
+    computeBoundingSphere, playbackRate,
+    rotateX, rotateY, rotateZ  }) => {
   // initialize video element
   let videoElement = document.createElement('video');
-  videoElement.src = url;
-  videoElement.type = mimetype;
   videoElement.crossOrigin = 'anonymous';
   videoElement.loop = loop;
   videoElement.muted = muted;
   videoElement.volume = volume;
   videoElement.playbackRate = playbackRate;
+  for (let i = 0; i < sources.length; i++) {
+    /* First source element creation */
+    let src = document.createElement("source");
+    // Attribute settings for my first source
+    src.setAttribute("src", sources[i].src);
+    src.setAttribute("type", sources[i].type);
+    videoElement.appendChild(src);
+  }
+  document.body.appendChild(videoElement);
 
   // create material from video texture
   let texture = new THREE.VideoTexture(videoElement);

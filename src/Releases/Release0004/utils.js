@@ -28,3 +28,8 @@ export const assetPath4Images = (p) => {
 export const makeSphere = (x) => {
   return new THREE.SphereBufferGeometry(x, x, x);
 };
+
+export const multiSourceVideo = (path) => ([
+  { type:'video/mp4', src: assetPath4Videos(`${path}.mp4`) },
+  { type:'video/webm', src: assetPath4Videos(`${path}.webm`) }
+]);
