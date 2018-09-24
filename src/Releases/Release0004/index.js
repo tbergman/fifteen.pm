@@ -62,6 +62,7 @@ class Release0004 extends PureComponent {
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
     this.renderer.domElement.addEventListener("click", this.onClick, false);
+    this.progressBar.addEventListener("click", this.onClick, false);
     this.init();
     this.animate();
   }
@@ -69,7 +70,7 @@ class Release0004 extends PureComponent {
   componentWillUnmount() {
     this.stop();
     window.removeEventListener("resize", this.onWindowResize, false);
-    this.renderer.domElement.removeEventListener("click", this.onClick, false);
+    this.progressBar.domElement.removeEventListener("click", this.onClick, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
@@ -92,8 +93,8 @@ class Release0004 extends PureComponent {
   }, 50);
 
   onClick = (e) => {
-    e.preventDefault();
-    if (this.state.mindState === C.MIND_STATE_CHILLIN || !this.state.hasChilled) {
+    console.log('CLICK!!!!')
+    if (this.state.mindState === C.MIND_STATE_CHILLIN) {
       this.setState({
         mindState: C.MIND_STATE_EXITING,
         hasChilled: true,
@@ -120,29 +121,13 @@ class Release0004 extends PureComponent {
 
     this.manager.onStart = ( url, itemsLoaded, itemsTotal ) => {
       this.emojiProgress = "";
-      this.progressBar.innerHTML = "⟅ loading ⟆<br/><br/>";
-    };
-
-    this.manager.onProgress = ( url, itemsLoaded, itemsTotal) => {
-      this.emojiProgress += randomChoice(C.PROGRESS_EMOJI);
-      let loadingText = "";
-      if (itemsLoaded % 2 === 0) {
-        loadingText = "⟆ loading ⟅<br/><br/>";
-      } else {
-        loadingText = "⟅ loading ⟆<br/><br/>";
-      }
-      // reset
-      if (itemsLoaded >= itemsTotal) {
-        this.emojiProgress = "";
-      } else if (this.emojiProgress.length >= C.MAX_START_PROGRESS_LENGTH) {
-        this.emojiProgress = "";
-      }
-      this.progressBar.innerHTML = loadingText + this.emojiProgress;
+      this.progressBar.innerHTML = "<img class='stretch' src='" + assetPath4Images('wormhole.gif') + "'></img>";
     };
 
     this.manager.onLoad = ( ) => {
       this.setState({ isLoaded: true });
       this.progressBar.innerHTML = "";
+      this.progressBar.zIndex = -100;
 
     };
     this.manager.onError = ( url ) => {
@@ -374,7 +359,7 @@ class Release0004 extends PureComponent {
   renderScene = () => {
     if (this.state.isLoaded) {
       this.controls.update(this.clock.getDelta());
-      this.updateStartProgress();
+      // this.updateStartProgress();
       this.updateSun();
       this.updatePlanets();
       this.updateMoons();
@@ -387,10 +372,10 @@ class Release0004 extends PureComponent {
   render() {
     return (
       <Fragment>
-        <div id={"progress-wrapper"} ref={element => this.progressWrapper = element}/>
-        <div id={"progress-bar"} ref={element => this.progressBar = element}/>
         <div className="release">
-          <div ref={element => this.container = element}/>
+          <div ref={element => this.container = element}>
+            <div id={"progress-bar"} ref={element => this.progressBar = element}/>
+          </div>
         </div>
         <SoundcloudPlayer
         trackId='267037220'
