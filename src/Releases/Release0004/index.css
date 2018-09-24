@@ -1,15 +1,16 @@
 div#progress-bar {
-  font-size: 16px;
+  font-size: 12px;
   font-family: 'Roboto Mono', monospace;
   color: white;
   width: 100%;
-  padding: 100px;
-  line-height: 2em;
+  padding: 120px;
+  line-height: 1.5em;
+  line-width: 10em;
   height: 100px;
   text-align: center;
   word-wrap: break-word;
   position: absolute;
-  top: 20%;
+  top: 10%;
   left: 0%;
   border-radius: 50%;
 }
