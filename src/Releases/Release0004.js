@@ -12,6 +12,7 @@ import GLTFLoader from 'three-gltf-loader';
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 const CAMERA_SPEED = 0.00029;
+const FIRST_PERSON_CONTROL_SPEED = 0.07;
 const STARTING_POINT = [-875, 0, -875];
 const VIDEO_STATE_PLAYING = 'playing';
 const VIDEO_STATE_PAUSED = 'paused';
@@ -57,6 +58,16 @@ const ASTEROIDS = [
     rotateY: 0.005,
     rotateZ: -0.001,
     relativeScale: 100,
+  },
+  {
+    type: 'gltf',
+    name: 'cat-asteroid',
+    url: assetPath4Objects('cat_low_polygon_art_farm_animal/scene.gltf'),
+    position: [0, 500, 1200],
+    rotateX: 0.005,
+    rotateY: -0.05,
+    rotateZ: 0.01,
+    relativeScale: 5,
   },
   {
     type: 'gltf',
@@ -354,8 +365,8 @@ const PLANETS = [
       {
         type: 'gltf',
         theta: 0.01,
-        name: 'beer-moon',
-        url: assetPath4Objects('german_beer_bottle_with_crown_cap/scene.gltf'),
+        name: 'water_bottle-moon',
+        url: assetPath4Objects('water_bottle/scene.gltf'),
         position: [800, 0, -800],
         relativeScale: 1,
       }
@@ -385,7 +396,7 @@ class Release0004 extends PureComponent {
     this.scene.add(light2);
 
     this.controls = new FirstPersonControls(this.camera);
-    this.controls.lookSpeed = 0.08;
+    this.controls.lookSpeed = FIRST_PERSON_CONTROL_SPEED;
     this.controls.movementSpeed = 200;
     this.controls.enabled = true;
     this.controls.mouseMotionActive = false;
