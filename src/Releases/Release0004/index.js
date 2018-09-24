@@ -133,9 +133,9 @@ class Release0004 extends PureComponent {
 
     this.manager.onLoad = ( ) => {
       let sleepTime = C.MIN_LOAD_TIME  - this.elapsed;
-      if (this.sleepTime > 0) {
+      if (sleepTime > 0) {
         console.log('sleeping ', sleepTime, 'seconds');
-        sleep(sleepTime)
+        sleep(1000 * sleepTime)
       }
       console.log('LOADED!');
       this.setState({ isLoaded: true });
