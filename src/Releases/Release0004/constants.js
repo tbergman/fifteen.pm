@@ -6,8 +6,9 @@ export const SCREEN_HEIGHT = window.innerHeight;
 export const CAMERA_SPEED = 0.00029;
 export const FIRST_PERSON_CONTROL_SPEED = 0.15;
 export const FIRST_PERSON_CONTROL_MOVEMENT = 150;
-export const STARTING_POINT = [-920, 0, -920];
-export const PROGRESS_EMOJI = ["🥤", "🥪", "🐈", "🌆"];
+export const STARTING_POINT = [-875, 0, -875];
+export const PROGRESS_EMOJI = ["🥤", "🥪", "🐈", "🌆", "<br/>", "◎", "◁", " "];
+export const MAX_START_PROGRESS_LENGTH = 23;
 export const VIDEO_STATE_PLAYING = 'playing';
 export const VIDEO_STATE_PAUSED = 'paused';
 export const MIND_STATE_CHILLIN_THRESHOLD = 3;
@@ -173,7 +174,7 @@ export const PLANETS = [
         theta: 0.07,
         name: 'soda-can-moon',
         url: assetPath4Objects('soda_can/scene.gltf'),
-        position: [750, 300, 900],
+        position: [850, 300, 900],
         relativeScale: 8,
       }
     ]

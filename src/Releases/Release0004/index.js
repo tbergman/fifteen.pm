@@ -118,17 +118,29 @@ class Release0004 extends PureComponent {
     this.manager = new THREE.LoadingManager();
 
     this.manager.onStart = ( url, itemsLoaded, itemsTotal ) => {
-      this.progressBar.style.setProperty('background-image', assetPath4Images('wormhole.gif'));
-      this.progressBar.innerHTML = this.progressBar.innerHTML + "loading <br/>";
+      this.emojiProgress = "";
+      this.progressBar.innerHTML = "⟅ loading ⟆<br/><br/>";
     };
 
-    this.manager.onProgress = ( url, itemsLoaded, itemsTotal ) => {
-      this.progressBar.innerHTML = this.progressBar.innerHTML + randomChoice(C.PROGRESS_EMOJI);
+    this.manager.onProgress = ( url, itemsLoaded, itemsTotal , oddText, eventText) => {
+      this.emojiProgress += randomChoice(C.PROGRESS_EMOJI);
+      let loadingText = "";
+      if (itemsLoaded % 2 === 0) {
+        loadingText = "⟆ loading ⟅<br/><br/>";
+      } else {
+        loadingText = "⟅ loading ⟆<br/><br/>";
+      }
+      // reset
+      if (itemsLoaded == C.MAX_START_PROGRESS_LENGTH) {
+        this.emojiProgress = "";
+      }
+      this.progressBar.innerHTML = loadingText + this.emojiProgress;
     };
 
     this.manager.onLoad = ( ) => {
-      this.progressBar.innerHTML = "";
       this.setState({ isLoaded: true });
+      this.progressBar.innerHTML = "⟆ starting ⟅<br/><br/>";
+
     };
     this.manager.onError = ( url ) => {
       this.progressBar.innerText = 'There was an error! Email dev@globally.lrd';
@@ -238,6 +250,24 @@ class Release0004 extends PureComponent {
   }
 
   // updaters
+  updateStartProgress = () => {
+    if (!this.state.hasChilled && this.state.isLoaded) {
+      this.emojiProgress += randomChoice(C.PROGRESS_EMOJI);
+      let startingText = "";
+      if (this.emojiProgress.length % 2 === 0) {
+        startingText = "⟆ starting ⟅<br/><br/>";
+      } else {
+        startingText = "⟅ starting ⟆<br/><br/>";
+      }
+      if (this.emojiProgress.length >= C.MAX_START_PROGRESS_LENGTH) {
+        this.emojiProgress = "";
+      }
+      this.progressBar.innerHTML = startingText + this.emojiProgress;
+    }
+    else if (this.state.hasChilled) {
+      this.progressBar.innerHTML = "";
+    }
+  }
 
   updateSun = () => {
     let sun = this.objects[C.SUN.name];
@@ -341,6 +371,7 @@ class Release0004 extends PureComponent {
   renderScene = () => {
     if (this.state.isLoaded) {
       this.controls.update(this.clock.getDelta());
+      this.updateStartProgress();
       this.updateSun();
       this.updatePlanets();
       this.updateMoons();
