@@ -46,33 +46,223 @@ const SUN = {
   name: 'sun',
   url: assetPath4Models('half_sub/scene.gltf'),
   position: [0, 0, 0],
-  relativeScale: 5,
+  relativeScale: 125,
   rotateX: .01
 }
 
 const PLANETS = [
-  // pluto
+  // 1
   {
     type: 'video',
     name: 'cat-girl-world',
     url: assetPath4Videos('myrtle-central-girl-notices-cat-er.webm'),
-    geometry: makeSphere(10),
-    position: [-80, -80, 5],
+    geometry: makeSphere(100),
+    position: [-800, 0, -800],
     playbackRate: 1,
     moons: [
       {
         type: 'gltf',
         name: 'cat-girl-moon',
         url: assetPath4Models('cardboard_box_sealed/scene.gltf'),
-        position: [-90, -90, 5],
+        position: [-800, 0, -1050],
+        relativeScale: 20,
+      }
+    ]
+  },
+  // 2
+  {
+    type: 'video',
+    name: 'broadway-bongs-video',
+    url: assetPath4Videos('er-broadway-bongs.webm'),
+    geometry: makeSphere(75),
+    position: [800, 0, -200],
+    playbackRate: 1,
+    moons: [
+      {
+        type: 'gltf',
+        name: 'vape-moon',
+        url: assetPath4Models('vape/scene.gltf'),
+        position: [800, 0, -450],
+        relativeScale: 3,
+      }
+    ]
+  },
+  // 3
+  {
+    type: 'video',
+    name: 'evergreen-bike-passing-newport-sign-video',
+    url: assetPath4Videos('evergreen-bike-passing-newport-sign-er.webm'),
+    geometry: makeSphere(200),
+    position: [-500, 0, 900],
+    playbackRate: 1,
+    moons: [
+      {
+        type: 'gltf',
+        name: 'cigarette-box-moon',
+        url: assetPath4Models('marlboro_cigarettes/scene.gltf'),
+        position: [-700, 0, 1150],
+        relativeScale: 2,
+      }
+    ]
+  },
+  // 4
+  {
+    type: 'video',
+    name: 'eric-mini-market-central-video',
+    url: assetPath4Videos('er-eric-mini-market-central-ave.webm'),
+    geometry: makeSphere(33),
+    position: [-250, 0, -250],
+    playbackRate: 1,
+    moons: [
+      {
+        type: 'gltf',
+        name: 'vape-moon',
+        url: assetPath4Models('doritos/doritos_cool_ranch.gltf'),
+        position: [-250, 0, -325],
+        relativeScale: 1,
+      }
+    ]
+  },
+  // 5
+  {
+    type: 'video',
+    name: 'myrtle-red-bull-fridge-video',
+    url: assetPath4Videos('myrtle-red-bull-fridge-er.webm'),
+    geometry: makeSphere(40),
+    position: [800, 0, 800],
+    playbackRate: 1,
+    moons: [
+      {
+        type: 'gltf',
+        name: 'soda-can-moon',
+        url: assetPath4Models('soda_can/scene.gltf'),
+        position: [700, 0, 700],
+        relativeScale: 3,
+      }
+    ]
+  },
+  // 6
+  {
+    type: 'video',
+    name: 'myrtle-omg-video',
+    url: assetPath4Videos('myrtle-omg-er.webm'),
+    geometry: makeSphere(120),
+    position: [200, 0, 600],
+    playbackRate: 1,
+    moons: [
+      {
+        type: 'gltf',
+        name: 'doritos-nacho-cheese-moon',
+        url: assetPath4Models('doritos/doritos_nacho_cheese.gltf'),
+        position: [200, 0, 350],
+        relativeScale: 3,
+      }
+    ]
+  },
+  // 7
+  {
+    type: 'video',
+    name: 'pomegranite-ice-box-video',
+    url: assetPath4Videos('er-pomegranite-ice-box.webm'),
+    geometry: makeSphere(100),
+    position: [-900, 0, 300],
+    playbackRate: 1,
+    moons: [
+      {
+        type: 'gltf',
+        name: 'drumstick-moon',
+        url: assetPath4Models('drumstick/scene.gltf'),
+        position: [-700, -50, 200],
+        relativeScale: 33,
+      }
+    ]
+  },
+  // 8
+  {
+    type: 'video',
+    name: 'broadway-big-boi-bitcoin-video',
+    url: assetPath4Videos('broadway-big-boi-bitcoin-er.webm'),
+    geometry: makeSphere(50),
+    position: [100, 0, -500],
+    playbackRate: 1,
+    moons: []
+  },
+  // 9
+  {
+    type: 'video',
+    name: 'day-and-night-pringles-video',
+    url: assetPath4Videos('er-day-and-night-pringles.webm'),
+    geometry: makeSphere(40),
+    position: [300, 0, -200],
+    playbackRate: 1,
+    moons: [
+      {
+        type: 'gltf',
+        name: 'drumstick-moon',
+        url: assetPath4Models('pringles/scene.gltf'),
+        position: [350, 0, -250],
+        relativeScale: 0.25,
+      }
+    ]
+  },
+  // 10
+  {
+    type: 'video',
+    name: 'day-and-night-pringles-video',
+    url: assetPath4Videos('er-day-and-night-pringles.webm'),
+    geometry: makeSphere(40),
+    position: [-500, 0, -400],
+    playbackRate: 1,
+    moons: [
+      {
+        type: 'gltf',
+        name: 'lighter-moon',
+        url: assetPath4Models('a_lighter/scene.gltf'),
+        position: [-600, 0, -300],
+        relativeScale: 5,
+      }
+    ]
+  },
+  // 11
+  {
+    type: 'video',
+    name: '99-cts-broadway-1-video',
+    url: assetPath4Videos('er-99-cts-broadway-1.webm'),
+    geometry: makeSphere(40),
+    position: [-1000, 0, 1000],
+    playbackRate: 1,
+    moons: [
+      {
+        type: 'gltf',
+        name: 'tp-moon',
+        url: assetPath4Models('simple_toilet_paper/scene.gltf'),
+        position: [-900, 0, 900],
+        relativeScale: 10,
+      }
+    ]
+  },
+  // 12
+  {
+    type: 'video',
+    name: 'johnson-roof-jon-phone-video',
+    url: assetPath4Videos('johnson-roof-jon-phone-er.webm'),
+    geometry: makeSphere(200),
+    position: [1000, 0, -1000],
+    playbackRate: 1,
+    moons: [
+      {
+        type: 'gltf',
+        name: 'beer-moon',
+        url: assetPath4Models('german_beer_bottle_with_crown_cap/scene.gltf'),
+        position: [800, 0, -800],
         relativeScale: 1,
       },
       {
         type: 'gltf',
-        name: 'cat-girl-potato-chip-moon',
-        url: assetPath4Models('potato_chip/scene.gltf'),
-        position: [-80, -70, 5],
-        relativeScale: 1,
+        name: 'water-bottle-moon',
+        url: assetPath4Models('water_bottle/scene.gltf'),
+        position: [700, 0, -700],
+        relativeScale: 100,
       }
     ]
   }
@@ -81,17 +271,17 @@ const PLANETS = [
 // define gltf loading manager
 let manager = new THREE.LoadingManager();
 manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-  console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+  // console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
 };
 manager.onLoad = function ( ) {
   console.log( 'Loading complete!');
 };
 manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
-  console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+  // console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
 
 };
 manager.onError = function ( url ) {
-  console.log( 'There was an error loading ' + url );
+  // console.log( 'There was an error loading ' + url );
 };
 
 // define gltf loader
@@ -157,9 +347,9 @@ class Release0004Universe extends PureComponent {
   }
 
   initCamera = () => {
-    this.camera.position.x = -100;
-    this.camera.position.y = -100;
-    this.camera.position.z = 5;
+    this.camera.position.x = -1000;
+    this.camera.position.y = -1000;
+    this.camera.position.z = 500;
     this.camera.lookAt(...SUN.position);
   }
 
@@ -223,10 +413,10 @@ class Release0004Universe extends PureComponent {
       for (let j = 0; j < planet.moons.length; j++) {
         let moonName = planet.moons[j].name;
         let moon = this.objects[moonName];
-        if (moon !== undefined) {
-          let time = Date.now() * 0.0005;
-          moon.scene.rotation.x = Math.cos( time * 10 ) * 5;
-        }
+        // if (moon !== undefined) {
+        //   let time = Date.now() * 0.0005;
+        //   moon.scene.rotation.x = Math.cos( time * 10 ) * 5;
+        // }
       }
     }
   }

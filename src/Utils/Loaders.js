@@ -1,8 +1,21 @@
 import * as THREE from "three";
 import GLTFLoader from 'three-gltf-loader';
 
+const rotateObject = (object, rotateX=0, rotateY=0, rotateZ=0) => {
+
+   rotateX = (rotateX * Math.PI)/180;
+   rotateY = (rotateY * Math.PI)/180;
+   rotateZ = (rotateZ * Math.PI)/180;
+
+   object.rotateX(rotateX);
+   object.rotateY(rotateY);
+   object.rotateZ(rotateZ);
+
+}
+
+
 //  initialize an object of type 'image'
-export const loadImage = ({ geometry, url, name, position }) => {
+export const loadImage = ({ geometry, url, name, position, rotateX, rotateY, rotateZ }) => {
 
   // create material from image texture
   let texture = new THREE.TextureLoader().load(url);
@@ -14,11 +27,12 @@ export const loadImage = ({ geometry, url, name, position }) => {
   let imageMesh = new THREE.Mesh(geometry, material);
   imageMesh.position.set(...position);
   imageMesh.name = name;
+  rotateObject(imageMesh, rotateX, rotateY, rotateZ);
   return imageMesh;
 }
 
 //  initialize an object of type 'video'
-export const loadVideo = ({ geometry, url, name, position, loop, muted, playbackRate }) => {
+export const loadVideo = ({ geometry, url, name, position, loop, muted, playbackRate, rotateX, rotateY, rotateZ  }) => {
   // initialize video element
   let videoElement = document.createElement('video');
   videoElement.src = url;
@@ -40,11 +54,13 @@ export const loadVideo = ({ geometry, url, name, position, loop, muted, playback
   // set position
   videoMesh.position.set(...position);
   videoMesh.name = name;
+  // rotate
+  rotateObject(videoMesh, rotateX, rotateY, rotateZ);
   return videoMesh;
 }
 
 // initialize an object of type 'gltf', with callbacks for success + errors
-export const loadGLTF = ({url, name, relativeScale, position, pivotPoint, loader, onSuccess, onError}) => {
+export const loadGLTF = ({url, name, relativeScale, position, rotateX, rotateY, rotateZ, pivotPoint, loader, onSuccess, onError}) => {
   loader.load(url, object => {
     object.scene.scale.multiplyScalar(relativeScale);
     object.scene.position.set(...position);
@@ -53,6 +69,7 @@ export const loadGLTF = ({url, name, relativeScale, position, pivotPoint, loader
     child.position.set(0, 0, 0);
     object.scene.position.set(...position);
     object.name = name;
+    rotateObject(object.scene, rotateX, rotateY, rotateZ);
     onSuccess(object);
   }, onError);
 }
