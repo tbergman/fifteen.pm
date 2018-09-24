@@ -86,8 +86,8 @@ const PLANETS = [
   {
     type: 'video',
     name: 'cat-girl-world',
-    url: assetPath4Videos('myrtle-central-girl-notices-cat-er.webm'),
-    geometry: makeSphere(60),
+    url: assetPath4Videos('myrtle-central-girl-notices-cat-er.mp4'),
+    geometry: makeSphere(100),
     position: [-800, 0, -800],
     playbackRate: 1,
     loop: true,
@@ -112,7 +112,7 @@ const PLANETS = [
   {
     type: 'video',
     name: 'broadway-bongs-video',
-    url: assetPath4Videos('er-broadway-bongs.webm'),
+    url: assetPath4Videos('er-broadway-bongs.mp4'),
     geometry: makeSphere(75),
     position: [800, -100, -200],
     playbackRate: 1,
@@ -138,7 +138,7 @@ const PLANETS = [
   {
     type: 'video',
     name: 'evergreen-bike-passing-newport-sign-video',
-    url: assetPath4Videos('evergreen-bike-passing-newport-sign-er.webm'),
+    url: assetPath4Videos('evergreen-bike-passing-newport-sign-er.mp4'),
     geometry: makeSphere(200),
     position: [-500, 200, 900],
     playbackRate: 1,
@@ -164,7 +164,7 @@ const PLANETS = [
   {
     type: 'video',
     name: 'eric-mini-market-central-video',
-    url: assetPath4Videos('er-eric-mini-market-central-ave.webm'),
+    url: assetPath4Videos('er-eric-mini-market-central-ave.mp4'),
     geometry: makeSphere(33),
     position: [-250, -200, -250],
     playbackRate: 1,
@@ -180,7 +180,7 @@ const PLANETS = [
   {
     type: 'video',
     name: 'myrtle-red-bull-fridge-video',
-    url: assetPath4Videos('myrtle-red-bull-fridge-er.webm'),
+    url: assetPath4Videos('myrtle-red-bull-fridge-er.mp4'),
     geometry: makeSphere(40),
     position: [800, 300, 800],
     playbackRate: 1,
@@ -206,7 +206,7 @@ const PLANETS = [
   {
     type: 'video',
     name: 'myrtle-omg-video',
-    url: assetPath4Videos('myrtle-omg-er.webm'),
+    url: assetPath4Videos('myrtle-omg-er.mp4'),
     geometry: makeSphere(120),
     position: [200, -300, 600],
     playbackRate: 1,
@@ -219,11 +219,11 @@ const PLANETS = [
     moons: [
       {
         type: 'gltf',
-        rotateAxis: new THREE.Vector3(0, 0, 1),
+        rotateAxis: new THREE.Vector3(1, 0, 0),
         theta: 0.15,
         name: 'doritos-nacho-cheese-moon',
         url: assetPath4Objects('doritos/doritos_nacho_cheese.gltf'),
-        position: [200, -300, 350],
+        position: [300, -300, 600],
         relativeScale: 3,
       }
     ]
@@ -232,7 +232,7 @@ const PLANETS = [
   {
     type: 'video',
     name: 'pomegranite-ice-box-video',
-    url: assetPath4Videos('er-pomegranite-ice-box.webm'),
+    url: assetPath4Videos('er-pomegranite-ice-box.mp4'),
     geometry: makeSphere(100),
     position: [-900, 200, 300],
     playbackRate: 1,
@@ -258,7 +258,7 @@ const PLANETS = [
   {
     type: 'video',
     name: 'broadway-big-boi-bitcoin-video',
-    url: assetPath4Videos('broadway-big-boi-bitcoin-er.webm'),
+    url: assetPath4Videos('broadway-big-boi-bitcoin-er.mp4'),
     geometry: makeSphere(50),
     position: [100, -550, -500],
     playbackRate: 1,
@@ -273,10 +273,10 @@ const PLANETS = [
         type: 'gltf',
         rotateAxis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
-        name: 'atm-asteroid',
+        name: 'atm-moon',
         url: assetPath4Objects('atm/scene.gltf'),
-        position: [100, -550, -500],
-        relativeScale: 0.5,
+        position: [200, -550, -500],
+        relativeScale: 0.3,
       }
     ]
   },
@@ -284,7 +284,7 @@ const PLANETS = [
   {
     type: 'video',
     name: 'day-and-night-pringles-video',
-    url: assetPath4Videos('er-day-and-night-pringles.webm'),
+    url: assetPath4Videos('er-day-and-night-pringles.mp4'),
     geometry: makeSphere(40),
     position: [300, 150, -200],
     playbackRate: 1,
@@ -307,36 +307,11 @@ const PLANETS = [
     ]
   },
   // 10
-  {
-    type: 'video',
-    name: 'day-and-night-pringles-video',
-    url: assetPath4Videos('er-day-and-night-pringles.webm'),
-    geometry: makeSphere(40),
-    position: [300, 150, -200],
-    playbackRate: 1,
-    loop: true,
-    invert: true,
-    volume: 0.1,
-    muted: true,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.005,
-    moons: [
-      {
-        type: 'gltf',
-        rotateAxis: new THREE.Vector3(1, 0, 0),
-        theta: 0.01,
-        name: 'pringles-moon',
-        url: assetPath4Objects('pringles/scene.gltf'),
-        position: [350, 150, -250],
-        relativeScale: 0.25,
-      }
-    ]
-  },
   // 11
   {
     type: 'video',
     name: 'broadway-tv-elbows-video',
-    url: assetPath4Videos('er-broadway-tvs-n-elbows.webm'),
+    url: assetPath4Videos('er-broadway-tvs-n-elbows.mp4'),
     geometry: makeSphere(80),
     position: [1000, 500, 500],
     playbackRate: 1,
@@ -352,7 +327,7 @@ const PLANETS = [
   {
     type: 'video',
     name: '99-cts-broadway-1-video',
-    url: assetPath4Videos('er-99-cts-broadway-1.webm'),
+    url: assetPath4Videos('er-99-cts-broadway-1.mp4'),
     geometry: makeSphere(40),
     position: [300, 450, 300],
     playbackRate: 1,
@@ -378,7 +353,7 @@ const PLANETS = [
   {
     type: 'video',
     name: 'johnson-roof-jon-phone-video',
-    url: assetPath4Videos('johnson-roof-jon-phone-er.webm'),
+    url: assetPath4Videos('johnson-roof-jon-phone-er.mp4'),
     geometry: makeSphere(200),
     position: [1000, 0, -1000],
     playbackRate: 1,
@@ -658,6 +633,20 @@ class Release0004 extends PureComponent {
     }
   }
 
+  rotateAboutPoint = (obj, point, axis, theta, pointIsWorld) => {
+    pointIsWorld = (pointIsWorld === undefined)? false : pointIsWorld;
+    if(pointIsWorld){
+      obj.parent.localToWorld(obj.position); // compensate for world coordinate
+    }
+    obj.position.sub(point); // remove the offset
+    obj.position.applyAxisAngle(axis, theta); // rotate the POSITION
+    obj.position.add(point); // re-add the offset
+    if(pointIsWorld){
+      obj.parent.worldToLocal(obj.position); // undo world coordinates compensation
+    }
+    obj.rotateOnAxis(axis, theta); // rotate the OBJECT
+  }
+
   updateMoons = () => {
     for (let i = 0; i < PLANETS.length; i++) {
       let planet = PLANETS[i];
@@ -722,20 +711,6 @@ class Release0004 extends PureComponent {
     }
   }
 
-  rotateAboutPoint = (obj, point, axis, theta, pointIsWorld) => {
-    pointIsWorld = (pointIsWorld === undefined)? false : pointIsWorld;
-    if(pointIsWorld){
-      obj.parent.localToWorld(obj.position); // compensate for world coordinate
-    }
-    obj.position.sub(point); // remove the offset
-    obj.position.applyAxisAngle(axis, theta); // rotate the POSITION
-    obj.position.add(point); // re-add the offset
-    if(pointIsWorld){
-      obj.parent.worldToLocal(obj.position); // undo world coordinates compensation
-    }
-    obj.rotateOnAxis(axis, theta); // rotate the OBJECT
-  }
-
   animate = () => {
     this.frameId = window.requestAnimationFrame(this.animate);
     this.renderScene();
@@ -763,9 +738,8 @@ class Release0004 extends PureComponent {
         trackId='267037220'
         message='JON CANNON'
         inputRef={el => this.audioElement = el}
-        fillColor="red"
-        />
-        <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
+        fillColor="white"/>
+        <Purchase fillColor="white" href='https://gltd.bandcamp.com/track/lets-beach'/>
       </Fragment>
     );
   }
