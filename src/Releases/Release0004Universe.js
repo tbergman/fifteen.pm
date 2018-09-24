@@ -204,7 +204,11 @@ class Release0004Universe extends PureComponent {
 
   initPlanet = (obj) => {
     let planet = this.initObject(obj);
+
     for (let i = 0; i < obj.moons.length; i++) {
+
+
+
       this.initObject(obj.moons[i]);
     }
     return planet;
@@ -224,11 +228,43 @@ class Release0004Universe extends PureComponent {
         let moonName = planet.moons[j].name;
         let moon = this.objects[moonName];
         if (moon !== undefined) {
-          let time = Date.now() * 0.0005;
-          moon.scene.rotation.x = Math.cos( time * 10 ) * 5;
+          if (planet.geometry.radius === undefined) {
+            planet.geometry.computeBoundingSphere();
+          }
+          let position = new THREE.Vector3(
+            planet.position[0],
+            planet.position[1],
+            planet.position[2]);
+          let axis = new THREE.Vector3(1, 1, 1);
+          let theta = .01;
+          let pointIsWorld = true;// false;
+          this.rotateAboutPoint(
+            moon.scene.children[0],
+            position,
+            axis,
+            theta,
+            pointIsWorld);
         }
       }
     }
+  }
+
+  rotateAboutPoint = (obj, point, axis, theta, pointIsWorld) =>{
+    pointIsWorld = (pointIsWorld === undefined)? false : pointIsWorld;
+
+    if(pointIsWorld){
+      obj.parent.localToWorld(obj.position); // compensate for world coordinate
+    }
+
+    obj.position.sub(point); // remove the offset
+    obj.position.applyAxisAngle(axis, theta); // rotate the POSITION
+    obj.position.add(point); // re-add the offset
+
+    if(pointIsWorld){
+      obj.parent.worldToLocal(obj.position); // undo world coordinates compensation
+    }
+
+    obj.rotateOnAxis(axis, theta); // rotate the OBJECT
   }
 
   animate = () => {
