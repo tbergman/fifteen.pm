@@ -12,11 +12,11 @@ import GLTFLoader from 'three-gltf-loader';
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 const CAMERA_SPEED = 0.00029;
-const FIRST_PERSON_CONTROL_SPEED = 0.07;
+const FIRST_PERSON_CONTROL_SPEED = 0.15;
 const STARTING_POINT = [-875, 0, -875];
 const VIDEO_STATE_PLAYING = 'playing';
 const VIDEO_STATE_PAUSED = 'paused';
-const MIND_STATE_CHILLIN_THRESHOLD = 10;
+const MIND_STATE_CHILLIN_THRESHOLD = 3;
 const MIND_STATE_CHILLIN = 'chillin';
 const MIND_STATE_EXITING = 'exiting';
 const MIND_STATE_FLYING = 'flying';
@@ -44,7 +44,7 @@ const SUN = {
   name: 'sun',
   url: assetPath4Objects('half_sub/scene.gltf'),
   position: [0, 0, 0],
-  relativeScale: 125,
+  relativeScale: 130,
   rotateX: .01
 }
 
@@ -57,7 +57,7 @@ const ASTEROIDS = [
     rotateX: 0.01,
     rotateY: 0.005,
     rotateZ: -0.001,
-    relativeScale: 100,
+    relativeScale: 110,
   },
   {
     type: 'gltf',
@@ -77,7 +77,7 @@ const ASTEROIDS = [
     rotateX: 0.001,
     rotateY: -0.005,
     rotateZ: 0.01,
-    relativeScale: 50,
+    relativeScale: 40,
   }
 ]
 
@@ -93,11 +93,13 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.005,
+    muted: false,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.005,
+    angle: 0.0,
     moons: [
       {
         type: 'gltf',
+        rotateAxis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
         name: 'cardboard-box-moon',
         url: assetPath4Objects('cardboard_box_sealed/scene.gltf'),
@@ -123,6 +125,7 @@ const PLANETS = [
     moons: [
       {
         type: 'gltf',
+        rotateAxis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
         name: 'vape-moon',
         url: assetPath4Objects('vape/scene.gltf'),
@@ -148,6 +151,7 @@ const PLANETS = [
     moons: [
       {
         type: 'gltf',
+        rotateAxis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
         name: 'cigarette-box-moon',
         url: assetPath4Objects('marlboro_cigarettes/scene.gltf'),
@@ -170,16 +174,7 @@ const PLANETS = [
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
-    moons: [
-      {
-        type: 'gltf',
-        theta: 0.01,
-        name: 'cool-ranch-moon',
-        url: assetPath4Objects('doritos/doritos_cool_ranch.gltf'),
-        position: [-250, -200, -325],
-        relativeScale: 1,
-      }
-    ]
+    moons: []
   },
   // 5
   {
@@ -198,11 +193,12 @@ const PLANETS = [
     moons: [
       {
         type: 'gltf',
-        theta: 0.01,
+        rotateAxis: new THREE.Vector3(1, 0, 0),
+        theta: 0.1,
         name: 'soda-can-moon',
         url: assetPath4Objects('soda_can/scene.gltf'),
-        position: [700, 300, 700],
-        relativeScale: 3,
+        position: [750, 300, 900],
+        relativeScale: 8,
       }
     ]
   },
@@ -223,7 +219,8 @@ const PLANETS = [
     moons: [
       {
         type: 'gltf',
-        theta: 0.01,
+        rotateAxis: new THREE.Vector3(0, 0, 1),
+        theta: 0.15,
         name: 'doritos-nacho-cheese-moon',
         url: assetPath4Objects('doritos/doritos_nacho_cheese.gltf'),
         position: [200, -300, 350],
@@ -248,6 +245,7 @@ const PLANETS = [
     moons: [
       {
         type: 'gltf',
+        rotateAxis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
         name: 'drumstick-moon',
         url: assetPath4Objects('drumstick/scene.gltf'),
@@ -270,7 +268,17 @@ const PLANETS = [
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
-    moons: []
+    moons: [
+      {
+        type: 'gltf',
+        rotateAxis: new THREE.Vector3(1, 0, 0),
+        theta: 0.01,
+        name: 'atm-asteroid',
+        url: assetPath4Objects('atm/scene.gltf'),
+        position: [100, -550, -500],
+        relativeScale: 0.5,
+      }
+    ]
   },
   // 9
   {
@@ -282,13 +290,14 @@ const PLANETS = [
     playbackRate: 1,
     loop: true,
     invert: true,
-    volume: 0.01,
+    volume: 0.1,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
     moons: [
       {
         type: 'gltf',
+        rotateAxis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
         name: 'pringles-moon',
         url: assetPath4Objects('pringles/scene.gltf'),
@@ -300,29 +309,46 @@ const PLANETS = [
   // 10
   {
     type: 'video',
-    name: 'cholulita-bite-video',
-    url: assetPath4Videos('er-cholulita-bite.webm'),
+    name: 'day-and-night-pringles-video',
+    url: assetPath4Videos('er-day-and-night-pringles.webm'),
     geometry: makeSphere(40),
-    position: [-500, -100, -400],
+    position: [300, 150, -200],
     playbackRate: 1,
     loop: true,
     invert: true,
-    volume: 0.01,
+    volume: 0.1,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
     moons: [
       {
         type: 'gltf',
+        rotateAxis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
-        name: 'hot-sauce-moon',
-        url: assetPath4Objects('hot_sauce/scene.gltf'),
-        position: [-600, -50, -300],
-        relativeScale: 20,
+        name: 'pringles-moon',
+        url: assetPath4Objects('pringles/scene.gltf'),
+        position: [350, 150, -250],
+        relativeScale: 0.25,
       }
     ]
   },
   // 11
+  {
+    type: 'video',
+    name: 'broadway-tv-elbows-video',
+    url: assetPath4Videos('er-broadway-tvs-n-elbows.webm'),
+    geometry: makeSphere(80),
+    position: [1000, 500, 500],
+    playbackRate: 1,
+    loop: true,
+    invert: true,
+    volume: 0.01,
+    muted: true,
+    axis: new THREE.Vector3(0, 0, 1).normalize(),
+    angle: 0.002,
+    moons: []
+  },
+  // 12
   {
     type: 'video',
     name: '99-cts-broadway-1-video',
@@ -339,6 +365,7 @@ const PLANETS = [
     moons: [
       {
         type: 'gltf',
+        rotateAxis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
         name: 'tp-moon',
         url: assetPath4Objects('simple_toilet_paper/scene.gltf'),
@@ -347,7 +374,7 @@ const PLANETS = [
       }
     ]
   },
-  // 12
+  // 13
   {
     type: 'video',
     name: 'johnson-roof-jon-phone-video',
@@ -364,10 +391,11 @@ const PLANETS = [
     moons: [
       {
         type: 'gltf',
+        rotateAxis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
-        name: 'water_bottle-moon',
-        url: assetPath4Objects('water_bottle/scene.gltf'),
-        position: [800, 0, -800],
+        name: 'cool-ranch-moon',
+        url: assetPath4Objects('doritos/doritos_cool_ranch.gltf'),
+        position: [-325, -200, -325],
         relativeScale: 1,
       }
     ]
@@ -378,6 +406,7 @@ class Release0004 extends PureComponent {
   constructor() {
     super();
     this.startTime = new Date();
+    this.clock = new THREE.Clock();
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
     this.camera = new THREE.PerspectiveCamera(80, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000);
@@ -385,15 +414,14 @@ class Release0004 extends PureComponent {
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    this.clock = new THREE.Clock();
-    let light0 = new THREE.HemisphereLight(0xffffff, 0x444444);
-    light0.position.set(0, 1000, 0);
-    let light1 = new THREE.HemisphereLight(0xffffff, 0x444444);
-    light1.position.set(1000, 0, 1000);
-    this.scene.add(light1);
-    let light2 = new THREE.HemisphereLight(0xffffff, 0x444444);
-    light2.position.set(500, -1000, 500);
-    this.scene.add(light2);
+    let lightA = new THREE.HemisphereLight(0xffffff, 0x444444);
+    lightA.position.set(1000, 0, 1000);
+    this.scene.add(lightA);
+
+    let lightD = new THREE.DirectionalLight( 0xffffff );
+    lightD.position.set( -2000, 0, -2000 );
+    lightD.target.position.set( 0, 0, 0 );
+    this.scene.add(lightD);
 
     this.controls = new FirstPersonControls(this.camera);
     this.controls.lookSpeed = FIRST_PERSON_CONTROL_SPEED;
@@ -638,12 +666,11 @@ class Release0004 extends PureComponent {
         let moon = this.objects[moonName];
         if (moon !== undefined) {
           let position = new THREE.Vector3(...planet.position);
-          let axis = new THREE.Vector3(1, 0, 0);
           let pointIsWorld = true;// false;
           this.rotateAboutPoint(
             moon.scene.children[0],
             position,
-            axis,
+            planet.moons[j].rotateAxis,
             planet.moons[j].theta,
             pointIsWorld);
         }
@@ -663,7 +690,6 @@ class Release0004 extends PureComponent {
 
   updateCameraPos = () => {
     let curPlanet = this.getCurPlanet();
-    let prevPlanet = this.getPrevPlanet();
     let distanceFromPlanet = this.camera.position.distanceTo(curPlanet.position);
 
     // have we arrived at the next Planet?
@@ -737,9 +763,9 @@ class Release0004 extends PureComponent {
         trackId='267037220'
         message='JON CANNON'
         inputRef={el => this.audioElement = el}
-        fillColor="white"
+        fillColor="red"
         />
-        <Purchase fillColor="white" href='https://gltd.bandcamp.com/track/lets-beach'/>
+        <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
       </Fragment>
     );
   }
