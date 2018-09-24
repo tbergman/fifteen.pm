@@ -119,16 +119,16 @@ class Release0004 extends PureComponent {
 
     this.manager.onStart = ( url, itemsLoaded, itemsTotal ) => {
       this.emojiProgress = "";
-      this.progressBar.innerHTML = "⟅ loading ⟆<br/>";
+      this.progressBar.innerHTML = "⟅ loading ⟆<br/><br/>";
     };
 
     this.manager.onProgress = ( url, itemsLoaded, itemsTotal) => {
       this.emojiProgress += randomChoice(C.PROGRESS_EMOJI);
       let loadingText = "";
       if (itemsLoaded % 2 === 0) {
-        loadingText = "⟆ loading ⟅<br/>";
+        loadingText = "⟆ loading ⟅<br/><br/>";
       } else {
-        loadingText = "⟅ loading ⟆<br/>";
+        loadingText = "⟅ loading ⟆<br/><br/>";
       }
       // reset
       if (itemsLoaded >= itemsTotal) {
@@ -257,14 +257,14 @@ class Release0004 extends PureComponent {
       this.emojiProgress += randomChoice(C.PROGRESS_EMOJI);
       let startingText = "";
       if (this.emojiProgress.length % 2 === 0) {
-        startingText = "⟆ loading ⟅<br/>";
+        startingText = "⟆ loading ⟅<br/><br/>";
       } else {
-        startingText = "⟅ loading ⟆<br/>";
+        startingText = "⟅ loading ⟆<br/><br/>";
       }
       if (this.emojiProgress.length >= C.MAX_START_PROGRESS_LENGTH) {
         this.emojiProgress = "";
       }
-      this.progressBar.innerHTML = startingText + this.emojiProgress;
+      this.progressBar.innerHTML = startingText;
     }
     else if (this.state.hasChilled) {
       this.progressBar.innerHTML = "";
@@ -373,7 +373,7 @@ class Release0004 extends PureComponent {
   renderScene = () => {
     if (this.state.isLoaded) {
       this.controls.update(this.clock.getDelta());
-      // this.updateStartProgress();
+      this.updateStartProgress();
       this.updateSun();
       this.updatePlanets();
       this.updateMoons();
