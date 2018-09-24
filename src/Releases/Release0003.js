@@ -29,7 +29,7 @@ const RADIUS = 280;
 // Some moments in the song (in seconds)
 const INTRO_START = -1;
 const INTRO_END = 77;
-const BASS_ENTERS = 0;
+// const BASS_ENTERS = 0;
 const MID_ENTERS = 15;
 const TREBLE_ENTERS = 29;
 
@@ -40,7 +40,7 @@ const INTERLUDE_2_END = 167;
 const INTERLUDE_3_START = 242;
 const INTERLUDE_3_END = 247;
 const OUTRO_START = 306;
-const CAN_U_HEAR = 169;
+// const CAN_U_HEAR = 169;
 const SONG_LENGTH = 328;
 const USE_ORBIT_CONTROLS_ON_MOBILE = true;
 
