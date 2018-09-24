@@ -6,10 +6,12 @@ import Purchase from '../Purchase';
 import debounce from "lodash/debounce";
 import {assetPath} from "../Utils/assets";
 import {FirstPersonControls} from '../Utils/FirstPersonControls';
+import {loadVideo, loadImage, loadGLTF} from '../Utils/Loaders';
 import GLTFLoader from 'three-gltf-loader';
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
+const GRID_SIZE = 10;
 
 const assetPath4 = (p) => {
   return assetPath("4/" + p);
@@ -31,9 +33,17 @@ const makeSphere = (x) => {
   return new THREE.SphereBufferGeometry(x, x, x);
 };
 
+const getRandomInt = (max) => {
+  return Math.floor(Math.random() * Math.floor(max));
+};
+
+const getRandomZPosition = () => {
+  return getRandomInt(GRID_SIZE * 2) - GRID_SIZE;
+};
 
 const SUN = {
   type: 'gltf',
+  name: 'sun',
   url: assetPath4Models('half_sub/scene.gltf'),
   position: [0, 0, 0],
   relativeScale: 5,
@@ -44,19 +54,48 @@ const PLANETS = [
   // pluto
   {
     type: 'video',
+    name: 'cat-girl-world',
     url: assetPath4Videos('myrtle-central-girl-notices-cat-er.webm'),
-    geometry: makeSphere(20),
-    position: [100, 100, 100],
+    geometry: makeSphere(10),
+    position: [-80, -80, 5],
+    playbackRate: 1,
     moons: [
       {
         type: 'gltf',
-        url: assetPath4Models('simple_toilet_paper/scene.gltf'),
-        position: [150, 100, 100],
-        relativeScale: 2,
+        name: 'cat-girl-moon',
+        url: assetPath4Models('cardboard_box_sealed/scene.gltf'),
+        position: [-90, -90, 5],
+        relativeScale: 1,
+      },
+      {
+        type: 'gltf',
+        name: 'cat-girl-potato-chip-moon',
+        url: assetPath4Models('potato_chip/scene.gltf'),
+        position: [-80, -70, 5],
+        relativeScale: 1,
       }
     ]
   }
 ];
+
+// define gltf loading manager
+let manager = new THREE.LoadingManager();
+manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+  console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
+manager.onLoad = function ( ) {
+  console.log( 'Loading complete!');
+};
+manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+  console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+
+};
+manager.onError = function ( url ) {
+  console.log( 'There was an error loading ' + url );
+};
+
+// define gltf loader
+let loader = new GLTFLoader( manager );
 
 class Release0004Universe extends PureComponent {
   constructor() {
@@ -72,7 +111,7 @@ class Release0004Universe extends PureComponent {
 
     this.clock = new THREE.Clock();
     let light0 = new THREE.HemisphereLight(0xffffff, 0x444444);
-    light0.position.set(0,1000, 0);
+    light0.position.set(0, 1000, 0);
     this.scene.add(light0);
 
 
@@ -91,11 +130,13 @@ class Release0004Universe extends PureComponent {
     var gridHelper = new THREE.GridHelper( size, divisions );
     this.scene.add( gridHelper );
     this.bodegas = new THREE.Object3D();
+    this.objects = {};
+    this.state = {isLoaded: false};
   }
 
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
-    this.renderer.domElement.addEventListener('click', this.onClick, false);
+    this.renderer.domElement.addEventListener("click", this.onClick, false);
     this.renderer.domElement.addEventListener("load", this.onLoad, false);
     this.init();
     this.animate();
@@ -116,9 +157,9 @@ class Release0004Universe extends PureComponent {
   }
 
   initCamera = () => {
-    this.camera.position.x = -1000;
-    this.camera.position.y = 1000;
-    this.camera.position.z = 1000;
+    this.camera.position.x = -100;
+    this.camera.position.y = -100;
+    this.camera.position.z = 5;
     this.camera.lookAt(...SUN.position);
   }
 
@@ -140,98 +181,31 @@ class Release0004Universe extends PureComponent {
     cancelAnimationFrame(this.frameId);
   }
 
-  // initialize an object of type 'gltf'
-  initGLTF = (gltf) => {
-    let {url, relativeScale, position, rotateX} = gltf;
-    const loader = new GLTFLoader();
-    loader.load(url, object => {
-      gltf.object = object.scene;
-      gltf.object.scale.multiplyScalar(gltf.relativeScale);
-      gltf.object.position.set(...position);
-      gltf.object.rotation.y = Math.sin(0.6);
-      this.scene.add(gltf.object);
-      let floaterChild = gltf.object.children[0];
-      // floaterChild.geometry.computeBoundingBox();
-      floaterChild.position.set(0, 0, 0);
-      object.scene.scale.multiplyScalar(relativeScale);
-      object.scene.position.set(...position);
-      return object;
-    });
+  addObjectToScene = (obj) => {
+    console.log('adding object', obj.name)
+    this.scene.add(obj.scene);
+    this.objects[obj.name] = obj;
   }
-
-  //  initialize an object of type 'video'
-  initImage = (image) => {
-    let { geometry, url, position } = image;
-
-    // create material from image texture
-    var texture = new THREE.TextureLoader().load(url );
-    texture.minFilter = THREE.LinearFilter;
-    texture.format = THREE.RGBFormat;
-    let material = new THREE.MeshBasicMaterial({map: texture});
-
-    // create mesh from material and geometry
-    let imageMesh = new THREE.Mesh(geometry, material);
-    imageMesh.renderOrder = 1;
-
-    // configure geometry
-    geometry.scale(-1, 1, 1);
-    imageMesh.rotation.y = Math.sin(0.6);
-    imageMesh.position.set(...position);
-    return imageMesh;
-  }
-
-  //  initialize an object of type 'video'
-  initVideo = (video) => {
-    let { geometry, url, position } = video;
-    // initialize video element
-    let videoElement = document.createElement('video');
-    videoElement.src = url;
-    videoElement.crossOrigin = 'anonymous';
-    videoElement.loop = true;
-    videoElement.muted = true;
-    videoElement.playbackRate = 1;
-
-    // create material from video texture
-    let texture = new THREE.VideoTexture(videoElement);
-    texture.minFilter = THREE.LinearFilter;
-    texture.format = THREE.RGBFormat;
-    let material = new THREE.MeshBasicMaterial({map: texture});
-
-
-    // create mesh from material and geometry
-    let videoMesh = new THREE.Mesh(geometry, material);
-    videoMesh.renderOrder = 1;
-
-    // configure geometry
-    geometry.scale(-1, 1, 1);
-    geometry.computeBoundingBox();
-
-    // set output user data
-    videoMesh.userData.type = 'video';
-    videoMesh.userData.video = videoElement;
-    videoMesh.userData.props = video;
-    videoMesh.userData.texture = texture;
-    videoMesh.position.set(...position);
-    return videoMesh;
-  }
-
 
   initObject = (obj) => {
+    let output;
     if (obj.type === 'gltf') {
-      return this.initGLTF(obj);
+      output = loadGLTF({...obj, loader: loader, onSuccess: (x) => {this.addObjectToScene(x)} });
     } else if (obj.type === 'video') {
-      return this.initVideo(obj);
+      output = loadVideo(obj);
+      this.scene.add(output);
     } else if (obj.type === 'image') {
-      return this.initImage(obj);
+      output = loadImage(obj);
+      this.scene.add(output);
     }
+    output = this.objects[obj.name];
+    return output;
   }
 
   initPlanet = (obj) => {
     let planet = this.initObject(obj);
     for (let i = 0; i < obj.moons.length; i++) {
-      let moon = this.initObject(obj.moons[i]);
-      this.scene.add(moon);
-      planet.add(moon);
+      this.initObject(obj.moons[i]);
     }
     return planet;
   }
@@ -239,17 +213,20 @@ class Release0004Universe extends PureComponent {
   initPlanets = () => {
     this.planets = new THREE.Object3D();
     for (let i = 0; i < PLANETS.length; i++) {
-      this.planets.add(this.initPlanet(PLANETS[i]));
+      this.initPlanet(PLANETS[i]);
     }
-    this.scene.add(this.planets);
   }
 
   updateMoons = () => {
-    for (let i = 0; i < this.planets.children.length; i++) {
-      let planet = this.planets.children[i];
-      for (let j = 0; i < planet.children.length; j++) {
-        let moon = planet.children[j];
-        moon.rotation.y += 0.05;
+    for (let i = 0; i < PLANETS.length; i++) {
+      let planet = PLANETS[i];
+      for (let j = 0; j < planet.moons.length; j++) {
+        let moonName = planet.moons[j].name;
+        let moon = this.objects[moonName];
+        if (moon !== undefined) {
+          let time = Date.now() * 0.0005;
+          moon.scene.rotation.x = Math.cos( time * 10 ) * 5;
+        }
       }
     }
   }
