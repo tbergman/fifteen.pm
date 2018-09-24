@@ -4,7 +4,7 @@ import './Releases/Release.css';
 import debounce from 'lodash/debounce';
 import {FresnelShader} from "./Utils/FresnelShader";
 import {loadGLTF} from './Utils/Loaders';
-
+import {isMobile} from "./Utils/BrowserDetection";
 // import nav from './nav.js';
 
 const DEFAULT_RADIUS = 3;
@@ -56,6 +56,8 @@ class Home extends PureComponent {
     window.addEventListener('resize', this.onWindowResize, false);
     window.addEventListener('click', this.onClick, false);
     window.addEventListener('mousemove', this.onMouseMove, false);
+    window.addEventListener("touchstart", this.onMouseMove, false);
+    window.addEventListener("touchmove", this.onMouseMove, false);
     this.init();
     this.animate();
   }
@@ -63,6 +65,8 @@ class Home extends PureComponent {
   componentWillUnmount() {
     window.removeEventListener('resize', this.onWindowResize, false);
     window.removeEventListener('click', this.onClick, false);
+    window.removeEventListener('mousemove', this.onMouseMove, false);
+    window.removeEventListener("touchstart", this.onMouseMove, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
@@ -121,7 +125,6 @@ class Home extends PureComponent {
     let geometry = new THREE.SphereBufferGeometry(meta.radius, meta.radius * 4, meta.radius * 4);
     geometry.computeBoundingSphere()
     let urls = Array(6).fill("assets/releases/0/images/purple-clouds.jpg");
-    console.log(meta.imageURL);
     // let urls = Array(6).fill(meta.imageURL);
     let material = this.initFresnelShaderMaterial(urls);
     let mesh = new THREE.Mesh(geometry, material);
@@ -175,7 +178,7 @@ class Home extends PureComponent {
     // mouse over
     raycaster.setFromCamera(mouse, camera);
     let intersects = raycaster.intersectObjects(scene.children);
-    if (intersects.length) {
+    if (intersects.length || isMobile) {
       document.body.style.cursor = "pointer";
     } else {
       document.body.style.cursor = "default";
