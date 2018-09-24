@@ -11,13 +11,14 @@ import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
 import * as C from "./constants";
 import '../Release.css';
 import './index.css';
-import {randomChoice, assetPath4Images} from './utils'
+import {randomChoice, assetPath4Images, sleep} from './utils'
 
 class Release0004 extends PureComponent {
   constructor() {
     super();
-    this.startTime = new Date();
     this.clock = new THREE.Clock();
+    this.clock.start();
+    this.elapsed = 0;
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
     this.camera = new THREE.PerspectiveCamera(80, C.SCREEN_WIDTH / C.SCREEN_HEIGHT, 1, 3000);
@@ -62,6 +63,7 @@ class Release0004 extends PureComponent {
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
     this.renderer.domElement.addEventListener("click", this.onClick, false);
+    this.renderer.domElement.addEventListener("touchend", this.onClick, false);
     this.progressBar.addEventListener("click", this.onClick, false);
     this.init();
     this.animate();
@@ -71,6 +73,7 @@ class Release0004 extends PureComponent {
     this.stop();
     window.removeEventListener("resize", this.onWindowResize, false);
     this.progressBar.domElement.removeEventListener("click", this.onClick, false);
+    this.renderer.domElement.removeEventListener("touchend", this.onClick, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
@@ -123,12 +126,23 @@ class Release0004 extends PureComponent {
       this.progressBar.innerHTML = "<img class='stretch' src='" + assetPath4Images('wormhole.gif') + "'></img>";
     };
 
+    this.manager.onProgress = ( url, itemsLoaded, itemsTotal ) => {
+      let d = this.clock.getDelta();
+      this.elapsed += d;
+    };
+
     this.manager.onLoad = ( ) => {
+      let sleepTime = C.MIN_LOAD_TIME  - this.elapsed;
+      if (this.sleepTime > 0) {
+        console.log('sleeping ', sleepTime, 'seconds');
+        sleep(sleepTime)
+      }
+      console.log('LOADED!');
       this.setState({ isLoaded: true });
       this.progressBar.innerHTML = "";
       this.progressBar.zIndex = -100;
-
     };
+
     this.manager.onError = ( url ) => {
       this.progressBar.innerText = 'There was an error! Email dev@globally.lrd';
     };
@@ -358,7 +372,6 @@ class Release0004 extends PureComponent {
   renderScene = () => {
     if (this.state.isLoaded) {
       this.controls.update(this.clock.getDelta());
-      // this.updateStartProgress();
       this.updateSun();
       this.updatePlanets();
       this.updateMoons();

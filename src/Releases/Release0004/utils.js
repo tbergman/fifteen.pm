@@ -5,6 +5,10 @@ export const randomChoice = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+export const sleep = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export const assetPath4 = (p) => {
   return assetPath("4/" + p);
 }
