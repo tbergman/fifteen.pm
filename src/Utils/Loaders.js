@@ -15,7 +15,7 @@ const rotateObject = (object, rotateX=0, rotateY=0, rotateZ=0) => {
 
 
 //  initialize an object of type 'image'
-export const loadImage = ({ geometry, url, name, position, rotateX, rotateY, rotateZ }) => {
+export const loadImage = ({ geometry, url, name, invert, position, rotateX, rotateY, rotateZ }) => {
 
   // create material from image texture
   let texture = new THREE.TextureLoader().load(url);
@@ -25,6 +25,10 @@ export const loadImage = ({ geometry, url, name, position, rotateX, rotateY, rot
 
   // create mesh from material and geometry
   let imageMesh = new THREE.Mesh(geometry, material);
+  // configure geometry
+  if (invert) {
+    geometry.scale(-1, 1, 1);
+  }
   imageMesh.position.set(...position);
   imageMesh.name = name;
   rotateObject(imageMesh, rotateX, rotateY, rotateZ);
@@ -32,13 +36,16 @@ export const loadImage = ({ geometry, url, name, position, rotateX, rotateY, rot
 }
 
 //  initialize an object of type 'video'
-export const loadVideo = ({ geometry, url, name, position, loop, muted, playbackRate, rotateX, rotateY, rotateZ  }) => {
+export const loadVideo = ({
+  geometry, url, name, position, loop, muted, invert, volume,
+  computeBoundingSphere, playbackRate, rotateX, rotateY, rotateZ  }) => {
   // initialize video element
   let videoElement = document.createElement('video');
   videoElement.src = url;
   videoElement.crossOrigin = 'anonymous';
   videoElement.loop = loop;
   videoElement.muted = muted;
+  videoElement.volume = volume;
   videoElement.playbackRate = playbackRate;
 
   // create material from video texture
@@ -50,10 +57,16 @@ export const loadVideo = ({ geometry, url, name, position, loop, muted, playback
   let videoMesh = new THREE.Mesh(geometry, material);
   videoMesh.renderOrder = 1;
   // configure geometry
-  geometry.scale(-1, 1, 1);
+  if (invert) {
+    geometry.scale(-1, 1, 1);
+  }
+  if (computeBoundingSphere) {
+    geometry.computeBoundingSphere();
+  }
   // set position
   videoMesh.position.set(...position);
   videoMesh.name = name;
+  videoMesh.userData.video = videoElement;
   // rotate
   rotateObject(videoMesh, rotateX, rotateY, rotateZ);
   return videoMesh;
