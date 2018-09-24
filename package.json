@@ -58,6 +58,7 @@
     "dual-fisheye-to-equirectangular": "sh scripts/dual-fisheye-to-equirectangular.sh",
     "download-assets": "sh scripts/download-assets.sh gltd",
     "upload-assets": "sh scripts/upload-assets.sh gltd",
+    "destroy-assets": "sh scripts/destroy-assets.sh gltd",
     "remove-asset": "sh scripts/remove-asset.sh gltd"
   },
   "devDependencies": {
@@ -72,7 +73,9 @@
     "simplex-noise": "^2.4.0",
     "three": "^0.94.0",
     "three-fbx-loader": "^1.0.3",
-    "three-gltf-loader": "^1.96.0"
+    "three-gltf-loader": "^1.96.0",
+    "three-gltf-loader": "^1.96.0",
+    "three-tween": "^1.0.0"
   },
   "jest": {
     "collectCoverageFrom": [

@@ -11,14 +11,14 @@ import GLTFLoader from 'three-gltf-loader';
 
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
-
+const CAMERA_SPEED = 0.00029;
+const STARTING_POINT = [-875, 0, -875];
 const VIDEO_STATE_PLAYING = 'playing';
 const VIDEO_STATE_PAUSED = 'paused';
-const MIND_STATE_CHILLIN_THRESHOLD = 5;
+const MIND_STATE_CHILLIN_THRESHOLD = 10;
 const MIND_STATE_CHILLIN = 'chillin';
 const MIND_STATE_EXITING = 'exiting';
 const MIND_STATE_FLYING = 'flying';
-const MIND_STATE_ENTERING = 'entering';
 
 
 const assetPath4 = (p) => {
@@ -29,26 +29,19 @@ const assetPath4Videos = (p) => {
   return assetPath4("videos/" + p);
 }
 
-const assetPath4Models = (p) => {
-  return assetPath4("models/" + p);
-}
-
-const assetPath4Images = (p) => {
-  return assetPath4("images/" + p)
+const assetPath4Objects = (p) => {
+  return assetPath4("objects/" + p);
 }
 
 const makeSphere = (x) => {
   return new THREE.SphereBufferGeometry(x, x, x);
 };
 
-const getRandomInt = (max) => {
-  return Math.floor(Math.random() * Math.floor(max));
-};
 
 const SUN = {
   type: 'gltf',
   name: 'sun',
-  url: assetPath4Models('half_sub/scene.gltf'),
+  url: assetPath4Objects('half_sub/scene.gltf'),
   position: [0, 0, 0],
   relativeScale: 125,
   rotateX: .01
@@ -58,7 +51,7 @@ const ASTEROIDS = [
   {
     type: 'gltf',
     name: 'chip-asteroid',
-    url: assetPath4Models('potato_chip/scene.gltf'),
+    url: assetPath4Objects('potato_chip/scene.gltf'),
     position: [-300, -100, 500],
     rotateX: 0.01,
     rotateY: 0.005,
@@ -68,7 +61,7 @@ const ASTEROIDS = [
   {
     type: 'gltf',
     name: 'cig-asteroid',
-    url: assetPath4Models('cigarette/scene.gltf'),
+    url: assetPath4Objects('cigarette/scene.gltf'),
     position: [0, 200, -800],
     rotateX: 0.001,
     rotateY: -0.005,
@@ -83,7 +76,7 @@ const PLANETS = [
     type: 'video',
     name: 'cat-girl-world',
     url: assetPath4Videos('myrtle-central-girl-notices-cat-er.webm'),
-    geometry: makeSphere(100),
+    geometry: makeSphere(60),
     position: [-800, 0, -800],
     playbackRate: 1,
     loop: true,
@@ -96,7 +89,7 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'cardboard-box-moon',
-        url: assetPath4Models('cardboard_box_sealed/scene.gltf'),
+        url: assetPath4Objects('cardboard_box_sealed/scene.gltf'),
         position: [-800, 0, -1050],
         relativeScale: 25,
       }
@@ -113,6 +106,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.007,
     moons: [
@@ -120,7 +114,7 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'vape-moon',
-        url: assetPath4Models('vape/scene.gltf'),
+        url: assetPath4Objects('vape/scene.gltf'),
         position: [800, -100, -450],
         relativeScale: 3.5,
       }
@@ -137,6 +131,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
     moons: [
@@ -144,8 +139,8 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'cigarette-box-moon',
-        url: assetPath4Models('marlboro_cigarettes/scene.gltf'),
-        position: [-700, 200, 1150],
+        url: assetPath4Objects('marlboro_cigarettes/scene.gltf'),
+        position: [-800, 200, 1150],
         relativeScale: 2,
       }
     ]
@@ -161,6 +156,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
     moons: [
@@ -168,7 +164,7 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'cool-ranch-moon',
-        url: assetPath4Models('doritos/doritos_cool_ranch.gltf'),
+        url: assetPath4Objects('doritos/doritos_cool_ranch.gltf'),
         position: [-250, -200, -325],
         relativeScale: 1,
       }
@@ -185,6 +181,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.01,
     moons: [
@@ -192,7 +189,7 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'soda-can-moon',
-        url: assetPath4Models('soda_can/scene.gltf'),
+        url: assetPath4Objects('soda_can/scene.gltf'),
         position: [700, 300, 700],
         relativeScale: 3,
       }
@@ -209,6 +206,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
     moons: [
@@ -216,7 +214,7 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'doritos-nacho-cheese-moon',
-        url: assetPath4Models('doritos/doritos_nacho_cheese.gltf'),
+        url: assetPath4Objects('doritos/doritos_nacho_cheese.gltf'),
         position: [200, -300, 350],
         relativeScale: 3,
       }
@@ -233,6 +231,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.03,
     moons: [
@@ -240,7 +239,7 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'drumstick-moon',
-        url: assetPath4Models('drumstick/scene.gltf'),
+        url: assetPath4Objects('drumstick/scene.gltf'),
         position: [-700, 200, 200],
         relativeScale: 33,
       }
@@ -257,6 +256,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
     moons: []
@@ -272,6 +272,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
     moons: [
@@ -279,7 +280,7 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'pringles-moon',
-        url: assetPath4Models('pringles/scene.gltf'),
+        url: assetPath4Objects('pringles/scene.gltf'),
         position: [350, 150, -250],
         relativeScale: 0.25,
       }
@@ -296,6 +297,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
     moons: [
@@ -303,9 +305,9 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'hot-sauce-moon',
-        url: assetPath4Models('hot_sauce/scene.gltf'),
-        position: [-600, -100, -300],
-        relativeScale: 5,
+        url: assetPath4Objects('hot_sauce/scene.gltf'),
+        position: [-600, -50, -300],
+        relativeScale: 20,
       }
     ]
   },
@@ -320,6 +322,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
     moons: [
@@ -327,7 +330,7 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'tp-moon',
-        url: assetPath4Models('simple_toilet_paper/scene.gltf'),
+        url: assetPath4Objects('simple_toilet_paper/scene.gltf'),
         position: [-350, 450, -350],
         relativeScale: 20,
       }
@@ -344,6 +347,7 @@ const PLANETS = [
     loop: true,
     invert: true,
     volume: 0.01,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
     moons: [
@@ -351,32 +355,13 @@ const PLANETS = [
         type: 'gltf',
         theta: 0.01,
         name: 'beer-moon',
-        url: assetPath4Models('german_beer_bottle_with_crown_cap/scene.gltf'),
+        url: assetPath4Objects('german_beer_bottle_with_crown_cap/scene.gltf'),
         position: [800, 0, -800],
         relativeScale: 1,
       }
     ]
   }
 ];
-
-// define gltf loading manager
-let manager = new THREE.LoadingManager();
-manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
-  // console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-};
-manager.onLoad = function ( ) {
-  console.log( 'Loading complete!');
-};
-manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
-  // console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
-
-};
-manager.onError = function ( url ) {
-  // console.log( 'There was an error loading ' + url );
-};
-
-// define gltf loader
-let loader = new GLTFLoader( manager );
 
 class Release0004 extends PureComponent {
   constructor() {
@@ -392,9 +377,9 @@ class Release0004 extends PureComponent {
     this.clock = new THREE.Clock();
     let light0 = new THREE.HemisphereLight(0xffffff, 0x444444);
     light0.position.set(0, 1000, 0);
-    // let light1 = new THREE.HemisphereLight(0xffffff, 0x444444);
-    // light1.position.set(1000, 0, 1000);
-    // this.scene.add(light1);
+    let light1 = new THREE.HemisphereLight(0xffffff, 0x444444);
+    light1.position.set(1000, 0, 1000);
+    this.scene.add(light1);
     let light2 = new THREE.HemisphereLight(0xffffff, 0x444444);
     light2.position.set(500, -1000, 500);
     this.scene.add(light2);
@@ -411,6 +396,7 @@ class Release0004 extends PureComponent {
     this.raycaster = new THREE.Raycaster()
     this.path = undefined;
     this.cameraRadians = 0;
+    this.initLoader();
     this.objects = {};
   }
 
@@ -419,7 +405,26 @@ class Release0004 extends PureComponent {
     prevPlanetIdx: 0,
     curVideoState: VIDEO_STATE_PAUSED,
     mindState: MIND_STATE_FLYING,
+    hasChilled: false,
     isLoaded: false
+  }
+
+  initLoader = () => {
+    // define gltf loading manager
+    this.manager = new THREE.LoadingManager();
+    this.manager.onStart = ( url, itemsLoaded, itemsTotal ) => {
+      // console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+    };
+    this.manager.onLoad = ( ) => {
+      this.setState({isLoaded: true});
+    };
+    this.manager.onProgress = ( url, itemsLoaded, itemsTotal ) => {
+      console.log( 'Loaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+    };
+    this.manager.onError = ( url ) => {
+      // console.log( 'There was an error loading ' + url );
+    };
+    this.loader = new GLTFLoader( this.manager );
   }
 
   componentDidMount() {
@@ -445,6 +450,7 @@ class Release0004 extends PureComponent {
     this.initPath();
     this.container.appendChild(this.renderer.domElement);
     this.playCurPlanet();
+    this.lookAtCurPlanet();
   }
 
 
@@ -457,8 +463,11 @@ class Release0004 extends PureComponent {
   onClick = (e) => {
     e.preventDefault();
     if (this.state.mindState === MIND_STATE_CHILLIN) {
-      console.log('entering wormhole!')
-      this.enterWormhole();
+      this.setState({
+        mindState: MIND_STATE_EXITING,
+        prevPlanetIdx: this.state.curPlanetIdx,
+        curPlanetIdx: this.state.curPlanetIdx + 1 === PLANETS.length ? 0 : this.state.curPlanetIdx + 1
+      })
     }
   }
 
@@ -476,26 +485,28 @@ class Release0004 extends PureComponent {
   }
 
   addObjectToScene = (obj) => {
-    console.log('adding object', obj.name)
     this.scene.add(obj.scene);
     this.objects[obj.name] = obj;
   }
 
   initPath = () => {
     // add starting point
-    let pathVertices = [new THREE.Vector3(-900, 0, -900)];
+    let pathVertices = [new THREE.Vector3(...STARTING_POINT)];
     for (let i = 0; i < PLANETS.length; i++) {
-      pathVertices.push(new THREE.Vector3(...PLANETS[i].position));
+      if (i !== PLANETS.length-1) {
+        pathVertices.push(new THREE.Vector3(...PLANETS[i].position));
+      }
     }
     // add sun and asteroids
     pathVertices.push(new THREE.Vector3(0, 0, 0));
     for (let i = 0; i < ASTEROIDS.length; i++) {
       pathVertices.push(new THREE.Vector3(...ASTEROIDS[i].position));
     }
+    pathVertices.push(new THREE.Vector3(...PLANETS[PLANETS.length-1].position));
     this.path = new THREE.CatmullRomCurve3(pathVertices);
     this.path.closed = true;
     this.path.arcLengthDivisions = PLANETS.length;
-    this.visualizePath();
+    // this.visualizePath();
   }
 
   visualizePath = () => {
@@ -513,7 +524,7 @@ class Release0004 extends PureComponent {
   initObject = (obj) => {
     let output;
     if (obj.type === 'gltf') {
-      output = loadGLTF({...obj, loader: loader, onSuccess: (x) => {this.addObjectToScene(x)} });
+      output = loadGLTF({...obj, loader: this.loader, onSuccess: (x) => {this.addObjectToScene(x)} });
     } else if (obj.type === 'video') {
       output = loadVideo({...obj, computeBoundingSphere: true});
       this.scene.add(output);
@@ -556,6 +567,11 @@ class Release0004 extends PureComponent {
     return this.getPlanetByIdx(this.state.curPlanetIdx);
   }
 
+  lookAtCurPlanet = () => {
+    let curPlanet = this.getCurPlanet();
+    this.camera.lookAt(curPlanet.position);
+  }
+
   getPrevPlanet = () => {
     return this.getPlanetByIdx(this.state.prevPlanetIdx);
   }
@@ -575,15 +591,6 @@ class Release0004 extends PureComponent {
       }
     }
   }
-  // state transitions
-  enterWormhole = () => {
-    // console.log('exiting')
-    this.setState({
-      mindState: MIND_STATE_EXITING,
-      prevPlanetIdx: this.state.curPlanetIdx,
-      curPlanetIdx: this.state.curPlanetIdx + 1 === PLANETS.length ? 0 : this.state.curPlanetIdx + 1
-    })
-  };
 
   // updaters
   updateSun = () => {
@@ -653,21 +660,14 @@ class Release0004 extends PureComponent {
     if (distanceFromPlanet < MIND_STATE_CHILLIN_THRESHOLD &&
       this.state.mindState !== MIND_STATE_EXITING &&
       this.state.mindState !== MIND_STATE_CHILLIN) {
-      console.log('chillin!')
-      this.setState({mindState: MIND_STATE_CHILLIN});
+      this.setState({mindState: MIND_STATE_CHILLIN, hasChilled: true});
+
     }
     // are we in transit ?
     if (this.state.mindState !== MIND_STATE_CHILLIN) {
 
       // check if we're exiting the previous Planet
       if (this.state.mindState !== MIND_STATE_FLYING) {
-        console.log('flying')
-        // play next Planet once were in space
-        // this.controls.enabled = false;
-
-
-        // this.camera.lookAt(curPlanet.position);
-        // console.log(prevPlanet);
         if (this.state.curVideoState !== VIDEO_STATE_PLAYING) {
           this.pausePlanets();
           this.playCurPlanet();
@@ -678,8 +678,8 @@ class Release0004 extends PureComponent {
           });
         }
       }
-
-      this.cameraRadians += .0003;
+      // advance
+      this.cameraRadians += CAMERA_SPEED;
       let holePos = this.path.getPoint(this.cameraRadians);
       this.camera.position.set(holePos.x, holePos.y, holePos.z);
     }
@@ -687,19 +687,15 @@ class Release0004 extends PureComponent {
 
   rotateAboutPoint = (obj, point, axis, theta, pointIsWorld) => {
     pointIsWorld = (pointIsWorld === undefined)? false : pointIsWorld;
-
     if(pointIsWorld){
       obj.parent.localToWorld(obj.position); // compensate for world coordinate
     }
-
     obj.position.sub(point); // remove the offset
     obj.position.applyAxisAngle(axis, theta); // rotate the POSITION
     obj.position.add(point); // re-add the offset
-
     if(pointIsWorld){
       obj.parent.worldToLocal(obj.position); // undo world coordinates compensation
     }
-
     obj.rotateOnAxis(axis, theta); // rotate the OBJECT
   }
 
@@ -709,13 +705,15 @@ class Release0004 extends PureComponent {
   }
 
   renderScene = () => {
-    this.controls.update(this.clock.getDelta());
-    this.updateSun();
-    this.updatePlanets();
-    this.updateMoons();
-    this.updateAsteroids();
-    this.updateCameraPos();
-    this.renderer.render(this.scene, this.camera);
+    if (this.state.isLoaded) {
+      this.controls.update(this.clock.getDelta());
+      this.updateSun();
+      this.updatePlanets();
+      this.updateMoons();
+      this.updateAsteroids();
+      this.updateCameraPos();
+      this.renderer.render(this.scene, this.camera);
+    }
   }
 
   render() {
@@ -728,9 +726,9 @@ class Release0004 extends PureComponent {
         trackId='267037220'
         message='JON CANNON'
         inputRef={el => this.audioElement = el}
-        fillColor="red"
+        fillColor="white"
         />
-        <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
+        <Purchase fillColor="white" href='https://gltd.bandcamp.com/track/lets-beach'/>
       </Fragment>
     );
   }

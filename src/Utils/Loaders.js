@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import GLTFLoader from 'three-gltf-loader';
 
 const rotateObject = (object, rotateX=0, rotateY=0, rotateZ=0) => {
 

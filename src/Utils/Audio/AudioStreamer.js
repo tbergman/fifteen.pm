@@ -1,4 +1,4 @@
-import {isChrome, isFirefox, isSafari} from "../BrowserDetection";
+import {isSafari} from "../BrowserDetection";
 
 class AudioStreamer {
   

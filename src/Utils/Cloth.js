@@ -50,17 +50,12 @@ var gravity = new THREE.Vector3(0, -GRAVITY, 0).multiplyScalar(MASS);
 var TIMESTEP = 18 / 1000;
 var TIMESTEP_SQ = TIMESTEP * TIMESTEP;
 
-var windStrength = 2;
+// var windStrength = 2;
 var windForce = new THREE.Vector3(0, 0, 0);
 
 var tmpForce = new THREE.Vector3();
 
 var lastTime;
-
-function volleyBallNet() {
-
-}
-
 
 function clothFunction(width, height, target) {
 
@@ -240,7 +235,7 @@ function simulateCloth(time, ballPosition, ballBody, ballSize, sphere) {
 
   }
 
-  var i, il, particles, particle, pt, constraints, constraint;
+  var i, il, particles, particle, constraints, constraint; // pt;
 
   // Aerodynamics forces
 
@@ -322,18 +317,16 @@ function simulateCloth(time, ballPosition, ballBody, ballSize, sphere) {
 
     }
 
-
-
-  let soundParticles = [
-    323,
-    324,
-    325,
-    326,
-    327,
-    328,
-    329,
-    330
-  ];
+  // let soundParticles = [
+  //   323,
+  //   324,
+  //   325,
+  //   326,
+  //   327,
+  //   328,
+  //   329,
+  //   330
+  // ];
 
   let numsoundParticles = 4;
   for (let i = 0; i < numsoundParticles; i++) {
@@ -346,17 +339,7 @@ function simulateCloth(time, ballPosition, ballBody, ballSize, sphere) {
     pos.add(diff)
   }
 
-
-
-
-
-
-
-
-
-
-
-  /*
+ /*
     This determines how far down the cloth should drop
    */
 
