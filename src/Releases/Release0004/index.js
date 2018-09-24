@@ -93,9 +93,10 @@ class Release0004 extends PureComponent {
 
   onClick = (e) => {
     e.preventDefault();
-    if (this.state.mindState === C.MIND_STATE_CHILLIN) {
+    if (this.state.mindState === C.MIND_STATE_CHILLIN || !this.state.hasChilled) {
       this.setState({
         mindState: C.MIND_STATE_EXITING,
+        hasChilled: true,
         prevPlanetIdx: this.state.curPlanetIdx,
         curPlanetIdx: this.state.curPlanetIdx + 1 === C.PLANETS.length ? 0 : this.state.curPlanetIdx + 1
       })
