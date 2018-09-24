@@ -134,10 +134,8 @@ class Release0004 extends PureComponent {
     this.manager.onLoad = ( ) => {
       let sleepTime = C.MIN_LOAD_TIME  - this.elapsed;
       if (sleepTime > 0) {
-        console.log('sleeping ', sleepTime, 'seconds');
         sleep(1000 * sleepTime)
       }
-      console.log('LOADED!');
       this.setState({ isLoaded: true });
       this.progressBar.innerHTML = "";
       this.progressBar.zIndex = -100;
