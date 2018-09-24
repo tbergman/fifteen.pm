@@ -12,7 +12,7 @@ import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
 import * as C from "./constants";
 import '../Release.css';
 import './index.css';
-import {randomChoice, assetPath4Images, sleep} from './utils'
+import {randomChoice, assetPath4Images, sleep } from './utils'
 
 class Release0004 extends PureComponent {
   constructor() {
