@@ -1,18 +1,27 @@
 import React, {PureComponent} from 'react';
 import anime from './Utils/Anime.min.js';
-import {SHAPES, RELEASE_LINKS, MENU_MESSAGES} from './Utils/MenuConstants';
+import {SHAPES, MENU_CONTENT} from './Utils/MenuConstants';
 import './Menu.css';
 
 class Menu extends PureComponent {
   state = {
-    shapeIndex: 3,
-    message: MENU_MESSAGES[window.location.pathname],
-    currentRel: window.location.pathname
+    shapeIndex: Math.floor(Math.random() * 4),
+    message: MENU_CONTENT[window.location.pathname].message,
+    currentRel: window.location.pathname,
+    showMenu: false,
+    fillColor: window.location.pathname === '/3' ? 'red' : '#ffffff' // TODO centralize this lookup (See Logo.js)
   }
 
   componentDidMount() {
     this.windowLocation = window.location.pathname;
-    this.animateMenu();
+  }
+
+  onMenuIconClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      showMenu: !this.state.showMenu,
+    }, () => this.animateMenu());
   }
 
   handleLinkMouseOver = (e) => {
@@ -21,7 +30,7 @@ class Menu extends PureComponent {
     const {idx, rel} = e.target.dataset;
     this.setState({
       shapeIndex: idx,
-      message: MENU_MESSAGES[rel],
+      message: MENU_CONTENT[rel].message,
       currentRel: rel
     }, () => {
       this.animateMenu();
@@ -41,7 +50,7 @@ class Menu extends PureComponent {
     e.preventDefault();
     e.stopPropagation();
     this.setState({
-      message: MENU_MESSAGES[this.windowLocation],
+      message: MENU_CONTENT[this.windowLocation],
     });
     window.location = e.target.dataset.to;
   }
@@ -93,31 +102,49 @@ class Menu extends PureComponent {
     return (
       <div className="links">
         <ul>
-          {RELEASE_LINKS.map((link, idx) =>
-            <li
-              className={ this.windowLocation === link.relPath ? 'active' : ''}
-              key={idx}
-              data-idx={idx + 1}
-              data-to={link.path}
-              data-rel={link.relPath}
-              onMouseOver={this.handleLinkMouseOver}
-              onClick={this.handleLinkClick}>
-              {link.name}
-            </li>
-          )}
           <li>{this.state.message}</li>
         </ul>
       </div>
     );
   }
 
+  renderMenuIcon() {
+    const {fillColor} = this.state;
+    return (
+      <div className="menu-icon" onClick={this.onMenuIconClick}>
+        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 100 100"
+             enableBackground="new 0 0 100 100">
+          <g>
+            <g>
+              <path fillRule="evenodd" clipRule="evenodd" fill={fillColor}
+                    d="M6.407,19.206h87.221c0.777,0,1.407,0.63,1.407,1.407v2.814    c0,0.777-0.63,1.407-1.407,1.407H6.407C5.63,24.833,5,24.203,5,23.426v-2.814C5,19.836,5.63,19.206,6.407,19.206z"/>
+            </g>
+            <g>
+              <path fillRule="evenodd" clipRule="evenodd" fill={fillColor}
+                    d="M6.407,47.341h87.221c0.777,0,1.407,0.63,1.407,1.407v2.814    c0,0.777-0.63,1.407-1.407,1.407H6.407C5.63,52.969,5,52.339,5,51.562v-2.814C5,47.971,5.63,47.341,6.407,47.341z"/>
+            </g>
+            <g>
+              <path fillRule="evenodd" clipRule="evenodd" fill={fillColor}
+                    d="M6.407,75.477h87.221c0.777,0,1.407,0.63,1.407,1.407v2.814    c0,0.777-0.63,1.407-1.407,1.407H6.407C5.63,81.105,5,80.475,5,79.698v-2.814C5,76.107,5.63,75.477,6.407,75.477z"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    )
+  }
+
   render() {
     return (
-      <div className="menu">
-        {this.renderMenu()}
-        <div className="links-wrapper">
-          {this.renderLinks()}
-        </div>
+      <div>
+        {this.renderMenuIcon()}
+        {this.state.showMenu && (
+          <div className="menu">
+            {this.renderMenu()}
+            <div className="links-wrapper">
+              {this.renderLinks()}
+            </div>
+          </div>
+        )}
       </div>
     );
   }
