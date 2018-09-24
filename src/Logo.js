@@ -23,7 +23,7 @@ class Logo extends Component {
            onClick={this.onClick}>
         <div id="logo-light"/>
         <svg width="75" height="75" viewBox="-1.2 -1.2 2.2 2.2">
-          <g fill="none" stroke={fillColor} strokeWidth="0.01">
+         <g fill="none" stroke={fillColor} strokeWidth="0.01">
             <circle r="1"/>
             <g id="grid">
               <path d="M0 1A1 1 0 0 1 0-1">
