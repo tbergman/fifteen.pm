@@ -7,6 +7,7 @@ import SoundcloudPlayer from '../../SoundcloudPlayer';
 import Purchase from '../../Purchase';
 import {FirstPersonControls} from '../../Utils/FirstPersonControls';
 import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
+import {isMobile} from '../../Utils/BrowserDetection';
 
 import * as C from "./constants";
 import '../Release.css';
@@ -181,6 +182,10 @@ class Release0004 extends PureComponent {
 
   initPlanet = (obj) => {
     this.initObject(obj);
+    // down't load moons on mobile
+    if (isMobile) {
+        return;
+    }
     for (let i = 0; i < obj.moons.length; i++) {
       this.initObject(obj.moons[i]);
     }
@@ -309,6 +314,10 @@ class Release0004 extends PureComponent {
   }
 
   updateMoons = () => {
+    // down't update moons on mobile
+    if (isMobile) {
+      return;
+    }
     for (let i = 0; i < C.PLANETS.length; i++) {
       let planet = C.PLANETS[i];
       for (let j = 0; j < planet.moons.length; j++) {
