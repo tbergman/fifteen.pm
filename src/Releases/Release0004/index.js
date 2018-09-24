@@ -93,7 +93,6 @@ class Release0004 extends PureComponent {
   }, 50);
 
   onClick = (e) => {
-    console.log('CLICK!!!!')
     if (this.state.mindState === C.MIND_STATE_CHILLIN) {
       this.setState({
         mindState: C.MIND_STATE_EXITING,
