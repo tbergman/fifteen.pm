@@ -1,5 +1,6 @@
 import React, {PureComponent, Fragment} from 'react';
 import * as THREE from "three";
+import {isMobile} from '../../Utils/BrowserDetection';
 import debounce from "lodash/debounce";
 import GLTFLoader from 'three-gltf-loader';
 
@@ -7,7 +8,6 @@ import SoundcloudPlayer from '../../SoundcloudPlayer';
 import Purchase from '../../Purchase';
 import {FirstPersonControls} from '../../Utils/FirstPersonControls';
 import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
-import {isMobile} from '../../Utils/BrowserDetection';
 
 import * as C from "./constants";
 import '../Release.css';
