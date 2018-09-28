@@ -119,9 +119,9 @@ class Release0004 extends PureComponent {
   // object helpers
   loadingText = () => {
     if (isMobile) {
-      return "<div class='loading-text-mobile'> A phone cannot contain <br/>the Bodegaverse! </div>"
+      return "<div class='loading-text-mobile'> a phone cannot contain <br/>the bodegaverse! </div>"
     } else {
-      return  "<div class='loading-text-desktop'> Loading the Bodegaverse </div>"
+      return  "<div class='loading-text-desktop'> loading the bodegaverse... </div>"
     }
   }
 
