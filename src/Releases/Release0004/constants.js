@@ -7,7 +7,7 @@ export const SCREEN_HEIGHT = window.innerHeight;
 export const CAMERA_SPEED = 0.00022;
 export const FIRST_PERSON_CONTROL_SPEED = 0.13;
 export const FIRST_PERSON_CONTROL_MOVEMENT = 133;
-export const STARTING_POINT = [-1050, -10, -1050];
+export const STARTING_POINT = [-1025, 0, -1025];
 export const PROGRESS_EMOJI = ["🥤", "🥪", "🐈", "🌆", "<br/>", "◎"];
 export const MAX_START_PROGRESS_LENGTH = 5;
 export const MIN_LOAD_TIME = 10;
@@ -67,7 +67,7 @@ export const PLANETS = [
     mimetype: 'video/mp4',
     name: 'cat-girl-world',
     sources: multiSourceVideo('myrtle-central-girl-notices-cat-er'),
-    geometry: makeSphere(100),
+    geometry: makeSphere(80),
     position: [-800, 0, -800],
     playbackRate: 1,
     loop: true,
