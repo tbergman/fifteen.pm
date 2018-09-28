@@ -4,10 +4,10 @@ import {makeSphere, assetPath4Objects, multiSourceVideo} from './utils'
 
 export const SCREEN_WIDTH = window.innerWidth;
 export const SCREEN_HEIGHT = window.innerHeight;
-export const CAMERA_SPEED = 0.00029;
-export const FIRST_PERSON_CONTROL_SPEED = 0.15;
+export const CAMERA_SPEED = 0.00020;
+export const FIRST_PERSON_CONTROL_SPEED = 0.10;
 export const FIRST_PERSON_CONTROL_MOVEMENT = 133;
-export const STARTING_POINT = [-950, -10, -950];
+export const STARTING_POINT = [-1050, -10, -1050];
 export const PROGRESS_EMOJI = ["🥤", "🥪", "🐈", "🌆", "<br/>", "◎"];
 export const MAX_START_PROGRESS_LENGTH = 5;
 export const MIN_LOAD_TIME = 10;
