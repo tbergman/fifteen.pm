@@ -253,26 +253,6 @@ class Release0004 extends PureComponent {
     this.path.arcLengthDivisions = C.PLANETS.length;
   }
 
-  // updaters
-  updateStartProgress = () => {
-    if (!this.state.hasChilled && this.state.isLoaded) {
-      this.emojiProgress += randomChoice(C.PROGRESS_EMOJI);
-      let startingText = "";
-      if (this.emojiProgress.length % 2 === 0) {
-        startingText = "⟆ loading ⟅<br/><br/>";
-      } else {
-        startingText = "⟅ loading ⟆<br/><br/>";
-      }
-      if (this.emojiProgress.length >= C.MAX_START_PROGRESS_LENGTH) {
-        this.emojiProgress = "";
-      }
-      this.progressBar.innerHTML = startingText;
-    }
-    else if (this.state.hasChilled) {
-      this.progressBar.innerHTML = "";
-    }
-  }
-
   updateSun = () => {
     let sun = this.objects[C.SUN.name];
     if (sun !== undefined) {
