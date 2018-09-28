@@ -117,6 +117,13 @@ class Release0004 extends PureComponent {
   }
 
   // object helpers
+  loadingText = () => {
+    if (isMobile) {
+      return "<div class='loading-text-mobile'> A phone cannot contain <br/>the Bodegaverse! </div>"
+    } else {
+      return  "<div class='loading-text-desktop'> Loading the Bodegaverse </div>"
+    }
+  }
 
   initLoader = () => {
     // define gltf loading manager
@@ -124,7 +131,8 @@ class Release0004 extends PureComponent {
 
     this.manager.onStart = ( url, itemsLoaded, itemsTotal ) => {
       this.emojiProgress = "";
-      this.progressBar.innerHTML = "<img class='stretch' src='" + assetPath4Images('wormhole.gif') + "'></img>";
+      this.progressBar.innerHTML = "<img class='stretch' src='" + assetPath4Images('wormhole.gif') + "'></img>" +
+                                   this.loadingText();
     };
 
     this.manager.onProgress = ( url, itemsLoaded, itemsTotal ) => {
@@ -137,9 +145,11 @@ class Release0004 extends PureComponent {
       if (sleepTime > 0) {
         sleep(1000 * sleepTime)
       }
-      this.setState({ isLoaded: true });
-      this.progressBar.innerHTML = "";
-      this.progressBar.zIndex = -100;
+      if (!isMobile) {
+        this.setState({ isLoaded: true });
+        this.progressBar.innerHTML = "";
+        this.progressBar.zIndex = -100;
+      }
     };
 
     this.manager.onError = ( url ) => {

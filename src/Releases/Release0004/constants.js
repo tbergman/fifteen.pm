@@ -4,8 +4,8 @@ import {makeSphere, assetPath4Objects, multiSourceVideo} from './utils'
 
 export const SCREEN_WIDTH = window.innerWidth;
 export const SCREEN_HEIGHT = window.innerHeight;
-export const CAMERA_SPEED = 0.00020;
-export const FIRST_PERSON_CONTROL_SPEED = 0.10;
+export const CAMERA_SPEED = 0.00022;
+export const FIRST_PERSON_CONTROL_SPEED = 0.13;
 export const FIRST_PERSON_CONTROL_MOVEMENT = 133;
 export const STARTING_POINT = [-1050, -10, -1050];
 export const PROGRESS_EMOJI = ["🥤", "🥪", "🐈", "🌆", "<br/>", "◎"];
@@ -102,7 +102,7 @@ export const PLANETS = [
     volume: 0.01,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.007,
+    angle: 0.003,
     moons: [
       {
         type: 'gltf',
@@ -129,7 +129,7 @@ export const PLANETS = [
     volume: 0.01,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.005,
+    angle: 0.003,
     moons: [
       {
         type: 'gltf',
@@ -156,7 +156,7 @@ export const PLANETS = [
     volume: 0.01,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.005,
+    angle: 0.003,
     moons: []
   },
   // 5
@@ -173,7 +173,7 @@ export const PLANETS = [
     volume: 0.01,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.01,
+    angle: 0.005,
     moons: [
       {
         type: 'gltf',
@@ -200,7 +200,7 @@ export const PLANETS = [
     volume: 0.01,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.005,
+    angle: 0.003,
     moons: [
       {
         type: 'gltf',
@@ -227,7 +227,7 @@ export const PLANETS = [
     volume: 0.01,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.03,
+    angle: 0.005,
     moons: [
       {
         type: 'gltf',
@@ -254,16 +254,16 @@ export const PLANETS = [
     volume: 0.01,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.005,
+    angle: 0.003,
     moons: [
       {
         type: 'gltf',
         axis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
-        name: 'atm-moon',
+        name: 'lighter-moon',
         url: assetPath4Objects('a_lighter/scene.gltf'),
         position: [200, -550, -500],
-        relativeScale: 0.3,
+        relativeScale: 10,
       }
     ]
   },
@@ -281,7 +281,7 @@ export const PLANETS = [
     volume: 0.1,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.005,
+    angle: 0.003,
     moons: [
       {
         type: 'gltf',
@@ -325,7 +325,7 @@ export const PLANETS = [
     volume: 0.01,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.005,
+    angle: 0.003,
     moons: [
       {
         type: 'gltf',
@@ -352,7 +352,7 @@ export const PLANETS = [
     volume: 0.01,
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.005,
+    angle: 0.003,
     moons: []
   }
 ];
