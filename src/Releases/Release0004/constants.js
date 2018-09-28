@@ -261,7 +261,7 @@ export const PLANETS = [
         axis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
         name: 'atm-moon',
-        url: assetPath4Objects('atm/scene.gltf'),
+        url: assetPath4Objects('a_lighter/scene.gltf'),
         position: [200, -550, -500],
         relativeScale: 0.3,
       }
@@ -287,15 +287,14 @@ export const PLANETS = [
         type: 'gltf',
         axis: new THREE.Vector3(1, 0, 0),
         theta: 0.01,
-        name: 'pringles-moon',
-        url: assetPath4Objects('pringles/scene.gltf'),
+        name: 'cool-ranch-moon',
+        url: assetPath4Objects('doritos/doritos_cool_ranch.gltf'),
         position: [350, 150, -250],
         relativeScale: 0.25,
       }
     ]
   },
   // 10
-  // 11
   {
     type: 'video',
     mimetype: 'video/mp4',
@@ -312,7 +311,7 @@ export const PLANETS = [
     angle: 0.002,
     moons: []
   },
-  // 12
+  // 11
   {
     type: 'video',
     mimetype: 'video/mp4',
@@ -339,7 +338,7 @@ export const PLANETS = [
       }
     ]
   },
-  // 13
+  // 12
   {
     type: 'video',
     mimetype: 'video/mp4',
@@ -354,16 +353,6 @@ export const PLANETS = [
     muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.005,
-    moons: [
-      {
-        type: 'gltf',
-        axis: new THREE.Vector3(1, 0, 0),
-        theta: 0.012,
-        name: 'cool-ranch-moon',
-        url: assetPath4Objects('doritos/doritos_cool_ranch.gltf'),
-        position: [1300, 0, -1000],
-        relativeScale: 1,
-      }
-    ]
+    moons: []
   }
 ];
