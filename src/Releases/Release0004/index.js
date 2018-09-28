@@ -58,7 +58,9 @@ class Release0004 extends PureComponent {
     curVideoState: C.VIDEO_STATE_PAUSED,
     mindState: C.MIND_STATE_FLYING,
     hasChilled: false,
-    isLoaded: false
+    isLoaded: false,
+    chillinTime: 0,
+    chillinStart: new Date()
   }
 
   componentDidMount() {
@@ -96,15 +98,20 @@ class Release0004 extends PureComponent {
     this.camera.updateProjectionMatrix();
   }, 50);
 
+
   onClick = (e) => {
     if (this.state.mindState === C.MIND_STATE_CHILLIN) {
-      this.setState({
-        mindState: C.MIND_STATE_EXITING,
-        hasChilled: true,
-        prevPlanetIdx: this.state.curPlanetIdx,
-        curPlanetIdx: this.state.curPlanetIdx + 1 === C.PLANETS.length ? 0 : this.state.curPlanetIdx + 1
-      })
+      this.enterWormhole()
     }
+  }
+
+  enterWormhole = () => {
+    this.setState({
+      mindState: C.MIND_STATE_EXITING,
+      hasChilled: true,
+      prevPlanetIdx: this.state.curPlanetIdx,
+      curPlanetIdx: this.state.curPlanetIdx + 1 === C.PLANETS.length ? 0 : this.state.curPlanetIdx + 1
+    })
   }
 
   stop = () => {
@@ -121,7 +128,7 @@ class Release0004 extends PureComponent {
     if (isMobile) {
       return "<div class='loading-text-mobile'> your phone cannot contain<br/>the bodega-verse.</div>"
     } else {
-      return  "<div class='loading-text-desktop'> loading the bodega-verse... </div>"
+      return "<div class='loading-text-desktop'> loading the bodega-verse... </div>"
     }
   }
 
@@ -336,7 +343,8 @@ class Release0004 extends PureComponent {
     if (distanceFromPlanet < C.MIND_STATE_CHILLIN_THRESHOLD &&
       this.state.mindState !== C.MIND_STATE_EXITING &&
       this.state.mindState !== C.MIND_STATE_CHILLIN) {
-      this.setState({mindState: C.MIND_STATE_CHILLIN, hasChilled: true});
+
+      this.setState({mindState: C.MIND_STATE_CHILLIN, hasChilled: true, chillinStart: new Date()});
 
     }
     // are we in transit ?
@@ -368,6 +376,13 @@ class Release0004 extends PureComponent {
 
   renderScene = () => {
     if (this.state.isLoaded) {
+      if (this.state.mindState == C.MIND_STATE_CHILLIN) {
+        let now = new Date();
+        this.setState({chillinTime: (now - this.state.chillinStart) / 1000})
+        if (this.state.chillinTime >= C.CHILLIN_TIME) {
+          this.enterWormhole()
+        }
+      }
       this.controls.update(this.clock.getDelta());
       this.updateSun();
       this.updatePlanets();
