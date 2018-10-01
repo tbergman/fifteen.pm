@@ -12,7 +12,7 @@ import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
 import * as C from "./constants";
 import '../Release.css';
 import './index.css';
-import {randomChoice, assetPath4Images, sleep, keyPressIsFirstPersonControls} from './utils'
+import {assetPath4Images, sleep, keyPressIsFirstPersonControls} from './utils'
 
 class Release0004 extends PureComponent {
   constructor() {
@@ -248,7 +248,7 @@ class Release0004 extends PureComponent {
   }
 
   pausePlanets = () => {
-    for (var i = 0; i < C.PLANETS.length; i++) {
+    for (let i = 0; i < C.PLANETS.length; i++) {
       if (i !== this.state.prevPlanetIdx) {
         this.getPlanetByIdx(i).userData.video.pause();
       }
@@ -384,7 +384,7 @@ class Release0004 extends PureComponent {
 
   renderScene = () => {
     if (this.state.isLoaded) {
-      if (this.state.mindState == C.MIND_STATE_CHILLIN) {
+      if (this.state.mindState === C.MIND_STATE_CHILLIN) {
         let now = new Date();
         this.setState({chillinTime: (now - this.state.chillinStart) / 1000})
         if (this.state.chillinTime >= C.CHILLIN_TIME &&
