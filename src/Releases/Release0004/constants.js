@@ -188,32 +188,32 @@ export const PLANETS = [
     ]
   },
   // 6
-  {
-    type: 'video',
-    mimetype: 'video/mp4',
-    name: 'myrtle-omg-video',
-    sources: multiSourceVideo('myrtle-omg-er'),
-    geometry: makeSphere(120),
-    position: [200, -300, 600],
-    playbackRate: 1,
-    loop: true,
-    invert: true,
-    volume: 0.01,
-    muted: true,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.003,
-    moons: [
-      {
-        type: 'gltf',
-        axis: new THREE.Vector3(1, 0, 0),
-        theta: 0.11,
-        name: 'doritos-nacho-cheese-moon',
-        url: assetPath4Objects('doritos/doritos_nacho_cheese.gltf'),
-        position: [300, -300, 550],
-        relativeScale: 3,
-      }
-    ]
-  },
+  // {
+  //   type: 'video',
+  //   mimetype: 'video/mp4',
+  //   name: 'myrtle-omg-video',
+  //   sources: multiSourceVideo('myrtle-omg-er'),
+  //   geometry: makeSphere(120),
+  //   position: [200, -300, 600],
+  //   playbackRate: 1,
+  //   loop: true,
+  //   invert: true,
+  //   volume: 0.01,
+  //   muted: true,
+  //   axis: new THREE.Vector3(0, 1, 0).normalize(),
+  //   angle: 0.003,
+  //   moons: [
+  //     {
+  //       type: 'gltf',
+  //       axis: new THREE.Vector3(1, 0, 0),
+  //       theta: 0.11,
+  //       name: 'doritos-nacho-cheese-moon',
+  //       url: assetPath4Objects('doritos/doritos_nacho_cheese.gltf'),
+  //       position: [300, -300, 550],
+  //       relativeScale: 3,
+  //     }
+  //   ]
+  // },
   // 7
   {
     type: 'video',
@@ -269,32 +269,32 @@ export const PLANETS = [
     ]
   },
   // 9
-  {
-    type: 'video',
-    mimetype: 'video/mp4',
-    name: 'day-and-night-pringles-video',
-    sources: multiSourceVideo('er-day-and-night-pringles'),
-    geometry: makeSphere(40),
-    position: [300, 150, -200],
-    playbackRate: 1,
-    loop: true,
-    invert: true,
-    volume: 0.1,
-    muted: true,
-    axis: new THREE.Vector3(0, 1, 0).normalize(),
-    angle: 0.003,
-    moons: [
-      {
-        type: 'gltf',
-        axis: new THREE.Vector3(1, 0, 0),
-        theta: 0.01,
-        name: 'cool-ranch-moon',
-        url: assetPath4Objects('doritos/doritos_cool_ranch.gltf'),
-        position: [350, 150, -250],
-        relativeScale: 0.25,
-      }
-    ]
-  },
+  // {
+  //   type: 'video',
+  //   mimetype: 'video/mp4',
+  //   name: 'day-and-night-pringles-video',
+  //   sources: multiSourceVideo('er-day-and-night-pringles'),
+  //   geometry: makeSphere(40),
+  //   position: [300, 150, -200],
+  //   playbackRate: 1,
+  //   loop: true,
+  //   invert: true,
+  //   volume: 0.1,
+  //   muted: true,
+  //   axis: new THREE.Vector3(0, 1, 0).normalize(),
+  //   angle: 0.003,
+  //   moons: [
+  //     {
+  //       type: 'gltf',
+  //       axis: new THREE.Vector3(1, 0, 0),
+  //       theta: 0.01,
+  //       name: 'cool-ranch-moon',
+  //       url: assetPath4Objects('doritos/doritos_cool_ranch.gltf'),
+  //       position: [350, 150, -250],
+  //       relativeScale: 0.25,
+  //     }
+  //   ]
+  // },
   // 10
   {
     type: 'video',
