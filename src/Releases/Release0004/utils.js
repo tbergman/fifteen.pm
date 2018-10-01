@@ -33,3 +33,9 @@ export const multiSourceVideo = (path) => ([
   { type:'video/mp4', src: assetPath4Videos(`${path}.mp4`) },
   { type:'video/webm', src: assetPath4Videos(`${path}.webm`) }
 ]);
+
+const firstPersonControlKeys = [37, 38, 39, 40];
+
+export const keyPressIsFirstPersonControls = (keycode) => {
+  return firstPersonControlKeys.includes(keycode)
+}

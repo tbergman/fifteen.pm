@@ -12,7 +12,7 @@ import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
 import * as C from "./constants";
 import '../Release.css';
 import './index.css';
-import {randomChoice, assetPath4Images, sleep } from './utils'
+import {randomChoice, assetPath4Images, sleep, keyPressIsFirstPersonControls} from './utils'
 
 class Release0004 extends PureComponent {
   constructor() {
@@ -60,14 +60,15 @@ class Release0004 extends PureComponent {
     hasChilled: false,
     isLoaded: false,
     chillinTime: 0,
-    chillinStart: new Date()
+    chillinStart: new Date(),
+    hasActivatedFirstPersonControls: false
   }
 
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
-    this.renderer.domElement.addEventListener("click", this.onClick, false);
-    this.renderer.domElement.addEventListener("touchend", this.onClick, false);
-    this.progressBar.addEventListener("click", this.onClick, false);
+    document.addEventListener("click", this.onClick, false);
+    document.addEventListener("touchend", this.onClick, false);
+    document.addEventListener("keydown", this.onKeyDown, false);
     this.init();
     this.animate();
   }
@@ -75,8 +76,9 @@ class Release0004 extends PureComponent {
   componentWillUnmount() {
     this.stop();
     window.removeEventListener("resize", this.onWindowResize, false);
-    this.progressBar.domElement.removeEventListener("click", this.onClick, false);
-    this.renderer.domElement.removeEventListener("touchend", this.onClick, false);
+    document.removeEventListener("click", this.onClick, false);
+    document.removeEventListener("touchend", this.onClick, false);
+    document.removeEventListener("keydown", this.onKeyDown, false);
     this.container.removeChild(this.renderer.domElement);
   }
 
@@ -102,6 +104,12 @@ class Release0004 extends PureComponent {
   onClick = (e) => {
     if (this.state.mindState === C.MIND_STATE_CHILLIN) {
       this.enterWormhole()
+    }
+  }
+
+  onKeyDown = (e) => {
+    if (keyPressIsFirstPersonControls(e.keyCode)) {
+      this.setState({hasActivatedFirstPersonControls:true})
     }
   }
 
@@ -379,7 +387,8 @@ class Release0004 extends PureComponent {
       if (this.state.mindState == C.MIND_STATE_CHILLIN) {
         let now = new Date();
         this.setState({chillinTime: (now - this.state.chillinStart) / 1000})
-        if (this.state.chillinTime >= C.CHILLIN_TIME) {
+        if (this.state.chillinTime >= C.CHILLIN_TIME &&
+            !this.state.hasActivatedFirstPersonControls) {
           this.enterWormhole()
         }
       }
@@ -402,11 +411,11 @@ class Release0004 extends PureComponent {
           </div>
         </div>
         <SoundcloudPlayer
-        trackId='267037220'
+        trackId='507660189'
         message='JON CANNON'
         inputRef={el => this.audioElement = el}
         fillColor="white"/>
-        <Purchase fillColor="white" href='https://gltd.bandcamp.com/track/lets-beach'/>
+        <Purchase fillColor="white" href='https://gltd.bandcamp.com/album/ep-1'/>
       </Fragment>
     );
   }
