@@ -141,7 +141,7 @@ export const MENU_CONTENT = {
     "message": "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
   },
   "/4":  {
-    "message": "Jon Cannon's haunting house ballads are a product of his habitat: the long drag along Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
+    "message": "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
   }
 }
 
