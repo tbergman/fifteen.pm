@@ -7,26 +7,25 @@ import {Reflector} from '../../Utils/Reflector';
 import {Water} from '../../Utils/Water2';
 
 class Release0005 extends Component {
+  state = {
+    exitingWormhole: true,
+    inMirrorLand: false
+  }
+
   componentDidMount() {
     this.init();
 
     // When user resize window
     window.addEventListener("resize", this.onResize, false);
     // When user move the mouse
+    window.addEventListener('click', this.onClick, false);
     document.body.addEventListener(
       "mousemove",
       this.onMouseMove,
       false
     );
 
-    // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    // this.controls.maxDistance = 400;
-    // this.controls.minDistance = 10;
-    // this.controls.target.set(0, 40, 0);
-    // this.controls.update();
-
     this.renderScene();
-
   }
 
   init = () => {
@@ -40,23 +39,28 @@ class Release0005 extends Component {
       target: new THREE.Vector2(0, 0)
     };
 
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.set(-16.5, 2.9, 14.7);
-    this.camera.lookAt(this.scene.position);
+    this.mirrorLandCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.mirrorLandCamera.position.set(-16.5, 2.9, 14.7);
+    this.mirrorLandCamera.lookAt(this.scene.position);
+
+
+    this.exitingWormholeCamera = new THREE.PerspectiveCamera(84, window.innerWidth / window.innerHeight, 0.01, 1000);
+    this.exitingWormholeCamera.name = "exitingWormholeCamera";
+    this.scene.add(this.exitingWormholeCamera);
 
 
     this.createSkyBox();
     this.createMirror();
     this.createLights();
     this.createWater();
-    // this.createTunnelMesh();
+    this.createTunnelMesh();
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     document.body.appendChild(this.renderer.domElement);
 
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+    this.controls = new OrbitControls(this.mirrorLandCamera, this.renderer.domElement);
 
     this.container.appendChild(this.renderer.domElement);
 
@@ -65,6 +69,11 @@ class Release0005 extends Component {
 
   createLights() {
     const {scene} = this;
+
+    this.cameraLight = new THREE.DirectionalLight(0xffffff);
+    // light.position.set( 0, 0, 1 );
+    this.scene.add(this.cameraLight);
+
     var mainLight = new THREE.PointLight(0xcccccc, 1.5, 250);
     mainLight.position.y = 60;
     scene.add(mainLight);
@@ -98,8 +107,6 @@ class Release0005 extends Component {
     this.water.position.y = .1;
     this.water.rotation.x = Math.PI * -0.5;
     scene.add(this.water);
-
-   // this.scene.add(planeBottom);
   }
 
 
@@ -156,40 +163,79 @@ class Release0005 extends Component {
   }
 
   createTunnelMesh() {
-    var points = [];
+    this.binormal = new THREE.Vector3();
+    this.normal = new THREE.Vector3();
+    this.numTubeSegments = 500;
+    // complex demo tube
+    this.curve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 10, -10), new THREE.Vector3(10, 0, -10),
+      new THREE.Vector3(20, 0, 0), new THREE.Vector3(30, 0, 10),
+      new THREE.Vector3(30, 0, 20), new THREE.Vector3(20, 0, 30),
+      new THREE.Vector3(10, 0, 30), new THREE.Vector3(0, 0, 30),
+      new THREE.Vector3(-10, 10, 30), new THREE.Vector3(-10, 20, 30),
+      new THREE.Vector3(0, 30, 30), new THREE.Vector3(10, 30, 30),
+      new THREE.Vector3(20, 30, 15), new THREE.Vector3(10, 30, 10),
+      new THREE.Vector3(0, 30, 10), new THREE.Vector3(-10, 20, 10),
+      new THREE.Vector3(-10, 10, 10), new THREE.Vector3(0, 0, 10),
+      new THREE.Vector3(10, -10, 10), new THREE.Vector3(20, -15, 10),
+      new THREE.Vector3(30, -15, 10), new THREE.Vector3(40, -15, 10),
+      new THREE.Vector3(50, -15, 10), new THREE.Vector3(60, 0, 10),
+      new THREE.Vector3(70, 0, 0), new THREE.Vector3(80, 0, 0),
+      new THREE.Vector3(90, 0, 0), new THREE.Vector3(100, 0, 0),
+      new THREE.Vector3(100, 0, 0), new THREE.Vector3(100, 0, 0)
+    ]);
 
-    for (var i = 0; i < 5; i += 1) {
-      points.push(new THREE.Vector3(0, 0, 2.5 * (i / 4)));
-    }
-    points[4].y = -0.06;
-
-    this.curve = new THREE.CatmullRomCurve3(points);
 
     var geometry = new THREE.Geometry();
-    geometry.vertices = this.curve.getPoints(70);
+    geometry.vertices = this.curve.getPoints(this.numTubeSegments);
     this.splineMesh = new THREE.Line(geometry, new THREE.LineBasicMaterial());
-
     var loader = new THREE.TextureLoader();
-
-    var textures = loader.load(CONSTANTS.textures.galaxy.url, function (texture) {
+    const textures = {
+      "galaxy": {
+        url: "./assets/releases/5/images/universe.jpg"
+      }
+    };
+    textures.galaxy.texture = loader.load(textures.galaxy.url, function (texture) {
       return texture;
     });
-
     this.tubeMaterial = new THREE.MeshStandardMaterial({
       side: THREE.BackSide,
-      map: textures
+      map: textures.galaxy.texture
     });
-
     this.tubeMaterial.map.wrapS = THREE.RepeatWrapping;
     this.tubeMaterial.map.wrapT = THREE.RepeatWrapping;
 
-    this.tubeGeometry = new THREE.TubeGeometry(this.curve, 70, 0.02, 50, false);
+    // this.tubeMaterial = new THREE.MeshLambertMaterial({ color: 0xffa000, opacity: 0.3, wireframe: true, transparent: true} );
+
+    // this.tubeMaterial = new THREE.MeshLambertMaterial({color: 0xff00ff});
+
+    const radiusSegments = 12
+    this.tubeGeometry = new THREE.TubeGeometry(this.curve, this.numTubeSegments, 2, radiusSegments, false);
     this.tubeMesh = new THREE.Mesh(this.tubeGeometry, this.tubeMaterial);
+    this.scale = 10;
+    this.tubeMesh.scale.set(this.scale, this.scale, this.scale);
+    // let wireframe = new THREE.Mesh( this.tubeGeometry, this.wireframeMaterial );
+    // this.tubeMesh.add( wireframe );
     this.scene.add(this.tubeMesh);
 
     // original tube geometry
     this.tubeGeometry_o = this.tubeGeometry.clone();
   };
+
+  onClick = (e) => {
+    if (this.state.exitingWormhole) {
+      this.setState({
+        exitingWormhole: false,
+        inMirrorLand: true
+      });
+    } else if (this.state.inMirrorLand) {
+      this.setState({
+        inMirrorLand: false,
+        exitingWormhole: true
+      });
+    }
+  }
+
 
   onMouseMove = (e) => {
     // Save mouse X & Y position
@@ -203,9 +249,9 @@ class Release0005 extends Component {
     const wh = window.innerHeight;
 
     // Update camera aspect
-    this.camera.aspect = ww / wh;
+    this.mirrorLandCamera.aspect = ww / wh;
     // Reset aspect of the camera
-    this.camera.updateProjectionMatrix();
+    this.mirrorLandCamera.updateProjectionMatrix();
     // Update size of the canvas
     this.renderer.setSize(ww, wh);
   };
@@ -253,27 +299,79 @@ class Release0005 extends Component {
     this.mouse.position.y += (this.mouse.target.y - this.mouse.position.y) / 30;
 
     // Rotate Z & Y axis
-    this.camera.rotation.z = this.mouse.position.x * 0.2;
-    this.camera.rotation.y = Math.PI - this.mouse.position.x * 0.06;
+    this.mirrorLandCamera.rotation.z = this.mouse.position.x * 0.2;
+    this.mirrorLandCamera.rotation.y = Math.PI - this.mouse.position.x * 0.06;
     // Move a bit the camera horizontally & vertically
-    this.camera.position.x = this.mouse.position.x * 0.015;
-    this.camera.position.y = -this.mouse.position.y * 0.015;
+    this.mirrorLandCamera.position.x = this.mouse.position.x * 0.015;
+    this.mirrorLandCamera.position.y = -this.mouse.position.y * 0.015;
   };
 
+  updateWormholeTravel() {
+
+    const {scale, normal, binormal, tubeGeometry, exitingWormholeCamera} = this;
+    // animate camera along spline
+    var time = Date.now();
+    var looptime = 20 * 1000;
+    var t = (time % looptime) / looptime;
+    // let t = 0;
+
+    var pos = tubeGeometry.parameters.path.getPointAt(t);
+    pos.multiplyScalar(scale);
+    // interpolation
+    var segments = tubeGeometry.tangents.length;
+
+    var pickt = t * segments;
+    var pick = Math.floor(pickt);
+    var pickNext = (pick + 1) % segments;
+    if (t > .97) {
+      this.setState({
+        exitingWormhole: false, // TODO there are two states because at first I was working with three... obviously could do this with one boolean switch
+        inMirrorLand: true
+      })
+    }
+
+    binormal.subVectors(tubeGeometry.binormals[pickNext], tubeGeometry.binormals[pick]);
+    binormal.multiplyScalar(pickt - pick).add(tubeGeometry.binormals[pick]);
+    var dir = tubeGeometry.parameters.path.getTangentAt(t);
+    var offset = 15;
+    normal.copy(binormal).cross(dir);
+    // we move on a offset on its binormal
+    pos.add(normal.clone().multiplyScalar(offset));
+    exitingWormholeCamera.position.copy(pos);
+    // cameraEye.position.copy( pos );
+    // using arclength for stablization in look ahead
+
+    var lookAt = tubeGeometry.parameters.path.getPointAt((t + 10 / tubeGeometry.parameters.path.getLength()) % 1).multiplyScalar(scale);
+    // camera orientation 2 - up orientation via normal
+    // if ( ! params.lookAhead ) lookAt.copy( pos ).add( dir );
+    exitingWormholeCamera.matrix.lookAt(exitingWormholeCamera.position, lookAt, normal);
+    exitingWormholeCamera.rotation.setFromRotationMatrix(exitingWormholeCamera.matrix, exitingWormholeCamera.rotation.order);
+  }
+
+  currentCamera = () => {
+    if (this.state.exitingWormhole) {
+      return this.exitingWormholeCamera;
+    } else if (this.state.inMirrorLand) {
+      return this.mirrorLandCamera;
+    }
+    console.log(this.state)
+  }
+
   renderScene() {
-    // console.log(this.camera.position);
-    // Update material offsetObject { x: -16.55902138729872, y: 2.9442435235951203, z: 14.701368669915082 }
+    // Update material offset
+    this.updateMaterialOffset();
+    let camera = this.currentCamera();
+    // this.updateCameraPosition(camera);
+    //
 
-    // this.updateMaterialOffset();
-
-    // Update camera position & rotation
-    // this.updateCameraPosition();
-
-    // Update the tunnel
+    this.cameraLight.position.copy(camera.position);
     // this.updateCurve();
-
     // render the scene
-    this.renderer.render(this.scene, this.camera);
+    this.renderer.render(this.scene, camera);
+
+    if (this.state.exitingWormhole) {
+      this.updateWormholeTravel()
+    }
 
     // Animation loop
     window.requestAnimationFrame(this.renderScene.bind(this));
