@@ -116,6 +116,7 @@ class Release0003 extends PureComponent {
     this.initOrbs();
     this.initRaycaster();
     this.initOrbitContols();
+    this.createLights();
     // this.initGridHelper();
     this.container.appendChild(this.renderer.domElement);
   }
@@ -152,10 +153,23 @@ class Release0003 extends PureComponent {
     this.midThresh = 130;
     this.trebThresh = 140.0;
     this.normalizingConst = 200.0;
-
-
   }
 
+  createLights() {
+      // lights
+      var mainLight = new THREE.PointLight( 0xcccccc, 1.5, 250 );
+      mainLight.position.y = 60;
+      this.scene.add( mainLight );
+      var greenLight = new THREE.PointLight( 0x00ff00, 0.25, 1000 );
+      greenLight.position.set( 550, 50, 0 );
+      this.scene.add( greenLight );
+      var redLight = new THREE.PointLight( 0xff0000, 0.25, 1000 );
+      redLight.position.set( - 550, 50, 0 );
+      this.scene.add( redLight );
+      var blueLight = new THREE.PointLight( 0x7f7fff, 0.25, 1000 );
+      blueLight.position.set( 0, 50, 550 );
+      this.scene.add( blueLight );
+  }
   initOrbs = () => {
     let bassParams = {
       numSpheres: 3,
