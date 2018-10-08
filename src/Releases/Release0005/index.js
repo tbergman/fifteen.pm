@@ -1,10 +1,12 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import '../Release.css';
 import * as THREE from "three";
 import {OrbitControls} from "../../Utils/OrbitControls";
 import {CONSTANTS} from "./constants";
 import {Reflector} from '../../Utils/Reflector';
 import {Water} from '../../Utils/Water2';
+import SoundcloudPlayer from '../../SoundcloudPlayer';
+import Purchase from '../../Purchase';
 
 class Release0005 extends Component {
   state = {
@@ -175,7 +177,8 @@ class Release0005 extends Component {
       new THREE.Vector3(-10, 10, 30), new THREE.Vector3(-10, 20, 30),
       new THREE.Vector3(0, 30, 30), new THREE.Vector3(10, 30, 30),
       new THREE.Vector3(20, 30, 15), new THREE.Vector3(10, 30, 10),
-      new THREE.Vector3(0, 30, 10), new THREE.Vector3(-10, 20, 10),
+      new THREE.Vector3(0, 30, 10), new THREE.Vector3(-10, 20,
+        10),
       new THREE.Vector3(-10, 10, 10), new THREE.Vector3(0, 0, 10),
       new THREE.Vector3(10, -10, 10), new THREE.Vector3(20, -15, 10),
       new THREE.Vector3(30, -15, 10), new THREE.Vector3(40, -15, 10),
@@ -184,7 +187,6 @@ class Release0005 extends Component {
       new THREE.Vector3(90, 0, 0), new THREE.Vector3(100, 0, 0),
       new THREE.Vector3(100, 0, 0), new THREE.Vector3(100, 0, 0)
     ]);
-
 
     var geometry = new THREE.Geometry();
     geometry.vertices = this.curve.getPoints(this.numTubeSegments);
@@ -202,6 +204,8 @@ class Release0005 extends Component {
       side: THREE.BackSide,
       map: textures.galaxy.texture
     });
+
+
     this.tubeMaterial.map.wrapS = THREE.RepeatWrapping;
     this.tubeMaterial.map.wrapT = THREE.RepeatWrapping;
 
@@ -379,7 +383,15 @@ class Release0005 extends Component {
 
   render() {
     return (
-      <div ref={element => this.container = element}/>
+      <Fragment>
+        <div ref={element => this.container = element}/>
+        <SoundcloudPlayer
+          trackId='267037220'
+          message='PLEBEIAN'
+          inputRef={el => this.audioElement = el}
+          fillColor="white"/>
+        <Purchase fillColor="white" href='https://gltd.bandcamp.com/track/lets-beach'/>
+      </Fragment>
     );
   }
 }
