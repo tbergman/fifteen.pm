@@ -146,4 +146,4 @@ export const MENU_CONTENT = {
   "/5":  {
     "message": "Andrew Nerviano.",
   }
-}
+};
