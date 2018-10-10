@@ -2,7 +2,7 @@ import React, {PureComponent, Fragment} from 'react';
 import * as THREE from "three";
 import debounce from 'lodash/debounce';
 import './Release.css';
-import SoundcloudPlayer from '../SoundcloudPlayer';
+import Player from '../Player';
 import Purchase from '../Purchase';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
@@ -647,7 +647,7 @@ class Release0003 extends PureComponent {
       <Fragment>
         <div className="release">
           <div ref={element => this.container = element}/>
-          <SoundcloudPlayer
+          <Player
             trackId='482138307'
             message='OTHERE'
             inputRef={el => this.audioElement = el}

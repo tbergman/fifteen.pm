@@ -4,7 +4,7 @@ import {SimplexNoise} from '../Utils/SimplexNoise';
 import {GPUComputationRenderer} from "../Utils/GPUComputationRenderer";
 import debounce from 'lodash/debounce';
 import './Release.css';
-import SoundcloudPlayer from '../SoundcloudPlayer';
+import Player from '../Player';
 import Purchase from '../Purchase';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 /* eslint import/no-webpack-loader-syntax: off */
@@ -299,7 +299,7 @@ class Release0001 extends PureComponent {
             this.mount = mount
           }}
         />
-        <SoundcloudPlayer
+        <Player
           trackId='466084773'
           type='audio/mpeg'
           message='YAHCEPH'
