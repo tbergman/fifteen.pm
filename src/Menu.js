@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import anime from './Utils/Anime.min.js';
-import {SHAPES, MENU_CONTENT} from './Utils/MenuConstants';
+import {SHAPES, MENU_CONTENT} from './MenuConstants';
 import './Menu.css';
 
 class Menu extends PureComponent {
@@ -97,6 +97,17 @@ class Menu extends PureComponent {
       </main>
     );
   }
+
+  // renderLinks() {
+  //   // const playList =   tracks.map((track) =>
+  //     {/*<li>{track}</li>*/}
+  //   // return (
+  //     {/*<div className="links">*/}
+  //       {/*<ul>{playList}</ul>*/}
+  //     // </div>
+  //   // );
+  // }
+
 
   renderLinks() {
     return (

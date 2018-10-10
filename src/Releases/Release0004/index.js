@@ -4,14 +4,16 @@ import {isMobile} from '../../Utils/BrowserDetection';
 import debounce from "lodash/debounce";
 import GLTFLoader from 'three-gltf-loader';
 
-import SoundcloudPlayer from '../../SoundcloudPlayer';
+import Player from '../../Player';
 import Purchase from '../../Purchase';
+import Playlist from '../../Playlist';
 import {FirstPersonControls} from '../../Utils/FirstPersonControls';
 import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
 
 import * as C from "./constants";
 import '../Release.css';
 import './index.css';
+import {PLAYLISTS} from "../../PlaylistConstants";
 import {assetPath4Images, sleep, keyPressIsFirstPersonControls} from './utils'
 
 class Release0004 extends PureComponent {
@@ -61,7 +63,8 @@ class Release0004 extends PureComponent {
     isLoaded: false,
     chillinTime: 0,
     chillinStart: new Date(),
-    hasActivatedFirstPersonControls: false
+    hasActivatedFirstPersonControls: false,
+    curTrackId: PLAYLISTS[4].tracks[0].id
   }
 
   componentDidMount() {
@@ -410,10 +413,14 @@ class Release0004 extends PureComponent {
             <div id={"progress-bar"} ref={element => this.progressBar = element}/>
           </div>
         </div>
-        <SoundcloudPlayer
-        trackId='507660189'
+        {/*<Playlist*/}
+          {/*tracks={PLAYLISTS[4].tracks}*/}
+        {/*/>*/}
+        <Player
+        trackId={this.state.curTrackId} // TODO REMOVE/assign from trackList[0]
+        trackList={PLAYLISTS[4].tracks}
         message='JON CANNON'
-        inputRef={el => this.audioElement = el}
+        // inputRef={el => this.audioElement = el}
         fillColor="white"/>
         <Purchase fillColor="white" href='https://gltd.bandcamp.com/album/ep-1'/>
       </Fragment>

@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth} from "../Utils/Cloth";
 // import {Detector} from "../Utils/Detector";
-import SoundcloudPlayer from '../SoundcloudPlayer';
+import Player from '../Player';
 import Purchase from '../Purchase';
 import {service} from "../Utils/service";
 // import {CannonDebugRenderer} from "../Utils/CannonDebugRenderer.js";
@@ -647,7 +647,7 @@ class Release0002 extends Component {
       <Fragment>
         <div className="release">
           <div ref={element => this.container = element}/>
-          <SoundcloudPlayer
+          <Player
             trackId='475418370'
             message='YEAR UNKNOWN'
             inputRef={el => this.audioElement = el}/>

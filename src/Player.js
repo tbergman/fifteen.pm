@@ -1,88 +1,63 @@
-import React, {Component} from 'react';
-import './Player.css';
+import React, {Fragment, Component} from 'react';
+import TrackPlayer from './TrackPlayer';
+import Playlist from './Playlist';
+import {PLAYLISTS} from "./PlaylistConstants";
 
+const soundcloudClientId = "ad6375f4b6bc0bcaee8edf53ab37e7f2"; // 😄
+const soundcloudApiUrl = "https://api.soundcloud.com/tracks";
 
 class Player extends Component {
-  static defaultProps = {
-    fillColor: '#ffffff',
+  constructor(props){
+    super(props);
+    this.state = {
+      curTrackId: this.props.trackList[0].id
+    };
+
+    this.handleTrackIdChange = this.handleTrackIdChange.bind(this);
   }
 
-  // Assume autplay does not work.
-  state = {
-    paused: true
+  static defaultProps = {
+    fillColor: '#ffffff',
+    type: 'audio/mpeg',
+    secretToken: undefined
   }
 
   componentDidMount() {
-    this.audioPlayer = document.getElementById('audio-player');
-
-    this.audioPlayer.addEventListener('playing', this.resetPlayer, false)
+    this.setState({
+      curTrackId: this.props.trackList[0].id
+    })
   }
 
-  isPlaying = (e) => {
-    // Check if the audio is playing
-
-    return this.audioPlayer.duration > 0
-            && !this.audioPlayer.paused
-            && !this.audioPlayer.ended;
-  }
-
-  resetPlayer = () => {
-    if (!this.isPlaying()) {
-      this.setState({paused: true});
+  formatSoundcloudSrc(trackId, secretToken) {
+    let url = `${soundcloudApiUrl}/${trackId}/stream?client_id=${soundcloudClientId}`;
+    if (secretToken !== undefined) {
+      url += `&secret_token=${secretToken}`
     }
-    else {
-      if (this.state.paused) {
-        this.setState({paused: false});
-      }
-    }
+    return url;
   }
 
-  handlePlay = () => {
-    this.audioPlayer.play();
-    this.setState({ paused: false});
-  }
-
-  handlePause = () => {
-    this.audioPlayer.pause();
-    this.setState({ paused: true});
-  }
-
-  onClick = (e) => {
-    e.preventDefault();
-    if(!this.isPlaying()) {
-      this.audioPlayer.play();
-    }
-    if(!this.state.paused) {
-      this.handlePause();
-    } else {
-      this.handlePlay();
-    }
+  handleTrackIdChange(trackId) {
+    this.setState({
+      curTrackId: trackId
+    })
   }
 
   render() {
-    const {paused} = this.state;
-    const {message, inputRef, src, type, fillColor} = this.props;
+    const {message, inputRef, trackId, secretToken, fillColor, trackList} = this.props;
+
     return (
-      <div id="player-container">
-        <div id="player">
-          <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" fill={fillColor}>
-            <defs>
-              <path id="circlePath" d=" M 150, 150 m -60, 0 a 60,60 0 0,1 120,0 a 60,60 0 0,1 -120,0 "/>
-            </defs>
-            <circle cx="100" cy="100" r="50" fill="none" stroke="none"/>
-            <g>
-                <use xlinkHref="#circlePath" fill="none"/>
-                <text fill="#000" stroke="red">
-                    <textPath xlinkHref="#circlePath" fill={fillColor}>{message}</textPath>
-                </text>
-            </g>
-          </svg>
-          <div onClick={this.onClick} className={paused ? 'button' : 'button paused'} style={{borderColor: `transparent transparent transparent ${fillColor}`}}/>
-          <audio id="audio-player" loop autoPlay crossOrigin="anonymous" ref={inputRef}>
-            <source src={src} type={type}/>
-          </audio>
-        </div>
-      </div>
+      <Fragment>
+        <TrackPlayer
+          src={this.formatSoundcloudSrc(this.state.curTrackId, secretToken)}
+          message={message}
+          inputRef={inputRef}
+          fillColor={fillColor}
+        />
+        <Playlist
+          onTrackIdChange={this.handleTrackIdChange}
+          trackList={trackList}
+        />
+      </Fragment>
     );
   }
 }
