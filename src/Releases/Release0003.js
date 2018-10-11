@@ -7,6 +7,7 @@ import Purchase from '../Purchase';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
 import {isMobile} from "../Utils/BrowserDetection";
+import {PLAYLISTS} from "../PlaylistConstants";
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);
@@ -648,7 +649,7 @@ class Release0003 extends PureComponent {
         <div className="release">
           <div ref={element => this.container = element}/>
           <Player
-            trackId='482138307'
+            trackList={PLAYLISTS[3].tracks}
             message='OTHERE'
             inputRef={el => this.audioElement = el}
             fillColor="red"

@@ -1,6 +1,15 @@
 
 
 export const PLAYLISTS = {
+  3: {
+    artist: "OTHERE",
+    tracks: [
+      {
+        title: "Let's Beach",
+        id: "482138307"
+      }
+    ]
+  },
   4: {
     artist: "JON CANNON",
     tracks: [
