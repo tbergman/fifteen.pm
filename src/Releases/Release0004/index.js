@@ -6,7 +6,6 @@ import GLTFLoader from 'three-gltf-loader';
 
 import Player from '../../Player';
 import Purchase from '../../Purchase';
-import Playlist from '../../Playlist';
 import {FirstPersonControls} from '../../Utils/FirstPersonControls';
 import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
 
@@ -413,14 +412,9 @@ class Release0004 extends PureComponent {
             <div id={"progress-bar"} ref={element => this.progressBar = element}/>
           </div>
         </div>
-        {/*<Playlist*/}
-          {/*tracks={PLAYLISTS[4].tracks}*/}
-        {/*/>*/}
         <Player
-        trackId={this.state.curTrackId} // TODO REMOVE/assign from trackList[0]
         trackList={PLAYLISTS[4].tracks}
         message='JON CANNON'
-        // inputRef={el => this.audioElement = el}
         fillColor="white"/>
         <Purchase fillColor="white" href='https://gltd.bandcamp.com/album/ep-1'/>
       </Fragment>
