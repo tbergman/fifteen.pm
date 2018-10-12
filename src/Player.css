@@ -1,19 +1,19 @@
-#track-player-container {
+#player-container {
     margin: 0%;
     z-index: 10000;
     position: absolute;
     left: 0;
-    width: 100%;
     bottom: 0px;
+    display: flex;
+    align-items: center;
 }
 
-#play-button {
+#play-button-container {
     position: relative;
-    width: 100%;
     overflow: hidden;
 }
 
-#play-button text {
+#play-button-container text {
     font-family: 'Roboto Mono', monospace;
     font-size: 28px;
     font-weight: bold;
@@ -22,7 +22,7 @@
     stroke: #ffffff;
 }
 
-#play-button svg {
+#play-button-container svg {
     position: relative;
     left: -6px;
     top: 0;
@@ -52,24 +52,48 @@
 }
 
 @-webkit-keyframes rotate {
-    from { -webkit-transform: rotate(360deg); }
-    to { -webkit-transform: rotate(0); }
+    from {
+        -webkit-transform: rotate(360deg);
+    }
+    to {
+        -webkit-transform: rotate(0);
+    }
 }
+
 @-moz-keyframes rotate {
-    from { -moz-transform: rotate(360deg); }
-    to { -moz-transform: rotate(0); }
+    from {
+        -moz-transform: rotate(360deg);
+    }
+    to {
+        -moz-transform: rotate(0);
+    }
 }
+
 @-ms-keyframes rotate {
-    from { -ms-transform: rotate(360deg); }
-    to { -ms-transform: rotate(0); }
+    from {
+        -ms-transform: rotate(360deg);
+    }
+    to {
+        -ms-transform: rotate(0);
+    }
 }
+
 @-o-keyframes rotate {
-    from { -o-transform: rotate(360deg); }
-    to { -o-transform: rotate(0); }
+    from {
+        -o-transform: rotate(360deg);
+    }
+    to {
+        -o-transform: rotate(0);
+    }
 }
+
 @keyframes rotate {
-    from { transform: rotate(360deg); }
-    to { transform: rotate(0); }
+    from {
+        transform: rotate(360deg);
+    }
+    to {
+        transform: rotate(0);
+    }
 }
 
 .button {
@@ -102,39 +126,35 @@
     border-color: transparent transparent transparent #FFFFFF;
 }
 
-#playlist {
-    color: #0ff;
-    position: absolute;
-    top: 600px;
-    left: 0;
-    height: 400px;
-}
-
 #playlist-container {
-    margin: 50%;
     z-index: 999999999;
-    position: absolute;
-    left: 0;
-    width: 0%;
-    bottom: 0px;
-    fill: #faf00;
-    stroke: #fafa0;
+    position: relative;
+    margin-left: 20px;
 }
 
-/*#playlist {*/
-/*position: relative;*/
-/*width: 100%;*/
-/*overflow: hidden;*/
-/*}*/
+#playlist-container ul {
+    padding: 0;
+}
 
-#playlist li text {
-    font-family: 'Roboto Mono', monospace;
-    font-size: 28px;
+#playlist-container .active-track{
+    display: flex;
     font-weight: bold;
-    letter-spacing: 10px;
-    fill: #faf00;
-    stroke: #fafa00;
 }
 
+#current-track-smiley{
+    margin-left: -17px;
+    margin-right: 10px;
+}
+
+#playlist li {
+    list-style-type: none;
+    font-size: 13px;
+    padding-bottom: 5px;
+}
+
+#playlist li:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
 
 
