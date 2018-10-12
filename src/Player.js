@@ -1,30 +1,47 @@
-import React, {Fragment, Component} from 'react';
+import React, {Fragment, PureComponent} from 'react';
 import './Player.css'
 
 const soundcloudClientId = "ad6375f4b6bc0bcaee8edf53ab37e7f2"; // 😄
 const soundcloudApiUrl = "https://api.soundcloud.com/tracks";
 
-class Player extends Component {
+class Player extends PureComponent {
   state = {
     paused: true, // Assume autoplay doesn't work.
     src: this.formatSoundcloudSrc(
       this.props.trackList[0].id,
       this.props.trackList[0].secretToken
     ),
-    curTrack: this.props.trackList[0]
+    audioElement: document.getElementById('audio-player'),
+    curTrackIdx: 0
   }
 
   static defaultProps = {
     fillColor: '#ffffff',
     selectedColor: '#fa0afa',
-    type: 'audio/mpeg',
-    inputRef: 'audio',
-
-}
+    type: 'audio/mpeg'
+  }
 
   componentDidMount() {
-    this.audioPlayer = document.getElementById('audio-player');
-    this.audioPlayer.addEventListener('playing', this.resetPlayer, false);
+    this.updateAudioElement()
+
+  }
+
+  componentDidUpdate() {
+    this.updateAudioElement()
+  }
+
+  componentWillUnmount() {
+    this.state.audioElement.removeEventListener('playing', this.resetPlayer, false);
+    this.state.audioElement.removeEventListener('ended', this.advanceTrack, false);
+  }
+
+  updateAudioElement() {
+    this.setState({
+      audioElement: document.getElementById('audio-player')
+    }, () => {
+      this.state.audioElement.addEventListener('playing', this.resetPlayer, false);
+      this.state.audioElement.addEventListener('ended', this.advanceTrack, false);
+    });
   }
 
   formatSoundcloudSrc(trackId, secretToken) {
@@ -37,9 +54,9 @@ class Player extends Component {
 
   isPlaying = (e) => {
     // Check if the audio is playing
-    return this.audioPlayer.duration > 0
-      && !this.audioPlayer.paused
-      && !this.audioPlayer.ended;
+    return this.state.audioElement.duration > 0
+      && !this.state.audioElement.paused
+      && !this.state.audioElement.ended;
   }
 
   resetPlayer = () => {
@@ -53,22 +70,34 @@ class Player extends Component {
     }
   }
 
+  advanceTrack = () => {
+    const {trackList} = this.props;
+    const {curTrackIdx} = this.state;
+    const nextTrackIdx = curTrackIdx + 1 === trackList.length ? 0 : curTrackIdx + 1;
+    const nextTrack = trackList[nextTrackIdx];
+    this.setState({
+      curTrackIdx: nextTrackIdx,
+      src: this.formatSoundcloudSrc(nextTrack.id, nextTrack.secretToken),
+      paused: false
+    });
+  }
+
   handlePlay = () => {
-    this.audioPlayer.pause();
-    this.audioPlayer.load();
-    this.audioPlayer.play();
+    this.state.audioElement.pause();
+    this.state.audioElement.load();
+    this.state.audioElement.play();
     this.setState({paused: false});
   }
 
   handlePause = () => {
-    this.audioPlayer.pause();
+    this.state.audioElement.pause();
     this.setState({paused: true});
   }
 
   handlePlayButtonClick = (e) => {
     e.preventDefault();
-    if (!this.isPlaying()) {//} && this.audioPlayer.currentSrc === this.state.src) {
-      this.audioPlayer.play();
+    if (!this.isPlaying()) {
+      this.state.audioElement.play();
     }
     if (!this.state.paused) {
       this.handlePause();
@@ -77,49 +106,34 @@ class Player extends Component {
     }
   }
 
-
-  handlePlaylistClick = (e, track) => {
+  handlePlaylistClick = (e, idx) => {
+    const {trackList} = this.props;
+    const track = trackList[idx];
     e.preventDefault();
     this.setState({
-      curTrack: track,
+      curTrackIdx: idx,
       src: this.formatSoundcloudSrc(track.id, track.secretToken),
       paused: false
-    }, () => {
-      this.audioPlayer = document.getElementById('audio-player');
     });
   }
 
-
-  // renderSongPlayingSVG() {
-  //   const {selectedColor} = this.props;
-  //   return (
-  //
-  //               ☻
-  //
-  //     {/*<svg fill={selectedColor} xmlns="http://www.w3.org/2000/svg" version="1.1" className="triangle">*/}
-  //       {/*<polygon points="0,0 10,0 5,10"/>*/}
-  //     {/*</svg>*/}
-  //   )
-  // }
-
   renderPlaylist = () => {
     const {trackList, fillColor, selectedColor} = this.props;
-    const {curTrack} = this.state;
-    console.log(fillColor, selectedColor);
-    const playList = trackList.map((track) =>
+    const {curTrackIdx} = this.state;
+    const curTrack = trackList[curTrackIdx];
+    if (trackList.length > 1) {
+      const playList = trackList.map((track, idx) =>
         <li
           style={{color: track.id === curTrack.id ? selectedColor : fillColor}}
           className={track.id === curTrack.id ? "active-track" : null}
-          onClick={((e) => this.handlePlaylistClick(e, track))} key={track.id}>
+          onClick={((e) => this.handlePlaylistClick(e, idx))} key={track.id}>
           {track.id === curTrack.id && <span id="current-track-smiley">☻</span>}
           {track.title}
         </li>
-
-    );
-    if (trackList.length > 1) {
+      );
       return (
         <div id="playlist-container">
-          <ul id="playlist">{playList}</ul>
+          <ul key={curTrack.id} id="playlist">{playList}</ul>
         </div>
       );
     }
@@ -160,11 +174,15 @@ class Player extends Component {
   }
 
   renderAudioTag = () => {
-    const {inputRef, type} = this.props;
+    const {type, audioRef} = this.props;
     const {src} = this.state;
     return (
       <Fragment>
-        <audio key={src} id="audio-player" autoPlay loop crossOrigin="anonymous" ref={inputRef}>
+        <audio key={src} id="audio-player"
+               autoPlay
+               crossOrigin="anonymous"
+               ref={audioRef}
+        >
           <source src={src} type={type}/>
         </audio>
       </Fragment>

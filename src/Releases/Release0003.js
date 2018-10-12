@@ -98,6 +98,7 @@ class Release0003 extends PureComponent {
 
   state = {
     allOrbs: false
+
   }
 
   componentDidMount() {

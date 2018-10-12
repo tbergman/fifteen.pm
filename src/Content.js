@@ -43,15 +43,38 @@ export const CONTENT = {
         id: "507660189"
       },
       {
-        title: "Finesse (One For Aziza)",
-        id: "482138307" // TODO this is Othere
+        title: "Miracle Center",
+        id: "513518607"
       },
       {
-        title: "Miracle Center",
-        id: "TODO"
+        title: "Finesse",
+        id: "513518595"
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
     message: "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials."
+  },
+  "/test-dummy": {
+    artist: "DUMMY",
+    tracks: [
+      { // These tracks are useful for devving on the player
+        title: "Fake short song 1",
+        id: "58432359" //287949388"
+      },
+      {
+        title: "Fake short song 2",
+        id: "177365673"
+      },
+      {
+        title: "Fake short song 3",
+        id: "177365185"
+      },
+      {
+        title: "Fake short song 4",
+        id: "177364838"
+      }
+    ],
+    purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
+    message: "Dummy message"
   }
 }
