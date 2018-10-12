@@ -158,10 +158,6 @@
 }
 
 @media screen and (max-width: 28em) {
-    #play-button-container {
-        width: 35%;
-    }
-
     #play-button-container svg {
         top: 20px;
         left: -20px;
@@ -173,11 +169,9 @@
     }
 
     #playlist-container{
-        margin-left: 0;
+        margin-left: -30px;
         display: flex;
         align-self: flex-end;
-        margin-bottom: 10px;
-        max-width: 60%;
     }
 
     #playlist {
