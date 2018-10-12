@@ -157,4 +157,32 @@
     cursor: pointer;
 }
 
+@media screen and (max-width: 28em) {
+    #play-button-container {
+        width: 35%;
+    }
 
+    #play-button-container svg {
+        top: 20px;
+        left: -20px;
+    }
+
+    .button {
+        margin-top: 70px;
+        left: 34px;
+    }
+
+    #playlist-container{
+        margin-left: 0;
+        display: flex;
+        align-self: flex-end;
+        margin-bottom: 10px;
+        max-width: 60%;
+    }
+
+    #playlist {
+        max-height: 100px;
+        overflow-y: scroll;
+        word-break: break-word;
+    }
+}
