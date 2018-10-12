@@ -12,7 +12,7 @@ import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
 import * as C from "./constants";
 import '../Release.css';
 import './index.css';
-import {PLAYLISTS} from "../../PlaylistConstants";
+import {CONTENT} from "../../Content";
 import {assetPath4Images, sleep, keyPressIsFirstPersonControls} from './utils'
 
 class Release0004 extends PureComponent {
@@ -63,7 +63,7 @@ class Release0004 extends PureComponent {
     chillinTime: 0,
     chillinStart: new Date(),
     hasActivatedFirstPersonControls: false,
-    curTrackId: PLAYLISTS[4].tracks[0].id
+    curTrackId: CONTENT[window.location.pathname].tracks[0].id
   }
 
   componentDidMount() {
@@ -416,9 +416,8 @@ class Release0004 extends PureComponent {
             <div id={"progress-bar"} ref={element => this.progressBar = element}/>
           </div>
           <Footer
-            playlist={PLAYLISTS[4]}
+            content={CONTENT[window.location.pathname]}
             fillColor="white"
-            purchaseHref='https://gltd.bandcamp.com/album/ep-1'
           />
         </div>
 
