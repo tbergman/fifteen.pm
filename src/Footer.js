@@ -4,18 +4,24 @@ import Purchase from './Purchase';
 
 class Footer extends PureComponent {
 
+  defaultProps = {
+    inputRef: "audio",
+    fillColor: 0xffffff
+  }
+
   render() {
-    const {playlist, fillColor, purchaseHref} = this.props;
+    const {content, fillColor, audioRef} = this.props;
     return (
       <div className="footer">
         <Player
-          trackList={playlist.tracks}
-          message={playlist.artist}
+          trackList={content.tracks}
+          message={content.artist}
           fillColor={fillColor}
+          inputRef={audioRef}
         />
         <Purchase
           fillColor={fillColor}
-          href={purchaseHref}
+          href={content.purchaseLink}
         />
       </div>
     );

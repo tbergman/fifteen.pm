@@ -1,12 +1,13 @@
 import React, {PureComponent} from 'react';
 import anime from './Utils/Anime.min.js';
-import {SHAPES, MENU_CONTENT} from './MenuConstants';
+import {SHAPES} from './MenuConstants';
+import {CONTENT} from './Content'
 import './Menu.css';
 
 class Menu extends PureComponent {
   state = {
     shapeIndex: Math.floor(Math.random() * 4),
-    message: MENU_CONTENT[window.location.pathname].message,
+    message: CONTENT[window.location.pathname].message,
     currentRel: window.location.pathname,
     showMenu: false,
     fillColor: window.location.pathname === '/3' ? 'red' : '#ffffff' // TODO centralize this lookup (See Logo.js)
@@ -30,7 +31,7 @@ class Menu extends PureComponent {
     const {idx, rel} = e.target.dataset;
     this.setState({
       shapeIndex: idx,
-      message: MENU_CONTENT[rel].message,
+      message: CONTENT[rel].message,
       currentRel: rel
     }, () => {
       this.animateMenu();
@@ -50,7 +51,7 @@ class Menu extends PureComponent {
     e.preventDefault();
     e.stopPropagation();
     this.setState({
-      message: MENU_CONTENT[this.windowLocation],
+      message: CONTENT[this.windowLocation],
     });
     window.location = e.target.dataset.to;
   }

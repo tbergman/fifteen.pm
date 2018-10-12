@@ -1,10 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import {cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth} from "../Utils/Cloth";
-// import {Detector} from "../Utils/Detector";
-import Player from '../Player';
-import Purchase from '../Purchase';
 import {service} from "../Utils/service";
-// import {CannonDebugRenderer} from "../Utils/CannonDebugRenderer.js";
 
 import * as CANNON from 'cannon';
 import * as THREE from 'three';
@@ -13,6 +9,8 @@ import * as TWEEN from 'three-tween';
 import debounce from 'lodash/debounce';
 import {isMobile} from "../Utils/BrowserDetection";
 import {OrbitControls} from "../Utils/OrbitControls";
+import {CONTENT} from "../Content"
+import Footer from "../Footer"
 
 /* this handles number of segments in cloth , TO DO fix this */
 let pinsFormation = [];
@@ -647,12 +645,11 @@ class Release0002 extends Component {
       <Fragment>
         <div className="release">
           <div ref={element => this.container = element}/>
-          <Player
-            trackId='475418370'
-            message='YEAR UNKNOWN'
-            inputRef={el => this.audioElement = el}/>
-          <Purchase href='https://gltd.bandcamp.com/track/timer'/>
         </div>
+        <Footer
+          content={CONTENT[window.location.pathname]}
+          audioRef={el => this.audioElement = el}
+        />
       </Fragment>
     );
   }
