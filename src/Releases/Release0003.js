@@ -2,12 +2,11 @@ import React, {PureComponent, Fragment} from 'react';
 import * as THREE from "three";
 import debounce from 'lodash/debounce';
 import './Release.css';
-import Player from '../Player';
-import Purchase from '../Purchase';
+import Footer from '../Footer'
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
 import {isMobile} from "../Utils/BrowserDetection";
-import {PLAYLISTS} from "../PlaylistConstants";
+import {CONTENT} from "../Content";
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);
@@ -77,11 +76,11 @@ const N_SCRATCHY_MOMENTS = 58;
 const NO_SCRATCHY_MOMENTS_BEFORE = 46;
 const SCRATCHY_TIME_BUFFERS = [
   BEAT_TIME / 4,
-  BEAT_TIME / 2, 
+  BEAT_TIME / 2,
   BEAT_TIME
 ];
 const SCRATCHY_MOMENTS = getRandomMoments(SONG_LENGTH, N_SCRATCHY_MOMENTS)
-                                  .filter(m => !isInterlude(m) && m >= NO_SCRATCHY_MOMENTS_BEFORE);
+  .filter(m => !isInterlude(m) && m >= NO_SCRATCHY_MOMENTS_BEFORE);
 
 class Release0003 extends PureComponent {
   constructor() {
@@ -124,13 +123,13 @@ class Release0003 extends PureComponent {
     if (!isMobile || USE_ORBIT_CONTROLS_ON_MOBILE) {
       this.controls = new OrbitControls(this.camera, this.renderer.domElement);
       this.startTime = Date.now();
-      this.orbitControlsActivated = true;    
+      this.orbitControlsActivated = true;
     }
   }
 
   initGridHelper = () => {
-    this.gridHelper = new THREE.GridHelper( 1000, 1000 );
-    this.scene.add( this.gridHelper );
+    this.gridHelper = new THREE.GridHelper(1000, 1000);
+    this.scene.add(this.gridHelper);
   }
 
   initAudioProps = () => {
@@ -519,7 +518,7 @@ class Release0003 extends PureComponent {
     let scale = smallScale;
     if (beatPos % 4 === 0) {
       scale = largeScale;
-    } else if (beatPos % 2 === 0){
+    } else if (beatPos % 2 === 0) {
       scale = medScale;
     }
 
@@ -573,9 +572,9 @@ class Release0003 extends PureComponent {
     let onLoPassSphere = false;
 
     // first check if the mouse has intersected with the inner sphere
-    if (Math.abs(this.camera.position.z) < (RADIUS + FILTER_RADIUS_BUFFER) && 
-        Math.abs(this.camera.position.x) < (RADIUS + FILTER_RADIUS_BUFFER) &&
-        Math.abs(this.camera.position.y) < (RADIUS + FILTER_RADIUS_BUFFER)) {
+    if (Math.abs(this.camera.position.z) < (RADIUS + FILTER_RADIUS_BUFFER) &&
+      Math.abs(this.camera.position.x) < (RADIUS + FILTER_RADIUS_BUFFER) &&
+      Math.abs(this.camera.position.y) < (RADIUS + FILTER_RADIUS_BUFFER)) {
       let minFilterRange = 0.0;
       let maxFilterRange = (RADIUS + FILTER_RADIUS_BUFFER);
       let adj = Math.max(Math.abs(this.camera.position.z), Math.abs(this.camera.position.y), Math.abs(this.camera.position.x));
@@ -599,7 +598,7 @@ class Release0003 extends PureComponent {
     }
 
     // second, check if the camera is within the radius of the inner sphere
-    if (!onLoPassSphere) { 
+    if (!onLoPassSphere) {
       for (let i = 0; i < intersects.length; i++) {
         if (intersects[i].object.name === 'filterSphere') {
           this.scene.background = new THREE.Color(0x000000);
@@ -644,17 +643,14 @@ class Release0003 extends PureComponent {
 
   render() {
     return (
-      
       <Fragment>
         <div className="release">
           <div ref={element => this.container = element}/>
-          <Player
-            trackList={PLAYLISTS[3].tracks}
-            message='OTHERE'
-            inputRef={el => this.audioElement = el}
+          <Footer
+            content={CONTENT[window.location.pathname]}
             fillColor="red"
+            audioRef={el => this.audioElement = el}
           />
-          <Purchase fillColor="red" href='https://gltd.bandcamp.com/track/lets-beach'/>
         </div>
       </Fragment>
     );

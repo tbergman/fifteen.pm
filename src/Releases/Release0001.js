@@ -4,9 +4,12 @@ import {SimplexNoise} from '../Utils/SimplexNoise';
 import {GPUComputationRenderer} from "../Utils/GPUComputationRenderer";
 import debounce from 'lodash/debounce';
 import './Release.css';
-import Player from '../Player';
-import Purchase from '../Purchase';
+
+import {CONTENT} from "../Content"
+import Footer from "../Footer"
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
+
+
 /* eslint import/no-webpack-loader-syntax: off */
 // import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
 
@@ -299,12 +302,10 @@ class Release0001 extends PureComponent {
             this.mount = mount
           }}
         />
-        <Player
-          trackId='466084773'
-          type='audio/mpeg'
-          message='YAHCEPH'
-          inputRef={el => this.audioElement = el}/>
-        <Purchase href='https://gltd.bandcamp.com/track/wun-4-jas'/>
+        <Footer
+          content={CONTENT[window.location.pathname]}
+          audioRef={el => this.audioElement = el}/>
+        />
       </Fragment>
     );
   }
