@@ -8,4 +8,6 @@ export const CONSTANTS = {
             url: "assets/circuit_pattern.png"
         },
     },
+    bpm: 145,
+    beatTime: (60 / 145) * 1000,
 };
