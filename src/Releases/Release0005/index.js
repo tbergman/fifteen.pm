@@ -10,6 +10,8 @@ import Purchase from '../../Purchase';
 import GLTFLoader from "three-gltf-loader";
 import {loadGLTF} from "../../Utils/Loaders";
 import {assetPath} from "../../Utils/assets";
+import {cameraViews} from "./Utils/cameraViews";
+import {isMobile} from "../../Utils/BrowserDetection";
 
 export const assetPath5 = (p) => {
   return assetPath("5/" + p);
@@ -24,26 +26,20 @@ class Release0005 extends Component {
   }
 
   componentDidMount() {
-
     this.init();
-    this.time = 0;
-    this.clock = new THREE.Clock();
 
-
-      // When user resize window
+    // When user resize window
     window.addEventListener("resize", this.onResize, false);
     // When user move the mouse
     window.addEventListener('click', this.onClick, false);
-    document.body.addEventListener(
-      "mousemove",
-      this.onMouseMove,
-      false
-    );
 
     this.renderScene();
   }
 
   init = () => {
+    this.time = 0;
+    this.clock = new THREE.Clock();
+
     // Create an empty scene and define a fog for it
     this.scene = new THREE.Scene();
 
@@ -68,6 +64,7 @@ class Release0005 extends Component {
     this.createWater();
     this.createTunnelMesh();
     this.createStatue();
+    this.updateCameraView();
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -284,6 +281,21 @@ class Release0005 extends Component {
     this.mirror.rotateY(newMirrorXPos);
   }
 
+  updateCameraView() {
+    //this.mirrorLandCamera = cameraViews[0](this.mirrorLandCamera);
+
+    if (!isMobile && this.state.inMirrorLand) {
+      let count = 0;
+      setInterval(() => {
+          if (count >= cameraViews.length - 1) {
+              count = 0;
+          } else {
+              count += 1;
+          }
+          this.mirrorLandCamera = cameraViews[count](this.mirrorLandCamera);
+      }, CONSTANTS.beatTime * 16);
+    }
+  }
 
   onClick = (e) => {
     if (this.state.exitingWormhole) {
@@ -423,9 +435,9 @@ class Release0005 extends Component {
     let delta = this.clock.getDelta();
 
     this.time += delta * 0.5;
-
-    let camera = this.currentCamera();
-    this.cameraLight.position.copy(camera.position);
+    console.log(this.mirrorLandCamera);
+    let camera = this.mirrorLandCamera;
+    // this.cameraLight.position.copy(camera.position);
 
     this.state.exitingWormhole && this.updateWormholeTravel();
     this.statueObj && this.animateStatueAndMirror();
