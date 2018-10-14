@@ -7,6 +7,13 @@ import {Reflector} from '../../Utils/Reflector';
 import {Water} from '../../Utils/Water2';
 import SoundcloudPlayer from '../../SoundcloudPlayer';
 import Purchase from '../../Purchase';
+import GLTFLoader from "three-gltf-loader";
+import {loadGLTF} from "../../Utils/Loaders";
+import {assetPath} from "../../Utils/assets";
+
+export const assetPath5 = (p) => {
+  return assetPath("5/" + p);
+}
 
 class Release0005 extends Component {
   state = {
@@ -15,6 +22,7 @@ class Release0005 extends Component {
   }
 
   componentDidMount() {
+
     this.init();
 
     // When user resize window
@@ -45,17 +53,16 @@ class Release0005 extends Component {
     this.mirrorLandCamera.position.set(-16.5, 2.9, 14.7);
     this.mirrorLandCamera.lookAt(this.scene.position);
 
-
     this.exitingWormholeCamera = new THREE.PerspectiveCamera(84, window.innerWidth / window.innerHeight, 0.01, 1000);
     this.exitingWormholeCamera.name = "exitingWormholeCamera";
     this.scene.add(this.exitingWormholeCamera);
-
 
     this.createSkyBox();
     this.createMirror();
     this.createLights();
     this.createWater();
     this.createTunnelMesh();
+    this.createStatue();
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -65,8 +72,6 @@ class Release0005 extends Component {
     this.controls = new OrbitControls(this.mirrorLandCamera, this.renderer.domElement);
 
     this.container.appendChild(this.renderer.domElement);
-
-
   }
 
   createLights() {
@@ -225,6 +230,51 @@ class Release0005 extends Component {
     // original tube geometry
     this.tubeGeometry_o = this.tubeGeometry.clone();
   };
+
+  createStatue = () => {
+    this.object = {};
+    // define gltf loading manager
+    this.manager = new THREE.LoadingManager();
+    this.loader = new GLTFLoader(this.manager);
+    const statuePath = assetPath5("objects/discus-thrower/scene.gltf");
+    const statueTexturePath = assetPath5("objects/discus-thrower/textures/texture1.png");
+
+    const statueObj = {
+      url: statuePath,
+      name: "discus-thrower",
+      position: [0, 0, 0],
+      rotateX: 0.001,
+      rotateY: -0.005,
+      rotateZ: 0.01,
+      relativeScale: .1
+    }
+
+    loadGLTF({
+      ...statueObj, loader: this.loader, onSuccess: (gltfObj) => {
+
+        var cubeTextureLoader = new THREE.CubeTextureLoader();
+        cubeTextureLoader.setPath('assets/releases/5/textures/cube/gradients/');
+        var cubeTexture = cubeTextureLoader.load([
+          '1.jpg', '1.jpg',
+          '1.jpg', '1.jpg',
+          '1.jpg', '1.jpg',
+        ]);
+        const statueObj = gltfObj.scene.children[0].children[0];
+        console.log("THIS IS THE STATUE OBJ", statueObj);
+        const updatedStatueMaterial = new THREE.MeshBasicMaterial({
+          color: 0xffffff,
+          envMap: cubeTexture
+        });
+        statueObj.material = updatedStatueMaterial;
+        statueObj.scale.set(.01, .01, .01);
+        statueObj.position.set(-5, -1.5, 0);
+        this.scene.add(statueObj);
+        // console.log(gltfObj.scene.children[0])
+      }
+    });
+
+  }
+
 
   onClick = (e) => {
     if (this.state.exitingWormhole) {
