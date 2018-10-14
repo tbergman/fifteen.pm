@@ -83,8 +83,6 @@ class Player extends PureComponent {
   }
 
   handlePlay = () => {
-    this.state.audioElement.pause();
-    this.state.audioElement.load();
     this.state.audioElement.play();
     this.setState({paused: false});
   }
