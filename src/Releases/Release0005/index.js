@@ -15,17 +15,22 @@ export const assetPath5 = (p) => {
   return assetPath("5/" + p);
 }
 
+let statueDirection = 0.01;
+
 class Release0005 extends Component {
   state = {
-    exitingWormhole: true,
-    inMirrorLand: false
+    exitingWormhole: false,
+    inMirrorLand: true
   }
 
   componentDidMount() {
 
     this.init();
+    this.time = 0;
+    this.clock = new THREE.Clock();
 
-    // When user resize window
+
+      // When user resize window
     window.addEventListener("resize", this.onResize, false);
     // When user move the mouse
     window.addEventListener('click', this.onClick, false);
@@ -70,20 +75,20 @@ class Release0005 extends Component {
     document.body.appendChild(this.renderer.domElement);
 
     this.controls = new OrbitControls(this.mirrorLandCamera, this.renderer.domElement);
-
     this.container.appendChild(this.renderer.domElement);
   }
 
   createLights() {
     const {scene} = this;
 
-    this.cameraLight = new THREE.DirectionalLight(0xffffff);
+    this.cameraLight = new THREE.DirectionalLight(0x666666);
     // light.position.set( 0, 0, 1 );
     this.scene.add(this.cameraLight);
 
     var mainLight = new THREE.PointLight(0xcccccc, 1.5, 250);
-    mainLight.position.y = 60;
+    mainLight.position.y = 100;
     scene.add(mainLight);
+
     var greenLight = new THREE.PointLight(0x00ff00, 0.25, 1000);
     greenLight.position.set(550, 50, 0);
     scene.add(greenLight);
@@ -103,19 +108,18 @@ class Release0005 extends Component {
       flowX: 1,
       flowY: 1
     };
-    var waterGeometry = new THREE.PlaneBufferGeometry(25, 25);
+    var waterGeometry = new THREE.PlaneBufferGeometry(50, 50);
     this.water = new Water(waterGeometry, {
       color: params.color,
       scale: params.scale,
       flowDirection: new THREE.Vector2(params.flowX, params.flowY),
-      textureWidth: 1024,
-      textureHeight: 1024
+      textureWidth: 512,
+      textureHeight: 512
     });
     this.water.position.y = .1;
     this.water.rotation.x = Math.PI * -0.5;
     scene.add(this.water);
   }
-
 
   createSkyBox() {
     const {scene} = this;
@@ -139,34 +143,33 @@ class Release0005 extends Component {
     scene.add(skyBox);
   }
 
-
   createMirror() {
     const mirrorGeometry = new THREE.CircleBufferGeometry(5, 64);
     const mirror = new Reflector(mirrorGeometry, {
-      // clipBias: 0.003,
+      clipBias: 0.3,
       textureWidth: CONSTANTS.ww * window.devicePixelRatio,
       textureHeight: CONSTANTS.wh * window.devicePixelRatio,
-      color: 0xffffff,
+      color: 0x000000,
       recursion: 1
     });
+
     mirror.position.y = 0;
     mirror.rotateY(-Math.PI / 2);
 
     this.mirror = mirror;
     this.scene.add(this.mirror);
-
-    var geometry = new THREE.PlaneBufferGeometry(100, 100);
-    var verticalMirror = new Reflector(geometry, {
-      // clipBias: 0.003,
-      textureWidth: CONSTANTS.ww * window.devicePixelRatio,
-      textureHeight: CONSTANTS.wh * window.devicePixelRatio,
-      color: 0x889999,
-      recursion: 5
-    });
-    verticalMirror.position.y = 50;
-    verticalMirror.position.z = -50;
+    //
+    // var geometry = new THREE.PlaneBufferGeometry(50, 50);
+    // var verticalMirror = new Reflector(geometry, {
+    //   // clipBias: 0.003,
+    //   textureWidth: CONSTANTS.ww * window.devicePixelRatio,
+    //   textureHeight: CONSTANTS.wh * window.devicePixelRatio,
+    //   color: 0x889999,
+    //   recursion: 1
+    // });
+    // verticalMirror.position.y = 0;
+    // verticalMirror.position.z = -50;
     // this.scene.add(verticalMirror);
-
   }
 
   createTunnelMesh() {
@@ -210,13 +213,8 @@ class Release0005 extends Component {
       map: textures.galaxy.texture
     });
 
-
     this.tubeMaterial.map.wrapS = THREE.RepeatWrapping;
     this.tubeMaterial.map.wrapT = THREE.RepeatWrapping;
-
-    // this.tubeMaterial = new THREE.MeshLambertMaterial({ color: 0xffa000, opacity: 0.3, wireframe: true, transparent: true} );
-
-    // this.tubeMaterial = new THREE.MeshLambertMaterial({color: 0xff00ff});
 
     const radiusSegments = 12
     this.tubeGeometry = new THREE.TubeGeometry(this.curve, this.numTubeSegments, 2, radiusSegments, false);
@@ -237,42 +235,53 @@ class Release0005 extends Component {
     this.manager = new THREE.LoadingManager();
     this.loader = new GLTFLoader(this.manager);
     const statuePath = assetPath5("objects/discus-thrower/scene.gltf");
-    const statueTexturePath = assetPath5("objects/discus-thrower/textures/texture1.png");
+    const renderStatue = gltfObj => this.renderStatueGltfObj(gltfObj);
 
-    const statueObj = {
+    const statueLoadGLTFParams = {
       url: statuePath,
       name: "discus-thrower",
       position: [0, 0, 0],
       rotateX: 0.001,
       rotateY: -0.005,
       rotateZ: 0.01,
-      relativeScale: .1
+      relativeScale: .1,
+      loader: this.loader,
+      onSuccess: renderStatue,
     }
 
-    loadGLTF({
-      ...statueObj, loader: this.loader, onSuccess: (gltfObj) => {
+    loadGLTF({...statueLoadGLTFParams});
+  }
 
-        var cubeTextureLoader = new THREE.CubeTextureLoader();
-        cubeTextureLoader.setPath('assets/releases/5/textures/cube/gradients/');
-        var cubeTexture = cubeTextureLoader.load([
-          '1.jpg', '1.jpg',
-          '1.jpg', '1.jpg',
-          '1.jpg', '1.jpg',
-        ]);
-        const statueObj = gltfObj.scene.children[0].children[0];
-        console.log("THIS IS THE STATUE OBJ", statueObj);
-        const updatedStatueMaterial = new THREE.MeshBasicMaterial({
-          color: 0xffffff,
-          envMap: cubeTexture
-        });
-        statueObj.material = updatedStatueMaterial;
-        statueObj.scale.set(.01, .01, .01);
-        statueObj.position.set(-5, -1.5, 0);
-        this.scene.add(statueObj);
-        // console.log(gltfObj.scene.children[0])
-      }
+  renderStatueGltfObj = (gltfObj) => {
+    var cubeTextureLoader = new THREE.CubeTextureLoader();
+    cubeTextureLoader.setPath('assets/releases/5/objects/discus-thrower/textures/texture1.png/');
+    var cubeTexture = cubeTextureLoader.load([
+        '6.jpg', '6.jpg',
+        '6.jpg', '6.jpg',
+        '6.jpg', '6.jpg',
+    ]);
+    const statueObj = gltfObj.scene.children[0].children[0];
+    const updatedStatueMaterial = new THREE.MeshBasicMaterial({
+        color: 0xeeeeee,
+        envMap: cubeTexture
     });
+    statueObj.material = updatedStatueMaterial;
+    statueObj.scale.set(.01, .01, .01);
+    statueObj.position.set(-2, -4.5, 0);
 
+    this.statueObj = statueObj;
+    this.scene.add(statueObj);
+    return gltfObj;
+  }
+
+  animateStatueAndMirror() {
+    const {position} = this.statueObj;
+    if (position.y > -0.1) statueDirection = -0.01;
+    if (position.y < -4.5) statueDirection = 0.01;
+    const newPos = position.y + statueDirection;
+    position.setY(newPos);
+    const newMirrorXPos = this.mirror.position.x + 0.01;
+    this.mirror.rotateY(newMirrorXPos);
   }
 
 
@@ -284,12 +293,11 @@ class Release0005 extends Component {
       });
     } else if (this.state.inMirrorLand) {
       this.setState({
-        inMirrorLand: false,
-        exitingWormhole: true
+        inMirrorLand: true,
+        exitingWormhole: false
       });
     }
   }
-
 
   onMouseMove = (e) => {
     // Save mouse X & Y position
@@ -361,6 +369,7 @@ class Release0005 extends Component {
   };
 
   updateWormholeTravel() {
+    this.updateMaterialOffset();
 
     const {scale, normal, binormal, tubeGeometry, exitingWormholeCamera} = this;
     // animate camera along spline
@@ -408,26 +417,20 @@ class Release0005 extends Component {
     } else if (this.state.inMirrorLand) {
       return this.mirrorLandCamera;
     }
-    console.log(this.state)
   }
 
   renderScene() {
-    // Update material offset
-    this.updateMaterialOffset();
+    let delta = this.clock.getDelta();
+
+    this.time += delta * 0.5;
+
     let camera = this.currentCamera();
-    // this.updateCameraPosition(camera);
-    //
-
     this.cameraLight.position.copy(camera.position);
-    // this.updateCurve();
-    // render the scene
+
+    this.state.exitingWormhole && this.updateWormholeTravel();
+    this.statueObj && this.animateStatueAndMirror();
+
     this.renderer.render(this.scene, camera);
-
-    if (this.state.exitingWormhole) {
-      this.updateWormholeTravel()
-    }
-
-    // Animation loop
     window.requestAnimationFrame(this.renderScene.bind(this));
   }
 
@@ -436,7 +439,8 @@ class Release0005 extends Component {
       <Fragment>
         <div ref={element => this.container = element}/>
         <SoundcloudPlayer
-          trackId='267037220'
+          trackId='514219014'
+          secretToken='s-WJVl5'
           message='PLEBEIAN'
           inputRef={el => this.audioElement = el}
           fillColor="white"/>
