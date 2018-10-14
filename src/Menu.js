@@ -99,17 +99,6 @@ class Menu extends PureComponent {
     );
   }
 
-  // renderLinks() {
-  //   // const playList =   tracks.map((track) =>
-  //     {/*<li>{track}</li>*/}
-  //   // return (
-  //     {/*<div className="links">*/}
-  //       {/*<ul>{playList}</ul>*/}
-  //     // </div>
-  //   // );
-  // }
-
-
   renderLinks() {
     return (
       <div className="links">
