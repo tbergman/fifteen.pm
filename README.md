@@ -60,10 +60,16 @@ yarn reset-local-assets-from-s3
 
 #### To reset s3 assets using local assets:
 
-**WARNING**: This will delete all your s3 assets. Make sure you know what you're doing!
+**WARNING**: Use EXTREME caution with this command, it will delete ALL of our production assets, and replace them with your local assets, lol.
 
 ```
 yarn reset-s3-assets-from-local
+```
+
+#### To backup our production assets to a timestamped backup location at `s3://backups.assets.globally.ltd/<iso-timestamp>`:
+
+```
+yarn backup-assets
 ```
 
 #### To sync local assets to prod:
