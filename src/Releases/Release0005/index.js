@@ -33,6 +33,7 @@ class Release0005 extends Component {
     // When user move the mouse
     window.addEventListener('click', this.onClick, false);
 
+    console.log(this.mirrorLandCamera);
     this.renderScene();
   }
 
@@ -293,7 +294,7 @@ class Release0005 extends Component {
               count += 1;
           }
           this.mirrorLandCamera = cameraViews[count](this.mirrorLandCamera);
-      }, CONSTANTS.beatTime * 16);
+      }, CONSTANTS.beatTime * 10);
     }
   }
 
@@ -435,7 +436,7 @@ class Release0005 extends Component {
     let delta = this.clock.getDelta();
 
     this.time += delta * 0.5;
-    console.log(this.mirrorLandCamera);
+
     let camera = this.mirrorLandCamera;
     // this.cameraLight.position.copy(camera.position);
 
