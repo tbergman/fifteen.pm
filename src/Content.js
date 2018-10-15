@@ -54,6 +54,24 @@ export const CONTENT = {
     purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
     message: "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials."
   },
+  "/5": {
+    artist: "PLEBEIAN",
+    tracks: [
+      {
+        title: "Heaven",
+        id: "514219014",
+        secretToken: "s-WJVl5"
+
+      },
+      {
+        title: "Bullseye",
+        id: "514219020",
+        secretToken: "s-QGHQP"
+      }
+    ],
+    purchaseLink: "TODO",
+    message: "TODO"
+  },
   "/test-dummy": {
     artist: "DUMMY",
     tracks: [
