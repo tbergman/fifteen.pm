@@ -19,6 +19,8 @@ export const MIND_STATE_CHILLIN = 'chillin';
 export const MIND_STATE_EXITING = 'exiting';
 export const MIND_STATE_FLYING = 'flying';
 
+
+
 export const SUN = {
   type: 'gltf',
   name: 'sun',
