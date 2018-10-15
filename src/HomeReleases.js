@@ -44,6 +44,14 @@ const RELEASES = [
     radius: DEFAULT_RADIUS + Math.random() * 3,
     textURL: assetPath("4/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-octave.wav")
+  },
+  {
+    path: "/5",
+    name: "PLEBIAN",
+    imageURL: assetPath("4/images/home.png"),
+    radius: DEFAULT_RADIUS + Math.random() * 3,
+    textURL: assetPath("4/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-octave.wav")
   }
 ];
 

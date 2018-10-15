@@ -130,7 +130,7 @@ class Release0005 extends Component {
     var cubeTexture = cubeTextureLoader.load([
       '4.jpg', '5.jpg',
       '6.jpg', '4.jpg',
-      '5.jpg', '6.jpg',
+      '4.jpg', '4.jpg',
     ]);
     var cubeShader = THREE.ShaderLib['cube'];
     cubeShader.uniforms['tCube'].value = cubeTexture;
@@ -159,18 +159,6 @@ class Release0005 extends Component {
 
     this.mirror = mirror;
     this.scene.add(this.mirror);
-    //
-    // var geometry = new THREE.PlaneBufferGeometry(50, 50);
-    // var verticalMirror = new Reflector(geometry, {
-    //   // clipBias: 0.003,
-    //   textureWidth: CONSTANTS.ww * window.devicePixelRatio,
-    //   textureHeight: CONSTANTS.wh * window.devicePixelRatio,
-    //   color: 0x889999,
-    //   recursion: 1
-    // });
-    // verticalMirror.position.y = 0;
-    // verticalMirror.position.z = -50;
-    // this.scene.add(verticalMirror);
   }
 
   createTunnelMesh() {
@@ -206,6 +194,7 @@ class Release0005 extends Component {
         url: "./assets/releases/5/images/blue_purple.jpg"
       }
     };
+
     textures.galaxy.texture = loader.load(textures.galaxy.url, function (texture) {
       return texture;
     });
@@ -251,15 +240,15 @@ class Release0005 extends Component {
 
   renderStatueGltfObj = (gltfObj) => {
     var cubeTextureLoader = new THREE.CubeTextureLoader();
-    cubeTextureLoader.setPath('assets/releases/5/objects/discus-thrower/textures/texture1.png/');
+    cubeTextureLoader.setPath('assets/releases/5/images/');
     var cubeTexture = cubeTextureLoader.load([
-        '6.jpg', '6.jpg',
-        '6.jpg', '6.jpg',
-        '6.jpg', '6.jpg',
+        '4.jpg', '5.jpg',
+        '6.jpg', '4.jpg',
+        '5.jpg', '6.jpg',
     ]);
     const statueObj = gltfObj.scene.children[0].children[0];
     const updatedStatueMaterial = new THREE.MeshBasicMaterial({
-        color: 0xeeeeee,
+        color: 0x555555,
         envMap: cubeTexture
     });
     statueObj.material = updatedStatueMaterial;
@@ -271,16 +260,16 @@ class Release0005 extends Component {
     return gltfObj;
   }
 
-  animateStatueAndMirror() {
+  animateSceneObjects() {
     const {position} = this.statueObj;
     if (position.y > Math.random() * -0.9 + 0.1) statueDirection = -0.01;
-    if (position.y < Math.random() * -5.5 + -3 ) statueDirection = 0.01;
+    if (position.y < Math.random() * -5.5 + -4 ) statueDirection = 0.01;
     const newPos = position.y + statueDirection;
     position.setY(newPos);
-    this.statueObj.rotateY(statueDirection);
+    this.statueObj.rotateY(0.01);
     const newMirrorXPos = this.mirror.position.x + 0.01;
     this.mirror.rotateY(newMirrorXPos);
-    this.coinObj.position.y = this.coinObj.position.y + statueDirection/2;
+    this.coinObj.position.y = this.coinObj.position.y + statueDirection;
   }
 
   createCoin() {
@@ -312,8 +301,8 @@ class Release0005 extends Component {
 
     const coinObj = gltfObj.scene.children[0].children[0];
     const updatedCoinMaterial = new THREE.MeshBasicMaterial({
-        color: 0xff0000,
-        //envMap: cubeTexture
+        color: 0xffffff,
+        envMap: cubeTexture
     });
     coinObj.material = updatedCoinMaterial;
     coinObj.scale.set(0.06, 0.06, 0.06);
@@ -481,7 +470,7 @@ class Release0005 extends Component {
     if(this.state.exitingWormhole) {
       this.updateWormholeTravel();
     } else {
-      this.statueObj && this.animateStatueAndMirror();
+      this.statueObj && this.animateSceneObjects();
     }
 
     this.renderer.render(this.scene, camera);
