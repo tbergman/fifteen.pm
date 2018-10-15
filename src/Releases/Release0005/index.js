@@ -53,14 +53,8 @@ class Release0005 extends Component {
       target: new THREE.Vector2(0, 0)
     };
 
-    this.mirrorLandCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.mirrorLandCamera.position.set(-16.5, 2.9, 14.7);
-    this.mirrorLandCamera.lookAt(this.scene.position);
 
-    this.exitingWormholeCamera = new THREE.PerspectiveCamera(84, window.innerWidth / window.innerHeight, 0.01, 1000);
-    this.exitingWormholeCamera.name = "exitingWormholeCamera";
-    this.scene.add(this.exitingWormholeCamera);
-
+    this.createCameras();
     this.createSkyBox();
     this.createMirror();
     this.createLights();
@@ -76,15 +70,25 @@ class Release0005 extends Component {
     document.body.appendChild(this.renderer.domElement);
 
     this.controls = new OrbitControls(this.mirrorLandCamera, this.renderer.domElement);
+    this.controls.maxDistance = 1500;
     this.container.appendChild(this.renderer.domElement);
+  }
+
+  createCameras() {
+    this.mirrorLandCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.mirrorLandCamera.position.set(-16.5, 2.9, 14.7);
+    this.mirrorLandCamera.lookAt(this.scene.position);
+
+    this.exitingWormholeCamera = new THREE.PerspectiveCamera(84, window.innerWidth / window.innerHeight, 0.01, 1000);
+    this.exitingWormholeCamera.name = "exitingWormholeCamera";
+    this.scene.add(this.exitingWormholeCamera);
   }
 
   createLights() {
     const {scene} = this;
 
     this.cameraLight = new THREE.DirectionalLight(0x0000ff);
-    // light.position.set( 0, 0, 1 );
-    this.scene.add(this.cameraLight);
+    scene.add(this.cameraLight);
 
     var mainLight = new THREE.PointLight(0xffffff, 1.5, 250);
     mainLight.position.y = 100;
@@ -93,9 +97,11 @@ class Release0005 extends Component {
     var greenLight = new THREE.PointLight(0x0000ff, 1.25, 1000);
     greenLight.position.set(550, 50, 0);
     scene.add(greenLight);
+
     var redLight = new THREE.PointLight(0xff0000, 0.25, 1000);
     redLight.position.set(-550, 50, 0);
     scene.add(redLight);
+
     var blueLight = new THREE.PointLight(0x0000ff, 0.25, 1000);
     blueLight.position.set(550, 50, 0);
     scene.add(blueLight);
@@ -294,9 +300,9 @@ class Release0005 extends Component {
   renderCoin = (gltfObj) => {
     this.cubeTextureLoader.setPath('assets/releases/5/objects/old_coin/textures/Material_25_normal.png/');
     var cubeTexture = this.cubeTextureLoader.load([
-        '6.jpg', '6.jpg',
-        '6.jpg', '6.jpg',
-        '6.jpg', '6.jpg',
+        '4.jpg', '5.jpg',
+        '6.jpg', '4.jpg',
+        '5.jpg', '6.jpg',
     ]);
 
     const coinObj = gltfObj.scene.children[0].children[0];
