@@ -1,29 +1,62 @@
-import React, {Component} from 'react';
-import './Player.css';
+import React, {Fragment, PureComponent} from 'react';
+import './Player.css'
 
+const soundcloudClientId = "ad6375f4b6bc0bcaee8edf53ab37e7f2"; // 😄
+const soundcloudApiUrl = "https://api.soundcloud.com/tracks";
 
-class Player extends Component {
-  static defaultProps = {
-    fillColor: '#ffffff',
+class Player extends PureComponent {
+  state = {
+    paused: true, // Assume autoplay doesn't work.
+    src: this.formatSoundcloudSrc(
+      this.props.trackList[0].id,
+      this.props.trackList[0].secretToken
+    ),
+    audioElement: document.getElementById('audio-player'),
+    curTrackIdx: 0
   }
 
-  // Assume autplay does not work.
-  state = {
-    paused: true
+  static defaultProps = {
+    fillColor: '#ffffff',
+    selectedColor: '#fa0afa',
+    type: 'audio/mpeg'
   }
 
   componentDidMount() {
-    this.audioPlayer = document.getElementById('audio-player');
+    this.updateAudioElement()
 
-    this.audioPlayer.addEventListener('playing', this.resetPlayer, false)
+  }
+
+  componentDidUpdate() {
+    this.updateAudioElement()
+  }
+
+  componentWillUnmount() {
+    this.state.audioElement.removeEventListener('playing', this.resetPlayer, false);
+    this.state.audioElement.removeEventListener('ended', this.advanceTrack, false);
+  }
+
+  updateAudioElement() {
+    this.setState({
+      audioElement: document.getElementById('audio-player')
+    }, () => {
+      this.state.audioElement.addEventListener('playing', this.resetPlayer, false);
+      this.state.audioElement.addEventListener('ended', this.advanceTrack, false);
+    });
+  }
+
+  formatSoundcloudSrc(trackId, secretToken) {
+    let url = `${soundcloudApiUrl}/${trackId}/stream?client_id=${soundcloudClientId}`;
+    if (secretToken !== undefined) {
+      url += `&secret_token=${secretToken}`
+    }
+    return url;
   }
 
   isPlaying = (e) => {
     // Check if the audio is playing
-
-    return this.audioPlayer.duration > 0
-            && !this.audioPlayer.paused
-            && !this.audioPlayer.ended;
+    return this.state.audioElement.duration > 0
+      && !this.state.audioElement.paused
+      && !this.state.audioElement.ended;
   }
 
   resetPlayer = () => {
@@ -37,52 +70,132 @@ class Player extends Component {
     }
   }
 
+  advanceTrack = () => {
+    const {trackList} = this.props;
+    const {curTrackIdx} = this.state;
+    const nextTrackIdx = curTrackIdx + 1 === trackList.length ? 0 : curTrackIdx + 1;
+    const nextTrack = trackList[nextTrackIdx];
+    this.setState({
+      curTrackIdx: nextTrackIdx,
+      src: this.formatSoundcloudSrc(nextTrack.id, nextTrack.secretToken),
+      paused: false
+    });
+  }
+
   handlePlay = () => {
-    this.audioPlayer.play();
-    this.setState({ paused: false});
+    this.state.audioElement.play();
+    this.setState({paused: false});
   }
 
   handlePause = () => {
-    this.audioPlayer.pause();
-    this.setState({ paused: true});
+    this.state.audioElement.pause();
+    this.setState({paused: true});
   }
 
-  onClick = (e) => {
+  handlePlayButtonClick = (e) => {
     e.preventDefault();
-    if(!this.isPlaying()) {
-      this.audioPlayer.play();
+    if (!this.isPlaying()) {
+      this.state.audioElement.play();
     }
-    if(!this.state.paused) {
+    if (!this.state.paused) {
       this.handlePause();
     } else {
       this.handlePlay();
     }
   }
 
-  render() {
+  handlePlaylistClick = (e, idx) => {
+    const {trackList} = this.props;
+    const track = trackList[idx];
+    e.preventDefault();
+    this.setState({
+      curTrackIdx: idx,
+      src: this.formatSoundcloudSrc(track.id, track.secretToken),
+      paused: false
+    });
+  }
+
+  renderPlaylist = () => {
+    const {trackList, fillColor, selectedColor} = this.props;
+    const {curTrackIdx} = this.state;
+    const curTrack = trackList[curTrackIdx];
+    if (trackList.length > 1) {
+      const playList = trackList.map((track, idx) =>
+        <li
+          style={{color: track.id === curTrack.id ? selectedColor : fillColor}}
+          className={track.id === curTrack.id ? "active-track" : null}
+          onClick={((e) => this.handlePlaylistClick(e, idx))} key={track.id}>
+          {track.id === curTrack.id && <span id="current-track-smiley">☻</span>}
+          {track.title}
+        </li>
+      );
+      return (
+        <div id="playlist-container">
+          <ul key={curTrack.id} id="playlist">{playList}</ul>
+        </div>
+      );
+    }
+  }
+
+  renderPlayerButton = () => {
     const {paused} = this.state;
-    const {message, inputRef, src, type, fillColor} = this.props;
+    const {message, fillColor} = this.props;
+    return (
+      <div id="play-button-container">
+        <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" fill={fillColor}>
+          <defs>
+            <path id="circlePath" d=" M 150, 150 m -60, 0 a 60,60 0 0,1 120,0 a 60,60 0 0,1 -120,0 "/>
+          </defs>
+          <circle cx="100" cy="100" r="50" fill="none" stroke="none"/>
+          <g>
+            <use xlinkHref="#circlePath" fill="none"/>
+            <text fill="#000" stroke="red">
+              <textPath xlinkHref="#circlePath" fill={fillColor}>{message}</textPath>
+            </text>
+          </g>
+        </svg>
+        <div onClick={this.handlePlayButtonClick} className={paused ? 'button' : 'button paused'}
+             style={{borderColor: `transparent transparent transparent ${fillColor}`}}/>
+      </div>
+    );
+  }
+
+  renderPlayerElements = () => {
+    const playButton = this.renderPlayerButton();
+    const playList = this.renderPlaylist();
     return (
       <div id="player-container">
-        <div id="player">
-          <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" fill={fillColor}>
-            <defs>
-              <path id="circlePath" d=" M 150, 150 m -60, 0 a 60,60 0 0,1 120,0 a 60,60 0 0,1 -120,0 "/>
-            </defs>
-            <circle cx="100" cy="100" r="50" fill="none" stroke="none"/>
-            <g>
-                <use xlinkHref="#circlePath" fill="none"/>
-                <text fill="#000" stroke="red">
-                    <textPath xlinkHref="#circlePath" fill={fillColor}>{message}</textPath>
-                </text>
-            </g>
-          </svg>
-          <div onClick={this.onClick} className={paused ? 'button' : 'button paused'} style={{borderColor: `transparent transparent transparent ${fillColor}`}}/>
-          <audio id="audio-player" loop autoPlay crossOrigin="anonymous" ref={inputRef}>
-            <source src={src} type={type}/>
-          </audio>
-        </div>
+        {playButton}
+        {playList}
       </div>
+    );
+  }
+
+  renderAudioTag = () => {
+    const {type, audioRef} = this.props;
+    const {src} = this.state;
+    return (
+      <Fragment>
+        <audio key={src} id="audio-player"
+               autoPlay
+               crossOrigin="anonymous"
+               ref={audioRef}
+        >
+          <source src={src} type={type}/>
+        </audio>
+      </Fragment>
+    );
+  }
+
+
+  render() {
+    const playerElements = this.renderPlayerElements();
+    const audioTag = this.renderAudioTag();
+    return (
+      <Fragment>
+        {playerElements}
+        {audioTag}
+      </Fragment>
     );
   }
 }

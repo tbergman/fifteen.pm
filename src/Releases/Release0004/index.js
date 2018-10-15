@@ -4,14 +4,15 @@ import {isMobile} from '../../Utils/BrowserDetection';
 import debounce from "lodash/debounce";
 import GLTFLoader from 'three-gltf-loader';
 
-import SoundcloudPlayer from '../../SoundcloudPlayer';
-import Purchase from '../../Purchase';
+
+import Footer from '../../Footer';
 import {FirstPersonControls} from '../../Utils/FirstPersonControls';
 import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
 
 import * as C from "./constants";
 import '../Release.css';
 import './index.css';
+import {CONTENT} from "../../Content";
 import {assetPath4Images, sleep, keyPressIsFirstPersonControls} from './utils'
 
 class Release0004 extends PureComponent {
@@ -31,9 +32,9 @@ class Release0004 extends PureComponent {
     lightA.position.set(1000, 0, 1000);
     this.scene.add(lightA);
 
-    let lightD = new THREE.DirectionalLight( 0xffffff );
-    lightD.position.set( -2000, 0, -2000 );
-    lightD.target.position.set( 0, 0, 0 );
+    let lightD = new THREE.DirectionalLight(0xffffff);
+    lightD.position.set(-2000, 0, -2000);
+    lightD.target.position.set(0, 0, 0);
     this.scene.add(lightD);
 
     this.controls = new FirstPersonControls(this.camera);
@@ -61,7 +62,8 @@ class Release0004 extends PureComponent {
     isLoaded: false,
     chillinTime: 0,
     chillinStart: new Date(),
-    hasActivatedFirstPersonControls: false
+    hasActivatedFirstPersonControls: false,
+    curTrackId: CONTENT[window.location.pathname].tracks[0].id
   }
 
   componentDidMount() {
@@ -109,7 +111,7 @@ class Release0004 extends PureComponent {
 
   onKeyDown = (e) => {
     if (keyPressIsFirstPersonControls(e.keyCode)) {
-      this.setState({hasActivatedFirstPersonControls:true})
+      this.setState({hasActivatedFirstPersonControls: true})
     }
   }
 
@@ -144,33 +146,33 @@ class Release0004 extends PureComponent {
     // define gltf loading manager
     this.manager = new THREE.LoadingManager();
 
-    this.manager.onStart = ( url, itemsLoaded, itemsTotal ) => {
+    this.manager.onStart = (url, itemsLoaded, itemsTotal) => {
       this.emojiProgress = "";
       this.progressBar.innerHTML = "<img class='stretch' src='" + assetPath4Images('wormhole.gif') + "'></img>" +
-                                   this.loadingText();
+        this.loadingText();
     };
 
-    this.manager.onProgress = ( url, itemsLoaded, itemsTotal ) => {
+    this.manager.onProgress = (url, itemsLoaded, itemsTotal) => {
       let d = this.clock.getDelta();
       this.elapsed += d;
     };
 
-    this.manager.onLoad = ( ) => {
-      let sleepTime = C.MIN_LOAD_TIME  - this.elapsed;
+    this.manager.onLoad = () => {
+      let sleepTime = C.MIN_LOAD_TIME - this.elapsed;
       if (sleepTime > 0) {
         sleep(1000 * sleepTime)
       }
       if (!isMobile) {
-        this.setState({ isLoaded: true });
+        this.setState({isLoaded: true});
         this.progressBar.innerHTML = "";
         this.progressBar.zIndex = -100;
       }
     };
 
-    this.manager.onError = ( url ) => {
+    this.manager.onError = (url) => {
       this.progressBar.innerText = 'There was an error! Email dev@globally.lrd';
     };
-    this.loader = new GLTFLoader( this.manager );
+    this.loader = new GLTFLoader(this.manager);
   }
 
   addObjectToScene = (obj) => {
@@ -181,7 +183,11 @@ class Release0004 extends PureComponent {
   initObject = (obj) => {
     let output;
     if (obj.type === 'gltf') {
-      output = loadGLTF({...obj, loader: this.loader, onSuccess: (x) => {this.addObjectToScene(x)} });
+      output = loadGLTF({
+        ...obj, loader: this.loader, onSuccess: (x) => {
+          this.addObjectToScene(x)
+        }
+      });
     } else if (obj.type === 'video') {
       output = loadVideo({...obj, computeBoundingSphere: true});
       this.scene.add(output);
@@ -209,7 +215,7 @@ class Release0004 extends PureComponent {
     this.initObject(obj);
     // down't load moons on mobile
     if (isMobile) {
-        return;
+      return;
     }
     for (let i = 0; i < obj.moons.length; i++) {
       this.initObject(obj.moons[i]);
@@ -240,7 +246,7 @@ class Release0004 extends PureComponent {
   }
 
   playCurPlanet = () => {
-     this.getCurPlanet().userData.video.play();
+    this.getCurPlanet().userData.video.play();
   }
 
   pausePrevPlanet = () => {
@@ -262,7 +268,7 @@ class Release0004 extends PureComponent {
     // add starting point
     let pathVertices = [new THREE.Vector3(...C.STARTING_POINT)];
     for (let i = 0; i < C.PLANETS.length; i++) {
-      if (i !== C.PLANETS.length-1) {
+      if (i !== C.PLANETS.length - 1) {
         pathVertices.push(new THREE.Vector3(...C.PLANETS[i].position));
       }
     }
@@ -272,7 +278,7 @@ class Release0004 extends PureComponent {
       pathVertices.push(new THREE.Vector3(...C.ASTEROIDS[i].position));
     }
     // visit the last Planet
-    pathVertices.push(new THREE.Vector3(...C.PLANETS[C.PLANETS.length-1].position));
+    pathVertices.push(new THREE.Vector3(...C.PLANETS[C.PLANETS.length - 1].position));
     this.path = new THREE.CatmullRomCurve3(pathVertices);
     this.path.closed = true;
     this.path.arcLengthDivisions = C.PLANETS.length;
@@ -298,21 +304,21 @@ class Release0004 extends PureComponent {
 
   updatePlanets = () => {
     for (let i = 0; i < C.PLANETS.length; i++) {
-     let planet = this.getPlanetByIdx(i);
+      let planet = this.getPlanetByIdx(i);
       this.quaternion.setFromAxisAngle(C.PLANETS[i].axis, C.PLANETS[i].angle);
       planet.applyQuaternion(this.quaternion);
     }
   }
 
   rotateAboutPoint = (obj, point, axis, theta, pointIsWorld) => {
-    pointIsWorld = (pointIsWorld === undefined)? false : pointIsWorld;
-    if(pointIsWorld){
+    pointIsWorld = (pointIsWorld === undefined) ? false : pointIsWorld;
+    if (pointIsWorld) {
       obj.parent.localToWorld(obj.position); // compensate for world coordinate
     }
     obj.position.sub(point); // remove the offset
     obj.position.applyAxisAngle(axis, theta); // rotate the POSITION
     obj.position.add(point); // re-add the offset
-    if(pointIsWorld){
+    if (pointIsWorld) {
       obj.parent.worldToLocal(obj.position); // undo world coordinates compensation
     }
     obj.rotateOnAxis(axis, theta); // rotate the OBJECT
@@ -388,7 +394,7 @@ class Release0004 extends PureComponent {
         let now = new Date();
         this.setState({chillinTime: (now - this.state.chillinStart) / 1000})
         if (this.state.chillinTime >= C.CHILLIN_TIME &&
-            !this.state.hasActivatedFirstPersonControls) {
+          !this.state.hasActivatedFirstPersonControls) {
           this.enterWormhole()
         }
       }
@@ -409,13 +415,12 @@ class Release0004 extends PureComponent {
           <div ref={element => this.container = element}>
             <div id={"progress-bar"} ref={element => this.progressBar = element}/>
           </div>
+          <Footer
+            content={CONTENT[window.location.pathname]}
+            fillColor="white"
+          />
         </div>
-        <SoundcloudPlayer
-        trackId='507660189'
-        message='JON CANNON'
-        inputRef={el => this.audioElement = el}
-        fillColor="white"/>
-        <Purchase fillColor="white" href='https://gltd.bandcamp.com/album/ep-1'/>
+
       </Fragment>
     );
   }

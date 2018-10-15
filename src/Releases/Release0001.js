@@ -4,9 +4,12 @@ import {SimplexNoise} from '../Utils/SimplexNoise';
 import {GPUComputationRenderer} from "../Utils/GPUComputationRenderer";
 import debounce from 'lodash/debounce';
 import './Release.css';
-import SoundcloudPlayer from '../SoundcloudPlayer';
-import Purchase from '../Purchase';
+
+import {CONTENT} from "../Content"
+import Footer from "../Footer"
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
+
+
 /* eslint import/no-webpack-loader-syntax: off */
 // import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
 
@@ -63,17 +66,20 @@ class Release0001 extends PureComponent {
   }
 
   componentDidMount() {
+    this.init();
+    // this.audioElement.addEventListener("loadstart", this.audioElementLoaded, false);
     window.addEventListener('mousemove', this.onDocumentMouseMove, false);
     window.addEventListener("touchstart", this.onDocumentMouseMove, false);
     window.addEventListener("touchmove", this.onDocumentMouseMove, false);
     window.addEventListener('resize', this.onWindowResize, false);
     window.addEventListener("load", this.onLoad, false);
-    this.init();
+
     this.animate();
   }
 
   componentWillUnmount() {
     this.stop();
+    this.audioElement.removeEventListener("loadstart", this.audioElementLoaded, false);
     window.removeEventListener('mousemove', this.onDocumentMouseMove, false);
     window.removeEventListener('resize', this.onWindowResize, false);
     window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
@@ -253,7 +259,6 @@ class Release0001 extends PureComponent {
   renderScene = () => {
     const {gpuCompute, renderer, camera, mouseCoords, meshRay, raycaster, freqArray, scene} = this;
     const uniforms = this.heightmapVariable.material.uniforms;
-
     if (this.mouseMoved) {
       raycaster.setFromCamera(mouseCoords, camera);
       let intersects = raycaster.intersectObject(meshRay);
@@ -268,7 +273,7 @@ class Release0001 extends PureComponent {
       this.mouseMoved = false;
     }
     else {
-      if (this.audioStream.stream !== undefined) {
+      if (this.audioStream) {
         this.audioStream.analyser.getByteFrequencyData(freqArray);
         let x = this.freqArray[600];
         let y = this.freqArray[100] - 100;
@@ -299,12 +304,12 @@ class Release0001 extends PureComponent {
             this.mount = mount
           }}
         />
-        <SoundcloudPlayer
-          trackId='466084773'
-          type='audio/mpeg'
-          message='YAHCEPH'
-          inputRef={el => this.audioElement = el}/>
-        <Purchase href='https://gltd.bandcamp.com/track/wun-4-jas'/>
+        <Footer
+          content={CONTENT[window.location.pathname]}
+          audioRef={el => this.audioElement = el}/>
+          {/*audioStream={el => this.state.audioStream = el}*/}
+          {/*useAudioStream={true}*/}
+        />
       </Fragment>
     );
   }
