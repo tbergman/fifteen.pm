@@ -21,8 +21,8 @@ let statueDirection = 0.01;
 
 class Release0005 extends Component {
   state = {
-    exitingWormhole: false,
-    inMirrorLand: true
+    exitingWormhole: true,
+    inMirrorLand: false
   }
 
   componentDidMount() {
@@ -33,15 +33,17 @@ class Release0005 extends Component {
     // When user move the mouse
     window.addEventListener('click', this.onClick, false);
 
-    console.log(this.mirrorLandCamera);
     this.renderScene();
   }
 
   init = () => {
     this.time = 0;
     this.clock = new THREE.Clock();
+    this.manager = new THREE.LoadingManager();
+    this.loader = new GLTFLoader(this.manager);
+    this.cubeTextureLoader = new THREE.CubeTextureLoader();
 
-    // Create an empty scene and define a fog for it
+      // Create an empty scene and define a fog for it
     this.scene = new THREE.Scene();
 
     // Store the position of the mouse
@@ -65,6 +67,7 @@ class Release0005 extends Component {
     this.createWater();
     this.createTunnelMesh();
     this.createStatue();
+    this.createCoin();
     this.updateCameraView();
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
@@ -79,22 +82,22 @@ class Release0005 extends Component {
   createLights() {
     const {scene} = this;
 
-    this.cameraLight = new THREE.DirectionalLight(0x666666);
+    this.cameraLight = new THREE.DirectionalLight(0x0000ff);
     // light.position.set( 0, 0, 1 );
     this.scene.add(this.cameraLight);
 
-    var mainLight = new THREE.PointLight(0xcccccc, 1.5, 250);
+    var mainLight = new THREE.PointLight(0xffffff, 1.5, 250);
     mainLight.position.y = 100;
     scene.add(mainLight);
 
-    var greenLight = new THREE.PointLight(0x00ff00, 0.25, 1000);
+    var greenLight = new THREE.PointLight(0x0000ff, 1.25, 1000);
     greenLight.position.set(550, 50, 0);
     scene.add(greenLight);
     var redLight = new THREE.PointLight(0xff0000, 0.25, 1000);
     redLight.position.set(-550, 50, 0);
     scene.add(redLight);
-    var blueLight = new THREE.PointLight(0x7f7fff, 0.25, 1000);
-    blueLight.position.set(0, 50, 550);
+    var blueLight = new THREE.PointLight(0x0000ff, 0.25, 1000);
+    blueLight.position.set(550, 50, 0);
     scene.add(blueLight);
   }
 
@@ -123,10 +126,10 @@ class Release0005 extends Component {
     const {scene} = this;
     // sky box
     var cubeTextureLoader = new THREE.CubeTextureLoader();
-    cubeTextureLoader.setPath('assets/releases/5/textures/cube/gradients/');
+    cubeTextureLoader.setPath('assets/releases/5/images/');
     var cubeTexture = cubeTextureLoader.load([
-      '1.jpg', '2.jpg',
-      '3.jpg', '4.jpg',
+      '4.jpg', '5.jpg',
+      '6.jpg', '4.jpg',
       '5.jpg', '6.jpg',
     ]);
     var cubeShader = THREE.ShaderLib['cube'];
@@ -147,7 +150,7 @@ class Release0005 extends Component {
       clipBias: 0.3,
       textureWidth: CONSTANTS.ww * window.devicePixelRatio,
       textureHeight: CONSTANTS.wh * window.devicePixelRatio,
-      color: 0x000000,
+      color: 0xffffff,
       recursion: 1
     });
 
@@ -200,7 +203,7 @@ class Release0005 extends Component {
     var loader = new THREE.TextureLoader();
     const textures = {
       "galaxy": {
-        url: "./assets/releases/5/images/universe.jpg"
+        url: "./assets/releases/5/images/blue_purple.jpg"
       }
     };
     textures.galaxy.texture = loader.load(textures.galaxy.url, function (texture) {
@@ -228,10 +231,6 @@ class Release0005 extends Component {
   };
 
   createStatue = () => {
-    this.object = {};
-    // define gltf loading manager
-    this.manager = new THREE.LoadingManager();
-    this.loader = new GLTFLoader(this.manager);
     const statuePath = assetPath5("objects/discus-thrower/scene.gltf");
     const renderStatue = gltfObj => this.renderStatueGltfObj(gltfObj);
 
@@ -274,18 +273,59 @@ class Release0005 extends Component {
 
   animateStatueAndMirror() {
     const {position} = this.statueObj;
-    if (position.y > -0.1) statueDirection = -0.01;
-    if (position.y < -4.5) statueDirection = 0.01;
+    if (position.y > Math.random() * -0.9 + 0.1) statueDirection = -0.01;
+    if (position.y < Math.random() * -5.5 + -3 ) statueDirection = 0.01;
     const newPos = position.y + statueDirection;
     position.setY(newPos);
+    this.statueObj.rotateY(statueDirection);
     const newMirrorXPos = this.mirror.position.x + 0.01;
     this.mirror.rotateY(newMirrorXPos);
+    this.coinObj.position.y = this.coinObj.position.y + statueDirection/2;
+  }
+
+  createCoin() {
+    const coinPath = assetPath5("objects/old_coin/scene.gltf");
+    const renderCoin = gltfObj => this.renderCoin(gltfObj);
+
+    const coinLoadGLTFParams = {
+        url: coinPath,
+        name: "old_coin",
+        position: [0, 0, 0],
+        rotateX: 0.001,
+        rotateY: -0.005,
+        rotateZ: 0.01,
+        relativeScale: .1,
+        loader: this.loader,
+        onSuccess: renderCoin,
+    }
+
+    loadGLTF({...coinLoadGLTFParams});
+  }
+
+  renderCoin = (gltfObj) => {
+    this.cubeTextureLoader.setPath('assets/releases/5/objects/old_coin/textures/Material_25_normal.png/');
+    var cubeTexture = this.cubeTextureLoader.load([
+        '6.jpg', '6.jpg',
+        '6.jpg', '6.jpg',
+        '6.jpg', '6.jpg',
+    ]);
+
+    const coinObj = gltfObj.scene.children[0].children[0];
+    const updatedCoinMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        //envMap: cubeTexture
+    });
+    coinObj.material = updatedCoinMaterial;
+    coinObj.scale.set(0.06, 0.06, 0.06);
+    coinObj.position.set(-15, 0, 10);
+
+    this.coinObj = coinObj;
+    this.scene.add(coinObj);
+    return gltfObj;
   }
 
   updateCameraView() {
-    //this.mirrorLandCamera = cameraViews[0](this.mirrorLandCamera);
-
-    if (!isMobile && this.state.inMirrorLand) {
+    if (!isMobile) {
       let count = 0;
       setInterval(() => {
           if (count >= cameraViews.length - 1) {
@@ -300,15 +340,15 @@ class Release0005 extends Component {
 
   onClick = (e) => {
     if (this.state.exitingWormhole) {
-      this.setState({
-        exitingWormhole: false,
-        inMirrorLand: true
-      });
+        this.setState({
+            exitingWormhole: false,
+            inMirrorLand: true
+        });
     } else if (this.state.inMirrorLand) {
-      this.setState({
-        inMirrorLand: true,
-        exitingWormhole: false
-      });
+        this.setState({
+            inMirrorLand: false,
+            exitingWormhole: true
+        });
     }
   }
 
@@ -425,11 +465,9 @@ class Release0005 extends Component {
   }
 
   currentCamera = () => {
-    if (this.state.exitingWormhole) {
-      return this.exitingWormholeCamera;
-    } else if (this.state.inMirrorLand) {
-      return this.mirrorLandCamera;
-    }
+    return this.state.exitingWormhole
+      ? this.exitingWormholeCamera
+      : this.mirrorLandCamera
   }
 
   renderScene() {
@@ -437,11 +475,14 @@ class Release0005 extends Component {
 
     this.time += delta * 0.5;
 
-    let camera = this.mirrorLandCamera;
-    // this.cameraLight.position.copy(camera.position);
+    let camera = this.currentCamera();
+    this.cameraLight.position.copy(camera.position);
 
-    this.state.exitingWormhole && this.updateWormholeTravel();
-    this.statueObj && this.animateStatueAndMirror();
+    if(this.state.exitingWormhole) {
+      this.updateWormholeTravel();
+    } else {
+      this.statueObj && this.animateStatueAndMirror();
+    }
 
     this.renderer.render(this.scene, camera);
     window.requestAnimationFrame(this.renderScene.bind(this));
