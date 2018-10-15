@@ -16,7 +16,6 @@ const RELEASES = [
   {
     path: "/1",
     name: "YAHCEPH",
-    imageURL: assetPath("1/images/home.jpg"),
     radius: DEFAULT_RADIUS + Math.random(),
     textURL: assetPath("1/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-root.wav")
@@ -24,7 +23,6 @@ const RELEASES = [
   {
     path: "/2",
     name: "YEAR UNKNOWN",
-    imageURL: assetPath("2/images/home.png"),
     radius: DEFAULT_RADIUS + Math.random() * 2,
     textURL: assetPath("2/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-fourth.wav")
@@ -32,7 +30,6 @@ const RELEASES = [
   {
     path: "/3",
     name: "OTHERE",
-    imageURL: assetPath("3/images/home.png"),
     radius: DEFAULT_RADIUS + Math.random() * 3,
     textURL: assetPath("3/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-fifth.wav")
@@ -40,7 +37,6 @@ const RELEASES = [
   {
     path: "/4",
     name: "JON CANNON",
-    imageURL: assetPath("4/images/home.png"),
     radius: DEFAULT_RADIUS + Math.random() * 3,
     textURL: assetPath("4/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-octave.wav")
@@ -48,10 +44,9 @@ const RELEASES = [
   {
     path: "/5",
     name: "PLEBIAN",
-    imageURL: assetPath("4/images/home.png"),
     radius: DEFAULT_RADIUS + Math.random() * 3,
-    textURL: assetPath("4/objects/text.gltf"),
-    soundURL: assetPath("0/sounds/chord-octave.wav")
+    textURL: assetPath("5/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-second.wav")
   }
 ];
 
@@ -175,14 +170,12 @@ class Home extends PureComponent {
 
   initReleaseText = (meta, pos, i) => {
     // TODO We could do something like this eventually --> https://codepen.io/collection/ABaxyy/#
-    console.log(meta);
     let gltfOpts = {
       url: meta.textURL,
       position: [pos.x, pos.y, pos.z],
       relativeScale: 1,
       loader: new GLTFLoader(),
       onSuccess: (obj) => {
-        console.log(obj);
         this.releaseObjs[i].text = obj.scene.children[0];
         this.releaseObjs[i].text.material.side = THREE.DoubleSide;
         this.releaseObjs[i].text.rotation.x = Math.random() * .001;
