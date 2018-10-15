@@ -5,13 +5,13 @@ import {OrbitControls} from "../../Utils/OrbitControls";
 import {CONSTANTS} from "./constants";
 import {Reflector} from '../../Utils/Reflector';
 import {Water} from '../../Utils/Water2';
-import SoundcloudPlayer from '../../SoundcloudPlayer';
-import Purchase from '../../Purchase';
+import Footer from '../../Footer';
 import GLTFLoader from "three-gltf-loader";
 import {loadGLTF} from "../../Utils/Loaders";
 import {assetPath} from "../../Utils/assets";
 import {cameraViews} from "./Utils/cameraViews";
 import {isMobile} from "../../Utils/BrowserDetection";
+import {CONTENT} from "../../Content";
 
 export const assetPath5 = (p) => {
   return assetPath("5/" + p);
@@ -481,13 +481,10 @@ class Release0005 extends Component {
     return (
       <Fragment>
         <div ref={element => this.container = element}/>
-        <SoundcloudPlayer
-          trackId='514219014'
-          secretToken='s-WJVl5'
-          message='PLEBEIAN'
-          inputRef={el => this.audioElement = el}
-          fillColor="white"/>
-        <Purchase fillColor="white" href='https://gltd.bandcamp.com/track/lets-beach'/>
+        <Footer
+          content={CONTENT[window.location.pathname]}
+          fillColor="white"
+          />
       </Fragment>
     );
   }
