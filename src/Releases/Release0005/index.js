@@ -467,18 +467,32 @@ class Release0005 extends Component {
   }
 
   currentTrack = () => {
+    if (!this.audioElement.currentSrc){
+      return;
+    }
     const trackId = soundcloudTrackIdFromSrc(this.audioElement.currentSrc);
-    console.log("PARSED TRACK ID", trackId);
-    const track = CONTENT[window.location.pathname].tracks.filter(track => track.id === trackId);
+    const track = CONTENT[window.location.pathname].tracks.filter(track => track.id === trackId)[0];
     return track.title
   }
 
   renderScene() {
-    console.log("CURRENT TRACK", this.currentTrack());
 
     let delta = this.clock.getDelta();
 
     this.time += delta * 0.5;
+
+    if (this.audioElement.currentTime){
+
+      const tunnelTimes = CONSTANTS.trackTimes[this.currentTrack()].enterTunnel;
+      tunnelTimes.forEach((t) => {
+        if (t === Math.floor(this.audioElement.currentTime) && this.state.inMirrorLand){
+          this.setState({
+            inMirrorLand: false,
+            exitingWormhole: true
+          });
+        }
+      })
+    }
 
     let camera = this.currentCamera();
     this.cameraLight.position.copy(camera.position);
@@ -500,7 +514,8 @@ class Release0005 extends Component {
         <Footer
           content={CONTENT[window.location.pathname]}
           fillColor="white"
-          />
+          audioRef={el => this.audioElement = el}
+        />
       </Fragment>
     );
   }
