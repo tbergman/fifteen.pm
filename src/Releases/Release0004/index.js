@@ -170,7 +170,7 @@ class Release0004 extends PureComponent {
     };
 
     this.manager.onError = (url) => {
-      this.progressBar.innerText = 'There was an error! Email dev@globally.lrd';
+      this.progressBar.innerText = 'There was an error! Email dev@globally.ltd';
     };
     this.loader = new GLTFLoader(this.manager);
   }
