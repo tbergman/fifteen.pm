@@ -10,7 +10,6 @@ import GLTFLoader from "three-gltf-loader";
 import {loadGLTF} from "../../Utils/Loaders";
 import {assetPath} from "../../Utils/assets";
 import {cameraViews} from "./Utils/cameraViews";
-import {isMobile} from "../../Utils/BrowserDetection";
 import {CONTENT} from "../../Content";
 import {soundcloudTrackIdFromSrc} from "../../Utils/SoundcloudUtils";
 
@@ -125,7 +124,7 @@ class Release0005 extends Component {
     const {scene} = this;
     // sky box
     var cubeTextureLoader = new THREE.CubeTextureLoader();
-    cubeTextureLoader.setPath('assets/releases/5/images/');
+    cubeTextureLoader.setPath(assetPath5('/images/');
     var cubeTexture = cubeTextureLoader.load([
       '4.jpg', '5.jpg',
       '6.jpg', '4.jpg',
