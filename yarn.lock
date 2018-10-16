@@ -6709,6 +6709,10 @@ three-gltf-loader@^1.96.0:
   version "1.96.0"
   resolved "https://registry.yarnpkg.com/three-gltf-loader/-/three-gltf-loader-1.96.0.tgz#c8dd6d4055895045297bba019c6230114eb2c561"
 
+three-reflector@^1.0.2:
+  version "1.0.2"
+  resolved "https://schoology.jfrog.io/schoology/api/npm/npm/three-reflector/-/three-reflector-1.0.2.tgz#051eb359b526f4ad85fcc92999a3ff6be0b1e15d"
+
 three-tween@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/three-tween/-/three-tween-1.0.0.tgz#da69bbbcccf321bfb8356358c594ceb1f0a7fd66"
@@ -6717,9 +6721,9 @@ three@^0.89.0:
   version "0.89.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.89.0.tgz#4442d819a6168871b8d2cb37ad12a24310c170f5"
 
-three@^0.94.0:
-  version "0.94.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.94.0.tgz#4ce6db7f2bfbf79c2d73444aa6e3cfc08a32d762"
+three@^0.97.0:
+  version "0.97.0"
+  resolved "https://schoology.jfrog.io/schoology/api/npm/npm/three/-/three-0.97.0.tgz#76141e1b0ace14246fe9198a458fefddc98a4e30"
 
 throat@^3.0.0:
   version "3.2.0"

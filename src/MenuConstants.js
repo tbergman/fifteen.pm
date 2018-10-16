@@ -126,3 +126,24 @@ export const SHAPES = [
     }
   }
 ];
+
+export const MENU_CONTENT = {
+  "/": {
+    "message": "Welcome to Globally LTD.",
+  },
+  "/1": {
+    "message": "Yahceph's production debut, \"wun 4 jas\", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.",
+  },
+  "/2": {
+    "message": "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly beat disturbance.",
+  },
+  "/3":  {
+    "message": "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
+  },
+  "/4":  {
+    "message": "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
+  },
+  "/5":  {
+    "message": "Andrew Nerviano.",
+  }
+};

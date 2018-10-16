@@ -307,8 +307,8 @@ class Release0001 extends PureComponent {
         <Footer
           content={CONTENT[window.location.pathname]}
           audioRef={el => this.audioElement = el}/>
-          {/*audioStream={el => this.state.audioStream = el}*/}
-          {/*useAudioStream={true}*/}
+        {/*audioStream={el => this.state.audioStream = el}*/}
+        {/*useAudioStream={true}*/}
         />
       </Fragment>
     );

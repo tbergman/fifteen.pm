@@ -75,10 +75,10 @@
     "react-three-renderer": "^3.2.4",
     "recompose": "^0.27.1",
     "simplex-noise": "^2.4.0",
-    "three": "^0.94.0",
+    "three": "^0.97.0",
     "three-fbx-loader": "^1.0.3",
     "three-gltf-loader": "^1.96.0",
-    "three-gltf-loader": "^1.96.0",
+    "three-reflector": "^1.0.2",
     "three-tween": "^1.0.0"
   },
   "jest": {
