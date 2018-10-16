@@ -10,7 +10,7 @@ class Player extends PureComponent {
       this.props.trackList[0].secretToken
     ),
     audioElement: document.getElementById('audio-player'),
-    curTrackIdx: 0
+    curTrackIdx: 0,
   }
 
   static defaultProps = {
@@ -20,114 +20,119 @@ class Player extends PureComponent {
   }
 
   componentDidMount() {
-    this.updateAudioElement()
-
+    this.updateAudioElement();
+    if (!("ontouchstart" in document.documentElement)) {
+        document.documentElement.className += "no-touch";
+    }
   }
 
   componentDidUpdate() {
-    this.updateAudioElement()
+    this.updateAudioElement();
   }
 
   componentWillUnmount() {
-    this.state.audioElement.removeEventListener('playing', this.resetPlayer, false);
-    this.state.audioElement.removeEventListener('ended', this.advanceTrack, false);
+    const { audioElement } = this.state;
+    audioElement.removeEventListener('playing', this.resetPlayer, false);
+    audioElement.removeEventListener('ended', this.advanceTrack, false);
   }
 
   updateAudioElement() {
     this.setState({
       audioElement: document.getElementById('audio-player')
     }, () => {
-      this.state.audioElement.addEventListener('playing', this.resetPlayer, false);
-      this.state.audioElement.addEventListener('ended', this.advanceTrack, false);
+      const { audioElement } = this.state;
+      audioElement.addEventListener('playing', this.resetPlayer, false);
+      audioElement.addEventListener('ended', this.advanceTrack, false);
     });
   }
 
-  isPlaying = (e) => {
+  isPlaying() {
     // Check if the audio is playing
-    return this.state.audioElement.duration > 0
-      && !this.state.audioElement.paused
-      && !this.state.audioElement.ended;
+    const { audioElement } = this.state;
+    return audioElement.duration > 0
+      && !audioElement.paused
+      && !audioElement.ended;
   }
 
   resetPlayer = () => {
-    if (!this.isPlaying()) {
-      this.setState({paused: true});
-    }
-    else {
-      if (this.state.paused) {
-        this.setState({paused: false});
-      }
+    if (this.isPlaying() || !this.state.paused) {
+      this.setState({paused: false});
     }
   }
 
-  advanceTrack = () => {
-    const {trackList} = this.props;
-    const {curTrackIdx} = this.state;
-    const nextTrackIdx = curTrackIdx + 1 === trackList.length ? 0 : curTrackIdx + 1;
-    const nextTrack = trackList[nextTrackIdx];
+  setCurrentTrack(trackIdx, {id, secretToken}) {
     this.setState({
-      curTrackIdx: nextTrackIdx,
-      src: formatSoundcloudSrc(nextTrack.id, nextTrack.secretToken),
-      paused: false
+        curTrackIdx: trackIdx,
+        src: formatSoundcloudSrc(id, secretToken),
+        paused: false
     });
   }
 
-  handlePlay = () => {
-    this.state.audioElement.play();
-    this.setState({paused: false});
+  advanceTrack = (e) => {
+    e.preventDefault();
+    const {trackList} = this.props;
+    const {curTrackIdx} = this.state;
+    const nextTrackIdx = curTrackIdx + 1 === trackList.length ? 0 : curTrackIdx + 1;
+    const track = trackList[nextTrackIdx];
+
+    this.setCurrentTrack(nextTrackIdx, track);
   }
 
-  handlePause = () => {
-    this.state.audioElement.pause();
-    this.setState({paused: true});
+  handlePlay() {
+    this.setState({paused: false}, () => {
+        this.state.audioElement.play();
+    });
+  }
+
+  handlePause() {
+    this.setState({paused: true}, () => {
+        this.state.audioElement.pause();
+    });
   }
 
   handlePlayButtonClick = (e) => {
     e.preventDefault();
-    if (!this.isPlaying()) {
-      this.state.audioElement.play();
-    }
-    if (!this.state.paused) {
-      this.handlePause();
-    } else {
-      this.handlePlay();
-    }
+    !this.state.paused
+      ? this.handlePause()
+      : this.handlePlay()
   }
 
-  handlePlaylistClick = (e, idx) => {
-    const {trackList} = this.props;
-    const track = trackList[idx];
+  handlePlaylistClick = (e) => {
     e.preventDefault();
-    this.setState({
-      curTrackIdx: idx,
-      src: formatSoundcloudSrc(track.id, track.secretToken),
-      paused: false
-    });
+    const {trackList} = this.props;
+    const trackIdx = Number(e.target.getAttribute('data-id'));
+    const track = trackList[trackIdx];
+
+    this.setCurrentTrack(trackIdx, track);
   }
 
-  renderPlaylist = () => {
+  renderPlaylist() {
     const {trackList, fillColor, selectedColor} = this.props;
     const {curTrackIdx} = this.state;
     const curTrack = trackList[curTrackIdx];
+
     if (trackList.length > 1) {
       const playList = trackList.map((track, idx) =>
         <li
           style={{color: track.id === curTrack.id ? selectedColor : fillColor}}
           className={track.id === curTrack.id ? "active-track" : null}
-          onClick={((e) => this.handlePlaylistClick(e, idx))} key={track.id}>
+          onClick={this.handlePlaylistClick}
+          key={track.id}
+          data-id={idx}
+        >
           {track.id === curTrack.id && <span id="current-track-smiley">☻</span>}
           {track.title}
         </li>
       );
       return (
         <div id="playlist-container">
-          <ul key={curTrack.id} id="playlist">{playList}</ul>
+          <ul key='playlist' id="playlist">{playList}</ul>
         </div>
       );
     }
   }
 
-  renderPlayerButton = () => {
+  renderPlayerButton() {
     const {paused} = this.state;
     const {message, fillColor} = this.props;
     return (
@@ -144,47 +149,46 @@ class Player extends PureComponent {
             </text>
           </g>
         </svg>
-        <div onClick={this.handlePlayButtonClick} className={paused ? 'button' : 'button paused'}
-             style={{borderColor: `transparent transparent transparent ${fillColor}`}}/>
+        <div
+          onClick={this.handlePlayButtonClick}
+          className={paused ? 'button' : 'button paused'}
+          style={{borderColor: `transparent transparent transparent ${fillColor}`}}/>
       </div>
     );
   }
 
-  renderPlayerElements = () => {
-    const playButton = this.renderPlayerButton();
-    const playList = this.renderPlaylist();
+  renderPlayerElements() {
     return (
       <div id="player-container">
-        {playButton}
-        {playList}
+        {this.renderPlayerButton()}
+        {this.renderPlaylist()}
       </div>
     );
   }
 
-  renderAudioTag = () => {
+  renderAudioTag() {
     const {type, audioRef} = this.props;
     const {src} = this.state;
+
     return (
-      <Fragment>
-        <audio key={src} id="audio-player"
-               autoPlay
-               crossOrigin="anonymous"
-               ref={audioRef}
-        >
-          <source src={src} type={type}/>
-        </audio>
-      </Fragment>
+      <audio
+          key={src}
+          id="audio-player"
+          autoPlay
+          crossOrigin="anonymous"
+          ref={audioRef}
+      >
+        <source src={src} type={type}/>
+      </audio>
     );
   }
 
 
   render() {
-    const playerElements = this.renderPlayerElements();
-    const audioTag = this.renderAudioTag();
     return (
       <Fragment>
-        {playerElements}
-        {audioTag}
+        {this.renderPlayerElements()}
+        {this.renderAudioTag()}
       </Fragment>
     );
   }
