@@ -9,3 +9,7 @@ export const formatSoundcloudSrc = (trackId, secretToken=null) => {
   return url;
 }
 
+export const soundcloudTrackIdFromSrc = (src) => {
+  return src.split(soundcloudApiUrl).split("/")[0]
+}
+

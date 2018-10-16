@@ -12,6 +12,7 @@ import {assetPath} from "../../Utils/assets";
 import {cameraViews} from "./Utils/cameraViews";
 import {isMobile} from "../../Utils/BrowserDetection";
 import {CONTENT} from "../../Content";
+import {soundcloudTrackIdFromSrc} from "../../Utils/SoundcloudUtils";
 
 export const assetPath5 = (p) => {
   return assetPath("5/" + p);
@@ -465,7 +466,16 @@ class Release0005 extends Component {
       : this.mirrorLandCamera
   }
 
+  currentTrack = () => {
+    const trackId = soundcloudTrackIdFromSrc(this.audioElement.currentSrc);
+    console.log("PARSED TRACK ID", trackId);
+    const track = CONTENT[window.location.pathname].tracks.filter(track => track.id === trackId);
+    return track.title
+  }
+
   renderScene() {
+    console.log("CURRENT TRACK", this.currentTrack());
+
     let delta = this.clock.getDelta();
 
     this.time += delta * 0.5;
