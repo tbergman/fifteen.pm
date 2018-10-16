@@ -1,13 +1,11 @@
 import React, {Fragment, PureComponent} from 'react';
 import './Player.css'
-
-const soundcloudClientId = "ad6375f4b6bc0bcaee8edf53ab37e7f2"; // 😄
-const soundcloudApiUrl = "https://api.soundcloud.com/tracks";
+import {formatSoundcloudSrc} from "./Utils/SoundcloudUtils";
 
 class Player extends PureComponent {
   state = {
     paused: true, // Assume autoplay doesn't work.
-    src: this.formatSoundcloudSrc(
+    src: formatSoundcloudSrc(
       this.props.trackList[0].id,
       this.props.trackList[0].secretToken
     ),
@@ -44,14 +42,6 @@ class Player extends PureComponent {
     });
   }
 
-  formatSoundcloudSrc(trackId, secretToken) {
-    let url = `${soundcloudApiUrl}/${trackId}/stream?client_id=${soundcloudClientId}`;
-    if (secretToken !== undefined) {
-      url += `&secret_token=${secretToken}`
-    }
-    return url;
-  }
-
   isPlaying = (e) => {
     // Check if the audio is playing
     return this.state.audioElement.duration > 0
@@ -77,7 +67,7 @@ class Player extends PureComponent {
     const nextTrack = trackList[nextTrackIdx];
     this.setState({
       curTrackIdx: nextTrackIdx,
-      src: this.formatSoundcloudSrc(nextTrack.id, nextTrack.secretToken),
+      src: formatSoundcloudSrc(nextTrack.id, nextTrack.secretToken),
       paused: false
     });
   }
@@ -110,7 +100,7 @@ class Player extends PureComponent {
     e.preventDefault();
     this.setState({
       curTrackIdx: idx,
-      src: this.formatSoundcloudSrc(track.id, track.secretToken),
+      src: formatSoundcloudSrc(track.id, track.secretToken),
       paused: false
     });
   }
