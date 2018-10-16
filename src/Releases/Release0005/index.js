@@ -125,7 +125,7 @@ class Release0005 extends Component {
     const {scene} = this;
     // sky box
     var cubeTextureLoader = new THREE.CubeTextureLoader();
-    cubeTextureLoader.setPath('assets/releases/5/images/');
+    cubeTextureLoader.setPath(assetPath5('images/'));
     var cubeTexture = cubeTextureLoader.load([
       '4.jpg', '5.jpg',
       '6.jpg', '4.jpg',
@@ -188,10 +188,10 @@ class Release0005 extends Component {
     this.textureLoader = new THREE.TextureLoader();
     const textures = {
       "galaxy": {
-        url: "./assets/releases/5/images/blue_purple.jpg"
+        url: assetPath5('images/blue_purple.jpg')
       },
       "galaxy2": {
-        url: "./assets/releases/5/images/light_purple.jpg"
+        url: assetPath5('images/light_purple.jpg')
       }
     };
     textures.galaxy.texture = this.textureLoader.load(textures.galaxy.url, function (texture) {
@@ -230,7 +230,7 @@ class Release0005 extends Component {
 
   renderStatueGltfObj = (gltfObj) => {
     var cubeTextureLoader = new THREE.CubeTextureLoader();
-    cubeTextureLoader.setPath('assets/releases/5/images/');
+    cubeTextureLoader.setPath(assetPath5('images/'));
     var cubeTexture = cubeTextureLoader.load([
       '4.jpg', '5.jpg',
       '6.jpg', '4.jpg',
@@ -285,7 +285,7 @@ class Release0005 extends Component {
   }
 
   renderCoin = (gltfObj) => {
-    this.cubeTextureLoader.setPath('assets/releases/5/objects/old_coin/textures/Material_25_normal.png/');
+    this.cubeTextureLoader.setPath(assetPath5('objects/old_coin/textures/Material_25_normal.png/'));
     var cubeTexture = this.cubeTextureLoader.load([
       '4.jpg', '5.jpg',
       '6.jpg', '4.jpg',
