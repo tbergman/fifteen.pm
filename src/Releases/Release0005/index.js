@@ -10,7 +10,6 @@ import GLTFLoader from "three-gltf-loader";
 import {loadGLTF} from "../../Utils/Loaders";
 import {assetPath} from "../../Utils/assets";
 import {cameraViews} from "./Utils/cameraViews";
-import {isMobile} from "../../Utils/BrowserDetection";
 import {CONTENT} from "../../Content";
 import {soundcloudTrackIdFromSrc} from "../../Utils/SoundcloudUtils";
 
