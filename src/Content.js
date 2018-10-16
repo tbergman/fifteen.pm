@@ -60,17 +60,14 @@ export const CONTENT = {
       {
         title: "Heaven",
         id: "514219014",
-        secretToken: "s-WJVl5"
-
       },
       {
         title: "Bullseye",
         id: "514219020",
-        secretToken: "s-QGHQP"
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/album/heaven",
-    message: "Side effects to Plebeian may include extreme bouts of skronk, chronic beat contagia, and a propensity to lay slamming techno tracks down in a single take."
+    message: "The bottom of Plebeian’s toolbox rattles with chains, ball-bearings and a dusty jar of loose screws on these slammin’ single-takes of industrial techno."
   },
   "/test-dummy": {
     artist: "DUMMY",
