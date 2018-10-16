@@ -2,9 +2,12 @@ const PROD_ASSET_URL = 'https://assets.globally.ltd'
 const DEV_ASSET_URL = '/assets/releases'
 
 export const assetPath = (path) => {
+  if (!path.startswith('/')) {
+    let path = "/" + path;
+  }
   if (process.env.NODE_ENV === 'development') {
-    return `${DEV_ASSET_URL}/${path}`
+    return `${DEV_ASSET_URL}${path}`
   } else {
-    return `${PROD_ASSET_URL}/${path}`
+    return `${PROD_ASSET_URL}${path}`
   }
 }
