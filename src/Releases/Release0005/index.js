@@ -307,17 +307,15 @@ class Release0005 extends Component {
   }
 
   updateCameraView() {
-    if (!isMobile) {
-      let count = 0;
-      setInterval(() => {
-        if (count >= cameraViews.length - 1) {
-          count = 0;
-        } else {
-          count += 1;
-        }
-        this.mirrorLandCamera = cameraViews[count](this.mirrorLandCamera);
-      }, 60 / CONSTANTS.trackTimes[this.currentTrack()].bpm * 10000);
-    }
+    let count = 0;
+    setInterval(() => {
+      if (count >= cameraViews.length - 1) {
+        count = 0;
+      } else {
+        count += 1;
+      }
+      this.mirrorLandCamera = cameraViews[count](this.mirrorLandCamera);
+    }, 60 / CONSTANTS.trackTimes[this.currentTrack()].bpm * 10000);
   }
 
   onMouseMove = (e) => {
