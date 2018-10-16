@@ -22,18 +22,16 @@ let statueDirection = 0.01;
 
 class Release0005 extends Component {
   state = {
-    exitingWormhole: true,
-    inMirrorLand: false
+    inWormhole: true,
+    inMirrorLand: false,
+    justTwitiched: false
   }
 
   componentDidMount() {
     this.init();
-
     // When user resize window
     window.addEventListener("resize", this.onResize, false);
     // When user move the mouse
-    window.addEventListener('click', this.onClick, false);
-
     this.renderScene();
   }
 
@@ -43,17 +41,14 @@ class Release0005 extends Component {
     this.manager = new THREE.LoadingManager();
     this.loader = new GLTFLoader(this.manager);
     this.cubeTextureLoader = new THREE.CubeTextureLoader();
-
-      // Create an empty scene and define a fog for it
+    // Create an empty scene and define a fog for it
     this.scene = new THREE.Scene();
-
     // Store the position of the mouse
     // Default is center of the screen
     this.mouse = {
       position: new THREE.Vector2(0, 0),
       target: new THREE.Vector2(0, 0)
     };
-
 
     this.createCameras();
     this.createSkyBox();
@@ -64,12 +59,10 @@ class Release0005 extends Component {
     this.createStatue();
     this.createCoin();
     this.updateCameraView();
-
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     document.body.appendChild(this.renderer.domElement);
-
     this.controls = new OrbitControls(this.mirrorLandCamera, this.renderer.domElement);
     this.controls.maxDistance = 1500;
     this.container.appendChild(this.renderer.domElement);
@@ -79,10 +72,9 @@ class Release0005 extends Component {
     this.mirrorLandCamera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     this.mirrorLandCamera.position.set(-16.5, 2.9, 14.7);
     this.mirrorLandCamera.lookAt(this.scene.position);
-
-    this.exitingWormholeCamera = new THREE.PerspectiveCamera(84, window.innerWidth / window.innerHeight, 0.01, 1000);
-    this.exitingWormholeCamera.name = "exitingWormholeCamera";
-    this.scene.add(this.exitingWormholeCamera);
+    this.inWormholeCamera = new THREE.PerspectiveCamera(84, window.innerWidth / window.innerHeight, 0.01, 1000);
+    this.inWormholeCamera.name = "inWormholeCamera";
+    this.scene.add(this.inWormholeCamera);
   }
 
   createLights() {
@@ -181,8 +173,7 @@ class Release0005 extends Component {
       new THREE.Vector3(-10, 10, 30), new THREE.Vector3(-10, 20, 30),
       new THREE.Vector3(0, 30, 30), new THREE.Vector3(10, 30, 30),
       new THREE.Vector3(20, 30, 15), new THREE.Vector3(10, 30, 10),
-      new THREE.Vector3(0, 30, 10), new THREE.Vector3(-10, 20,
-        10),
+      new THREE.Vector3(0, 30, 10), new THREE.Vector3(-10, 20, 10),
       new THREE.Vector3(-10, 10, 10), new THREE.Vector3(0, 0, 10),
       new THREE.Vector3(10, -10, 10), new THREE.Vector3(20, -15, 10),
       new THREE.Vector3(30, -15, 10), new THREE.Vector3(40, -15, 10),
@@ -191,45 +182,38 @@ class Release0005 extends Component {
       new THREE.Vector3(90, 0, 0), new THREE.Vector3(100, 0, 0),
       new THREE.Vector3(100, 0, 0), new THREE.Vector3(100, 0, 0)
     ]);
-
     var geometry = new THREE.Geometry();
     geometry.vertices = this.curve.getPoints(this.numTubeSegments);
     this.splineMesh = new THREE.Line(geometry, new THREE.LineBasicMaterial());
-    var loader = new THREE.TextureLoader();
+    this.textureLoader = new THREE.TextureLoader();
     const textures = {
       "galaxy": {
         url: "./assets/releases/5/images/blue_purple.jpg"
+      },
+      "galaxy2": {
+        url: "./assets/releases/5/images/light_purple.jpg"
       }
     };
-
-    textures.galaxy.texture = loader.load(textures.galaxy.url, function (texture) {
+    textures.galaxy.texture = this.textureLoader.load(textures.galaxy.url, function (texture) {
       return texture;
     });
     this.tubeMaterial = new THREE.MeshStandardMaterial({
       side: THREE.BackSide,
       map: textures.galaxy.texture
     });
-
     this.tubeMaterial.map.wrapS = THREE.RepeatWrapping;
     this.tubeMaterial.map.wrapT = THREE.RepeatWrapping;
-
     const radiusSegments = 12
     this.tubeGeometry = new THREE.TubeGeometry(this.curve, this.numTubeSegments, 2, radiusSegments, false);
     this.tubeMesh = new THREE.Mesh(this.tubeGeometry, this.tubeMaterial);
     this.scale = 10;
     this.tubeMesh.scale.set(this.scale, this.scale, this.scale);
-    // let wireframe = new THREE.Mesh( this.tubeGeometry, this.wireframeMaterial );
-    // this.tubeMesh.add( wireframe );
     this.scene.add(this.tubeMesh);
-
-    // original tube geometry
-    this.tubeGeometry_o = this.tubeGeometry.clone();
   };
 
   createStatue = () => {
     const statuePath = assetPath5("objects/discus-thrower/scene.gltf");
     const renderStatue = gltfObj => this.renderStatueGltfObj(gltfObj);
-
     const statueLoadGLTFParams = {
       url: statuePath,
       name: "discus-thrower",
@@ -241,7 +225,6 @@ class Release0005 extends Component {
       loader: this.loader,
       onSuccess: renderStatue,
     }
-
     loadGLTF({...statueLoadGLTFParams});
   }
 
@@ -249,14 +232,14 @@ class Release0005 extends Component {
     var cubeTextureLoader = new THREE.CubeTextureLoader();
     cubeTextureLoader.setPath('assets/releases/5/images/');
     var cubeTexture = cubeTextureLoader.load([
-        '4.jpg', '5.jpg',
-        '6.jpg', '4.jpg',
-        '5.jpg', '6.jpg',
+      '4.jpg', '5.jpg',
+      '6.jpg', '4.jpg',
+      '5.jpg', '6.jpg',
     ]);
     const statueObj = gltfObj.scene.children[0].children[0];
     const updatedStatueMaterial = new THREE.MeshBasicMaterial({
-        color: 0x555555,
-        envMap: cubeTexture
+      color: 0x555555,
+      envMap: cubeTexture
     });
     statueObj.material = updatedStatueMaterial;
     statueObj.scale.set(.01, .01, .01);
@@ -267,16 +250,19 @@ class Release0005 extends Component {
     return gltfObj;
   }
 
-  animateSceneObjects() {
+  animateSceneObjects(rotationSpeed = 0.01) {
     const {position} = this.statueObj;
-    if (position.y > Math.random() * -0.9 + 0.1) statueDirection = -0.01;
-    if (position.y < Math.random() * -5.5 + -4 ) statueDirection = 0.01;
+    if (position.y > Math.random() * -0.9 + 0.1) statueDirection = -1 * 0.01;
+    if (position.y < Math.random() * -5.5 + -4) statueDirection = 0.01;
     const newPos = position.y + statueDirection;
     position.setY(newPos);
-    this.statueObj.rotateY(0.01);
-    const newMirrorXPos = this.mirror.position.x + 0.01;
+    this.statueObj.rotateY(rotationSpeed);
+    const newMirrorXPos = this.mirror.position.x + rotationSpeed;
     this.mirror.rotateY(newMirrorXPos);
-    this.coinObj.position.y = this.coinObj.position.y + statueDirection;
+    if (this.coinObj !== undefined) {
+      this.coinObj.position.y = this.coinObj.position.y + statueDirection;
+      this.coinObj.rotateY(-1 * rotationSpeed);
+    }
   }
 
   createCoin() {
@@ -284,15 +270,15 @@ class Release0005 extends Component {
     const renderCoin = gltfObj => this.renderCoin(gltfObj);
 
     const coinLoadGLTFParams = {
-        url: coinPath,
-        name: "old_coin",
-        position: [0, 0, 0],
-        rotateX: 0.001,
-        rotateY: -0.005,
-        rotateZ: 0.01,
-        relativeScale: .1,
-        loader: this.loader,
-        onSuccess: renderCoin,
+      url: coinPath,
+      name: "old_coin",
+      position: [0, 0, 0],
+      rotateX: 0.001,
+      rotateY: -0.005,
+      rotateZ: 0.01,
+      relativeScale: .1,
+      loader: this.loader,
+      onSuccess: renderCoin,
     }
 
     loadGLTF({...coinLoadGLTFParams});
@@ -301,15 +287,15 @@ class Release0005 extends Component {
   renderCoin = (gltfObj) => {
     this.cubeTextureLoader.setPath('assets/releases/5/objects/old_coin/textures/Material_25_normal.png/');
     var cubeTexture = this.cubeTextureLoader.load([
-        '4.jpg', '5.jpg',
-        '6.jpg', '4.jpg',
-        '5.jpg', '6.jpg',
+      '4.jpg', '5.jpg',
+      '6.jpg', '4.jpg',
+      '5.jpg', '6.jpg',
     ]);
 
     const coinObj = gltfObj.scene.children[0].children[0];
     const updatedCoinMaterial = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        envMap: cubeTexture
+      color: 0xffffff,
+      envMap: cubeTexture
     });
     coinObj.material = updatedCoinMaterial;
     coinObj.scale.set(0.06, 0.06, 0.06);
@@ -324,27 +310,13 @@ class Release0005 extends Component {
     if (!isMobile) {
       let count = 0;
       setInterval(() => {
-          if (count >= cameraViews.length - 1) {
-              count = 0;
-          } else {
-              count += 1;
-          }
-          this.mirrorLandCamera = cameraViews[count](this.mirrorLandCamera);
-      }, CONSTANTS.beatTime * 10);
-    }
-  }
-
-  onClick = (e) => {
-    if (this.state.exitingWormhole) {
-        this.setState({
-            exitingWormhole: false,
-            inMirrorLand: true
-        });
-    } else if (this.state.inMirrorLand) {
-        this.setState({
-            inMirrorLand: false,
-            exitingWormhole: true
-        });
+        if (count >= cameraViews.length - 1) {
+          count = 0;
+        } else {
+          count += 1;
+        }
+        this.mirrorLandCamera = cameraViews[count](this.mirrorLandCamera);
+      }, 60 / CONSTANTS.trackTimes[this.currentTrack()].bpm * 10000);
     }
   }
 
@@ -367,81 +339,27 @@ class Release0005 extends Component {
     this.renderer.setSize(ww, wh);
   };
 
-  updateMaterialOffset() {
-    // Update the offset of the material
-    this.tubeMaterial.map.offset.x += this.speed * 0.5;
-  };
-
-  updateCurve() {
-    var index = 0, vertice_o = null, vertice = null;
-    // For each vertice of the tube, move it a bit based on the spline
-    for (var i = 0, j = this.tubeGeometry.vertices.length; i < j; i += 1) {
-      // Get the original tube vertice
-      vertice_o = this.tubeGeometry_o.vertices[i];
-      // Get the visible tube vertice
-      vertice = this.tubeGeometry.vertices[i];
-      // Calculate index of the vertice based on the Z axis
-      // The tube is made of 50 rings of vertices
-      index = Math.floor(i / 50);
-      // Update tube vertice
-      vertice.x +=
-        (vertice_o.x + this.splineMesh.geometry.vertices[index].x - vertice.x) /
-        10;
-      vertice.y +=
-        (vertice_o.y + this.splineMesh.geometry.vertices[index].y - vertice.y) /
-        5;
-    }
-    // Warn ThreeJs that the points have changed
-    this.tubeGeometry.verticesNeedUpdate = true;
-
-    // Update the points along the curve base on mouse position
-    this.curve.points[2].x = -this.mouse.position.x * 0.1;
-    this.curve.points[4].x = -this.mouse.position.x * 0.1;
-    this.curve.points[2].y = this.mouse.position.y * 0.1;
-
-    // Warn ThreeJs that the spline has changed
-    this.splineMesh.geometry.verticesNeedUpdate = true;
-    this.splineMesh.geometry.vertices = this.curve.getPoints(70);
-  };
-
-  updateCameraPosition() {
-    // Update the mouse position with some lerp
-    this.mouse.position.x += (this.mouse.target.x - this.mouse.position.x) / 30;
-    this.mouse.position.y += (this.mouse.target.y - this.mouse.position.y) / 30;
-
-    // Rotate Z & Y axis
-    this.mirrorLandCamera.rotation.z = this.mouse.position.x * 0.2;
-    this.mirrorLandCamera.rotation.y = Math.PI - this.mouse.position.x * 0.06;
-    // Move a bit the camera horizontally & vertically
-    this.mirrorLandCamera.position.x = this.mouse.position.x * 0.015;
-    this.mirrorLandCamera.position.y = -this.mouse.position.y * 0.015;
-  };
-
   updateWormholeTravel() {
-    this.updateMaterialOffset();
-
-    const {scale, normal, binormal, tubeGeometry, exitingWormholeCamera} = this;
+    const {scale, normal, binormal, tubeGeometry, inWormholeCamera} = this;
     // animate camera along spline
+    this.cameraLight.intensity =THREE.Math.randFloat(.9, 1.0);
     var time = Date.now();
     var looptime = 20 * 1000;
     var t = (time % looptime) / looptime;
     // let t = 0;
-
     var pos = tubeGeometry.parameters.path.getPointAt(t);
     pos.multiplyScalar(scale);
     // interpolation
     var segments = tubeGeometry.tangents.length;
-
     var pickt = t * segments;
     var pick = Math.floor(pickt);
     var pickNext = (pick + 1) % segments;
-    if (t > .97) {
+    if (t > .97 && this.currentTrack() === "Heaven") {
       this.setState({
-        exitingWormhole: false, // TODO there are two states because at first I was working with three... obviously could do this with one boolean switch
+        inWormhole: false, // TODO there are two states because at first I was working with three... obviously could do this with one boolean switch
         inMirrorLand: true
       })
     }
-
     binormal.subVectors(tubeGeometry.binormals[pickNext], tubeGeometry.binormals[pick]);
     binormal.multiplyScalar(pickt - pick).add(tubeGeometry.binormals[pick]);
     var dir = tubeGeometry.parameters.path.getTangentAt(t);
@@ -449,55 +367,64 @@ class Release0005 extends Component {
     normal.copy(binormal).cross(dir);
     // we move on a offset on its binormal
     pos.add(normal.clone().multiplyScalar(offset));
-    exitingWormholeCamera.position.copy(pos);
-    // cameraEye.position.copy( pos );
+    inWormholeCamera.position.copy(pos);
     // using arclength for stablization in look ahead
-
     var lookAt = tubeGeometry.parameters.path.getPointAt((t + 10 / tubeGeometry.parameters.path.getLength()) % 1).multiplyScalar(scale);
-    // camera orientation 2 - up orientation via normal
-    // if ( ! params.lookAhead ) lookAt.copy( pos ).add( dir );
-    exitingWormholeCamera.matrix.lookAt(exitingWormholeCamera.position, lookAt, normal);
-    exitingWormholeCamera.rotation.setFromRotationMatrix(exitingWormholeCamera.matrix, exitingWormholeCamera.rotation.order);
+    inWormholeCamera.matrix.lookAt(inWormholeCamera.position, lookAt, normal);
+    inWormholeCamera.rotation.setFromRotationMatrix(inWormholeCamera.matrix, inWormholeCamera.rotation.order);
   }
 
   currentCamera = () => {
-    return this.state.exitingWormhole
-      ? this.exitingWormholeCamera
+    return this.state.inWormhole
+      ? this.inWormholeCamera
       : this.mirrorLandCamera
   }
 
   currentTrack = () => {
-    if (!this.audioElement.currentSrc){
-      return;
+    if (!this.audioElement.currentSrc) {
+      return 'Heaven';
     }
     const trackId = soundcloudTrackIdFromSrc(this.audioElement.currentSrc);
     const track = CONTENT[window.location.pathname].tracks.filter(track => track.id === trackId)[0];
     return track.title
   }
 
-  renderScene() {
-
-    let delta = this.clock.getDelta();
-
-    this.time += delta * 0.5;
-
-    if (this.audioElement.currentTime){
-
-      const tunnelTimes = CONSTANTS.trackTimes[this.currentTrack()].enterTunnel;
-      tunnelTimes.forEach((t) => {
-        if (t === Math.floor(this.audioElement.currentTime) && this.state.inMirrorLand){
+  shouldPivotStatue() {
+    const statuePivotTimes = CONSTANTS.trackTimes[this.currentTrack()].pivotStatue;
+    statuePivotTimes.forEach((t) => {
+      if (this.state.inMirrorLand && Math.abs(this.audioElement.currentTime - t) < .1) {
+        if (!this.state.isStatuePivoting) {
           this.setState({
-            inMirrorLand: false,
-            exitingWormhole: true
+            isStatuePivoting: true
+          }, () => {
+            this.statueObj && this.animateSceneObjects(-1);
           });
         }
+      } else {
+        this.setState({
+          isStatuePivoting: false
+        })
+      }
+    });
+  }
+
+  renderScene() {
+    let delta = this.clock.getDelta();
+    this.time += delta * 0.5;
+
+    if (this.currentTrack() === "Heaven") {
+      if (this.audioElement.currentTime) {
+       this.shouldPivotStatue()
+      }
+    } else {
+      this.setState({
+        inWormhole: true
       })
     }
-
     let camera = this.currentCamera();
     this.cameraLight.position.copy(camera.position);
 
-    if(this.state.exitingWormhole) {
+    if (this.state.inWormhole) {
       this.updateWormholeTravel();
     } else {
       this.statueObj && this.animateSceneObjects();
