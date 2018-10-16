@@ -70,7 +70,7 @@ export const CONTENT = {
       }
     ],
     purchaseLink: "TODO",
-    message: "TODO"
+    message: "Side effects to Plebeian may include extreme bouts of skronk, chronic beat contagia, and a propensity to lay slamming techno tracks down in a single take."
   },
   "/test-dummy": {
     artist: "DUMMY",
