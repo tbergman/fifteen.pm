@@ -14,7 +14,7 @@ import {CONTENT} from "../../Content";
 import {soundcloudTrackIdFromSrc} from "../../Utils/SoundcloudUtils";
 
 export const assetPath5 = (p) => {
-  return assetPath("5/" + p);
+  return assetPath("/5/" + p);
 }
 
 let statueDirection = 0.01;
