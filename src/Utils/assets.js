@@ -3,7 +3,7 @@ const DEV_ASSET_URL = '/assets/releases'
 
 export const assetPath = (path) => {
   if (!path.startsWith('/')) {
-    let path = "/" + path;
+    path = "/" + path;
   }
   if (process.env.NODE_ENV === 'development') {
     return `${DEV_ASSET_URL}${path}`
