@@ -69,7 +69,7 @@ export const CONTENT = {
         secretToken: "s-QGHQP"
       }
     ],
-    purchaseLink: "TODO",
+    purchaseLink: "https://gltd.bandcamp.com/album/heaven",
     message: "Side effects to Plebeian may include extreme bouts of skronk, chronic beat contagia, and a propensity to lay slamming techno tracks down in a single take."
   },
   "/test-dummy": {

@@ -330,7 +330,6 @@ class Release0005 extends Component {
     // On resize, get new width & height of window
     const ww = document.documentElement.clientWidth || document.body.clientWidth;
     const wh = window.innerHeight;
-
     // Update camera aspect
     this.mirrorLandCamera.aspect = ww / wh;
     // Reset aspect of the camera
@@ -342,7 +341,7 @@ class Release0005 extends Component {
   updateWormholeTravel() {
     const {scale, normal, binormal, tubeGeometry, inWormholeCamera} = this;
     // animate camera along spline
-    this.cameraLight.intensity =THREE.Math.randFloat(.9, 1.0);
+    this.cameraLight.intensity = THREE.Math.randFloat(.9, 1.0);
     var time = Date.now();
     var looptime = 20 * 1000;
     var t = (time % looptime) / looptime;
@@ -354,7 +353,7 @@ class Release0005 extends Component {
     var pickt = t * segments;
     var pick = Math.floor(pickt);
     var pickNext = (pick + 1) % segments;
-    if (t > .97 && this.currentTrack() === "Heaven") {
+    if (t > .97) {
       this.setState({
         inWormhole: false, // TODO there are two states because at first I was working with three... obviously could do this with one boolean switch
         inMirrorLand: true
@@ -408,19 +407,29 @@ class Release0005 extends Component {
     });
   }
 
+  shouldEnterWormhole() {
+    const enterWormholeTimes = CONSTANTS.trackTimes[this.currentTrack()].enterWormhole;
+    enterWormholeTimes.forEach((t) => {
+      if (this.state.inMirrorLand && Math.abs(this.audioElement.currentTime - t) < .1) {
+        this.setState({
+          inWormhole: true,
+          inMirrorLand: false
+        });
+      }
+    })
+  }
+
   renderScene() {
     let delta = this.clock.getDelta();
     this.time += delta * 0.5;
-
     if (this.currentTrack() === "Heaven") {
       if (this.audioElement.currentTime) {
-       this.shouldPivotStatue()
+        this.shouldPivotStatue()
       }
-    } else {
-      this.setState({
-        inWormhole: true
-      })
     }
+
+    this.shouldEnterWormhole();
+
     let camera = this.currentCamera();
     this.cameraLight.position.copy(camera.position);
 

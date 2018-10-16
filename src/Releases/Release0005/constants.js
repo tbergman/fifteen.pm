@@ -10,7 +10,7 @@ export const CONSTANTS = {
   trackTimes: {
     Heaven: {
       bpm: 131.0,
-      enterTunnel: [
+      enterWormhole: [
         94, // synths enter,
         180, // synths drop out
         195, // drums change
@@ -79,8 +79,9 @@ export const CONSTANTS = {
     },
     Bullseye: {
       bpm: 134.0,
-      enterTunnel: [
+      enterWormhole: [
         0, // the song is spooky
+        10,
         31, // snares enter
         87, // hats enter
         114, // weird noise hit enters (faster feeling)
