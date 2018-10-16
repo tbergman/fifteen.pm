@@ -124,7 +124,7 @@ class Release0005 extends Component {
     const {scene} = this;
     // sky box
     var cubeTextureLoader = new THREE.CubeTextureLoader();
-    cubeTextureLoader.setPath(assetPath5('/images/');
+    cubeTextureLoader.setPath(assetPath5('/images/'));
     var cubeTexture = cubeTextureLoader.load([
       '4.jpg', '5.jpg',
       '6.jpg', '4.jpg',
