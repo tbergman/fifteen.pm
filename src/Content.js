@@ -67,7 +67,7 @@ export const CONTENT = {
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/album/heaven",
-    message: "The bottom of Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno."
+    message: "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno."
   },
   "/test-dummy": {
     artist: "DUMMY",
