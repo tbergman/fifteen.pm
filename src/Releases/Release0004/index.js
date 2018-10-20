@@ -5,14 +5,14 @@ import debounce from "lodash/debounce";
 import GLTFLoader from 'three-gltf-loader';
 
 
-import Footer from '../../Footer';
+import Footer from '../../Main/Footer/Footer';
 import {FirstPersonControls} from '../../Utils/FirstPersonControls';
 import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
 
 import * as C from "./constants";
 import '../Release.css';
 import './index.css';
-import {CONTENT} from "../../Content";
+import {CONTENT} from "../../Main/Content";
 import {assetPath4Images, sleep, keyPressIsFirstPersonControls} from './utils'
 
 class Release0004 extends PureComponent {

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import * as THREE from 'three';
 import * as Cloth from '../Utils/Cloth';
-import './Release.css';
+import '../Releases/Release.css';
 import {OrbitControls} from '../Utils/OrbitControls';
 import debounce from 'lodash/debounce';
 

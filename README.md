@@ -17,7 +17,7 @@ Here's a brief overview of some key Components:
   * This file ties together all of our components into a single application. It uses [react-router](https://github.com/ReactTraining/react-router) to determine what components get rendered given the requested path. For example `/` will render the homepage and `/1` will render the first release, etc.
 
 - [src/App.js](src.App.js)
-  * This file is responsible for rendering the homepage and setting some global styles (see [src/App.css](src/App.css)).
+  * This file is responsible for rendering the homepage and setting some global styles (see [src/App.css](src/Main/App.css)).
   * TODO: Refactor this component into a separate "Release"?
 
 - TODO...
