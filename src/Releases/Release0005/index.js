@@ -5,12 +5,12 @@ import {OrbitControls} from "../../Utils/OrbitControls";
 import {CONSTANTS} from "./constants";
 import {Reflector} from '../../Utils/Reflector';
 import {Water} from '../../Utils/Water2';
-import Footer from '../../Footer';
+import Footer from '../../Main/Footer/Footer';
 import GLTFLoader from "three-gltf-loader";
 import {loadGLTF} from "../../Utils/Loaders";
 import {assetPath} from "../../Utils/assets";
 import {cameraViews} from "./Utils/cameraViews";
-import {CONTENT} from "../../Content";
+import {CONTENT} from "../../Main/Content";
 import {soundcloudTrackIdFromSrc} from "../../Utils/SoundcloudUtils";
 
 export const assetPath5 = (p) => {

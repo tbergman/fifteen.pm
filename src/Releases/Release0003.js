@@ -2,11 +2,11 @@ import React, {PureComponent, Fragment} from 'react';
 import * as THREE from "three";
 import debounce from 'lodash/debounce';
 import './Release.css';
-import Footer from '../Footer'
+import Footer from '../Main/Footer/Footer'
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
 import {isMobile} from "../Utils/BrowserDetection";
-import {CONTENT} from "../Content";
+import {CONTENT} from "../Main/Content";
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);

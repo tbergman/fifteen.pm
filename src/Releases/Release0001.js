@@ -5,8 +5,8 @@ import {GPUComputationRenderer} from "../Utils/GPUComputationRenderer";
 import debounce from 'lodash/debounce';
 import './Release.css';
 
-import {CONTENT} from "../Content"
-import Footer from "../Footer"
+import {CONTENT} from "../Main/Content"
+import Footer from "../Main/Footer/Footer"
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 
 

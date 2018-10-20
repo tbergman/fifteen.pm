@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
-import {CONTENT} from "../../Content";
-import Footer from '../../Footer';
+import {CONTENT} from "../../Main/Content";
+import Footer from '../../Main/Footer/Footer';
 
 class Release0006 extends Component {
     render() {

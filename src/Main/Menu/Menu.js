@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
-import anime from './Utils/Anime.min.js';
+import anime from '../../Utils/Anime.min.js';
 import {SHAPES} from './MenuConstants';
-import {CONTENT} from './Content'
+import {CONTENT} from '../Content'
 import './Menu.css';
 
 class Menu extends PureComponent {

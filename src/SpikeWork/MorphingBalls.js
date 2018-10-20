@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import * as THREE from 'three';
 import {MarchingCubes, EffectComposer, ShaderPass, FXAAShader, HorizontalTiltShiftShader, VerticalTiltShiftShader, RenderPass} from '../Utils/ShaderPass';
 import {OrbitControls} from '../Utils/OrbitControls';
-import './Release.css';
+import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
 
 const MARGIN = 0;
