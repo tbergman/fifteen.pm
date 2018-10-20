@@ -10,6 +10,7 @@ import Release0002 from "./Releases/Release0002";
 import Release0003 from "./Releases/Release0003";
 import Release0004 from "./Releases/Release0004/index";
 import Release0005 from "./Releases/Release0005/index";
+import Release0006 from "./Releases/Release0006/index";
 import registerServiceWorker from './registerServiceWorker';
 import {Router, Route} from 'react-router-dom';
 
@@ -24,6 +25,7 @@ ReactDOM.render(
             <Route path="/3" component={Release0003}/>
             <Route path="/4" component={Release0004}/>
             <Route path="/5" component={Release0005}/>
+            <Route path="/6" component={Release0006}/>
         </div>
     </Router>,
     document.getElementById('root')

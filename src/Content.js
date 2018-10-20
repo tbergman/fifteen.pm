@@ -69,6 +69,21 @@ export const CONTENT = {
     purchaseLink: "https://gltd.bandcamp.com/album/heaven",
     message: "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno."
   },
+  "/6": {
+      artist: "VVEIS",
+      tracks: [
+          {
+              title: "Heaven",
+              id: "514219014",
+          },
+          {
+              title: "Bullseye",
+              id: "514219020",
+          }
+      ],
+      purchaseLink: "https://gltd.bandcamp.com/album/heaven",
+      message: "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno."
+  },
   "/test-dummy": {
     artist: "DUMMY",
     tracks: [
