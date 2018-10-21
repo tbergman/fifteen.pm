@@ -69,6 +69,21 @@ export const CONTENT = {
     purchaseLink: "https://gltd.bandcamp.com/album/heaven",
     message: "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno."
   },
+  "/7": {
+    artist: "JENNIFER VANILLA",
+    tracks: [
+      {
+        title: "Space Time Motion",
+        id: "514219014",
+      },
+      {
+        title: "Erase The Time",
+        id: "514219020",
+      }
+    ],
+    purchaseLink: "https://gltd.bandcamp.com/album/heaven",
+    message: "Jennifer Vanilla."
+  },
   "/test-dummy": {
     artist: "DUMMY",
     tracks: [
