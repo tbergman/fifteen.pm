@@ -74,11 +74,13 @@ export const CONTENT = {
     tracks: [
       {
         title: "Space Time Motion",
-        id: "514219014",
+        id: "517825101",
+        secretToken: "s-U7dTe"
       },
       {
         title: "Erase The Time",
-        id: "514219020",
+        id: "517825440",
+        secretToken: "s-vb5q8"
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/album/heaven",
