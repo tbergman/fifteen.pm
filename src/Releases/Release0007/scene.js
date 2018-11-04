@@ -177,7 +177,7 @@ const init = (container) => {
     invert: true,
     rotateY: 180,
     transparent: true,
-    opacity: 0.033
+    opacity: 0.1
   })
   scene.add( backgroundImage );
 
