@@ -6709,6 +6709,10 @@ three-gltf-loader@^1.96.0:
   version "1.96.0"
   resolved "https://registry.yarnpkg.com/three-gltf-loader/-/three-gltf-loader-1.96.0.tgz#c8dd6d4055895045297bba019c6230114eb2c561"
 
+three-obj-mtl-loader@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/three-obj-mtl-loader/-/three-obj-mtl-loader-1.0.3.tgz#2901efd5b77cce29b61733c63f196432ee653667"
+
 three-reflector@^1.0.2:
   version "1.0.2"
   resolved "https://schoology.jfrog.io/schoology/api/npm/npm/three-reflector/-/three-reflector-1.0.2.tgz#051eb359b526f4ad85fcc92999a3ff6be0b1e15d"

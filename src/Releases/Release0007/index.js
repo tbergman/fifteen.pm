@@ -1,8 +1,9 @@
 import React, {Component, Fragment} from 'react';
 import '../Release.css';
+import './index.css';
 import Footer from '../../Footer';
 import {CONTENT} from "../../Content";
-import {renderScene} from "./scene"
+import {renderScene, assetPath7} from "./scene"
 
 class Release0007 extends Component {
 
@@ -12,16 +13,16 @@ class Release0007 extends Component {
 
   render = () => {
     return (
-    <div>
       <Fragment>
+        <div className={'background'}>
         <div ref={element => this.container = element}/>
         <Footer
           content={CONTENT[window.location.pathname]}
           fillColor="white"
           audioRef={el => this.audioElement = el}
         />
+        </div>
       </Fragment>
-    </div>
     );
   }
 }

@@ -14,13 +14,13 @@ const rotateObject = (object, rotateX=0, rotateY=0, rotateZ=0) => {
 
 
 //  initialize an object of type 'image'
-export const loadImage = ({ geometry, url, name, invert, position, rotateX, rotateY, rotateZ }) => {
+export const loadImage = ({ geometry, url, name, invert, position, transparent, opacity, rotateX, rotateY, rotateZ }) => {
 
   // create material from image texture
   let texture = new THREE.TextureLoader().load(url);
   texture.minFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
-  let material = new THREE.MeshBasicMaterial({map: texture});
+  let material = new THREE.MeshBasicMaterial({map: texture, transparent: transparent, opacity: opacity});
 
   // create mesh from material and geometry
   let imageMesh = new THREE.Mesh(geometry, material);
@@ -92,6 +92,16 @@ export const loadGLTF = ({url, name, relativeScale, position, rotateX, rotateY, 
     object.scene.position.set(...position);
     object.name = name;
     rotateObject(object.scene, rotateX, rotateY, rotateZ);
+    onSuccess(object);
+  }, onError);
+}
+
+export const loadOBJ = ({url, name, relativeScale, position, rotateX, rotateY, rotateZ, pivotPoint, loader, onSuccess, onError}) => {
+  loader.load(url, object => {
+    object.scale.multiplyScalar(relativeScale);
+    object.position.set(...position);
+    object.name = name;
+    rotateObject(object, rotateX, rotateY, rotateZ);
     onSuccess(object);
   }, onError);
 }
