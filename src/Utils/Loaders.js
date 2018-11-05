@@ -20,6 +20,8 @@ export const loadImage = ({ geometry, url, name, invert, position, transparent, 
   let texture = new THREE.TextureLoader().load(url);
   texture.minFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
   let material = new THREE.MeshBasicMaterial({map: texture, transparent: transparent, opacity: opacity});
 
   // create mesh from material and geometry

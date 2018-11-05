@@ -36,8 +36,14 @@ let handMirrorAxis = new THREE.Vector3(0, 1, 0);
 let handMirrorRad = 0.019;
 let jupiterAxis = new THREE.Vector3(0, 1, 0);
 let jupiterRad = 0.007;
-let balloonAxis = new THREE.Vector3(0, -1, 0);
-let balloonTheta = 0.0075;
+let jupiterOrbitAxis = new THREE.Vector3(0, 0, -0.9);
+let jupiterOrbitTheta = 0.03;
+let balloonOrbitAxis = new THREE.Vector3(0, -1, 0);
+let balloonOrbitTheta = 0.0075;
+let balloonAxis = new THREE.Vector3(1, 0, 1);
+let balloonRad = 0.01;
+let numBalloons = 3;
+let balloons = [];
 let gltfObjects = {};
 let mlib = {};
 
@@ -64,7 +70,7 @@ const init = (container) => {
 
   // CAMERA
   camera = new THREE.PerspectiveCamera( 40, SCREEN_WIDTH / SCREEN_HEIGHT, 2, 4000 );
-  camera.position.set( -1462, 252, 313);
+  camera.position.set( -1262, 260, 313);
   controls = new FirstPersonControls(camera);
   controls.lookSpeed = 0.065;
   controls.movementSpeed = 66;
@@ -79,7 +85,7 @@ const init = (container) => {
   objLoader = new OBJLoader();
 
   // LIGHTS
-  scene.add( new THREE.AmbientLight( 0x111111, 3 ) );
+  scene.add( new THREE.AmbientLight( 0x111111, 5 ) );
   directionalLight = new THREE.DirectionalLight( 0xffffff, 1.15 );
   directionalLight.position.set( 500, 2000, 0 );
   scene.add( directionalLight );
@@ -96,12 +102,12 @@ const init = (container) => {
   normalMap = new THREE.WebGLRenderTarget( rx, ry, pars );
   normalMap.texture.generateMipmaps = false;
   uniformsNoise = {
-    time: { value: 1.0 },
-    scale: { value: new THREE.Vector2( 1.5, 1.5 ) },
-    offset: { value: new THREE.Vector2( 0, 0 ) }
+    time: { value: 0.0 },
+    scale: { value: new THREE.Vector2( 1.3, 1.3 ) },
+    offset: { value: new THREE.Vector2( -10, -10 ) }
   };
   uniformsNormal = THREE.UniformsUtils.clone( normalShader.uniforms );
-  uniformsNormal.height.value = 0.05;
+  uniformsNormal.height.value = 0.1;
   uniformsNormal.resolution.value.set( rx, ry );
   uniformsNormal.heightMap.value = heightMap.texture;
   let vertexShader = SHADERS[ 'vertexShader' ];
@@ -109,11 +115,11 @@ const init = (container) => {
   // TEXTURES
   let loadingManager = new THREE.LoadingManager( function () {
     terrain.visible = true;
-  } );
+  });
   let textureLoader = new THREE.TextureLoader( loadingManager );
   let specularMap = new THREE.WebGLRenderTarget( 1024, 1024, pars );
   specularMap.texture.generateMipmaps = false;
-  let diffuseTexture1 = textureLoader.load( assetPath7("textures/terrain/sand-big-saturated.jpg"));
+  let diffuseTexture1 = textureLoader.load( assetPath7("textures/terrain/sand-big-saturated-pink.jpg"));
   let diffuseTexture2 = textureLoader.load( assetPath7("textures/terrain/backgrounddetailed6.jpg"));
   let detailTexture = textureLoader.load( assetPath7("textures/terrain/grasslight-big-nm.jpg"));
   diffuseTexture1.wrapS = diffuseTexture1.wrapT = THREE.RepeatWrapping;
@@ -163,7 +169,7 @@ const init = (container) => {
   let geometryTerrain = new THREE.PlaneBufferGeometry( 6000, 6000, 256, 256 );
   BufferGeometryUtils.computeTangents( geometryTerrain );
   terrain = new THREE.Mesh( geometryTerrain, mlib[ 'terrain' ] );
-  terrain.position.set( 0, - 125, 0 );
+  terrain.position.set( 0, -125, 0 );
   terrain.rotation.x = - Math.PI / 2;
   terrain.visible = false;
   scene.add( terrain );
@@ -171,14 +177,15 @@ const init = (container) => {
   // UNIVERSE
   backgroundImage = loadImage({
     geometry: new THREE.SphereBufferGeometry(2000, 2000, 2000),
-    url: assetPath7('images/background.png'),
+    url: assetPath7('images/background-okeefe-edited.jpg'),
     name: 'background',
-    position: [ -1462, 252, 313],
+    position: [ -1262, 260, 313],
     invert: true,
     rotateY: 180,
     transparent: true,
     opacity: 0.1
   })
+  backgroundImage.material.map.repeat.set(2, 2);
   scene.add( backgroundImage );
 
 
@@ -189,9 +196,9 @@ const init = (container) => {
     return gltfObj;
   }
 
-  const renderOBJ = (obj) => {
+  const renderBalloon = (obj) => {
     obj.updateMatrixWorld();
-    gltfObjects[obj.name] = obj;
+    balloons.push(obj);
     scene.add(obj);
     return obj;
   }
@@ -209,18 +216,18 @@ const init = (container) => {
     onSuccess: renderGLTF,
   });
 
-  // JUPITER
-  loadGLTF({
-    url: assetPath7("objects/jupiter/scene.gltf"),
-    name: "jupiter",
-    position: [-200, 700, 340],
-    rotateX: 0,
-    rotateY: 0,
-    rotateZ: 0,
-    relativeScale: 20,
-    loader: loader,
-    onSuccess: renderGLTF,
-  });
+  // // JUPITER
+  // loadGLTF({
+  //   url: assetPath7("objects/jupiter/scene.gltf"),
+  //   name: "jupiter",
+  //   position: [-200, 1300, 340],
+  //   rotateX: 0,
+  //   rotateY: 0,
+  //   rotateZ: 0,
+  //   relativeScale: 100,
+  //   loader: loader,
+  //   onSuccess: renderGLTF,
+  // });
 
 
   // LAVA LAMP
@@ -257,18 +264,20 @@ const init = (container) => {
     onSuccess: renderGLTF,
   });
 
-  // BALLOON
-  loadOBJ({
-    url: assetPath7('objects/red_balloon/Red_Balloon_with_Ribbon_convert.obj'),
-    name: 'red_balloon',
-    position: [ -3200, 500, 313],
-    rotateX: 90,
-    rotateY: 0,
-    rotateZ: 0,
-    relativeScale: 0.75,
-    loader: objLoader,
-    onSuccess: renderOBJ
-  })
+  // BALLOONS
+  for (let i=0; i < numBalloons; i++) {
+    loadOBJ({
+      url: assetPath7('objects/red_balloon/Red_Balloon_with_Ribbon_convert.obj'),
+      name: `balloon_${i}`,
+      position: [ -3200 + i * 50, 500 + i * 50 , 313 + i * 50],
+      rotateX: 90,
+      rotateY: 0,
+      rotateZ: 0,
+      relativeScale: 0.75,
+      loader: objLoader,
+      onSuccess: renderBalloon
+    })
+  }
 
   // RENDERER
   renderer = new THREE.WebGLRenderer( { alpha:true } );
@@ -297,15 +306,29 @@ const rotateAboutPoint = (obj, point, axis, theta, pointIsWorld) => {
 }
 
 const updateBalloons = () => {
+  balloons.forEach( balloon => {
+    if (balloon !== undefined) {
+      let point = new THREE.Vector3( -1262, 260, 313);
+      balloon.rotateOnAxis(balloonAxis, balloonRad);
+      rotateAboutPoint(
+        balloon,
+        point,
+        balloonOrbitAxis,
+        balloonOrbitTheta,
+        true);
+    }
+  });
+}
 
-  if (gltfObjects['red_balloon'] !== undefined) {
-    let point = new THREE.Vector3( -1462, 252, 313);
+const updateJupiter = () => {
+  if (gltfObjects['jupiter'] !== undefined) {
+    let point = new THREE.Vector3( -1262, 260, 313);
     rotateAboutPoint(
-      gltfObjects['red_balloon'],
+      gltfObjects['jupiter'].scene,
       point,
-      balloonAxis,
-      balloonTheta,
-      true);
+      jupiterOrbitAxis,
+      jupiterOrbitTheta,
+      false);
   }
 }
 
@@ -352,9 +375,9 @@ const render = () => {
       if (gltfObjects['hand_mirror'] !== undefined) {
       gltfObjects['hand_mirror'].scene.rotateOnAxis(handMirrorAxis, handMirrorRad);
     }
-    if (gltfObjects['jupiter'] !== undefined) {
-      gltfObjects['jupiter'].scene.rotateOnAxis(jupiterAxis, jupiterRad);
-    }
+    // if (gltfObjects['jupiter'] !== undefined) {
+    //   gltfObjects['jupiter'].scene.rotateOnAxis(jupiterAxis, jupiterRad);
+    // }
     if (backgroundImage !== undefined ) {
       backgroundImage.rotateOnAxis(backgroundAxis, backgroundRad);
     }
@@ -362,6 +385,7 @@ const render = () => {
       lavaLampMixer.update(delta);
     }
     updateBalloons();
+    // updateJupiter();
     controls.update(delta);
     renderer.render( scene, camera );
   }
