@@ -183,7 +183,7 @@ const init = (container) => {
     invert: true,
     rotateY: 180,
     transparent: true,
-    opacity: 0.1
+    opacity: 0.066
   })
   backgroundImage.material.map.repeat.set(2, 2);
   scene.add( backgroundImage );
