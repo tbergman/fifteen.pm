@@ -5,9 +5,28 @@
 }
 
 .background {
-  background: rgb(53,1,108);
-  background: -moz-linear-gradient(0deg, rgba(0,0,0,1) 100%, rgba(38,28,131,1) 0%);
-  background: -webkit-linear-gradient(0deg, rgba(0,0,0,1) 100%, rgba(38,28,131,1) 0%);
-  background: linear-gradient(0deg, rgba(0,0,0,1) 100%, rgba(38,28,131,1) 0%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#35016c",endColorstr="#002865",GradientType=1);
+
+  background: linear-gradient(180deg, #34042c, #ff4fd3, #270a70, #9d36f5, #0c0214);
+  background-size: 1000% 1000%;
+  -webkit-animation: jvplanetltd 240s ease infinite;
+  -moz-animation: jvplanetltd 240s ease infinite;
+  animation: jvplanetltd 240s ease infinite;
 }
+
+@-webkit-keyframes jvplanetltd {
+    0%{background-position:50% 0%}
+    50%{background-position:51% 100%}
+    100%{background-position:50% 0%}
+}
+@-moz-keyframes jvplanetltd {
+    0%{background-position:50% 0%}
+    50%{background-position:51% 100%}
+    100%{background-position:50% 0%}
+}
+@keyframes jvplanetltd {
+    0%{background-position:50% 0%}
+    50%{background-position:51% 100%}
+    100%{background-position:50% 0%}
+}
+
+

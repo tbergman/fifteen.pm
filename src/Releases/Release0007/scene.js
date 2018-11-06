@@ -29,11 +29,13 @@ let updateNoise = true;
 let hourglassAxis = new THREE.Vector3(0, 0, -1);
 let hourglassRad = 0.013;
 let backgroundAxis = new THREE.Vector3(0, -1, 0);
-let backgroundRad = 0.001;
+let backgroundRad = 0.00075;
 let lavaLampAxis = new THREE.Vector3(0, -1, 0);
 let lavaLampRad = 0.12;
 let handMirrorAxis = new THREE.Vector3(0, 1, 0);
 let handMirrorRad = 0.019;
+let vaseAxis = new THREE.Vector3(1, 0, 0);
+let vaseRad = 0.01;
 let jupiterAxis = new THREE.Vector3(0, 1, 0);
 let jupiterRad = 0.007;
 let jupiterOrbitAxis = new THREE.Vector3(0, 0, -0.9);
@@ -103,8 +105,8 @@ const init = (container) => {
   normalMap.texture.generateMipmaps = false;
   uniformsNoise = {
     time: { value: 0.0 },
-    scale: { value: new THREE.Vector2( 1.3, 1.3 ) },
-    offset: { value: new THREE.Vector2( -10, -10 ) }
+    scale: { value: new THREE.Vector2( 0.7, 0.7 ) },
+    offset: { value: new THREE.Vector2( -1.3, -1.3 ) }
   };
   uniformsNormal = THREE.UniformsUtils.clone( normalShader.uniforms );
   uniformsNormal.height.value = 0.1;
@@ -119,9 +121,9 @@ const init = (container) => {
   let textureLoader = new THREE.TextureLoader( loadingManager );
   let specularMap = new THREE.WebGLRenderTarget( 1024, 1024, pars );
   specularMap.texture.generateMipmaps = false;
-  let diffuseTexture1 = textureLoader.load( assetPath7("textures/terrain/sand-big-saturated-pink.jpg"));
-  let diffuseTexture2 = textureLoader.load( assetPath7("textures/terrain/backgrounddetailed6.jpg"));
-  let detailTexture = textureLoader.load( assetPath7("textures/terrain/grasslight-big-nm.jpg"));
+  let diffuseTexture1 = textureLoader.load( assetPath7("textures/terrain/sand-big-saturated-purple.jpg") );
+  let diffuseTexture2 = textureLoader.load( assetPath7("textures/terrain/backgrounddetailed6.jpg") );
+  let detailTexture = textureLoader.load( assetPath7("textures/terrain/TexturesCom_DesertSand3_2x2_512_normal.jpg") );
   diffuseTexture1.wrapS = diffuseTexture1.wrapT = THREE.RepeatWrapping;
   diffuseTexture2.wrapS = diffuseTexture2.wrapT = THREE.RepeatWrapping;
   detailTexture.wrapS = detailTexture.wrapT = THREE.RepeatWrapping;
@@ -142,9 +144,9 @@ const init = (container) => {
   uniformsTerrain[ 'enableSpecular' ].value = true;
   uniformsTerrain[ 'diffuse' ].value.setHex( 0xffffff );
   uniformsTerrain[ 'specular' ].value.setHex( 0xffffff );
-  uniformsTerrain[ 'shininess' ].value = 120;
+  uniformsTerrain[ 'shininess' ].value = 240;
   uniformsTerrain[ 'uDisplacementScale' ].value = 375;
-  uniformsTerrain[ 'uRepeatOverlay' ].value.set( 6, 6 );
+  uniformsTerrain[ 'uRepeatOverlay' ].value.set( 4, 4 );
   let params = [
     [ 'heightmap',  SHADERS[ 'fragmentShaderNoise' ],   vertexShader, uniformsNoise, false ],
     [ 'normal',   normalShader.fragmentShader, normalShader.vertexShader, uniformsNormal, false ],
@@ -166,7 +168,7 @@ const init = (container) => {
   sceneRenderTarget.add( quadTarget );
 
   // TERRAIN MESH
-  let geometryTerrain = new THREE.PlaneBufferGeometry( 6000, 6000, 256, 256 );
+  let geometryTerrain = new THREE.PlaneBufferGeometry( 3000, 3000, 512, 512 );
   BufferGeometryUtils.computeTangents( geometryTerrain );
   terrain = new THREE.Mesh( geometryTerrain, mlib[ 'terrain' ] );
   terrain.position.set( 0, -125, 0 );
@@ -176,16 +178,16 @@ const init = (container) => {
 
   // UNIVERSE
   backgroundImage = loadImage({
-    geometry: new THREE.SphereBufferGeometry(2000, 2000, 2000),
-    url: assetPath7('images/background-okeefe-edited.jpg'),
+    geometry: new THREE.SphereBufferGeometry(6000, 32, 32),
+    url: assetPath7('images/background-okeefe-edited-long.jpg'),
     name: 'background',
     position: [ -1262, 260, 313],
     invert: true,
     rotateY: 180,
     transparent: true,
-    opacity: 0.066
+    opacity: 0.07
   })
-  backgroundImage.material.map.repeat.set(2, 2);
+  backgroundImage.material.map.repeat.set(3, 1);
   scene.add( backgroundImage );
 
 
@@ -216,50 +218,43 @@ const init = (container) => {
     onSuccess: renderGLTF,
   });
 
-  // // JUPITER
-  // loadGLTF({
-  //   url: assetPath7("objects/jupiter/scene.gltf"),
-  //   name: "jupiter",
-  //   position: [-200, 1300, 340],
-  //   rotateX: 0,
-  //   rotateY: 0,
-  //   rotateZ: 0,
-  //   relativeScale: 100,
-  //   loader: loader,
-  //   onSuccess: renderGLTF,
-  // });
-
-
-  // LAVA LAMP
-  const renderLavaLamp = (gltfObj) => {
-    let gltf = renderGLTF(gltfObj);
-    lavaLampMixer = new THREE.AnimationMixer(gltf.scene);
-    for (let i = 0; i < gltf.animations.length; i++) {
-      lavaLampMixer.clipAction(gltf.animations[i]).play();
-    }
-  }
-
+  // JUPITER
   loadGLTF({
-    url: assetPath7("objects/lava_lamp.gltf"),
-    name: "lava_lamp",
-    position: [-175, 260, 700],
+    url: assetPath7("objects/jupiter/scene.gltf"),
+    name: "jupiter",
+    position: [-200, 1300, 340],
     rotateX: 0,
-    rotateY: 12,
+    rotateY: 0,
     rotateZ: 0,
-    relativeScale: 20,
+    relativeScale: 100,
     loader: loader,
-    onSuccess: renderLavaLamp,
+    onSuccess: renderGLTF,
   });
+
 
   // HAND MIRROR
   loadGLTF({
     url: assetPath7("objects/enchanted_mirror/scene.gltf"),
     name: "hand_mirror",
-    position: [-175, 285, -50],
+    position: [-175, 285, 700],
     rotateX: 0,
     rotateY: 0,
     rotateZ: 0,
     relativeScale: 0.45,
+    loader: loader,
+    onSuccess: renderGLTF,
+  });
+
+
+  // RUBINS VASE
+  loadGLTF({
+    url: assetPath7('objects/rubins_vase.gltf'),
+    name: 'rubins_vase',
+    position: [-175, 330, -50],
+    rotateX: 0,
+    rotateY: 0,
+    rotateZ: 0,
+    relativeScale: 23,
     loader: loader,
     onSuccess: renderGLTF,
   });
@@ -374,6 +369,9 @@ const render = () => {
     }
       if (gltfObjects['hand_mirror'] !== undefined) {
       gltfObjects['hand_mirror'].scene.rotateOnAxis(handMirrorAxis, handMirrorRad);
+    }
+    if (gltfObjects['rubins_vase'] !== undefined) {
+      gltfObjects['rubins_vase'].scene.rotateOnAxis(vaseAxis, vaseRad);
     }
     // if (gltfObjects['jupiter'] !== undefined) {
     //   gltfObjects['jupiter'].scene.rotateOnAxis(jupiterAxis, jupiterRad);
