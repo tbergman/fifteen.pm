@@ -168,24 +168,24 @@ const init = (container) => {
   sceneRenderTarget.add( quadTarget );
 
   // TERRAIN MESH
-  let geometryTerrain = new THREE.PlaneBufferGeometry( 3000, 3000, 512, 512 );
+  let geometryTerrain = new THREE.PlaneBufferGeometry( 4500, 4500, 512, 512 );
   BufferGeometryUtils.computeTangents( geometryTerrain );
   terrain = new THREE.Mesh( geometryTerrain, mlib[ 'terrain' ] );
-  terrain.position.set( 0, -125, 0 );
+  terrain.position.set( -600, -125, 0 );
   terrain.rotation.x = - Math.PI / 2;
   terrain.visible = false;
   scene.add( terrain );
 
   // UNIVERSE
   backgroundImage = loadImage({
-    geometry: new THREE.SphereBufferGeometry(6000, 32, 32),
+    geometry: new THREE.SphereBufferGeometry(3000, 32, 32),
     url: assetPath7('images/background-okeefe-edited-long.jpg'),
     name: 'background',
     position: [ -1262, 260, 313],
     invert: true,
     rotateY: 180,
     transparent: true,
-    opacity: 0.07
+    opacity: 0.1
   })
   backgroundImage.material.map.repeat.set(3, 1);
   scene.add( backgroundImage );
@@ -218,15 +218,15 @@ const init = (container) => {
     onSuccess: renderGLTF,
   });
 
-  // JUPITER
+  // Lava Lamp
   loadGLTF({
-    url: assetPath7("objects/jupiter/scene.gltf"),
-    name: "jupiter",
-    position: [-200, 1300, 340],
+    url: assetPath7("objects/lava_lamp2.gltf"),
+    name: "lava_lamp",
+    position: [-200, 285, 700],
     rotateX: 0,
     rotateY: 0,
     rotateZ: 0,
-    relativeScale: 100,
+    relativeScale: 20,
     loader: loader,
     onSuccess: renderGLTF,
   });
@@ -236,13 +236,13 @@ const init = (container) => {
   loadGLTF({
     url: assetPath7("objects/enchanted_mirror/scene.gltf"),
     name: "hand_mirror",
-    position: [-175, 285, 700],
+    position: [-175, 1000, 340],
     rotateX: 0,
     rotateY: 0,
     rotateZ: 0,
     relativeScale: 0.45,
     loader: loader,
-    onSuccess: renderGLTF,
+    onSuccess: renderGLTF
   });
 
 
@@ -373,9 +373,9 @@ const render = () => {
     if (gltfObjects['rubins_vase'] !== undefined) {
       gltfObjects['rubins_vase'].scene.rotateOnAxis(vaseAxis, vaseRad);
     }
-    // if (gltfObjects['jupiter'] !== undefined) {
-    //   gltfObjects['jupiter'].scene.rotateOnAxis(jupiterAxis, jupiterRad);
-    // }
+    if (gltfObjects['lava_lamp'] !== undefined) {
+      gltfObjects['lava_lamp'].scene.rotateOnAxis(lavaLampAxis, lavaLampRad);
+    }
     if (backgroundImage !== undefined ) {
       backgroundImage.rotateOnAxis(backgroundAxis, backgroundRad);
     }
