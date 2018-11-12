@@ -75,8 +75,8 @@ export const PLANETS = [
     playbackRate: 1,
     loop: true,
     invert: true,
-    volume: 0.005,
-    muted: isMobile,
+    volume: 0,
+    muted: true,
     axis: new THREE.Vector3(0, 1, 0).normalize(),
     angle: 0.0,
     moons: [
