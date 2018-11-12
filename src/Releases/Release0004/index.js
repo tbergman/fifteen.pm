@@ -90,7 +90,7 @@ class Release0004 extends PureComponent {
     this.initAsteroids();
     this.initPath();
     this.container.appendChild(this.renderer.domElement);
-    // this.playCurPlanet();
+    this.playCurPlanet();
     this.lookAtCurPlanet();
   }
 
