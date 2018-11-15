@@ -62,7 +62,7 @@ class Release0006 extends Component {
     this.controls.enabled = true;
     this.controls.mouseMotionActive = false;
     this.controls.lookSpeed = .05;
-    this.controls.lookVertical = false;
+    // this.controls.lookVertical = false;
 
     this.container.appendChild(this.renderer.domElement);
     this.setRendererSize();
@@ -70,7 +70,7 @@ class Release0006 extends Component {
     // todo - put these in proper place
     this.rotationAngle = 0;
     this.rotationRadius = 1;
-    this.orbitRadius = 300;
+    this.orbitRadius = 350;
     // this.renderScene();
     this.startAnimation();
   }
@@ -100,6 +100,7 @@ class Release0006 extends Component {
       if (child.name === "octopus") {
         child.receiveShadow = false;
         child.castShadow = false;
+        this.octopus = child;
         this.octoMaterial = new THREE.MeshStandardMaterial({
           // map: null,
           color: 0x4B0082,
@@ -194,7 +195,6 @@ class Release0006 extends Component {
         // phurbaMaterial.roughnessMap = roughnessMap;
         child.material = phurbaMaterial;
         // END BLACK MATTE
-
         this.camera.add(child);
         this.phurba = child;
       }
@@ -225,19 +225,16 @@ class Release0006 extends Component {
     light.shadow.camera.near = 10;
     light.shadow.camera.far = 1000;
     light.shadow.camera.fov = 30;
-    light.lookAt(scene);
+    light.lookAt(scene); // todo check if this is doing anything???
     scene.add(light);
-
     //TMP
     // let ambientLight = new THREE.AmbientLight(0xaaaaaa);//ffffff);
     // scene.add(ambientLight)
-
     this.cameraLight = new THREE.PointLight("#fff", .1);
     this.cameraLight.intensity = 1.0;
     this.cameraLight.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z)
     this.cameraLight.lookAt(this.scene.position);
     scene.add(this.cameraLight);
-
     this.setupLensFlare();
     this.setupStrobe();
   }
@@ -288,6 +285,7 @@ class Release0006 extends Component {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
     this.camera.position.copy(CONSTANTS.cameraStartPos)
     this.camera.lookAt(this.scene.position);
+    this.camera.rotation.x += .5;
     this.scene.add(this.camera);
   }
 
@@ -328,11 +326,9 @@ class Release0006 extends Component {
     const curTime = audioElement.currentTime;
     if (curTime >= SECTION_1_START && curTime < SECTION_2_START && mode != UNDERNEATH) {
       this.state.mode = UNDERNEATH;
-      this.controls.lookSpeed = .05;
     } else if (curTime >= SECTION_2_START && curTime < SECTION_3_START && mode != RISING) {
       this.state.mode = RISING;
       this.state.strobeOn = true;
-      this.controls.lookSpeed = .005;
     } else if (curTime >= SECTION_3_START && curTime < SECTION_3_OUTRO_START && mode != ORBITING) {
       this.state.mode = ORBITING;
     } else if (curTime >= SECTION_3_OUTRO_START && mode != RETURNING) {
@@ -399,7 +395,7 @@ class Release0006 extends Component {
 
   shouldPhurbasShoot(clockDelta) {
     CONSTANTS.purbaShootTimes.forEach((t) => {
-      if (!this.state.arePurbasShooting && Math.abs(this.audioElement.currentTime - t) < .1) {
+      if (!this.state.arePurbasShooting && Math.abs(this.audioElement.currentTime - (t - 2)) < .1) { // about 2 second lag between shooting the phurba and seeing it
         this.phurba.visible = true;
         this.setState({
           arePurbasShooting: true,
@@ -445,7 +441,6 @@ class Release0006 extends Component {
     this.startTime = this.then;
     // TODO - where to set this (ensuring that it's initialized and not constantly being set -- we used to be able to pass this as arg
     this.audioElement.loop = true;
-
     this.animate();
   }
 
@@ -480,19 +475,15 @@ class Release0006 extends Component {
 
 
   renderScene() {
-    const {scene, renderer, camera, mixer, clock, cameraLight} = this;
+    const {scene, renderer, camera, mixer, clock, cameraLight, octopus} = this;
     const {mode, strobeOn, arePurbasShooting} = this.state;
     const clockDelta = clock.getDelta();
-
-    // if (this.audioElement && this.audioElement.currentTime < 230) {
-    //   this.audioElement.currentTime = 231;
+    // if (this.audioElement && this.audioElement.currentTime < 95) {
+    //   this.audioElement.currentTime = 95;
     // }
-
     // console.log("MODE", mode, "TIME", this.audioElement.currentTime);
-
     this.setSongState();
 
-    // this.controls.update();
     this.controls.update(clockDelta);
 
     if (mixer) {
@@ -512,14 +503,16 @@ class Release0006 extends Component {
     this.shouldStrobe();
 
     if (mode === RISING) {
-      // this.camera.position.set(-12.5, -8, -30);
-      const step = .0636;
+      // timeToTravel / distance / framrate =
+      // 96 / (70 + 15.5 + 67 / 25
+      const step = .07;
       if (camera.position.z > -100) { // goes 70
         camera.position.z -= step;
       } else if (camera.position.x < 3) { // goes 15.5
         camera.position.x += step;
       } else if (camera.position.y < 59) { // goes 67 // so in total, we go 152.5 units /1.59 units every second... 25 frames per second // .0636 steps an animation frame
         camera.position.y += step;
+        console.log(camera.position);
       } else {
         this.state.mode = ORBITING;
         this.state.strobeOn = false;
