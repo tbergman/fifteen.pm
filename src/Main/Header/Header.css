@@ -53,3 +53,41 @@
 }
 
 
+body {
+    text-align: center;
+    background-color: white;
+}
+
+.wavy-logo {
+    position: absolute;
+}
+
+h1 {
+    display: inline-block;
+    position: relative;
+    font: 900 1.5em/1.2 'Roboto Mono', sans-serif;
+    font-style: italic;
+    padding: 0 .9em;
+    white-space: nowrap;
+    color: #363dc2;
+    /*outline: solid 1px maroon; */
+}
+
+h1 div {
+    position: absolute;
+    top: 0; left: 0;
+    padding: inherit;
+    font: inherit;
+    white-space: inherit;
+    animation-name: bravo;
+    animation-duration: 1000ms;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes bravo {
+    from {top: 0px; }
+    to {top: 10px; }
+}
+

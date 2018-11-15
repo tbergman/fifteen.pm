@@ -26,9 +26,9 @@ const SECTION_3_START = 192;
 class Release0006 extends Component {
 
   state = {
-    mode: ORBITING,//UNDERNEATH,
+    mode: UNDERNEATH,//UNDERNEATH,
     strobeOn: false,
-    arePurbasShooting: false
+    arePurbasShooting: true
   }
 
   componentDidMount() {
@@ -50,7 +50,7 @@ class Release0006 extends Component {
     });
     this.loadOctopusGLTF();
     this.phurbas = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 13; i++) {
       this.loadPhurbaGLTF(i);
     }
 

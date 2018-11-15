@@ -2,7 +2,21 @@ import * as THREE from "three";
 
 export const CONSTANTS = {
   purbaShootTimes: [
-    2
+      2,
+      20,
+      23,
+      29,
+      32,
+      35,
+      44,
+      47,
+      108,
+      71,
+      105,
+      110,
+      114,
+      116,
+      135
   ],
   phurbaCombos: [
     {
