@@ -251,9 +251,9 @@ class Release0006 extends Component {
     // lensflares
     let textureLoader = new THREE.TextureLoader();
     this.textureFlare0 = textureLoader.load(assetPath6('textures/lensflare/lensflare0.png'));
-    this.textureFlare3 = textureLoader.load(assetPath6('textures/lensflare/lensflare0.png'));
-    this.addLensFlareLight(0.95, 0.9, 0.5, 5000, 0, -1000);
-    this.addLensFlareLight(0.75, 0.8, 0.5, 0, 0, -1000);
+    this.textureFlare3 = textureLoader.load(assetPath6('textures/lensflare/lensflare4.png'));
+    this.addLensFlareLight(0.55, 0.9, 0.5, 5000, 0, -1000);
+    this.addLensFlareLight(0.08, 0.8, 0.5, 0, 0, -1000);
     this.addLensFlareLight(0.995, 0.5, 0.9, 5000, 5000, -1000);
   }
 
@@ -265,10 +265,10 @@ class Release0006 extends Component {
     scene.add(light);
     var lensflare = new Lensflare();
     lensflare.addElement(new LensflareElement(textureFlare0, 700, 0, light.color));
-    lensflare.addElement(new LensflareElement(textureFlare0, 60, 0.6));
-    lensflare.addElement(new LensflareElement(textureFlare0, 70, 0.7));
-    lensflare.addElement(new LensflareElement(textureFlare0, 120, 0.9));
-    lensflare.addElement(new LensflareElement(textureFlare0, 70, 1));
+    lensflare.addElement(new LensflareElement(textureFlare3, 60, 0.6));
+    lensflare.addElement(new LensflareElement(textureFlare3, 70, 0.7));
+    lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
+    lensflare.addElement(new LensflareElement(textureFlare3, 70, 1));
     light.add(lensflare);
   }
 
