@@ -252,8 +252,8 @@ class Release0006 extends Component {
     let textureLoader = new THREE.TextureLoader();
     this.textureFlare0 = textureLoader.load(assetPath6('textures/lensflare/lensflare0.png'));
     this.textureFlare3 = textureLoader.load(assetPath6('textures/lensflare/lensflare0.png'));
-    this.addLensFlareLight(0.55, 0.9, 0.5, 5000, 0, -1000);
-    this.addLensFlareLight(0.08, 0.8, 0.5, 0, 0, -1000);
+    this.addLensFlareLight(0.85, 0.9, 0.5, 5000, 0, -1000);
+    this.addLensFlareLight(0.75, 0.8, 0.5, 0, 0, -1000);
     this.addLensFlareLight(0.995, 0.5, 0.9, 5000, 5000, -1000);
   }
 
