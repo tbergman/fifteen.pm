@@ -74,12 +74,11 @@ export const CONTENT = {
       tracks: [
           {
               title: "ESCAPE VELOCITY",
-              id: "529074519",
-              secretToken: "s-a04qt"
+              id: "529074519"
           }
       ],
-      purchaseLink: "https://gltd.bandcamp.com/album/heaven",
-      message: "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno."
+      purchaseLink: "https://gltd.bandcamp.com/track/escape-velocity",
+      message: "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms."
   },
   "/test-dummy": {
     artist: "DUMMY",
