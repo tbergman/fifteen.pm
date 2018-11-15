@@ -33,7 +33,6 @@ class Release0006 extends Component {
   }
 
   componentDidMount() {
-
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
     this.scene.fog = false;
@@ -50,37 +49,30 @@ class Release0006 extends Component {
       // gammaFactor: 2.2
     });
     this.loadOctopusGLTF();
-    this.phurbas = [];
-    for (let i = 0; i < 3; i++) {
-      this.loadPhurbaGLTF(i);
-    }
+
+
+      this.loadPhurbaGLTF();
 
     this.setupCamera();
     this.setupLights();
 
+    this.controls = new OrbitControls(this.camera);
 
-    // this.controls = new OrbitControls(this.camera);
-
-     this.controls = new FirstPersonControls(this.camera);
-     this.controls.lookSpeed = .05;
-     this.controls.movementSpeed = 133;
-     this.controls.enabled = true;
-     this.controls.mouseMotionActive = false;
-
+    // this.controls = new FirstPersonControls(this.camera);
+    // this.controls.enabled = true;
+    // this.controls.mouseMotionActive = false;
+    // this.controls.lookVertical = false;
 
     this.container.appendChild(this.renderer.domElement);
     this.setRendererSize();
     window.addEventListener("resize", this.setRendererSize, false);
-
     // todo - put these in proper place
     this.rotationAngle = 0;
     this.rotationRadius = 1;
     this.orbitRadius = 300;
     // this.renderScene();
     this.startAnimation();
-
   }
-
 
   loadOctopusGLTF = () => {
     // const octopusPath = assetPath6("objects/octopus/25-dollar-octopus-test.glb");
@@ -114,38 +106,48 @@ class Release0006 extends Component {
           roughness: 0.0,
           // envMapIntensity: 1.0
         });
-
-        // BLACK MATTE OCTO
-        // var envMap = new THREE.TextureLoader().load(assetPath6('images/envMap.png'));
-        // envMap.mapping = THREE.SphericalReflectionMapping;
-        // this.octoMaterial = new THREE.MeshPhongMaterial({
-        //   color: 0x000000,
-        //   roughness: 0.0,
-        //   // specular: 0x050505,
-        //   // specular: 0x0f0f0f,
-        //   shininess: 100.0
-        //   // metalness: 1
-        // });
-        // const roughnessMap = new THREE.TextureLoader().load(assetPath6('images/roughnessMap.png'));
-        // roughnessMap.magFilter = THREE.NearestFilter;
-        // this.octoMaterial.roughnessMap = roughnessMap;
-        // END BLACK MATTE OCTO
-
         this.octoMaterial.skinning = true;
         this.octoMaterial.fog = true; // TODO check if turning this on creates flare
         this.octoMaterial.side = THREE.DoubleSide;
         child.material = this.octoMaterial;
         child.material.needsUpdate = true;
       }
+      if (child.name === "Knife"){
+        child.receiveShadow = false;
+        child.castShadow = false;
+
+        child.material = new THREE.MeshStandardMaterial({
+           color: 0x800080,
+           // roughness: 0.0,
+           // specular: 0x050505,
+           // specular: 0x0f0f0f,
+          metalness: 0,
+          roughness: 0.0,
+         });
+        child.skinning = true;
+        child.fog = true; // TODO check if turning this on creates flare
+        child.side = THREE.DoubleSide;
+        child.material.needsUpdate = true;
+
+        // knife light
+        let knifeLight = new THREE.SpotLight(0xffffff, .1);
+        knifeLight.lookAt(child.position);
+        knifeLight.position.set(child.position.x + 1, child.position.y, child.position.z);//.addScalar(.1);
+        knifeLight.intensity = 1.0;
+        knifeLight.visible = true;
+        knifeLight.castShadow = true;
+        knifeLight.penumbra = .5;
+        child.add(knifeLight);
+        this.scene.add(knifeLight);
+      }
     });
     this.octoGltf = gltf;
     this.scene.add(this.octoGltf.scene);
-
     this.setupOctopusAnimation();
   }
   loadPhurbaGLTF = (idx) => {
     const phurbaPath = assetPath6("objects/ritual-dagger/phurba.glb");
-    const renderPhurba = gltf => this.renderPhurbaGLTF(gltf, idx);
+    const renderPhurba = gltf => this.renderPhurbaGLTF(gltf);
     const phurbaLoadGLTFParams = {
       url: phurbaPath,
       name: "RitualDagger",
@@ -154,7 +156,7 @@ class Release0006 extends Component {
       rotateX: 0,
       rotateY: 0,
       rotateZ: 0,
-      relativeScale: .02,
+      // relativeScale: .002,
       loader: this.loader,
       onSuccess: renderPhurba,
     }
@@ -163,7 +165,7 @@ class Release0006 extends Component {
 
 
   // TODO - all of this scene initialization shouldnt be in callback use promise
-  renderPhurbaGLTF = (gltf, idx) => {
+  renderPhurbaGLTF = (gltf) => {
     gltf.scene.traverse(child => {
       if (child.name === "RitualDagger") {
         child.receiveShadow = false;
@@ -173,6 +175,8 @@ class Release0006 extends Component {
         child.userData.endPos = new THREE.Vector3();
         child.userData.direction = new THREE.Vector3();
         child.position.set(99999, 99999, 999999)
+        child.scale.set(.0005, .0005, .0005);
+
         // BLACK MATTE
         var envMap = new THREE.TextureLoader().load(assetPath6('objects/ritual-dagger/RitualDagger_G_reduced.png'));
         envMap.mapping = THREE.SphericalReflectionMapping;
@@ -190,7 +194,8 @@ class Release0006 extends Component {
         child.material = phurbaMaterial;
         // END BLACK MATTE
 
-        this.phurbas.push(child);
+        this.camera.add(child);
+        this.phurba = child;
       }
     });
     this.phurbaGltf = gltf;
@@ -223,10 +228,10 @@ class Release0006 extends Component {
     scene.add(light);
 
     //TMP
-    let ambientLight = new THREE.AmbientLight(0xffffff);
+    let ambientLight = new THREE.AmbientLight(0xaaaaaa);//ffffff);
     scene.add(ambientLight)
 
-    this.cameraLight = new THREE.SpotLight("#fff", .1);
+    this.cameraLight = new THREE.PointLight("#fff", .1);
     this.cameraLight.intensity = 1.0;
     this.cameraLight.position.set(this.camera.position.x, this.camera.position.y, this.camera.position.z)
     this.cameraLight.lookAt(this.scene.position);
@@ -321,12 +326,14 @@ class Release0006 extends Component {
     const curTime = this.audioElement.currentTime;
     if (curTime >= SECTION_1_START && curTime < SECTION_2_START && mode != UNDERNEATH) {
       this.state.mode = UNDERNEATH;
-    } else if (curTime >= SECTION_2_START && curTime < SECTION_3_START && mode != RISING){
+      this.controls.lookSpeed = .05;
+    } else if (curTime >= SECTION_2_START && curTime < SECTION_3_START && mode != RISING) {
       this.state.mode = RISING;
       this.state.strobeOn = true;
+      this.controls.lookSpeed = .005;
     } else if (curTime >= SECTION_3_START && curTime < SECTION_3_OUTRO_START && mode != ORBITING) {
       this.state.mode = ORBITING;
-    } else if (curTime >= SECTION_3_OUTRO_START && mode != RETURNING){
+    } else if (curTime >= SECTION_3_OUTRO_START && mode != RETURNING) {
       this.state.mode = RETURNING;
       this.initReturnToUnderneath();
     }
@@ -342,16 +349,24 @@ class Release0006 extends Component {
 
 
   shootPhurbas() {
-    const {camera, cameraVector} = this;
-    camera.getWorldDirection(cameraVector);
-    const combo = CONSTANTS.phurbaCombos[THREE.Math.randInt(0, CONSTANTS.phurbaCombos.length - 1)];
-    for (let i = 0; i < this.phurbas.length; i++) {
-      let phurba = this.phurbas[i];
-      phurba.userData.startPos.copy(camera.position).add(combo.start).addScalar(i * 300);
-      phurba.userData.endPos.copy(camera.position).add(combo.end).addScalar(i * 300);
-      phurba.position.copy(phurba.userData.startPos);
-      phurba.lookAt(phurba.userData.endPos);
-    }
+    const {camera, cameraVector, phurba} = this;
+    // camera.getWorldDirection(cameraVector);
+    // console.log("SHOOT PHURBA!!")
+    // const combo = CONSTANTS.phurbaCombos[THREE.Math.randInt(0, CONSTANTS.phurbaCombos.length - 1)];
+    const start = new THREE.Vector3(
+      THREE.Math.randInt(-1.5, 1.5),
+      THREE.Math.randInt(-1.5, 1.5),
+      -20
+    )
+    const end = new THREE.Vector3(
+      THREE.Math.randInt(-1.5, 1.5),
+      THREE.Math.randInt(-1.5, 1.5),
+      20
+    )
+    phurba.userData.startPos.copy(start);
+    phurba.userData.endPos.copy(end);
+    phurba.position.copy(phurba.userData.startPos);
+    phurba.lookAt(camera.position);
   }
 
   inView(pos) {
@@ -364,37 +379,27 @@ class Release0006 extends Component {
   }
 
   phurbasHavePassed() {
-    const {phurbas} = this;
-    const phurbasPassed = Array(phurbas.length).fill(false);
-    for (let i = 0; i < phurbas.length; i++) {
-      const phurba = phurbas[i];
-      const endPos = phurba.userData.endPos;
-      if (phurba.position.distanceTo(endPos) < 100 && !this.inView(phurba.position)) {
-        phurbasPassed[i] = true;
-      }
-    }
-    return phurbasPassed.includes(true);
+    const {phurba} = this;
+    const endPos = phurba.userData.endPos;
+    return (phurba.position.distanceTo(endPos) < 1 && !this.inView(phurba.position))
   }
 
   advancePhurbas() {
-    let speed = .05;
-    for (let i = 0; i < this.phurbas.length; i++) {
-      let phurba = this.phurbas[i];
-      let phurbaPos = phurba.position;
-      let endPos = phurba.userData.endPos;
-      let newX = this.lerp(phurbaPos.x, endPos.x, speed);//this.ease(clockDelta));
-      let newY = this.lerp(phurbaPos.y, endPos.y, speed);//this.ease(clockDelta));
-      let newZ = this.lerp(phurbaPos.z, endPos.z, speed);//this.ease(clockDelta));
-      phurbaPos.set(newX, newY, newZ);
-    }
+    const {phurba} = this;
+    let speed = .005;
+    let phurbaPos = phurba.position;
+    let endPos = phurba.userData.endPos;
+    console.log("ADVANCE PHURB")
+    let newX = this.lerp(phurbaPos.x, endPos.x, speed);//this.ease(clockDelta));
+    let newY = this.lerp(phurbaPos.y, endPos.y, speed);//this.ease(clockDelta));
+    let newZ = this.lerp(phurbaPos.z, endPos.z, speed);//this.ease(clockDelta));
+    phurbaPos.set(newX, newY, newZ);
   }
 
   shouldPhurbasShoot(clockDelta) {
     CONSTANTS.purbaShootTimes.forEach((t) => {
       if (!this.state.arePurbasShooting && Math.abs(this.audioElement.currentTime - t) < .1) {
-        for (let i = 0; i < this.phurbas.length; i++) {
-          this.phurbas[i].visible = true;
-        }
+        this.phurba.visible = true;
         this.setState({
           arePurbasShooting: true,
           strobeOn: true
@@ -402,14 +407,12 @@ class Release0006 extends Component {
           this.shootPhurbas(clockDelta);
         });
       } else if (!this.state.arePurbasShooting) {
-        for (let i = 0; i < this.phurbas.length; i++) {
-          this.phurbas[i].visible = false;
-        }
+        this.phurba.visible = false;
       }
     });
   }
 
-  initReturnToUnderneath(){
+  initReturnToUnderneath() {
     const {camera} = this;
     this.finalOrbitalPos = camera.position;
     const endPos = CONSTANTS.cameraStartPos;
@@ -418,7 +421,7 @@ class Release0006 extends Component {
     this.returningUnderneathSpeed = timeToTravel / this.finalOrbitalPos.distanceTo(endPos) / CONSTANTS.frameRate;// / timeToTravel;// / CONSTANTS.frameRate;
   }
 
-  advanceTowardsUnderneath(){
+  advanceTowardsUnderneath() {
     const {camera} = this;
     const endPos = CONSTANTS.cameraStartPos;
     let newX = this.lerp(camera.position.x, endPos.x, this.returningUnderneathSpeed);
@@ -463,36 +466,49 @@ class Release0006 extends Component {
     }
   }
 
+  shouldStrobe(){
+    CONSTANTS.strobeOn.forEach((t) => {
+      const delta = Math.abs(this.audioElement.currentTime - t);
+      if (delta < .1) {
+        this.state.strobeOn = true;
+      } else if (delta > 3 && delta < 4){
+        this.state.strobeOn = false;
+      }
+    })
+  }
+
 
   renderScene() {
     const {scene, renderer, camera, mixer, clock, cameraLight} = this;
     const {mode, strobeOn, arePurbasShooting} = this.state;
     const clockDelta = clock.getDelta();
 
-    if (this.audioElement && this.audioElement.currentTime < 230){
+    if (this.audioElement && this.audioElement.currentTime < 230) {
       this.audioElement.currentTime = 231;
     }
 
-    console.log("MODE", mode, "TIME", this.audioElement.currentTime);
+    // console.log("MODE", mode, "TIME", this.audioElement.currentTime);
 
-    this.setSongState();
+    // this.setSongState();
 
-    // this.controls.update();
-    this.controls.update(clockDelta);
+    this.controls.update();
+    // this.controls.update(clockDelta);
 
     if (mixer) {
       mixer.update(clockDelta);
     }
 
-    if (!arePurbasShooting) {
+    if (!arePurbasShooting && this.phurba) {
       this.shouldPhurbasShoot(clockDelta);
-    } else {
+    } else if (this.phurba) {
       this.advancePhurbas(clockDelta);
       if (this.phurbasHavePassed()) {
         this.state.arePurbasShooting = false;
         this.state.strobeOn = false;
       }
     }
+
+    this.shouldStrobe();
 
     if (mode === RISING) {
       // this.camera.position.set(-12.5, -8, -30);
