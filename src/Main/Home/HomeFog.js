@@ -1,8 +1,8 @@
 import React, {PureComponent} from 'react';
 import * as THREE from 'three';
-import {ImprovedNoise} from "./Utils/ImprovedNoise";
-import {FirstPersonControls} from "./Utils/FirstPersonControls";
-import './Releases/Release.css';
+import {ImprovedNoise} from "../../Utils/ImprovedNoise";
+import {FirstPersonControls} from "../../Utils/FirstPersonControls";
+import '../../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import {generatePitchShiftProcessor} from "./Utils/PitchShifterProcessor"
 
