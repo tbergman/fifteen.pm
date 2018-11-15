@@ -46,6 +46,13 @@ const RELEASES = [
     radius: DEFAULT_RADIUS + Math.random() * 3,
     textURL: assetPath("5/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-second.wav")
+  },
+  {
+    path: "/6",
+    name: "VVEISS",
+    radius: DEFAULT_RADIUS + Math.random() * 3,
+    textURL: assetPath("6/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-fifth-down.wav")
   }
 ];
 

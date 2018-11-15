@@ -56,12 +56,12 @@ class Release0006 extends Component {
     this.setupCamera();
     this.setupLights();
 
-    this.controls = new OrbitControls(this.camera);
+    // this.controls = new OrbitControls(this.camera);
 
-    // this.controls = new FirstPersonControls(this.camera);
-    // this.controls.enabled = true;
-    // this.controls.mouseMotionActive = false;
-    // this.controls.lookVertical = false;
+     this.controls = new FirstPersonControls(this.camera);
+     this.controls.enabled = true;
+     this.controls.mouseMotionActive = false;
+     this.controls.lookVertical = false;
 
     this.container.appendChild(this.renderer.domElement);
     this.setRendererSize();
@@ -483,16 +483,16 @@ class Release0006 extends Component {
     const {mode, strobeOn, arePurbasShooting} = this.state;
     const clockDelta = clock.getDelta();
 
-    if (this.audioElement && this.audioElement.currentTime < 230) {
-      this.audioElement.currentTime = 231;
-    }
+    // if (this.audioElement && this.audioElement.currentTime < 230) {
+    //   this.audioElement.currentTime = 231;
+    // }
 
     // console.log("MODE", mode, "TIME", this.audioElement.currentTime);
 
-    // this.setSongState();
+    this.setSongState();
 
-    this.controls.update();
-    // this.controls.update(clockDelta);
+    // this.controls.update();
+    this.controls.update(clockDelta);
 
     if (mixer) {
       mixer.update(clockDelta);
