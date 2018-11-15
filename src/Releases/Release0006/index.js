@@ -323,10 +323,17 @@ class Release0006 extends Component {
 
 
   setSongState() {
+    const {audioElement} = this;
     const {mode} = this.state;
-    const curTime = this.audioElement.currentTime;
-    if (curTime >= SECTION_1_START && curTime < SECTION_2_START && mode != UNDERNEATH) {
+    console.log(mode);
+    const curTime = audioElement.currentTime;
+    if (audioElement.currentTime > 0 && audioElement.paused){
+      this.state.mode = ORBITING;
+    } else if (curTime >= SECTION_1_START && curTime < SECTION_2_START && mode != UNDERNEATH) {
       this.state.mode = UNDERNEATH;
+      console.log(CONSTANTS.cameraStartPos)
+      this.camera.position.set(CONSTANTS.cameraStartPos.x, CONSTANTS.cameraStartPos.y, CONSTANTS.cameraStartPos.z);
+      console.log(this.camera.position);
       this.controls.lookSpeed = .05;
     } else if (curTime >= SECTION_2_START && curTime < SECTION_3_START && mode != RISING) {
       this.state.mode = RISING;
