@@ -57,7 +57,7 @@ class Release0006 extends Component {
     this.setupLights();
 
     // this.controls = new OrbitControls(this.camera);
-
+    //
     this.controls = new FirstPersonControls(this.camera);
     this.controls.enabled = true;
     this.controls.mouseMotionActive = false;
@@ -118,7 +118,7 @@ class Release0006 extends Component {
         child.castShadow = false;
 
         child.material = new THREE.MeshStandardMaterial({
-          color: 0x800080,
+          color: 0x494646,
           // roughness: 0.0,
           // specular: 0x050505,
           // specular: 0x0f0f0f,
@@ -184,7 +184,7 @@ class Release0006 extends Component {
 
         let phurbaMaterial = new THREE.MeshStandardMaterial({
           map: envMap,
-          color: 0xfa0060,
+          color: 0xC0C0C0,
           metalness: 0.5,
           roughness: 0.0,
           // envMapIntensity: 1.0
@@ -229,8 +229,8 @@ class Release0006 extends Component {
     scene.add(light);
 
     //TMP
-    let ambientLight = new THREE.AmbientLight(0xaaaaaa);//ffffff);
-    scene.add(ambientLight)
+    // let ambientLight = new THREE.AmbientLight(0xaaaaaa);//ffffff);
+    // scene.add(ambientLight)
 
     this.cameraLight = new THREE.PointLight("#fff", .1);
     this.cameraLight.intensity = 1.0;
@@ -251,10 +251,10 @@ class Release0006 extends Component {
     // lensflares
     let textureLoader = new THREE.TextureLoader();
     this.textureFlare0 = textureLoader.load(assetPath6('textures/lensflare/lensflare0.png'));
-    this.textureFlare3 = textureLoader.load(assetPath6('textures/lensflare/lensflare0.png'));
-    this.addLensFlareLight(0.85, 0.9, 0.5, 5000, 0, -1000);
-    this.addLensFlareLight(0.75, 0.8, 0.5, 0, 0, -1000);
-    this.addLensFlareLight(0.995, 0.5, 0.9, 5000, 5000, -1000);
+    // this.textureFlare3 = textureLoader.load(assetPath6('textures/lensflare/lensflare4.png'));
+    this.addLensFlareLight(0.32, 0.9, 0.9, 5000, 0, -1000);
+    this.addLensFlareLight(0.07, 0.9, 0.25, 0, -1000, 0);
+    this.addLensFlareLight(0.00995, 0.5, 0.9, 5000, 5000, -1000);
   }
 
   addLensFlareLight(h, s, l, x, y, z) {
@@ -265,10 +265,10 @@ class Release0006 extends Component {
     scene.add(light);
     var lensflare = new Lensflare();
     lensflare.addElement(new LensflareElement(textureFlare0, 700, 0, light.color));
-    lensflare.addElement(new LensflareElement(textureFlare3, 60, 0.6));
-    lensflare.addElement(new LensflareElement(textureFlare3, 70, 0.7));
-    lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
-    lensflare.addElement(new LensflareElement(textureFlare3, 70, 1));
+    // lensflare.addElement(new LensflareElement(textureFlare3, 60, 0.6));
+    // lensflare.addElement(new LensflareElement(textureFlare3, 70, 0.7));
+    // lensflare.addElement(new LensflareElement(textureFlare3, 120, 0.9));
+    // lensflare.addElement(new LensflareElement(textureFlare3, 70, 1));
     light.add(lensflare);
   }
 
