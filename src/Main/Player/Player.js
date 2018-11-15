@@ -1,6 +1,6 @@
 import React, {Fragment, PureComponent} from 'react';
 import './Player.css'
-import {formatSoundcloudSrc} from "./Utils/SoundcloudUtils";
+import {formatSoundcloudSrc} from "../../Utils/SoundcloudUtils";
 
 class Player extends PureComponent {
   state = {

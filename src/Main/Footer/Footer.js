@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
-import Player from './Player';
-import Purchase from './Purchase';
+import Player from '../Player/Player';
+import Purchase from '../Purchase/Purchase';
 
 class Footer extends PureComponent {
 
