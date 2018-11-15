@@ -51,17 +51,18 @@ class Release0006 extends Component {
     this.loadOctopusGLTF();
 
 
-      this.loadPhurbaGLTF();
+    this.loadPhurbaGLTF();
 
     this.setupCamera();
     this.setupLights();
 
     // this.controls = new OrbitControls(this.camera);
 
-     this.controls = new FirstPersonControls(this.camera);
-     this.controls.enabled = true;
-     this.controls.mouseMotionActive = false;
-     this.controls.lookVertical = false;
+    this.controls = new FirstPersonControls(this.camera);
+    this.controls.enabled = true;
+    this.controls.mouseMotionActive = false;
+    this.controls.lookSpeed = .05;
+    this.controls.lookVertical = false;
 
     this.container.appendChild(this.renderer.domElement);
     this.setRendererSize();
@@ -112,18 +113,18 @@ class Release0006 extends Component {
         child.material = this.octoMaterial;
         child.material.needsUpdate = true;
       }
-      if (child.name === "Knife"){
+      if (child.name === "Knife") {
         child.receiveShadow = false;
         child.castShadow = false;
 
         child.material = new THREE.MeshStandardMaterial({
-           color: 0x800080,
-           // roughness: 0.0,
-           // specular: 0x050505,
-           // specular: 0x0f0f0f,
+          color: 0x800080,
+          // roughness: 0.0,
+          // specular: 0x050505,
+          // specular: 0x0f0f0f,
           metalness: 0,
           roughness: 0.0,
-         });
+        });
         child.skinning = true;
         child.fog = true; // TODO check if turning this on creates flare
         child.side = THREE.DoubleSide;
@@ -307,7 +308,7 @@ class Release0006 extends Component {
     // forced rotation under tentacle
     camera.rotation.x = this.rotationRadius * Math.cos(this.rotationAngle);
     camera.rotation.z = this.rotationRadius * Math.sin(this.rotationAngle);
-    this.rotationAngle += 0.01;
+    this.rotationAngle += 0.005;
   }
 
   advanceOrbitRotation() {
@@ -389,7 +390,6 @@ class Release0006 extends Component {
     let speed = .005;
     let phurbaPos = phurba.position;
     let endPos = phurba.userData.endPos;
-    console.log("ADVANCE PHURB")
     let newX = this.lerp(phurbaPos.x, endPos.x, speed);//this.ease(clockDelta));
     let newY = this.lerp(phurbaPos.y, endPos.y, speed);//this.ease(clockDelta));
     let newZ = this.lerp(phurbaPos.z, endPos.z, speed);//this.ease(clockDelta));
@@ -466,12 +466,12 @@ class Release0006 extends Component {
     }
   }
 
-  shouldStrobe(){
+  shouldStrobe() {
     CONSTANTS.strobeOn.forEach((t) => {
       const delta = Math.abs(this.audioElement.currentTime - t);
       if (delta < .1) {
         this.state.strobeOn = true;
-      } else if (delta > 3 && delta < 4){
+      } else if (delta > 3 && delta < 4) {
         this.state.strobeOn = false;
       }
     })
