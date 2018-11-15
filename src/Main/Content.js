@@ -70,15 +70,12 @@ export const CONTENT = {
     message: "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno."
   },
   "/6": {
-      artist: "VVEIS",
+      artist: "VVEISS",
       tracks: [
           {
-              title: "Heaven",
-              id: "514219014",
-          },
-          {
-              title: "Bullseye",
-              id: "514219020",
+              title: "ESCAPE VELOCITY",
+              id: "529074519",
+              secretToken: "s-a04qt"
           }
       ],
       purchaseLink: "https://gltd.bandcamp.com/album/heaven",
