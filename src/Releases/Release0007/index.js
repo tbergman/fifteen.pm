@@ -1,8 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import '../Release.css';
 import './index.css';
-import Footer from '../../Footer';
-import {CONTENT} from "../../Content";
+import Footer from '../../Main/Footer/Footer';
+import {CONTENT} from "../../Main/Content";
 import {renderScene, assetPath7} from "./scene"
 
 class Release0007 extends Component {

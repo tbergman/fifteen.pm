@@ -26,11 +26,8 @@ ReactDOM.render(
             <Route path="/3" component={Release0003}/>
             <Route path="/4" component={Release0004}/>
             <Route path="/5" component={Release0005}/>
-<<<<<<< HEAD
-            <Route path="/7" component={Release0007}/>
-=======
             <Route path="/6" component={Release0006}/>
->>>>>>> master
+            <Route path="/7" component={Release0007}/>
         </div>
     </Router>,
     document.getElementById('root')
