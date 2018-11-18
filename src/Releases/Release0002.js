@@ -9,8 +9,8 @@ import * as TWEEN from 'three-tween';
 import debounce from 'lodash/debounce';
 import {isMobile} from "../Utils/BrowserDetection";
 import {OrbitControls} from "../Utils/OrbitControls";
-import {CONTENT} from "../Content"
-import Footer from "../Footer"
+import {CONTENT} from "../Main/Content"
+import Footer from "../Main/Footer/Footer"
 
 /* this handles number of segments in cloth , TO DO fix this */
 let pinsFormation = [];

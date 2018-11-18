@@ -78,6 +78,7 @@
     "simplex-noise": "^2.4.0",
     "three": "^0.97.0",
     "three-fbx-loader": "^1.0.3",
+    "three-full": "^11.3.2",
     "three-gltf-loader": "^1.96.0",
     "three-reflector": "^1.0.2",
     "three-tween": "^1.0.0"

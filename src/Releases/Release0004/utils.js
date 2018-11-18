@@ -26,7 +26,7 @@ export const assetPath4Images = (p) => {
 }
 
 export const makeSphere = (x) => {
-  return new THREE.SphereBufferGeometry(x, 32, 32);
+  return new THREE.SphereBufferGeometry(x, 24, 24);
 };
 
 export const multiSourceVideo = (path) => ([

@@ -1,13 +1,12 @@
 import React, {PureComponent, Fragment} from 'react';
 import * as THREE from 'three';
-import './Releases/Release.css';
+import '../../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import GLTFLoader from 'three-gltf-loader';
-import {FresnelShader} from "./Utils/FresnelShader";
-import {loadGLTF} from './Utils/Loaders';
-import {isMobile} from "./Utils/BrowserDetection";
-import {assetPath} from "./Utils/assets";
-// import nav from './nav.js';
+import {FresnelShader} from "../../Utils/FresnelShader";
+import {loadGLTF} from '../../Utils/Loaders';
+import {isMobile} from "../../Utils/BrowserDetection";
+import {assetPath} from "../../Utils/assets";
 
 const DEFAULT_RADIUS = 3;
 const SCREEN_WIDTH = window.innerWidth;
@@ -47,6 +46,13 @@ const RELEASES = [
     radius: DEFAULT_RADIUS + Math.random() * 3,
     textURL: assetPath("5/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-second.wav")
+  },
+  {
+    path: "/6",
+    name: "VVEISS",
+    radius: DEFAULT_RADIUS + Math.random() * 3,
+    textURL: assetPath("6/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-fifth-down.wav")
   }
 ];
 
