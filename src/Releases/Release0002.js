@@ -3,7 +3,7 @@ import {cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateC
 import {service} from "../Utils/service";
 
 import * as CANNON from 'cannon';
-import * as THREE from 'three';
+import * as THREE from 'three-full';
 import './Release.css';
 import * as TWEEN from 'three-tween';
 import debounce from 'lodash/debounce';
