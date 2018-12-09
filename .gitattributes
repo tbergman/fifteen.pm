@@ -1,5 +1,5 @@
-# release assets
-public/assets/releases/* filter=lfs diff=lfs merge=lfs -text
+# release asset data
+public/assets/releases/*.json filter=lfs diff=lfs merge=lfs -text
 
 # images
 *.png filter=lfs diff=lfs merge=lfs -text
@@ -23,6 +23,7 @@ public/assets/releases/* filter=lfs diff=lfs merge=lfs -text
 *.bin filter=lfs diff=lfs merge=lfs -text
 *.glb filter=lfs diff=lfs merge=lfs -text
 *.obj filter=lfs diff=lfs merge=lfs -text
+*.exr filter=lfs diff=lfs merge=lfs -text
 
 # blender
 *.blend filter=lfs diff=lfs merge=lfs -text
