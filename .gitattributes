@@ -1,32 +1,29 @@
-# release asset data
-public/assets/releases/*.json filter=lfs diff=lfs merge=lfs -text
+## track everything in releases
+public/assets/releases/** filter=lfs diff=lfs merge=lfs -text
 
-# images
-*.png filter=lfs diff=lfs merge=lfs -text
-*.jpg filter=lfs diff=lfs merge=lfs -text
-*.jpeg filter=lfs diff=lfs merge=lfs -text
-*.pxm filter=lfs diff=lfs merge=lfs -text
-*.gif filter=lfs diff=lfs merge=lfs -text
-*.svg filter=lfs diff=lfs merge=lfs -text
+# # images
+# *.png filter=lfs diff=lfs merge=lfs -text
+# *.jpg filter=lfs diff=lfs merge=lfs -text
+# *.jpeg filter=lfs diff=lfs merge=lfs -text
+# *.pxm filter=lfs diff=lfs merge=lfs -text
+# *.gif filter=lfs diff=lfs merge=lfs -text
+# *.svg filter=lfs diff=lfs merge=lfs -text
+# # audio
+# *.wav filter=lfs diff=lfs merge=lfs -text
+# *.mp3 filter=lfs diff=lfs merge=lfs -text
+# # video
+# *.mp4 filter=lfs diff=lfs merge=lfs -text
+# *.webm filter=lfs diff=lfs merge=lfs -text
+# # objects/textures
+# *.gltf filter=lfs diff=lfs merge=lfs -text
+# *.gltf.json filter=lfs diff=lfs merge=lfs -text
+# *.mtl  filter=lfs diff=lfs merge=lfs -text
+# *.tga filter=lfs diff=lfs merge=lfs -text
+# *.bin filter=lfs diff=lfs merge=lfs -text
+# *.glb filter=lfs diff=lfs merge=lfs -text
+# *.obj filter=lfs diff=lfs merge=lfs -text
+# *.exr filter=lfs diff=lfs merge=lfs -text
+# # blender
+# *.blend filter=lfs diff=lfs merge=lfs -text
+# *.blend1 filter=lfs diff=lfs merge=lfs -text
 
-# audio
-*.wav filter=lfs diff=lfs merge=lfs -text
-*.mp3 filter=lfs diff=lfs merge=lfs -text
-
-# video
-*.mp4 filter=lfs diff=lfs merge=lfs -text
-*.webm filter=lfs diff=lfs merge=lfs -text
-
-# objects/textures
-*.gltf filter=lfs diff=lfs merge=lfs -text
-*.gltf.json filter=lfs diff=lfs merge=lfs -text
-*.mtl  filter=lfs diff=lfs merge=lfs -text
-*.tga filter=lfs diff=lfs merge=lfs -text
-*.bin filter=lfs diff=lfs merge=lfs -text
-*.glb filter=lfs diff=lfs merge=lfs -text
-*.obj filter=lfs diff=lfs merge=lfs -text
-*.exr filter=lfs diff=lfs merge=lfs -text
-
-# blender
-*.blend filter=lfs diff=lfs merge=lfs -text
-*.blend1 filter=lfs diff=lfs merge=lfs -text
