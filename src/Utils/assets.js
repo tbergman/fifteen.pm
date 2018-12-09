@@ -5,9 +5,5 @@ export const assetPath = (path) => {
   if (!path.startsWith('/')) {
     path = "/" + path;
   }
-  if (process.env.NODE_ENV === 'development') {
-    return `${DEV_ASSET_URL}${path}`
-  } else {
-    return `${DEV_ASSET_URL}${path}`
-  }
+  return `${DEV_ASSET_URL}${path}`
 }
