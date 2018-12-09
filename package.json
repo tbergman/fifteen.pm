@@ -55,15 +55,7 @@
     "start-chromium-without-web-audio": "scripts/start-chromium-without-web-audio.sh",
     "encode-release": "scripts/encode-release.sh",
     "mp4-to-webm": "scripts/mp4-to-webm.sh",
-    "dual-fisheye-to-equirectangular": "scripts/dual-fisheye-to-equirectangular.sh",
-    "download-assets": "scripts/download-assets.sh gltd",
-    "upload-assets": "scripts/upload-assets.sh gltd",
-    "backup-assets": "scripts/backup-assets.sh gltd",
-    "destroy-s3-assets": "scripts/destroy-s3-assets.sh gltd",
-    "destroy-local-assets": "scripts/destroy-local-assets.sh gltd",
-    "reset-local-assets-from-s3": "scripts/reset-local-assets-from-s3.sh gltd",
-    "reset-s3-assets-from-local": "scripts/reset-s3-assets-from-local.sh gltd",
-    "remove-asset": "sh scripts/remove-asset.sh gltd"
+    "dual-fisheye-to-equirectangular": "scripts/dual-fisheye-to-equirectangular.sh"
   },
   "devDependencies": {
     "cannon": "^0.6.2",
