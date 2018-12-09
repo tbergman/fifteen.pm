@@ -8,6 +8,6 @@ export const assetPath = (path) => {
   if (process.env.NODE_ENV === 'development') {
     return `${DEV_ASSET_URL}${path}`
   } else {
-    return `${PROD_ASSET_URL}${path}`
+    return `${DEV_ASSET_URL}${path}`
   }
 }
