@@ -6,4 +6,3 @@ build
 *.log
 dev/
 tmp/
-public/assets/releases/

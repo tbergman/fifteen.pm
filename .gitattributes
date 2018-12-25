@@ -1,0 +1,2 @@
+## track everything in releases
+public/assets/releases/** filter=lfs diff=lfs merge=lfs -text

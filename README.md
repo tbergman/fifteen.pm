@@ -28,55 +28,7 @@ TODO ...
 
 ## Release Asset Management
 
-We host our assets for our releases (audio, images, video, 3D models, etc) at [assets.globally.ltd](https://assets.globally.ltd). To keep these out of version control, we store all release assets under [`public/assets/releases`](public/assets/releases) and sync them via the following commands:
-
-#### To sync production assets locally:
-
-```
-yarn download-assets
-```
-
-#### To sync local assets to prod:
-
-```
-yarn upload-assets
-```
-
-#### To remove an asset from local and production:
-
-**NOTE**: Use a path relative to `/public/assets/releases` or `s3://assets.globally.ltd/`
-
-```
-yarn remove-asset "4/videos/file.webm"
-```
-
-#### To reset local assets using assets on s3:
-
-**WARNING**: This will delete all your local assets. Make sure you know what you're doing!
-
-```
-yarn reset-local-assets-from-s3
-```
-
-#### To reset s3 assets using local assets:
-
-**WARNING**: Use EXTREME caution with this command, it will delete ALL of our production assets, and replace them with your local assets, lol.
-
-```
-yarn reset-s3-assets-from-local
-```
-
-#### To backup our production assets to a timestamped backup location at `s3://backups.assets.globally.ltd/<iso-timestamp>`:
-
-```
-yarn backup-assets
-```
-
-#### To sync local assets to prod:
-
-```
-yarn upload-assets
-```
+We store all assets for releases under [`public/assets/releases/`](public/assets/releases). We version all assets under this path with [`git-lfs`](https://git-lfs.github.com/), or as otherwise defined in [`.gitattributes`](.gitattributes).
 
 #### To access an asset in a Release Component, follow this pattern:
 
