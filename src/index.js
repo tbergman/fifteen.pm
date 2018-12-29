@@ -11,6 +11,7 @@ import Release0003 from "./Releases/Release0003";
 import Release0004 from "./Releases/Release0004/index";
 import Release0005 from "./Releases/Release0005/index";
 import Release0006 from "./Releases/Release0006/index";
+import ReleasesMenu from './Main/ReleasesMenu';
 import registerServiceWorker from './registerServiceWorker';
 import {Router, Route} from 'react-router-dom';
 
@@ -18,7 +19,7 @@ ReactDOM.render(
     <Router history={history}>
         <div>
             <Header/>
-            <Route exact path="/" component={App}/>
+            <Route exact path="/" component={ReleasesMenu}/>
             <Route path="/gltd" component={MorphingBalls}/>
             <Route path="/1" component={Release0001}/>
             <Route path="/2" component={Release0002}/>
