@@ -29,4 +29,5 @@ ReactDOM.render(
     </Router>,
     document.getElementById('root')
 );
+registerServiceWorker();
 module.hot.accept();

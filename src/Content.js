@@ -275,12 +275,38 @@ export const CONTENT = {
       ]
     }
   },
+  "/8": {
+    artist: "GREEM JELLYFISH",
+    tracks: [
+      {
+        title: "Heaven",
+        id: "514219014",
+      },
+    ],
+    theme: {
+      message: "DUR DUR DUR DUR DUR DUR DUR DUR",
+      purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
+      iconColor: '#fff',
+      fillColor: 'rgba(40, 47, 175, 1)',
+      textColor: '#fff',
+      navColor: '#fff',
+      controls: [
+        {
+          icon: ArrowKeys,
+          instructions: "use arrow keys to orbit around"
+        },
+        {
+          icon: MouseMove,
+          instructions: "move mouse to yaw around"
+        }
+      ]
+    }
+  }
 };
 
 
 /*
 For devving, easy to swap in:
-
 tracks: [
       { // These tracks are useful for devving on the player
         title: "Fake short song 1",
@@ -300,3 +326,4 @@ tracks: [
       }
 ],
 */
+  
