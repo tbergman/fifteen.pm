@@ -1,50 +1,32 @@
 import React, {PureComponent, Fragment} from 'react';
 import './index.css';
 
-// const RELEASES = [
-//     {
-//         path: "/1",
-//         name: "YAHCEPH",
-//         radius: DEFAULT_RADIUS + Math.random(),
-//         textURL: assetPath("1/objects/text.gltf"),
-//         soundURL: assetPath("0/sounds/chord-root.wav")
-//     },
-//     {
-//         path: "/2",
-//         name: "YEAR UNKNOWN",
-//         radius: DEFAULT_RADIUS + Math.random() * 2,
-//         textURL: assetPath("2/objects/text.gltf"),
-//         soundURL: assetPath("0/sounds/chord-fourth.wav")
-//     },
-//     {
-//         path: "/3",
-//         name: "OTHERE",
-//         radius: DEFAULT_RADIUS + Math.random() * 3,
-//         textURL: assetPath("3/objects/text.gltf"),
-//         soundURL: assetPath("0/sounds/chord-fifth.wav")
-//     },
-//     {
-//         path: "/4",
-//         name: "JON CANNON",
-//         radius: DEFAULT_RADIUS + Math.random() * 3,
-//         textURL: assetPath("4/objects/text.gltf"),
-//         soundURL: assetPath("0/sounds/chord-octave.wav")
-//     },
-//     {
-//         path: "/5",
-//         name: "PLEBIAN",
-//         radius: DEFAULT_RADIUS + Math.random() * 3,
-//         textURL: assetPath("5/objects/text.gltf"),
-//         soundURL: assetPath("0/sounds/chord-second.wav")
-//     },
-//     {
-//         path: "/6",
-//         name: "VVEISS",
-//         radius: DEFAULT_RADIUS + Math.random() * 3,
-//         textURL: assetPath("6/objects/text.gltf"),
-//         soundURL: assetPath("0/sounds/chord-fifth-down.wav")
-//     }
-// ];
+const RELEASES = [
+    {
+        path: "/1",
+        name: "YAHCEPH",
+    },
+    {
+        path: "/2",
+        name: "YEAR UNKNOWN",
+    },
+    {
+        path: "/3",
+        name: "OTHERE",
+    },
+    {
+        path: "/4",
+        name: "JON CANNON",
+    },
+    {
+        path: "/5",
+        name: "PLEBIAN",
+    },
+    {
+        path: "/6",
+        name: "VVEISS",
+    }
+];
 
 class ReleasesMenu extends PureComponent {
     render() {
@@ -53,86 +35,40 @@ class ReleasesMenu extends PureComponent {
                 <main>
                     <div class="grid-wrap">
                         <div class="grid">
-                            <a href="#" class="grid__item">
-                                <div class="grid__item-bg"></div>
-                                <div class="grid__item-wrap">
-                                    <svg class="square-circle-loader" viewBox="0 0 90 90" version="1.1">
-                                        <g class="square-circle-loader__group">
-                                            <path class="square-circle-loader__square" strokeWidth="1" fill="none" d="M0,30 0,90 60,90 60,30z"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <h3 class="grid__item-title">Yahceph</h3>
-                                <h4 class="grid__item-number">001</h4>
-                            </a>
-                            <a href="#" class="grid__item">
-                                <div class="grid__item-bg"></div>
-                                <div class="grid__item-wrap">
-                                    <svg class="square-circle-loader" viewBox="0 0 90 90" version="1.1">
-                                        <g class="square-circle-loader__group">
-                                            <path class="square-circle-loader__circle m--left" strokeWidth="1" fill="none" d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
-                                            <path class="square-circle-loader__circle m--right" strokeWidth="1" fill="none" d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <h3 class="grid__item-title">Year Unknown</h3>
-                                <h4 class="grid__item-number">002</h4>
-                            </a>
-                            <a href="#" class="grid__item">
-                                <div class="grid__item-bg"></div>
-                                <div class="grid__item-wrap">
-                                    <svg class="square-circle-loader" viewBox="0 0 90 90" version="1.1">
-                                        <g class="square-circle-loader__group">
-                                            <path class="square-circle-loader__square" strokeWidth="1" fill="none" d="M0,30 0,90 60,90 60,30z"/>
-                                            <path class="square-circle-loader__circle m--left" strokeWidth="1" fill="none" d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
-                                            <path class="square-circle-loader__circle m--right" strokeWidth="1" fill="none" d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <h3 class="grid__item-title">Othere</h3>
-                                <h4 class="grid__item-number">003</h4>
-                            </a>
-                            <a href="#" class="grid__item">
-                                <div class="grid__item-bg"></div>
-                                <div class="grid__item-wrap">
-                                    <svg class="square-circle-loader" viewBox="0 0 90 90" version="1.1">
-                                        <g class="square-circle-loader__group">
-                                            <path class="square-circle-loader__circle m--left" strokeWidth="1" fill="none" d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
-                                            <path class="square-circle-loader__circle m--right" strokeWidth="1" fill="none" d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <h3 class="grid__item-title">John Cannon</h3>
-                                <h4 class="grid__item-number">004</h4>
-                            </a>
-                            <a href="#" class="grid__item">
-                                <div class="grid__item-bg"></div>
-                                <div class="grid__item-wrap">
-                                    <svg class="square-circle-loader" viewBox="0 0 90 90" version="1.1">
-                                        <g class="square-circle-loader__group">
-                                            <path class="square-circle-loader__square" strokeWidth="1" fill="none" d="M0,30 0,90 60,90 60,30z"/>
-                                            <path class="square-circle-loader__circle m--left" strokeWidth="1" fill="none" d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
-                                            <path class="square-circle-loader__circle m--right" strokeWidth="1" fill="none" d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <h3 class="grid__item-title">Plebian</h3>
-                                <h4 class="grid__item-number">005</h4>
-                            </a>
-                            <a href="#" class="grid__item">
-                                <div class="grid__item-bg"></div>
-                                <div class="grid__item-wrap">
-                                    <svg class="square-circle-loader" viewBox="0 0 90 90" version="1.1">
-                                        <g class="square-circle-loader__group">
-                                            <path class="square-circle-loader__square" strokeWidth="1" fill="none" d="M0,30 0,90 60,90 60,30z"/>
-                                            <path class="square-circle-loader__circle m--left" strokeWidth="1" fill="none" d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
-                                            <path class="square-circle-loader__circle m--right" strokeWidth="1" fill="none" d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
-                                        </g>
-                                    </svg>
-                                </div>
-                                <h3 class="grid__item-title">VVeiss</h3>
-                                <h4 class="grid__item-number">006</h4>
-                            </a>
+                            {RELEASES.map((release, idx) => {
+                                return (
+                                    <a href={release.path} class="grid__item">
+                                        <div class="grid__item-bg"></div>
+                                        <div class="grid__item-wrap">
+                                            {idx % 2
+                                                ? <svg class="square-circle-loader" viewBox="0 0 90 90" version="1.1">
+                                                    <g class="square-circle-loader__group">
+                                                        <path class="square-circle-loader__square" strokeWidth="1"
+                                                              fill="none" d="M0,30 0,90 60,90 60,30z"/>
+                                                        <path class="square-circle-loader__circle m--left"
+                                                              strokeWidth="1" fill="none"
+                                                              d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
+                                                        <path class="square-circle-loader__circle m--right"
+                                                              strokeWidth="1" fill="none"
+                                                              d="M60,60 a30,30 0 0,1 -60,0 a30,30 0 0,1 60,0"/>
+                                                    </g>
+                                                </svg>
+                                                : <svg x="0px" y="0px"
+	                                                width="340px" height="333px" viewBox="0 0 340 333" enableBackground="new 0 0 340 333">
+                                                    <path class="path" fill="none" stroke="#4800d4" strokeWidth="1" strokeMiterlimit="10" d="
+                                                         M 100, 100
+                                                         m -75, 0
+                                                         a 75,75 0 1,0 150,0
+                                                         a 75,75 0 1,0 -150,0
+                                                         "/>
+                                                </svg>
+                                            }
+                                        </div>
+                                        <h3 class="grid__item-title">{release.name}</h3>
+                                        <h4 class="grid__item-number">{idx > 9 ? idx + 1 : `0${idx + 1}`}</h4>
+                                    </a>
+                                )
+                            })}
                         </div>
                     </div>
                     <div class="content">
