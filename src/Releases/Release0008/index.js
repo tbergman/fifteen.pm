@@ -265,7 +265,7 @@ class Release0008 extends Component {
     // var guillotineLightHelper = new THREE.PointLightHelper( this.guillotineLight, sphereSize );
     // scene.add( guillotineLightHelper );
 
-
+    this.setupModelAnimation(gltf);
     scene.add(gltf.scene);
   }
 
