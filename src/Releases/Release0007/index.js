@@ -9,12 +9,23 @@ export const assetPath7UnityBuild = (p) => {
 }
 
 class Release0007 extends Component {
+  state = {
+    progression: 0
+  }
+  constructor(props) {
+    super(props)
+    this.unityContent = new UnityContent(
+      assetPath7UnityBuild('GLTDJonFayGoldenGrove.json'),
+      assetPath7UnityBuild('UnityLoader.js')
+    );
 
-  unityContent = new UnityContent(
-    assetPath7UnityBuild('GLTDJonFayGoldenGrove.json'),
-    assetPath7UnityBuild('UnityLoader.js')
-  );
- 
+    this.unityContent.on("progress", progression => {
+      this.setState({
+        progression: progression
+      })
+    });
+  };
+
   render() {
     return (
       <Fragment>
