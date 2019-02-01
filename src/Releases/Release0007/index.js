@@ -15,7 +15,7 @@ class Release0007 extends Component {
   constructor(props) {
     super(props)
     this.unityContent = new UnityContent(
-      assetPath7UnityBuild('GLTDJonFayGoldenGrove.json'),
+      assetPath7UnityBuild('unity.json'),
       assetPath7UnityBuild('UnityLoader.js')
     );
 
