@@ -134,23 +134,13 @@ class Release0004 extends PureComponent {
     }
   }
 
-  // object helpers
-  loadingText = () => {
-    if (isMobile) {
-      return "<div class='loading-text-mobile'> your phone cannot contain<br/>the bodega-verse.</div>"
-    } else {
-      return "<div class='loading-text-desktop'> loading the bodega-verse... </div>"
-    }
-  }
-
   initLoader = () => {
     // define gltf loading manager
     this.manager = new THREE.LoadingManager();
 
     this.manager.onStart = (url, itemsLoaded, itemsTotal) => {
       this.emojiProgress = "";
-      this.progressBar.innerHTML = "<img class='stretch' src='" + assetPath4Images('wormhole.gif') + "'></img>" +
-        this.loadingText();
+      this.progressBar.innerHTML = "<img class='stretch' src='" + assetPath4Images('wormhole.gif') + "'></img>"
     };
 
     this.manager.onProgress = (url, itemsLoaded, itemsTotal) => {

@@ -78,7 +78,7 @@ class Menu extends PureComponent {
       <div>
         <h2 className="modal-message"> {this.state.content.message} </h2>
         <button className="menu-button" onClick={() => this.closeModal()}>
-          {this.state.hasEnteredWorld ? "CLOSE" : "ENTER"}
+          {this.state.hasEnteredWorld || this.state.content.home  ? "CLOSE" : "ENTER"}
         </button>
         {!this.state.content.home && (
           <div>
