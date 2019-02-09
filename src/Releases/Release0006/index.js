@@ -9,7 +9,7 @@ import {Lensflare, LensflareElement} from 'three-full';
 import {FirstPersonControls} from "../../Utils/FirstPersonControls";
 import {OrbitControls} from "../../Utils/OrbitControls";
 import {CONSTANTS} from "../Release0006/constants";
-
+import Menu from '../../Main/Menu/Menu';
 
 export const assetPath6 = (p) => {
   return assetPath("6/" + p);
@@ -539,6 +539,7 @@ class Release0006 extends Component {
   render() {
     return (
       <Fragment>
+        <Menu />
         <div ref={element => this.container = element}/>
         <Footer
           content={CONTENT[window.location.pathname]}

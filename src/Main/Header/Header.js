@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import Logo from './Logo';
-import Menu from '../Menu/Menu';
 import {isNoUIMode} from '../../Utils/modes'
 
 import './Header.css';
@@ -12,7 +11,6 @@ class Header extends Component {
     return (
       <div style={style}>
         <Logo />
-        <Menu />
       </div>
     );
   }

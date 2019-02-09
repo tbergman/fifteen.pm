@@ -6,7 +6,7 @@ import {isNoUIMode} from '../../Utils/modes'
 class Footer extends PureComponent {
 
   render() {
-    const {content, fillColor, audioRef} = this.props;
+    const {content, fillColor, audioRef, isPlaying} = this.props;
     const style = isNoUIMode() ? {display: 'none'} : {};
     return (
       <div style={style}>
@@ -16,10 +16,7 @@ class Footer extends PureComponent {
             message={content.artist}
             fillColor={fillColor}
             audioRef={audioRef}
-          />
-          <Purchase
-            fillColor={fillColor}
-            href={content.purchaseLink}
+            isPlaying={isPlaying}
           />
         </div>
       </div>

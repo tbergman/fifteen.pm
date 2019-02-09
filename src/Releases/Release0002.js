@@ -11,6 +11,7 @@ import {isMobile} from "../Utils/BrowserDetection";
 import {OrbitControls} from "../Utils/OrbitControls";
 import {CONTENT} from "../Main/Content"
 import Footer from "../Main/Footer/Footer"
+import Menu from '../Main/Menu/Menu';
 
 /* this handles number of segments in cloth , TO DO fix this */
 let pinsFormation = [];
@@ -643,6 +644,7 @@ class Release0002 extends Component {
   render() {
     return (
       <Fragment>
+        <Menu />
         <div className="release">
           <div ref={element => this.container = element}/>
         </div>

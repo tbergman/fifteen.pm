@@ -7,6 +7,7 @@ import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import {OrbitControls} from "../Utils/OrbitControls";
 import {isMobile} from "../Utils/BrowserDetection";
 import {CONTENT} from "../Main/Content";
+import Menu from '../Main/Menu/Menu';
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);
@@ -645,6 +646,7 @@ class Release0003 extends PureComponent {
   render() {
     return (
       <Fragment>
+        <Menu menuIconFillColor="red"/>
         <div className="release">
           <div ref={element => this.container = element}/>
           <Footer

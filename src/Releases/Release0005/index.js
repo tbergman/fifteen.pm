@@ -12,6 +12,7 @@ import {assetPath} from "../../Utils/assets";
 import {cameraViews} from "./Utils/cameraViews";
 import {CONTENT} from "../../Main/Content";
 import {soundcloudTrackIdFromSrc} from "../../Utils/SoundcloudUtils";
+import Menu from '../../Main/Menu/Menu';
 
 export const assetPath5 = (p) => {
   return assetPath("5/" + p);
@@ -443,6 +444,7 @@ class Release0005 extends Component {
   render() {
     return (
       <Fragment>
+        <Menu />
         <div ref={element => this.container = element}/>
         <Footer
           content={CONTENT[window.location.pathname]}
