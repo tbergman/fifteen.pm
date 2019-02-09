@@ -7,6 +7,7 @@ import './Release.css';
 
 import {CONTENT} from "../Main/Content"
 import Footer from "../Main/Footer/Footer"
+import Menu from '../Main/Menu/Menu';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 
 
@@ -297,6 +298,7 @@ class Release0001 extends PureComponent {
   render() {
     return (
       <Fragment>
+        <Menu />
         <div
           className="release"
           id="release001"

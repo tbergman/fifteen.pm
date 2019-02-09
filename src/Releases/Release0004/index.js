@@ -14,6 +14,7 @@ import '../Release.css';
 import './index.css';
 import {CONTENT} from "../../Main/Content";
 import {assetPath4Images, sleep, keyPressIsFirstPersonControls} from './utils'
+import Menu from '../../Main/Menu/Menu';
 
 class Release0004 extends PureComponent {
   constructor() {
@@ -411,6 +412,7 @@ class Release0004 extends PureComponent {
   render() {
     return (
       <Fragment>
+        <Menu />
         <div className="release">
           <div ref={element => this.container = element}>
             <div id={"progress-bar"} ref={element => this.progressBar = element}/>

@@ -1,6 +1,10 @@
+import { Hover, MouseMove, Click, TwoFingerScroll, ArrowKeys, NoPhone } from "./Controls/Icons";
+
 export const CONTENT = {
   "/": {
-    message: "Welcome to Globally LTD."
+    message:
+      "globally.ltd invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound, permeating the web with a sense of hypnotic wonderment.",
+    home: true
   },
   "/1": {
     artist: "YAHCEPH",
@@ -11,18 +15,38 @@ export const CONTENT = {
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/track/wun-4-jas",
-    message: "Yahceph's production debut, \"wun 4 jas\", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode."
+    message:
+      'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
+    home: false,
+    controls: [
+      {
+        icon: MouseMove,
+        instructions: 'move mouse to make water ripple'
+      }
+    ]
   },
   "/2": {
     artist: "YEAR UNKNOWN",
     tracks: [
       {
         title: "Timer",
-        id: "475418370",
+        id: "475418370"
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/track/timer",
-    message: "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly beat disturbance."
+    message:
+      "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly beat disturbance.",
+    home: false,
+    controls: [
+      {
+        icon: MouseMove,
+        instructions: 'click and drag mouse to look around'
+      },
+      {
+        icon: TwoFingerScroll,
+        instructions: 'scroll to zoom'
+      }
+    ]
   },
   "/3": {
     artist: "OTHERE",
@@ -33,7 +57,23 @@ export const CONTENT = {
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/track/lets-beach",
-    message: "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound."
+    message:
+      "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
+    home: false,
+    controls: [
+      {
+        icon: Hover,
+        instructions: 'hover over inner orb to activate filter'
+      },
+      {
+        icon: MouseMove,
+        instructions: 'click and drag mouse to look around'
+      },
+      {
+        icon: TwoFingerScroll,
+        instructions: 'scroll to zoom and fly through filter'
+      }
+    ]
   },
   "/4": {
     artist: "JON CANNON",
@@ -52,38 +92,79 @@ export const CONTENT = {
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
-    message: "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials."
+    message:
+      "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
+    home: false,
+    controls: [
+      {
+        icon: MouseMove,
+        instructions: 'move mouse to look around'
+      },
+      {
+        icon: Click,
+        instructions: 'click to advance/return to flight path'
+      },
+      {
+        icon: ArrowKeys,
+        instructions: 'when inside a world, use arrow keys to fly around'
+      },
+      {
+        icon: NoPhone,
+        instructions: 'doesn\'t work on phones'
+      }
+    ]
   },
   "/5": {
     artist: "PLEBEIAN",
     tracks: [
       {
         title: "Heaven",
-        id: "514219014",
+        id: "514219014"
       },
       {
         title: "Bullseye",
-        id: "514219020",
+        id: "514219020"
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/album/heaven",
-    message: "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno."
+    message:
+      "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
+    home: false,
+    controls: [
+      {
+        icon: MouseMove,
+        instructions: 'click and drag mouse to look around'
+      },
+      {
+        icon: TwoFingerScroll,
+        instructions: 'scroll to zoom'
+      }
+    ]
   },
   "/6": {
-      artist: "VVEISS",
-      tracks: [
-          {
-              title: "ESCAPE VELOCITY",
-              id: "529074519"
-          }
-      ],
-      purchaseLink: "https://gltd.bandcamp.com/track/escape-velocity",
-      message: "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms."
+    artist: "VVEISS",
+    tracks: [
+      {
+        title: "ESCAPE VELOCITY",
+        id: "529074519"
+      }
+    ],
+    purchaseLink: "https://gltd.bandcamp.com/track/escape-velocity",
+    message:
+      "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
+    home: false,
+    controls: [
+      {
+        icon: MouseMove,
+        instructions: 'move mouse to look around'
+      }
+    ]
   },
   "/test-dummy": {
     artist: "DUMMY",
     tracks: [
-      { // These tracks are useful for devving on the player
+      {
+        // These tracks are useful for devving on the player
         title: "Fake short song 1",
         id: "58432359" //287949388"
       },
@@ -101,6 +182,7 @@ export const CONTENT = {
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
-    message: "Dummy message"
+    message: "Dummy message",
+    home: false
   }
-}
+};
