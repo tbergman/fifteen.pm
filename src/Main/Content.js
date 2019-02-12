@@ -17,7 +17,6 @@ export const CONTENT = {
     purchaseLink: "https://gltd.bandcamp.com/track/wun-4-jas",
     message:
       'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
-    home: false,
     controls: [
       {
         icon: MouseMove,
@@ -36,7 +35,6 @@ export const CONTENT = {
     purchaseLink: "https://gltd.bandcamp.com/track/timer",
     message:
       "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly beat disturbance.",
-    home: false,
     controls: [
       {
         icon: MouseMove,
@@ -59,7 +57,6 @@ export const CONTENT = {
     purchaseLink: "https://gltd.bandcamp.com/track/lets-beach",
     message:
       "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
-    home: false,
     controls: [
       {
         icon: Hover,
@@ -94,7 +91,6 @@ export const CONTENT = {
     purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
     message:
       "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
-    home: false,
     controls: [
       {
         icon: MouseMove,
@@ -129,7 +125,6 @@ export const CONTENT = {
     purchaseLink: "https://gltd.bandcamp.com/album/heaven",
     message:
       "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
-    home: false,
     controls: [
       {
         icon: MouseMove,
@@ -152,7 +147,6 @@ export const CONTENT = {
     purchaseLink: "https://gltd.bandcamp.com/track/escape-velocity",
     message:
       "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
-    home: false,
     controls: [
       {
         icon: MouseMove,
@@ -182,7 +176,6 @@ export const CONTENT = {
       }
     ],
     purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
-    message: "Dummy message",
-    home: false
+    message: "Dummy message"
   }
 };
