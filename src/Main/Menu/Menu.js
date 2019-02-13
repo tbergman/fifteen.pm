@@ -1,55 +1,120 @@
-import React, { PureComponent } from "react";
-import Modal from "react-modal";
-import Purchase from "../Purchase/Purchase";
-import anime from "../../Utils/Anime.min.js";
-import { SHAPES } from "./MenuConstants";
-import { CONTENT } from "../Content";
-import "./Menu.css";
+import React, {PureComponent} from 'react';
+import anime from '../../Utils/Anime.min.js';
+import {SHAPES} from './MenuConstants';
+import {CONTENT} from '../Content'
 import { isNoUIMode } from "../../Utils/modes";
+import './Menu.css';
 
 class Menu extends PureComponent {
 
+
   state = {
-    content: CONTENT[window.location.pathname],
+    shapeIndex: Math.floor(Math.random() * SHAPES.length),
+    message: CONTENT[window.location.pathname].message,
     currentRel: window.location.pathname,
-    showMenu: true,
-    hasEnteredWorld: false
-  };
+    showMenu: false,
+    fillColor: window.location.pathname === '/3' ? 'red' : '#ffffff' // TODO centralize this lookup (See Logo.js)
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   componentDidMount() {
-    const { menuOpen } = this.props;
-    this.setState({ showMenu: menuOpen });
     this.windowLocation = window.location.pathname;
   }
 
-  toggleModal() {
-    this.setState({ showMenu: !this.state.showMenu, hasEnteredWorld: true });
+  onMenuIconClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      showMenu: !this.state.showMenu,
+    }, () => this.animateMenu());
   }
 
-  afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    //
+  handleLinkMouseOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const {idx, rel} = e.target.dataset;
+    this.setState({
+      shapeIndex: idx,
+      message: CONTENT[rel].message,
+      currentRel: rel
+    }, () => {
+      this.animateMenu();
+    });
   }
 
-  closeModal() {
-    this.setState({ showMenu: false, hasEnteredWorld: true });
-  }
-
-  renderControls = () => {
-    const controls = this.state.content.controls.map(c => (
-      <div className="control-item">
-        <div className="control-icon">
-          <c.icon fillColor={"#fff"} />
-        </div>
-        <div className="control-instructions">{c.instructions}</div>
+  renderMessage = () => {
+    const {message} = this.state.message;
+    return (
+      <div className="message">
+        {message}
       </div>
-    ));
-    return <div className="controls">{controls}</div>;
-  };
+    )
+  }
+
+  handleLinkClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      message: CONTENT[this.windowLocation],
+    });
+    window.location = e.target.dataset.to;
+  }
+
+  animateMenu() {
+    const {shapeIndex} = this.state;
+
+    anime({
+      targets: this.svg,
+      duration: SHAPES[shapeIndex].animation.svg.duration,
+      easing: SHAPES[shapeIndex].animation.svg.easing,
+      elasticity: SHAPES[shapeIndex].animation.svg.elasticity || 0,
+      scaleX: SHAPES[shapeIndex].scaleX,
+      scaleY: SHAPES[shapeIndex].scaleY,
+      translateX: SHAPES[shapeIndex].tx + 'px',
+      translateY: SHAPES[shapeIndex].ty + 'px',
+      rotate: SHAPES[shapeIndex].rotate + 'deg'
+    });
+
+    anime({
+      targets: this.path,
+      easing: 'linear',
+      d: [{value: SHAPES[shapeIndex].pathAlt, duration: 3000}, {value: SHAPES[shapeIndex].path, duration: 3000}],
+      loop: true,
+      fill: {
+        value: SHAPES[shapeIndex].fill.color,
+        duration: SHAPES[shapeIndex].fill.duration,
+        easing: SHAPES[shapeIndex].fill.easing
+      },
+      direction: 'alternate'
+    });
+  }
+
+  renderMenu() {
+    const {shapeIndex} = this.state;
+
+    return (
+      <main>
+        <div className="morph-wrap">
+          <svg ref={element => this.svg = element} className="morph" width="1400" height="770" viewBox="0 0 1400 770">
+            <path ref={element => this.path = element} d={SHAPES[shapeIndex].path}/>
+          </svg>
+        </div>
+      </main>
+    );
+  }
+
+  renderLinks() {
+    return (
+      <div className="links">
+        <ul>
+          <li>{this.state.message}</li>
+        </ul>
+      </div>
+    );
+  }
 
   renderMenuIcon = () => {
     const { menuIconFillColor } = this.props;
@@ -60,7 +125,7 @@ class Menu extends PureComponent {
           width="100%"
           height="100%"
           viewBox="0 0 100 100"
-          onClick={() => this.toggleModal()}
+          onClick={(event) => this.onMenuIconClick(event)}
         >
           <g>
             <path
@@ -72,80 +137,27 @@ class Menu extends PureComponent {
       </div>
     );
   };
-  renderMenuContent = () => {
-    const { fillColor, loading } = this.props;
-    return (
-      <div>
-        <h2 className="modal-message"> {this.state.content.message} </h2>
-        <button className="menu-button" onClick={() => this.closeModal()}>
-          {this.state.hasEnteredWorld || this.state.content.home  ? "CLOSE" : "ENTER"}
-        </button>
-        {!this.state.content.home && (
-          <div>
-            <hr />
-            <div>{this.renderControls()}</div>
-            <Purchase
-              href={this.state.content.purchaseLink}
-              fillColor={"#fff"}
-            />
-          </div>
-        )}
-      </div>
-    );
-  };
 
-  renderMenu = () => {
-    const { message } = this.state.content;
-    const { fillColor } = this.props;
-    return (
-      <Modal
-        isOpen={this.state.showMenu}
-        appElement={this.appElement}
-        onAfterOpen={this.afterOpenModal}
-        onRequestClose={this.closeModal}
-        ariaHideApp={false}
-        style={{
-          overlay: {
-            backgroundColor: "rgba(255, 255, 255, 0.00)"
-          },
-          content: {
-            top: "50%",
-            left: "50%",
-            width: "75%",
-            height: "75%",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            border: "none"
-          }
-        }}
-        contentLabel="About"
-      >
-        {this.renderMenuContent()}
-      </Modal>
-    );
-  };
-
-  render = () => {
+  render() {
     return (
       <div>
         {this.renderMenuIcon()}
         {this.state.showMenu && (
-          <div
-            ref={appElement => (this.appElement = appElement)}
-            className="modal"
-          >
+          <div className="menu">
             {this.renderMenu()}
+            <div className="links-wrapper">
+              {this.renderLinks()}
+            </div>
           </div>
         )}
       </div>
     );
-  };
+  }
 }
+
 Menu.defaultProps = {
-  menuOpen: true,
-  loading: true,
-  fillColor: "#ffffff",
   menuIconFillColor: "#ffffff"
-};
+}
+
+
 export default Menu;
