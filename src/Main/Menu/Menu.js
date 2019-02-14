@@ -1,120 +1,55 @@
-import React, {PureComponent} from 'react';
-import anime from '../../Utils/Anime.min.js';
-import {SHAPES} from './MenuConstants';
-import {CONTENT} from '../Content'
+import React, { PureComponent } from "react";
+import Modal from "react-modal";
+import Purchase from "../Purchase/Purchase";
+import anime from "../../Utils/Anime.min.js";
+import { SHAPES } from "./MenuConstants";
+import { CONTENT } from "../Content";
+import "./Menu.css";
 import { isNoUIMode } from "../../Utils/modes";
-import './Menu.css';
 
 class Menu extends PureComponent {
 
-
   state = {
-    shapeIndex: Math.floor(Math.random() * SHAPES.length),
-    message: CONTENT[window.location.pathname].message,
+    content: CONTENT[window.location.pathname],
     currentRel: window.location.pathname,
-    showMenu: false,
-    fillColor: window.location.pathname === '/3' ? 'red' : '#ffffff' // TODO centralize this lookup (See Logo.js)
-  }
+    showMenu: true,
+    hasEnteredWorld: false
+  };
 
   constructor(props) {
-    super(props)
+    super(props);
   }
 
   componentDidMount() {
+    const { menuOpen } = this.props;
+    this.setState({ showMenu: menuOpen });
     this.windowLocation = window.location.pathname;
   }
 
-  onMenuIconClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    this.setState({
-      showMenu: !this.state.showMenu,
-    }, () => this.animateMenu());
+  toggleModal() {
+    this.setState({ showMenu: !this.state.showMenu, hasEnteredWorld: true });
   }
 
-  handleLinkMouseOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const {idx, rel} = e.target.dataset;
-    this.setState({
-      shapeIndex: idx,
-      message: CONTENT[rel].message,
-      currentRel: rel
-    }, () => {
-      this.animateMenu();
-    });
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    //
   }
 
-  renderMessage = () => {
-    const {message} = this.state.message;
-    return (
-      <div className="message">
-        {message}
-      </div>
-    )
+  closeModal() {
+    this.setState({ showMenu: false, hasEnteredWorld: true });
   }
 
-  handleLinkClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    this.setState({
-      message: CONTENT[this.windowLocation],
-    });
-    window.location = e.target.dataset.to;
-  }
-
-  animateMenu() {
-    const {shapeIndex} = this.state;
-
-    anime({
-      targets: this.svg,
-      duration: SHAPES[shapeIndex].animation.svg.duration,
-      easing: SHAPES[shapeIndex].animation.svg.easing,
-      elasticity: SHAPES[shapeIndex].animation.svg.elasticity || 0,
-      scaleX: SHAPES[shapeIndex].scaleX,
-      scaleY: SHAPES[shapeIndex].scaleY,
-      translateX: SHAPES[shapeIndex].tx + 'px',
-      translateY: SHAPES[shapeIndex].ty + 'px',
-      rotate: SHAPES[shapeIndex].rotate + 'deg'
-    });
-
-    anime({
-      targets: this.path,
-      easing: 'linear',
-      d: [{value: SHAPES[shapeIndex].pathAlt, duration: 3000}, {value: SHAPES[shapeIndex].path, duration: 3000}],
-      loop: true,
-      fill: {
-        value: SHAPES[shapeIndex].fill.color,
-        duration: SHAPES[shapeIndex].fill.duration,
-        easing: SHAPES[shapeIndex].fill.easing
-      },
-      direction: 'alternate'
-    });
-  }
-
-  renderMenu() {
-    const {shapeIndex} = this.state;
-
-    return (
-      <main>
-        <div className="morph-wrap">
-          <svg ref={element => this.svg = element} className="morph" width="1400" height="770" viewBox="0 0 1400 770">
-            <path ref={element => this.path = element} d={SHAPES[shapeIndex].path}/>
-          </svg>
+  renderControls = () => {
+    const controls = this.state.content.controls.map(c => (
+      <div className="control-item">
+        <div className="control-icon">
+          <c.icon fillColor={"#fff"} />
         </div>
-      </main>
-    );
-  }
-
-  renderLinks() {
-    return (
-      <div className="links">
-        <ul>
-          <li>{this.state.message}</li>
-        </ul>
+        <div className="control-instructions">{c.instructions}</div>
       </div>
-    );
-  }
+    ));
+    return <div className="controls">{controls}</div>;
+  };
 
   renderMenuIcon = () => {
     const { menuIconFillColor } = this.props;
@@ -125,7 +60,7 @@ class Menu extends PureComponent {
           width="100%"
           height="100%"
           viewBox="0 0 100 100"
-          onClick={(event) => this.onMenuIconClick(event)}
+          onClick={() => this.toggleModal()}
         >
           <g>
             <path
@@ -137,27 +72,88 @@ class Menu extends PureComponent {
       </div>
     );
   };
-
-  render() {
+  renderMenuContent = () => {
+    const { fillColor, loading } = this.props;
     return (
       <div>
-        {this.renderMenuIcon()}
-        {this.state.showMenu && (
-          <div className="menu">
-            {this.renderMenu()}
-            <div className="links-wrapper">
-              {this.renderLinks()}
-            </div>
+        <h2 className="modal-message"> {this.state.content.message} </h2>
+        <button className="menu-button" onClick={() => this.closeModal()}>
+          {this.state.hasEnteredWorld || this.state.content.home  ? "CLOSE" : "ENTER"}
+        </button>
+        {!this.state.content.home && (
+          <div>
+            <hr />
+            <div>{this.renderControls()}</div>
+            <Purchase
+              href={this.state.content.purchaseLink}
+              fillColor={"#fff"}
+            />
           </div>
         )}
       </div>
     );
-  }
-}
+  };
 
+  renderMenu = () => {
+    const { message } = this.state.content;
+    const { fillColor } = this.props;
+    return (
+      <Modal
+        isOpen={this.state.showMenu}
+        appElement={this.appElement}
+        onAfterOpen={() => this.afterOpenModal()}
+        onRequestClose={() => this.closeModal()}
+        shouldCloseOnOverlayClick={true}
+        ariaHideApp={false}
+        style={{
+          overlay: {
+            backgroundColor: "rgba(255, 255, 255, 0.00)"
+          },
+          content: {
+            top: "50%",
+            left: "50%",
+            width: "75%",
+            height: "75%",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            border: "none"
+          }
+        }}
+        contentLabel="About"
+      >
+      <svg className='modal-blob' width="95%" height="95%" viewBox="0 0 1098 724" preserveAspectRatio="none">
+        <g fill="rgba(0, 0, 0, 0.5)">
+          <path d="M548.5,59.7382812 C470.008113,55.8864258 497.028587,41.5039063 443.035156,41.5039063 C389.041725,41.5039063 343.68701,64.1118961 284.179688,59.7382812 C224.672365,55.3646664 225.719215,35.0568574 167.859375,32.359375 C109.999535,29.6618926 39.4951345,65.7659262 28.4257813,121.070312 C17.356428,176.374699 8.50799008,190.198758 13.1796875,232.328125 C17.8513849,274.457492 43.9397366,261.869184 49.9101563,314.816406 C55.8805759,367.763628 46.0880379,374.82659 34.6171875,422.441406 C23.1463371,470.056222 2.57212237,484.248134 1.30859375,516.558594 C0.045065125,548.869053 54.257922,529.389301 57.5898438,571.183594 C60.9217655,612.977887 -17.401275,625.724459 13.1796875,665.464844 C43.76065,705.205229 56.6332649,714.643204 132.476562,722.128906 C208.31986,729.614609 212.8999,695.871374 303.953125,694.164063 C395.00635,692.456751 424.640876,702.752749 480.554687,700.234375 C536.468499,697.716001 508.240732,681.191406 591.976562,681.191406 C675.712393,681.191406 678.939727,700.234375 736.359375,700.234375 C793.779023,700.234375 791.090876,683.015275 874.972656,681.191406 C958.854436,679.367538 971.439718,704.239349 1021,694.164063 C1070.56028,684.088776 1071.37564,670.634909 1080.28125,633.570313 C1089.18686,596.505716 1081.60726,580.438136 1069.72656,555.277344 C1057.84586,530.116552 1053.59109,550.66426 1048.46875,509.058594 C1043.34641,467.452928 1056.94369,471.455894 1069.72656,422.441406 C1082.50943,373.426919 1100.03309,371.265077 1096.58594,324.558594 C1093.13878,277.852111 1070.17892,278.139004 1055.69531,232.328125 C1041.2117,186.517246 1032.16112,179.964122 1037.97266,139.167969 C1043.78419,98.3718156 1088.49492,95.7984925 1080.28125,59.7382812 C1072.06758,23.67807 1055.80465,15.1224402 1007.30469,4.52734375 C958.80472,-6.06775273 952.166845,7.02171475 891.527344,18.5039063 C830.887843,29.9860978 850.724053,37.3147824 773.40625,48.8164062 C696.088447,60.3180301 653.874587,58.1458124 621.082031,59.7382812 C588.289475,61.3307501 626.991887,63.5901367 548.5,59.7382812 Z"></path>
+        </g>
+      </svg>
+      <div className="modal-content-container">
+        {this.renderMenuContent()}
+      </div>
+      </Modal>
+    );
+  };
+
+  render = () => {
+    return (
+      <div>
+        {this.renderMenuIcon()}
+        {this.state.showMenu && (
+          <div
+            ref={appElement => (this.appElement = appElement)}
+            className="modal"
+          >
+            {this.renderMenu()}
+          </div>
+        )}
+      </div>
+    );
+  };
+}
 Menu.defaultProps = {
+  menuOpen: true,
+  loading: true,
+  fillColor: "#ffffff",
   menuIconFillColor: "#ffffff"
-}
-
-
+};
 export default Menu;
