@@ -104,7 +104,6 @@ class Player extends Component {
 
   handlePlayButtonClick = (e) => {
     e.preventDefault();
-    console.log("ON LICKY", this.state.pausedState);
     !this.state.pausedState
       ? this.handlePause()
       : this.handlePlay()

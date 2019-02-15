@@ -30,7 +30,6 @@ class Menu extends PureComponent {
 
   afterOpenModal() {
     // references are now sync'd and can be accessed.
-    console.log("AFTER OPEN MODAL AUDIO REF:", this.props.audioRef);
   }
 
   closeModal() {
@@ -38,12 +37,8 @@ class Menu extends PureComponent {
       showMenu: false,
       hasEnteredWorld: true
     }, () => {
-      
-      console.log("AFTER CLOSE STATE", this.state);
-      console.log("AFTER CLOSE MODAL AUDIO REF:", this.props.audioRef);
+
     });
-    
-    
   }
 
   renderControls = () => {
@@ -79,8 +74,9 @@ class Menu extends PureComponent {
       </div>
     );
   };
+
   renderMenuContent = () => {
-    const { fillColor, loading } = this.props;
+    // const { fillColor, loading } = this.props;
     return (
       <div>
         <h2 className="modal-message"> {this.state.content.message} </h2>
@@ -102,8 +98,8 @@ class Menu extends PureComponent {
   };
 
   renderMenu = () => {
-    const { message } = this.state.content;
-    const { fillColor } = this.props;
+    // const { message } = this.state.content;
+    // const { fillColor } = this.props;
     return (
       <Modal
         isOpen={this.state.showMenu}
@@ -145,16 +141,18 @@ class Menu extends PureComponent {
   renderPlayer = () => {
     const { content, menuIconFillColor, audioRef, isPlaying } = this.props;
     const { hasEnteredWorld } = this.state;
-    return (
-      <Player
-        trackList={content.tracks}
-        message={content.artist}
-        fillColor={menuIconFillColor}
-        audioRef={audioRef}
-        // audioRef={el => this.audioElement = el}
-        paused={!hasEnteredWorld}
-      />
-    );
+    if (this.props.renderPlayer){
+      return (
+        <Player
+          trackList={content.tracks}
+          message={content.artist}
+          fillColor={menuIconFillColor}
+          audioRef={audioRef}
+          // audioRef={el => this.audioElement = el}
+          paused={!hasEnteredWorld}
+        />
+      );
+    }
   }
 
   render = () => {
@@ -172,7 +170,9 @@ class Menu extends PureComponent {
 
           </div>
         )}
+       
         {this.renderPlayer()}
+        
       </div>
     );
   };
@@ -180,6 +180,7 @@ class Menu extends PureComponent {
 
 Menu.defaultProps = {
   menuOpen: true,
+  renderPlayer: true,
   loading: true,
   fillColor: "#ffffff",
   menuIconFillColor: "#ffffff"
