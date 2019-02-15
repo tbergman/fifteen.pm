@@ -1,12 +1,12 @@
-import React, {PureComponent, Fragment} from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import * as THREE from "three";
 import debounce from 'lodash/debounce';
 import './Release.css';
 import Footer from '../Main/Footer/Footer'
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
-import {OrbitControls} from "../Utils/OrbitControls";
-import {isMobile} from "../Utils/BrowserDetection";
-import {CONTENT} from "../Main/Content";
+import { OrbitControls } from "../Utils/OrbitControls";
+import { isMobile } from "../Utils/BrowserDetection";
+import { CONTENT } from "../Main/Content";
 import Menu from '../Main/Menu/Menu';
 
 const BPM = 130;
@@ -91,7 +91,7 @@ class Release0003 extends PureComponent {
     this.scene.background = new THREE.Color(0xFFFFFF);
     this.camera = new THREE.PerspectiveCamera(80, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000);
     this.camera.position.z = 1000;
-    this.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.orbitControlsActivated = false;
@@ -226,7 +226,7 @@ class Release0003 extends PureComponent {
 
     // FILTER SPHERE add an invisible sphere for raycasting (TODO move)
     let geometry = new THREE.SphereGeometry(RADIUS + FILTER_RADIUS_BUFFER);
-    var material = new THREE.MeshBasicMaterial({transparent: true, opacity: 0.0});
+    var material = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.0 });
     var sphere = new THREE.Mesh(geometry, material);
     sphere.name = "filterSphere";
     // sphere.position = new THREE.Vector3();
@@ -241,7 +241,7 @@ class Release0003 extends PureComponent {
   initOrbsGroup = (params, scratchy) => {
     let orbs = [];
     for (let i = 0; i < params.numSpheres; ++i) {
-      let material = new THREE.LineBasicMaterial({color: params.offFilterColor});
+      let material = new THREE.LineBasicMaterial({ color: params.offFilterColor });
       let geometry = this.createOrbGeometry(params, i, scratchy);
       let orb = new THREE.LineSegments(geometry, material);
       orb.scale.x = orb.scale.y = orb.scale.z = params.scale;
@@ -377,7 +377,7 @@ class Release0003 extends PureComponent {
         }
       }
     }
-    this.setState({allOrbs: true});
+    this.setState({ allOrbs: true });
   }
 
   removeAllButFirstOrb = () => {
@@ -389,7 +389,7 @@ class Release0003 extends PureComponent {
         }
       }
     }
-    this.setState({allOrbs: false});
+    this.setState({ allOrbs: false });
   }
 
 
@@ -438,7 +438,7 @@ class Release0003 extends PureComponent {
   }
 
   renderByTrackSection = (currentTime) => {
-    const {allOrbs} = this.state;
+    const { allOrbs } = this.state;
 
     // toggle orbs
     this.toggleOrbs(currentTime);
@@ -564,7 +564,7 @@ class Release0003 extends PureComponent {
   }
 
   applyFilter = () => {
-    const {raycaster, mouse, camera, scene} = this;
+    const { raycaster, mouse, camera, scene } = this;
 
     // update the picking ray with the camera and mouse position
     raycaster.setFromCamera(mouse, camera);
@@ -646,13 +646,17 @@ class Release0003 extends PureComponent {
   render() {
     return (
       <Fragment>
-        <Menu menuIconFillColor="red"/>
+        <Menu
+          menuIconFillColor="red"
+          content={CONTENT[window.location.pathname]}
+          audioRef={el => this.audioElement = el}
+        />
         <div className="release">
-          <div ref={element => this.container = element}/>
+          <div ref={element => this.container = element} />
           <Footer
-            content={CONTENT[window.location.pathname]}
+            // content={CONTENT[window.location.pathname]}
             fillColor="red"
-            audioRef={el => this.audioElement = el}
+            // audioRef={el => this.audioElement = el}
           />
         </div>
       </Fragment>
