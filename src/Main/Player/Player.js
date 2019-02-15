@@ -4,7 +4,7 @@ import { formatSoundcloudSrc } from "../../Utils/SoundcloudUtils";
 
 class Player extends Component {
   state = {
-    pausedState: true, // Assume autoplay doesn't work.
+    pausedState: true,
     src: formatSoundcloudSrc(
       this.props.trackList[0].id,
       this.props.trackList[0].secretToken
@@ -34,10 +34,7 @@ class Player extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // this.updateAudioElement();
     if(prevProps.paused!==this.props.paused && !this.props.paused){
-      //Perform some operation here
-      // this.setState({state.paused});
         this.handlePlay();
     }
   }
@@ -186,7 +183,6 @@ class Player extends Component {
       <audio
         key={src}
         id="audio-player"
-        // autoPlay
         crossOrigin="anonymous"
         ref={audioRef}
       >

@@ -148,7 +148,6 @@ class Menu extends PureComponent {
           message={content.artist}
           fillColor={menuIconFillColor}
           audioRef={audioRef}
-          // audioRef={el => this.audioElement = el}
           paused={!hasEnteredWorld}
         />
       );
@@ -156,23 +155,18 @@ class Menu extends PureComponent {
   }
 
   render = () => {
-    // const { audioRef } = this.props;
     return (
       <div>
         {this.renderMenuIcon()}
         {this.state.showMenu && (
           <div
             ref={appElement => (this.appElement = appElement)}
-            // audioRef={audioRef}
             className="modal"
           >
             {this.renderMenu()}
-
           </div>
         )}
-       
         {this.renderPlayer()}
-        
       </div>
     );
   };
