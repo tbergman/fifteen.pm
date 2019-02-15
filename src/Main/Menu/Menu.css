@@ -24,7 +24,7 @@
 
 .overlay-message {
   position: absolute;
-  top: -98%;
+  top: -95%;
   width: 77%;
   z-index: 1000;
   font-size: 20px;
@@ -39,8 +39,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 90%;
-  height: 90%;
+  width: 80%;
+  height: 80%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
   background: transparent;
@@ -54,7 +54,7 @@
 
 .controls {
   position: absolute;
-  top: -80%;
+  top: -79%;
   width: 77%;
 }
 
@@ -83,7 +83,7 @@
 
 .purchase-container {
   text-transform: uppercase;
-  top: -40%;
+  top: -38%;
   right: 23%;
   position:  absolute;
   text-align: center;
@@ -95,14 +95,14 @@
 }
 
 .purchase-icon-link {
-  font-size: 45px;
+  font-size: 36px;
   line-height: 36px;
 }
 
 .enter-container {
   position: absolute;
   text-align: center;
-  top: -40%;
+  top: -38%;
   left: 0%;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .enter-icon-link {
-  font-size: 45px;
+  font-size: 36px;
   line-height: 36px;
 }
 
