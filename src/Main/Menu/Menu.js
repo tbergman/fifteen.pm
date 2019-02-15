@@ -21,7 +21,12 @@ class Menu extends PureComponent {
     this.animateOverlay();
   }
 
-  toggleOverlay() {
+  disableEvents(e) {
+    e.preventDefault();
+  }
+
+  toggleOverlay(e) {
+    e.preventDefault();
     this.setState({
       overlayOpen: !this.state.overlayOpen,
       hasEnteredWorld: true
@@ -92,10 +97,10 @@ class Menu extends PureComponent {
 
   renderPurchaseLink = () => {
     return (
-      <div className="purchase-container">
-        <div className="purchase-link">
+      <div className="overlay-button-container purchase-container">
+        <div className="overlay-button">
           <a
-            className="purchase-icon-link"
+            className="overlay-button-icon"
             style={{ color: this.state.overlay.textColor }}
             href={this.state.overlay.purchaseLink}
             target="_blank"
@@ -104,7 +109,6 @@ class Menu extends PureComponent {
           </a>
           <br />
           <a
-            className=""
             style={{ color: this.state.overlay.textColor }}
             href={this.state.overlay.purchaseLink}
             href={this.state.overlay.purchaseLink}
@@ -119,10 +123,10 @@ class Menu extends PureComponent {
 
   renderEnterButton = () => {
     return (
-      <div className="enter-container" onClick={this.toggleOverlay.bind(this)}>
-        <div className="enter-link">
+      <div className="overlay-button-container enter-container" onClick={this.toggleOverlay.bind(this)}>
+        <div className="overlay-button">
           <span
-            className="enter-icon-link"
+            className="overlay-button-icon"
             style={{ color: this.state.overlay.textColor }}
           >
             ☻
@@ -156,53 +160,56 @@ class Menu extends PureComponent {
     // const { message } = this.state.content;
     // const { fillColor } = this.props;
     return (
-      <Modal
-        isOpen={this.state.overlayOpen}
-        appElement={this.appElement}
-        onAfterOpen={this.afterOpenOverlay.bind(this)}
-        onRequestClose={this.closeOverlay.bind(this)}
-        shouldCloseOnOverlayClick={true}
-        ariaHideApp={false}
-        style={{
-          overlay: {
-            background: "transparent"
-          },
-          content: {
-            top: "50%",
-            left: "50%",
-            width: "80%",
-            height: "80%",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-            background: "transparent",
-            border: "none",
-            overflow: "hidden"
-          }
-        }}
-        contentLabel="overlay"
-      >
-      <div>
-        <div className="overlay-blob">
-          <svg
-            ref={element => (this.svg = element)}
-            width="100%"
-            height="100%"
-            viewBox="0 0 1098 724"
-            preserveAspectRatio="none"
-          >
-            <g fill={this.state.overlay.fillColor}>
-              <path
-                ref={element => (this.path = element)}
-                d={SHAPES[this.state.shapeIndex].path}
-              />
-            </g>
-          </svg>
+      <div  onKeyPress={this.disableEvents.bind(this)}>
+        <Modal
+          onMouseMove={this.disableEvents.bind(this)}
+          isOpen={this.state.overlayOpen}
+          appElement={this.appElement}
+          onAfterOpen={this.afterOpenOverlay.bind(this)}
+          onRequestClose={this.closeOverlay.bind(this)}
+          shouldCloseOnOverlayClick={true}
+          ariaHideApp={false}
+          style={{
+            overlay: {
+              background: "transparent"
+            },
+            content: {
+              top: "45%",
+              left: "50%",
+              width: "80%",
+              height: "80%",
+              marginRight: "-50%",
+              transform: "translate(-50%, -50%)",
+              background: "transparent",
+              border: "none",
+              overflow: "hidden"
+            }
+          }}
+          contentLabel="overlay"
+        >
+        <div>
+          <div className="overlay-blob">
+            <svg
+              ref={element => (this.svg = element)}
+              width="100%"
+              height="100%"
+              viewBox="0 0 1098 724"
+              preserveAspectRatio="none"
+            >
+              <g fill={this.state.overlay.fillColor}>
+                <path
+                  ref={element => (this.path = element)}
+                  d={SHAPES[this.state.shapeIndex].path}
+                />
+              </g>
+            </svg>
+          </div>
+          <div className="overlay-content-container">
+            {this.renderOverlayContent()}
+          </div>
         </div>
-        <div className="overlay-content-container">
-          {this.renderOverlayContent()}
-        </div>
+        </Modal>
       </div>
-      </Modal>
     );
   };
 

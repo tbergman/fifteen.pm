@@ -11,16 +11,13 @@
 
 .overlay-content-container {
   position: absolute;
-  margin-left: 20%;
-  margin-right: 20%;
-  padding-right: 30px;
+  margin-left: 15%;
   z-index: 2;
 }
 
 .overlay-message {
+  width: 85%;
   margin-top: 100px;
-  width: 100%;
-  z-index: 1000;
   font-size: 20px;
   font-weight: 200;
 }
@@ -33,8 +30,8 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 90%;
-  height: 90%;
+  width: 95%;
+  height: 95%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
   background: transparent;
@@ -48,7 +45,7 @@
 }
 
 .control-item {
-  width: 100%;
+  width: 85%;
   padding-top: 5px;
   position: relative;
   margin-bottom: -40px;
@@ -70,39 +67,29 @@
   margin-right: 5px;
 }
 
-.purchase-container {
-  margin-top: 30px;
+.overlay-button-container {
+  padding-top: 8%;
   position: absolute;
-  right: 12%;
-  text-transform: uppercase;
   text-align: center;
+  text-transform: uppercase;
 }
 
-.purchase-link:hover {
+.overlay-button:hover {
   cursor: pointer;
   opacity: 0.5;
 }
 
-.purchase-icon-link {
+.overlay-button-icon {
   font-size: 36px;
   line-height: 36px;
 }
 
 .enter-container {
-  margin-top: 30px;
-  position: absolute;
   left: 0%;
-  text-align: center;
 }
 
-.enter-link:hover {
-  cursor: pointer;
-  opacity: 0.5;
-}
-
-.enter-icon-link {
-  font-size: 36px;
-  line-height: 36px;
+.purchase-container {
+  right: 20%;
 }
 
 @media screen and (max-width: 112em) {
@@ -112,10 +99,7 @@
   .control-instructions {
     font-size: 15px;
   }
-  .purchase-container {
-    font-size: 20px;
-  }
-  .enter-container {
+  .overlay-button-container {
     font-size: 20px;
   }
 }
@@ -127,10 +111,7 @@
   .control-instructions {
     font-size: 12px;
   }
-  .purchase-container {
-    font-size: 17px;
-  }
-  .enter-container {
+  .overlay-button-container {
     font-size: 17px;
   }
 }
@@ -142,10 +123,7 @@
   .control-instructions {
     font-size: 10px;
   }
-  .purchase-container {
-    font-size: 12px;
-  }
-  .enter-container {
+  .overlay-button-container {
     font-size: 12px;
   }
 }
