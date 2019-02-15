@@ -259,7 +259,10 @@ class Home extends PureComponent {
   render() {
     return (
       <Fragment>
-        <Menu menuOpen={false}/>
+        <Menu
+        menuOpen={false}
+        renderPlayer={false}
+        />
         <div ref={element => this.container = element}/>
       </Fragment>
     );

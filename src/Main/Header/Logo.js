@@ -3,7 +3,7 @@ import pure from 'recompose/pure';
 
 class Logo extends Component {
   static defaultProps = {
-    fillColor: window.location.pathname === '/3' ? 'red' : '#ffffff',
+    fillColor: window.location.pathname === '/3' ? 'red' : '#ffffff', // TODO centralize this logic
   }
 
   onClick = (e) => {
