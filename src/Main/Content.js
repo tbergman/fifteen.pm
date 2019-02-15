@@ -1,10 +1,22 @@
-import { Hover, MouseMove, Click, TwoFingerScroll, ArrowKeys, NoPhone } from "./Controls/Icons";
+import {
+  Hover,
+  MouseMove,
+  Click,
+  TwoFingerScroll,
+  ArrowKeys,
+  NoPhone
+} from "./Controls/Icons";
 
 export const CONTENT = {
   "/": {
-    message:
-      "globally.ltd invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound, permeating the web with a sense of hypnotic wonderment.",
-    home: true
+    home: true,
+    overlay: {
+      message:
+        "globally.ltd invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound, permeating the web with a sense of hypnotic wonderment.",
+      iconColor: '#fff',
+      fillColor: 'rgba(0, 0, 0, 0.5)',
+      textColor: '#fff'
+    }
   },
   "/1": {
     artist: "YAHCEPH",
@@ -14,15 +26,20 @@ export const CONTENT = {
         id: "466084773"
       }
     ],
-    purchaseLink: "https://gltd.bandcamp.com/track/wun-4-jas",
-    message:
-      'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
-    controls: [
-      {
-        icon: MouseMove,
-        instructions: 'move mouse to make water ripple'
-      }
-    ]
+    overlay: {
+      message:
+        'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
+      purchaseLink: "https://gltd.bandcamp.com/track/wun-4-jas",
+      iconColor: '#fff',
+      fillColor: 'rgba(0, 0, 0, 0.5)',
+      textColor: '#fff',
+      controls: [
+        {
+          icon: MouseMove,
+          instructions: "move mouse to make water ripple"
+        }
+      ]
+    }
   },
   "/2": {
     artist: "YEAR UNKNOWN",
@@ -32,19 +49,24 @@ export const CONTENT = {
         id: "475418370"
       }
     ],
-    purchaseLink: "https://gltd.bandcamp.com/track/timer",
-    message:
-      "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly beat disturbance.",
-    controls: [
-      {
-        icon: MouseMove,
-        instructions: 'click and drag mouse to look around'
-      },
-      {
-        icon: TwoFingerScroll,
-        instructions: 'scroll to zoom'
-      }
-    ]
+    overlay: {
+      message:
+        "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly drum disturbance.",
+      purchaseLink: "https://gltd.bandcamp.com/track/timer",
+      iconColor: '#fff',
+      fillColor: 'rgba(0, 0, 0, 0.5)',
+      textColor: '#fff',
+      controls: [
+        {
+          icon: MouseMove,
+          instructions: "click and drag mouse to look around"
+        },
+        {
+          icon: TwoFingerScroll,
+          instructions: "scroll to zoom"
+        }
+      ]
+    }
   },
   "/3": {
     artist: "OTHERE",
@@ -54,23 +76,28 @@ export const CONTENT = {
         id: "482138307"
       }
     ],
-    purchaseLink: "https://gltd.bandcamp.com/track/lets-beach",
-    message:
-      "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
-    controls: [
-      {
-        icon: Hover,
-        instructions: 'hover over inner orb to activate filter'
-      },
-      {
-        icon: MouseMove,
-        instructions: 'click and drag mouse to look around'
-      },
-      {
-        icon: TwoFingerScroll,
-        instructions: 'scroll to zoom and fly through filter'
-      }
-    ]
+    overlay: {
+      message:
+        "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
+      purchaseLink: "https://gltd.bandcamp.com/track/lets-beach",
+      iconColor: 'red',
+      fillColor: 'rgba(255, 0, 0, 0.7)',
+      textColor: '#fff',
+      controls: [
+        {
+          icon: Hover,
+          instructions: "hover over inner orb to activate filter"
+        },
+        {
+          icon: MouseMove,
+          instructions: "click and drag mouse to look around"
+        },
+        {
+          icon: TwoFingerScroll,
+          instructions: "scroll to zoom and fly through filter"
+        }
+      ]
+    }
   },
   "/4": {
     artist: "JON CANNON",
@@ -88,27 +115,32 @@ export const CONTENT = {
         id: "513518595"
       }
     ],
-    purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
-    message:
-      "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
-    controls: [
-      {
-        icon: MouseMove,
-        instructions: 'move mouse to look around'
-      },
-      {
-        icon: Click,
-        instructions: 'click to advance/return to flight path'
-      },
-      {
-        icon: ArrowKeys,
-        instructions: 'when inside a world, use arrow keys to fly around'
-      },
-      {
-        icon: NoPhone,
-        instructions: 'doesn\'t work on phones'
-      }
-    ]
+    overlay: {
+      message:
+        "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
+      purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
+      iconColor: '#fff',
+      fillColor: 'rgba(0, 0, 0, 0.5)',
+      textColor: '#fff',
+      controls: [
+        {
+          icon: MouseMove,
+          instructions: "move mouse to look around"
+        },
+        {
+          icon: Click,
+          instructions: "click to advance/return to flight path"
+        },
+        {
+          icon: ArrowKeys,
+          instructions: "when inside a world, use arrow keys to fly around"
+        },
+        {
+          icon: NoPhone,
+          instructions: "doesn't work on phones"
+        }
+      ]
+    }
   },
   "/5": {
     artist: "PLEBEIAN",
@@ -122,19 +154,24 @@ export const CONTENT = {
         id: "514219020"
       }
     ],
-    purchaseLink: "https://gltd.bandcamp.com/album/heaven",
-    message:
-      "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
-    controls: [
-      {
-        icon: MouseMove,
-        instructions: 'click and drag mouse to look around'
-      },
-      {
-        icon: TwoFingerScroll,
-        instructions: 'scroll to zoom'
-      }
-    ]
+    overlay: {
+      message:
+        "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
+      purchaseLink: "https://gltd.bandcamp.com/album/heaven",
+      iconColor: '#fff',
+      fillColor: 'rgba(0, 0, 0, 0.5)',
+      textColor: '#fff',
+      controls: [
+        {
+          icon: MouseMove,
+          instructions: "click and drag mouse to look around"
+        },
+        {
+          icon: TwoFingerScroll,
+          instructions: "scroll to zoom"
+        }
+      ]
+    }
   },
   "/6": {
     artist: "VVEISS",
@@ -144,15 +181,20 @@ export const CONTENT = {
         id: "529074519"
       }
     ],
-    purchaseLink: "https://gltd.bandcamp.com/track/escape-velocity",
-    message:
-      "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
-    controls: [
-      {
-        icon: MouseMove,
-        instructions: 'move mouse to look around'
-      }
-    ]
+    overlay: {
+      message:
+        "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
+      purchaseLink: "https://gltd.bandcamp.com/track/escape-velocity",
+      iconColor: '#fff',
+      fillColor: 'rgba(0, 0, 0, 0.5)',
+      textColor: '#fff',
+      controls: [
+        {
+          icon: MouseMove,
+          instructions: "move mouse to look around"
+        }
+      ]
+    }
   },
   "/test-dummy": {
     artist: "DUMMY",
@@ -175,7 +217,9 @@ export const CONTENT = {
         id: "177364838"
       }
     ],
-    purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
-    message: "Dummy message"
+    overlay: {
+      message: "Dummy message",
+      purchaseLink: "https://gltd.bandcamp.com/album/ep-1"
+    }
   }
 };
