@@ -83,8 +83,8 @@
 
 .purchase-container {
   text-transform: uppercase;
-  top: -169%;
-  left: 40%;
+  top: -40%;
+  right: 23%;
   position:  absolute;
   text-align: center;
 }
