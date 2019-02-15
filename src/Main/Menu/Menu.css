@@ -1,11 +1,10 @@
-.menu {
+.overlay {
   width: 100%;
   height: 100%;
-  text-align: center;
   position: absolute;
 }
 
-.menu-icon {
+.overlay-icon {
   width: 20px;
   height: 20px;
   position: absolute;
@@ -16,46 +15,47 @@
   cursor: pointer;
 }
 
-.message {
-  display: block;
-  font-size: 15px;
-  width: 50%;
-}
 
-.menu-button {
-  position: absolute;
-  bottom: 20%;
-  left: 40%;
-  color: rgba(255, 255, 255);
-  text-align: center;
+.overlay-button {
   text-transform: uppercase;
-  font-size: 36px;
-  font-family: "Roboto Mono", monospace;
-  background-color: rgba(0, 0, 0, 0);
-  cursor: pointer;
+  top: 20px;
+  width: 200px;
 }
 
-.modal-message {
+.overlay-message {
+  position: absolute;
+  top: -98%;
+  width: 77%;
+  z-index: 1000;
   font-size: 20px;
   font-weight: 100;
 }
 
-.modal-blob { 
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: -1;
+.overlay-message:hover {
+  cursor: auto;
 }
 
-.modal-content-container {
-  display: flex;
-  justify-content: center;
-  margin: 10%;
+.overlay-blob { 
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: 90%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  background: transparent;
+  border: none;
+  z-index: 1;
+}
+
+.overlay-content-container {
+  margin: 12%;
 }
 
 .controls {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: -80%;
+  width: 77%;
 }
 
 .control-item {
@@ -69,25 +69,94 @@
   display: inline-block;
   position: relative;
   width: 80px;
-  height: 80px;
+  height: 88px;
 }
 
 .control-instructions {
   display: inline-block;
   position: absolute;
   margin-left: -30px;
-  font-size: 12px;
+  font-size: 17px;
   margin-top: 7px;
   margin-right: 5px;
 }
 
-@media screen and (max-width: 28em) {
-  .modal-button {
-    font-size: 10px;
-    left: 10px;
-    bottom: 10px;
+.purchase-container {
+  text-transform: uppercase;
+  top: -169%;
+  left: 40%;
+  position:  absolute;
+  text-align: center;
+}
+
+.purchase-link:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.purchase-icon-link {
+  font-size: 45px;
+  line-height: 36px;
+}
+
+.enter-container {
+  position: absolute;
+  text-align: center;
+  top: -40%;
+  left: 0%;
+}
+
+.enter-link:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.enter-icon-link {
+  font-size: 45px;
+  line-height: 36px;
+}
+
+@media screen and (max-width: 112em) {
+  .overlay-message {
+    font-size: 17px;
   }
-  .modal-message {
+  .control-instructions {
+    font-size: 15px;
+  }
+  .purchase-container {
+    font-size: 20px;
+  }
+  .enter-container {
+    font-size: 20px;
+  }
+}
+
+@media screen and (max-width: 56em) {
+  .overlay-message {
     font-size: 14px;
+  }
+  .control-instructions {
+    font-size: 12px;
+  }
+  .purchase-container {
+    font-size: 17px;
+  }
+  .enter-container {
+    font-size: 17px;
+  }
+}
+
+@media screen and (max-width: 28em) {
+  .overlay-message {
+    font-size: 12px;
+  }
+  .control-instructions {
+    font-size: 10px;
+  }
+  .purchase-container {
+    font-size: 12px;
+  }
+  .enter-container {
+    font-size: 12px;
   }
 }
