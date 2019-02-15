@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import Player from '../Player/Player';
-import Purchase from '../Purchase/Purchase';
+// import Purchase from '../Purchase/Purchase';
 import {isNoUIMode} from '../../Utils/modes'
 
 class Footer extends PureComponent {
