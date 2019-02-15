@@ -653,11 +653,6 @@ class Release0003 extends PureComponent {
         />
         <div className="release">
           <div ref={element => this.container = element} />
-          {/* <Footer
-            // content={CONTENT[window.location.pathname]}
-            fillColor="red"
-            // audioRef={el => this.audioElement = el}
-          /> */}
         </div>
       </Fragment>
     );

@@ -1,17 +1,17 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import '../Release.css';
 import * as THREE from "three";
-import {OrbitControls} from "../../Utils/OrbitControls";
-import {CONSTANTS} from "./constants";
-import {Reflector} from '../../Utils/Reflector';
-import {Water} from '../../Utils/Water2';
+import { OrbitControls } from "../../Utils/OrbitControls";
+import { CONSTANTS } from "./constants";
+import { Reflector } from '../../Utils/Reflector';
+import { Water } from '../../Utils/Water2';
 import Footer from '../../Main/Footer/Footer';
 import GLTFLoader from "three-gltf-loader";
-import {loadGLTF} from "../../Utils/Loaders";
-import {assetPath} from "../../Utils/assets";
-import {cameraViews} from "./Utils/cameraViews";
-import {CONTENT} from "../../Main/Content";
-import {soundcloudTrackIdFromSrc} from "../../Utils/SoundcloudUtils";
+import { loadGLTF } from "../../Utils/Loaders";
+import { assetPath } from "../../Utils/assets";
+import { cameraViews } from "./Utils/cameraViews";
+import { CONTENT } from "../../Main/Content";
+import { soundcloudTrackIdFromSrc } from "../../Utils/SoundcloudUtils";
 import Menu from '../../Main/Menu/Menu';
 
 export const assetPath5 = (p) => {
@@ -59,7 +59,7 @@ class Release0005 extends Component {
     this.createStatue();
     this.createCoin();
     this.updateCameraView();
-    this.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     document.body.appendChild(this.renderer.domElement);
@@ -78,7 +78,7 @@ class Release0005 extends Component {
   }
 
   createLights() {
-    const {scene} = this;
+    const { scene } = this;
 
     this.cameraLight = new THREE.DirectionalLight(0x0000ff);
     scene.add(this.cameraLight);
@@ -101,7 +101,7 @@ class Release0005 extends Component {
   }
 
   createWater() {
-    const {scene} = this;
+    const { scene } = this;
     var params = {
       color: '#ffffff',
       scale: 4,
@@ -122,7 +122,7 @@ class Release0005 extends Component {
   }
 
   createSkyBox() {
-    const {scene} = this;
+    const { scene } = this;
     // sky box
     var cubeTextureLoader = new THREE.CubeTextureLoader();
     cubeTextureLoader.setPath(assetPath5('images/'));
@@ -225,7 +225,7 @@ class Release0005 extends Component {
       loader: this.loader,
       onSuccess: renderStatue,
     }
-    loadGLTF({...statueLoadGLTFParams});
+    loadGLTF({ ...statueLoadGLTFParams });
   }
 
   renderStatueGltfObj = (gltfObj) => {
@@ -251,7 +251,7 @@ class Release0005 extends Component {
   }
 
   animateSceneObjects(rotationSpeed = 0.01) {
-    const {position} = this.statueObj;
+    const { position } = this.statueObj;
     if (position.y > Math.random() * -0.9 + 0.1) statueDirection = -1 * 0.01;
     if (position.y < Math.random() * -5.5 + -4) statueDirection = 0.01;
     const newPos = position.y + statueDirection;
@@ -281,7 +281,7 @@ class Release0005 extends Component {
       onSuccess: renderCoin,
     }
 
-    loadGLTF({...coinLoadGLTFParams});
+    loadGLTF({ ...coinLoadGLTFParams });
   }
 
   renderCoin = (gltfObj) => {
@@ -337,7 +337,7 @@ class Release0005 extends Component {
   };
 
   updateWormholeTravel() {
-    const {scale, normal, binormal, tubeGeometry, inWormholeCamera} = this;
+    const { scale, normal, binormal, tubeGeometry, inWormholeCamera } = this;
     // animate camera along spline
     this.cameraLight.intensity = THREE.Math.randFloat(.9, 1.0);
     var time = Date.now();
@@ -444,13 +444,12 @@ class Release0005 extends Component {
   render() {
     return (
       <Fragment>
-        <Menu />
-        <div ref={element => this.container = element}/>
-        <Footer
+        <Menu
           content={CONTENT[window.location.pathname]}
-          fillColor="white"
+          menuIconFillColor="white"
           audioRef={el => this.audioElement = el}
         />
+        <div ref={element => this.container = element} />
       </Fragment>
     );
   }

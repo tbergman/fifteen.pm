@@ -1,19 +1,19 @@
-import React, {PureComponent, Fragment} from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import * as THREE from "three";
-import {isMobile} from '../../Utils/BrowserDetection';
+import { isMobile } from '../../Utils/BrowserDetection';
 import debounce from "lodash/debounce";
 import GLTFLoader from 'three-gltf-loader';
 
 
 import Footer from '../../Main/Footer/Footer';
-import {FirstPersonControls} from '../../Utils/FirstPersonControls';
-import {loadVideo, loadImage, loadGLTF} from '../../Utils/Loaders';
+import { FirstPersonControls } from '../../Utils/FirstPersonControls';
+import { loadVideo, loadImage, loadGLTF } from '../../Utils/Loaders';
 
 import * as C from "./constants";
 import '../Release.css';
 import './index.css';
-import {CONTENT} from "../../Main/Content";
-import {assetPath4Images, sleep, keyPressIsFirstPersonControls} from './utils'
+import { CONTENT } from "../../Main/Content";
+import { assetPath4Images, sleep, keyPressIsFirstPersonControls } from './utils'
 import Menu from '../../Main/Menu/Menu';
 
 class Release0004 extends PureComponent {
@@ -25,7 +25,7 @@ class Release0004 extends PureComponent {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
     this.camera = new THREE.PerspectiveCamera(80, C.SCREEN_WIDTH / C.SCREEN_HEIGHT, 1, 3000);
-    this.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(C.SCREEN_WIDTH, C.SCREEN_HEIGHT);
 
@@ -112,7 +112,7 @@ class Release0004 extends PureComponent {
 
   onKeyDown = (e) => {
     if (keyPressIsFirstPersonControls(e.keyCode)) {
-      this.setState({hasActivatedFirstPersonControls: true})
+      this.setState({ hasActivatedFirstPersonControls: true })
     }
   }
 
@@ -154,7 +154,7 @@ class Release0004 extends PureComponent {
         sleep(1000 * sleepTime)
       }
       if (!isMobile) {
-        this.setState({isLoaded: true});
+        this.setState({ isLoaded: true });
         this.progressBar.innerHTML = "";
         this.progressBar.zIndex = -100;
       }
@@ -180,7 +180,7 @@ class Release0004 extends PureComponent {
         }
       });
     } else if (obj.type === 'video') {
-      output = loadVideo({...obj, computeBoundingSphere: true});
+      output = loadVideo({ ...obj, computeBoundingSphere: true });
       this.scene.add(output);
       this.objects[obj.name] = output;
     } else if (obj.type === 'image') {
@@ -349,7 +349,7 @@ class Release0004 extends PureComponent {
       this.state.mindState !== C.MIND_STATE_EXITING &&
       this.state.mindState !== C.MIND_STATE_CHILLIN) {
 
-      this.setState({mindState: C.MIND_STATE_CHILLIN, hasChilled: true, chillinStart: new Date()});
+      this.setState({ mindState: C.MIND_STATE_CHILLIN, hasChilled: true, chillinStart: new Date() });
 
     }
     // are we in transit ?
@@ -360,7 +360,7 @@ class Release0004 extends PureComponent {
         if (this.state.curVideoState !== C.VIDEO_STATE_PLAYING) {
           this.pausePlanets();
           this.playCurPlanet();
-          this.setState({curVideoState: C.VIDEO_STATE_PLAYING});
+          this.setState({ curVideoState: C.VIDEO_STATE_PLAYING });
           this.setState({
             curVideoState: C.VIDEO_STATE_PAUSED,
             mindState: C.MIND_STATE_FLYING
@@ -383,7 +383,7 @@ class Release0004 extends PureComponent {
     if (this.state.isLoaded) {
       if (this.state.mindState === C.MIND_STATE_CHILLIN) {
         let now = new Date();
-        this.setState({chillinTime: (now - this.state.chillinStart) / 1000})
+        this.setState({ chillinTime: (now - this.state.chillinStart) / 1000 })
         if (this.state.chillinTime >= C.CHILLIN_TIME &&
           !this.state.hasActivatedFirstPersonControls) {
           this.enterWormhole()
@@ -402,15 +402,14 @@ class Release0004 extends PureComponent {
   render() {
     return (
       <Fragment>
-        <Menu />
+        <Menu
+          content={CONTENT[window.location.pathname]}
+          menuIconFillColor="white"
+        />
         <div className="release">
           <div ref={element => this.container = element}>
-            <div id={"progress-bar"} ref={element => this.progressBar = element}/>
+            <div id={"progress-bar"} ref={element => this.progressBar = element} />
           </div>
-          <Footer
-            content={CONTENT[window.location.pathname]}
-            fillColor="white"
-          />
         </div>
 
       </Fragment>
