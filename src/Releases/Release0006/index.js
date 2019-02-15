@@ -1,13 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { CONTENT } from "../../Main/Content";
-import Footer from '../../Main/Footer/Footer';
 import { loadGLTF } from "../../Utils/Loaders";
 import * as THREE from "three";
 import { assetPath } from "../../Utils/assets";
 import GLTFLoader from "three-gltf-loader";
 import { Lensflare, LensflareElement } from 'three-full';
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
-import { OrbitControls } from "../../Utils/OrbitControls";
+// import { OrbitControls } from "../../Utils/OrbitControls";
 import { CONSTANTS } from "../Release0006/constants";
 import Menu from '../../Main/Menu/Menu';
 

@@ -3,9 +3,6 @@ import * as THREE from "three";
 import { isMobile } from '../../Utils/BrowserDetection';
 import debounce from "lodash/debounce";
 import GLTFLoader from 'three-gltf-loader';
-
-
-import Footer from '../../Main/Footer/Footer';
 import { FirstPersonControls } from '../../Utils/FirstPersonControls';
 import { loadVideo, loadImage, loadGLTF } from '../../Utils/Loaders';
 
@@ -380,7 +377,8 @@ class Release0004 extends PureComponent {
   }
 
   renderScene = () => {
-    if (this.state.isLoaded) {
+    console.log("HAS ENTERED WORLD", this.hasEnteredWorld)
+    if (this.state.isLoaded) {//  && this.hasEnteredWorld) {
       if (this.state.mindState === C.MIND_STATE_CHILLIN) {
         let now = new Date();
         this.setState({ chillinTime: (now - this.state.chillinStart) / 1000 })
@@ -397,6 +395,7 @@ class Release0004 extends PureComponent {
       this.updateCameraPos();
       this.renderer.render(this.scene, this.camera);
     }
+    
   }
 
   render() {
@@ -405,6 +404,7 @@ class Release0004 extends PureComponent {
         <Menu
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="white"
+          // ref = {element => this.hasEnteredWorld = element.state.hasEnteredWorld}
         />
         <div className="release">
           <div ref={element => this.container = element}>
