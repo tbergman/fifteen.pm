@@ -143,13 +143,15 @@ class Menu extends PureComponent {
         >
           {this.state.overlay.message}
         </div>
-        {!this.state.home && (
-          <div>
+        <div>
+          <div>{this.renderEnterButton()}</div>
+          {!this.state.home && (
+            <div>
             <div>{this.renderControls()}</div>
-            <div>{this.renderEnterButton()}</div>
             <div>{this.renderPurchaseLink()}</div>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     );
   };
