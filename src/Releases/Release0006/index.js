@@ -1,14 +1,14 @@
-import React, {Component, Fragment} from 'react';
-import {CONTENT} from "../../Main/Content";
+import React, { Component, Fragment } from 'react';
+import { CONTENT } from "../../Main/Content";
 import Footer from '../../Main/Footer/Footer';
-import {loadGLTF} from "../../Utils/Loaders";
+import { loadGLTF } from "../../Utils/Loaders";
 import * as THREE from "three";
-import {assetPath} from "../../Utils/assets";
+import { assetPath } from "../../Utils/assets";
 import GLTFLoader from "three-gltf-loader";
-import {Lensflare, LensflareElement} from 'three-full';
-import {FirstPersonControls} from "../../Utils/FirstPersonControls";
-import {OrbitControls} from "../../Utils/OrbitControls";
-import {CONSTANTS} from "../Release0006/constants";
+import { Lensflare, LensflareElement } from 'three-full';
+import { FirstPersonControls } from "../../Utils/FirstPersonControls";
+import { OrbitControls } from "../../Utils/OrbitControls";
+import { CONSTANTS } from "../Release0006/constants";
 import Menu from '../../Main/Menu/Menu';
 
 export const assetPath6 = (p) => {
@@ -90,7 +90,7 @@ class Release0006 extends Component {
       loader: this.loader,
       onSuccess: renderOctopus,
     }
-    loadGLTF({...octopusLoadGLTFParams});
+    loadGLTF({ ...octopusLoadGLTFParams });
   }
 
 
@@ -162,7 +162,7 @@ class Release0006 extends Component {
       loader: this.loader,
       onSuccess: renderPhurba,
     }
-    loadGLTF({...phurbaLoadGLTFParams});
+    loadGLTF({ ...phurbaLoadGLTFParams });
   }
 
 
@@ -206,7 +206,7 @@ class Release0006 extends Component {
 
 
   setupOctopusAnimation = () => {
-    const {octoGltf} = this;
+    const { octoGltf } = this;
     // setup animations mixer
     this.mixer = new THREE.AnimationMixer(octoGltf.scene);
     for (let i = 0; i < octoGltf.animations.length; i++) {
@@ -216,7 +216,7 @@ class Release0006 extends Component {
   }
 
   setupLights = () => {
-    const {scene} = this;
+    const { scene } = this;
     let light = new THREE.SpotLight("#fff", 0.8);
     light.position.y = 100;
     light.angle = 1.05;
@@ -240,7 +240,7 @@ class Release0006 extends Component {
   }
 
   setupLensFlare = () => {
-    const {scene} = this;
+    const { scene } = this;
     var dirLight = new THREE.DirectionalLight(0xffffff, 0.05);
     dirLight.position.set(-100, -1, -100).normalize();
     dirLight.color.setHSL(0.1, 0.7, 0.5);
@@ -255,7 +255,7 @@ class Release0006 extends Component {
   }
 
   addLensFlareLight(h, s, l, x, y, z) {
-    const {scene, textureFlare0, textureFlare3} = this;
+    const { scene, textureFlare0, textureFlare3 } = this;
     var light = new THREE.PointLight(0xffffff, 1.5, 2000);
     light.color.setHSL(h, s, l);
     light.position.set(x, y, z);
@@ -270,7 +270,7 @@ class Release0006 extends Component {
   }
 
   setupStrobe() {
-    const {cameraLight} = this;
+    const { cameraLight } = this;
     setInterval(() => {
       if (this.state.strobeOn) {
         cameraLight.power = Math.random() > 0.5 ? .0001 : 10.0;
@@ -302,7 +302,7 @@ class Release0006 extends Component {
   };
 
   forceRotate() {
-    const {camera} = this;
+    const { camera } = this;
     // forced rotation under tentacle
     camera.rotation.x = this.rotationRadius * Math.cos(this.rotationAngle);
     camera.rotation.z = this.rotationRadius * Math.sin(this.rotationAngle);
@@ -310,7 +310,7 @@ class Release0006 extends Component {
   }
 
   advanceOrbitRotation() {
-    const {camera, scene} = this;
+    const { camera, scene } = this;
     // forced rotation under tentacle
     camera.position.x = this.orbitRadius * Math.cos(this.rotationAngle);
     camera.position.y = this.orbitRadius * Math.sin(this.rotationAngle);
@@ -321,8 +321,8 @@ class Release0006 extends Component {
 
 
   setSongState() {
-    const {audioElement} = this;
-    const {mode} = this.state;
+    const { audioElement } = this;
+    const { mode } = this.state;
     const curTime = audioElement.currentTime;
     if (curTime >= SECTION_1_START && curTime < SECTION_2_START && mode != UNDERNEATH) {
       this.state.mode = UNDERNEATH;
@@ -347,7 +347,7 @@ class Release0006 extends Component {
 
 
   shootPhurbas() {
-    const {camera, cameraVector, phurba} = this;
+    const { camera, cameraVector, phurba } = this;
     // camera.getWorldDirection(cameraVector);
     // console.log("SHOOT PHURBA!!")
     // const combo = CONSTANTS.phurbaCombos[THREE.Math.randInt(0, CONSTANTS.phurbaCombos.length - 1)];
@@ -368,7 +368,7 @@ class Release0006 extends Component {
   }
 
   inView(pos) {
-    const {camera} = this;
+    const { camera } = this;
     camera.updateMatrix();
     camera.updateMatrixWorld();
     var frustum = new THREE.Frustum();
@@ -377,13 +377,13 @@ class Release0006 extends Component {
   }
 
   phurbasHavePassed() {
-    const {phurba} = this;
+    const { phurba } = this;
     const endPos = phurba.userData.endPos;
     return (phurba.position.distanceTo(endPos) < 1 && !this.inView(phurba.position))
   }
 
   advancePhurbas() {
-    const {phurba} = this;
+    const { phurba } = this;
     let speed = .005;
     let phurbaPos = phurba.position;
     let endPos = phurba.userData.endPos;
@@ -410,7 +410,7 @@ class Release0006 extends Component {
   }
 
   initReturnToUnderneath() {
-    const {camera} = this;
+    const { camera } = this;
     this.finalOrbitalPos = camera.position;
     const endPos = CONSTANTS.cameraStartPos;
     const timeToTravel = this.audioElement.duration - SECTION_3_OUTRO_START;
@@ -419,7 +419,7 @@ class Release0006 extends Component {
   }
 
   advanceTowardsUnderneath() {
-    const {camera} = this;
+    const { camera } = this;
     const endPos = CONSTANTS.cameraStartPos;
     let newX = this.lerp(camera.position.x, endPos.x, this.returningUnderneathSpeed);
     let newY = this.lerp(camera.position.y, endPos.y, this.returningUnderneathSpeed);
@@ -475,8 +475,8 @@ class Release0006 extends Component {
 
 
   renderScene() {
-    const {scene, renderer, camera, mixer, clock, cameraLight, octopus} = this;
-    const {mode, strobeOn, arePurbasShooting} = this.state;
+    const { scene, renderer, camera, mixer, clock, cameraLight, octopus } = this;
+    const { mode, strobeOn, arePurbasShooting } = this.state;
     const clockDelta = clock.getDelta();
     // if (this.audioElement && this.audioElement.currentTime < 95) {
     //   this.audioElement.currentTime = 95;
@@ -539,13 +539,12 @@ class Release0006 extends Component {
   render() {
     return (
       <Fragment>
-        <Menu />
-        <div ref={element => this.container = element}/>
-        <Footer
+        <Menu
           content={CONTENT[window.location.pathname]}
-          fillColor="white"
+          menuIconFillColor="white"
           audioRef={el => this.audioElement = el}
         />
+        <div ref={element => this.container = element} />
       </Fragment>
     );
   }

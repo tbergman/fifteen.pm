@@ -1,15 +1,15 @@
-import React, {Component, Fragment} from 'react';
-import {cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth} from "../Utils/Cloth";
-import {service} from "../Utils/service";
+import React, { Component, Fragment } from 'react';
+import { cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth } from "../Utils/Cloth";
+import { service } from "../Utils/service";
 
 import * as CANNON from 'cannon';
 import * as THREE from 'three-full';
 import './Release.css';
 import * as TWEEN from 'three-tween';
 import debounce from 'lodash/debounce';
-import {isMobile} from "../Utils/BrowserDetection";
-import {OrbitControls} from "../Utils/OrbitControls";
-import {CONTENT} from "../Main/Content"
+import { isMobile } from "../Utils/BrowserDetection";
+import { OrbitControls } from "../Utils/OrbitControls";
+import { CONTENT } from "../Main/Content"
 import Footer from "../Main/Footer/Footer"
 import Menu from '../Main/Menu/Menu';
 
@@ -42,7 +42,7 @@ class Release0002 extends Component {
     this.pole1 = new THREE.Mesh(this.poleGeo, this.poleMat);
     this.pole2 = new THREE.Mesh(this.poleGeo, this.poleMat);
 
-    this.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     this.spotLight1 = this.createSpotlight(0xFF7F00);
@@ -85,7 +85,7 @@ class Release0002 extends Component {
   }
 
   init = () => {
-    const {controls} = this;
+    const { controls } = this;
     this.initCannon();
     // if (!Detector.webgl) Detector.addGetWebGLMessage();
 
@@ -199,7 +199,7 @@ class Release0002 extends Component {
   }
 
   addBulbLights = () => {
-    const {scene} = this;
+    const { scene } = this;
 
     const sphere = new THREE.SphereBufferGeometry(3, 3, 3);
 
@@ -442,14 +442,14 @@ class Release0002 extends Component {
   }
 
   onWindowResize = debounce(() => {
-    const {camera, renderer} = this;
+    const { camera, renderer } = this;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   }, 1000);
 
   addLights = () => {
-    const {light, scene} = this;
+    const { light, scene } = this;
     scene.add(light);
   }
 
@@ -466,7 +466,7 @@ class Release0002 extends Component {
   }
 
   addSpotLights = () => {
-    const {scene, spotLight1, spotLight2, spotLight3} = this;
+    const { scene, spotLight1, spotLight2, spotLight3 } = this;
 
     spotLight1.position.set(150, 250, 450);
     spotLight2.position.set(0, 250, 350);
@@ -490,7 +490,7 @@ class Release0002 extends Component {
   }
 
   addNet = () => {
-    const {pole1, pole2, scene} = this;
+    const { pole1, pole2, scene } = this;
     // TODO soft body
     // reference: https://github.com/schteppe/goo-cannon-softbody
     scene.add(clothMesh);
@@ -511,7 +511,7 @@ class Release0002 extends Component {
   }
 
   addRenderer = () => {
-    const {renderer} = this;
+    const { renderer } = this;
     // renderer
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -534,7 +534,7 @@ class Release0002 extends Component {
   }
 
   animateSpotLights = () => {
-    const {tween, spotLight1, spotLight2, spotLight3} = this;
+    const { tween, spotLight1, spotLight2, spotLight3 } = this;
     tween(spotLight1);
     tween(spotLight2);
     tween(spotLight3);
@@ -569,12 +569,12 @@ class Release0002 extends Component {
       this.renderScene();
     } else if (!this.state.renderedOnce) {
       this.renderScene();
-      this.setState({renderedOnce: true});
+      this.setState({ renderedOnce: true });
     }
   }
 
   rotateCamera = (time) => {
-    const {camera, scene} = this;
+    const { camera, scene } = this;
 
     camera.position.x = Math.cos(time * .0001) * 1400;
     camera.position.z = Math.sin(time * .0001) * 1400;
@@ -582,7 +582,7 @@ class Release0002 extends Component {
   }
 
   updateRaycastIntersects = () => {
-    const {camera, scene, raycaster, mouse} = this;
+    const { camera, scene, raycaster, mouse } = this;
     raycaster.setFromCamera(mouse, camera);
     let intersects = raycaster.intersectObjects(scene.children);
 
@@ -632,7 +632,7 @@ class Release0002 extends Component {
   }
 
   renderScene = () => {
-    const {scene, camera, renderer} = this;
+    const { scene, camera, renderer } = this;
     TWEEN.update();
     this.updateCloth();
     this.updateRaycastIntersects();
@@ -644,14 +644,13 @@ class Release0002 extends Component {
   render() {
     return (
       <Fragment>
-        <Menu />
-        <div className="release">
-          <div ref={element => this.container = element}/>
-        </div>
-        <Footer
+        <Menu
           content={CONTENT[window.location.pathname]}
           audioRef={el => this.audioElement = el}
         />
+        <div className="release">
+          <div ref={element => this.container = element} />
+        </div>
       </Fragment>
     );
   }
