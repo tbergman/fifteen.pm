@@ -136,7 +136,7 @@ class Menu extends PureComponent {
 
   renderOverlayContent = () => {
     return (
-      <div className="overlay">
+      <div>
         <div
           className="overlay-message"
           style={{ "text-color": this.state.overlay.textColor }}
@@ -144,13 +144,9 @@ class Menu extends PureComponent {
           {this.state.overlay.message}
         </div>
         <div>
+          {!this.state.home && ( <div>{this.renderControls()}</div>)}
           <div>{this.renderEnterButton()}</div>
-          {!this.state.home && (
-            <div>
-            <div>{this.renderControls()}</div>
-            <div>{this.renderPurchaseLink()}</div>
-            </div>
-          )}
+          {!this.state.home && ( <div>{this.renderPurchaseLink()}</div>)}
         </div>
       </div>
     );
@@ -169,7 +165,7 @@ class Menu extends PureComponent {
         ariaHideApp={false}
         style={{
           overlay: {
-            backgroundColor: "rgba(255, 255, 255, 0.00)"
+            background: "transparent"
           },
           content: {
             top: "50%",
@@ -178,12 +174,14 @@ class Menu extends PureComponent {
             height: "80%",
             marginRight: "-50%",
             transform: "translate(-50%, -50%)",
-            backgroundColor: "rgba(0, 0, 0, 0)",
-            border: "none"
+            background: "transparent",
+            border: "none",
+            overflow: "hidden"
           }
         }}
         contentLabel="overlay"
       >
+      <div>
         <div className="overlay-blob">
           <svg
             ref={element => (this.svg = element)}
@@ -199,10 +197,11 @@ class Menu extends PureComponent {
               />
             </g>
           </svg>
-          <div className="overlay-content-container">
-            {this.renderOverlayContent()}
-          </div>
         </div>
+        <div className="overlay-content-container">
+          {this.renderOverlayContent()}
+        </div>
+      </div>
       </Modal>
     );
   };
