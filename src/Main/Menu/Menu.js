@@ -38,6 +38,10 @@ class Menu extends PureComponent {
       hasEnteredWorld: true
     });
     this.animateOverlay();
+    // this prop can be used as a callback from a parent component
+    if (this.props.didEnterWorld){
+      this.props.didEnterWorld();
+    }
   }
 
   afterOpenOverlay() {
@@ -153,9 +157,9 @@ class Menu extends PureComponent {
           {this.state.overlay.message}
         </div>
         <div>
-          {!this.state.home && ( <div>{this.renderControls()}</div>)}
+          {!this.state.home && (<div>{this.renderControls()}</div>)}
           <div>{this.renderEnterButton()}</div>
-          {!this.state.home && ( <div>{this.renderPurchaseLink()}</div>)}
+          {!this.state.home && (<div>{this.renderPurchaseLink()}</div>)}
         </div>
       </div>
     );
@@ -165,7 +169,7 @@ class Menu extends PureComponent {
     // const { message } = this.state.content;
     // const { fillColor } = this.props;
     return (
-      <div  onKeyPress={this.disableEvents.bind(this)}>
+      <div onKeyPress={this.disableEvents.bind(this)}>
         <Modal
           onMouseMove={this.disableEvents.bind(this)}
           isOpen={this.state.overlayOpen}
@@ -192,27 +196,27 @@ class Menu extends PureComponent {
           }}
           contentLabel="overlay"
         >
-        <div>
-          <div className="overlay-blob">
-            <svg
-              ref={element => (this.svg = element)}
-              width="100%"
-              height="100%"
-              viewBox="0 0 1098 724"
-              preserveAspectRatio="none"
-            >
-              <g fill={this.state.overlay.fillColor}>
-                <path
-                  ref={element => (this.path = element)}
-                  d={SHAPES[this.state.shapeIndex].path}
-                />
-              </g>
-            </svg>
+          <div>
+            <div className="overlay-blob">
+              <svg
+                ref={element => (this.svg = element)}
+                width="100%"
+                height="100%"
+                viewBox="0 0 1098 724"
+                preserveAspectRatio="none"
+              >
+                <g fill={this.state.overlay.fillColor}>
+                  <path
+                    ref={element => (this.path = element)}
+                    d={SHAPES[this.state.shapeIndex].path}
+                  />
+                </g>
+              </svg>
+            </div>
+            <div className="overlay-content-container">
+              {this.renderOverlayContent()}
+            </div>
           </div>
-          <div className="overlay-content-container">
-            {this.renderOverlayContent()}
-          </div>
-        </div>
         </Modal>
       </div>
     );
