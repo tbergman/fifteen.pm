@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import * as THREE from "three";
 import { isMobile } from '../../Utils/BrowserDetection';
 import debounce from "lodash/debounce";
@@ -13,7 +13,7 @@ import { CONTENT } from "../../Main/Content";
 import { assetPath4Images, sleep, keyPressIsFirstPersonControls } from './utils'
 import Menu from '../../Main/Menu/Menu';
 
-class Release0004 extends PureComponent {
+class Release0004 extends Component {
   constructor() {
     super();
     this.clock = new THREE.Clock();
@@ -81,6 +81,10 @@ class Release0004 extends PureComponent {
     document.removeEventListener("keydown", this.onKeyDown, false);
     this.container.removeChild(this.renderer.domElement);
   }
+
+  // didEnterWorld = () => {
+  //   this.hasEnteredWorld = true;
+  // }
 
   init = () => {
     this.initObject(C.SUN);
@@ -377,8 +381,8 @@ class Release0004 extends PureComponent {
   }
 
   renderScene = () => {
-    console.log("HAS ENTERED WORLD", this.hasEnteredWorld)
-    if (this.state.isLoaded) {//  && this.hasEnteredWorld) {
+    // console.log("HAS ENTERED WORLD", this.hasEntered)
+    if (this.state.isLoaded && this.hasEntered) {
       if (this.state.mindState === C.MIND_STATE_CHILLIN) {
         let now = new Date();
         this.setState({ chillinTime: (now - this.state.chillinStart) / 1000 })
@@ -395,7 +399,7 @@ class Release0004 extends PureComponent {
       this.updateCameraPos();
       this.renderer.render(this.scene, this.camera);
     }
-    
+
   }
 
   render() {
@@ -404,7 +408,7 @@ class Release0004 extends PureComponent {
         <Menu
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="white"
-          // ref = {element => this.hasEnteredWorld = element.state.hasEnteredWorld}
+          didEnterWorld={() => {this.hasEntered = true}}
         />
         <div className="release">
           <div ref={element => this.container = element}>
