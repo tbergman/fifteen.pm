@@ -63,15 +63,7 @@ class Menu extends PureComponent {
   }
 
   animateMenuIcon() {
-    const shape = SHAPES[this.state.shapeIndex];
-    let fromIcon, toIcon;
-    if (this.state.overlayOpen) {
-      fromIcon = MENU_ICON_CLOSE;
-      toIcon = MENU_ICON_OPEN;
-    } else {
-      fromIcon = MENU_ICON_OPEN;
-      toIcon = MENU_ICON_CLOSE;
-    }
+    let toIcon = this.state.overlayOpen ? MENU_ICON_OPEN : MENU_ICON_CLOSE;
     anime({
       targets: this.iconPath,
       easing: "linear",
@@ -198,7 +190,8 @@ class Menu extends PureComponent {
           ariaHideApp={false}
           style={{
             overlay: {
-              background: "transparent"
+              background: "transparent",
+              overflow: "visible"
             },
             content: {
               top: "45%",
@@ -220,7 +213,7 @@ class Menu extends PureComponent {
                 ref={element => (this.svg = element)}
                 width="100%"
                 height="100%"
-                viewBox="0 0 1098 724"
+                viewBox="-50 -50 1200 791"
                 preserveAspectRatio="none"
               >
                 <g fill={this.state.overlay.fillColor}>

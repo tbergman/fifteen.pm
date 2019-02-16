@@ -4,6 +4,8 @@
   margin-left: 70px;
   margin-right: 70px;
   position: relative;
+  overflow: visible;
+  z-index: 2;
 }
 
 .overlay-icon {
@@ -37,16 +39,13 @@
   top: 50%;
   left: 50%;
   width: 80%;
-  height: 80%;
+  height: 95%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
   background: transparent;
-  border: none;
+  overflow: visible;
+  z-index: 1;
 }
-
-/* the contents of the blob */
-
-/* generic menu item */
 
 /* the release  description */
 
@@ -128,161 +127,7 @@
   margin-bottom: -16px;
 }
 
-@media screen and (max-width: 700px) {
-  .overlay-message-text {
-    font-size: 14px;
-    line-height: 0.66em;
-  }
-  .overlay-control-instructions {
-    font-size: 10px;
-  }
-  .overlay-button {
-    font-size: 12px;
-  }
-  .overlay-control-icon {
-    width: 100px;
-    margin-left: 20px;
-  }
-  .overlay-controls-container > .overlay-control-item {
-    width: 100px;
-    height: 100px;
-  }
-}
-
-/* the i/x icon */
-.overlay-content {
-  margin-top: 140px;
-  margin-left: 70px;
-  margin-right: 70px;
-  position: relative;
-}
-
-.overlay-icon {
-  width: 69px;
-  height: 69px;
-  position: absolute;
-  margin-right: 27px;
-  margin-top: 27px;
-  top: 0;
-  right: 0;
-  cursor: pointer;
-  opacity: 0.25;
-  z-index: 999999;
-}
-
-.overlay-icon:hover {
-  opacity: 0.5;
-}
-
-.overlay-icon-open {
-  opacity: 0.5;
-}
-
-.overlay-icon-open:hover {
-  opacity: 0.75;
-}
-
-/* the blob */
-.overlay-blob {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 80%;
-  height: 80%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-  background: transparent;
-  border: none;
-}
-
-/* the contents of the blob */
-
-/* generic menu item */
-
-.overlay-content {
-  z-index: 99999999999;
-}
-
-/* the release  description */
-
-.overlay-message-container {
-  margin-top: %;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-.overlay-message-container > .overlay-message {
-  font-size: 20px;
-  font-weight: 200;
-  margin-top: 3%;
-  max-width: 600px;
-}
-
-.overlay-message:hover {
-  cursor: auto;
-}
-
-/* the control instructions */
-
-.overlay-controls-container {
-  margin-top: 5%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.overlay-controls-container > .overlay-control-item {
-  width: 150px;
-  height: 150px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.overlay-control-icon {
-  width: 150px;
-  margin-left: 30px;
-}
-
-.overlay-control-instructions {
-  font-size: 14px;
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-top: -2px;
-  text-align: center;
-}
-
-/* the smiley button */
-
-.overlay-button-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.overlay-button-container > .overlay-button {
-  height: 120px;
-  width: 120px;
-  text-transform: uppercase;
-  font-size: 24px;
-  text-align: center;
-}
-
-.overlay-button:hover {
-  cursor: pointer;
-  opacity: 0.5;
-}
-
-.overlay-button-icon {
-  font-size: 80px;
-  line-height: 36px;
-  margin-bottom: -16px;
-}
+/* media calls */
 
 @media screen and (max-width: 1000px) {
   .overlay-message-container > .overlay-message {
@@ -338,6 +183,7 @@
   .overlay-controls-container > .overlay-control-item {
     width: 80px;
     height: 80px;
+    margin-bottom: 20px;
   }
   .overlay-control-instructions {
     font-size: 10px;
