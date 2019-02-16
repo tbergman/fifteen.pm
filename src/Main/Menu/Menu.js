@@ -16,6 +16,12 @@ class Menu extends PureComponent {
     hasEnteredWorld: false
   };
 
+  static defaultProps = {
+    overlayOpen: true,
+    renderPlayer: true,
+    loading: true
+  };
+
   componentDidMount() {
     this.setState({ overlayOpen: this.props.overlayOpen });
     this.animateOverlay();
@@ -111,7 +117,6 @@ class Menu extends PureComponent {
           <a
             style={{ color: this.state.overlay.textColor }}
             href={this.state.overlay.purchaseLink}
-            href={this.state.overlay.purchaseLink}
             target="_blank"
           >
             BUY ME
@@ -132,7 +137,7 @@ class Menu extends PureComponent {
             ☻
           </span>
           <br />
-          <span>ENTER</span>
+          <span>{this.state.home || this.state.hasEnteredWorld ? 'CLOSE' : 'ENTER'}</span>
         </div>
       </div>
     );
@@ -247,11 +252,4 @@ class Menu extends PureComponent {
   };
 }
 
-Menu.defaultProps = {
-  overlayOpen: true,
-  renderPlayer: true,
-  loading: true,
-  fillColor: "#ffffff",
-  menuIconFillColor: "#ffffff"
-};
 export default Menu;

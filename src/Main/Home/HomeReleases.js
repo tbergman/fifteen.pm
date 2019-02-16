@@ -260,10 +260,10 @@ class Home extends PureComponent {
     return (
       <Fragment>
         <Menu
-        menuOpen={false}
+        overlayOpen={false}
         renderPlayer={false}
         />
-        <div ref={element => this.container = element}/>
+        <div className="release" ref={element => this.container = element}/>
       </Fragment>
     );
   }

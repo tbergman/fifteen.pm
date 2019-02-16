@@ -9,8 +9,7 @@ import * as TWEEN from 'three-tween';
 import debounce from 'lodash/debounce';
 import { isMobile } from "../Utils/BrowserDetection";
 import { OrbitControls } from "../Utils/OrbitControls";
-import { CONTENT } from "../Main/Content"
-import Footer from "../Main/Footer/Footer"
+import { CONTENT } from "../Main/Content";
 import Menu from '../Main/Menu/Menu';
 
 /* this handles number of segments in cloth , TO DO fix this */

@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import {isMobile} from '../../Utils/BrowserDetection';
 import {makeSphere, assetPath4Objects, multiSourceVideo} from './utils'
 
 export const SCREEN_WIDTH = window.innerWidth;

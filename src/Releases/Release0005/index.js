@@ -5,7 +5,6 @@ import { OrbitControls } from "../../Utils/OrbitControls";
 import { CONSTANTS } from "./constants";
 import { Reflector } from '../../Utils/Reflector';
 import { Water } from '../../Utils/Water2';
-import Footer from '../../Main/Footer/Footer';
 import GLTFLoader from "three-gltf-loader";
 import { loadGLTF } from "../../Utils/Loaders";
 import { assetPath } from "../../Utils/assets";
