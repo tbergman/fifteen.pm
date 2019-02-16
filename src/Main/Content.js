@@ -13,9 +13,9 @@ export const CONTENT = {
     overlay: {
       message:
         "globally.ltd invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound, permeating the web with a sense of hypnotic wonderment.",
-      iconColor: '#fff',
+      iconColor: 'white',
       fillColor: 'rgba(0, 0, 0, 0.5)',
-      textColor: '#fff'
+      textColor: 'white'
     }
   },
   "/1": {
@@ -31,7 +31,7 @@ export const CONTENT = {
         'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
       purchaseLink: "https://gltd.bandcamp.com/track/wun-4-jas",
       iconColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.5)',
+      fillColor: 'rgba(255,105,180, 0.5)',
       textColor: '#fff',
       controls: [
         {
@@ -82,7 +82,7 @@ export const CONTENT = {
       purchaseLink: "https://gltd.bandcamp.com/track/lets-beach",
       iconColor: 'red',
       fillColor: 'rgba(255, 0, 0, 0.7)',
-      textColor: '#fff',
+      textColor: 'white',
       controls: [
         {
           icon: Hover,
@@ -129,11 +129,11 @@ export const CONTENT = {
         },
         {
           icon: Click,
-          instructions: "click to advance/return to flight path"
+          instructions: "click to advance flight path"
         },
         {
           icon: ArrowKeys,
-          instructions: "when inside a world, use arrow keys to fly around"
+          instructions: "use arrow keys to fly around"
         },
         {
           icon: NoPhone,
