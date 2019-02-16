@@ -6,7 +6,6 @@ import debounce from 'lodash/debounce';
 import './Release.css';
 
 import { CONTENT } from "../Main/Content"
-import Footer from "../Main/Footer/Footer"
 import Menu from '../Main/Menu/Menu';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 
