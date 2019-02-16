@@ -214,14 +214,14 @@ class Menu extends PureComponent {
   };
 
   renderPlayer = () => {
-    const { content, menuIconFillColor, audioRef, isPlaying } = this.props;
+    const { content, audioRef } = this.props;
     const { hasEnteredWorld } = this.state;
     if (this.props.renderPlayer) {
       return (
         <Player
           trackList={content.tracks}
           message={content.artist}
-          fillColor={menuIconFillColor}
+          fillColor={content.overlay.iconColor}
           audioRef={audioRef}
           paused={!hasEnteredWorld}
         />
