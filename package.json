@@ -59,6 +59,7 @@
     "dual-fisheye-to-equirectangular": "scripts/dual-fisheye-to-equirectangular.sh"
   },
   "devDependencies": {
+    "anime": "^0.1.2",
     "cannon": "^0.6.2",
     "gpucomputationrender-threejs": "^1.0.0",
     "lodash": "^4.17.10",
@@ -73,7 +74,8 @@
     "three-full": "^11.3.2",
     "three-gltf-loader": "^1.96.0",
     "three-reflector": "^1.0.2",
-    "three-tween": "^1.0.0"
+    "three-tween": "^1.0.0",
+    "upgrade": "^1.1.0"
   },
   "jest": {
     "collectCoverageFrom": [

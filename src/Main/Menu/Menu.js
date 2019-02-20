@@ -1,3 +1,4 @@
+// BRIAN
 import React, { PureComponent, Fragment } from "react";
 import Modal from "react-modal";
 import Player from "../Player/Player";
@@ -26,13 +27,13 @@ class Menu extends PureComponent {
     this.setState({ overlayOpen: this.props.overlayOpen });
   }
 
-  toggleOverlay(e) {
+  toggleOverlay = (e) => {
     e.preventDefault();
     this.setState({
       overlayOpen: !this.state.overlayOpen,
       hasEnteredWorld: true
     });
-    this.animateMenuIcon();
+    // this.animateMenuIcon();
     // this prop can be used as a callback from a parent component
     if (this.props.didEnterWorld) {
       this.props.didEnterWorld();
@@ -63,33 +64,29 @@ class Menu extends PureComponent {
   }
 
   animateMenuIcon() {
-    let toIcon = this.state.overlayOpen ? MENU_ICON_OPEN : MENU_ICON_CLOSE;
-    anime({
-      targets: this.iconPath,
-      easing: "linear",
-      d: [{ value: toIcon, duration: 300 }],
-      loop: false
-    });
+    // let toIcon = this.state.overlayOpen ? MENU_ICON_OPEN : MENU_ICON_CLOSE;
+    // anime({
+    //   targets: this.iconPath,
+    //   easing: "linear",
+    //   d: [{ value: toIcon, duration: 300 }],
+    //   loop: false
+    // });
   }
 
-  renderMenuIcon = () => {
+  renderInfoIcon = () => {
     const icon = (
       <svg width="100%" height="100%" viewBox="0 0 100 100">
         <g fill={this.state.overlay.iconColor}>
           <path
             ref={el => (this.iconPath = el)}
-            d={this.state.overlayOpen ? MENU_ICON_CLOSE : MENU_ICON_OPEN}
+            d={MENU_ICON_OPEN}
           />
         </g>
       </svg>
     );
-    let iconClassName = "overlay-icon";
-    if (this.state.overlayOpen) {
-      iconClassName = iconClassName + " overlay-icon-open";
-    }
     return (
       <div
-        className={iconClassName}
+        className="overlay-icon"
         onClick={this.toggleOverlay.bind(this)}
         style={isNoUIMode() ? { display: "none" } : {}}
       >
@@ -99,81 +96,75 @@ class Menu extends PureComponent {
   };
 
   renderControls = () => {
-    const controls = this.state.overlay.controls.map(c => (
-      <div className="overlay-control-item">
-        <div className="overlay-control-icon">
+    const controls = this.state.overlay.controls.map((c, i) => (
+      <div className="control-item" key={i}>
+        <div className="control-icon">
           <c.icon fillColor={this.state.overlay.textColor} />
         </div>
         <div
-          className="overlay-control-instructions"
+          className="control-instructions overlay-text"
           style={{ color: this.state.overlay.textColor }}
         >
           {c.instructions}
         </div>
       </div>
     ));
-    return <div className="overlay-controls-container ">{controls}</div>;
+    return <div className="overlay-controls">{controls}</div>;
   };
 
-  renderButton = () => {
-    let buttonText, buttonIcon;
-    if (this.state.home || !this.state.hasEnteredWorld) {
-      buttonIcon = <span onClick={this.toggleOverlay.bind(this)}>☻</span>;
-      buttonText = (
-        <span onClick={this.toggleOverlay.bind(this)}>
-          {this.state.home ? "ENTER" : "START"}
-        </span>
-      );
-    } else {
-      buttonIcon = (
-        <a
-          style={{ color: this.state.overlay.textColor }}
-          href={this.state.overlay.purchaseLink}
-          target="_blank"
-        >
-          ☻
-        </a>
-      );
-      buttonText = (
-        <a
-          style={{ color: this.state.overlay.textColor }}
-          href={this.state.overlay.purchaseLink}
-          target="_blank"
-        >
-        BUY
-        </a>
-      );
-    }
+  renderPurchaseLink() {
     return (
-      <div className="overlay-button-container">
-        <div
-          className="overlay-button"
+      <div className="purchase-container">
+        <a
+          className="purchase-icon-link purchase-link overlay-text"
+          target="_blank"
+          href={this.state.overlay.purchaseLink}
           style={{ color: this.state.overlay.textColor }}
         >
-          <div className="overlay-button-icon">{buttonIcon}</div>
-          <br />
-          <span className="overlay-button-text">{buttonText}</span>
-        </div>
+          &#x32E1;
+        </a>
+        <a
+          id="purchase-text-link"
+          className="purchase-link overlay-text"
+          target="_blank"
+          href={this.state.overlay.purchaseLink}
+          style={{ color: this.state.overlay.textColor }}
+        >
+          BUY ME
+        </a>
       </div>
     );
   };
 
-  renderOverlayContent = () => {
+  renderEnterButton() {
     return (
-      <Fragment>
-        <div className="overlay-message-container">
-          <div
-            className="overlay-message"
-            style={{ color: this.state.overlay.textColor }}
-          >
-            <span className="overlay-message-text">
-              {this.state.overlay.message}
-            </span>
-          </div>
+      <div className="enter-container">
+        <button
+          type="button"
+          style={{ "color": this.state.overlay.textColor }}
+          onClick={this.toggleOverlay.bind(this)}>
+          ENTER
+        </button>
+      </div>
+    );
+  };
+
+  renderOverlayContent() {
+    const { home, overlay: { textColor, message } } = this.state;
+
+    return (
+      <div className="overlay">
+        <div className="overlay-header" style={{ "textColor": textColor }}>
+          <div className="overlay-header-message">{message}</div>
         </div>
-        {!this.state.home && this.renderControls()}
-        {this.renderButton()}
-      </Fragment>
+        {!home && (
+          <Fragment>
+            {this.renderControls()}
+            {this.renderPurchaseLink()}
+            {this.renderEnterButton()}
+          </Fragment>
+        )}
+      </div>
     );
   };
 
@@ -181,52 +172,36 @@ class Menu extends PureComponent {
     // const { message } = this.state.content;
     // const { fillColor } = this.props;
     return (
-        <Modal
-          isOpen={this.state.overlayOpen}
-          appElement={this.appElement}
-          onAfterOpen={this.afterOpenOverlay.bind(this)}
-          onRequestClose={this.closeOverlay.bind(this)}
-          shouldCloseOnOverlayClick={true}
-          ariaHideApp={false}
-          style={{
-            overlay: {
-              background: "transparent",
-              overflow: "visible"
-            },
-            content: {
-              top: "45%",
-              left: "50%",
-              width: "100%",
-              height: "100%",
-              marginRight: "-50%",
-              transform: "translate(-50%, -50%)",
-              background: "transparent",
-              border: "none",
-              overflow: "visible"
-            }
-          }}
-          contentLabel="overlay"
-        >
-          <div>
-            <div className="overlay-blob">
-              <svg
-                ref={element => (this.svg = element)}
-                width="100%"
-                height="100%"
-                viewBox="-50 -50 1200 791"
-                preserveAspectRatio="none"
-              >
-                <g fill={this.state.overlay.fillColor}>
-                  <path
-                    ref={element => (this.path = element)}
-                    d={SHAPES[this.state.shapeIndex].path}
-                  />
-                </g>
-              </svg>
-            </div>
-            <div className='overlay-content'> {this.renderOverlayContent()}</div>
+      <Modal
+        isOpen={this.state.overlayOpen}
+        appElement={this.appElement}
+        onAfterOpen={this.afterOpenOverlay.bind(this)}
+        onRequestClose={this.closeOverlay.bind(this)}
+        shouldCloseOnOverlayClick={true}
+        ariaHideApp={false}
+        className="overlay"
+        overlayClassName="overlay-blob"
+      >
+        <div>
+          <div className="overlay-blob">
+            <svg
+              ref={element => (this.svg = element)}
+              width="100%"
+              height="100%"
+              viewBox="0 0 1098 724"
+              preserveAspectRatio="none"
+            >
+              <g fill={this.state.overlay.fillColor}>
+                <path
+                  ref={element => (this.path = element)}
+                  d={SHAPES[this.state.shapeIndex].path}
+                />
+              </g>
+            </svg>
           </div>
-        </Modal>
+          {this.renderOverlayContent()}
+        </div>
+      </Modal>
     );
   };
 
@@ -249,16 +224,19 @@ class Menu extends PureComponent {
   render = () => {
     return (
       <div>
-        {this.renderMenuIcon()}
+
         {this.state.overlayOpen && (
           <div
             ref={appElement => (this.appElement = appElement)}
-            className="overlay"
+            className="modal"
           >
             {this.renderOverlay()}
           </div>
         )}
-        {this.renderPlayer()}
+        <div className="footer">
+          {this.renderPlayer()}
+          {this.renderInfoIcon()}
+        </div>
       </div>
     );
   };
