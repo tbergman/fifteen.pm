@@ -1,234 +1,186 @@
-/* the i/x icon */
-.overlay-content {
-  margin-top: 140px;
-  margin-left: 70px;
-  margin-right: 70px;
+.footer {
+  position: absolute;
+  display: -ms-flexbox;
+  display: flex;
+  bottom: 0;
+  /* align-self: flex-end; */
+  /* height: 50%; */
+  width: 100%;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -ms-flex-align: start;
+  align-items: center;
+}
+
+.overlay {
+  width: 100%;
+  height: 100%;
   position: relative;
-  overflow: visible;
+  padding: 5rem;
   z-index: 2;
+  outline: none
+}
+
+.overlay-header {
+  font-size: 16px;
+  font-weight: 100;
+  margin-bottom: 2rem;
 }
 
 .overlay-icon {
-  width: 69px;
-  height: 69px;
-  position: absolute;
-  margin-right: 27px;
-  margin-top: 27px;
-  top: 0;
-  right: 0;
+  width: 20px;
+  height: 20px;
+  /* position: absolute; */
+  /* left: 0; */
+  bottom: 0;
+  margin-left: -20px;
+  margin-top: -8px;
+  z-index: 10001;
+  color: red;
+  /* display: flex; */
   cursor: pointer;
-  opacity: 0.25;
-  z-index: 999999;
 }
 
-.overlay-icon:hover {
-  opacity: 0.5;
+
+.overlay-button {
+  text-transform: uppercase;
+  top: 20px;
+  width: 200px;
 }
 
-.overlay-icon-open {
-  opacity: 0.5;
-}
 
-.overlay-icon-open:hover {
-  opacity: 0.75;
-}
-
-/* the blob */
-.overlay-blob {
+.overlay-blob { 
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 80%;
-  height: 95%;
+  width: 66%;
+  height: 66%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
   background: transparent;
-  overflow: visible;
+  border: none;
   z-index: 1;
 }
 
-/* the release  description */
+.overlay-blob svg {
+  position: absolute;
+  /* width: 175%;
+  height: 175%;
+  left: -25%; */
+}
 
-.overlay-message-container {
-  margin-top: 5%;
+.overlay-controls {
+  width: 77%;
+}
+
+.control-item {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-.overlay-message-container > .overlay-message {
-  font-size: 20px;
-  font-weight: 200;
-  margin-top: 3%;
-  max-width: 600px;
-}
-
-.overlay-message:hover {
-  cursor: auto;
-}
-
-/* the control instructions */
-
-.overlay-controls-container {
-  margin-top: 5%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
+  margin-bottom: 10px;
 }
 
-.overlay-controls-container > .overlay-control-item {
-  width: 150px;
-  height: 150px;
-  margin-top: 10px;
+.control-icon {
+  position: relative;
+  width: 80px;
+  height: 40px;
 }
 
-.overlay-control-icon {
-  width: 150px;
-  margin-left: 30px;
+.control-instructions {
+  font-size: 12px;
+  margin-left: -30px;
 }
 
-.overlay-control-instructions {
-  font-size: 14px;
-  margin-left: 5px;
-  margin-right: 5px;
-  text-align: center;
-}
-
-/* the smiley button */
-
-.overlay-button-container {
-  margin-top: 5%;
+.purchase-container {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
   align-items: center;
-}
-
-.overlay-button-container > .overlay-button {
-  height: 120px;
-  width: 120px;
   text-transform: uppercase;
-  font-size: 24px;
-  text-align: center;
+  font-size: 14px;
+  font-weight: 100;
 }
 
-.overlay-button:hover {
+.purchase-container:hover {
   cursor: pointer;
   opacity: 0.5;
 }
 
-.overlay-button-icon {
-  font-size: 80px;
+.purchase-icon-link {
+  font-size: 26px;
   line-height: 36px;
-  margin-bottom: -16px;
+  margin: auto 20px auto 5px;
 }
 
-/* media calls */
-
-@media screen and (max-width: 1000px) {
-  .overlay-message-container > .overlay-message {
-    max-width: 500px;
-  }
+.enter-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  font-weight: 100;
 }
 
-@media screen and (max-width: 900px) {
-  .overlay-message-container > .overlay-message {
-    font-size: 20px;
-    font-weight: 200;
-    margin-top: 3%;
-    max-width: 450px;
+.enter-container button {
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border: 2px solid #ffffff;
+  background: transparent;
+}
+
+.enter-container button:hover {
+  opacity: 0.5;
+}
+
+.enter-icon-link {
+  font-size: 45px;
+  line-height: 36px;
+}
+
+@media screen and (max-width: 56em) {
+  .overlay-blob {
+    width: 100%;
   }
-  .overlay-message {
-    line-height: 0.9em;
-  }
-  .overlay-message-text {
-    font-size: 14px;
-  }
-  .overlay-control-instructions {
-    font-size: 10px;
-  }
-  .overlay-button-container {
-    margin-top: 30px;
+  .overlay-header-message {
+    font-size: 15px;
   }
   .overlay-button {
+    font-size: 17px;
+  }
+  .control-instructions {
     font-size: 12px;
+    margin-left: -20px;
   }
-  .overlay-control-icon {
-    width: 100px;
-    margin-left: 20px;
+  .purchase-container {
+    font-size: 10px;
   }
-  .overlay-controls-container > .overlay-control-item {
-    width: 100px;
-    height: 100px;
+  .enter-container {
+    font-size: 17px;
   }
 }
 
-@media screen and (max-width: 450px) {
-  .overlay-message {
-    line-height: 0.66em;
-    margin-bottom: 25px;
+@media screen and (max-width: 28em) {
+  .overlay-blob {
+    width: 100%;
   }
-  .overlay-message-text {
-    font-size: 14px;
-  }
-  .overlay-control-icon {
-    width: 80px;
-    margin-left: 16px;
-    margin-bottom: 0px;
-  }
-  .overlay-controls-container > .overlay-control-item {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-  }
-  .overlay-control-instructions {
-    font-size: 10px;
-  }
-  .overlay-button-container {
-    margin-top: 25px;
-  }
-  .overlay-button-icon {
-    font-size: 64px;
-    margin-bottom: -28px;
-  }
-  .overlay-button-text {
-    font-size: 16px;
-  }
-}
-
-@media screen and (max-width: 350px) {
-  .overlay-message {
-    line-height: 0.66em;
-    margin-bottom: 5px;
-  }
-  .overlay-message-text {
+  .overlay-header {
+    flex-direction: column;
+    align-items: flex-start;
     font-size: 12px;
   }
-  .overlay-control-icon {
-    width: 60px;
-    margin-left: 12px;
-    margin-bottom: 0px;
+  .overlay-header-message {
+    font-size: 12px;
   }
-  .overlay-controls-container > .overlay-control-item {
-    width: 60px;
-    height: 60px;
-  }
-  .overlay-control-instructions {
+  .control-instructions {
     font-size: 10px;
-    line-height: 0.9em;
+    margin-left: -20px;
   }
-  .overlay-button-container {
+  .purchase-container {
+    font-size: 10px;
     margin-top: 10px;
+    margin-left: 0;
   }
-  .overlay-button-icon {
-    font-size: 64px;
-    margin-bottom: -30px;
+  .purchase-icon-link{
+    font-size: 20px;
+    margin-right: 10px;
   }
-  .overlay-button-text {
-    font-size: 16px;
+  .enter-container {
+    font-size: 12px;
   }
 }

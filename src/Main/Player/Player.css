@@ -1,11 +1,12 @@
 #player-container {
     margin: 0%;
     z-index: 10000;
-    position: absolute;
-    left: 0;
-    bottom: 0px;
-    display: flex;
-    align-items: center;
+    /* position: absolute; */
+    display: -ms-flexbox;
+    bottom: 0;
+    /* display: flex; */
+    -ms-flex-align: center;
+    /* align-items: center; */
 }
 
 #play-button-container {
