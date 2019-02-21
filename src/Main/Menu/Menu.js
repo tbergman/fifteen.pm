@@ -27,7 +27,7 @@ class Menu extends PureComponent {
     this.setState({ overlayOpen: this.props.overlayOpen });
   }
 
-  toggleOverlay = (e) => {
+  toggleOverlay = e => {
     e.preventDefault();
     this.setState({
       overlayOpen: !this.state.overlayOpen,
@@ -37,7 +37,7 @@ class Menu extends PureComponent {
     if (this.props.didEnterWorld) {
       this.props.didEnterWorld();
     }
-  }
+  };
 
   afterOpenOverlay() {
     this.animateOverlay();
@@ -66,10 +66,7 @@ class Menu extends PureComponent {
     const icon = (
       <svg width="100%" height="100%" viewBox="0 0 100 100">
         <g fill={this.state.overlay.iconColor}>
-          <path
-            ref={el => (this.iconPath = el)}
-            d={MENU_ICON_OPEN}
-          />
+          <path ref={el => (this.iconPath = el)} d={MENU_ICON_OPEN} />
         </g>
       </svg>
     );
@@ -77,12 +74,12 @@ class Menu extends PureComponent {
       display: isNoUIMode() ? "none" : {},
       marginBottom: "20px",
       marginLeft: "20px"
-    }
+    };
     if (!this.state.home) {
       style = {
         marginLeft: this.props.content.tracks.length > 1 ? "0px" : "-40px",
         display: isNoUIMode() ? "none" : {}
-      }
+      };
     }
     return (
       <div
@@ -134,7 +131,7 @@ class Menu extends PureComponent {
         </a>
       </div>
     );
-  };
+  }
 
   renderEnterButton() {
     const { home, hasEnteredWorld } = this.state;
@@ -142,19 +139,26 @@ class Menu extends PureComponent {
       <div className="enter-container">
         <button
           type="button"
-          style={{ "color": this.state.overlay.textColor }}
-          onClick={this.toggleOverlay.bind(this)}>
-          { home || hasEnteredWorld ? 'CLOSE' : 'ENTER'}
+          style={{ color: this.state.overlay.textColor }}
+          onClick={this.toggleOverlay.bind(this)}
+        >
+          {/* Show 'ENTER' for releases on load.
+              Show 'CLOSE' for releases on additional modal opens 
+              Show 'CLOSE' for home page */}
+          {home || hasEnteredWorld ? "CLOSE" : "ENTER"}
         </button>
       </div>
     );
-  };
+  }
 
   renderOverlayContent() {
-    const { home, overlay: { textColor, message } } = this.state;
+    const {
+      home,
+      overlay: { textColor, message }
+    } = this.state;
     return (
       <div className="overlay">
-        <div className="overlay-header" style={{ "textColor": textColor }}>
+        <div className="overlay-header" style={{ textColor: textColor }}>
           <div className="overlay-header-message">{message}</div>
         </div>
         <Fragment>
@@ -164,7 +168,7 @@ class Menu extends PureComponent {
         </Fragment>
       </div>
     );
-  };
+  }
 
   renderOverlay = () => {
     return (
@@ -220,7 +224,6 @@ class Menu extends PureComponent {
   render = () => {
     return (
       <div>
-
         {this.state.overlayOpen && (
           <div
             ref={appElement => (this.appElement = appElement)}
