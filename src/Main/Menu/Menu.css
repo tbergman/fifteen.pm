@@ -16,7 +16,7 @@
   width: 100%;
   height: 100%;
   position: relative;
-  padding: 5rem;
+  padding: 5rem 8rem;
   z-index: 2;
   outline: none
 }
@@ -30,14 +30,12 @@
 .overlay-icon {
   width: 20px;
   height: 20px;
-  /* position: absolute; */
+  position: relative;
   /* left: 0; */
   bottom: 0;
-  margin-left: -20px;
-  margin-top: -8px;
+  margin-top: -20px;
   z-index: 10001;
   color: red;
-  /* display: flex; */
   cursor: pointer;
 }
 
@@ -53,7 +51,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 66%;
+  width: 100%;
   height: 66%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
@@ -137,7 +135,11 @@
   .overlay-blob {
     width: 100%;
   }
+  .overlay {
+    padding: 4rem 1rem;
+  }
   .overlay-header-message {
+    padding-top: 30px;
     font-size: 15px;
   }
   .overlay-button {
@@ -159,10 +161,17 @@
   .overlay-blob {
     width: 100%;
   }
+  .overlay {
+    padding: 4rem 1rem;
+  }
   .overlay-header {
     flex-direction: column;
     align-items: flex-start;
-    font-size: 12px;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  .overlay-controls {
+    display: none;
   }
   .overlay-header-message {
     font-size: 12px;
