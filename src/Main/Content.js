@@ -12,7 +12,7 @@ export const CONTENT = {
     home: true,
     overlay: {
       message:
-        "globally.ltd invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound, permeating the web with a sense of hypnotic wonderment.",
+        "globally.ltd invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
       iconColor: 'white',
       fillColor: 'rgba(0, 0, 0, 0.5)',
       textColor: 'white'
