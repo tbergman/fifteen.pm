@@ -10,10 +10,11 @@ import {
 export const CONTENT = {
   "/": {
     home: true,
-    overlay: {
+    theme: {
       message:
         "globally.ltd invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
       iconColor: 'white',
+      navColor: '#fff',
       fillColor: 'rgba(0, 0, 0, 0.5)',
       textColor: 'white'
     }
@@ -26,13 +27,14 @@ export const CONTENT = {
         id: "466084773"
       }
     ],
-    overlay: {
+    theme: {
       message:
         'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
       purchaseLink: "https://gltd.bandcamp.com/track/wun-4-jas",
       iconColor: '#fff',
       fillColor: 'rgba(255,105,180, 0.5)',
       textColor: '#fff',
+      navColor: '#fff',
       controls: [
         {
           icon: MouseMove,
@@ -49,13 +51,14 @@ export const CONTENT = {
         id: "475418370"
       }
     ],
-    overlay: {
+    theme: {
       message:
         "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly drum disturbance.",
       purchaseLink: "https://gltd.bandcamp.com/track/timer",
       iconColor: '#fff',
       fillColor: 'rgba(0, 0, 0, 0.5)',
       textColor: '#fff',
+      navColor: '#fff',
       controls: [
         {
           icon: MouseMove,
@@ -76,11 +79,12 @@ export const CONTENT = {
         id: "482138307"
       }
     ],
-    overlay: {
+    theme: {
       message:
         "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
       purchaseLink: "https://gltd.bandcamp.com/track/lets-beach",
       iconColor: 'red',
+      navColor: 'red',
       fillColor: 'rgba(255, 0, 0, 0.7)',
       textColor: 'white',
       controls: [
@@ -115,13 +119,14 @@ export const CONTENT = {
         id: "513518595"
       }
     ],
-    overlay: {
+    theme: {
       message:
         "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
       purchaseLink: "https://gltd.bandcamp.com/album/ep-1",
       iconColor: '#fff',
       fillColor: 'rgba(0, 0, 0, 0.5)',
       textColor: '#fff',
+      navColor: '#fff',
       controls: [
         {
           icon: MouseMove,
@@ -154,13 +159,14 @@ export const CONTENT = {
         id: "514219020"
       }
     ],
-    overlay: {
+    theme: {
       message:
         "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
       purchaseLink: "https://gltd.bandcamp.com/album/heaven",
       iconColor: '#fff',
       fillColor: 'rgba(0, 0, 0, 0.5)',
       textColor: '#fff',
+      navColor: '#fff',
       controls: [
         {
           icon: MouseMove,
@@ -181,45 +187,20 @@ export const CONTENT = {
         id: "529074519"
       }
     ],
-    overlay: {
+    theme: {
       message:
         "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
       purchaseLink: "https://gltd.bandcamp.com/track/escape-velocity",
       iconColor: '#fff',
       fillColor: 'rgba(0, 0, 0, 0.5)',
       textColor: '#fff',
+      navColor: '#fff',
       controls: [
         {
           icon: MouseMove,
           instructions: "move mouse to look around"
         }
       ]
-    }
-  },
-  "/test-dummy": {
-    artist: "DUMMY",
-    tracks: [
-      {
-        // These tracks are useful for devving on the player
-        title: "Fake short song 1",
-        id: "58432359" //287949388"
-      },
-      {
-        title: "Fake short song 2",
-        id: "177365673"
-      },
-      {
-        title: "Fake short song 3",
-        id: "177365185"
-      },
-      {
-        title: "Fake short song 4",
-        id: "177364838"
-      }
-    ],
-    overlay: {
-      message: "Dummy message",
-      purchaseLink: "https://gltd.bandcamp.com/album/ep-1"
     }
   }
 };
