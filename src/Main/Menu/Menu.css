@@ -33,7 +33,7 @@
   position: relative;
   /* left: 0; */
   bottom: 0;
-  margin-top: -20px;
+  margin-top: 10px;
   z-index: 10001;
   opacity: 0.5;
 }
@@ -100,6 +100,7 @@
   text-transform: uppercase;
   font-size: 14px;
   font-weight: 100;
+  width: 110px;
 }
 
 .purchase-container:hover {
@@ -141,7 +142,7 @@
     width: 100%;
   }
   .overlay {
-    padding: 4rem 1rem;
+    padding: 4rem 2rem;
   }
   .overlay-header-message {
     padding-top: 30px;
@@ -156,6 +157,9 @@
   }
   .purchase-container {
     font-size: 10px;
+  }
+  .purchase-icon-link {
+    margin-right: 30px;
   }
   .enter-container {
     font-size: 17px;
@@ -186,13 +190,14 @@
     margin-left: -20px;
   }
   .purchase-container {
+    width: 100px;
     font-size: 10px;
     margin-top: 10px;
     margin-left: 0;
   }
   .purchase-icon-link{
     font-size: 20px;
-    margin-right: 10px;
+    margin-right: 20px;
   }
   .enter-container {
     font-size: 12px;

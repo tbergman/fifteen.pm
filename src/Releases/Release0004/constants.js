@@ -3,17 +3,17 @@ import {makeSphere, assetPath4Objects, multiSourceVideo} from './utils'
 
 export const SCREEN_WIDTH = window.innerWidth;
 export const SCREEN_HEIGHT = window.innerHeight;
-export const CAMERA_SPEED = 0.00022;
+export const CAMERA_SPEED = 0.00016;
 export const FIRST_PERSON_CONTROL_SPEED = 0.13;
 export const FIRST_PERSON_CONTROL_MOVEMENT = 133;
-export const STARTING_POINT = [-1025, 0, -1025];
+export const STARTING_POINT = [-975, 0, -975];
 export const PROGRESS_EMOJI = ["🥤", "🥪", "🐈", "🌆", "<br/>", "◎"];
 export const MAX_START_PROGRESS_LENGTH = 5;
 export const MIN_LOAD_TIME = 10;
 export const VIDEO_STATE_PLAYING = 'playing';
 export const VIDEO_STATE_PAUSED = 'paused';
 export const MIND_STATE_CHILLIN_THRESHOLD = 5;
-export const CHILLIN_TIME = 6;
+export const CHILLIN_TIME = 12;
 export const MIND_STATE_CHILLIN = 'chillin';
 export const MIND_STATE_EXITING = 'exiting';
 export const MIND_STATE_FLYING = 'flying';
