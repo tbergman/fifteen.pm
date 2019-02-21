@@ -137,13 +137,14 @@ class Menu extends PureComponent {
   };
 
   renderEnterButton() {
+    const { home, hasEnteredWorld } = this.state;
     return (
       <div className="enter-container">
         <button
           type="button"
           style={{ "color": this.state.overlay.textColor }}
           onClick={this.toggleOverlay.bind(this)}>
-          ENTER
+          { home || hasEnteredWorld ? 'CLOSE' : 'ENTER'}
         </button>
       </div>
     );
@@ -156,13 +157,11 @@ class Menu extends PureComponent {
         <div className="overlay-header" style={{ "textColor": textColor }}>
           <div className="overlay-header-message">{message}</div>
         </div>
-        {!home && (
-          <Fragment>
-            {this.renderControls()}
-            {this.renderPurchaseLink()}
-            {this.renderEnterButton()}
-          </Fragment>
-        )}
+        <Fragment>
+          {!home && this.renderControls()}
+          {!home && this.renderPurchaseLink()}
+          {this.renderEnterButton()}
+        </Fragment>
       </div>
     );
   };
