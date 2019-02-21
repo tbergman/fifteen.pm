@@ -65,7 +65,7 @@ class Menu extends PureComponent {
 
   renderInfoIcon = () => {
     const icon = (
-      <svg width="100%" height="100%" viewBox="0 0 100 100">
+      <svg width="100%" height="100%" viewBox="0 0 111 100">
         <g fill={this.state.theme.iconColor}>
           <path ref={el => (this.iconPath = el)} d={MENU_ICON_OPEN} />
         </g>

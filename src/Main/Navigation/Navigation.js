@@ -3,10 +3,9 @@ import { CONTENT } from "../Content";
 import "./Navigation.css";
 
 class Navigation extends Component {
-  
   state = {
     currentLocation: window.location.pathname,
-    currentIndex: parseInt(window.location.pathname.replace('/', '')),
+    currentIndex: parseInt(window.location.pathname.replace("/", "")),
     totalReleases: Object.keys(CONTENT).length - 1
   };
 
@@ -15,56 +14,68 @@ class Navigation extends Component {
   };
 
   isHome = () => {
-    return this.state.currentLocation === '/';
-  }
+    return this.state.currentLocation === "/";
+  };
 
   getPrevReleasePath = () => {
     let prevRelease;
     if (this.isHome()) {
       prevRelease = "/" + this.state.totalReleases.toString();
     } else if (this.state.currentIndex == 1) {
-      prevRelease = "/"
+      prevRelease = "/";
     } else {
       prevRelease = "/" + (this.state.currentIndex - 1).toString();
     }
     return prevRelease;
-  }
+  };
 
   renderPrevArrow = () => (
-    <a className="arrow arrow-prev" href={this.getPrevReleasePath()}>
-      <svg viewBox="0 0 128 160" width="100%" height="100%">
-      <g fill={this.props.fillColor}>
+    <div className="arrow arrow-prev">
+      <svg
+        viewBox="0 0 25 25"
+        width="100%"
+        height="100%"
+        onClick={() => this.setLocation(this.getPrevReleasePath())}
+      >
+        <g className="arrow-path" fill={this.props.fillColor}>
           <path d="M14.41,16l5.3-5.29a1,1,0,0,0-1.42-1.42l-6,6a1,1,0,0,0,0,1.42l6,6a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z" />
         </g>
       </svg>
-    </a>
+    </div>
   );
 
   getNextReleasePath = () => {
     let nextRelease;
     if (this.state.currentIndex == this.state.totalReleases) {
-      nextRelease = "/"
+      nextRelease = "/";
     } else if (this.isHome()) {
-      nextRelease = "/1"
+      nextRelease = "/1";
     } else {
-      nextRelease = "/"  + (this.state.currentIndex + 1).toString();
+      nextRelease = "/" + (this.state.currentIndex + 1).toString();
     }
     return nextRelease;
-  }
+  };
 
   renderNextArrow = () => (
-    <a className="arrow arrow-next" href={this.getNextReleasePath()}>
-      <svg viewBox="0 0 128 160" width="100%" height="100%">
-        <g fill={this.props.fillColor}>
+    <div className="arrow arrow-next">
+      <svg
+        viewBox="0 0 25 25"
+        width="100%"
+        height="100%"
+        onClick={() => this.setLocation(this.getNextReleasePath())}
+      >
+        <g className="arrow-path" fill={this.props.fillColor}>
           <path d="M19.71,15.29l-6-6a1,1,0,0,0-1.42,1.42L17.59,16l-5.3,5.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l6-6A1,1,0,0,0,19.71,15.29Z" />
         </g>
       </svg>
-    </a>
+    </div>
   );
 
+  setLocation = path => {
+    window.location.pathname = path;
+  };
+
   render() {
-    console.log('CURRENT RELEASE')
-    console.log(this.state.currentIndex)
     return (
       <Fragment>
         {this.renderPrevArrow()}
