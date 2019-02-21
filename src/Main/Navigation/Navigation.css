@@ -1,0 +1,21 @@
+.arrow {
+  position: absolute;
+  top: 46%;
+  opacity: 0.5;
+  z-index: 999999;
+}
+
+.arrow-prev {
+  left: 0;
+  margin-left: -22px;
+}
+
+.arrow-next {
+  right: 0;
+  margin-right: -250px;
+}
+
+.arrow:hover {
+  opacity: 1;
+  cursor: pointer;
+}

@@ -2,6 +2,7 @@
 import React, { PureComponent, Fragment } from "react";
 import Modal from "react-modal";
 import Player from "../Player/Player";
+import Navigation from "../Navigation/Navigation";
 import anime from "../../Utils/Anime.min.js";
 import { SHAPES, MENU_ICON_OPEN } from "./MenuConstants";
 import { CONTENT } from "../Content";
@@ -11,7 +12,7 @@ import "./Menu.css";
 class Menu extends PureComponent {
   state = {
     home: CONTENT[window.location.pathname].home,
-    overlay: CONTENT[window.location.pathname].overlay,
+    theme: CONTENT[window.location.pathname].theme,
     shapeIndex: Math.floor(Math.random() * SHAPES.length),
     overlayOpen: true,
     hasEnteredWorld: false
@@ -65,7 +66,7 @@ class Menu extends PureComponent {
   renderInfoIcon = () => {
     const icon = (
       <svg width="100%" height="100%" viewBox="0 0 100 100">
-        <g fill={this.state.overlay.iconColor}>
+        <g fill={this.state.theme.iconColor}>
           <path ref={el => (this.iconPath = el)} d={MENU_ICON_OPEN} />
         </g>
       </svg>
@@ -93,14 +94,14 @@ class Menu extends PureComponent {
   };
 
   renderControls = () => {
-    const controls = this.state.overlay.controls.map((c, i) => (
+    const controls = this.state.theme.controls.map((c, i) => (
       <div className="control-item" key={i}>
         <div className="control-icon">
-          <c.icon fillColor={this.state.overlay.textColor} />
+          <c.icon fillColor={this.state.theme.textColor} />
         </div>
         <div
           className="control-instructions overlay-text"
-          style={{ color: this.state.overlay.textColor }}
+          style={{ color: this.state.theme.textColor }}
         >
           {c.instructions}
         </div>
@@ -115,8 +116,8 @@ class Menu extends PureComponent {
         <a
           className="purchase-icon-link purchase-link overlay-text"
           target="_blank"
-          href={this.state.overlay.purchaseLink}
-          style={{ color: this.state.overlay.textColor }}
+          href={this.state.theme.purchaseLink}
+          style={{ color: this.state.theme.textColor }}
         >
           &#x32E1;
         </a>
@@ -124,8 +125,8 @@ class Menu extends PureComponent {
           id="purchase-text-link"
           className="purchase-link overlay-text"
           target="_blank"
-          href={this.state.overlay.purchaseLink}
-          style={{ color: this.state.overlay.textColor }}
+          href={this.state.theme.purchaseLink}
+          style={{ color: this.state.theme.textColor }}
         >
           BUY ME
         </a>
@@ -139,7 +140,7 @@ class Menu extends PureComponent {
       <div className="enter-container">
         <button
           type="button"
-          style={{ color: this.state.overlay.textColor }}
+          style={{ color: this.state.theme.textColor }}
           onClick={this.toggleOverlay.bind(this)}
         >
           {/* Show 'ENTER' for releases on load.
@@ -154,7 +155,7 @@ class Menu extends PureComponent {
   renderOverlayContent() {
     const {
       home,
-      overlay: { textColor, message }
+      theme: { textColor, message }
     } = this.state;
     return (
       <div className="overlay">
@@ -191,7 +192,7 @@ class Menu extends PureComponent {
               viewBox="0 0 1098 724"
               preserveAspectRatio="none"
             >
-              <g fill={this.state.overlay.fillColor}>
+              <g fill={this.state.theme.fillColor}>
                 <path
                   ref={element => (this.path = element)}
                   d={SHAPES[this.state.shapeIndex].path}
@@ -213,13 +214,19 @@ class Menu extends PureComponent {
         <Player
           trackList={content.tracks}
           message={content.artist}
-          fillColor={content.overlay.iconColor}
+          fillColor={content.theme.iconColor}
           audioRef={audioRef}
           paused={!hasEnteredWorld}
         />
       );
     }
   };
+
+  renderNavigation = () => (
+    <Navigation
+      fillColor={this.state.theme.navColor}
+    />
+  );
 
   render = () => {
     return (
@@ -232,6 +239,9 @@ class Menu extends PureComponent {
             {this.renderOverlay()}
           </div>
         )}
+        <div className="navigation">
+          {this.renderNavigation()}
+        </div>
         <div className="footer">
           {this.renderPlayer()}
           {this.renderInfoIcon()}
