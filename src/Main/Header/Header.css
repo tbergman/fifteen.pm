@@ -32,6 +32,7 @@
     background-color: white;
     opacity: 0.2;
     -webkit-filter: blur(20px);
+    z-index: 1001;
 }
 
 #logo-light:hover {
