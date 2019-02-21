@@ -153,7 +153,7 @@ class Player extends Component {
           <circle cx="100" cy="100" r="50" fill="none" stroke="none" />
           <g>
             <use xlinkHref="#circlePath" fill="none" />
-            <text fill="#000" stroke="red">
+            <text fill={fillColor} stroke={fillColor}>
               <textPath xlinkHref="#circlePath" fill={fillColor}>{message}</textPath>
             </text>
           </g>
