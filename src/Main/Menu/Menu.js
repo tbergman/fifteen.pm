@@ -3,7 +3,7 @@ import React, { PureComponent, Fragment } from "react";
 import Modal from "react-modal";
 import Player from "../Player/Player";
 import anime from "../../Utils/Anime.min.js";
-import { SHAPES, MENU_ICON_CLOSE, MENU_ICON_OPEN } from "./MenuConstants";
+import { SHAPES, MENU_ICON_OPEN } from "./MenuConstants";
 import { CONTENT } from "../Content";
 import { isNoUIMode } from "../../Utils/modes";
 import "./Menu.css";
@@ -33,7 +33,6 @@ class Menu extends PureComponent {
       overlayOpen: !this.state.overlayOpen,
       hasEnteredWorld: true
     });
-    // this.animateMenuIcon();
     // this prop can be used as a callback from a parent component
     if (this.props.didEnterWorld) {
       this.props.didEnterWorld();
@@ -63,16 +62,6 @@ class Menu extends PureComponent {
     });
   }
 
-  animateMenuIcon() {
-    // let toIcon = this.state.overlayOpen ? MENU_ICON_OPEN : MENU_ICON_CLOSE;
-    // anime({
-    //   targets: this.iconPath,
-    //   easing: "linear",
-    //   d: [{ value: toIcon, duration: 300 }],
-    //   loop: false
-    // });
-  }
-
   renderInfoIcon = () => {
     const icon = (
       <svg width="100%" height="100%" viewBox="0 0 100 100">
@@ -84,11 +73,22 @@ class Menu extends PureComponent {
         </g>
       </svg>
     );
+    let style = {
+      display: isNoUIMode() ? "none" : {},
+      marginBottom: "20px",
+      marginLeft: "20px"
+    }
+    if (!this.state.home) {
+      style = {
+        marginLeft: this.props.content.tracks.length > 1 ? "0px" : "-40px",
+        display: isNoUIMode() ? "none" : {}
+      }
+    }
     return (
       <div
         className="overlay-icon"
         onClick={this.toggleOverlay.bind(this)}
-        style={isNoUIMode() ? { display: "none" } : {}}
+        style={style}
       >
         {icon}
       </div>
@@ -151,7 +151,6 @@ class Menu extends PureComponent {
 
   renderOverlayContent() {
     const { home, overlay: { textColor, message } } = this.state;
-
     return (
       <div className="overlay">
         <div className="overlay-header" style={{ "textColor": textColor }}>
@@ -169,8 +168,6 @@ class Menu extends PureComponent {
   };
 
   renderOverlay = () => {
-    // const { message } = this.state.content;
-    // const { fillColor } = this.props;
     return (
       <Modal
         isOpen={this.state.overlayOpen}
