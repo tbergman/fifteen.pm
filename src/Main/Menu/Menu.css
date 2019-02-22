@@ -189,7 +189,7 @@
     display: none;
   }
   .overlay-header-message {
-    font-size: 12px;
+    font-size: 11px;
   }
   .control-instructions {
     font-size: 10px;
@@ -206,6 +206,13 @@
     margin-right: 20px;
   }
   .enter-container {
-    font-size: 12px;
+    font-size: 10px;
   }
+}
+
+@media screen and (max-height: 400px) {
+  .overlay {
+    padding: 1rem 1rem;
+  }
+
 }
