@@ -58,7 +58,14 @@ class Release0005 extends Component {
     this.createTunnelMesh();
     this.createStatue();
     this.createCoin();
-
+    this.renderer = new THREE.WebGLRenderer({ antialias: true });
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    document.body.appendChild(this.renderer.domElement);
+    this.updateCameraView();
+    this.controls = new OrbitControls(this.mirrorLandCamera, this.renderer.domElement);
+    this.controls.maxDistance = 1500;
+    this.container.appendChild(this.renderer.domElement);
   }
 
   createCameras() {
@@ -413,14 +420,6 @@ class Release0005 extends Component {
   renderScene() {
     if (this.hasEntered) {
       if (!this.state.cameraInitialized) {
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.setPixelRatio(window.devicePixelRatio);
-        document.body.appendChild(this.renderer.domElement);
-        this.updateCameraView();
-        this.controls = new OrbitControls(this.mirrorLandCamera, this.renderer.domElement);
-        this.controls.maxDistance = 1500;
-        this.container.appendChild(this.renderer.domElement);
         this.setState({ cameraInitialized: true });
       }
       let delta = this.clock.getDelta();
