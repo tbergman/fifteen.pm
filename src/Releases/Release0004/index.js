@@ -1,17 +1,21 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment } from "react";
 import * as THREE from "three";
-import { isMobile } from '../../Utils/BrowserDetection';
+import { isMobile } from "../../Utils/BrowserDetection";
 import debounce from "lodash/debounce";
-import GLTFLoader from 'three-gltf-loader';
-import { FirstPersonControls } from '../../Utils/FirstPersonControls';
-import { loadVideo, loadImage, loadGLTF } from '../../Utils/Loaders';
+import GLTFLoader from "three-gltf-loader";
+import { FirstPersonControls } from "../../Utils/FirstPersonControls";
+import { loadVideo, loadImage, loadGLTF } from "../../Utils/Loaders";
 
 import * as C from "./constants";
-import '../Release.css';
-import './index.css';
+import "../Release.css";
+import "./index.css";
 import { CONTENT } from "../../Main/Content";
-import { assetPath4Images, sleep, keyPressIsFirstPersonControls } from './utils'
-import Menu from '../../Main/Menu/Menu';
+import {
+  assetPath4Images,
+  sleep,
+  keyPressIsFirstPersonControls
+} from "./utils";
+import Menu from "../../Main/Menu/Menu";
 
 class Release0004 extends Component {
   constructor() {
@@ -21,7 +25,12 @@ class Release0004 extends Component {
     this.elapsed = 0;
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x000000);
-    this.camera = new THREE.PerspectiveCamera(80, C.SCREEN_WIDTH / C.SCREEN_HEIGHT, 1, 3000);
+    this.camera = new THREE.PerspectiveCamera(
+      80,
+      C.SCREEN_WIDTH / C.SCREEN_HEIGHT,
+      1,
+      3000
+    );
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(C.SCREEN_WIDTH, C.SCREEN_HEIGHT);
@@ -44,7 +53,7 @@ class Release0004 extends Component {
     // this.raycaster = new THREE.Raycaster();
     // this.mouse = new THREE.Vector3();
     this.quaternion = new THREE.Quaternion();
-    this.raycaster = new THREE.Raycaster()
+    this.raycaster = new THREE.Raycaster();
     this.path = undefined;
     this.cameraRadians = 0;
     this.initLoader();
@@ -59,10 +68,11 @@ class Release0004 extends Component {
     hasChilled: false,
     isLoaded: false,
     chillinTime: 0,
+    hasEntered: false,
     chillinStart: new Date(),
     hasActivatedFirstPersonControls: false,
     curTrackId: CONTENT[window.location.pathname].tracks[0].id
-  }
+  };
 
   componentDidMount() {
     window.addEventListener("resize", this.onWindowResize, false);
@@ -82,10 +92,6 @@ class Release0004 extends Component {
     this.container.removeChild(this.renderer.domElement);
   }
 
-  // didEnterWorld = () => {
-  //   this.hasEnteredWorld = true;
-  // }
-
   init = () => {
     this.initObject(C.SUN);
     this.initPlanets();
@@ -94,7 +100,7 @@ class Release0004 extends Component {
     this.container.appendChild(this.renderer.domElement);
     this.playCurPlanet();
     this.lookAtCurPlanet();
-  }
+  };
 
   // event handlers
 
@@ -104,27 +110,29 @@ class Release0004 extends Component {
     this.camera.updateProjectionMatrix();
   }, 50);
 
-
-  onClick = (e) => {
+  onClick = e => {
     if (this.state.mindState === C.MIND_STATE_CHILLIN) {
-      this.enterWormhole()
+      this.enterWormhole();
     }
-  }
+  };
 
-  onKeyDown = (e) => {
+  onKeyDown = e => {
     if (keyPressIsFirstPersonControls(e.keyCode)) {
-      this.setState({ hasActivatedFirstPersonControls: true })
+      this.setState({ hasActivatedFirstPersonControls: true });
     }
-  }
+  };
 
   enterWormhole = () => {
     this.setState({
       mindState: C.MIND_STATE_EXITING,
       hasChilled: true,
       prevPlanetIdx: this.state.curPlanetIdx,
-      curPlanetIdx: this.state.curPlanetIdx + 1 === C.PLANETS.length ? 0 : this.state.curPlanetIdx + 1
-    })
-  }
+      curPlanetIdx:
+        this.state.curPlanetIdx + 1 === C.PLANETS.length
+          ? 0
+          : this.state.curPlanetIdx + 1
+    });
+  };
 
   stop = () => {
     cancelAnimationFrame(this.frameId);
@@ -133,65 +141,44 @@ class Release0004 extends Component {
       this.scene.remove(this.scene.children[i]);
       this.renderer.deallocateObject(this.scene.children[i]);
     }
-  }
+  };
 
   initLoader = () => {
     // define gltf loading manager
     this.manager = new THREE.LoadingManager();
-
-    this.manager.onStart = (url, itemsLoaded, itemsTotal) => {
-      this.emojiProgress = "";
-      this.progressBar.innerHTML = "<img class='stretch' src='" + assetPath4Images('wormhole.gif') + "'></img>"
-    };
-
-    this.manager.onProgress = (url, itemsLoaded, itemsTotal) => {
-      let d = this.clock.getDelta();
-      this.elapsed += d;
-    };
-
-    this.manager.onLoad = () => {
-      let sleepTime = C.MIN_LOAD_TIME - this.elapsed;
-      if (sleepTime > 0) {
-        sleep(1000 * sleepTime)
-      }
-      if (!isMobile) {
-        this.setState({ isLoaded: true });
-        this.progressBar.innerHTML = "";
-        this.progressBar.zIndex = -100;
-      }
-    };
-
-    this.manager.onError = (url) => {
-      this.progressBar.innerText = 'There was an error! Email dev@globally.ltd';
+    this.manager.onError = url => {
+      this.progressBar.innerText = "There was an error! Email dev@globally.ltd";
     };
     this.loader = new GLTFLoader(this.manager);
-  }
+  };
 
-  addObjectToScene = (obj) => {
+  addObjectToScene = obj => {
     this.scene.add(obj.scene);
     this.objects[obj.name] = obj;
-  }
+  };
 
-  initObject = (obj) => {
+  initObject = obj => {
     let output;
-    if (obj.type === 'gltf') {
+    if (obj.type === "gltf") {
       output = loadGLTF({
-        ...obj, loader: this.loader, onSuccess: (x) => {
-          this.addObjectToScene(x)
+        ...obj,
+        loader: this.loader,
+        onSuccess: x => {
+          this.addObjectToScene(x);
         }
       });
-    } else if (obj.type === 'video') {
+    } else if (obj.type === "video") {
       output = loadVideo({ ...obj, computeBoundingSphere: true });
       this.scene.add(output);
       this.objects[obj.name] = output;
-    } else if (obj.type === 'image') {
+    } else if (obj.type === "image") {
       output = loadImage(obj);
       this.scene.add(output);
       this.objects[obj.name] = output;
     }
     output = this.objects[obj.name];
     return output;
-  }
+  };
 
   // asteroids
 
@@ -199,11 +186,11 @@ class Release0004 extends Component {
     for (let i = 0; i < C.ASTEROIDS.length; i++) {
       this.initObject(C.ASTEROIDS[i]);
     }
-  }
+  };
 
   // planet utils
 
-  initPlanet = (obj) => {
+  initPlanet = obj => {
     this.initObject(obj);
     // down't load moons on mobile
     if (isMobile) {
@@ -212,38 +199,38 @@ class Release0004 extends Component {
     for (let i = 0; i < obj.moons.length; i++) {
       this.initObject(obj.moons[i]);
     }
-  }
+  };
 
   initPlanets = () => {
     for (let i = 0; i < C.PLANETS.length; i++) {
       this.initPlanet(C.PLANETS[i]);
     }
-  }
+  };
 
-  getPlanetByIdx = (idx) => {
+  getPlanetByIdx = idx => {
     return this.objects[C.PLANETS[idx].name];
-  }
+  };
 
   getCurPlanet = () => {
     return this.getPlanetByIdx(this.state.curPlanetIdx);
-  }
+  };
 
   lookAtCurPlanet = () => {
     let curPlanet = this.getCurPlanet();
     this.camera.lookAt(curPlanet.position);
-  }
+  };
 
   getPrevPlanet = () => {
     return this.getPlanetByIdx(this.state.prevPlanetIdx);
-  }
+  };
 
   playCurPlanet = () => {
     this.getCurPlanet().userData.video.play();
-  }
+  };
 
   pausePrevPlanet = () => {
     this.getPrevPlanet().userData.video.pause();
-  }
+  };
 
   pausePlanets = () => {
     for (let i = 0; i < C.PLANETS.length; i++) {
@@ -251,12 +238,11 @@ class Release0004 extends Component {
         this.getPlanetByIdx(i).userData.video.pause();
       }
     }
-  }
+  };
 
   // path
 
   initPath = () => {
-
     // add starting point
     let pathVertices = [new THREE.Vector3(...C.STARTING_POINT)];
     for (let i = 0; i < C.PLANETS.length; i++) {
@@ -270,18 +256,20 @@ class Release0004 extends Component {
       pathVertices.push(new THREE.Vector3(...C.ASTEROIDS[i].position));
     }
     // visit the last Planet
-    pathVertices.push(new THREE.Vector3(...C.PLANETS[C.PLANETS.length - 1].position));
+    pathVertices.push(
+      new THREE.Vector3(...C.PLANETS[C.PLANETS.length - 1].position)
+    );
     this.path = new THREE.CatmullRomCurve3(pathVertices);
     this.path.closed = true;
     this.path.arcLengthDivisions = C.PLANETS.length;
-  }
+  };
 
   updateSun = () => {
     let sun = this.objects[C.SUN.name];
     if (sun !== undefined) {
-      sun.scene.rotation.x += 0.01
+      sun.scene.rotation.x += 0.01;
     }
-  }
+  };
 
   updateAsteroids = () => {
     for (let i = 0; i < C.ASTEROIDS.length; i++) {
@@ -292,7 +280,7 @@ class Release0004 extends Component {
         asteroid.scene.rotation.z += C.ASTEROIDS[i].rotateZ;
       }
     }
-  }
+  };
 
   updatePlanets = () => {
     for (let i = 0; i < C.PLANETS.length; i++) {
@@ -300,10 +288,10 @@ class Release0004 extends Component {
       this.quaternion.setFromAxisAngle(C.PLANETS[i].axis, C.PLANETS[i].angle);
       planet.applyQuaternion(this.quaternion);
     }
-  }
+  };
 
   rotateAboutPoint = (obj, point, axis, theta, pointIsWorld) => {
-    pointIsWorld = (pointIsWorld === undefined) ? false : pointIsWorld;
+    pointIsWorld = pointIsWorld === undefined ? false : pointIsWorld;
     if (pointIsWorld) {
       obj.parent.localToWorld(obj.position); // compensate for world coordinate
     }
@@ -314,7 +302,7 @@ class Release0004 extends Component {
       obj.parent.worldToLocal(obj.position); // undo world coordinates compensation
     }
     obj.rotateOnAxis(axis, theta); // rotate the OBJECT
-  }
+  };
 
   updateMoons = () => {
     // down't update moons on mobile
@@ -328,34 +316,40 @@ class Release0004 extends Component {
         let moon = this.objects[moonName];
         if (moon !== undefined) {
           let position = new THREE.Vector3(...planet.position);
-          let pointIsWorld = true;// false;
+          let pointIsWorld = true; // false;
           this.rotateAboutPoint(
             moon.scene.children[0],
             position,
             planet.moons[j].axis,
             planet.moons[j].theta,
-            pointIsWorld);
+            pointIsWorld
+          );
         }
       }
     }
-  }
+  };
 
   updateCameraPos = () => {
     let curPlanet = this.getCurPlanet();
-    let distanceFromPlanet = this.camera.position.distanceTo(curPlanet.position);
+    let distanceFromPlanet = this.camera.position.distanceTo(
+      curPlanet.position
+    );
 
     // have we arrived at the next Planet?
     // todo: fix this constant
-    if (distanceFromPlanet < C.MIND_STATE_CHILLIN_THRESHOLD &&
+    if (
+      distanceFromPlanet < C.MIND_STATE_CHILLIN_THRESHOLD &&
       this.state.mindState !== C.MIND_STATE_EXITING &&
-      this.state.mindState !== C.MIND_STATE_CHILLIN) {
-
-      this.setState({ mindState: C.MIND_STATE_CHILLIN, hasChilled: true, chillinStart: new Date() });
-
+      this.state.mindState !== C.MIND_STATE_CHILLIN
+    ) {
+      this.setState({
+        mindState: C.MIND_STATE_CHILLIN,
+        hasChilled: true,
+        chillinStart: new Date()
+      });
     }
     // are we in transit ?
     if (this.state.mindState !== C.MIND_STATE_CHILLIN) {
-
       // check if we're exiting the previous Planet
       if (this.state.mindState !== C.MIND_STATE_FLYING) {
         if (this.state.curVideoState !== C.VIDEO_STATE_PLAYING) {
@@ -373,22 +367,24 @@ class Release0004 extends Component {
       let holePos = this.path.getPoint(this.cameraRadians);
       this.camera.position.set(holePos.x, holePos.y, holePos.z);
     }
-  }
+  };
 
   animate = () => {
     this.frameId = window.requestAnimationFrame(this.animate);
     this.renderScene();
-  }
+  };
 
   renderScene = () => {
     // console.log("HAS ENTERED WORLD", this.hasEntered)
-    if (this.state.isLoaded && this.hasEntered) {
+    if (this.state.hasEntered) {
       if (this.state.mindState === C.MIND_STATE_CHILLIN) {
         let now = new Date();
-        this.setState({ chillinTime: (now - this.state.chillinStart) / 1000 })
-        if (this.state.chillinTime >= C.CHILLIN_TIME &&
-          !this.state.hasActivatedFirstPersonControls) {
-          this.enterWormhole()
+        this.setState({ chillinTime: (now - this.state.chillinStart) / 1000 });
+        if (
+          this.state.chillinTime >= C.CHILLIN_TIME &&
+          !this.state.hasActivatedFirstPersonControls
+        ) {
+          this.enterWormhole();
         }
       }
       this.controls.update(this.clock.getDelta());
@@ -399,8 +395,17 @@ class Release0004 extends Component {
       this.updateCameraPos();
       this.renderer.render(this.scene, this.camera);
     }
+  };
 
-  }
+  renderLoadingGif = () => {
+    if (!this.state.hasEntered) {
+      return (
+        <div id={"progress-bar"}>
+          <img class="stretch" src={assetPath4Images("wormhole.gif")} />
+        </div>
+      );
+    }
+  };
 
   render() {
     return (
@@ -408,14 +413,15 @@ class Release0004 extends Component {
         <Menu
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="white"
-          didEnterWorld={() => {this.hasEntered = true}}
+          didEnterWorld={() => {
+            this.setState({ hasEntered: true });
+          }}
         />
         <div className="release">
-          <div ref={element => this.container = element}>
-            <div id={"progress-bar"} ref={element => this.progressBar = element} />
+          <div ref={element => (this.container = element)}>
+            {this.renderLoadingGif()}
           </div>
         </div>
-
       </Fragment>
     );
   }
