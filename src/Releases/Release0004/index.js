@@ -401,7 +401,7 @@ class Release0004 extends Component {
     if (!this.state.hasEntered) {
       return (
         <div id={"progress-bar"}>
-          <img class="stretch" src={assetPath4Images("wormhole.gif")} />
+          <img className="stretch" src={assetPath4Images("wormhole.gif")} />
         </div>
       );
     }
