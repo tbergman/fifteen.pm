@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import {CONTENT} from "../../Main/Content";
-import Footer from '../../Main/Footer/Footer';
+import Menu from '../../Main/Menu/Menu';
 import {assetPath} from "../../Utils/assets";
 import Unity, { UnityContent } from "react-unity-webgl";
 
@@ -30,10 +30,9 @@ class Release0007 extends Component {
     return (
       <Fragment>
         <Unity unityContent={this.unityContent} />;
-        <Footer
+        <Menu
           content={CONTENT[window.location.pathname]}
-          fillColor="black"
-          audioRef={el => this.audioElement = el}
+          menuIconFillColor="black"
         />
       </Fragment>
     );
