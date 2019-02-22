@@ -185,7 +185,7 @@
     font-size: 14px;
     margin-bottom: 5px;
   }
-  .overlay-controls {
+  .control-item.hide-in-mobile {
     display: none;
   }
   .overlay-header-message {
