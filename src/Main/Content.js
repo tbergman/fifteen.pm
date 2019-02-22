@@ -179,7 +179,7 @@ export const CONTENT = {
         "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
       purchaseLink: "https://gltd.bandcamp.com/album/heaven",
       iconColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.5)',
+      fillColor: 'rgba(40, 47, 175, 1)',
       textColor: '#fff',
       navColor: '#fff',
       controls: [
