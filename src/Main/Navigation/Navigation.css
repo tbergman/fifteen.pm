@@ -25,6 +25,7 @@
 
 .arrow-next {
   right: 0;
+  margin-right: -2px;
 }
 
 .arrow-next:hover {
