@@ -30,3 +30,13 @@
 .arrow-next:hover {
   transform: translate(-10px);
 }
+
+
+@media screen and (max-width: 28em) {
+
+  .arrow {
+    width: 25px;
+    height: 25px;
+  }
+
+}
