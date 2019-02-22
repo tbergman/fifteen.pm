@@ -229,7 +229,7 @@ class Menu extends PureComponent {
   );
 
   renderFooter = () => {
-    return (<div className="footer" id={this.state.hasEnteredWorld ? 'display' : 'hidden'}>
+    return (<div className="footer" id={this.state.hasEnteredWorld || this.state.home ? 'display' : 'hidden'}>
       {this.renderPlayer()}
       {this.renderInfoIcon()}
     </div>);
