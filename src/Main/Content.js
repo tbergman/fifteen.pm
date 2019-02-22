@@ -157,7 +157,8 @@ export const CONTENT = {
         },
         {
           icon: NoPhone,
-          instructions: "doesn't work on phones"
+          instructions: "doesn't work on phones",
+          alwaysShow: true
         }
       ]
     }

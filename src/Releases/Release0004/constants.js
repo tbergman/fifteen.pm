@@ -3,7 +3,7 @@ import {makeSphere, assetPath4Objects, multiSourceVideo} from './utils'
 
 export const SCREEN_WIDTH = window.innerWidth;
 export const SCREEN_HEIGHT = window.innerHeight;
-export const CAMERA_SPEED = 0.00016;
+export const CAMERA_SPEED = 0.00015;
 export const FIRST_PERSON_CONTROL_SPEED = 0.13;
 export const FIRST_PERSON_CONTROL_MOVEMENT = 133;
 export const STARTING_POINT = [-975, 0, -975];
@@ -180,7 +180,7 @@ export const PLANETS = [
       {
         type: 'gltf',
         axis: new THREE.Vector3(1, 0, 0),
-        theta: 0.07,
+        theta: 0.035,
         name: 'soda-can-moon',
         url: assetPath4Objects('soda_can/scene.gltf'),
         position: [850, 300, 900],

@@ -93,9 +93,10 @@ class Menu extends PureComponent {
     );
   };
 
-  renderControls = () => {
+  renderControlInfo = () => {
     const controls = this.state.theme.controls.map((c, i) => (
-      <div className="control-item" key={i}>
+      // if !alwaysShow key add hideInMobile
+      <div className={c.alwaysShow !== undefined ? "control-item" : "control-item hide-in-mobile"} key={i}>
         <div className="control-icon">
           <c.icon fillColor={this.state.theme.textColor} />
         </div>
@@ -163,7 +164,7 @@ class Menu extends PureComponent {
           <div className="overlay-header-message">{message}</div>
         </div>
         <Fragment>
-          {!home && this.renderControls()}
+          {!home && this.renderControlInfo()}
           {!home && this.renderPurchaseLink()}
           {this.renderEnterButton()}
         </Fragment>
