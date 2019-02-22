@@ -36,6 +36,8 @@
   margin-top: 10px;
   z-index: 10001;
   opacity: 0.5;
+  transition: 500ms all ease;
+  -webkit-transition: 500ms all ease;
 }
 
 .overlay-icon:hover {
