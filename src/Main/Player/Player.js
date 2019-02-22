@@ -1,10 +1,10 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import './Player.css'
 import { formatSoundcloudSrc } from "../../Utils/SoundcloudUtils";
 
-class Player extends Component {
+class Player extends PureComponent {
   state = {
-    pausedState: true,
+    paused: true, // Assume autoplay doesn't work.
     src: formatSoundcloudSrc(
       this.props.trackList[0].id,
       this.props.trackList[0].secretToken
@@ -19,23 +19,22 @@ class Player extends Component {
     type: 'audio/mpeg'
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.paused !== prevState.pausedState) {
-      return { paused: nextProps.paused };
-    }
-    else return null;
-  }
-
   componentDidMount() {
+    this.setState({ paused: true });
     this.updateAudioElement();
     if (!("ontouchstart" in document.documentElement)) {
       document.documentElement.className += "no-touch";
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if(prevProps.paused!==this.props.paused && !this.props.paused){
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevState.curTrackIdx !== this.state.curTrackIdx) {
+      this.updateAudioElement();
+      if (this.props.initialized && !this.state.paused) {
         this.handlePlay();
+      }
+    } else if (!prevProps.initialized && this.props.initialized) {
+      this.handlePlay();
     }
   }
 
@@ -64,8 +63,8 @@ class Player extends Component {
   }
 
   resetPlayer = () => {
-    if (this.isPlaying() || !this.state.pausedState) {
-      this.setState({ pausedState: false });
+    if (this.isPlaying()) {
+      this.setState({ paused: false });
     }
   }
 
@@ -73,7 +72,7 @@ class Player extends Component {
     this.setState({
       curTrackIdx: trackIdx,
       src: formatSoundcloudSrc(id, secretToken),
-      pausedState: false
+      paused: false
     });
   }
 
@@ -88,22 +87,23 @@ class Player extends Component {
   }
 
   handlePlay() {
-    this.setState({ pausedState: false }, () => {
+    console.log("HANDLING PLAY FOR ", this.state.curTrackIdx);
+    this.setState({ paused: false }, () => {
       this.state.audioElement.play();
     });
   }
 
   handlePause() {
-    this.setState({ pausedState: true }, () => {
+    this.setState({ paused: true }, () => {
       this.state.audioElement.pause();
     });
   }
 
   handlePlayButtonClick = (e) => {
     e.preventDefault();
-    !this.state.pausedState
-      ? this.handlePause()
-      : this.handlePlay()
+    this.state.paused
+      ? this.handlePlay()
+      : this.handlePause()
   }
 
   handlePlaylistClick = (e) => {
@@ -142,7 +142,7 @@ class Player extends Component {
   }
 
   renderPlayerButton() {
-    const { pausedState } = this.state;
+    const { paused } = this.state;
     const { message, fillColor } = this.props;
     return (
       <div id="play-button-container">
@@ -153,14 +153,14 @@ class Player extends Component {
           <circle cx="100" cy="100" r="50" fill="none" stroke="none" />
           <g>
             <use xlinkHref="#circlePath" fill="none" />
-            <text fill={fillColor} stroke={fillColor}>
+            <text fill="#000" stroke="red">
               <textPath xlinkHref="#circlePath" fill={fillColor}>{message}</textPath>
             </text>
           </g>
         </svg>
         <div
           onClick={this.handlePlayButtonClick}
-          className={pausedState ? 'button' : 'button paused'}
+          className={paused ? 'button' : 'button paused'}
           style={{ borderColor: `transparent transparent transparent ${fillColor}` }} />
       </div>
     );
@@ -183,6 +183,7 @@ class Player extends Component {
       <audio
         key={src}
         id="audio-player"
+        // autoPlay
         crossOrigin="anonymous"
         ref={audioRef}
       >

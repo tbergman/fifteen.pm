@@ -23,7 +23,8 @@ class Release0005 extends Component {
   state = {
     inWormhole: true,
     inMirrorLand: false,
-    justTwitiched: false
+    justTwitiched: false,
+    cameraInitialized: false
   }
 
   componentDidMount() {
@@ -57,14 +58,7 @@ class Release0005 extends Component {
     this.createTunnelMesh();
     this.createStatue();
     this.createCoin();
-    this.updateCameraView();
-    this.renderer = new THREE.WebGLRenderer({ antialias: true });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.setPixelRatio(window.devicePixelRatio);
-    document.body.appendChild(this.renderer.domElement);
-    this.controls = new OrbitControls(this.mirrorLandCamera, this.renderer.domElement);
-    this.controls.maxDistance = 1500;
-    this.container.appendChild(this.renderer.domElement);
+
   }
 
   createCameras() {
@@ -417,26 +411,39 @@ class Release0005 extends Component {
   }
 
   renderScene() {
-    let delta = this.clock.getDelta();
-    this.time += delta * 0.5;
-    if (this.currentTrack() === "Heaven") {
-      if (this.audioElement.currentTime) {
-        this.shouldPivotStatue()
+    if (this.hasEntered) {
+      if (!this.state.cameraInitialized) {
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(this.renderer.domElement);
+        this.updateCameraView();
+        this.controls = new OrbitControls(this.mirrorLandCamera, this.renderer.domElement);
+        this.controls.maxDistance = 1500;
+        this.container.appendChild(this.renderer.domElement);
+        this.setState({ cameraInitialized: true });
       }
+      let delta = this.clock.getDelta();
+      this.time += delta * 0.5;
+      if (this.currentTrack() === "Heaven") {
+        if (this.audioElement.currentTime) {
+          this.shouldPivotStatue()
+        }
+      }
+
+      this.shouldEnterWormhole();
+
+      let camera = this.currentCamera();
+      this.cameraLight.position.copy(camera.position);
+
+      if (this.state.inWormhole) {
+        this.updateWormholeTravel();
+      } else {
+        this.statueObj && this.animateSceneObjects();
+      }
+
+      this.renderer.render(this.scene, camera);
     }
-
-    this.shouldEnterWormhole();
-
-    let camera = this.currentCamera();
-    this.cameraLight.position.copy(camera.position);
-
-    if (this.state.inWormhole) {
-      this.updateWormholeTravel();
-    } else {
-      this.statueObj && this.animateSceneObjects();
-    }
-
-    this.renderer.render(this.scene, camera);
     window.requestAnimationFrame(this.renderScene.bind(this));
   }
 
@@ -447,6 +454,7 @@ class Release0005 extends Component {
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="white"
           audioRef={el => this.audioElement = el}
+          didEnterWorld={() => { this.hasEntered = true }}
         />
         <div ref={element => this.container = element} />
       </Fragment>
