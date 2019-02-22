@@ -56,7 +56,7 @@ export const CONTENT = {
         "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly drum disturbance.",
       purchaseLink: "https://gltd.bandcamp.com/track/timer",
       iconColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.5)',
+      fillColor: 'rgba(127, 0, 255, 0.5)',
       textColor: '#fff',
       navColor: '#fff',
       controls: [
