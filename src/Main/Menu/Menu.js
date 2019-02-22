@@ -216,7 +216,7 @@ class Menu extends PureComponent {
           message={content.artist}
           fillColor={content.theme.iconColor}
           audioRef={audioRef}
-          paused={!hasEnteredWorld}
+          initialized={hasEnteredWorld}
         />
       );
     }
@@ -227,6 +227,13 @@ class Menu extends PureComponent {
       fillColor={this.state.theme.navColor}
     />
   );
+
+  renderFooter = () => {
+    return (<div className="footer" id={this.state.hasEnteredWorld ? 'display' : 'hidden'}>
+      {this.renderPlayer()}
+      {this.renderInfoIcon()}
+    </div>);
+  }
 
   render = () => {
     return (
@@ -242,10 +249,8 @@ class Menu extends PureComponent {
         <div className="navigation">
           {this.renderNavigation()}
         </div>
-        <div className="footer">
-          {this.renderPlayer()}
-          {this.renderInfoIcon()}
-        </div>
+        {this.renderFooter()}
+        {/* {(this.state.hasEnteredWorld || this.state.home) && this.renderFooter()} */}
       </div>
     );
   };

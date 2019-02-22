@@ -300,6 +300,7 @@ class Release0001 extends PureComponent {
         <Menu
           content={CONTENT[window.location.pathname]}
           audioRef={el => this.audioElement = el}
+          didEnterWorld={() => { this.hasEntered = true }}
         />
         <div
           className="release"

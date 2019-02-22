@@ -106,18 +106,34 @@ export const CONTENT = {
   "/4": {
     artist: "JON CANNON",
     tracks: [
-      {
-        title: "Nothing (Blood)",
-        id: "507660189"
+      { // These tracks are useful for devving on the player
+        title: "Fake short song 1",
+        id: "58432359" //287949388"
       },
       {
-        title: "Miracle Center",
-        id: "513518607"
+        title: "Fake short song 2",
+        id: "177365673"
       },
       {
-        title: "Finesse",
-        id: "513518595"
+        title: "Fake short song 3",
+        id: "177365185"
+      },
+      {
+        title: "Fake short song 4",
+        id: "177364838"
       }
+      // {
+      //   title: "Nothing (Blood)",
+      //   id: "507660189"
+      // },
+      // {
+      //   title: "Miracle Center",
+      //   id: "513518607"
+      // },
+      // {
+      //   title: "Finesse",
+      //   id: "513518595"
+      // }
     ],
     theme: {
       message:
@@ -204,3 +220,27 @@ export const CONTENT = {
     }
   }
 };
+
+
+/*
+For devving, easy to swap in:
+
+tracks: [
+      { // These tracks are useful for devving on the player
+        title: "Fake short song 1",
+        id: "58432359" //287949388"
+      },
+      {
+        title: "Fake short song 2",
+        id: "177365673"
+      },
+      {
+        title: "Fake short song 3",
+        id: "177365185"
+      },
+      {
+        title: "Fake short song 4",
+        id: "177364838"
+      }
+],
+*/
