@@ -7,6 +7,7 @@ import {FresnelShader} from "../../Utils/FresnelShader";
 import {loadGLTF} from '../../Utils/Loaders';
 import {isMobile} from "../../Utils/BrowserDetection";
 import {assetPath} from "../../Utils/assets";
+import Menu from '../Menu/Menu';
 
 const DEFAULT_RADIUS = 3;
 const SCREEN_WIDTH = window.innerWidth;
@@ -258,7 +259,11 @@ class Home extends PureComponent {
   render() {
     return (
       <Fragment>
-        <div ref={element => this.container = element}/>
+        <Menu
+        overlayOpen={false}
+        renderPlayer={false}
+        />
+        <div className="release" ref={element => this.container = element}/>
       </Fragment>
     );
   }

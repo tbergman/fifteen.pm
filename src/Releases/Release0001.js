@@ -1,12 +1,12 @@
-import React, {PureComponent, Fragment} from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import * as THREE from "three";
-import {SimplexNoise} from '../Utils/SimplexNoise';
-import {GPUComputationRenderer} from "../Utils/GPUComputationRenderer";
+import { SimplexNoise } from '../Utils/SimplexNoise';
+import { GPUComputationRenderer } from "../Utils/GPUComputationRenderer";
 import debounce from 'lodash/debounce';
 import './Release.css';
 
-import {CONTENT} from "../Main/Content"
-import Footer from "../Main/Footer/Footer"
+import { CONTENT } from "../Main/Content"
+import Menu from '../Main/Menu/Menu';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 
 
@@ -31,7 +31,7 @@ class Release0001 extends PureComponent {
     super();
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, WIDTH / HEIGHT, 1, 3000);
-    this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     // this.meshBasicMaterial = new THREE.MeshBasicMaterial({color: 0xff00ff});
     this.mouseCoords = new THREE.Vector2();
     this.raycaster = new THREE.Raycaster();
@@ -39,7 +39,7 @@ class Release0001 extends PureComponent {
       uniforms: THREE.UniformsUtils.merge([
         THREE.ShaderLib['phong'].uniforms,
         {
-          heightmap: {value: null}
+          heightmap: { value: null }
         }
       ]),
       vertexShader: document.getElementById('waterVertexShader').textContent,
@@ -51,7 +51,7 @@ class Release0001 extends PureComponent {
     this.geometry = new THREE.PlaneBufferGeometry(WATER_BOUNDS, WATER_BOUNDS, WATER_WIDTH - 1, WATER_WIDTH - 1);
     this.waterMesh = new THREE.Mesh(this.geometry, this.shaderMaterial);
     this.geometryRay = new THREE.PlaneBufferGeometry(WATER_BOUNDS, WATER_BOUNDS, 1, 1);
-    this.meshRay = new THREE.Mesh(this.geometryRay, new THREE.MeshBasicMaterial({color: 0xFFFFFF, visible: false}));
+    this.meshRay = new THREE.Mesh(this.geometryRay, new THREE.MeshBasicMaterial({ color: 0xFFFFFF, visible: false }));
 
 
     this.gpuCompute = new GPUComputationRenderer(WATER_WIDTH, WATER_WIDTH, this.renderer);
@@ -112,7 +112,7 @@ class Release0001 extends PureComponent {
   }
 
   init = () => {
-    const {camera, renderer} = this;
+    const { camera, renderer } = this;
 
     camera.position.set(0, 150, 0);
     renderer.setSize(WIDTH, HEIGHT);
@@ -133,7 +133,7 @@ class Release0001 extends PureComponent {
   }
 
   addWater = () => {
-    const {shaderMaterial, waterMesh, gpuCompute, scene, meshRay, mousePos, heightmap0} = this;
+    const { shaderMaterial, waterMesh, gpuCompute, scene, meshRay, mousePos, heightmap0 } = this;
     const waterShininess = 60;
     const waterOpacity = 0.5;
 
@@ -173,9 +173,9 @@ class Release0001 extends PureComponent {
 
     this.gpuCompute.setVariableDependencies(this.heightmapVariable, [this.heightmapVariable]);
 
-    this.heightmapVariable.material.uniforms.mousePos = {value: mousePos};
-    this.heightmapVariable.material.uniforms.mouseSize = {value: 20.0};
-    this.heightmapVariable.material.uniforms.viscosityConstant = {value: 0.03};
+    this.heightmapVariable.material.uniforms.mousePos = { value: mousePos };
+    this.heightmapVariable.material.uniforms.mouseSize = { value: 20.0 };
+    this.heightmapVariable.material.uniforms.viscosityConstant = { value: 0.03 };
     this.heightmapVariable.material.defines.BOUNDS = WATER_BOUNDS.toFixed(1);
 
     var error = gpuCompute.init();
@@ -190,7 +190,7 @@ class Release0001 extends PureComponent {
   }
 
   addSun = () => {
-    const {sun, sun2, scene} = this;
+    const { sun, sun2, scene } = this;
     sun.position.set(300, 400, 175);
     scene.add(sun);
 
@@ -199,7 +199,7 @@ class Release0001 extends PureComponent {
   }
 
   addAmbientLight = () => {
-    const {ambientLight, scene} = this;
+    const { ambientLight, scene } = this;
     // two lights, an ambient to mimic reflected light
     // on the back side of the box as it passes in front of the light
     ambientLight.position.set(20, -1, 0);
@@ -207,14 +207,14 @@ class Release0001 extends PureComponent {
   }
 
   addLight = () => {
-    const {light, scene, camera} = this;
+    const { light, scene, camera } = this;
     light.position.set(0, 10, 0);
     scene.add(light);
     camera.lookAt(light.position);
   }
 
   fillTexture(texture) {
-    const {simplex} = this;
+    const { simplex } = this;
     const waterMaxHeight = 19;
     const waveRippleFactor = 0.95;
     const TEXTURE_WIDTH = WATER_WIDTH / 2;
@@ -257,7 +257,7 @@ class Release0001 extends PureComponent {
 
 
   renderScene = () => {
-    const {gpuCompute, renderer, camera, mouseCoords, meshRay, raycaster, freqArray, scene} = this;
+    const { gpuCompute, renderer, camera, mouseCoords, meshRay, raycaster, freqArray, scene } = this;
     const uniforms = this.heightmapVariable.material.uniforms;
     if (this.mouseMoved) {
       raycaster.setFromCamera(mouseCoords, camera);
@@ -297,18 +297,17 @@ class Release0001 extends PureComponent {
   render() {
     return (
       <Fragment>
+        <Menu
+          content={CONTENT[window.location.pathname]}
+          audioRef={el => this.audioElement = el}
+          didEnterWorld={() => { this.hasEntered = true }}
+        />
         <div
           className="release"
           id="release001"
           ref={(mount) => {
             this.mount = mount
           }}
-        />
-        <Footer
-          content={CONTENT[window.location.pathname]}
-          audioRef={el => this.audioElement = el}/>
-        {/*audioStream={el => this.state.audioStream = el}*/}
-        {/*useAudioStream={true}*/}
         />
       </Fragment>
     );

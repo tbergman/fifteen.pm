@@ -1,4 +1,4 @@
-const PROD_ASSET_URL = 'https://assets.globally.ltd'
+// const PROD_ASSET_URL = 'https://assets.globally.ltd'
 const DEV_ASSET_URL = '/assets/releases'
 
 export const assetPath = (path) => {

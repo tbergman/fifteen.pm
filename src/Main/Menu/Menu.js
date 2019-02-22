@@ -1,154 +1,260 @@
-import React, {PureComponent} from 'react';
-import anime from '../../Utils/Anime.min.js';
-import {SHAPES} from './MenuConstants';
-import {CONTENT} from '../Content'
-import './Menu.css';
+// BRIAN
+import React, { PureComponent, Fragment } from "react";
+import Modal from "react-modal";
+import Player from "../Player/Player";
+import Navigation from "../Navigation/Navigation";
+import anime from "../../Utils/Anime.min.js";
+import { SHAPES, MENU_ICON_OPEN } from "./MenuConstants";
+import { CONTENT } from "../Content";
+import { isNoUIMode } from "../../Utils/modes";
+import "./Menu.css";
 
 class Menu extends PureComponent {
   state = {
-    shapeIndex: Math.floor(Math.random() * 4),
-    message: CONTENT[window.location.pathname].message,
-    currentRel: window.location.pathname,
-    showMenu: false,
-    fillColor: window.location.pathname === '/3' ? 'red' : '#ffffff' // TODO centralize this lookup (See Logo.js)
-  }
+    home: CONTENT[window.location.pathname].home,
+    theme: CONTENT[window.location.pathname].theme,
+    shapeIndex: Math.floor(Math.random() * SHAPES.length),
+    overlayOpen: true,
+    hasEnteredWorld: false
+  };
+
+  static defaultProps = {
+    overlayOpen: true,
+    renderPlayer: true,
+    loading: true
+  };
 
   componentDidMount() {
-    this.windowLocation = window.location.pathname;
+    this.setState({ overlayOpen: this.props.overlayOpen });
   }
 
-  onMenuIconClick = (e) => {
+  toggleOverlay = e => {
     e.preventDefault();
-    e.stopPropagation();
     this.setState({
-      showMenu: !this.state.showMenu,
-    }, () => this.animateMenu());
-  }
-
-  handleLinkMouseOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const {idx, rel} = e.target.dataset;
-    this.setState({
-      shapeIndex: idx,
-      message: CONTENT[rel].message,
-      currentRel: rel
-    }, () => {
-      this.animateMenu();
+      overlayOpen: !this.state.overlayOpen,
+      hasEnteredWorld: true
     });
+    // this prop can be used as a callback from a parent component
+    if (this.props.didEnterWorld) {
+      this.props.didEnterWorld();
+    }
+  };
+
+  afterOpenOverlay() {
+    this.animateOverlay();
   }
 
-  renderMessage = () => {
-    const {message} = this.state.message;
-    return (
-      <div className="message">
-        {message}
-      </div>
-    )
+  closeOverlay() {
+    this.setState({ overlayOpen: false, hasEnteredWorld: true });
   }
 
-  handleLinkClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    this.setState({
-      message: CONTENT[this.windowLocation],
-    });
-    window.location = e.target.dataset.to;
-  }
-
-  animateMenu() {
-    const {shapeIndex} = this.state;
-
-    anime({
-      targets: this.svg,
-      duration: SHAPES[shapeIndex].animation.svg.duration,
-      easing: SHAPES[shapeIndex].animation.svg.easing,
-      elasticity: SHAPES[shapeIndex].animation.svg.elasticity || 0,
-      scaleX: SHAPES[shapeIndex].scaleX,
-      scaleY: SHAPES[shapeIndex].scaleY,
-      translateX: SHAPES[shapeIndex].tx + 'px',
-      translateY: SHAPES[shapeIndex].ty + 'px',
-      rotate: SHAPES[shapeIndex].rotate + 'deg'
-    });
-
+  animateOverlay() {
+    const shape = SHAPES[this.state.shapeIndex];
     anime({
       targets: this.path,
-      easing: 'linear',
-      d: [{value: SHAPES[shapeIndex].pathAlt, duration: 3000}, {value: SHAPES[shapeIndex].path, duration: 3000}],
+      easing: shape.easing,
+      elasticity: shape.elasticity || 0,
+      d: [
+        { value: shape.pathAlt, duration: shape.duration },
+        { value: shape.path, duration: shape.duration }
+      ],
       loop: true,
-      fill: {
-        value: SHAPES[shapeIndex].fill.color,
-        duration: SHAPES[shapeIndex].fill.duration,
-        easing: SHAPES[shapeIndex].fill.easing
-      },
-      direction: 'alternate'
+      direction: "alternate"
     });
   }
 
-  renderMenu() {
-    const {shapeIndex} = this.state;
-
+  renderInfoIcon = () => {
+    const icon = (
+      <svg width="100%" height="100%" viewBox="0 0 111 100">
+        <g fill={this.state.theme.iconColor}>
+          <path ref={el => (this.iconPath = el)} d={MENU_ICON_OPEN} />
+        </g>
+      </svg>
+    );
+    let style = {
+      display: isNoUIMode() ? "none" : {},
+      marginBottom: "20px",
+      marginLeft: "20px"
+    };
+    if (!this.state.home) {
+      style = {
+        marginLeft: this.props.content.tracks.length > 1 ? "0px" : "-40px",
+        display: isNoUIMode() ? "none" : {}
+      };
+    }
     return (
-      <main>
-        <div className="morph-wrap">
-          <svg ref={element => this.svg = element} className="morph" width="1400" height="770" viewBox="0 0 1400 770">
-            <path ref={element => this.path = element} d={SHAPES[shapeIndex].path}/>
-          </svg>
+      <div
+        className="overlay-icon"
+        onClick={this.toggleOverlay.bind(this)}
+        style={style}
+      >
+        {icon}
+      </div>
+    );
+  };
+
+  renderControlInfo = () => {
+    const controls = this.state.theme.controls.map((c, i) => (
+      // if !alwaysShow key add hideInMobile
+      <div className={c.alwaysShow !== undefined ? "control-item" : "control-item hide-in-mobile"} key={i}>
+        <div className="control-icon">
+          <c.icon fillColor={this.state.theme.textColor} />
         </div>
-      </main>
-    );
-  }
+        <div
+          className="control-instructions overlay-text"
+          style={{ color: this.state.theme.textColor }}
+        >
+          {c.instructions}
+        </div>
+      </div>
+    ));
+    return <div className="overlay-controls">{controls}</div>;
+  };
 
-  renderLinks() {
+  renderPurchaseLink() {
     return (
-      <div className="links">
-        <ul>
-          <li>{this.state.message}</li>
-        </ul>
+      <div className="purchase-container">
+        <a
+          className="purchase-icon-link purchase-link overlay-text"
+          target="_blank"
+          href={this.state.theme.purchaseLink}
+          style={{ color: this.state.theme.textColor }}
+        >
+          &#x32E1;
+        </a>
+        <a
+          id="purchase-text-link"
+          className="purchase-link overlay-text"
+          target="_blank"
+          href={this.state.theme.purchaseLink}
+          style={{ color: this.state.theme.textColor }}
+        >
+          BUY ME
+        </a>
       </div>
     );
   }
 
-  renderMenuIcon() {
-    const {fillColor} = this.state;
+  renderEnterButton() {
+    const { home, hasEnteredWorld } = this.state;
     return (
-      <div className="menu-icon" onClick={this.onMenuIconClick}>
-        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" x="0px" y="0px" viewBox="0 0 100 100"
-             enableBackground="new 0 0 100 100">
-          <g>
-            <g>
-              <path fillRule="evenodd" clipRule="evenodd" fill={fillColor}
-                    d="M6.407,19.206h87.221c0.777,0,1.407,0.63,1.407,1.407v2.814    c0,0.777-0.63,1.407-1.407,1.407H6.407C5.63,24.833,5,24.203,5,23.426v-2.814C5,19.836,5.63,19.206,6.407,19.206z"/>
-            </g>
-            <g>
-              <path fillRule="evenodd" clipRule="evenodd" fill={fillColor}
-                    d="M6.407,47.341h87.221c0.777,0,1.407,0.63,1.407,1.407v2.814    c0,0.777-0.63,1.407-1.407,1.407H6.407C5.63,52.969,5,52.339,5,51.562v-2.814C5,47.971,5.63,47.341,6.407,47.341z"/>
-            </g>
-            <g>
-              <path fillRule="evenodd" clipRule="evenodd" fill={fillColor}
-                    d="M6.407,75.477h87.221c0.777,0,1.407,0.63,1.407,1.407v2.814    c0,0.777-0.63,1.407-1.407,1.407H6.407C5.63,81.105,5,80.475,5,79.698v-2.814C5,76.107,5.63,75.477,6.407,75.477z"/>
-            </g>
-          </g>
-        </svg>
+      <div className="enter-container">
+        <button
+          type="button"
+          style={{ color: this.state.theme.textColor }}
+          onClick={this.toggleOverlay.bind(this)}
+        >
+          {/* Show 'ENTER' for releases on load.
+              Show 'CLOSE' for releases on additional modal opens 
+              Show 'CLOSE' for home page */}
+          {home || hasEnteredWorld ? "CLOSE" : "ENTER"}
+        </button>
       </div>
-    )
+    );
   }
 
-  render() {
+  renderOverlayContent() {
+    const {
+      home,
+      theme: { textColor, message }
+    } = this.state;
+    return (
+      <div className="overlay">
+        <div className="overlay-header" style={{ textColor: textColor }}>
+          <div className="overlay-header-message">{message}</div>
+        </div>
+        <Fragment>
+          {!home && this.renderControlInfo()}
+          {!home && this.renderPurchaseLink()}
+          {this.renderEnterButton()}
+        </Fragment>
+      </div>
+    );
+  }
+
+  renderOverlay = () => {
+    return (
+      <Modal
+        isOpen={this.state.overlayOpen}
+        appElement={this.appElement}
+        onAfterOpen={this.afterOpenOverlay.bind(this)}
+        onRequestClose={this.closeOverlay.bind(this)}
+        shouldCloseOnOverlayClick={true}
+        ariaHideApp={false}
+        className="overlay"
+        overlayClassName="overlay-blob"
+      >
+        <div>
+          <div className="overlay-blob">
+            <svg
+              ref={element => (this.svg = element)}
+              width="100%"
+              height="100%"
+              viewBox="0 0 1098 724"
+              preserveAspectRatio="none"
+            >
+              <g fill={this.state.theme.fillColor}>
+                <path
+                  ref={element => (this.path = element)}
+                  d={SHAPES[this.state.shapeIndex].path}
+                />
+              </g>
+            </svg>
+          </div>
+          {this.renderOverlayContent()}
+        </div>
+      </Modal>
+    );
+  };
+
+  renderPlayer = () => {
+    const { content, audioRef } = this.props;
+    const { hasEnteredWorld } = this.state;
+    if (this.props.renderPlayer) {
+      return (
+        <Player
+          trackList={content.tracks}
+          message={content.artist}
+          fillColor={content.theme.iconColor}
+          audioRef={audioRef}
+          initialized={hasEnteredWorld}
+        />
+      );
+    }
+  };
+
+  renderNavigation = () => (
+    <Navigation
+      fillColor={this.state.theme.navColor}
+    />
+  );
+
+  renderFooter = () => {
+    return (<div className="footer" id={this.state.hasEnteredWorld || this.state.home ? 'display' : 'hidden'}>
+      {this.renderPlayer()}
+      {this.renderInfoIcon()}
+    </div>);
+  }
+
+  render = () => {
     return (
       <div>
-        {this.renderMenuIcon()}
-        {this.state.showMenu && (
-          <div className="menu">
-            {this.renderMenu()}
-            <div className="links-wrapper">
-              {this.renderLinks()}
-            </div>
+        {this.state.overlayOpen && (
+          <div
+            ref={appElement => (this.appElement = appElement)}
+            className="modal"
+          >
+            {this.renderOverlay()}
           </div>
         )}
+        <div className="navigation">
+          {this.renderNavigation()}
+        </div>
+        {this.renderFooter()}
+        {/* {(this.state.hasEnteredWorld || this.state.home) && this.renderFooter()} */}
       </div>
     );
-  }
+  };
 }
 
 export default Menu;
