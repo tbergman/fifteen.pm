@@ -9,9 +9,16 @@ export const assetPath7UnityBuild = (p) => {
   return assetPath("7/unity/Build/" + p);
 }
 
+export const assetPath7Images = (p) => {
+  return assetPath("7/images/" + p);
+}
+
 class Release0007 extends Component {
   state = {
-    progression: 0
+    progression: 0,
+    unityControllerOff: false,
+    hasEntered: false,
+    loading: true
   }
 
   constructor(props) {
@@ -22,6 +29,7 @@ class Release0007 extends Component {
         adjustOnWindowResize: true
       }
     );
+
     this.unityContent.on("progress", progression => {
       this.setState({
         progression: progression
@@ -29,13 +37,33 @@ class Release0007 extends Component {
     });
 
     this.unityContent.on("loaded", () => {
-      this.unityComponent.adjustCanvasToContainer()
+      this.unityComponent.adjustCanvasToContainer();
+      this.lockMouseLookBeforeEntering();
+      setTimeout(() => { this.setState({ loading: false }); }, 3000);
     });
   };
+
+  lockMouseLookBeforeEntering() {
+    if (!this.state.hasEntered && !this.state.unityControllerOff) {
+      this.unityContent.send("ToggleController", "LockMouseLook");
+      this.setState({ unityControllerOff: true });
+    }
+  }
+
+  unlockMouseLookAfterEntering() {
+    if (this.state.hasEntered && this.state.unityControllerOff) {
+      this.unityContent.send("ToggleController", "UnlockMouseLook");
+      this.setState({ unityControllerOff: false });
+    }
+  }
 
   componentDidMount() {
     this.setWindowDimensions();
     window.addEventListener('resize', this.onWindowResize, false);
+  }
+
+  componentDidUpdate() {
+    this.unlockMouseLookAfterEntering();
   }
 
   setWindowDimensions() {
@@ -48,18 +76,33 @@ class Release0007 extends Component {
     this.unityComponent.adjustCanvasToContainer()
   }
 
+  renderLoadingGif = () => {
+    if (!this.state.hasEntered) {
+      return (
+        <div id={"progress-bar"}>
+          <img className="stretch" alt="" src={assetPath7Images("loading.gif")} />
+        </div>
+      );
+    }
+  };
+
   render() {
     return (
       <Fragment>
         <Menu
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="black"
+          didEnterWorld={() => {
+            this.setState({ hasEntered: true });
+          }}
+          loading={this.state.loading}
         />
         <div className="unity-content" >
           <Unity unityContent={this.unityContent}
-            height = {this.height}
-            width = {this.width}
+            height={this.height}
+            width={this.width}
             ref={component => this.unityComponent = component} />
+          {this.renderLoadingGif()}
         </div>
       </Fragment >
     );

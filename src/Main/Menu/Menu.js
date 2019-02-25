@@ -21,7 +21,7 @@ class Menu extends PureComponent {
   static defaultProps = {
     overlayOpen: true,
     renderPlayer: true,
-    loading: true
+    loading: false
   };
 
   componentDidMount() {
@@ -30,6 +30,9 @@ class Menu extends PureComponent {
 
   toggleOverlay = e => {
     e.preventDefault();
+    if (this.props.loading){
+      return;
+    }
     this.setState({
       overlayOpen: !this.state.overlayOpen,
       hasEnteredWorld: true
@@ -137,6 +140,12 @@ class Menu extends PureComponent {
 
   renderEnterButton() {
     const { home, hasEnteredWorld } = this.state;
+    let message = "ENTER";
+    if (home || hasEnteredWorld){
+      message = "CLOSE"
+    } else if (this.props.loading){
+      message = "LOADING..."
+    }
     return (
       <div className="enter-container">
         <button
@@ -147,7 +156,7 @@ class Menu extends PureComponent {
           {/* Show 'ENTER' for releases on load.
               Show 'CLOSE' for releases on additional modal opens 
               Show 'CLOSE' for home page */}
-          {home || hasEnteredWorld ? "CLOSE" : "ENTER"}
+          {message}
         </button>
       </div>
     );
@@ -251,7 +260,6 @@ class Menu extends PureComponent {
           {this.renderNavigation()}
         </div>
         {this.renderFooter()}
-        {/* {(this.state.hasEnteredWorld || this.state.home) && this.renderFooter()} */}
       </div>
     );
   };
