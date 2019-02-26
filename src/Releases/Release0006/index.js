@@ -540,7 +540,6 @@ class Release0006 extends Component {
       <Fragment>
         <Menu
           content={CONTENT[window.location.pathname]}
-          menuIconFillColor="white"
           audioRef={el => this.audioElement = el}
         />
         <div ref={element => this.container = element} />

@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import '../Release.css';
 import './index.css';
-import Footer from '../../Main/Footer/Footer';
+import Menu from '../../Main/Menu/Menu';
 import {CONTENT} from "../../Main/Content";
 import {renderScene, assetPath7} from "./scene"
 
@@ -16,9 +16,8 @@ class ReleaseJV extends Component {
       <Fragment>
         <div className={'background'}>
         <div ref={element => this.container = element}/>
-        <Footer
+        <Menu
           content={CONTENT[window.location.pathname]}
-          fillColor="white"
           audioRef={el => this.audioElement = el}
         />
         </div>
