@@ -53,8 +53,8 @@ let mlib = {};
 // UTILS
 ////////
 
-export const assetPath7 = (p) => {
-  return assetPath("7/" + p);
+export const assetPathJV = (p) => {
+  return assetPath("jv/" + p);
 }
 
 ///////////////////
@@ -121,9 +121,9 @@ const init = (container) => {
   let textureLoader = new THREE.TextureLoader( loadingManager );
   let specularMap = new THREE.WebGLRenderTarget( 1024, 1024, pars );
   specularMap.texture.generateMipmaps = false;
-  let diffuseTexture1 = textureLoader.load( assetPath7("textures/terrain/sand-big-saturated-purple.jpg") );
-  let diffuseTexture2 = textureLoader.load( assetPath7("textures/terrain/backgrounddetailed6.jpg") );
-  let detailTexture = textureLoader.load( assetPath7("textures/terrain/TexturesCom_DesertSand3_2x2_512_normal.jpg") );
+  let diffuseTexture1 = textureLoader.load( assetPathJV("textures/terrain/sand-big-saturated-purple.jpg") );
+  let diffuseTexture2 = textureLoader.load( assetPathJV("textures/terrain/backgrounddetailed6.jpg") );
+  let detailTexture = textureLoader.load( assetPathJV("textures/terrain/TexturesCom_DesertSand3_2x2_512_normal.jpg") );
   diffuseTexture1.wrapS = diffuseTexture1.wrapT = THREE.RepeatWrapping;
   diffuseTexture2.wrapS = diffuseTexture2.wrapT = THREE.RepeatWrapping;
   detailTexture.wrapS = detailTexture.wrapT = THREE.RepeatWrapping;
@@ -179,7 +179,7 @@ const init = (container) => {
   // UNIVERSE
   backgroundImage = loadImage({
     geometry: new THREE.SphereBufferGeometry(3000, 32, 32),
-    url: assetPath7('images/background-okeefe-edited-long.jpg'),
+    url: assetPathJV('images/background-okeefe-edited-long.jpg'),
     name: 'background',
     position: [ -1262, 260, 313],
     invert: true,
@@ -207,7 +207,7 @@ const init = (container) => {
 
   // HOURGLASS
   loadGLTF({
-    url: assetPath7("objects/hourglass_and_stars.gltf"),
+    url: assetPathJV("objects/hourglass_and_stars.gltf"),
     name: "hourglass",
     position: [0, 420, 340],
     rotateX: 0,
@@ -220,7 +220,7 @@ const init = (container) => {
 
   // Lava Lamp
   loadGLTF({
-    url: assetPath7("objects/lava_lamp2.gltf"),
+    url: assetPathJV("objects/lava_lamp2.gltf"),
     name: "lava_lamp",
     position: [-200, 285, 700],
     rotateX: 0,
@@ -234,7 +234,7 @@ const init = (container) => {
 
   // HAND MIRROR
   loadGLTF({
-    url: assetPath7("objects/enchanted_mirror/scene.gltf"),
+    url: assetPathJV("objects/enchanted_mirror/scene.gltf"),
     name: "hand_mirror",
     position: [-175, 1000, 340],
     rotateX: 0,
@@ -248,7 +248,7 @@ const init = (container) => {
 
   // RUBINS VASE
   loadGLTF({
-    url: assetPath7('objects/rubins_vase.gltf'),
+    url: assetPathJV('objects/rubins_vase.gltf'),
     name: 'rubins_vase',
     position: [-175, 330, -50],
     rotateX: 0,
@@ -262,7 +262,7 @@ const init = (container) => {
   // BALLOONS
   for (let i=0; i < numBalloons; i++) {
     loadOBJ({
-      url: assetPath7('objects/red_balloon/Red_Balloon_with_Ribbon_convert.obj'),
+      url: assetPathJV('objects/red_balloon/Red_Balloon_with_Ribbon_convert.obj'),
       name: `balloon_${i}`,
       position: [ -3200 + i * 50, 500 + i * 50 , 313 + i * 50],
       rotateX: 90,

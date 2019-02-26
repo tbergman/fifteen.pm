@@ -5,7 +5,7 @@ import Footer from '../../Main/Footer/Footer';
 import {CONTENT} from "../../Main/Content";
 import {renderScene, assetPath7} from "./scene"
 
-class Release0007 extends Component {
+class ReleaseJV extends Component {
 
   componentDidMount = () => {
     renderScene(this.container);
@@ -27,4 +27,4 @@ class Release0007 extends Component {
   }
 }
 
-export default Release0007;
+export default ReleaseJV;
