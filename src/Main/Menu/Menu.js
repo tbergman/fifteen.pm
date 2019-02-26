@@ -1,4 +1,3 @@
-// BRIAN
 import React, { PureComponent, Fragment } from "react";
 import Modal from "react-modal";
 import Player from "../Player/Player";

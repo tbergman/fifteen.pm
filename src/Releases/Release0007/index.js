@@ -50,11 +50,10 @@ class Release0007 extends Component {
     }
   }
 
-  unlockMouseLookAfterEntering() {
-    if (this.state.hasEntered && this.state.unityControllerOff) {
-      this.unityContent.send("ToggleController", "UnlockMouseLook");
-      this.setState({ unityControllerOff: false });
-    }
+  unlockMouseLook() {
+    console.log("LOCK!")
+    this.unityContent.send("ToggleController", "UnlockMouseLook");
+    this.setState({ unityControllerOff: false });
   }
 
   componentDidMount() {
@@ -63,7 +62,9 @@ class Release0007 extends Component {
   }
 
   componentDidUpdate() {
-    this.unlockMouseLookAfterEntering();
+    if (this.state.hasEntered && this.state.unityControllerOff) {
+      this.unlockMouseLook();
+    }
   }
 
   setWindowDimensions() {
