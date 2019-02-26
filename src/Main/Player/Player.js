@@ -1,6 +1,6 @@
-import React, {Fragment, PureComponent} from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import './Player.css'
-import {formatSoundcloudSrc} from "../../Utils/SoundcloudUtils";
+import { formatSoundcloudSrc } from "../../Utils/SoundcloudUtils";
 
 class Player extends PureComponent {
   state = {
@@ -20,14 +20,22 @@ class Player extends PureComponent {
   }
 
   componentDidMount() {
+    this.setState({ paused: true });
     this.updateAudioElement();
     if (!("ontouchstart" in document.documentElement)) {
-        document.documentElement.className += "no-touch";
+      document.documentElement.className += "no-touch";
     }
   }
 
-  componentDidUpdate() {
-    this.updateAudioElement();
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevState.curTrackIdx !== this.state.curTrackIdx) {
+      this.updateAudioElement();
+      if (this.props.initialized && !this.state.paused) {
+        this.handlePlay();
+      }
+    } else if (!prevProps.initialized && this.props.initialized) {
+      this.handlePlay();
+    }
   }
 
   componentWillUnmount() {
@@ -55,23 +63,23 @@ class Player extends PureComponent {
   }
 
   resetPlayer = () => {
-    if (this.isPlaying() || !this.state.paused) {
-      this.setState({paused: false});
+    if (this.isPlaying()) {
+      this.setState({ paused: false });
     }
   }
 
-  setCurrentTrack(trackIdx, {id, secretToken}) {
+  setCurrentTrack(trackIdx, { id, secretToken }) {
     this.setState({
-        curTrackIdx: trackIdx,
-        src: formatSoundcloudSrc(id, secretToken),
-        paused: false
+      curTrackIdx: trackIdx,
+      src: formatSoundcloudSrc(id, secretToken),
+      paused: false
     });
   }
 
   advanceTrack = (e) => {
     e.preventDefault();
-    const {trackList} = this.props;
-    const {curTrackIdx} = this.state;
+    const { trackList } = this.props;
+    const { curTrackIdx } = this.state;
     const nextTrackIdx = curTrackIdx + 1 === trackList.length ? 0 : curTrackIdx + 1;
     const track = trackList[nextTrackIdx];
 
@@ -79,27 +87,28 @@ class Player extends PureComponent {
   }
 
   handlePlay() {
-    this.setState({paused: false}, () => {
-        this.state.audioElement.play();
+    console.log("HANDLING PLAY FOR ", this.state.curTrackIdx);
+    this.setState({ paused: false }, () => {
+      this.state.audioElement.play();
     });
   }
 
   handlePause() {
-    this.setState({paused: true}, () => {
-        this.state.audioElement.pause();
+    this.setState({ paused: true }, () => {
+      this.state.audioElement.pause();
     });
   }
 
   handlePlayButtonClick = (e) => {
     e.preventDefault();
-    !this.state.paused
-      ? this.handlePause()
-      : this.handlePlay()
+    this.state.paused
+      ? this.handlePlay()
+      : this.handlePause()
   }
 
   handlePlaylistClick = (e) => {
     e.preventDefault();
-    const {trackList} = this.props;
+    const { trackList } = this.props;
     const trackIdx = Number(e.target.getAttribute('data-id'));
     const track = trackList[trackIdx];
 
@@ -107,14 +116,14 @@ class Player extends PureComponent {
   }
 
   renderPlaylist() {
-    const {trackList, fillColor, selectedColor} = this.props;
-    const {curTrackIdx} = this.state;
+    const { trackList, fillColor, selectedColor } = this.props;
+    const { curTrackIdx } = this.state;
     const curTrack = trackList[curTrackIdx];
 
     if (trackList.length > 1) {
       const playList = trackList.map((track, idx) =>
         <li
-          style={{color: track.id === curTrack.id ? selectedColor : fillColor}}
+          style={{ color: track.id === curTrack.id ? selectedColor : fillColor }}
           className={track.id === curTrack.id ? "active-track" : null}
           onClick={this.handlePlaylistClick}
           key={track.id}
@@ -133,17 +142,17 @@ class Player extends PureComponent {
   }
 
   renderPlayerButton() {
-    const {paused} = this.state;
-    const {message, fillColor} = this.props;
+    const { paused } = this.state;
+    const { message, fillColor } = this.props;
     return (
       <div id="play-button-container">
         <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" fill={fillColor}>
           <defs>
-            <path id="circlePath" d=" M 150, 150 m -60, 0 a 60,60 0 0,1 120,0 a 60,60 0 0,1 -120,0 "/>
+            <path id="circlePath" d=" M 150, 150 m -60, 0 a 60,60 0 0,1 120,0 a 60,60 0 0,1 -120,0 " />
           </defs>
-          <circle cx="100" cy="100" r="50" fill="none" stroke="none"/>
+          <circle cx="100" cy="100" r="50" fill="none" stroke="none" />
           <g>
-            <use xlinkHref="#circlePath" fill="none"/>
+            <use xlinkHref="#circlePath" fill="none" />
             <text fill="#000" stroke="red">
               <textPath xlinkHref="#circlePath" fill={fillColor}>{message}</textPath>
             </text>
@@ -152,7 +161,7 @@ class Player extends PureComponent {
         <div
           onClick={this.handlePlayButtonClick}
           className={paused ? 'button' : 'button paused'}
-          style={{borderColor: `transparent transparent transparent ${fillColor}`}}/>
+          style={{ borderColor: `transparent transparent transparent ${fillColor}` }} />
       </div>
     );
   }
@@ -167,18 +176,18 @@ class Player extends PureComponent {
   }
 
   renderAudioTag() {
-    const {type, audioRef} = this.props;
-    const {src} = this.state;
+    const { type, audioRef } = this.props;
+    const { src } = this.state;
 
     return (
       <audio
-          key={src}
-          id="audio-player"
-          autoPlay
-          crossOrigin="anonymous"
-          ref={audioRef}
+        key={src}
+        id="audio-player"
+        // autoPlay
+        crossOrigin="anonymous"
+        ref={audioRef}
       >
-        <source src={src} type={type}/>
+        <source src={src} type={type} />
       </audio>
     );
   }

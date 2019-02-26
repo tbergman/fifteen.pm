@@ -1,16 +1,20 @@
 #player-container {
     margin: 0%;
     z-index: 10000;
-    position: absolute;
-    left: 0;
-    bottom: 0px;
+    /* position: absolute; */
+    display: -ms-flexbox;
+    bottom: 0;
     display: flex;
-    align-items: center;
+    -ms-flex-align: center;
+    /* align-items: flex-start;  */
+    align-self: flex-start;
+    margin-right: 20px;
 }
 
 #play-button-container {
     position: relative;
     overflow: hidden;
+    top: 10px;
 }
 
 #play-button-container text {
@@ -129,7 +133,11 @@
 #playlist-container {
     z-index: 999999999;
     position: relative;
-    margin-left: 20px;
+    /* top: -20x; */
+    margin-left: 10px;
+    display: flex;
+    /* align-self: flex-end; */
+    align-items: center;
 }
 
 #playlist-container ul {
@@ -158,6 +166,9 @@
 }
 
 @media screen and (max-width: 28em) {
+    #play-button-container {
+        top: -10px;
+    }
     #play-button-container svg {
         top: 20px;
         left: -20px;
