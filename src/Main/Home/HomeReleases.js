@@ -59,7 +59,7 @@ const RELEASES = [
     path: "/7",
     name: "JON FAY",
     radius: DEFAULT_RADIUS + Math.random(),
-    textURL: assetPath("7/objects/text.gltf"),
+    textURL: assetPath("7/objects/artist-text.gltf"),
     soundURL: assetPath("0/sounds/chord-third.wav")
   }
 ];
