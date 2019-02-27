@@ -4,7 +4,8 @@ import {
   Click,
   TwoFingerScroll,
   ArrowKeys,
-  NoPhone
+  NoPhone,
+  SlowLoad
 } from "./Controls/Icons";
 
 export const CONTENT = {
@@ -218,7 +219,44 @@ export const CONTENT = {
         }
       ]
     }
-  }
+  },
+  "/7": {
+    artist: "JON FAY",
+    tracks: [
+      {
+        title: "GOLDEN GROOVE",
+        id: "565459281",
+        secretToken: "s-BOQ7b"
+      }
+    ],
+    theme: {
+      message: "Jon Fay captures the feeling the sound of leaving the rave golden grove oi.",
+      purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
+      iconColor: '#fff',
+      fillColor: 'rgba(40, 47, 175, 1)',
+      textColor: '#fff',
+      navColor: '#fff',
+      controls: [
+        {
+          icon: SlowLoad,
+          instructions: "takes a few seconds to load"
+        },
+        {
+          icon: ArrowKeys,
+          instructions: "use arrow keys to walk forever"
+        },
+        {
+          icon: MouseMove,
+          instructions: "move mouse to look around"
+        },
+        {
+          icon: NoPhone,
+          instructions: "doesn't work on phones",
+          alwaysShow: true
+        }
+      ]
+    }
+  },
 };
 
 

@@ -1,12 +1,12 @@
-import React, {PureComponent, Fragment} from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import * as THREE from 'three';
 import '../../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import GLTFLoader from 'three-gltf-loader';
-import {FresnelShader} from "../../Utils/FresnelShader";
-import {loadGLTF} from '../../Utils/Loaders';
-import {isMobile} from "../../Utils/BrowserDetection";
-import {assetPath} from "../../Utils/assets";
+import { FresnelShader } from "../../Utils/FresnelShader";
+import { loadGLTF } from '../../Utils/Loaders';
+import { isMobile } from "../../Utils/BrowserDetection";
+import { assetPath } from "../../Utils/assets";
 import Menu from '../Menu/Menu';
 
 const DEFAULT_RADIUS = 3;
@@ -23,37 +23,44 @@ const RELEASES = [
   {
     path: "/2",
     name: "YEAR UNKNOWN",
-    radius: DEFAULT_RADIUS + Math.random() * 2,
+    radius: DEFAULT_RADIUS + Math.random(),
     textURL: assetPath("2/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-fourth.wav")
   },
   {
     path: "/3",
     name: "OTHERE",
-    radius: DEFAULT_RADIUS + Math.random() * 3,
+    radius: DEFAULT_RADIUS + Math.random(),
     textURL: assetPath("3/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-fifth.wav")
   },
   {
     path: "/4",
     name: "JON CANNON",
-    radius: DEFAULT_RADIUS + Math.random() * 3,
+    radius: DEFAULT_RADIUS + Math.random(),
     textURL: assetPath("4/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-octave.wav")
   },
   {
     path: "/5",
     name: "PLEBIAN",
-    radius: DEFAULT_RADIUS + Math.random() * 3,
+    radius: DEFAULT_RADIUS + Math.random(),
     textURL: assetPath("5/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-second.wav")
   },
   {
     path: "/6",
     name: "VVEISS",
-    radius: DEFAULT_RADIUS + Math.random() * 3,
+    radius: DEFAULT_RADIUS + Math.random(),
     textURL: assetPath("6/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-fifth-down.wav")
+  },
+  {
+    path: "/7",
+    name: "JON FAY",
+    radius: DEFAULT_RADIUS + Math.random(),
+    textURL: assetPath("7/objects/artist-text.gltf"),
+    soundURL: assetPath("0/sounds/chord-third.wav")
   }
 ];
 
@@ -68,12 +75,14 @@ class Home extends PureComponent {
     this.camera.position.z = 30;
     this.camera.lookAt(new THREE.Vector3());
     this.releaseObjs = [];
-    this.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+    // this.randomPoints = this.generateRandomPoints();
   }
+
 
   componentDidMount() {
     window.addEventListener('resize', this.onWindowResize, false);
@@ -101,7 +110,7 @@ class Home extends PureComponent {
   }
 
   onClick = () => {
-    const {raycaster, mouse, camera, scene} = this;
+    const { raycaster, mouse, camera, scene } = this;
     // update the picking ray with the camera and mouse position
     raycaster.setFromCamera(mouse, camera);
     // calculate objects intersecting the picking ray
@@ -126,13 +135,13 @@ class Home extends PureComponent {
       let releaseMeta = RELEASES[i];
       let mesh = this.initReleaseObj(releaseMeta);
       this.initReleaseSound(releaseMeta, mesh);
-      this.releaseObjs.push({mesh: mesh});
+      this.releaseObjs.push({ mesh: mesh });
       this.initReleaseText(releaseMeta, mesh.position, i);
     }
   }
 
   initReleaseSound = (meta, obj) => {
-    const {camera} = this;
+    const { camera } = this;
     let listener = new THREE.AudioListener();
     camera.add(listener);
     // create the PositionalAudio object (passing in the listener)
@@ -165,10 +174,10 @@ class Home extends PureComponent {
     let geometry = new THREE.SphereBufferGeometry(meta.radius, meta.radius * 4, meta.radius * 4);
     geometry.computeBoundingSphere()
     let urls = Array(6).fill(assetPath("0/images/purple-clouds.jpg"));
-    // let urls = Array(6).fill(meta.imageURL);
     let material = this.initFresnelShaderMaterial(urls);
     let mesh = new THREE.Mesh(geometry, material);
     mesh.scale.x = mesh.scale.y = mesh.scale.z = 1 - Math.random() * .001;
+    mesh.material.opacity = .1;
     mesh.name = meta.name;
     mesh.userData.path = meta.path;
     this.scene.add(mesh);
@@ -184,26 +193,36 @@ class Home extends PureComponent {
       loader: new GLTFLoader(),
       onSuccess: (obj) => {
         this.releaseObjs[i].text = obj.scene.children[0];
-        this.releaseObjs[i].text.material.side = THREE.DoubleSide;
-        this.releaseObjs[i].text.rotation.x = Math.random() * .001;
-        this.releaseObjs[i].text.rotation.z = Math.random() * .001;
-        this.releaseObjs[i].text.userData.polarity = THREE.Math.randInt(-1, 1) > 0 ? 1 : -1;
-        this.releaseObjs[i].text.userData.rotationSpeed = Math.random() * .005;
+        let text = this.releaseObjs[i].text;
+        text.rotation.x = Math.random() * .001;
+        text.rotation.z = Math.random() * .001;
+        text.userData.polarity = THREE.Math.randInt(-1, 1) > 0 ? 1 : -1;
+        text.userData.rotationSpeed = Math.random() * .005;
         let urls = Array(6).fill(assetPath("0/images/dark-purple-clouds.jpg"));
-        this.releaseObjs[i].text.material = this.initFresnelShaderMaterial(urls);
+        text.material.side = THREE.DoubleSide;
+        text.material = this.initFresnelShaderMaterial(urls);
         this.scene.add(obj.scene);
       }
     }
     loadGLTF(gltfOpts);
   }
 
+
   initRaycaster = () => {
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2(100, 100);
   }
 
+  // generateRandomPoints() {
+  //   let points = [];
+  //   for(i=0;i<RELEASES.length;i++){
+  //     points.push(Random.insideUnitCircle * RELEASES.length)
+  //   }
+
+  // }
+
   onWindowResize = debounce(() => {
-    const {camera, renderer} = this;
+    const { camera, renderer } = this;
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -215,7 +234,7 @@ class Home extends PureComponent {
   }
 
   renderCursorStyle = () => {
-    const {raycaster, mouse, camera, scene} = this;
+    const { raycaster, mouse, camera, scene } = this;
     // mouse over
     raycaster.setFromCamera(mouse, camera);
     let intersects = raycaster.intersectObjects(scene.children);
@@ -236,8 +255,8 @@ class Home extends PureComponent {
     let timer = 0.0001 * Date.now();
     for (let i = 0, il = this.releaseObjs.length; i < il; i++) {
       let mesh = this.releaseObjs[i].mesh;
-      mesh.position.x = 20 * Math.cos(timer + i);
-      mesh.position.y = 10 * Math.sin(timer + i * 1.1);
+      mesh.position.x = 25 * Math.cos(timer + i * 1.15);
+      mesh.position.y = 15 * Math.sin(timer + i * 1.1);
       let text = this.releaseObjs[i].text;
       if (text !== undefined) { // TODO ensure defined by this point
         text.position.x = mesh.position.x;// + 10;
@@ -249,7 +268,7 @@ class Home extends PureComponent {
   }
 
   renderScene = () => {
-    const {renderer, camera, scene} = this;
+    const { renderer, camera, scene } = this;
     this.renderCursorStyle();
     this.renderReleaseLinks();
     renderer.render(scene, camera);
@@ -260,10 +279,10 @@ class Home extends PureComponent {
     return (
       <Fragment>
         <Menu
-        overlayOpen={false}
-        renderPlayer={false}
+          overlayOpen={false}
+          renderPlayer={false}
         />
-        <div className="release" ref={element => this.container = element}/>
+        <div className="release" ref={element => this.container = element} />
       </Fragment>
     );
   }

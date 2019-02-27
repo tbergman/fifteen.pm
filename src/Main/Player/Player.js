@@ -87,7 +87,6 @@ class Player extends PureComponent {
   }
 
   handlePlay() {
-    console.log("HANDLING PLAY FOR ", this.state.curTrackIdx);
     this.setState({ paused: false }, () => {
       this.state.audioElement.play();
     });
