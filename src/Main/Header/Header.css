@@ -52,15 +52,3 @@
         rotate(-360deg);
     }
 }
-
-
-
-@media screen and (max-width: 28em) {
-
-    .logo-wrapper svg {
-        width: 375.px;
-        height: 37.5px;
-        top: 10px;
-        left: -10px;
-    }
-  }
