@@ -230,7 +230,7 @@ export const CONTENT = {
       }
     ],
     theme: {
-      message: "Jon Fay captures the feeling the sound of leaving the rave golden grove oi.",
+      message: "In this 22-minute meditation, Jon Fay captures the infinite pulse of the rave as it empties into the dawn.",
       purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
       iconColor: '#fff',
       fillColor: 'rgba(40, 47, 175, 1)',
