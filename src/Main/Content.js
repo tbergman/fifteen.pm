@@ -4,7 +4,8 @@ import {
   Click,
   TwoFingerScroll,
   ArrowKeys,
-  NoPhone
+  NoPhone,
+  SlowLoad
 } from "./Controls/Icons";
 
 export const CONTENT = {
@@ -237,12 +238,16 @@ export const CONTENT = {
       navColor: '#fff',
       controls: [
         {
-          icon: MouseMove,
-          instructions: "move mouse to look around"
+          icon: SlowLoad,
+          instructions: "takes a few seconds to load"
         },
         {
           icon: ArrowKeys,
-          instructions: "use arrow keys to fly around"
+          instructions: "use arrow keys to walk forever"
+        },
+        {
+          icon: MouseMove,
+          instructions: "move mouse to look around"
         },
         {
           icon: NoPhone,
