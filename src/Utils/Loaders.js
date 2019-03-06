@@ -39,7 +39,7 @@ export const loadVideo = ({
     geometry, url, name, position, loop,
     muted, mimetype, invert, volume, sources,
     computeBoundingSphere, playbackRate,
-    rotateX, rotateY, rotateZ  }) => {
+    rotateX, rotateY, rotateZ, repeat  }) => {
   // initialize video element
   let videoElement = document.createElement('video');
   videoElement.crossOrigin = 'anonymous';
@@ -59,6 +59,16 @@ export const loadVideo = ({
 
   // create material from video texture
   let texture = new THREE.VideoTexture(videoElement);
+  if (repeat){
+    texture.repeat.x = repeat.x;
+    texture.repeat.y = repeat.y;
+
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    // texture.wrapS = THREE.RepeatWrapping;
+    // texture.wrapT = THREE.RepeatWrapping;
+  }
+  
   texture.minFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
   let material = new THREE.MeshBasicMaterial({map: texture});

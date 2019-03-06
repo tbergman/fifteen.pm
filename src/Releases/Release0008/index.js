@@ -66,6 +66,21 @@ class Release0008 extends Component {
     // }
     // loadGLTF({...sheriParams});
 
+    const boyParams = {
+      url: assetPath8("objects/boy/scene.gltf"),
+      name: "boy",
+      position: [0, 0, 150],
+      // position: [80, -250, -50],
+      rotateX: 0,
+      rotateY: 180,
+      rotateZ: 0,
+      relativeScale: 1,
+      loader: this.loader,
+      onSuccess: gltf => this.setupDancer(gltf)
+    }
+    loadGLTF({ ...boyParams });
+
+
     // const samParams = {
     //   url: assetPath8("objects/sam/scene.gltf"),
     //   name: "sam",
@@ -92,7 +107,7 @@ class Release0008 extends Component {
     // }
     // loadGLTF({...athenaParams});
 
-    // TODO - how to randomize this animation (can create extra versions of file)?
+    // TODO - randomize or progressively raise and lower the y position of the water and progressively rotate on the x?
     const waterParams = {
       url: assetPath8("objects/room/wave.gltf"), //greem-room.glb"),
       name: "room",
@@ -126,33 +141,32 @@ class Release0008 extends Component {
     let videoMesh = loadVideo({ ...obj, computeBoundingSphere: false });
     videoMesh.material.transparent = true; // TODO -- this wont work on all browsers:  https://discourse.threejs.org/t/transparent-channel-on-video-texture/1200
     videoMesh.material.opacity = 0.5;
-    console.log(videoMesh.material);
     this.scene.add(videoMesh);
 
     // TODO - background video - randomized/similar mashup
-    let flatVid = {
-      type: 'video',
-      mimetype: 'video/mp4',
-      name: 'scratch-video',
-      sources: multiSourceVideo('scratch-video'),
-      geometry: new THREE.PlaneBufferGeometry(100, 100), // TODO -- extra args to reduce size?
-      position: [150, 150, 200], // TODO randomize
-      playbackRate: 1,
-      loop: true,
-      invert: true,
-      volume: 0.01,
-      muted: true,
-      // rotateY: CONSTANTS.televisionRotateY
-      // axis: new THREE.Vector3(0, 1, 0).normalize(),
-      // angle: 0.003,
-    }
-    // obj.rotateY = 150; // TO DO rotate on x/raise y? to give it a slanted looking down from above feel
-    flatVid.rotateX = -20;
-    let flatVidMesh = loadVideo({ ...flatVid, computeBoundingSphere: true });
-    flatVidMesh.material.transparent = true; // TODO -- this wont work on all browsers:  https://discourse.threejs.org/t/transparent-channel-on-video-texture/1200
-    flatVidMesh.material.opacity = 0.05;
-    flatVidMesh.userData.video.play();
-    this.scene.add(flatVidMesh);
+    // let flatVid = {
+    //   type: 'video',
+    //   mimetype: 'video/mp4',
+    //   name: 'scratch-video',
+    //   sources: multiSourceVideo('scratch-video'),
+    //   geometry: new THREE.PlaneBufferGeometry(100, 100), // TODO -- extra args to reduce size?
+    //   position: [150, 150, 200], // TODO randomize
+    //   playbackRate: 1,
+    //   loop: true,
+    //   invert: true,
+    //   volume: 0.01,
+    //   muted: true,
+    //   // rotateY: CONSTANTS.televisionRotateY
+    //   // axis: new THREE.Vector3(0, 1, 0).normalize(),
+    //   // angle: 0.003,
+    // }
+    // // obj.rotateY = 150; // TO DO rotate on x/raise y? to give it a slanted looking down from above feel
+    // flatVid.rotateX = -20;
+    // let flatVidMesh = loadVideo({ ...flatVid, computeBoundingSphere: true });
+    // flatVidMesh.material.transparent = true; // TODO -- this wont work on all browsers:  https://discourse.threejs.org/t/transparent-channel-on-video-texture/1200
+    // flatVidMesh.material.opacity = 0.05;
+    // flatVidMesh.userData.video.play();
+    // this.scene.add(flatVidMesh);
 
 
     // TODO clean up/organize lights
@@ -175,11 +189,48 @@ class Release0008 extends Component {
 
   // TODO - all of this scene initialization shouldnt be in callback use promise
   setupDancer(gltf) {
+    
+    // let body = gltf.scene.getObjectByName("_rootJoint");
+
+    const flatVidName = 'output-juicy-tender-trim-512-256-resize'
+    let flatVid = {
+      type: 'video',
+      mimetype: 'video/mp4',
+      name: flatVidName,
+      sources: multiSourceVideo(flatVidName),
+      geometry: new THREE.PlaneBufferGeometry(512, 256), // TODO -- extra args to reduce size?
+      position: [150, 150, 200],
+      playbackRate: 1,
+      loop: true,
+      invert: true,
+      volume: 0.01,
+      muted: true,
+      repeat: {x: 2, y: 2},
+      // rotateY: CONSTANTS.televisionRotateY
+      // axis: new THREE.Vector3(0, 1, 0).normalize(),
+      // angle: 0.003,
+    }
+    // obj.rotateY = 150; // TO DO rotate on x/raise y? to give it a slanted looking down from above feel
+    // flatVid.rotateX = -20;
+    let flatVidMesh = loadVideo({ ...flatVid, computeBoundingSphere: false });
+    flatVidMesh.material.transparent = true; // TODO -- this wont work on all browsers:  https://discourse.threejs.org/t/transparent-channel-on-video-texture/1200
+    flatVidMesh.material.opacity = 1.0;
+    flatVidMesh.material.skinning = true;
+    console.log(flatVidMesh);
+    flatVidMesh.userData.video.play();
+    // this.scene.add(flatVidMesh);
+
+    // let body = gltf.scene.getObjectById(13);
+
+    // body.material = flatVidMesh.material;
+    let body2 = gltf.scene.getObjectById(14);
+    body2.material = flatVidMesh.material;
+
     this.scene.add(gltf.scene);
     this.setupModelAnimation(gltf);
     this.dancers.push(gltf);
   }
- 
+
   setupWater(gltf) {
     const { scene } = this;
     this.setupModelAnimation(gltf);
@@ -200,11 +251,10 @@ class Release0008 extends Component {
     camera.position.z = -100;
     camera.rotateY -= 50;
     camera.lookAt(this.scene.position);
-    console.log(camera.position);
-    
-    // DEBUG
-    var helper = new THREE.CameraHelper( camera );
-    this.scene.add( helper );
+    // DEBUG/
+    // TODO Video texture is only showing up on body when the camera helper is on WTF
+    var helper = new THREE.CameraHelper(camera);
+    this.scene.add(helper);
     return camera;
   }
 
