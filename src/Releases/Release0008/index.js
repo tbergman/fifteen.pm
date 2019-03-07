@@ -220,9 +220,9 @@ class Release0008 extends Component {
     flatVidMesh.userData.video.play();
     // this.scene.add(flatVidMesh);
 
-    // let body = gltf.scene.getObjectById(13);
+    let body = gltf.scene.getObjectById(13);
 
-    // body.material = flatVidMesh.material;
+    body.material = flatVidMesh.material;
     let body2 = gltf.scene.getObjectById(14);
     body2.material = flatVidMesh.material;
 
@@ -253,8 +253,8 @@ class Release0008 extends Component {
     camera.lookAt(this.scene.position);
     // DEBUG/
     // TODO Video texture is only showing up on body when the camera helper is on WTF
-    var helper = new THREE.CameraHelper(camera);
-    this.scene.add(helper);
+    // var helper = new THREE.CameraHelper(camera);
+    // this.scene.add(helper);
     return camera;
   }
 
