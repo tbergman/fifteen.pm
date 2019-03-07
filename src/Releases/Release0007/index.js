@@ -51,7 +51,6 @@ class Release0007 extends Component {
   }
 
   unlockMouseLook() {
-    console.log("LOCK!")
     this.unityContent.send("ToggleController", "UnlockMouseLook");
     this.setState({ unityControllerOff: false });
   }
