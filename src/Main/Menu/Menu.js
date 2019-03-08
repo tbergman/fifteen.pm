@@ -29,7 +29,7 @@ class Menu extends PureComponent {
 
   toggleOverlay = e => {
     e.preventDefault();
-    if (this.props.loading){
+    if (this.props.loading) {
       return;
     }
     this.setState({
@@ -140,9 +140,9 @@ class Menu extends PureComponent {
   renderEnterButton() {
     const { home, hasEnteredWorld } = this.state;
     let message = "ENTER";
-    if (home || hasEnteredWorld){
+    if (home || hasEnteredWorld) {
       message = "CLOSE"
-    } else if (this.props.loading){
+    } else if (this.props.loading) {
       message = "LOADING..."
     }
     return (
@@ -180,6 +180,25 @@ class Menu extends PureComponent {
     );
   }
 
+  renderOverlayBlob() {
+    return (<div className="overlay-blob">
+      <svg
+        ref={element => (this.svg = element)}
+        width="100%"
+        height="100%"
+        viewBox="0 0 1098 724"
+        // preserveAspectRatio="none"
+      >
+        <g fill={this.state.theme.fillColor}>
+          <path
+            ref={element => (this.path = element)}
+            d={SHAPES[this.state.shapeIndex].path}
+          />
+        </g>
+      </svg>
+    </div>);
+  }
+
   renderOverlay = () => {
     return (
       <Modal
@@ -193,23 +212,8 @@ class Menu extends PureComponent {
         overlayClassName="overlay-blob"
       >
         <div>
-          <div className="overlay-blob">
-            <svg
-              ref={element => (this.svg = element)}
-              width="100%"
-              height="100%"
-              viewBox="0 0 1098 724"
-              preserveAspectRatio="none"
-            >
-              <g fill={this.state.theme.fillColor}>
-                <path
-                  ref={element => (this.path = element)}
-                  d={SHAPES[this.state.shapeIndex].path}
-                />
-              </g>
-            </svg>
-          </div>
           {this.renderOverlayContent()}
+          {this.renderOverlayBlob()}
         </div>
       </Modal>
     );
