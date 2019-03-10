@@ -29,7 +29,7 @@ class Menu extends PureComponent {
 
   toggleOverlay = e => {
     e.preventDefault();
-    if (this.props.loading){
+    if (this.props.loading) {
       return;
     }
     this.setState({
@@ -140,9 +140,9 @@ class Menu extends PureComponent {
   renderEnterButton() {
     const { home, hasEnteredWorld } = this.state;
     let message = "ENTER";
-    if (home || hasEnteredWorld){
+    if (home || hasEnteredWorld) {
       message = "CLOSE"
-    } else if (this.props.loading){
+    } else if (this.props.loading) {
       message = "LOADING..."
     }
     return (
@@ -161,6 +161,12 @@ class Menu extends PureComponent {
     );
   }
 
+  /**
+   *  Renders content inside react modal
+   *    - description of artists
+   *    - instructions
+   *    - action button
+   */
   renderOverlayContent() {
     const {
       home,
@@ -180,6 +186,31 @@ class Menu extends PureComponent {
     );
   }
 
+  /**
+   *  Renders svg modal background (animated blob)
+   */
+  renderOverlaySvg() {
+    return (<div className="overlay-svg">
+      <svg
+        ref={element => (this.svg = element)}
+        viewBox="0 0 1098 724"
+        preserveAspectRatio="false"
+      >
+        <g fill={this.state.theme.fillColor}>
+          <path
+            ref={element => (this.path = element)}
+            d={SHAPES[this.state.shapeIndex].path}
+          />
+        </g>
+      </svg>
+    </div>);
+  }
+
+  /**
+   * Renders react modal https://github.com/reactjs/react-modal
+   *  with children: content and svg
+   *
+   */
   renderOverlay = () => {
     return (
       <Modal
@@ -189,28 +220,15 @@ class Menu extends PureComponent {
         onRequestClose={this.closeOverlay.bind(this)}
         shouldCloseOnOverlayClick={true}
         ariaHideApp={false}
-        className="overlay"
-        overlayClassName="overlay-blob"
+        className="overlay-modal"
+        style={{
+          overlay: { backgroundColor: "transparent" }
+        }}
       >
-        <div>
-          <div className="overlay-blob">
-            <svg
-              ref={element => (this.svg = element)}
-              width="100%"
-              height="100%"
-              viewBox="0 0 1098 724"
-              preserveAspectRatio="none"
-            >
-              <g fill={this.state.theme.fillColor}>
-                <path
-                  ref={element => (this.path = element)}
-                  d={SHAPES[this.state.shapeIndex].path}
-                />
-              </g>
-            </svg>
-          </div>
+        <Fragment>
           {this.renderOverlayContent()}
-        </div>
+          {this.renderOverlaySvg()}
+        </Fragment>
       </Modal>
     );
   };

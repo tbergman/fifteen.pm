@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import pure from 'recompose/pure';
+import {CONTENT} from "../Content";
 
 class Logo extends Component {
   static defaultProps = {
-    fillColor: window.location.pathname === '/3' ? 'red' : '#ffffff', // TODO centralize this logic
+    fillColor: CONTENT[window.location.pathname].theme.logoSvgFillColor || "#ffffff" // TODO centralize this logic
   }
 
   onClick = (e) => {

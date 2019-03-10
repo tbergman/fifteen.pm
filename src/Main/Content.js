@@ -8,6 +8,11 @@ import {
   SlowLoad
 } from "./Controls/Icons";
 
+export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
+    "/1": "#FF69B4",
+    "/3": "red"
+}
+
 export const CONTENT = {
   "/": {
     home: true,
@@ -17,7 +22,7 @@ export const CONTENT = {
       iconColor: 'white',
       navColor: '#fff',
       fillColor: 'rgba(0, 0, 0, 0.5)',
-      textColor: 'white'
+      textColor: 'white',
     }
   },
   "/1": {
@@ -33,7 +38,8 @@ export const CONTENT = {
         'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
       purchaseLink: "https://gltd.bandcamp.com/track/wun-4-jas",
       iconColor: '#fff',
-      fillColor: 'rgba(255,105,180, 0.5)',
+      fillColor: 'rgba(255,105,180, 1)',
+      logoSvgFillColor: 'rgba(255,105,180, 1)',
       textColor: '#fff',
       navColor: '#fff',
       controls: [
@@ -84,9 +90,10 @@ export const CONTENT = {
       message:
         "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
       purchaseLink: "https://gltd.bandcamp.com/track/lets-beach",
-      iconColor: 'red',
-      navColor: 'red',
+      iconColor: 'rgba(255, 0, 0, 1)',
+      navColor: 'rgba(255, 0, 0, 1)',
       fillColor: 'rgba(255, 0, 0, 0.7)',
+      logoSvgFillColor: 'rgba(255, 0, 0, 1)',
       textColor: 'white',
       controls: [
         {
@@ -209,7 +216,7 @@ export const CONTENT = {
         "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
       purchaseLink: "https://gltd.bandcamp.com/track/escape-velocity",
       iconColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.5)',
+      fillColor: 'rgba(127, 0, 255, 0.4)',
       textColor: '#fff',
       navColor: '#fff',
       controls: [
@@ -233,7 +240,7 @@ export const CONTENT = {
       message: "In this 22-minute meditation, Jon Fay captures the infinite pulse of the rave as it empties into the dawn.",
       purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
       iconColor: '#fff',
-      fillColor: 'rgba(40, 47, 175, 1)',
+      fillColor: 'rgba(255, 102, 0, 0.4)',
       textColor: '#fff',
       navColor: '#fff',
       controls: [
