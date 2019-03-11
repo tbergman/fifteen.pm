@@ -194,7 +194,6 @@ class Menu extends PureComponent {
       <svg
         ref={element => (this.svg = element)}
         viewBox="0 0 1098 724"
-        preserveAspectRatio="false"
       >
         <g fill={this.state.theme.fillColor}>
           <path
