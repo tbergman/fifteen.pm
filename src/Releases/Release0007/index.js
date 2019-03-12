@@ -39,7 +39,7 @@ class Release0007 extends Component {
     this.unityContent.on("loaded", () => {
       this.unityComponent.adjustCanvasToContainer();
       this.lockMouseLookBeforeEntering();
-      setTimeout(() => { this.setState({ loading: false }); }, 3000);
+      setTimeout(() => { this.setState({ loading: false }); }, 1500);
     });
   };
 
