@@ -12,6 +12,8 @@ import AudioStreamer from "../Utils/Audio/AudioStreamer";
 
 /* eslint import/no-webpack-loader-syntax: off */
 import heightMapFragmentShader from '!raw-loader!glslify-loader!../Shaders/waterHeight.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import waterVertexShader from '!raw-loader!glslify-loader!../Shaders/waterVertex.glsl';
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -42,7 +44,7 @@ class Release0001 extends PureComponent {
           heightmap: { value: null }
         }
       ]),
-      vertexShader: document.getElementById('waterVertexShader').textContent,
+      vertexShader: waterVertexShader,//document.getElementById('waterVertexShader').textContent,
       fragmentShader: THREE.ShaderChunk['meshphong_frag'],
       transparent: true,
     });
