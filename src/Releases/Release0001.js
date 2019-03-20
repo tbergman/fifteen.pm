@@ -11,7 +11,7 @@ import AudioStreamer from "../Utils/Audio/AudioStreamer";
 
 
 /* eslint import/no-webpack-loader-syntax: off */
-// import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
+import heightMapFragmentShader from '!raw-loader!glslify-loader!../Shaders/waterHeight.glsl';
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -167,9 +167,9 @@ class Release0001 extends PureComponent {
 
     this.fillTexture(heightmap0);
 
-    this.heightmapVariable = this.gpuCompute.addVariable("heightmap", document.getElementById('heightmapFragmentShader').textContent, heightmap0);
+    // this.heightmapVariable = this.gpuCompute.addVariable("heightmap", document.getElementById('heightmapFragmentShader').textContent, heightmap0);
 
-    // this.heightmapVariable = this.gpuCompute.addVariable("heightmap",heightMapFragmentShader, heightmap0);
+    this.heightmapVariable = this.gpuCompute.addVariable("heightmap",heightMapFragmentShader, heightmap0);
 
     this.gpuCompute.setVariableDependencies(this.heightmapVariable, [this.heightmapVariable]);
 
