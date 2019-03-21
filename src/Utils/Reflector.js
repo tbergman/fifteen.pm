@@ -1,5 +1,10 @@
 import * as THREE from 'three';
 
+/* eslint import/no-webpack-loader-syntax: off */
+import reflectorVertexShader from '!raw-loader!glslify-loader!../Shaders/reflectorVertex.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import reflectorFragmentShader from '!raw-loader!glslify-loader!../Shaders/reflectorFragment.glsl';
+
 export const Reflector = (function () {
     function Reflector(geometry, options) {
 
@@ -220,43 +225,9 @@ export const Reflector = (function () {
 
         },
 
-        vertexShader: [
-            'uniform mat4 textureMatrix;',
-            'varying vec4 vUv;',
+        vertexShader: reflectorVertexShader,
 
-            'void main() {',
-
-            '	vUv = textureMatrix * vec4( position, 1.0 );',
-
-            '	gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
-
-            '}'
-        ].join('\n'),
-
-        fragmentShader: [
-            'uniform vec3 color;',
-            'uniform sampler2D tDiffuse;',
-            'varying vec4 vUv;',
-
-            'float blendOverlay( float base, float blend ) {',
-
-            '	return( base < 0.5 ? ( 2.0 * base * blend ) : ( 1.0 - 2.0 * ( 1.0 - base ) * ( 1.0 - blend ) ) );',
-
-            '}',
-
-            'vec3 blendOverlay( vec3 base, vec3 blend ) {',
-
-            '	return vec3( blendOverlay( base.r, blend.r ), blendOverlay( base.g, blend.g ), blendOverlay( base.b, blend.b ) );',
-
-            '}',
-
-            'void main() {',
-
-            '	vec4 base = texture2DProj( tDiffuse, vUv );',
-            '	gl_FragColor = vec4( blendOverlay( base.rgb, color ), 1.0 );',
-
-            '}'
-        ].join('\n')
+        fragmentShader: reflectorFragmentShader
     };
 
     return Reflector;

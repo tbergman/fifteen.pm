@@ -6,10 +6,11 @@
  * (Shaders extracted by globally.ltd)
  */
 
- /* eslint import/no-webpack-loader-syntax: off */
-import fresnelFragmentShader from '!raw-loader!glslify-loader!../Shaders/fresnelFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
 import fresnelVertexShader from '!raw-loader!glslify-loader!../Shaders/fresnelVertex.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import fresnelFragmentShader from '!raw-loader!glslify-loader!../Shaders/fresnelFragment.glsl';
+
 
 export const FresnelShader = {
   uniforms: {
