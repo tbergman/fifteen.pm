@@ -11,7 +11,10 @@ import AudioStreamer from "../Utils/Audio/AudioStreamer";
 
 
 /* eslint import/no-webpack-loader-syntax: off */
-// import heightMapFragmentShader from '../Utils/Shaders/heightMapFragmentShader.glsl'
+import waterVertexShader from '!raw-loader!glslify-loader!../Shaders/water1Vertex.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import heightMapFragmentShader from '!raw-loader!glslify-loader!../Shaders/water1Height.glsl';
+
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -42,7 +45,7 @@ class Release0001 extends PureComponent {
           heightmap: { value: null }
         }
       ]),
-      vertexShader: document.getElementById('waterVertexShader').textContent,
+      vertexShader: waterVertexShader,
       fragmentShader: THREE.ShaderChunk['meshphong_frag'],
       transparent: true,
     });
@@ -61,13 +64,11 @@ class Release0001 extends PureComponent {
     this.sun2 = new THREE.DirectionalLight(lightColor2, lightIntensity2);
     this.ambientLight = new THREE.AmbientLight(ambientLightColor);
     this.heightmap0 = this.gpuCompute.createTexture();
-    //this.smoothShader = this.gpuCompute.createShaderMaterial(document.getElementById('smoothFragmentShader').textContent, {texture: {value: null}});
     this.simplex = new SimplexNoise();
   }
 
   componentDidMount() {
     this.init();
-    // this.audioElement.addEventListener("loadstart", this.audioElementLoaded, false);
     window.addEventListener('mousemove', this.onDocumentMouseMove, false);
     window.addEventListener("touchstart", this.onDocumentMouseMove, false);
     window.addEventListener("touchmove", this.onDocumentMouseMove, false);
@@ -167,9 +168,7 @@ class Release0001 extends PureComponent {
 
     this.fillTexture(heightmap0);
 
-    this.heightmapVariable = this.gpuCompute.addVariable("heightmap", document.getElementById('heightmapFragmentShader').textContent, heightmap0);
-
-    // this.heightmapVariable = this.gpuCompute.addVariable("heightmap",heightMapFragmentShader, heightmap0);
+    this.heightmapVariable = this.gpuCompute.addVariable("heightmap",heightMapFragmentShader, heightmap0);
 
     this.gpuCompute.setVariableDependencies(this.heightmapVariable, [this.heightmapVariable]);
 
