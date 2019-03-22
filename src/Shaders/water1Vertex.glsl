@@ -1,4 +1,4 @@
- uniform sampler2D heightmap;
+uniform sampler2D heightmap;
 
 #define PHONG
 

@@ -3,7 +3,7 @@ import '../Release.css';
 import * as THREE from "three";
 import { OrbitControls } from "../../Utils/OrbitControls";
 import { CONSTANTS } from "./constants";
-import { Reflector } from '../../Utils/Reflector';
+import { Reflector } from "three-full";
 import { Water } from '../../Utils/Water2';
 import GLTFLoader from "three-gltf-loader";
 import { loadGLTF } from "../../Utils/Loaders";
@@ -189,9 +189,6 @@ class Release0005 extends Component {
     const textures = {
       "galaxy": {
         url: assetPath5('images/blue_purple.jpg')
-      },
-      "galaxy2": {
-        url: assetPath5('images/light_purple.jpg')
       }
     };
     textures.galaxy.texture = this.textureLoader.load(textures.galaxy.url, function (texture) {
