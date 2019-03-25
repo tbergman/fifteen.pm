@@ -74,7 +74,6 @@ class Release0001 extends PureComponent {
     window.addEventListener("touchmove", this.onDocumentMouseMove, false);
     window.addEventListener('resize', this.onWindowResize, false);
     window.addEventListener("load", this.onLoad, false);
-
     this.animate();
   }
 
@@ -86,6 +85,7 @@ class Release0001 extends PureComponent {
     window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
     window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
     window.removeEventListener("load", this.onLoad, false);
+
     this.mount.removeChild(this.renderer.domElement);
   }
 
@@ -109,6 +109,9 @@ class Release0001 extends PureComponent {
   };
 
   onLoad = (event) => {
+    // only init audio props AFTER load!
+    this.audioStream = new AudioStreamer(this.audioElement);
+    this.freqArray = new Uint8Array(this.audioStream.analyser.frequencyBinCount);
     this.audioStream.connect()
   }
 
@@ -124,7 +127,6 @@ class Release0001 extends PureComponent {
     this.addAmbientLight();
     this.addWater();
     this.addLight();
-    this.initAudioProps();
 
     this.mount.appendChild(this.renderer.domElement);
   }
@@ -168,7 +170,7 @@ class Release0001 extends PureComponent {
 
     this.fillTexture(heightmap0);
 
-    this.heightmapVariable = this.gpuCompute.addVariable("heightmap",heightMapFragmentShader, heightmap0);
+    this.heightmapVariable = this.gpuCompute.addVariable("heightmap", heightMapFragmentShader, heightmap0);
 
     this.gpuCompute.setVariableDependencies(this.heightmapVariable, [this.heightmapVariable]);
 
@@ -181,11 +183,6 @@ class Release0001 extends PureComponent {
     if (error !== null) {
       console.error(error);
     }
-  }
-
-  initAudioProps = () => {
-    this.audioStream = new AudioStreamer(this.audioElement);
-    this.freqArray = new Uint8Array(this.audioStream.analyser.frequencyBinCount);
   }
 
   addSun = () => {

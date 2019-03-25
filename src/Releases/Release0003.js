@@ -112,7 +112,6 @@ class Release0003 extends PureComponent {
   }
 
   init = () => {
-    this.initAudioProps();
     this.initOrbs();
     this.initRaycaster();
     this.initOrbitContols();
@@ -298,7 +297,9 @@ class Release0003 extends PureComponent {
   }
 
   onLoad = (event) => {
-    this.audioStream.connect()
+    // only init audio props AFTER load!
+    this.initAudioProps();
+    // this.audioStream.connect()
   }
 
   onMouseMove = (event) => {
@@ -549,7 +550,7 @@ class Release0003 extends PureComponent {
   renderOrbs = () => {
     let currentTime = this.audioElement.currentTime;
     this.renderByTrackSection(currentTime);
-    if (this.audioStream.deactivated) {
+    if (!this.audioStream || this.audioStream.deactivated) {
       this.renderOrbsSansAnalyser(currentTime);
     } else {
       this.renderOrbsWithAnalyser();
@@ -620,6 +621,9 @@ class Release0003 extends PureComponent {
     }
 
     if (!onLoPassSphere) {
+      if (!this.audioStream){
+        return;
+      }
       this.scene.background = new THREE.Color(0xFFFFFF);
       this.audioStream.filter.frequency.value = 22000;
       this.audioStream.filter.Q.value = 0;
