@@ -173,7 +173,7 @@ class Menu extends PureComponent {
       theme: { textColor, message }
     } = this.state;
     return (
-      <div className="overlay">
+      <div className="overlay-content">
         <div className="overlay-header" style={{ textColor: textColor }}>
           <div className="overlay-header-message">{message}</div>
         </div>
@@ -221,7 +221,7 @@ class Menu extends PureComponent {
         ariaHideApp={false}
         className="overlay-modal"
         style={{
-          overlay: { backgroundColor: "transparent" }
+          overlay: { backgroundColor: "transparent" } // for the built-in react-modal overlay style
         }}
       >
         <Fragment>
