@@ -7,6 +7,7 @@ import { SHAPES, MENU_ICON_OPEN } from "./MenuConstants";
 import { CONTENT } from "../Content";
 import { isNoUIMode } from "../../Utils/modes";
 import "./Menu.css";
+import { PurchaseLink } from "../Controls/Icons";
 
 class Menu extends PureComponent {
   state = {
@@ -98,12 +99,12 @@ class Menu extends PureComponent {
   renderControlInfo = () => {
     const controls = this.state.theme.controls.map((c, i) => (
       // if !alwaysShow key add hideInMobile
-      <div className={c.alwaysShow !== undefined ? "control-item" : "control-item hide-in-mobile"} key={i}>
-        <div className="control-icon">
+      <div className={c.alwaysShow !== undefined ? "overlay-content-item" : "overlay-content-item hide-in-mobile"} key={i}>
+        <div className="overlay-content-icon">
           <c.icon fillColor={this.state.theme.textColor} />
         </div>
         <div
-          className="control-instructions overlay-text"
+          className="overlay-content-item-text"
           style={{ color: this.state.theme.textColor }}
         >
           {c.instructions}
@@ -115,24 +116,27 @@ class Menu extends PureComponent {
 
   renderPurchaseLink() {
     return (
-      <div className="purchase-container">
-        <a
-          className="purchase-icon-link purchase-link overlay-text"
-          target="_blank"
-          href={this.state.theme.purchaseLink}
-          style={{ color: this.state.theme.textColor }}
-        >
-          &#x32E1;
+      <div className="overlay-content-item">
+        <div className="overlay-content-icon">
+          <a
+            target="_blank"
+            className="purchase-link"
+            href={this.state.theme.purchaseLink}
+          >
+            <PurchaseLink fillColor={this.state.theme.textColor} />
+          </a>
+        </div>
+        <div className="overlay-content-item-text">
+          <a
+            className="purchase-link"
+            target="_blank"
+            href={this.state.theme.purchaseLink}
+            style={{
+              color: this.state.theme.textColor    
+            }}
+          >buy me
         </a>
-        <a
-          id="purchase-text-link"
-          className="purchase-link overlay-text"
-          target="_blank"
-          href={this.state.theme.purchaseLink}
-          style={{ color: this.state.theme.textColor }}
-        >
-          BUY ME
-        </a>
+        </div>
       </div>
     );
   }
