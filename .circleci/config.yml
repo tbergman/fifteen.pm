@@ -3,6 +3,9 @@ defaults: &defaults
   docker:
     - image: circleci/node:8.15.1
 version: 2
+dependencies:
+  override:
+    - yarn
 jobs:
   checkout_code:
     <<: *defaults
@@ -23,16 +26,21 @@ jobs:
     <<: *defaults
     steps:
       - restore_cache:
+        name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: "Yarn install"
-          command: yarn install
+          command: yarn install  --frozen-lockfile
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
           paths:
-            - node_modules
+            - ~/.cache/yarn
+
   test:
     <<: *defaults
     steps:
