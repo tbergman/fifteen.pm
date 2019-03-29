@@ -107,10 +107,10 @@ workflows:
   version: 2
   test_and_deploy:
     jobs:
-      - checkout_code
+      - checkout
       - install:
           requires:
-            - checkout_code
+            - checkout
       - test:
           requires:
             - install
