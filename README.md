@@ -66,7 +66,14 @@ yarn start # opens a browser to localhost:3000
 
 ## Deploying
 
+We use [CircleCI](https://circleci.com/gh/gltd/releases) for deploys. 
+
+- Pushes to the `develop` branch will automatically be deployed to [dev.globally.ltd](https://dev.globally.ld)
+- Pushes to the `master` branch will automatically be deployed to [globally.ltd](https://globally.ltd)
+
+
+Manually: 
 ```
-yarn deploy-dev  # deploys to staging site
-yarn deploy-prod # deploys to production site
+AWS_PROFILE=gltd yarn deploy-dev  # deploys to staging site
+AWS_PROFILE=gltd yarn deploy-prod # deploys to production site
 ```
