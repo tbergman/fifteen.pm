@@ -12,7 +12,7 @@ jobs:
             - source-{{ .Branch }}-{{ .Revision }}
             - source-{{ .Branch }}-
             - source-
-      - run: curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && apt-get update && apt-get install -y git-lfs && rm -rf /var/lib/apt/lists/*
+      - run: curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get update && sudo apt-get install -y git-lfs && sudo rm -rf /var/lib/apt/lists/*
       - checkout
       - save_cache:
           key: source-{{ .Branch }}-{{ .Revision }}
