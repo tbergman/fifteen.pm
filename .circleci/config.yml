@@ -43,6 +43,9 @@ jobs:
       - run:
           name: "Yarn install"
           command: yarn install  --frozen-lockfile
+      - run:
+          name: "Install chalk"
+          command: yarn add chalk
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
@@ -74,9 +77,6 @@ jobs:
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
-          name: "Install chalk"
-          command: yarn add chalk
-      - run:
           name: "Build app"
           command: CI=false yarn build
       - persist_to_workspace:
@@ -100,6 +100,8 @@ jobs:
       - run: sudo pip install awscli --upgrade
       - run: aws --version
       - run: aws s3 ls
+      - run: pwd
+      - run: ls
       - run: 
           name: "Deploy to S3"
           command: |
@@ -109,7 +111,6 @@ jobs:
             elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
               bucket="${STAGING_BUCKET}"
               dist_id="${STAGING_DISTRIBUTION_ID}"
-              ./scripts/deploy.sh 
             else
               echo "Not deploying..."
               exit 0
