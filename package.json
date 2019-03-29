@@ -27,7 +27,7 @@
     "fs-extra": "3.0.1",
     "glslify-loader": "^2.0.0",
     "html-webpack-plugin": "2.29.0",
-    "jest": "20.0.4",
+    "jest": "^24.5.0",
     "object-assign": "4.1.1",
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
@@ -111,7 +111,8 @@
       "web.jsx",
       "jsx",
       "node",
-      "mjs"
+      "mjs",
+      "glsl"
     ]
   },
   "babel": {
