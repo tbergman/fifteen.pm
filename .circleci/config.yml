@@ -15,11 +15,7 @@ jobs:
             - source-{{ .Branch }}-{{ .Revision }}
             - source-{{ .Branch }}-
             - source-
-      - restore_cache:
-          keys:
-            - assets-{{ .Branch }}-{{ .Revision }}
-            - assets-{{ .Branch }}-
-            - assets-
+
       # install git-lfs pre-checkout
       - run: curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get update && sudo apt-get install -y git-lfs && sudo rm -rf /var/lib/apt/lists/*
       
@@ -29,25 +25,20 @@ jobs:
           key: source-{{ .Branch }}-{{ .Revision }}
           paths:
             - "~/releases"
-      - save_cache:
-          key: assets-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - "~/releases/public/assets/"
 
   install:
     <<: *defaults
     steps:
+      # cache
       - restore_cache:
           name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          name: Restore Assets
-          key: assets-{{ .Branch }}-{{ .Revision }}
-      - restore_cache:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
-      - run
+      
+      - run:
           name: "Upgrade Yarn"
           commmand: curl -o- -L https://yarnpkg.com/install.sh | sudo bash
       - run:
@@ -66,9 +57,6 @@ jobs:
           name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          name: Restore Assets
-          key: assets-{{ .Branch }}-{{ .Revision }}
-      - restore_cache:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
@@ -82,9 +70,6 @@ jobs:
       - restore_cache:
           name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
-      - restore_cache:
-          name: Restore Assets
-          key: assets-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
