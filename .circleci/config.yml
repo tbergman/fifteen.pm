@@ -84,6 +84,7 @@ jobs:
           paths:
             - build
             - scripts
+            - config
             - package.json
 
   deploy:
