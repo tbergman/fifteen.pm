@@ -7,7 +7,7 @@ defaults: &defaults
       - yarn
 version: 2
 jobs:
-  checkout_code:
+  checkout:
     <<: *defaults
     steps:
       - restore_cache:
@@ -78,14 +78,16 @@ jobs:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
-      # TODO: figure out why we need to install chalk here?
+      # TODO: figure out why we need to re-install chalk here?
       - run:
           name: "Install chalk"
           command: yarn add chalk
+      # Install awscli
       - run: sudo apt-get update && sudo apt-get install -y python-dev
       - run: sudo curl -O https://bootstrap.pypa.io/get-pip.py
       - run: sudo python get-pip.py
       - run: sudo pip install awscli --upgrade
+      # Deploy
       - run: 
           name: "Deploy to S3"
           command: |
@@ -99,7 +101,7 @@ jobs:
               echo "Not deploying..."
               exit 0
             fi
-            CI=falsescripts/deploy.sh $bucket $dist_id
+            CI=false scripts/deploy.sh "$bucket" "$dist_id"
 
 workflows:
   version: 2
