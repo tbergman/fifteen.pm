@@ -38,10 +38,10 @@ jobs:
     <<: *defaults
     steps:
       - restore_cache:
-        name: Restore Source Cache
+          name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
-        - restore_cache:
-        name: Restore Assets
+      - restore_cache:
+          name: Restore Assets
           key: assets-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           name: Restore Yarn Package Cache
@@ -61,10 +61,10 @@ jobs:
     <<: *defaults
     steps:
       - restore_cache:
-        name: Restore Source Cache
+          name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
-        - restore_cache:
-        name: Restore Assets
+      - restore_cache:
+          name: Restore Assets
           key: assets-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           name: Restore Yarn Package Cache
@@ -78,10 +78,10 @@ jobs:
     <<: *defaults
     steps:
       - restore_cache:
-        name: Restore Source Cache
+          name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
-        - restore_cache:
-        name: Restore Assets
+      - restore_cache:
+          name: Restore Assets
           key: assets-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           name: Restore Yarn Package Cache
