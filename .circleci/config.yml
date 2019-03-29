@@ -16,8 +16,9 @@ jobs:
             - source-{{ .Branch }}-
             - source-
 
-      # install git-lfs pre-checkout
-      - run: curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get update && sudo apt-get install -y git-lfs && sudo rm -rf /var/lib/apt/lists/*
+      - run: 
+          name: Install git-lfs
+          command: "curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get update && sudo apt-get install -y git-lfs && sudo rm -rf /var/lib/apt/lists/*"
       
       - checkout
       
@@ -40,7 +41,7 @@ jobs:
       
       - run:
           name: "Upgrade Yarn"
-          commmand: curl -o- -L https://yarnpkg.com/install.sh | sudo bash
+          commmand: "curl -o- -L 'https://yarnpkg.com/install.sh' | bash"
       - run:
           name: "Yarn install"
           command: yarn install  --frozen-lockfile
