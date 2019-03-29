@@ -30,7 +30,6 @@ jobs:
   install:
     <<: *defaults
     steps:
-      # cache
       - restore_cache:
           name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
@@ -38,10 +37,9 @@ jobs:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
-      
       - run:
           name: "Upgrade Yarn"
-          commmand: "curl -o- -L 'https://yarnpkg.com/install.sh' | bash"
+          command: "curl -o- -L 'https://yarnpkg.com/install.sh' | bash"
       - run:
           name: "Yarn install"
           command: yarn install  --frozen-lockfile
