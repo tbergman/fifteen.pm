@@ -2,10 +2,10 @@ defaults: &defaults
   working_directory: ~/releases
   docker:
     - image: circleci/node:8.15.1
+  dependencies:
+    override:
+      - yarn
 version: 2
-dependencies:
-  override:
-    - yarn
 jobs:
   checkout_code:
     <<: *defaults
@@ -39,7 +39,7 @@ jobs:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: "Upgrade Yarn"
-          command: "curl -o- -L 'https://yarnpkg.com/install.sh' | bash"
+          command: "curl -o- -L 'https://yarnpkg.com/install.sh' | bash && source ~/.bashrc"
       - run:
           name: "Yarn install"
           command: yarn install  --frozen-lockfile
@@ -59,10 +59,10 @@ jobs:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
-    
       - run:
           name: "Test"
           command: "echo 'who needs tests?' > /dev/null"
+
   build:
     <<: *defaults
     steps:
