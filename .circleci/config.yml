@@ -82,11 +82,7 @@ jobs:
       - persist_to_workspace:
           root: ~/releases
           paths:
-            - build
-            - scripts
-            - config
-            - package.json
-
+            - '*'
   deploy:
     <<: *defaults
     environment:
