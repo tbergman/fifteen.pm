@@ -1,0 +1,118 @@
+defaults: &defaults
+  working_directory: ~/releases
+  docker:
+    - image: circleci/node:8.15.1
+  dependencies:
+    override:
+      - yarn
+version: 2
+
+jobs:
+  checkout:
+    <<: *defaults
+    steps:
+      - restore_cache:
+          keys:
+            - source-{{ .Branch }}-{{ .Revision }}
+            - source-{{ .Branch }}-
+            - source-
+      - run: 
+          name: Install git-lfs
+          command: "curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get update && sudo apt-get install -y git-lfs && sudo rm -rf /var/lib/apt/lists/*"
+      - checkout
+      - save_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - "~/releases"
+
+  install:
+    <<: *defaults
+    steps:
+      - restore_cache:
+          name: Restore Source Cache
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: "Upgrade Yarn"
+          command: "curl -o- -L 'https://yarnpkg.com/install.sh' | bash"
+      - run:
+          name: "Yarn install"
+          command: yarn install  --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+
+  test:
+    <<: *defaults
+    steps:
+      - restore_cache:
+          name: Restore Source Cache
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run:
+          name: "Test"
+          command: "echo 'who needs tests?' > /dev/null"
+  
+  deploy:
+    <<: *defaults
+    environment:
+      - STAGING_BUCKET: s3://dev.globally.ltd
+      - PRODUCTION_BUCKET: s3://globally.ltd
+      - STAGING_DISTRIBUTION_ID: E2RNC34S3LB4YH
+      - PRODUCTION_DISTRIBUTION_ID: E36B2H2DAB37RY
+    steps:
+      - restore_cache:
+          name: Restore Source Cache
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      # TODO: figure out why we need to re-install chalk here?
+      - run:
+          name: "Install chalk"
+          command: yarn add chalk
+      # Install awscli
+      - run: sudo apt-get update && sudo apt-get install -y python-dev
+      - run: sudo curl -O https://bootstrap.pypa.io/get-pip.py
+      - run: sudo python get-pip.py
+      - run: sudo pip install awscli --upgrade
+      # Deploy
+      - run: 
+          name: "Deploy to S3"
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              bucket="${PRODUCTION_BUCKET}"
+              dist_id="${PRODUCTION_DISTRIBUTION_ID}"
+            elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              bucket="${STAGING_BUCKET}"
+              dist_id="${STAGING_DISTRIBUTION_ID}"
+            else
+              echo "Not deploying..."
+              exit 0
+            fi
+            CI=false scripts/deploy.sh "$bucket" "$dist_id"
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - checkout
+      - install:
+          requires:
+            - checkout
+      - test:
+          requires:
+            - install
+      - deploy:
+          requires:
+            - install
+            - test

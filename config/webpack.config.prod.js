@@ -105,12 +105,6 @@ module.exports = {
     ],
   },
   module: {
-    loaders: [
-      {
-        test: /\.glsl$/,
-        loader: 'webpack-glsl',
-      }
-    ],
     strictExportPresence: true,
     rules: [
       {
@@ -141,10 +135,6 @@ module.exports = {
           },
         ],
         include: paths.appSrc,
-      },
-      {
-        test: /\.glsl$/,
-        loader: require.resolve('webpack-glsl-loader'),
       },
       {
         // "oneOf" will traverse all following loaders until one will
