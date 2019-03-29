@@ -40,10 +40,14 @@ jobs:
       - restore_cache:
         name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
+        - restore_cache:
+        name: Restore Assets
+          key: assets-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           name: Restore Yarn Package Cache
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
+      
       - run:
           name: "Yarn install"
           command: yarn install  --frozen-lockfile
@@ -57,9 +61,16 @@ jobs:
     <<: *defaults
     steps:
       - restore_cache:
+        name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
+        - restore_cache:
+        name: Restore Assets
+          key: assets-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+    
       - run:
           name: "Test"
           command: "echo 'who needs tests?' > /dev/null"
@@ -67,9 +78,16 @@ jobs:
     <<: *defaults
     steps:
       - restore_cache:
+        name: Restore Source Cache
           key: source-{{ .Branch }}-{{ .Revision }}
+        - restore_cache:
+        name: Restore Assets
+          key: assets-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+
       - run:
           name: "Build app"
           command: yarn build
