@@ -30,9 +30,9 @@ jobs:
           paths:
             - "~/releases"
       - save_cache:
-        key: assets-{{ .Branch }}-{{ .Revision }}
-        paths:
-          - "~/releases/public/assets/"
+          key: assets-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - "~/releases/public/assets/"
 
   install:
     <<: *defaults
