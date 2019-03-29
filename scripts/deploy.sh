@@ -4,7 +4,7 @@ set -x
 set -e
 
 # # build the app
-yarn build
+CI=false yarn build
 # # gzip all assets that aren't movies
 cd build/ && find . -type f ! -path '*.mp4*' ! -path '*.webm*' -exec gzip -9 "{}" \; -exec mv "{}.gz" "{}" \;
 cd ../

@@ -62,27 +62,7 @@ jobs:
       - run:
           name: "Test"
           command: "echo 'who needs tests?' > /dev/null"
-
-  build:
-    <<: *defaults
-    steps:
-      - restore_cache:
-          name: Restore Source Cache
-          key: source-{{ .Branch }}-{{ .Revision }}
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
-      - run:
-          name: "Install chalk"
-          command: yarn add chalk
-      - run:
-          name: "Build app"
-          command: CI=false yarn build
-      - persist_to_workspace:
-          root: ~/releases
-          paths:
-            - '*'
+  
   deploy:
     <<: *defaults
     environment:
@@ -91,8 +71,17 @@ jobs:
       - STAGING_DISTRIBUTION_ID: E2RNC34S3LB4YH
       - PRODUCTION_DISTRIBUTION_ID: E36B2H2DAB37RY
     steps:
-      - attach_workspace:
-          at: ~/releases
+      - restore_cache:
+          name: Restore Source Cache
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      # TODO: figure out why we need to install chalk here?
+      - run:
+          name: "Install chalk"
+          command: yarn add chalk
       - run: sudo apt-get update && sudo apt-get install -y python-dev
       - run: sudo curl -O https://bootstrap.pypa.io/get-pip.py
       - run: sudo python get-pip.py
@@ -110,11 +99,11 @@ jobs:
               echo "Not deploying..."
               exit 0
             fi
-            scripts/deploy.sh $bucket $dist_id
+            CI=falsescripts/deploy.sh $bucket $dist_id
 
 workflows:
   version: 2
-  build_and_test:
+  test_and_deploy:
     jobs:
       - checkout_code
       - install:
@@ -123,10 +112,7 @@ workflows:
       - test:
           requires:
             - install
-      - build:
-          requires:
-            - install
       - deploy:
           requires:
+            - install
             - test
-            - build
