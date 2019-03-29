@@ -82,8 +82,9 @@ jobs:
       - persist_to_workspace:
           root: ~/releases
           paths:
-            - dist
-            - package.json
+            - build
+            - scripts
+
   deploy:
     <<: *defaults
     environment:
@@ -98,10 +99,6 @@ jobs:
       - run: sudo curl -O https://bootstrap.pypa.io/get-pip.py
       - run: sudo python get-pip.py
       - run: sudo pip install awscli --upgrade
-      - run: aws --version
-      - run: aws s3 ls
-      - run: pwd
-      - run: ls
       - run: 
           name: "Deploy to S3"
           command: |
@@ -115,16 +112,7 @@ jobs:
               echo "Not deploying..."
               exit 0
             fi
-
-            # # gzip all assets that aren't movies
-            cd build/ && find . -type f ! -path '*.mp4*' ! -path '*.webm*' -exec gzip -9 "{}" \; -exec mv "{}.gz" "{}" \;
-            cd ../
-            # push gzipped assets 
-            aws s3 sync build/ $bucket --exclude '*.mp4*' --exclude '*.webm*' --acl public-read --content-encoding gzip
-            # push non-gzipped assets
-            aws s3 sync build/ $bucket --include '*.mp4*' --include '*.webm*' --acl public-read
-            # refresh cloudfront
-            aws cloudfront create-invalidation --distribution-id $dist_id --paths '/*' > /dev/null
+            scripts/deploy.sh $bucket $dist_id
 
 workflows:
   version: 2
