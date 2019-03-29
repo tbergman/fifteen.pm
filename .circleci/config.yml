@@ -38,11 +38,8 @@ jobs:
           keys:
             - yarn-packages-{{ checksum "yarn.lock" }}
       - run:
-          name: "Upgrade Yarn"
-          command: "curl -o- -L 'https://yarnpkg.com/install.sh' | bash"
-      - run:
           name: "Yarn install"
-          command: ~/.yarn/bin/yarn install  --frozen-lockfile
+          command: yarn install  --frozen-lockfile
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
@@ -78,7 +75,7 @@ jobs:
           command: yarn add chalk
       - run:
           name: "Build app"
-          command: ~/.yarn/bin/yarn build
+          command: yarn build
       - persist_to_workspace:
           root: ~/releases
           paths:
