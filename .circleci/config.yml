@@ -105,10 +105,10 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo "Deploying to production (globally.ltd)"
-              scripts/deploy.sh "${PRODUCTION_BUCKET}" "${PRODUCTION_DISTRIBUTION_ID}"
+              ~/releases/scripts/deploy.sh "${PRODUCTION_BUCKET}" "${PRODUCTION_DISTRIBUTION_ID}"
             elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
               echo "Deploying to development (dev.globally.ltd)..."
-              scripts/deploy.sh "${STAGING_BUCKET}" "${STAGING_DISTRIBUTION_ID}"
+              ~/releases/scripts/deploy.sh "${STAGING_BUCKET}" "${STAGING_DISTRIBUTION_ID}"
             else
               echo "Not deploying..."
             fi
