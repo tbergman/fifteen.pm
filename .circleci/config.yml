@@ -104,14 +104,27 @@ jobs:
           name: "Deploy to S3"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo "Deploying to production (globally.ltd)"
-              ~/releases/scripts/deploy.sh "${PRODUCTION_BUCKET}" "${PRODUCTION_DISTRIBUTION_ID}"
+              bucket="${PRODUCTION_BUCKET}"
+              dist_id="${PRODUCTION_DISTRIBUTION_ID}"
             elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              echo "Deploying to development (dev.globally.ltd)..."
-              ~/releases/scripts/deploy.sh "${STAGING_BUCKET}" "${STAGING_DISTRIBUTION_ID}"
+              bucket="${STAGING_BUCKET}"
+              dist_id="${STAGING_DISTRIBUTION_ID}"
+              ./scripts/deploy.sh 
             else
               echo "Not deploying..."
+              exit 0
             fi
+
+            # # gzip all assets that aren't movies
+            cd build/ && find . -type f ! -path '*.mp4*' ! -path '*.webm*' -exec gzip -9 "{}" \; -exec mv "{}.gz" "{}" \;
+            cd ../
+            # push gzipped assets 
+            aws s3 sync build/ $bucket --exclude '*.mp4*' --exclude '*.webm*' --acl public-read --content-encoding gzip
+            # push non-gzipped assets
+            aws s3 sync build/ $bucket --include '*.mp4*' --include '*.webm*' --acl public-read
+            # refresh cloudfront
+            aws cloudfront create-invalidation --distribution-id $dist_id --paths '/*' > /dev/null
+
 workflows:
   version: 2
   build_and_test:
