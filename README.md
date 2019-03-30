@@ -74,6 +74,6 @@ We use [CircleCI](https://circleci.com/gh/gltd/releases) for deploys.
 
 Manually: 
 ```
-AWS_PROFILE=gltd yarn deploy-dev  # deploys to staging site
-AWS_PROFILE=gltd yarn deploy-prod # deploys to production site
+yarn deploy-dev  # deploys to staging site
+yarn deploy-prod # deploys to production site
 ```
