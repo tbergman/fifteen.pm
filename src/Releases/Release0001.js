@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import * as THREE from "three";
-import { SimplexNoise } from '../Utils/SimplexNoise';
-import { GPUComputationRenderer } from "../Utils/GPUComputationRenderer";
+import { SimplexNoise } from "three-full";
+import { GPUComputationRenderer } from "three-full";
 import debounce from 'lodash/debounce';
 import './Release.css';
 

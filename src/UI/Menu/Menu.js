@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from "react";
 import Modal from "react-modal";
 import Player from "../Player/Player";
 import Navigation from "../Navigation/Navigation";
-import anime from "../../Utils/Anime.min.js";
+import anime from "animejs";
 import { SHAPES, MENU_ICON_OPEN } from "./MenuConstants";
 import { CONTENT } from "../../Content";
 import { isNoUIMode } from "../../Utils/modes";
