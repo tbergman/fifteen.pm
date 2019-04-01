@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { CONTENT } from "../../Main/Content";
-import Menu from '../../Main/Menu/Menu';
+import { CONTENT } from "../../Content";
+import Menu from '../../UI/Menu/Menu';
 import { assetPath } from "../../Utils/assets";
 import Unity, { UnityContent } from "react-unity-webgl";
 

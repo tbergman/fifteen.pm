@@ -6,6 +6,7 @@ defaults: &defaults
     override:
       - yarn
 version: 2
+
 jobs:
   checkout:
     <<: *defaults
@@ -15,13 +16,10 @@ jobs:
             - source-{{ .Branch }}-{{ .Revision }}
             - source-{{ .Branch }}-
             - source-
-
       - run: 
           name: Install git-lfs
           command: "curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get update && sudo apt-get install -y git-lfs && sudo rm -rf /var/lib/apt/lists/*"
-      
       - checkout
-      
       - save_cache:
           key: source-{{ .Branch }}-{{ .Revision }}
           paths:

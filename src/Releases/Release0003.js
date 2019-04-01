@@ -5,8 +5,8 @@ import './Release.css';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import { OrbitControls } from "../Utils/OrbitControls";
 import { isMobile } from "../Utils/BrowserDetection";
-import { CONTENT } from "../Main/Content";
-import Menu from '../Main/Menu/Menu';
+import { CONTENT } from "../Content";
+import Menu from '../UI/Menu/Menu';
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);
