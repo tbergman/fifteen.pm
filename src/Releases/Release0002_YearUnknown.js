@@ -22,7 +22,7 @@ service.pins = pinsArr;
 pinsFormation.push(service.pins);
 service.pins = pinsFormation[0];
 
-class Release0002 extends Component {
+class Release0002_YearUnknown extends Component {
   constructor() {
     super();
     this.bpm = 145;
@@ -654,4 +654,4 @@ class Release0002 extends Component {
   }
 }
 
-export default Release0002;
+export default Release0002_YearUnknown;

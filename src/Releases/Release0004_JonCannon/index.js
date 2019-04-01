@@ -5,7 +5,6 @@ import debounce from "lodash/debounce";
 import GLTFLoader from "three-gltf-loader";
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 import { loadVideo, loadImage, loadGLTF } from "../../Utils/Loaders";
-
 import * as C from "./constants";
 import "../Release.css";
 import "./index.css";
@@ -17,7 +16,7 @@ import {
 } from "./utils";
 import Menu from "../../UI/Menu/Menu";
 
-class Release0004 extends Component {
+class Release0004_JonCannon extends Component {
   constructor() {
     super();
     this.clock = new THREE.Clock();
@@ -427,4 +426,4 @@ class Release0004 extends Component {
   }
 }
 
-export default Release0004;
+export default Release0004_JonCannon;

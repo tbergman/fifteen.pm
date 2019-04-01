@@ -19,7 +19,7 @@ export const assetPath5 = (p) => {
 
 let statueDirection = 0.01;
 
-class Release0005 extends Component {
+class Release0005_Plebeian extends Component {
   state = {
     inWormhole: true,
     inMirrorLand: false,
@@ -458,4 +458,4 @@ class Release0005 extends Component {
   }
 }
 
-export default Release0005;
+export default Release0005_Plebeian;
