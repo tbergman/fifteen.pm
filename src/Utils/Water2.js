@@ -8,18 +8,17 @@
  */
 
 import * as THREE from 'three';
-import { Reflector } from "three-full";//./Reflector";
-import { Refractor } from "three-full";//./Refractor";
+import { Reflector } from "three-full";
+import { Refractor } from "three-full";
 
 /* eslint import/no-webpack-loader-syntax: off */
 import water2VertexShader from '!raw-loader!glslify-loader!../Shaders/water2Vertex.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
 import water2FragmentShader from '!raw-loader!glslify-loader!../Shaders/water2Fragment.glsl';
 
-export const Water = (function () {
+export const Water2 = (function () {
   function Water(geometry, options) {
-    // export const Water = ( geometry, options ) => {
-    //
+
     THREE.Mesh.call(this, geometry);
 
     this.type = 'Water';

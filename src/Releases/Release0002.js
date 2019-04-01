@@ -3,7 +3,7 @@ import { cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulate
 import { service } from "../Utils/service";
 
 import * as CANNON from 'cannon';
-import * as THREE from 'three-full';
+import * as THREE from 'three';
 import './Release.css';
 import * as TWEEN from 'three-tween';
 import debounce from 'lodash/debounce';
@@ -25,7 +25,6 @@ service.pins = pinsFormation[0];
 class Release0002 extends Component {
   constructor() {
     super();
-    //
     this.bpm = 145;
     this.beatTime = (60 / 145) * 1000;
 

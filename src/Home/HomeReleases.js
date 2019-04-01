@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import GLTFLoader from 'three-gltf-loader';
-import { FresnelShader } from "../Utils/FresnelShader";
+import { FresnelShader } from "three-full";
 import { loadGLTF } from '../Utils/Loaders';
 import { isMobile } from "../Utils/BrowserDetection";
 import { assetPath } from "../Utils/assets";

@@ -1,7 +1,7 @@
+// TODO: Clean up (and remove physics?)
 import * as CANNON from 'cannon';
 import * as THREE from "three";
-//import { ballPosition, ballSize, sphere } from "./Sphere";
-import {service} from "./service";
+import { service } from "./service";
 
 
 /*
@@ -280,53 +280,29 @@ function simulateCloth(time, ballPosition, ballBody, ballSize, sphere) {
 
   }
 
-  // Ball Constraints
-  // Ball Constraints
-  // ballPosition.z = Math.sin( Date.now() / 600 ) * 1000; //+ 40;
-  // ballPosition.y = Math.cos( Date.now() / 600 ) * 600 - 200;
-  // ballPosition.x = Math.sin( Date.now() / 500 ) * 1000;
-  // Ball Constraints
-  // ballPosition.z = - Math.sin( Date.now() / 700 ) * 900 ; //+ 40;
-  // ballPosition.x = Math.cos( Date.now() / 400 ) * 400;
-
-
-  // console.log(cloth.particles.length)
-
-    // particles.length ==
-
-    for (particles = cloth.particles, i = 0, il = particles.length; i < il; i++) {
-      particle = particles[i];
-      var pos = particle.position;
-      diff.subVectors(pos, ballPosition);
-      if (diff.length() < ballSize) {
-        // collided
-        diff.normalize().multiplyScalar(ballSize);
-        pos.copy(ballPosition).add(diff);
-        if (ballPosition.z > 0) {
-         ballBody.position.z += 10
-        } else {
-         ballBody.position.z -= 10
-        }
-        ballBody.velocity = new CANNON.Vec3(
-         -ballBody.velocity.x,
-         -ballBody.velocity.y,
-         -ballBody.velocity.z
-        )
+  for (particles = cloth.particles, i = 0, il = particles.length; i < il; i++) {
+    particle = particles[i];
+    var pos = particle.position;
+    diff.subVectors(pos, ballPosition);
+    if (diff.length() < ballSize) {
+      // collided
+      diff.normalize().multiplyScalar(ballSize);
+      pos.copy(ballPosition).add(diff);
+      if (ballPosition.z > 0) {
+        ballBody.position.z += 10
+      } else {
+        ballBody.position.z -= 10
       }
-
-
+      ballBody.velocity = new CANNON.Vec3(
+        -ballBody.velocity.x,
+        -ballBody.velocity.y,
+        -ballBody.velocity.z
+      )
     }
 
-  // let soundParticles = [
-  //   323,
-  //   324,
-  //   325,
-  //   326,
-  //   327,
-  //   328,
-  //   329,
-  //   330
-  // ];
+
+  }
+
 
   let numsoundParticles = 4;
   for (let i = 0; i < numsoundParticles; i++) {
@@ -339,9 +315,9 @@ function simulateCloth(time, ballPosition, ballBody, ballSize, sphere) {
     pos.add(diff)
   }
 
- /*
-    This determines how far down the cloth should drop
-   */
+  /*
+     This determines how far down the cloth should drop
+    */
 
   for (particles = cloth.particles, i = 0, il = particles.length; i < il; i++) {
 
@@ -369,12 +345,6 @@ function simulateCloth(time, ballPosition, ballBody, ballSize, sphere) {
 let clothGeometry = new THREE.ParametricGeometry(clothFunction, cloth.w, cloth.h);
 
 // cloth material
-
-// let loader = new THREE.TextureLoader();
-// var clothTexture = loader.load( 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/patterns/circuit_pattern.png' );
-// clothTexture.anisotropy = 16;
-
-
 let clothMaterial = new THREE.MeshPhongMaterial({
   color: 0xaa2929,
   specular: 0x030303,
@@ -387,11 +357,9 @@ let clothMaterial = new THREE.MeshPhongMaterial({
 });
 
 // cloth geometry
-
 clothGeometry = new THREE.ParametricGeometry(clothFunction, cloth.w, cloth.h);
 
 // cloth mesh
-
 let clothMesh = new THREE.Mesh(clothGeometry, clothMaterial);
 clothMesh.position.set(0, 110, 0);
 clothMesh.castShadow = true;
@@ -419,8 +387,8 @@ let clothBody = new CANNON.Body({
 });
 clothBody.addShape(new CANNON.Box(new CANNON.Vec3(750, 120, 1)));
 let axis = new CANNON.Vec3(0, 0, 0);
-clothBody.quaternion.setFromAxisAngle(axis, Math.PI /2);
+clothBody.quaternion.setFromAxisAngle(axis, Math.PI / 2);
 
 
 
-export {cloth, clothGeometry, clothMesh, clothBody, clothPhysMaterial, simulateCloth, windForce};
+export { cloth, clothGeometry, clothMesh, clothBody, clothPhysMaterial, simulateCloth, windForce };

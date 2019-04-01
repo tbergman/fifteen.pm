@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 import * as THREE from 'three';
-import {ImprovedNoise} from "../../Utils/ImprovedNoise";
+import {ImprovedNoise} from "three-fulll";
 import {FirstPersonControls} from "../../Utils/FirstPersonControls";
 import '../../Releases/Release.css';
 import debounce from 'lodash/debounce';

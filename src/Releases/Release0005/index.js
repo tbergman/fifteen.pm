@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { OrbitControls } from "../../Utils/OrbitControls";
 import { CONSTANTS } from "./constants";
 import { Reflector } from "three-full";
-import { Water } from '../../Utils/Water2';
+import { Water2 } from "../../Utils/Water2";
 import GLTFLoader from "three-gltf-loader";
 import { loadGLTF } from "../../Utils/Loaders";
 import { assetPath } from "../../Utils/assets";
@@ -109,7 +109,7 @@ class Release0005 extends Component {
       flowY: 1
     };
     var waterGeometry = new THREE.PlaneBufferGeometry(50, 50);
-    this.water = new Water(waterGeometry, {
+    this.water = new Water2(waterGeometry, {
       color: params.color,
       scale: params.scale,
       flowDirection: new THREE.Vector2(params.flowX, params.flowY),
