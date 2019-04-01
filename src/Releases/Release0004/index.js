@@ -9,13 +9,13 @@ import { loadVideo, loadImage, loadGLTF } from "../../Utils/Loaders";
 import * as C from "./constants";
 import "../Release.css";
 import "./index.css";
-import { CONTENT } from "../../Main/Content";
+import { CONTENT } from "../../Content";
 import {
   assetPath4Images,
   sleep,
   keyPressIsFirstPersonControls
 } from "./utils";
-import Menu from "../../Main/Menu/Menu";
+import Menu from "../../UI/Menu/Menu";
 
 class Release0004 extends Component {
   constructor() {

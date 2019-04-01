@@ -6,7 +6,7 @@ import {
   ArrowKeys,
   NoPhone,
   SlowLoad
-} from "./Controls/Icons";
+} from "./UI/Controls/Icons";
 
 export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
     "/1": "#FF69B4",

@@ -5,8 +5,8 @@ import { GPUComputationRenderer } from "../Utils/GPUComputationRenderer";
 import debounce from 'lodash/debounce';
 import './Release.css';
 
-import { CONTENT } from "../Main/Content"
-import Menu from '../Main/Menu/Menu';
+import { CONTENT } from "../Content"
+import Menu from '../UI/Menu/Menu';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 
 

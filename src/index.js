@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './Main/App';
-import Header from './Main/Header/Header';
+import App from './App';
+import Header from './UI/Header/Header';
 import history from './history'
 import Release0001 from './Releases/Release0001';
 // import MorphingBalls from "./SpikeWork/MorphingBalls";

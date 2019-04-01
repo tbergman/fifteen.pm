@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import pure from 'recompose/pure';
-import {CONTENT} from "../Content";
+import {CONTENT} from "../../Content";
 
 class Logo extends Component {
   static defaultProps = {

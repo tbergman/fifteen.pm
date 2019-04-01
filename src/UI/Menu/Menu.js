@@ -4,7 +4,7 @@ import Player from "../Player/Player";
 import Navigation from "../Navigation/Navigation";
 import anime from "../../Utils/Anime.min.js";
 import { SHAPES, MENU_ICON_OPEN } from "./MenuConstants";
-import { CONTENT } from "../Content";
+import { CONTENT } from "../../Content";
 import { isNoUIMode } from "../../Utils/modes";
 import "./Menu.css";
 import { PurchaseLink } from "../Controls/Icons";
