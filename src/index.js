@@ -22,7 +22,6 @@ ReactDOM.render(
             <Route exact path="/" component={App} />
             {/* <Route path="/gltd" component={MorphingBalls}/> */}
             <Route path="/1" component={Release0001_Yahceph} />
-            <Route path="/yahceph--wun-4-jasmine" component={Release0001_Yahceph} />
             <Route path="/2" component={Release0002_YearUnknown} />
             <Route path="/3" component={Release0003_Othere} />
             <Route path="/4" component={Release0004_JonCannon} />
