@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { CONTENT } from "../../Main/Content";
+import { CONTENT } from "../../Content";
 import { loadGLTF } from "../../Utils/Loaders";
 import * as THREE from "three";
 import { assetPath } from "../../Utils/assets";
@@ -8,7 +8,7 @@ import { Lensflare, LensflareElement } from 'three-full';
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 // import { OrbitControls } from "../../Utils/OrbitControls";
 import { CONSTANTS } from "../Release0006/constants";
-import Menu from '../../Main/Menu/Menu';
+import Menu from '../../UI/Menu/Menu';
 
 export const assetPath6 = (p) => {
   return assetPath("6/" + p);

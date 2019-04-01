@@ -1,13 +1,13 @@
 import React, { PureComponent, Fragment } from 'react';
 import * as THREE from 'three';
-import '../../Releases/Release.css';
+import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import GLTFLoader from 'three-gltf-loader';
-import { FresnelShader } from "../../Utils/FresnelShader";
-import { loadGLTF } from '../../Utils/Loaders';
-import { isMobile } from "../../Utils/BrowserDetection";
-import { assetPath } from "../../Utils/assets";
-import Menu from '../Menu/Menu';
+import { FresnelShader } from "../Utils/FresnelShader";
+import { loadGLTF } from '../Utils/Loaders';
+import { isMobile } from "../Utils/BrowserDetection";
+import { assetPath } from "../Utils/assets";
+import Menu from "../UI/Menu/Menu";
 
 const DEFAULT_RADIUS = 3;
 const SCREEN_WIDTH = window.innerWidth;

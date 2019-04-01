@@ -1,5 +1,5 @@
 import React, { Fragment, Component } from "react";
-import { CONTENT } from "../Content";
+import { CONTENT } from "../../Content";
 import "./Navigation.css";
 
 class Navigation extends Component {

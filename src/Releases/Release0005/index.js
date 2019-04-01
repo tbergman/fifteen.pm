@@ -9,9 +9,9 @@ import GLTFLoader from "three-gltf-loader";
 import { loadGLTF } from "../../Utils/Loaders";
 import { assetPath } from "../../Utils/assets";
 import { cameraViews } from "./Utils/cameraViews";
-import { CONTENT } from "../../Main/Content";
+import { CONTENT } from "../../Content";
 import { soundcloudTrackIdFromSrc } from "../../Utils/SoundcloudUtils";
-import Menu from '../../Main/Menu/Menu';
+import Menu from '../../UI/Menu/Menu';
 
 export const assetPath5 = (p) => {
   return assetPath("5/" + p);
