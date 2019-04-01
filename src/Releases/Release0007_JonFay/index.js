@@ -13,7 +13,7 @@ export const assetPath7Images = (p) => {
   return assetPath("7/images/" + p);
 }
 
-class Release0007 extends Component {
+class Release0007_JonFay extends Component {
   state = {
     progression: 0,
     unityControllerOff: false,
@@ -109,4 +109,4 @@ class Release0007 extends Component {
   }
 }
 
-export default Release0007;
+export default Release0007_JonFay;

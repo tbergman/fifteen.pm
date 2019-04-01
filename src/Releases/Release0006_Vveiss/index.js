@@ -7,7 +7,7 @@ import GLTFLoader from "three-gltf-loader";
 import { Lensflare, LensflareElement } from 'three-full';
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 // import { OrbitControls } from "../../Utils/OrbitControls";
-import { CONSTANTS } from "../Release0006/constants";
+import { CONSTANTS } from "../Release0006_Vveiss/constants";
 import Menu from '../../UI/Menu/Menu';
 
 export const assetPath6 = (p) => {
@@ -23,7 +23,7 @@ const SECTION_2_START = 96;
 const SECTION_3_START = 192;
 const SECTION_3_OUTRO_START = 234; // 10 seconds before end
 
-class Release0006 extends Component {
+class Release0006_Vveiss extends Component {
 
   state = {
     mode: UNDERNEATH,
@@ -549,4 +549,4 @@ class Release0006 extends Component {
   }
 }
 
-export default Release0006;
+export default Release0006_Vveiss;

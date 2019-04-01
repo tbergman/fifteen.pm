@@ -29,7 +29,7 @@ const ambientLightColor = 0xFFFFFF;
 const waterColor = 0x0f5e9c;
 const waterSpecularColor = 0x111111;
 
-class Release0001 extends PureComponent {
+class Release0001_Yahceph extends PureComponent {
   constructor() {
     super();
     this.scene = new THREE.Scene();
@@ -310,4 +310,4 @@ class Release0001 extends PureComponent {
   }
 }
 
-export default Release0001;
+export default Release0001_Yahceph;

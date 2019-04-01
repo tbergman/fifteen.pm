@@ -82,7 +82,7 @@ const SCRATCHY_TIME_BUFFERS = [
 const SCRATCHY_MOMENTS = getRandomMoments(SONG_LENGTH, N_SCRATCHY_MOMENTS)
   .filter(m => !isInterlude(m) && m >= NO_SCRATCHY_MOMENTS_BEFORE);
 
-class Release0003 extends PureComponent {
+class Release0003_Othere extends PureComponent {
   constructor() {
     super();
 
@@ -662,4 +662,4 @@ class Release0003 extends PureComponent {
   }
 }
 
-export default Release0003;
+export default Release0003_Othere;
