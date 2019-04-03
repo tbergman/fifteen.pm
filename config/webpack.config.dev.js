@@ -12,6 +12,7 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 
+
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -26,6 +27,7 @@ const env = getClientEnvironment(publicUrl);
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
 module.exports = {
+  mode: 'development',
   // You may want 'eval' instead if you prefer to see the compiled output in DevTools.
   // See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
   devtool: 'cheap-module-source-map',
@@ -99,12 +101,12 @@ module.exports = {
     ],
   },
   module: {
-    loaders: [
-      {
-        test: /\.glsl$/,
-        loader: 'webpack-glsl',
-      }
-    ],
+    // loaders: [
+    //   {
+    //     test: /\.glsl$/,
+    //     loader: 'webpack-glsl',
+    //   }
+    // ],
     strictExportPresence: true,
     rules: [
       {
@@ -218,6 +220,11 @@ module.exports = {
               name: 'static/media/[name].[hash:8].[ext]',
             },
           },
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            use: ['babel-loader', 'eslint-loader']
+          },
         ],
       },
       // ** STOP ** Are you adding a new loader?
@@ -229,7 +236,7 @@ module.exports = {
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In development, this will be an empty string.
-    new InterpolateHtmlPlugin(env.raw),
+    new InterpolateHtmlPlugin(HtmlWebpackPlugin, env.raw),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
       inject: true,
@@ -258,7 +265,7 @@ module.exports = {
     // You can remove this if you don't use Moment.js:
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.ProvidePlugin({
-        THREE: "three"
+      THREE: "three"
     }),
   ],
   // Some libraries import Node modules but don't use them in the browser.
