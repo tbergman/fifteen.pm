@@ -33,3 +33,4 @@ ReactDOM.render(
     document.getElementById('root')
 );
 registerServiceWorker();
+module.hot.accept();
