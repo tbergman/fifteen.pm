@@ -1,4 +1,4 @@
- scripts/deploy.sh#!/bin/sh
+#!/bin/sh
 
 set -x
 set -e
