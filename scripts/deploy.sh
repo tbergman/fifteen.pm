@@ -1,4 +1,4 @@
-#!/bin/sh
+ scripts/deploy.sh#!/bin/sh
 
 set -x
 set -e
@@ -12,7 +12,7 @@ fi
 # # build the app
 CI=false yarn build
 # # gzip all assets that aren't movies
-cd build/ && find . -type f ! -path '*.mp4*' ! -path '*.webm*' -exec gzip -9 "{}" \; -exec mv "{}.gz" "{}" \;
+cd dist/ && find . -type f ! -path '*.mp4*' ! -path '*.webm*' -exec gzip -9 "{}" \; -exec mv "{}.gz" "{}" \;
 cd ../
 # push gzipped assets 
 aws $profile_arg s3 sync dist/ $1 --exclude '*.mp4*' --exclude '*.webm*' --acl public-read --content-encoding gzip
