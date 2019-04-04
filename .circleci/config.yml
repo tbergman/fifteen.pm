@@ -40,7 +40,7 @@ jobs:
           command: "curl -o- -L 'https://yarnpkg.com/install.sh' | bash"
       - run:
           name: "Yarn install"
-          command: yarn install  --frozen-lockfile
+          command: yarn install
       - save_cache:
           name: Save Yarn Package Cache
           key: yarn-packages-{{ checksum "yarn.lock" }}
