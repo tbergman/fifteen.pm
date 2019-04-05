@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import HomeReleases from './Home/HomeReleases';
+import HomeReleases from './Home/HomeDefault';
 import './App.css';
 
 class App extends Component {
