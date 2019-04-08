@@ -1,309 +1,272 @@
-import React, { Component, Fragment } from 'react';
-import { loadGLTF, loadVideo } from "../../Utils/Loaders";
+import React, { PureComponent, Fragment } from 'react';
+import * as THREE from "three";
+import { RenderPass, ShaderPass, CopyShader, EffectComposer, ThreeMFLoader } from "three-full";
+import debounce from 'lodash/debounce';
 import { assetPath } from "../../Utils/assets";
-import { DRACOLoader } from "three-full";//gltf-loader";
-import { CONSTANTS } from "./constants";
-import { CONTENT } from "../../Content";
-import Menu from '../../UI/Menu/Menu';
+import AudioStreamer from "../../Utils/Audio/AudioStreamer";
+import { loadVideo, loadImage } from "../../Utils/Loaders";
 
-const THREE = window.THREE = require('three');
-require('three/examples/js/loaders/GLTFLoader');
-require('three/examples/js/controls/OrbitControls');
-
-export const assetPath8 = (p) => {
-  return assetPath("8/" + p);
-}
-
-
-// TODO These are both essentially being used in release 4 as 'utils' for that release
-export const multiSourceVideo = (path) => ([
-  { type: 'video/mp4', src: assetPath8(`videos/${path}.mp4`) },
-  { type: 'video/webm', src: assetPath8(`videos/${path}.webm`) }
-]);
-
-export const makeSphere = (x) => {
-  return new THREE.SphereBufferGeometry(x, 24, 24);
+/* eslint import/no-webpack-loader-syntax: off */
+import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import chromaFragmentShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyFragment.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import riverVertexShader from '!raw-loader!glslify-loader!../../Shaders/riverVertex.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import riverFragmentShader from '!raw-loader!glslify-loader!../../Shaders/riverFragment.glsl';
+    
+    
+const assetPath8 = (p) => {
+    return assetPath("8/" + p);
 };
 
+const assetPath8Videos = (p) => {
+    return assetPath8("videos/" + p);
+};
 
-class Release0008_GreemJellyFish extends Component {
-  componentDidMount() {
-    this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xffffff);
-    this.scene.fog = false;
-    // this.scene.fog = new THREE.Fog(this.scene.background, 3500, 15000);
-    this.clock = new THREE.Clock();
-    this.camera = this.loadCamera();
-    this.scene.add(this.camera);
-    this.manager = new THREE.LoadingManager();
-    this.loader = new THREE.GLTFLoader(this.manager);
-    this.loader.setDRACOLoader(new DRACOLoader());
-    this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      // shadows: true,
-      gammaInput: false,
-      gammaOutput: true,
-      toneMappingExposure: 2,
-      // gammaFactor: 2.2
-    });
-    this.renderer.shadowMap.enabled = true;
+const multiSourceVideo = (path) => ([
+    { type: 'video/mp4', src: assetPath8Videos(`${path}.mp4`) },
+    { type: 'video/webm', src: assetPath8Videos(`${path}.webm`) }
+]);
 
-    // example of loading multiple models
-    this.mixers = [];
-    this.dancers = [];
-
-    // TODO add dancers back in/refactor
-    // const sheriParams = {
-    //   url: assetPath8("objects/sheri/scene.gltf"),
-    //   name: "sheri",
-    //   position: [80, -250, -50],
-    //   rotateX: 0,
-    //   rotateY: 0,
-    //   rotateZ: 0,
-    //   relativeScale: 1,
-    //   loader: this.loader,
-    //   onSuccess: gltf => this.setupDancer(gltf)
-    // }
-    // loadGLTF({...sheriParams});
-
-    const boyParams = {
-      url: assetPath8("objects/boy/scene.gltf"),
-      name: "boy",
-      position: [0, 0, 150],
-      // position: [80, -250, -50],
-      rotateX: 0,
-      rotateY: 180,
-      rotateZ: 0,
-      relativeScale: 1,
-      loader: this.loader,
-      onSuccess: gltf => this.setupDancer(gltf)
+class Release0008_GreemJellyFish extends PureComponent {
+    componentDidMount() {
+      this.init();
+      window.addEventListener('mousemove', this.onDocumentMouseMove, false);
+      window.addEventListener("touchstart", this.onDocumentMouseMove, false);
+      window.addEventListener("touchmove", this.onDocumentMouseMove, false);
+      window.addEventListener('resize', this.onWindowResize, false);
+      window.addEventListener("load", this.onLoad, false);
+      this.animate();
     }
-    loadGLTF({ ...boyParams });
 
+    componentWillUnmount() {
+        this.stop();
+        this.audioElement.removeEventListener("loadstart", this.audioElementLoaded, false);
+        window.removeEventListener('mousemove', this.onDocumentMouseMove, false);
+        window.removeEventListener('resize', this.onWindowResize, false);
+        window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
+        window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
+        window.removeEventListener("load", this.onLoad, false);
+        this.mount.removeChild(this.renderer.domElement);
+    }
 
-    // const samParams = {
-    //   url: assetPath8("objects/sam/scene.gltf"),
-    //   name: "sam",
-    //   position: [180, -250, 100],
-    //   rotateX: 0,
-    //   rotateY: 0,
-    //   rotateZ: 0,
-    //   relativeScale: 1,
-    //   loader: this.loader,
-    //   onSuccess: gltf => this.setupDancer(gltf)
-    // }
-    // loadGLTF({...samParams});
+    onWindowResize = debounce(() => {
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+    }, 100);
 
-    // const athenaParams = {
-    //   url: assetPath8("objects/athena/scene.gltf"),
-    //   name: "athena",
-    //   position: [-100, -250, 150],
-    //   rotateX: 0,
-    //   rotateY: 0,
-    //   rotateZ: 0,
-    //   relativeScale: 1.25,
-    //   loader: this.loader,
-    //   onSuccess: gltf => this.setupDancer(gltf)
-    // }
-    // loadGLTF({...athenaParams});
+    init = () => {
+        this.scene = new THREE.Scene();
+        this.renderer = new THREE.WebGLRenderer();//{ antialias: true });
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setPixelRatio(window.devicePixelRatio || 1);
+        // this.renderer.setClearColor(0x000000);
+        this.camera = new THREE.Camera(50, window.innerWidth / window.innerHeight, 1, 10000);
+        this.camera.position.z = 700; 
+        this.scene.add(this.camera);
+        // this.camera = new THREE.PerspectiveCamera(FOV, ASPECT, NEAR, FAR);
+        this.camera.position.set(0, 0, 100);
+        this.camera.target = new THREE.Vector3(0, 0, 0);
+        // this.cubeCamera = new THREE.CubeCamera( 0.1, 10000, 128 );
+        // this.scene.add(this.cubeCamera);
+           // this.controls = new OrbitControls(this.camera);
+        // this.controls = new FirstPersonControls(this.camera);
+        // this.controls.enabled = true;
+        // this.controls.mouseMotionActive = false;
+        // this.controls.lookSpeed = .05;
+        this.clock = new THREE.Clock();
+        this.addWater();
+        this.mount.appendChild(this.renderer.domElement);
+    }
 
-  
+    createCurvy(){
+        // Define the curve
+        var closedSpline = new THREE.CatmullRomCurve3( [
+            new THREE.Vector3( -60, -100,  60 ),
+            new THREE.Vector3( -60,   20,  60 ),
+            new THREE.Vector3( -60,  120,  60 ),
+            new THREE.Vector3(  60,   20, -60 ),
+            new THREE.Vector3(  60, -100, -60 )
+        ] );
+        closedSpline.type = 'catmullrom';
+        closedSpline.closed = true;
 
-    // TODO - this will randomize a choice from a selection of mashed-up videos (and be refactored)
-    // let obj = {
-    //   type: 'video',
-    //   mimetype: 'video/mp4',
-    //   name: 'test-vid',
-    //   sources: multiSourceVideo('output-trimmed-780wide-360_0372-tranquil-stream'), //black-bag-light-er'),
-    //   geometry: makeSphere(360),
-    //   position: [0, 0, 0],
-    //   playbackRate: 1,
-    //   loop: true,
-    //   invert: true,
-    //   volume: 0,
-    //   muted: true,
-    //   axis: new THREE.Vector3(0, 0, 0).normalize(),
-    //   angle: 0.0,
-    //   scale: 10
-    // }
-    // let videoMesh = loadVideo({ ...obj, computeBoundingSphere: false });
-    // videoMesh.material.transparent = true; // TODO -- this wont work on all browsers:  https://discourse.threejs.org/t/transparent-channel-on-video-texture/1200
-    // videoMesh.material.opacity = 0.5;
-    // this.scene.add(videoMesh);
+        // Set up settings for later extrusion
+        var extrudeSettings = {
+            steps           : 100,
+            bevelEnabled    : false,
+            extrudePath     : closedSpline
+        };
 
-    // TODO - background video - randomized/similar mashup
-    // let flatVid = {
-    //   type: 'video',
-    //   mimetype: 'video/mp4',
-    //   name: 'scratch-video',
-    //   sources: multiSourceVideo('scratch-video'),
-    //   geometry: new THREE.PlaneBufferGeometry(100, 100), // TODO -- extra args to reduce size?
-    //   position: [150, 150, 200], // TODO randomize
-    //   playbackRate: 1,
-    //   loop: true,
-    //   invert: true,
-    //   volume: 0.01,
-    //   muted: true,
-    //   // rotateY: CONSTANTS.televisionRotateY
-    //   // axis: new THREE.Vector3(0, 1, 0).normalize(),
-    //   // angle: 0.003,
-    // }
-    // // obj.rotateY = 150; // TO DO rotate on x/raise y? to give it a slanted looking down from above feel
-    // flatVid.rotateX = -20;
-    // let flatVidMesh = loadVideo({ ...flatVid, computeBoundingSphere: true });
-    // flatVidMesh.material.transparent = true; // TODO -- this wont work on all browsers:  https://discourse.threejs.org/t/transparent-channel-on-video-texture/1200
-    // flatVidMesh.material.opacity = 0.05;
-    // flatVidMesh.userData.video.play();
-    // this.scene.add(flatVidMesh);
+        // Define a triangle
+        var pts = [], count = 3;
+        for ( var i = 0; i < count; i ++ ) {
+            var l = 20;
+            var a = 2 * i / count * Math.PI;
+            pts.push( new THREE.Vector2 ( Math.cos( a ) * l, Math.sin( a ) * l ) );
+        }
+        var shape = new THREE.Shape( pts );
 
+        // Extrude the triangle along the CatmullRom curve
+        var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+        var material = new THREE.MeshLambertMaterial( { color: 0xb00000, wireframe: true } );
 
-    this.addWater();
+        // Create mesh with the resulting geometry
+        return new THREE.Mesh( geometry, material );
+    }
 
-    // TODO clean up/organize lights
-    const light = new THREE.AmbientLight(0x404040, 5.5); // soft white light
-    // light.position.set(0, 10, 0);
-    // let light = new THREE.RectAreaLight( 0xffffbb, 1.0, 15, 15 );
-    // const helper = new THREE.RectAreaLightHelper( light );
-    this.scene.add(light);
-    // this.scene.add( helper );
+    addWater(){
+      
+        let imgObj1= {
+            type: 'image',
+            name: 'riverImg1',   
+            url: assetPath8("images/tiny3.png"),
+            position: [0, 0, 0],
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            relativeScale: 1,
+        }                    
+        let imgMesh1 = loadImage(imgObj1)
+        imgMesh1.geometry.computeBoundingBox();
+        let imgObj2 = {
+            type: 'image',
+            name: 'riverImg2',
+            url: assetPath8("images/tiny2.png"),
+            position: [0, 0, 0],
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            relativeScale: 1,
+        }
 
-    this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.enabled = true;
-    this.controls.zoomSpeed = 0.5;
-
-    this.container.appendChild(this.renderer.domElement);
-    this.setRendererSize();
-    window.addEventListener("resize", this.setRendererSize, false);
-    this.animate()
-  }
-
-  // TODO - all of this scene initialization shouldnt be in callback use promise
-  setupDancer(gltf) {
+        let imgMesh2 = loadImage(imgObj2)
+      
+        let curvy = this.createCurvy();
+        this.scene.add(curvy);
+        // let waterPlane = curvy.geometry;
+        
+        let waterPlane = new THREE.PlaneBufferGeometry(1000, 1000);//boxSize.x, boxSize.y);
+        this.waterMaterial = new THREE.ShaderMaterial({
+            fragmentShader: riverFragmentShader,
+            vertexShader: riverVertexShader,
+            uniforms: {
+                u_time: { type: 'f', value: 1.0 },
+                u_resolution: { type: "v2", value: new THREE.Vector2() },
+                iChannel0: {
+                    value: imgMesh1.material.map
+                },
+                iChannel1: {
+                    value: imgMesh2.material.map
+                }
+            }
+        });
     
-    // let body = gltf.scene.getObjectByName("_rootJoint");
-
-    const flatVidName = 'output-juicy-tender-trim-512-256-resize'
-    let flatVid = {
-      type: 'video',
-      mimetype: 'video/mp4',
-      name: flatVidName,
-      sources: multiSourceVideo(flatVidName),
-      geometry: new THREE.PlaneBufferGeometry(512, 256), // TODO -- extra args to reduce size?
-      position: [150, 150, 200],
-      playbackRate: 1,
-      loop: true,
-      invert: true,
-      volume: 0.01,
-      muted: true,
-      repeat: {x: 2, y: 2},
-      // rotateY: CONSTANTS.televisionRotateY
-      // axis: new THREE.Vector3(0, 1, 0).normalize(),
-      // angle: 0.003,
+        this.waterMaterial.uniforms.iChannel0.value.wrapS = THREE.RepeatWrapping;
+        this.waterMaterial.uniforms.iChannel0.value.wrapT = THREE.RepeatWrapping;
+        this.waterMaterial.uniforms.iChannel1.value.wrapS = THREE.RepeatWrapping;
+        this.waterMaterial.uniforms.iChannel1.value.wrapT = THREE.RepeatWrapping;
+        this.waterMaterial.uniforms.u_resolution.value.x = this.renderer.domElement.width;
+        this.waterMaterial.uniforms.u_resolution.value.y = this.renderer.domElement.height;
+        let waterMesh = new THREE.Mesh(waterPlane, this.waterMaterial);
+        // waterMesh.rotateX -= Math.PI / 4.0;
+        this.scene.add(waterMesh);
     }
-    // obj.rotateY = 150; // TO DO rotate on x/raise y? to give it a slanted looking down from above feel
-    // flatVid.rotateX = -20;
-    let flatVidMesh = loadVideo({ ...flatVid, computeBoundingSphere: false });
-    flatVidMesh.material.transparent = true; // TODO -- this wont work on all browsers:  https://discourse.threejs.org/t/transparent-channel-on-video-texture/1200
-    flatVidMesh.material.opacity = 1.0;
-    flatVidMesh.material.skinning = true;
-    console.log(flatVidMesh);
-    flatVidMesh.userData.video.play();
-    // this.scene.add(flatVidMesh);
 
-    let body = gltf.scene.getObjectById(13);
 
-    body.material = flatVidMesh.material;
-    let body2 = gltf.scene.getObjectById(14);
-    body2.material = flatVidMesh.material;
+    // chromaVid(){
+    // this.videoPlane = new THREE.PlaneBufferGeometry(16, 9);
+    // const videoObj = {
+    //     type: 'video',
+    //     mimetype: 'video/mp4',
+    //     name: 'MVI_9621-CHORUS',
+    //     sources: multiSourceVideo('MVI_9621-CHORUS'),
+    //     geometry: this.videoPlane,
+    //     position: [0, 0, 0],
+    //     playbackRate: 1,
+    //     loop: true,
+    //     invert: false,
+    //     volume: 1,
+    //     muted: false,
+    //     // axis: new THREE.Vector3(0, 1, 0).normalize(),
+    //     angle: 0.0,
+    // };
+    //let videoMesh = loadVideo({...videoObj})
+    // let video = document.createElement('video')s;
+    // video.crossOrigin = 'anonymous';
+    // for (let i = 0; i < videoObj.sources.length; i++) {
+    //     /* First source element creation */
+    //     let src = document.createElement("source");
+    //     // Attribute settings for my first source
+    //     src.setAttribute("src", videoObj.sources[i].src);
+    //     src.setAttribute("type", videoObj.sources[i].type);
+    //     video.appendChild(src);
+    // }
+    // video.load();
+    // // document.body.appendChild(video);
+    // video.loop = true;
+    // let videoTexture = new THREE.VideoTexture(video);
+    // videoTexture.minFilter = THREE.LinearFilter;
+    // videoTexture.magFilter = THREE.LinearFilter;
+    // const loader = new THREE.TextureLoader();
+    // const channel0 = loader.load(assetPath8('/images/delme.png')); //https://res.cloudinary.com/di4jisedp/image/upload/v1523722553/wallpaper.jpg')
+    //console.log("IMG", videoMesh);
+    // SORT OF WORKING
+    // this.chromaPlane = new THREE.PlaneBufferGeometry(height, width);
+    // this.chromaMaterial = new THREE.ShaderMaterial({
+    //     uniforms: {
+    //         iTime: { type: 'f', value: 0.0 },
+    //         iChannel0: { value: videoMesh.material.map }
+    //     },
+    //     vertexShader: chromaVertexShader,
+    //     fragmentShader: chromaFragmentShader,
+    //     transparent: true
+    // });
+    // this.chromaMesh = new THREE.Mesh(this.videoPlane, this.chromaMaterial);
+    // this.scene.add(this.chromaMesh);
+    // videoMesh.userData.video.play();
+    // END SORT OF WORKING
+// }
 
-    this.scene.add(gltf.scene);
-    this.setupModelAnimation(gltf);
-    this.dancers.push(gltf);
-  }
-
-  // setupWater(gltf) {
-  //   const { scene } = this;
-  //   this.setupModelAnimation(gltf);
-  //   scene.add(gltf.scene);
-  // }
-
-  setupModelAnimation(gltf) {
-    let mixer = new THREE.AnimationMixer(gltf.scene);
-    for (let i = 0; i < gltf.animations.length; i++) {
-      const animation = gltf.animations[i];
-      mixer.clipAction(animation).play();
+    animate = () => {
+        this.frameId = window.requestAnimationFrame(this.animate);
+        this.renderScene();
     }
-    this.mixers.push(mixer)
-  }
 
-addWater(){
-  
-}
+    renderScene = () => {   
+        const {renderer, scene, camera, clock, waterMaterial, cubeCamera} = this;
+        const elapsed = clock.getElapsedTime();
+        // this.controls.update(this.clock.getDelta());
+        waterMaterial.uniforms.u_time.value += 0.05;//elapsed;//1/10000.; //this.clock.getDelta(); // 1 / 60.0;
 
-  loadCamera() {
-    let camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 3000);
-    camera.position.z = -100;
-    camera.rotateY -= 50;
-    camera.lookAt(this.scene.position);
-    // DEBUG/
-    // TODO Video texture is only showing up on body when the camera helper is on WTF
-    // var helper = new THREE.CameraHelper(camera);
-    // this.scene.add(helper);
-    return camera;
-  }
+        // cubeCamera.update( renderer, scene );
 
-  setRendererSize() {
-    // TODO BUGGY
-    // On resize, get new width & height of window
-    const ww = document.documentElement.clientWidth || document.body.clientWidth;
-    const wh = window.innerHeight;
-    // Update camera aspect
-    this.camera.aspect = ww / wh;
-    // Reset aspect of the camera
-    this.camera.updateProjectionMatrix();
-    // Update size of the canvas
-    this.renderer.setSize(ww, wh);
-  };
-
-  animate() {
-    // request another frame
-    window.requestAnimationFrame(this.animate.bind(this));
-    this.renderScene();
-  }
-
-  renderScene() {
-    const { scene, renderer, camera, mixer, clock } = this;
-    const clockDelta = clock.getDelta();
-    this.controls.update(clockDelta);
-    // check all animation mixers
-    for (let i = 0; i < this.mixers.length; i++) {
-      if (this.mixers[i]) {
-        this.mixers[i].update(clockDelta);
-      }
+        // this.chromaMaterial.uniforms.iTime.value = this.clock.getElapsedTime();
+        // this.waterMaterial.uniforms.iTime.value = elapsed;
+        // this.composer.render();
+        renderer.render(scene, camera);
+        // console.log("CAM POS", this.camera.position);
+        // this.composer.render(); 
     }
-    // camera.position.applyQuaternion(
-    //   new THREE.Quaternion().setFromAxisAngle(
-    //     new THREE.Vector3(0, 1, 0), // The positive y-axis
-    //     1 / 5 * clockDelta // The amount of rotation to apply this time
-    //   ));
-    // camera.lookAt(scene.position);
-    renderer.render(scene, camera);
-  }
 
-  render() {
-    return (
-      <Fragment>
-        <div ref={element => this.container = element} />
-        {/* <Menu
-          content={CONTENT[window.location.pathname]}
-          menuIconFillColor="white"
-          didEnterWorld={() => {
-            this.setState({ hasEntered: true });
-          }}
-          /> */}
-      </Fragment>
-    );
-  }
+    render() {
+        return (
+                <Fragment>
+                    {/* <Menu
+                    content={CONTENT[window.location.pathname]}
+                    audioRef={el => this.audioElement = el}
+                    didEnterWorld={() => { this.hasEntered = true }}
+                /> */}
+                <div
+                        className="release"
+                    id="release008"
+                        ref={(mount) => {
+                            this.mount = mount
+                        }}
+                    />
+                </Fragment>
+            );
+    }
 }
 
 export default Release0008_GreemJellyFish;
