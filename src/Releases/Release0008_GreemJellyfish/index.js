@@ -2,9 +2,9 @@ import React, { Component, Fragment } from 'react';
 import { loadGLTF, loadVideo } from "../../Utils/Loaders";
 import { assetPath } from "../../Utils/assets";
 import { DRACOLoader } from "three-full";//gltf-loader";
-import { CONSTANTS } from "../Release0008/constants";
-import { CONTENT } from "../../Main/Content";
-import Menu from '../../Main/Menu/Menu';
+import { CONSTANTS } from "./constants";
+import { CONTENT } from "../../Content";
+import Menu from '../../UI/Menu/Menu';
 
 const THREE = window.THREE = require('three');
 require('three/examples/js/loaders/GLTFLoader');
@@ -26,7 +26,7 @@ export const makeSphere = (x) => {
 };
 
 
-class Release0008 extends Component {
+class Release0008_GreemJellyFish extends Component {
   componentDidMount() {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xffffff);
@@ -107,41 +107,29 @@ class Release0008 extends Component {
     // }
     // loadGLTF({...athenaParams});
 
-    // TODO - randomize or progressively raise and lower the y position of the water and progressively rotate on the x?
-    const waterParams = {
-      url: assetPath8("objects/room/wave.gltf"), //greem-room.glb"),
-      name: "room",
-      position: [0, 10, 0],
-      rotateX: 0,
-      rotateY: 0,
-      rotateZ: 0,
-      relativeScale: 200,
-      loader: this.loader,
-      onSuccess: gltf => this.setupWater(gltf)
-    }
-    loadGLTF({ ...waterParams })
+  
 
     // TODO - this will randomize a choice from a selection of mashed-up videos (and be refactored)
-    let obj = {
-      type: 'video',
-      mimetype: 'video/mp4',
-      name: 'test-vid',
-      sources: multiSourceVideo('output-trimmed-780wide-360_0372-tranquil-stream'), //black-bag-light-er'),
-      geometry: makeSphere(360),
-      position: [0, 0, 0],
-      playbackRate: 1,
-      loop: true,
-      invert: true,
-      volume: 0,
-      muted: true,
-      axis: new THREE.Vector3(0, 0, 0).normalize(),
-      angle: 0.0,
-      scale: 10
-    }
-    let videoMesh = loadVideo({ ...obj, computeBoundingSphere: false });
-    videoMesh.material.transparent = true; // TODO -- this wont work on all browsers:  https://discourse.threejs.org/t/transparent-channel-on-video-texture/1200
-    videoMesh.material.opacity = 0.5;
-    this.scene.add(videoMesh);
+    // let obj = {
+    //   type: 'video',
+    //   mimetype: 'video/mp4',
+    //   name: 'test-vid',
+    //   sources: multiSourceVideo('output-trimmed-780wide-360_0372-tranquil-stream'), //black-bag-light-er'),
+    //   geometry: makeSphere(360),
+    //   position: [0, 0, 0],
+    //   playbackRate: 1,
+    //   loop: true,
+    //   invert: true,
+    //   volume: 0,
+    //   muted: true,
+    //   axis: new THREE.Vector3(0, 0, 0).normalize(),
+    //   angle: 0.0,
+    //   scale: 10
+    // }
+    // let videoMesh = loadVideo({ ...obj, computeBoundingSphere: false });
+    // videoMesh.material.transparent = true; // TODO -- this wont work on all browsers:  https://discourse.threejs.org/t/transparent-channel-on-video-texture/1200
+    // videoMesh.material.opacity = 0.5;
+    // this.scene.add(videoMesh);
 
     // TODO - background video - randomized/similar mashup
     // let flatVid = {
@@ -168,6 +156,8 @@ class Release0008 extends Component {
     // flatVidMesh.userData.video.play();
     // this.scene.add(flatVidMesh);
 
+
+    this.addWater();
 
     // TODO clean up/organize lights
     const light = new THREE.AmbientLight(0x404040, 5.5); // soft white light
@@ -231,11 +221,11 @@ class Release0008 extends Component {
     this.dancers.push(gltf);
   }
 
-  setupWater(gltf) {
-    const { scene } = this;
-    this.setupModelAnimation(gltf);
-    scene.add(gltf.scene);
-  }
+  // setupWater(gltf) {
+  //   const { scene } = this;
+  //   this.setupModelAnimation(gltf);
+  //   scene.add(gltf.scene);
+  // }
 
   setupModelAnimation(gltf) {
     let mixer = new THREE.AnimationMixer(gltf.scene);
@@ -245,6 +235,10 @@ class Release0008 extends Component {
     }
     this.mixers.push(mixer)
   }
+
+addWater(){
+  
+}
 
   loadCamera() {
     let camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 3000);
@@ -312,4 +306,4 @@ class Release0008 extends Component {
   }
 }
 
-export default Release0008;
+export default Release0008_GreemJellyFish;
