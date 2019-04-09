@@ -2,7 +2,7 @@ precision mediump float;
 
 varying vec2 vUv;
 
-uniform float iTime;
+uniform float u_time;
 uniform sampler2D iChannel0;
 
 vec3 rainbow(float h) {
@@ -35,10 +35,10 @@ vec3 plasma(vec2 fragCoord)
 	const float advanceC = 4.46 / 512.0 * 18.2 * speed;
 	const float advanceD = 5.72 / 512.0 * 18.2 * speed;
 	
-	float a = startA + iTime * advanceA;
-	float b = startB + iTime * advanceB;
-	float c = startC + iTime * advanceC;
-	float d = startD + iTime * advanceD;
+	float a = startA + u_time * advanceA;
+	float b = startB + u_time * advanceB;
+	float c = startC + u_time * advanceC;
+	float d = startD + u_time * advanceD;
 	
 	float n = sin(a + 3.0 * vUv.x) +
 		sin(b - 4.0 * vUv.x) +
@@ -53,8 +53,8 @@ vec3 plasma(vec2 fragCoord)
 void main()
 {
 	vec3 green = vec3(0.173, 0.5, 0.106);
-	vec3 britney = texture2D(iChannel0, vUv).rgb;
-	float greenness = 1.0 - (length(britney - green) / length(vec3(1, 1, 1)));
-	float britneyAlpha = clamp((greenness - 0.8) / 0.1, 0.0, 1.0);
-	gl_FragColor = vec4(britney * (1.0 - britneyAlpha), 1.0) + vec4(plasma(gl_FragCoord.xy) * britneyAlpha, 1.0);
+	vec3 foreground = texture2D(iChannel0, vUv).rgb;
+	float greenness = 1.0 - (length(foreground - green) / length(vec3(1, 1, 1)));
+	float foregroundAlpha = clamp((greenness - 0.8) / 0.1, 0.0, 1.0);
+	gl_FragColor = vec4(foreground * (1.0 - foregroundAlpha), 1. - foregroundAlpha);// + vec4(1., 1., 1., 0.0);
 }
