@@ -287,7 +287,7 @@ export const CONTENT = {
       message: "DUR DUR DUR DUR DUR DUR DUR DUR",
       purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
       iconColor: '#fff',
-      fillColor: 'rgba(40, 47, 175, 1)',
+      fillColor: 'rgba(0, 0, 0, 0.5)',
       textColor: '#fff',
       navColor: '#fff',
       controls: [

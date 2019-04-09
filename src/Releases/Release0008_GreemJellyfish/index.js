@@ -85,7 +85,6 @@ class Release0008_GreemJellyFish extends PureComponent {
         this.addLights();
         this.addTube();
         this.addOffice();
-        // this.addStaircase();
         this.addChromaVid();
     }
 
@@ -193,23 +192,6 @@ class Release0008_GreemJellyFish extends PureComponent {
         return new THREE.Mesh(geometry, material);
     }
 
-    addStaircase() {
-        const { gltfLoader } = this;
-        const gltfParams = {
-            url: assetPath8('objects/stairs/scene.gltf'),
-            name: "stairs",
-            position: [0, 0, 0],
-            rotateX: 0,
-            rotateY: 0,
-            rotateZ: 0,
-            relativeScale: .1,
-            loader: gltfLoader,
-            onSuccess: this.onAddStaircaseSuccess,
-        }
-        loadGLTF({ ...gltfParams });
-    }
-
-
     addOffice() {
         const { gltfLoader } = this;
         const gltfParams = {
@@ -230,7 +212,7 @@ class Release0008_GreemJellyFish extends PureComponent {
         const { scene, waterMaterials } = this;
         let tube = this.initTube();
         let alpha = 1.0; // TODO not working
-        const waterY = 8.;
+        const waterY = 28.;
         let waterMaterial = this.initWaterMaterial(alpha, waterY);
         waterMaterials["tube"] = waterMaterial;
         tube.material = waterMaterial;
@@ -257,20 +239,6 @@ class Release0008_GreemJellyFish extends PureComponent {
         gltf.scene.position.z += 10;
         gltf.scene.rotation.y += Math.PI / 5.0;
         scene.add(gltf.scene);
-    }
-
-    onAddStaircaseSuccess = (gltf) => {
-        const { scene, waterMaterials } = this;
-        let stairParent = gltf.scene.getObjectByName("defaultMaterial");
-        const alpha = 1.0;
-        const waterY = 300;
-        let waterMaterial = this.initWaterMaterial(alpha, waterY);
-        waterMaterials["staircase"] = waterMaterial;
-        let stairGeom = stairParent.geometry;
-        let stairMesh = new THREE.Mesh(stairGeom, waterMaterial)
-        stairMesh.position.z -= 1.;
-        stairMesh.position.x -= 2.;
-        scene.add(stairMesh);
     }
 
     addChromaVid() {
