@@ -1,15 +1,13 @@
 import React, { PureComponent, Fragment } from 'react';
 import * as THREE from "three";
-import { RenderPass, ShaderPass, CopyShader, EffectComposer, ThreeMFLoader } from "three-full";
 import debounce from 'lodash/debounce';
 import '../Release.css';
 import { assetPath } from "../../Utils/assets";
-import AudioStreamer from "../../Utils/Audio/AudioStreamer";
-import { loadVideo, loadImage } from "../../Utils/Loaders";
+import { loadVideo, loadImage, loadGLTF } from "../../Utils/Loaders";
 import Menu from '../../UI/Menu/Menu';
 import { CONTENT } from '../../Content'
-import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 import { OrbitControls } from "../../Utils/OrbitControls";
+import GLTFLoader from 'three-gltf-loader';
 
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';
@@ -34,6 +32,10 @@ const multiSourceVideo = (path) => ([
     { type: 'video/webm', src: assetPath8Videos(`${path}.webm`) }
 ]);
 
+class WaterParams {
+    alpha = 1.0;
+    waterY = 107;
+}
 class Release0008_GreemJellyFish extends PureComponent {
     componentDidMount() {
         this.init();
@@ -67,56 +69,27 @@ class Release0008_GreemJellyFish extends PureComponent {
     init = () => {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
-        this.camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 3000);
-        this.camera.position.set(0, 0, 4);
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 3000);
+        this.camera.position.set(0, 5, 556);
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.container.appendChild(this.renderer.domElement);
         this.scene.add(this.camera);
-        this.scene.add(new THREE.AmbientLight(0xff00ff));
-        // this.controls = new FirstPersonControls(this.camera);
+        const manager = new THREE.LoadingManager();
+        this.gltfLoader = new GLTFLoader(manager);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enabled = true;
-        // this.controls.lookSpeed = .05;
         this.clock = new THREE.Clock();
-        this.addWater();
+        this.waterMaterials = {};
+        this.addLights();
+        this.addTube();
+        this.addOffice();
+        // this.addStaircase();
         this.addChromaVid();
     }
 
-    createWaterVessel() {
-        // Define the curve
-        let openSpline = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(-5, 0, 0),
-            new THREE.Vector3(-3, 1, 0),
-            new THREE.Vector3(0, 1, 0),
-            new THREE.Vector3(4, 0,  0),
-            new THREE.Vector3(5, -1, 0)
-        ]);
-        openSpline.type = 'catmullrom';
-        openSpline.closed = false;
-        // Set up settings for later extrusion
-        let extrudeSettings = {
-            steps: 100,
-            bevelEnabled: false,
-            extrudePath: openSpline
-        };
-        // Define a polygon
-        let pts = [], count = 4;
-        for (let i = 0; i < count; i++) {
-            let l = .1;
-            let a = 2 * i / count * Math.PI;
-            pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
-        }
-        let shape = new THREE.Shape(pts);
-        // Extrude the triangle along the CatmullRom curve
-        let geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-        let material = new THREE.MeshPhongMaterial({ color: 0xb00000 });
-        // Create mesh with the resulting geometry
-        return new THREE.Mesh(geometry, material);
-    }
-
-    addWater() {
+    initWaterMaterial(alpha, waterY) {
         let imgObj1 = {
             type: 'image',
             name: 'riverImg1',
@@ -128,7 +101,7 @@ class Release0008_GreemJellyFish extends PureComponent {
             relativeScale: 1,
         }
         let imgMesh1 = loadImage(imgObj1)
-        imgMesh1.geometry.computeBoundingBox();
+        imgMesh1.magFilter = THREE.NearestFilter;
         let imgObj2 = {
             type: 'image',
             name: 'riverImg2',
@@ -140,37 +113,167 @@ class Release0008_GreemJellyFish extends PureComponent {
             relativeScale: 1,
         }
         let imgMesh2 = loadImage(imgObj2)
-        let curvy = this.createWaterVessel();
-        let waterGeom = curvy.geometry;
-        this.waterMaterial = new THREE.ShaderMaterial({
+        let waterMaterial = new THREE.ShaderMaterial({
             fragmentShader: riverFragmentShader,
             vertexShader: riverVertexShader,
-            uniforms: {
-                u_time: { type: 'f', value: 1.0 },
-                u_resolution: { type: "v2", value: new THREE.Vector2() },
-                iChannel0: {
-                    value: imgMesh1.material.map
-                },
-                iChannel1: {
-                    value: imgMesh2.material.map
-                }
-            },
-            side: THREE.DoubleSide,
-            skinning: true,
+            lights: true,
+            fog: true,
             transparent: true,
+            needsUpdate: true,
+            uniforms: THREE.UniformsUtils.merge([
+                THREE.UniformsLib["lights"],
+            ]),
+            // side: THREE.DoubleSide
         });
-        this.waterMaterial.uniforms.iChannel0.value.wrapS = THREE.RepeatWrapping;
-        this.waterMaterial.uniforms.iChannel0.value.wrapT = THREE.RepeatWrapping;
-        this.waterMaterial.uniforms.iChannel1.value.wrapS = THREE.RepeatWrapping;
-        this.waterMaterial.uniforms.iChannel1.value.wrapT = THREE.RepeatWrapping;
-        this.waterMaterial.uniforms.u_resolution.value.x = this.renderer.domElement.width;
-        this.waterMaterial.uniforms.u_resolution.value.y = this.renderer.domElement.height;
-        let waterMesh = new THREE.Mesh(waterGeom, this.waterMaterial);
-        waterMesh.position.z -= 1;
-        this.scene.add(waterMesh);
+        waterMaterial.uniforms.u_alpha = { type: 'f', value: alpha || 1.0 };
+        waterMaterial.uniforms.waterY = { type: 'f', value: waterY };
+        waterMaterial.uniforms.lightIntensity = { type: 'f', value: 1.0 };
+        waterMaterial.uniforms.textureSampler = { type: 't', value: imgMesh2.material.map };
+        waterMaterial.uniforms.u_time = { type: 'f', value: 1.0 };
+        waterMaterial.uniforms.u_resolution = { type: "v2", value: new THREE.Vector2() };
+        waterMaterial.uniforms.iChannel0 = { value: imgMesh1.material.map };
+        waterMaterial.uniforms.iChannel1 = { value: imgMesh2.material.map };
+        waterMaterial.uniforms.iChannel0.value.wrapS = THREE.RepeatWrapping;
+        waterMaterial.uniforms.iChannel0.value.wrapT = THREE.RepeatWrapping;
+        waterMaterial.uniforms.iChannel1.value.wrapS = THREE.RepeatWrapping;
+        waterMaterial.uniforms.iChannel1.value.wrapT = THREE.RepeatWrapping;
+        waterMaterial.uniforms.u_resolution.value.x = this.renderer.domElement.width;
+        waterMaterial.uniforms.u_resolution.value.y = this.renderer.domElement.height;
+        return waterMaterial;
     }
 
-    addChromaVid(){
+    addLights() {
+        const { scene } = this;
+        scene.add(new THREE.AmbientLight(0x0fffff));
+        this.pointLight = new THREE.PointLight(0xfff000, 1, 100);
+        this.pointLight.userData.angle = 0.0;
+        this.pointLight.castShadow = true;
+        this.pointLight.position.set(0, 2, 2);
+        scene.add(this.pointLight);
+        const sphereSize = 1;
+        const pointLightHelper = new THREE.PointLightHelper(this.pointLight, sphereSize);
+        scene.add(pointLightHelper);
+    }
+
+    initTube() {
+        // Define the curve
+        let spline = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(-20, 5, 1),
+            new THREE.Vector3(-10, -5, 1),
+            new THREE.Vector3(-7, -5, 0),
+            new THREE.Vector3(-5, -5, 0),
+            new THREE.Vector3(-3, -5, 0),
+            new THREE.Vector3(0, -5, 0),
+            new THREE.Vector3(4, -5, 0),
+            new THREE.Vector3(7, -5, -1),
+            new THREE.Vector3(10, -5, -1),
+            new THREE.Vector3(20, 5, -1)
+        ]);
+        spline.type = 'catmullrom';
+        spline.closed = true;
+        // Set up settings for later extrusion
+        let extrudeSettings = {
+            steps: 100,
+            bevelEnabled: false,
+            extrudePath: spline
+        };
+        // Define a polygon
+        let pts = [], count = 7;
+        for (let i = 0; i < count; i++) {
+            let l = 1;
+            let a = 2 * i / count * Math.PI;
+            pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
+        }
+        let shape = new THREE.Shape(pts);
+        // Extrude the triangle along the CatmullRom curve
+        let geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        // let geometry = new THREE.BoxGeometry(1, 1, 1);
+        let material = new THREE.MeshPhongMaterial({ color: 0xb00000 });
+        // Create mesh with the resulting geometry
+        return new THREE.Mesh(geometry, material);
+    }
+
+    addStaircase() {
+        const { gltfLoader } = this;
+        const gltfParams = {
+            url: assetPath8('objects/stairs/scene.gltf'),
+            name: "stairs",
+            position: [0, 0, 0],
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            relativeScale: .1,
+            loader: gltfLoader,
+            onSuccess: this.onAddStaircaseSuccess,
+        }
+        loadGLTF({ ...gltfParams });
+    }
+
+
+    addOffice() {
+        const { gltfLoader } = this;
+        const gltfParams = {
+            url: assetPath8('objects/office/scene.gltf'),
+            name: "office",
+            position: [0, 0, 0],
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            relativeScale: 15,
+            loader: gltfLoader,
+            onSuccess: this.onAddOfficeSuccess,
+        }
+        loadGLTF({ ...gltfParams });
+    }
+
+    addTube() {
+        const { scene, waterMaterials } = this;
+        let tube = this.initTube();
+        let alpha = 1.0; // TODO not working
+        const waterY = 8.;
+        let waterMaterial = this.initWaterMaterial(alpha, waterY);
+        waterMaterials["tube"] = waterMaterial;
+        tube.material = waterMaterial;
+        tube.position.z += 1.;
+        scene.add(tube);
+    }
+
+    onAddOfficeSuccess = (gltf) => {
+        const { scene, waterMaterials } = this;
+        const alpha = .1;
+        const waterY = 107.;
+        let waterMaterial = this.initWaterMaterial(alpha, waterY);
+        waterMaterials["office"] = waterMaterial;
+        const object = gltf.scene.children[0].getObjectByProperty('mesh');
+        if (object) {
+            object.traverse(function (node) {
+                if (node.isMesh) {
+                    node.material = waterMaterial;
+                }
+            });
+        }
+        // gltf.scene.position.x -= 20;
+        gltf.scene.position.y -= 10;
+        gltf.scene.position.z += 10;
+        gltf.scene.rotation.y += Math.PI / 5.0;
+        scene.add(gltf.scene);
+    }
+
+    onAddStaircaseSuccess = (gltf) => {
+        const { scene, waterMaterials } = this;
+        let stairParent = gltf.scene.getObjectByName("defaultMaterial");
+        const alpha = 1.0;
+        const waterY = 300;
+        let waterMaterial = this.initWaterMaterial(alpha, waterY);
+        waterMaterials["staircase"] = waterMaterial;
+        let stairGeom = stairParent.geometry;
+        let stairMesh = new THREE.Mesh(stairGeom, waterMaterial)
+        stairMesh.position.z -= 1.;
+        stairMesh.position.x -= 2.;
+        scene.add(stairMesh);
+    }
+
+    addChromaVid() {
         this.videoPlane = new THREE.PlaneBufferGeometry(1, 1);
         const videoObj = {
             type: 'video',
@@ -187,8 +290,8 @@ class Release0008_GreemJellyFish extends PureComponent {
             axis: new THREE.Vector3(0, 0, 0).normalize(),
             angle: 0.0,
         };
-        let videoMesh = loadVideo({...videoObj})
-        this.chromaPlane = new THREE.PlaneBufferGeometry(16, 9);//window.innerHeight, window.innerWidth);
+        let videoMesh = loadVideo({ ...videoObj })
+        this.chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
         this.chromaMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 u_time: { type: 'f', value: 0.0 },
@@ -196,11 +299,19 @@ class Release0008_GreemJellyFish extends PureComponent {
             },
             vertexShader: chromaVertexShader,
             fragmentShader: chromaFragmentShader,
-            transparent: true
+            transparent: true,
+            side: THREE.DoubleSide
         });
         this.chromaMesh = new THREE.Mesh(this.chromaPlane, this.chromaMaterial);
         this.scene.add(this.chromaMesh);
-        videoMesh.userData.video.play();
+        videoMesh.userData.video.addEventListener("canplay", () => {
+            setInterval(() => {
+                const video = videoMesh.userData.video;
+                if (!this.audioElement.paused && video.paused) {
+                    videoMesh.userData.video.play();
+                }
+            }, 100);
+        })
     }
 
     animate = () => {
@@ -208,10 +319,28 @@ class Release0008_GreemJellyFish extends PureComponent {
         this.renderScene();
     }
 
+    updateWaterMaterials(lightIntensity) {
+        const { waterMaterials } = this;
+        for (const objName in waterMaterials) {
+            waterMaterials[objName].uniforms.u_time.value += 0.05;
+            waterMaterials[objName].uniforms.lightIntensity.value = lightIntensity;
+
+        }
+    }
+
     renderScene = () => {
-        const { renderer, scene, camera, controls, clock, waterMaterial, chromaMaterial } = this;
-        waterMaterial.uniforms.u_time.value += 0.05;
-        chromaMaterial.uniforms.u_time.value = this.clock.getElapsedTime();
+
+        const { renderer, scene, camera, controls, clock, waterMaterial, pointLight, chromaMaterial } = this;
+        pointLight.userData.angle -= 0.025;
+        let lightIntensity = 0.75 + 0.25 * Math.cos(this.clock.getElapsedTime() * Math.PI);
+        pointLight.position.x = 10 + 10 * Math.sin(pointLight.userData.angle);
+        pointLight.position.y = 10 + 10 * Math.cos(pointLight.userData.angle);
+        pointLight.color.setHSL(lightIntensity, 1.0, 0.5);
+
+        this.updateWaterMaterials(lightIntensity);
+
+
+        // chromaMaterial.uniforms.u_time.value = this.clock.getElapsedTime();
         controls.update(clock.getDelta());
         renderer.render(scene, camera);
     }
@@ -219,11 +348,11 @@ class Release0008_GreemJellyFish extends PureComponent {
     render() {
         return (
             <Fragment>
-                {/* <Menu
+                <Menu
                     content={CONTENT[window.location.pathname]}
-                    audioRef={el => this.audioElement = el}
+                    mediaRef={el => this.audioElement = el}
                     didEnterWorld={() => { this.hasEntered = true }}
-                /> */}
+                />
                 <div className="release" id="release008">
                     <div ref={(element) => this.container = element} />}
                 </div>
