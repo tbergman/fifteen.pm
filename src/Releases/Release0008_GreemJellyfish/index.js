@@ -67,6 +67,7 @@ class Release0008_GreemJellyFish extends PureComponent {
     }, 50);
 
     init = () => {
+        // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
         this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 3000);
@@ -81,10 +82,15 @@ class Release0008_GreemJellyFish extends PureComponent {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enabled = true;
         this.clock = new THREE.Clock();
+        // release-specific objects
         this.waterMaterials = {};
+        this.sprites = [];
+        this.animations = {};
+        // release-specific initilization
         this.addLights();
         this.addTube();
         this.addOffice();
+        this.addSprites();
         this.addChromaVid();
     }
 
@@ -194,6 +200,7 @@ class Release0008_GreemJellyFish extends PureComponent {
 
     addOffice() {
         const { gltfLoader } = this;
+
         const gltfParams = {
             url: assetPath8('objects/office/scene.gltf'),
             name: "office",
@@ -206,18 +213,6 @@ class Release0008_GreemJellyFish extends PureComponent {
             onSuccess: this.onAddOfficeSuccess,
         }
         loadGLTF({ ...gltfParams });
-    }
-
-    addTube() {
-        const { scene, waterMaterials } = this;
-        let tube = this.initTube();
-        let alpha = 1.0; // TODO not working
-        const waterY = 28.;
-        let waterMaterial = this.initWaterMaterial(alpha, waterY);
-        waterMaterials["tube"] = waterMaterial;
-        tube.material = waterMaterial;
-        tube.position.z += 1.;
-        scene.add(tube);
     }
 
     onAddOfficeSuccess = (gltf) => {
@@ -241,6 +236,51 @@ class Release0008_GreemJellyFish extends PureComponent {
         scene.add(gltf.scene);
     }
 
+    addTube() {
+        const { scene, waterMaterials } = this;
+        let tube = this.initTube();
+        let alpha = 1.0; // TODO not working
+        const waterY = 28.;
+        let waterMaterial = this.initWaterMaterial(alpha, waterY);
+        waterMaterials["tube"] = waterMaterial;
+        tube.material = waterMaterial;
+        tube.position.z += 1.;
+        scene.add(tube);
+    }
+
+    addSprites() {
+        const { gltfLoader } = this;
+        const rebeccaParams = {
+            url: assetPath8("objects/rebecca/rebecca.gltf"),
+            name: "rebecca",
+            position: [0, 0, 0],
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            relativeScale: 1,
+            loader: gltfLoader,
+            onSuccess: gltf => this.onSpriteLoad(gltf)
+        }
+        loadGLTF({ ...rebeccaParams });
+    }
+
+    onSpriteLoad = (gltf) => {
+        const { scene } = this;
+        scene.add(gltf.scene);
+        this.setupModelAnimation(gltf);
+        this.sprites.push(gltf);
+    }
+
+    setupModelAnimation(gltf) {
+        const { animations } = this;
+        // one mixer per object
+        let mixer = new THREE.AnimationMixer(gltf.scene);
+        animations[gltf.name] = {
+            mixer: mixer,
+            clips: gltf.animations
+        };
+    }
+
     addChromaVid() {
         this.videoPlane = new THREE.PlaneBufferGeometry(1, 1);
         const videoObj = {
@@ -254,7 +294,7 @@ class Release0008_GreemJellyFish extends PureComponent {
             loop: true,
             invert: false,
             volume: 1,
-            muted: false,
+            muted: true,
             axis: new THREE.Vector3(0, 0, 0).normalize(),
             angle: 0.0,
         };
@@ -275,7 +315,7 @@ class Release0008_GreemJellyFish extends PureComponent {
         videoMesh.userData.video.addEventListener("canplay", () => {
             setInterval(() => {
                 const video = videoMesh.userData.video;
-                if (!this.audioElement.paused && video.paused) {
+                if (this.mediaElement && !this.mediaElement.paused && video.paused) {
                     videoMesh.userData.video.play();
                 }
             }, 100);
@@ -296,18 +336,52 @@ class Release0008_GreemJellyFish extends PureComponent {
         }
     }
 
-    renderScene = () => {
-
-        const { renderer, scene, camera, controls, clock, waterMaterial, pointLight, chromaMaterial } = this;
+    updateLights() {
+        const { clock, pointLight } = this;
         pointLight.userData.angle -= 0.025;
-        let lightIntensity = 0.75 + 0.25 * Math.cos(this.clock.getElapsedTime() * Math.PI);
+        let lightIntensity = 0.75 + 0.25 * Math.cos(clock.getElapsedTime() * Math.PI);
         pointLight.position.x = 10 + 10 * Math.sin(pointLight.userData.angle);
         pointLight.position.y = 10 + 10 * Math.cos(pointLight.userData.angle);
         pointLight.color.setHSL(lightIntensity, 1.0, 0.5);
+        return lightIntensity;
+    }
 
+    updateAnimations() {
+        const { clock, animations } = this;
+        // TODO figure out how to organize this and where to put it (probably in constants)
+        const animationMap = {
+            rebecca: {
+                sadWorldClips: [
+                    "Defeated",
+                    "SadHandsClasped"
+                ]
+            }
+        }
+        const animation = animations["rebecca"];    
+        // play/pause/blend animations
+        if (this.mediaElement.currentTime >= 1 && this.mediaElement.currentTime < 5) {
+            animation.curClip = THREE.AnimationClip.findByName(animation.clips, "Defeated")
+            animation.action = animation.mixer.clipAction(animation.curClip)
+            animation.action.play();
+        } else if (this.mediaElement.currentTime >= 5 && animation.curClip.name != "SadHandsClasped") {
+            animation.curClip = THREE.AnimationClip.findByName(animation.clips, "SadHandsClasped")
+            let nextAction = animation.mixer.clipAction(animation.curClip);
+            nextAction.play();
+            const fadeInTime = 1;
+            animation.action.crossFadeTo(nextAction, fadeInTime); //crossFadeTo(nextAction, fadeInTime);
+            animation.action = nextAction;
+        }
+        // update all mixers
+        for (const objName in animations) {
+            animations[objName].mixer.update(.1);// TODO clock.getDelta() is not the value you're looking for here...;
+        }
+    }
+
+    renderScene = () => {
+        const { renderer, scene, camera, controls, clock, chromaMaterial } = this;
+        let lightIntensity = this.updateLights();
         this.updateWaterMaterials(lightIntensity);
-
-
+        this.updateAnimations();
         // chromaMaterial.uniforms.u_time.value = this.clock.getElapsedTime();
         controls.update(clock.getDelta());
         renderer.render(scene, camera);
@@ -318,7 +392,7 @@ class Release0008_GreemJellyFish extends PureComponent {
             <Fragment>
                 <Menu
                     content={CONTENT[window.location.pathname]}
-                    mediaRef={el => this.audioElement = el}
+                    mediaRef={el => this.mediaElement = el}
                     didEnterWorld={() => { this.hasEntered = true }}
                 />
                 <div className="release" id="release008">
