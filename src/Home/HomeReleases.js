@@ -59,7 +59,7 @@ const RELEASES = [
     path: "/7",
     name: "JON FAY",
     radius: DEFAULT_RADIUS + Math.random(),
-    textURL: assetPath("7/objects/artist-text.gltf"),
+    textURL: assetPath("7/objects/text.gltf"),
     soundURL: assetPath("0/sounds/chord-third.wav")
   }
 ];
@@ -191,8 +191,8 @@ class Home extends PureComponent {
       position: [pos.x, pos.y, pos.z],
       relativeScale: 1,
       loader: new GLTFLoader(),
-      onSuccess: (obj) => {
-        this.releaseObjs[i].text = obj.scene.children[0];
+      onSuccess: (gltf) => {
+        this.releaseObjs[i].text = gltf.scene.getObjectByName("ArtistText");
         let text = this.releaseObjs[i].text;
         text.rotation.x = Math.random() * .001;
         text.rotation.z = Math.random() * .001;
@@ -201,7 +201,7 @@ class Home extends PureComponent {
         let urls = Array(6).fill(assetPath("0/images/dark-purple-clouds.jpg"));
         text.material.side = THREE.DoubleSide;
         text.material = this.initFresnelShaderMaterial(urls);
-        this.scene.add(obj.scene);
+        this.scene.add(gltf.scene);
       }
     }
     loadGLTF(gltfOpts);
@@ -212,14 +212,6 @@ class Home extends PureComponent {
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2(100, 100);
   }
-
-  // generateRandomPoints() {
-  //   let points = [];
-  //   for(i=0;i<RELEASES.length;i++){
-  //     points.push(Random.insideUnitCircle * RELEASES.length)
-  //   }
-
-  // }
 
   onWindowResize = debounce(() => {
     const { camera, renderer } = this;
