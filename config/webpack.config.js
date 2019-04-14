@@ -35,9 +35,13 @@ module.exports = {
     },
     devServer: {
         hot: true,
-        contentBase: './public',
+        inline: true,
+        contentBase: ['./src', './public'],
         historyApiFallback: true,
         open: true,
-        port: 3000
+        port: 3000,
+        watchOptions: {
+            poll: true
+        }
     }
 };
