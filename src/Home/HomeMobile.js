@@ -18,11 +18,7 @@ const numBlobs = 10;
 
 class HomeMobile extends Component {
   state = {
-    overlayOpen: false
-  }
-
-  shouldComponentUpdate() {
-    return false;
+    overlayOpen: false,
   }
 
   constructor(props, context) {
@@ -36,18 +32,18 @@ class HomeMobile extends Component {
     this.ambientLight = new THREE.AmbientLight(0xFFFFFF);
 
     // environment map
-    // let path = assetPath("0/images/example-map.jpg");
-    // let textureEquirec = new THREE.TextureLoader().load(path);
-    // textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
-    // textureEquirec.magFilter = THREE.LinearFilter;
-    // textureEquirec.minFilter = THREE.LinearMipMapLinearFilter;
-    // textureEquirec.encoding = THREE.sRGBEncoding;
+    let path = assetPath("0/images/example-map.jpg");
+    let textureEquirec = new THREE.TextureLoader().load(path);
+    textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
+    textureEquirec.magFilter = THREE.LinearFilter;
+    textureEquirec.minFilter = THREE.LinearMipMapLinearFilter;
+    textureEquirec.encoding = THREE.sRGBEncoding;
 
     // material
     this.shinyMaterial = new THREE.MeshStandardMaterial({
       color: 0x550000,
       roughness: 0.1,
-      // envMap: textureEquirec
+      envMap: textureEquirec
     });
     this.marchingCubes = new MarchingCubes(resolution, this.shinyMaterial, true, true);
     this.renderer = new THREE.WebGLRenderer();
@@ -86,7 +82,7 @@ class HomeMobile extends Component {
     let time = 0;
 
     const init = () => {
-      const { container, camera, controls, ambientLight, light, scene, pointLight, marchingCubes, renderer, hblur, vblur, effectFXAA, composer, } = this;
+      const { container, camera, controls, ambientLight, light, scene, pointLight, marchingCubes, renderer, hblur, vblur, effectFXAA, composer } = this;
 
       // CAMERA
       camera.position.set(0, 10, 0);
@@ -130,13 +126,13 @@ class HomeMobile extends Component {
       hblur.uniforms['r'].value = vblur.uniforms['r'].value = 0.5;
       effectFXAA.uniforms['resolution'].value.set(1 / SCREEN_WIDTH, 1 / SCREEN_HEIGHT);
 
-      // vblur.renderToScreen = true;
-      // effectFXAA.renderToScreen = true;
+      vblur.renderToScreen = true;
+      effectFXAA.renderToScreen = true;
 
-      // composer.addPass(this.renderModel);
-      // composer.addPass(effectFXAA);
-      // composer.addPass(hblur);
-      // composer.addPass(vblur);
+      composer.addPass(this.renderModel);
+      composer.addPass(effectFXAA);
+      composer.addPass(hblur);
+      composer.addPass(vblur);
 
       // EVENTS
       window.addEventListener('resize', onWindowResize, false);
@@ -177,7 +173,7 @@ class HomeMobile extends Component {
     }, 10);
 
     const renderAnimation = () => {
-      const { clock, camera, light, scene, pointLight, marchingCubes, renderer, composer, menuRef } = this;
+      const { clock, camera, light, scene, pointLight, marchingCubes, renderer, composer, menuRef, state } = this;
       let delta = clock.getDelta();
 
       time += delta * marchingCubeProps.speed * 0.5;
@@ -206,8 +202,8 @@ class HomeMobile extends Component {
         renderer.render(scene, camera);
       }
 
-      // overlay
-      if (menuRef) {
+      // hacky to put this here...
+      if (menuRef && menuRef.state.overlayOpen != state.overlayOpen) {
         this.setState({
           overlayOpen: menuRef.state.overlayOpen
         })
@@ -225,7 +221,7 @@ class HomeMobile extends Component {
 
   renderReleaseLinks() {
     return (<div className="releases-list">
-      <div>Releases</div>
+      <div className="releases-list-title">Releases</div>
       <div>
         <ul>
           <li><Link to="1">Yahceph</Link></li>
@@ -241,7 +237,6 @@ class HomeMobile extends Component {
   }
 
   render() {
-    const { state } = this;
     return (
       <Fragment>
         <Menu

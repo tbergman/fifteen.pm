@@ -12,7 +12,6 @@ import Release0004_JonCannon from "./Releases/Release0004_JonCannon/index";
 import Release0005_Plebeian from "./Releases/Release0005_Plebeian/index";
 import Release0006_Vveiss from "./Releases/Release0006_Vveiss/index";
 import Release0007_JonFay from "./Releases/Release0007_JonFay/index";
-import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
     <Router history={history}>
