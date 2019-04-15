@@ -1,0 +1,16 @@
+.releases-list {
+    background: transparent;
+    position: absolute;
+    top: 20%;
+    margin-left: 5%;
+    font-size: 200%;
+}
+
+.releases-list ul {
+    list-style: none;
+}
+
+.releases-list li:hover {
+    opacity: .25;
+    cursor: pointer;
+}

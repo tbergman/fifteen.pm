@@ -8,83 +8,63 @@ import { loadGLTF } from '../Utils/Loaders';
 import { isMobile } from "../Utils/BrowserDetection";
 import { assetPath } from "../Utils/assets";
 import Menu from "../UI/Menu/Menu";
-import { SOUNDS, NUM_RELEASES } from "./Constants";
-import { CONTENT } from "../Content";
-import { range } from 'rxjs';
 
-const DEFAULT_RELEASE_MESH_RADIUS = 3;
+const DEFAULT_RADIUS = 3;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
-
-// const RELEASES = [
-//   {
-//     path: "/1",
-//     name: "YAHCEPH",
-//     radius: DEFAULT_RELEASE_MESH_RADIUS + Math.random(),
-//     textURL: assetPath("1/objects/text.gltf"),
-//     soundURL: assetPath("0/sounds/chord-root.wav")
-//   },
-//   {
-//     path: "/2",
-//     name: "YEAR UNKNOWN",
-//     radius: DEFAULT_RELEASE_MESH_RADIUS + Math.random(),
-//     textURL: assetPath("2/objects/text.gltf"),
-//     soundURL: assetPath("0/sounds/chord-fourth.wav")
-//   },
-//   {
-//     path: "/3",
-//     name: "OTHERE",
-//     radius: DEFAULT_RELEASE_MESH_RADIUS + Math.random(),
-//     textURL: assetPath("3/objects/text.gltf"),
-//     soundURL: assetPath("0/sounds/chord-fifth.wav")
-//   },
-//   {
-//     path: "/4",
-//     name: "JON CANNON",
-//     radius: DEFAULT_RELEASE_MESH_RADIUS + Math.random(),
-//     textURL: assetPath("4/objects/text.gltf"),
-//     soundURL: assetPath("0/sounds/chord-octave.wav")
-//   },
-//   {
-//     path: "/5",
-//     name: "PLEBIAN",
-//     radius: DEFAULT_RELEASE_MESH_RADIUS + Math.random(),
-//     textURL: assetPath("5/objects/text.gltf"),
-//     soundURL: assetPath("0/sounds/chord-second.wav")
-//   },
-//   {
-//     path: "/6",
-//     name: "VVEISS",
-//     radius: DEFAULT_RELEASE_MESH_RADIUS + Math.random(),
-//     textURL: assetPath("6/objects/text.gltf"),
-//     soundURL: assetPath("0/sounds/chord-fifth-down.wav")
-//   },
-//   {
-//     path: "/7",
-//     name: "JON FAY",
-//     radius: DEFAULT_RELEASE_MESH_RADIUS + Math.random(),
-//     textURL: assetPath("7/objects/text.gltf"),
-//     soundURL: assetPath("0/sounds/chord-third.wav")
-//   }
-// ];
-
-
-function pointsOnCircumference(numPoints, radius, center) {
-  const points = []
-  for (let i = 0; i < numPoints; i++) {
-    const x = center.x + radius * Math.cos(2 * Math.PI * i / numPoints);
-    const y = center.y + radius * Math.sin(2 * Math.PI * i / numPoints);
-    const z = 0;//center.z + radius * Math.tan(2 * Math.PI * i / numPoints);
-    points.push({ x: x, y: y, z: z });
+const RELEASES = [
+  {
+    path: "/1",
+    name: "YAHCEPH",
+    radius: DEFAULT_RADIUS + Math.random(),
+    textURL: assetPath("1/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-root.wav")
+  },
+  {
+    path: "/2",
+    name: "YEAR UNKNOWN",
+    radius: DEFAULT_RADIUS + Math.random(),
+    textURL: assetPath("2/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-fourth.wav")
+  },
+  {
+    path: "/3",
+    name: "OTHERE",
+    radius: DEFAULT_RADIUS + Math.random(),
+    textURL: assetPath("3/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-fifth.wav")
+  },
+  {
+    path: "/4",
+    name: "JON CANNON",
+    radius: DEFAULT_RADIUS + Math.random(),
+    textURL: assetPath("4/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-octave.wav")
+  },
+  {
+    path: "/5",
+    name: "PLEBIAN",
+    radius: DEFAULT_RADIUS + Math.random(),
+    textURL: assetPath("5/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-second.wav")
+  },
+  {
+    path: "/6",
+    name: "VVEISS",
+    radius: DEFAULT_RADIUS + Math.random(),
+    textURL: assetPath("6/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-fifth-down.wav")
+  },
+  {
+    path: "/7",
+    name: "JON FAY",
+    radius: DEFAULT_RADIUS + Math.random(),
+    textURL: assetPath("7/objects/text.gltf"),
+    soundURL: assetPath("0/sounds/chord-third.wav")
   }
-  return points
-}
-const ORBITING_RADIUS = 12;
-const CENTER = { x: 0, y: 0 };
-const STARTING_POSITIONS = pointsOnCircumference(NUM_RELEASES, ORBITING_RADIUS, CENTER);
+];
 
-
-class Home extends PureComponent {
+class HomeDefault extends PureComponent {
   constructor() {
     super();
     this.scene = new THREE.Scene();
@@ -100,6 +80,7 @@ class Home extends PureComponent {
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+    // this.randomPoints = this.generateRandomPoints();
   }
 
 
@@ -150,25 +131,16 @@ class Home extends PureComponent {
   }
 
   initReleases = () => {
-    let centerPivot = new THREE.Object3D();
-    this.scene.add(centerPivot);
-    for (let idx = 0; idx < NUM_RELEASES; idx++) {
-      const key = "/" + (idx + 1);
-      let releaseMeta = CONTENT[key];
-      let orbMesh = this.initReleaseOrb(key, releaseMeta, idx);
-      let meshPivot = new THREE.Object3D();
-      centerPivot.add(meshPivot);
-      meshPivot.add(orbMesh);
-      this.releaseObjs.push({
-        orb: orbMesh,
-        pivot: meshPivot
-      })
-      this.initReleaseSound(idx, orbMesh);
-      // this.initReleaseText(releaseMeta, orbMesh.position, idx);
+    for (let i in RELEASES) {
+      let releaseMeta = RELEASES[i];
+      let mesh = this.initReleaseObj(releaseMeta);
+      this.initReleaseSound(releaseMeta, mesh);
+      this.releaseObjs.push({ mesh: mesh });
+      this.initReleaseText(releaseMeta, mesh.position, i);
     }
   }
 
-  initReleaseSound = (idx, obj) => {
+  initReleaseSound = (meta, obj) => {
     const { camera } = this;
     let listener = new THREE.AudioListener();
     camera.add(listener);
@@ -176,7 +148,7 @@ class Home extends PureComponent {
     let sound = new THREE.PositionalAudio(listener);
     let audioLoader = new THREE.AudioLoader();
     sound.setVolume(0.25);
-    audioLoader.load(SOUNDS[idx], (buffer) => {
+    audioLoader.load(meta.soundURL, (buffer) => {
       sound.setBuffer(buffer);
       sound.setRefDistance(20);
     });
@@ -198,34 +170,30 @@ class Home extends PureComponent {
     });
   }
 
-  initReleaseOrb = (key, meta, idx) => {
-    const radius = DEFAULT_RELEASE_MESH_RADIUS + Math.random();
-    let geometry = new THREE.SphereBufferGeometry(radius, radius * 4, radius * 4);
+  initReleaseObj = (meta) => {
+    let geometry = new THREE.SphereBufferGeometry(meta.radius, meta.radius * 4, meta.radius * 4);
     geometry.computeBoundingSphere()
     let urls = Array(6).fill(assetPath("0/images/purple-clouds.jpg"));
     let material = this.initFresnelShaderMaterial(urls);
     let mesh = new THREE.Mesh(geometry, material);
     mesh.scale.x = mesh.scale.y = mesh.scale.z = 1 - Math.random() * .001;
     mesh.material.opacity = .1;
-    mesh.name = meta.artist;
-    mesh.userData.path = key;
-    const pos = STARTING_POSITIONS[idx];
-    mesh.position.x = pos.x;
-    mesh.position.y = pos.y;
-    mesh.position.z = pos.z;
+    mesh.name = meta.name;
+    mesh.userData.path = meta.path;
     this.scene.add(mesh);
     return mesh;
   }
 
-  initReleaseText = (meta, mesh, idx) => {
+  initReleaseText = (meta, pos, i) => {
     // TODO We could do something like this eventually --> https://codepen.io/collection/ABaxyy/#
     let gltfOpts = {
-      url: meta.textModel,
-      position: STARTING_POSITIONS[idx],
+      url: meta.textURL,
+      position: [pos.x, pos.y, pos.z],
       relativeScale: 1,
       loader: new GLTFLoader(),
       onSuccess: (gltf) => {
-        let text = gltf.scene.getObjectByName("ArtistText");
+        this.releaseObjs[i].text = gltf.scene.getObjectByName("ArtistText");
+        let text = this.releaseObjs[i].text;
         text.rotation.x = Math.random() * .001;
         text.rotation.z = Math.random() * .001;
         text.userData.polarity = THREE.Math.randInt(-1, 1) > 0 ? 1 : -1;
@@ -233,8 +201,6 @@ class Home extends PureComponent {
         let urls = Array(6).fill(assetPath("0/images/dark-purple-clouds.jpg"));
         text.material.side = THREE.DoubleSide;
         text.material = this.initFresnelShaderMaterial(urls);
-        mesh.text = text;
-        this.releaseObjs[idx].text = mesh;
         this.scene.add(gltf.scene);
       }
     }
@@ -268,7 +234,6 @@ class Home extends PureComponent {
       document.body.style.cursor = "pointer";
       // Play a sound!
       for (let i = 0; i < intersects.length; i++) {
-        console.log("INTERSECT", intersects[i]);
         if (!intersects[i].object.userData.sound.isPlaying) {
           intersects[i].object.userData.sound.play();
         }
@@ -280,18 +245,16 @@ class Home extends PureComponent {
 
   renderReleaseLinks = () => {
     let timer = 0.0001 * Date.now();
-    for (let i = 0; i < this.releaseObjs.length; i++) {
-      let orbMesh = this.releaseObjs[i].orb;
-      let orbPivot = this.releaseObjs[i].pivot;
-      orbPivot.rotation.x += .001;
-      orbPivot.rotation.y += .003;
-      orbPivot.rotation.z += .003;
-      let textMesh = this.releaseObjs[i].text;
-      if (textMesh !== undefined) {
-        textMesh.position.x = orbMesh.position.x;
-        textMesh.position.y = orbMesh.position.y - mesh.geometry.boundingSphere.radius - 2;
-        textMesh.position.z = orbMesh.position.z;
-        textMesh.rotation.y += textMesh.userData.rotationSpeed * textMesh.userData.polarity;
+    for (let i = 0, il = this.releaseObjs.length; i < il; i++) {
+      let mesh = this.releaseObjs[i].mesh;
+      mesh.position.x = 25 * Math.cos(timer + i * 1.15);
+      mesh.position.y = 15 * Math.sin(timer + i * 1.1);
+      let text = this.releaseObjs[i].text;
+      if (text !== undefined) { // TODO ensure defined by this point
+        text.position.x = mesh.position.x;// + 10;
+        text.position.y = mesh.position.y - mesh.geometry.boundingSphere.radius - 2;
+        text.position.z = mesh.position.z;
+        text.rotation.y += text.userData.rotationSpeed * text.userData.polarity;
       }
     }
   }
@@ -317,4 +280,4 @@ class Home extends PureComponent {
   }
 }
 
-export default Home;
+export default HomeDefault;
