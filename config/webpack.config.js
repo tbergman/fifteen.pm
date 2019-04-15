@@ -34,10 +34,10 @@ module.exports = {
         new CopyPlugin([
             { from: 'public/assets', to: 'assets'}
         ]),
-        new CompressionPlugin({
-            exclude: /\.mp4|\.webm/,
-            filename: '[path]'
-        })
+        // new CompressionPlugin({
+        //     exclude: /\.(mp4|webm|png|jpg|wav)$/,
+        //     filename: '[path]'
+        // })
     ],
     output: {
         publicPath: '/'
