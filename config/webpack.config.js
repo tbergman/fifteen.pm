@@ -34,8 +34,9 @@ module.exports = {
         new CopyPlugin([
             { from: 'public/assets', to: 'assets'}
         ]),
+        // This is causing issues - wav and jpg and png get encoding errors 
         // new CompressionPlugin({
-        //     exclude: /\.(mp4|webm|png|jpg|wav)$/,
+        //     exclude: /\.(mp4|webm)$/,
         //     filename: '[path]'
         // })
     ],
