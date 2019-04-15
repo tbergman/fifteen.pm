@@ -1,5 +1,7 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin')
+const CompressionPlugin = require('compression-webpack-plugin')
 
 module.exports = {
     module: {
@@ -28,7 +30,14 @@ module.exports = {
             filename: 'index.html',
             favicon: './public/favicon.ico'
         }),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new CopyPlugin([
+            { from: 'public/assets', to: 'assets'}
+        ]),
+        new CompressionPlugin({
+            exclude: /\.mp4|\.webm/,
+            filename: '[path]'
+        })
     ],
     output: {
         publicPath: '/'
