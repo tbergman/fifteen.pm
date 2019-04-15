@@ -202,7 +202,15 @@ class HomeMobile extends Component {
   render() {
     return (
       <Fragment>
+        <div className="releases-list">
         <div>Releases</div>
+        <ul>
+          <li>Yahceph</li>
+          <li>Year Unknown</li>
+        </ul>
+        </div>
+        
+
       <div
         id="container"
         ref={element => this.container = element}

@@ -8,6 +8,8 @@ import {
   SlowLoad
 } from "./UI/Controls/Icons";
 
+import { assetPath } from "./Utils/assets";
+
 export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
     "/1": "#FF69B4",
     "/3": "red"
@@ -23,7 +25,7 @@ export const CONTENT = {
       navColor: '#fff',
       fillColor: 'rgba(0, 0, 0, 0.5)',
       textColor: 'white',
-    }
+    },
   },
   "/m": {
     home: true,
@@ -38,6 +40,7 @@ export const CONTENT = {
   },
   "/1": {
     artist: "YAHCEPH",
+    textModel: assetPath("1/objects/text.gltf"),
     tracks: [
       {
         title: "Wun 4 Jas",
@@ -63,6 +66,7 @@ export const CONTENT = {
   },
   "/2": {
     artist: "YEAR UNKNOWN",
+    textModel: assetPath("2/objects/text.gltf"),
     tracks: [
       {
         title: "Timer",
@@ -91,6 +95,7 @@ export const CONTENT = {
   },
   "/3": {
     artist: "OTHERE",
+    textModel: assetPath("3/objects/text.gltf"),
     tracks: [
       {
         title: "Let's Beach",
@@ -123,23 +128,9 @@ export const CONTENT = {
     }
   },
   "/4": {
-    artist: "JON CANNON",
+    artist: "JON CANNON", 
+    textModel: assetPath("4/objects/text.gltf"),
     tracks: [
-      // These tracks are useful for devving on the player
-      //   title: "Fake short song 1",
-      //   id: "58432359" //287949388"
-      // },
-      // {
-      //   title: "Fake short song 2",
-      //   id: "177365673"
-      // },
-      // {
-      //   title: "Fake short song 3",
-      //   id: "177365185"
-      // },
-      // {
-      //   title: "Fake short song 4",
-      //   id: "177364838"
       {
         title: "Nothing (Blood)",
         id: "507660189"
@@ -184,6 +175,7 @@ export const CONTENT = {
   },
   "/5": {
     artist: "PLEBEIAN",
+    textModel: assetPath("5/objects/text.gltf"),
     tracks: [
       {
         title: "Heaven",
@@ -216,6 +208,7 @@ export const CONTENT = {
   },
   "/6": {
     artist: "VVEISS",
+    textModel: assetPath("6/objects/text.gltf"),
     tracks: [
       {
         title: "ESCAPE VELOCITY",
@@ -240,6 +233,7 @@ export const CONTENT = {
   },
   "/7": {
     artist: "JON FAY",
+    textModel: assetPath("7/objects/text.gltf"),
     tracks: [
       {
         title: "GOLDEN GROOVE",
