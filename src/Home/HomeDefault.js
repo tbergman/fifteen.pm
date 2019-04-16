@@ -64,7 +64,7 @@ const RELEASES = [
   }
 ];
 
-class Home extends PureComponent {
+class HomeDefault extends PureComponent {
   constructor() {
     super();
     this.scene = new THREE.Scene();
@@ -280,4 +280,4 @@ class Home extends PureComponent {
   }
 }
 
-export default Home;
+export default HomeDefault;
