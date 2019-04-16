@@ -32,10 +32,6 @@ const multiSourceVideo = (path) => ([
     { type: 'video/webm', src: assetPath8Videos(`${path}.webm`) }
 ]);
 
-class WaterParams {
-    alpha = 1.0;
-    waterY = 107;
-}
 class Release0008_GreemJellyFish extends PureComponent {
     componentDidMount() {
         this.init();
@@ -70,8 +66,9 @@ class Release0008_GreemJellyFish extends PureComponent {
         // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
-        this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 3000);
-        this.camera.position.set(0, 5, 556);
+        this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 10000);
+        // this.camera.position.set(0, 5, 556);
+        this.camera.position.set(4900, 900, 6800);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -86,12 +83,47 @@ class Release0008_GreemJellyFish extends PureComponent {
         this.waterMaterials = {};
         this.sprites = [];
         this.animations = {};
+        
         // release-specific initilization
+         this.textSequence = this.loadTextSequence(this.textSequence);
+
         this.addLights();
         this.addTube();
         this.addOffice();
-        this.addSprites();
+        // this.addSprites();
         this.addChromaVid();
+        
+    }
+
+    loadTextSequence(){
+        const {scene, gltfLoader} = this;
+        let textSequence = [];
+        const texts = [
+            {path: assetPath8("objects/flyer/greem-jellyfish.gltf"), name: "greem-jellyfish-text"},
+            {path: assetPath8("objects/flyer/globally-ltd.gltf"), name: "globally-ltd-text"}
+        ]
+        for (let i = 0; i < texts.length; i ++){
+            const text = texts[i];
+            const gltfParams = {
+                url: text.path,
+                name: text.name,
+                position: [350, 0, 0],
+                rotateX: 0,
+                rotateY: 0,
+                rotateZ: 0,
+                relativeScale: 40,
+                loader: gltfLoader,
+                onSuccess: (gltf) => {
+                    textSequence.push({
+                        obj: gltf.scene,
+                        isActive: text.name === "greem-jellyfish-text"
+                    });
+                    scene.add(gltf.scene);
+                }
+            }
+            loadGLTF({ ...gltfParams });
+        }
+        return textSequence;
     }
 
     initWaterMaterial(alpha, waterY) {
@@ -155,9 +187,9 @@ class Release0008_GreemJellyFish extends PureComponent {
         this.pointLight.castShadow = true;
         this.pointLight.position.set(0, 2, 2);
         scene.add(this.pointLight);
-        const sphereSize = 1;
-        const pointLightHelper = new THREE.PointLightHelper(this.pointLight, sphereSize);
-        scene.add(pointLightHelper);
+        // const sphereSize = 1;
+        // const pointLightHelper = new THREE.PointLightHelper(this.pointLight, sphereSize);
+        // scene.add(pointLightHelper);
     }
 
     initTube() {
@@ -229,7 +261,6 @@ class Release0008_GreemJellyFish extends PureComponent {
                 }
             });
         }
-        // gltf.scene.position.x -= 20;
         gltf.scene.position.y -= 10;
         gltf.scene.position.z += 10;
         gltf.scene.rotation.y += Math.PI / 5.0;
@@ -346,7 +377,24 @@ class Release0008_GreemJellyFish extends PureComponent {
         return lightIntensity;
     }
 
-    updateAnimations() {
+    updateTextSequence(){
+        const {textSequence } = this;
+        for (let i =0; i < textSequence.length; i++){
+            let txt = textSequence[i];
+            if (txt.isActive){
+                txt.obj.position.x -= 1;
+                if (txt.obj.position.x <= -30){
+                    txt.isActive = false;
+                    const nextActiveIdx = i + 1 == textSequence.length ? 0 : i;
+                    console.log("NEXT ACTIVE:", nextActiveIdx)
+                    textSequence[nextActiveIdx].isActive = true;
+
+                }
+            }
+        }
+    }
+
+    updateSpriteAnimations() {
         const { clock, animations } = this;
         // TODO figure out how to organize this and where to put it (probably in constants)
         const animationMap = {
@@ -381,7 +429,8 @@ class Release0008_GreemJellyFish extends PureComponent {
         const { renderer, scene, camera, controls, clock, chromaMaterial } = this;
         let lightIntensity = this.updateLights();
         this.updateWaterMaterials(lightIntensity);
-        this.updateAnimations();
+        this.updateTextSequence();
+        // this.updateSpriteAnimations();
         // chromaMaterial.uniforms.u_time.value = this.clock.getElapsedTime();
         controls.update(clock.getDelta());
         renderer.render(scene, camera);
