@@ -3,7 +3,7 @@
     position: absolute;
     top: 20%;
     margin-left: 5%;
-    font-size: 200%;
+    font-size: 1.7rem;
 }
 
 .releases-list-title{
@@ -14,7 +14,15 @@
     list-style: none;
 }
 
-.releases-list li:hover {
-    opacity: .25;
-    cursor: pointer;
+.releases-list ul li:first-child {
+    border-bottom: 2px solid #ffffff;
+    margin-bottom: 10px;
+}
+
+.releases-list ul li {
+    padding: 5px 0;
+}
+
+.releases-list ul li a:hover{
+    border-bottom: 2px solid #ffffff;
 }

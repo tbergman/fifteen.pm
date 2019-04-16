@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
 import * as THREE from 'three';
 import { MarchingCubes, EffectComposer, ShaderPass, FXAAShader, HorizontalTiltShiftShader, VerticalTiltShiftShader, RenderPass } from 'three-full';
 import { OrbitControls } from '../Utils/OrbitControls';
@@ -57,12 +56,17 @@ class HomeMobile extends Component {
     this.controls = new OrbitControls(this.camera);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+      // only update chart if the data has changed
+      console.log(prevState);
+  }
+
   componentDidMount() {
     // if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     let hueDirection = 0.01;
     let marchingCubeProps = {
-      speed: 0.3,
-      numBlobs: numBlobs,
+      speed: 0.5,
+      numBlobs: 12,
       resolution: 50,
       isolation: 30,
       floor: false,
@@ -85,9 +89,7 @@ class HomeMobile extends Component {
       const { container, camera, controls, ambientLight, light, scene, pointLight, marchingCubes, renderer, hblur, vblur, effectFXAA, composer } = this;
 
       // CAMERA
-      camera.position.set(0, 10, 0);
-
-      // camera.position.set(0, -300, 1500);
+      camera.position.set(0, 10, 5);
       camera.rotation.x = 0.4;
       camera.rotation.z = 0.1;
 
@@ -161,7 +163,7 @@ class HomeMobile extends Component {
       // fill the field with some metaballs
       var i, ballx, bally, ballz, subtract, strength;
 
-      subtract = 12;
+      subtract = 1;
       strength = 1. / ((Math.sqrt(numblobs) - 1) / 4 + 1);
 
       for (i = 0; i < numblobs; i++) {
@@ -219,20 +221,18 @@ class HomeMobile extends Component {
     animate();
   }
 
-  renderReleaseLinks() {
+  renderReleaseas() {
     return (<div className="releases-list">
-      <div className="releases-list-title">Releases</div>
-      <div>
         <ul>
-          <li><Link to="1">Yahceph</Link></li>
-          <li><Link to="2">Year Unknown</Link></li>
-          <li><Link to="3">Othere</Link></li>
-          <li><Link to="4">Jon Cannon</Link></li>
-          <li><Link to="5">Plebeian</Link></li>
-          <li><Link to="6">Vveiss</Link></li>
-          <li><Link to="7">Jon Fay</Link></li>
+          <li> Releases </li>
+          <li><a href="/1">Yahceph</a></li>
+          <li><a href="/2">Year Unknown</a></li>
+          <li><a href="/3">Othere</a></li>
+          <li><a href="/4">Jon Cannon</a></li>
+          <li><a href="/5">Plebeian</a></li>
+          <li><a href="/6">vveiss</a></li>
+          <li><a href="/7">Jon Fay</a></li>
         </ul>
-      </div>
     </div>);
   }
 
@@ -244,7 +244,7 @@ class HomeMobile extends Component {
           renderPlayer={false}
           ref={element => this.menuRef = element}
         />
-        {!this.state.overlayOpen && this.renderReleaseLinks()}
+        {!this.state.overlayOpen && this.renderReleaseas()}
         <div ref={element => this.container = element} />
       </Fragment>
     );
