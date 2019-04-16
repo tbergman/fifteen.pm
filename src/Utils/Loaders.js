@@ -62,7 +62,6 @@ export const loadVideo = ({
   if (repeat){
     texture.repeat.x = repeat.x;
     texture.repeat.y = repeat.y;
-
     texture.wrapS = THREE.ClampToEdgeWrapping;
     texture.wrapT = THREE.ClampToEdgeWrapping;
     // texture.wrapS = THREE.RepeatWrapping;

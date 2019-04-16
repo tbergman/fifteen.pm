@@ -3,6 +3,7 @@ import pure from 'recompose/pure';
 import {CONTENT} from "../../Content";
 
 class Logo extends Component {
+  
   static defaultProps = {
     fillColor: CONTENT[window.location.pathname].theme.logoSvgFillColor || "#ffffff" // TODO centralize this logic
   }
@@ -18,6 +19,7 @@ class Logo extends Component {
   }
 
   render() {
+    console.log("IN LOGO", window.location.pathname);
     const {fillColor} = this.props;
     return (
       <div className="logo-wrapper"

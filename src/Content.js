@@ -301,6 +301,18 @@ export const CONTENT = {
         }
       ]
     }
+  },
+  "/greem-jellyfish-and-globally-ltd-present": {
+    artist: "GREEM JELLYFISH",
+    tracks: [],
+    theme: {
+      message: "Address and date and info",
+      iconColor: '#fff',
+      fillColor: 'rgba(0, 0, 0, 0.5)',
+      textColor: '#fff',
+      navColor: '#fff',
+      controls: []
+    }
   }
 };
 

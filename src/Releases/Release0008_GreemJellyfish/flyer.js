@@ -32,7 +32,7 @@ const multiSourceVideo = (path) => ([
     { type: 'video/webm', src: assetPath8Videos(`${path}.webm`) }
 ]);
 
-class Release0008_GreemJellyFish extends PureComponent {
+class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     componentDidMount() {
         this.init();
         //   window.addEventListener('mousemove', this.onDocumentMouseMove, false);
@@ -60,13 +60,14 @@ class Release0008_GreemJellyFish extends PureComponent {
         const height = window.innerHeight;
         this.renderer.setSize(width, height);
         this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
     }, 50);
 
     init = () => {
         // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
-        this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 10000);
+        this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 100000);
         // this.camera.position.set(0, 5, 556);
         this.camera.position.set(4900, 900, 6800);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -78,47 +79,110 @@ class Release0008_GreemJellyFish extends PureComponent {
         this.gltfLoader = new GLTFLoader(manager);
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enabled = true;
+        this.controls.autoRotate = true;
+        this.controls.autoRotateSpeed = 1;
+        // this.controls.target = new THREE.Vector3(.5, .5, .5);
+
         this.clock = new THREE.Clock();
         // release-specific objects
         this.waterMaterials = {};
         this.sprites = [];
-        this.animations = {};
-        
+        this.spriteAnimations = {};
+        this.office = undefined;
+        this.chromaMesh = undefined;
         // release-specific initilization
-         this.textSequence = this.loadTextSequence(this.textSequence);
-
-        this.addLights();
-        this.addTube();
-        this.addOffice();
-        // this.addSprites();
-        this.addChromaVid();
-        
+        this.textSequence = this.initText(this.textSequence);
+        this.initLights();
+        this.initTube();
+        this.initChromaVid(); // order matters... everything that will be in/on office should load first... write a chain?
+        // this.initSprites();
+        this.initOffice();
     }
 
-    loadTextSequence(){
-        const {scene, gltfLoader} = this;
+    // twist(bufferGeometry) {
+    //     const quaternion = new THREE.Quaternion();
+    //     const arr = bufferGeometry.attributes.position.array;
+    //     let twistedPoints = [];
+    //     for (let i = 2; i < arr.length; i+=3) {
+    //       // a single vertex Y position
+    //       const yPos = arr[i-1];
+    //       const twistAmount = 10;
+    //       const upVec = new THREE.Vector3(0, 1, 0);
+    //       quaternion.setFromAxisAngle(
+    //         upVec, 
+    //         (Math.PI / 180) * (yPos / twistAmount)
+    //       );
+    //       let vertex = new THREE.Vector3(arr[i-2], arr[i-1], arr[i]);            
+    //       let twisted = vertex.applyQuaternion(quaternion);
+    //     //   twistedPoints.push(twisted);
+    //       twistedPoints.push(twisted.x);
+    //       twistedPoints.push(twisted.y);
+    //       twistedPoints.push(twisted.z);
+    //     }
+    //     // bufferGeometry.computeBoundingSphere();
+    //     // bufferGeometry.setFromPoints(twistedPoints);
+    //     return new THREE.BufferGeometry().setFromPoints(twistedPoints);//bufferGeometry;
+    //   }
+
+    initText() {
+        const { camera, gltfLoader } = this;
         let textSequence = [];
         const texts = [
-            {path: assetPath8("objects/flyer/greem-jellyfish.gltf"), name: "greem-jellyfish-text"},
-            {path: assetPath8("objects/flyer/globally-ltd.gltf"), name: "globally-ltd-text"}
+            {
+                path: assetPath8("objects/flyer/greem-jellyfish.gltf"),
+                name: "greem-jellyfish-text",
+                // scale: .04,
+                scale: 20,
+                position: [0, .06, -10],
+                rotateY: -30,
+            },
+            // { 
+            //     path: assetPath8("objects/flyer/globally-ltd.gltf"),
+            //     name: "globally-ltd-text",
+            //     scale: .05,
+            //     position: [0, .03, -10],
+            //     rotateY: -30,
+            // }
         ]
-        for (let i = 0; i < texts.length; i ++){
+        let path = assetPath("8/images/keanu.jpg");
+        let textureEquirec = new THREE.TextureLoader().load(path);
+        textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
+        textureEquirec.magFilter = THREE.LinearFilter;
+        textureEquirec.minFilter = THREE.LinearMipMapLinearFilter;
+        textureEquirec.encoding = THREE.sRGBEncoding;
+        for (let i = 0; i < texts.length; i++) {
             const text = texts[i];
             const gltfParams = {
                 url: text.path,
                 name: text.name,
-                position: [350, 0, 0],
+                position: text.position,
                 rotateX: 0,
-                rotateY: 0,
+                rotateY: text.rotateY,
                 rotateZ: 0,
-                relativeScale: 40,
+                relativeScale: text.scale,
                 loader: gltfLoader,
                 onSuccess: (gltf) => {
+                    // let textMesh = gltf.scene.children[0];
+                    // textMesh.material = this.initWaterMaterial(.5, 7, text.name);
+                    let mixer = new THREE.AnimationMixer(gltf.scene);
                     textSequence.push({
                         obj: gltf.scene,
-                        isActive: text.name === "greem-jellyfish-text"
+                        clips: gltf.animations,
+                        mixer: mixer
+                        // isActive: text.name === "greem-jellyfish-text"
                     });
-                    scene.add(gltf.scene);
+                    for (let j = 0; j < gltf.animations.length; j++) {
+                        mixer.clipAction(gltf.animations[j]).play();
+                    }
+                    let material = gltf.scene.children[0].material;
+                    material.envMap = textureEquirec;
+                    material.color.set(0xfffa00);
+                    material.needsUpdate = true;
+                    console.log(material);
+                    // let textObj = gltf.scene.getObjectByName("ArtistText");
+                    // textObj.geometry = this.twist(textObj.geometry);
+                    // camera.add(gltf.scene);
+                    this.scene.add(gltf.scene);
                 }
             }
             loadGLTF({ ...gltfParams });
@@ -126,7 +190,7 @@ class Release0008_GreemJellyFish extends PureComponent {
         return textSequence;
     }
 
-    initWaterMaterial(alpha, waterY) {
+    initWaterMaterial(alpha, waterY, name) {
         let imgObj1 = {
             type: 'image',
             name: 'riverImg1',
@@ -150,6 +214,7 @@ class Release0008_GreemJellyFish extends PureComponent {
             relativeScale: 1,
         }
         let imgMesh2 = loadImage(imgObj2)
+
         let waterMaterial = new THREE.ShaderMaterial({
             fragmentShader: riverFragmentShader,
             vertexShader: riverVertexShader,
@@ -162,6 +227,8 @@ class Release0008_GreemJellyFish extends PureComponent {
             ]),
             // side: THREE.DoubleSide
         });
+        //         potentially add env map: view-source:https://2pha.com/demos/threejs/shaders/fresnel_cube_env.html
+        // waterMaterial.uniforms.envMap = textureEquirec
         waterMaterial.uniforms.u_alpha = { type: 'f', value: alpha || 1.0 };
         waterMaterial.uniforms.waterY = { type: 'f', value: waterY };
         waterMaterial.uniforms.lightIntensity = { type: 'f', value: 1.0 };
@@ -176,23 +243,92 @@ class Release0008_GreemJellyFish extends PureComponent {
         waterMaterial.uniforms.iChannel1.value.wrapT = THREE.RepeatWrapping;
         waterMaterial.uniforms.u_resolution.value.x = this.renderer.domElement.width;
         waterMaterial.uniforms.u_resolution.value.y = this.renderer.domElement.height;
+        this.waterMaterials[name] = waterMaterial;
         return waterMaterial;
     }
 
-    addLights() {
-        const { scene } = this;
+    initChromaVid() {
+        let videoPlane = new THREE.PlaneBufferGeometry(1, 1);
+        const videoObj = {
+            type: 'video',
+            mimetype: 'video/mp4',
+            name: 'greem-vid1',
+            sources: multiSourceVideo('MVI_9621-CHORUS'),
+            geometry: videoPlane,
+            position: [0, 0, 0],
+            playbackRate: 1,
+            loop: true,
+            invert: false,
+            volume: 1,
+            muted: true,
+            // axis: new THREE.Vector3(1,0, 0).normalize(),
+            angle: 0.0
+        };
+        let videoMesh = loadVideo({ ...videoObj })
+        let chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
+        this.chromaMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                u_time: { type: 'f', value: 0.0 },
+                iChannel0: { value: videoMesh.material.map }
+            },
+            vertexShader: chromaVertexShader,
+            fragmentShader: chromaFragmentShader,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+        this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
+        this.chromaMesh.position.y -= .5;
+        this.chromaMesh.position.z += 1.5;
+        this.chromaMesh.rotation.x += Math.PI / 2;
+        this.chromaMesh.scale.set(.3, .3, .3);
+        videoMesh.userData.video.addEventListener("canplay", () => {
+            setInterval(() => {
+                const video = videoMesh.userData.video;
+                if (this.mediaElement && !this.mediaElement.paused && video.paused) {
+                    videoMesh.userData.video.play();
+                }
+            }, 100);
+        })
+    }
+
+    initLights() {
+        const { scene, camera } = this;
         scene.add(new THREE.AmbientLight(0x0fffff));
         this.pointLight = new THREE.PointLight(0xfff000, 1, 100);
         this.pointLight.userData.angle = 0.0;
         this.pointLight.castShadow = true;
         this.pointLight.position.set(0, 2, 2);
         scene.add(this.pointLight);
+
+        let cameraLight = new THREE.SpotLight(0xfff000, 1, 1000);
+        cameraLight.position.set(camera.position.x, camera.position.y, camera.position.z);
+        // cameraLight.position.z += 10
+        // scene.add(cameraLight);
+        camera.add(cameraLight);
         // const sphereSize = 1;
-        // const pointLightHelper = new THREE.PointLightHelper(this.pointLight, sphereSize);
+        // const pointLightHelper = new THREE.SpotLightHelper(cameraLight, sphereSize);
+        cameraLight.lookAt(new THREE.Vector3());
         // scene.add(pointLightHelper);
+
+        let spotLight = new THREE.SpotLight(0xff0000, 100, 1000);
+        spotLight.position.set(-10, 100, 0);
+        spotLight.lookAt(new THREE.Vector3());
+        // const spotLightHelper = new THREE.SpotLightHelper(spotLight, sphereSize);
+        // scene.add(spotLightHelper);
+
+        // add subtle ambient lighting
+        var ambientLight = new THREE.AmbientLight(0xbbbbbb);
+        scene.add(ambientLight);
+
+        // directional lighting
+        var directionalLight = new THREE.DirectionalLight(0xffffff);
+        directionalLight.position.set(1, 1, 1).normalize();
+        scene.add(directionalLight);
+
     }
 
     initTube() {
+        const { scene, waterMaterials } = this;
         // Define the curve
         let spline = new THREE.CatmullRomCurve3([
             new THREE.Vector3(-20, 5, 1),
@@ -227,59 +363,57 @@ class Release0008_GreemJellyFish extends PureComponent {
         // let geometry = new THREE.BoxGeometry(1, 1, 1);
         let material = new THREE.MeshPhongMaterial({ color: 0xb00000 });
         // Create mesh with the resulting geometry
-        return new THREE.Mesh(geometry, material);
+        let tube = new THREE.Mesh(geometry, material);
+        let alpha = 1.0; // TODO not working
+        const waterY = 28.;
+        let waterMaterialName = "tube";
+        let waterMaterial = this.initWaterMaterial(alpha, waterY, waterMaterialName);
+        tube.material = waterMaterial;
+        tube.position.z += 1.;
+        scene.add(tube);
     }
 
-    addOffice() {
+    initOffice() {
         const { gltfLoader } = this;
-
+        const name = "office";
         const gltfParams = {
             url: assetPath8('objects/office/scene.gltf'),
-            name: "office",
+            name: name,
             position: [0, 0, 0],
             rotateX: 0,
             rotateY: 0,
             rotateZ: 0,
             relativeScale: 15,
             loader: gltfLoader,
-            onSuccess: this.onAddOfficeSuccess,
+            onSuccess: (gltf) => {
+                const { scene, waterMaterials } = this;
+
+                const alpha = .1;
+                const waterY = 107.;
+                let waterMaterial = this.initWaterMaterial(alpha, waterY, name);
+                const object = gltf.scene.children[0].getObjectByProperty('mesh');
+                if (object) {
+                    object.traverse(function (node) {
+                        if (node.isMesh) {
+                            node.material = waterMaterial;
+                        }
+                    });
+                }
+                gltf.scene.position.y -= 10;
+                gltf.scene.position.z += 10;
+                gltf.scene.rotation.y += Math.PI / 5.0;
+                this.office = gltf.scene;
+                this.office.position.x = -20;//window.innerWidth/2.0;
+                // this.office.add(this.chromaMesh);
+                const videoWall = this.office.getObjectByName("walls005_11")
+                videoWall.add(this.chromaMesh);
+                scene.add(gltf.scene);
+            }
         }
         loadGLTF({ ...gltfParams });
     }
 
-    onAddOfficeSuccess = (gltf) => {
-        const { scene, waterMaterials } = this;
-        const alpha = .1;
-        const waterY = 107.;
-        let waterMaterial = this.initWaterMaterial(alpha, waterY);
-        waterMaterials["office"] = waterMaterial;
-        const object = gltf.scene.children[0].getObjectByProperty('mesh');
-        if (object) {
-            object.traverse(function (node) {
-                if (node.isMesh) {
-                    node.material = waterMaterial;
-                }
-            });
-        }
-        gltf.scene.position.y -= 10;
-        gltf.scene.position.z += 10;
-        gltf.scene.rotation.y += Math.PI / 5.0;
-        scene.add(gltf.scene);
-    }
-
-    addTube() {
-        const { scene, waterMaterials } = this;
-        let tube = this.initTube();
-        let alpha = 1.0; // TODO not working
-        const waterY = 28.;
-        let waterMaterial = this.initWaterMaterial(alpha, waterY);
-        waterMaterials["tube"] = waterMaterial;
-        tube.material = waterMaterial;
-        tube.position.z += 1.;
-        scene.add(tube);
-    }
-
-    addSprites() {
+    initSprites() {
         const { gltfLoader } = this;
         const rebeccaParams = {
             url: assetPath8("objects/rebecca/rebecca.gltf"),
@@ -290,67 +424,19 @@ class Release0008_GreemJellyFish extends PureComponent {
             rotateZ: 0,
             relativeScale: 1,
             loader: gltfLoader,
-            onSuccess: gltf => this.onSpriteLoad(gltf)
+            onSuccess: (gltf) => {
+                const { scene, spriteAnimations } = this;
+                scene.add(gltf.scene);
+                // one mixer per object
+                let mixer = new THREE.AnimationMixer(gltf.scene);
+                spriteAnimations[gltf.name] = {
+                    mixer: mixer,
+                    clips: gltf.animations
+                };
+                this.sprites.push(gltf);
+            }
         }
         loadGLTF({ ...rebeccaParams });
-    }
-
-    onSpriteLoad = (gltf) => {
-        const { scene } = this;
-        scene.add(gltf.scene);
-        this.setupModelAnimation(gltf);
-        this.sprites.push(gltf);
-    }
-
-    setupModelAnimation(gltf) {
-        const { animations } = this;
-        // one mixer per object
-        let mixer = new THREE.AnimationMixer(gltf.scene);
-        animations[gltf.name] = {
-            mixer: mixer,
-            clips: gltf.animations
-        };
-    }
-
-    addChromaVid() {
-        this.videoPlane = new THREE.PlaneBufferGeometry(1, 1);
-        const videoObj = {
-            type: 'video',
-            mimetype: 'video/mp4',
-            name: 'MVI_9621-CHORUS',
-            sources: multiSourceVideo('MVI_9621-CHORUS'),
-            geometry: this.videoPlane,
-            position: [0, 0, 0],
-            playbackRate: 1,
-            loop: true,
-            invert: false,
-            volume: 1,
-            muted: true,
-            axis: new THREE.Vector3(0, 0, 0).normalize(),
-            angle: 0.0,
-        };
-        let videoMesh = loadVideo({ ...videoObj })
-        this.chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
-        this.chromaMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                u_time: { type: 'f', value: 0.0 },
-                iChannel0: { value: videoMesh.material.map }
-            },
-            vertexShader: chromaVertexShader,
-            fragmentShader: chromaFragmentShader,
-            transparent: true,
-            side: THREE.DoubleSide
-        });
-        this.chromaMesh = new THREE.Mesh(this.chromaPlane, this.chromaMaterial);
-        this.scene.add(this.chromaMesh);
-        videoMesh.userData.video.addEventListener("canplay", () => {
-            setInterval(() => {
-                const video = videoMesh.userData.video;
-                if (this.mediaElement && !this.mediaElement.paused && video.paused) {
-                    videoMesh.userData.video.play();
-                }
-            }, 100);
-        })
     }
 
     animate = () => {
@@ -377,25 +463,25 @@ class Release0008_GreemJellyFish extends PureComponent {
         return lightIntensity;
     }
 
-    updateTextSequence(){
-        const {textSequence } = this;
-        for (let i =0; i < textSequence.length; i++){
-            let txt = textSequence[i];
-            if (txt.isActive){
-                txt.obj.position.x -= 1;
-                if (txt.obj.position.x <= -30){
-                    txt.isActive = false;
-                    const nextActiveIdx = i + 1 == textSequence.length ? 0 : i;
-                    console.log("NEXT ACTIVE:", nextActiveIdx)
-                    textSequence[nextActiveIdx].isActive = true;
+    updateText() {
+        const { textSequence } = this;
+        for (let i = 0; i < textSequence.length; i++) {
+            textSequence[i].mixer.update(.01);
+            // let txt = textSequence[i];
+            // if (txt.isActive) {
+            //     txt.obj.position.x -= 1;
+            //     if (txt.obj.position.x <= -30) {
+            //         txt.isActive = false;
+            //         const nextActiveIdx = i + 1 == textSequence.length ? 0 : i;
+            //         textSequence[nextActiveIdx].isActive = true;
 
-                }
-            }
+            //     }
+            // }
         }
     }
 
     updateSpriteAnimations() {
-        const { clock, animations } = this;
+        const { clock, spriteAnimations } = this;
         // TODO figure out how to organize this and where to put it (probably in constants)
         const animationMap = {
             rebecca: {
@@ -405,8 +491,8 @@ class Release0008_GreemJellyFish extends PureComponent {
                 ]
             }
         }
-        const animation = animations["rebecca"];    
-        // play/pause/blend animations
+        const animation = spriteAnimations["rebecca"];
+        // play/pause/blend spriteAnimations
         if (this.mediaElement.currentTime >= 1 && this.mediaElement.currentTime < 5) {
             animation.curClip = THREE.AnimationClip.findByName(animation.clips, "Defeated")
             animation.action = animation.mixer.clipAction(animation.curClip)
@@ -420,8 +506,8 @@ class Release0008_GreemJellyFish extends PureComponent {
             animation.action = nextAction;
         }
         // update all mixers
-        for (const objName in animations) {
-            animations[objName].mixer.update(.1);// TODO clock.getDelta() is not the value you're looking for here...;
+        for (const objName in spriteAnimations) {
+            spriteAnimations[objName].mixer.update(.1);// TODO clock.getDelta() is not the value you're looking for here...;
         }
     }
 
@@ -429,9 +515,9 @@ class Release0008_GreemJellyFish extends PureComponent {
         const { renderer, scene, camera, controls, clock, chromaMaterial } = this;
         let lightIntensity = this.updateLights();
         this.updateWaterMaterials(lightIntensity);
-        this.updateTextSequence();
+        this.updateText();
         // this.updateSpriteAnimations();
-        // chromaMaterial.uniforms.u_time.value = this.clock.getElapsedTime();
+        chromaMaterial.uniforms.u_time.value = this.clock.getElapsedTime();
         controls.update(clock.getDelta());
         renderer.render(scene, camera);
     }
@@ -439,11 +525,11 @@ class Release0008_GreemJellyFish extends PureComponent {
     render() {
         return (
             <Fragment>
-                <Menu
+                {/* <Menu
                     content={CONTENT[window.location.pathname]}
                     mediaRef={el => this.mediaElement = el}
                     didEnterWorld={() => { this.hasEntered = true }}
-                />
+                /> */}
                 <div className="release" id="release008">
                     <div ref={(element) => this.container = element} />}
                 </div>
@@ -452,4 +538,4 @@ class Release0008_GreemJellyFish extends PureComponent {
     }
 }
 
-export default Release0008_GreemJellyFish;
+export default Release0008_GreemJellyFish_EventFlyer;
