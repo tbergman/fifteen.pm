@@ -56,10 +56,6 @@ class HomeMobile extends Component {
     this.controls = new OrbitControls(this.camera);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-      // only update chart if the data has changed
-      console.log(prevState);
-  }
 
   componentDidMount() {
     // if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
@@ -138,6 +134,9 @@ class HomeMobile extends Component {
 
       // EVENTS
       window.addEventListener('resize', onWindowResize, false);
+      window.addEventListener('mousemove', this.onMouseMove, false);
+      window.addEventListener("touchstart", this.onMouseMove, false);
+      window.addEventListener("touchmove", this.onMouseMove, false);  
     }
 
     const onWindowResize = debounce((event) => {
@@ -219,6 +218,21 @@ class HomeMobile extends Component {
 
     init();
     animate();
+  }
+
+  componentWillUnmount() {
+    this.stop();
+    window.removeEventListener("resize", this.onWindowResize, false);
+    document.removeEventListener("mousemove", this.onMouseMove, false);
+    document.removeEventListener("touchstart", this.onMouseMove, false);
+    this.container.removeChild(this.renderer.domElement);
+  }
+
+  onMouseMove = (event) => {
+    // calculate mouse position in normalized device coordinates
+    // (-1 to +1) for both components
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   }
 
   renderReleaseas() {
