@@ -276,11 +276,11 @@ export const CONTENT = {
     }
   },
   "/8": {
-    artist: "GREEM JELLYFISH",
+    artist: "",
     tracks: [
       {
         title: "JUICY AND TENDER",
-        id: "466084773",
+        id: "220556854",
       },
     ],
     theme: {

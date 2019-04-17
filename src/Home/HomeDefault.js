@@ -181,7 +181,7 @@ class HomeDefault extends PureComponent {
     mesh.name = meta.name;
     mesh.userData.path = meta.path;
     this.scene.add(mesh);
-    return mesh;
+    return mesh;x
   }
 
   initReleaseText = (meta, pos, i) => {

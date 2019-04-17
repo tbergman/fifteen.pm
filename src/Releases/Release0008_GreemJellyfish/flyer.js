@@ -2,10 +2,14 @@ import React, { PureComponent, Fragment } from 'react';
 import * as THREE from "three";
 import debounce from 'lodash/debounce';
 import '../Release.css';
+import './flyer.css';
+
 import { assetPath } from "../../Utils/assets";
 import { loadVideo, loadImage, loadGLTF } from "../../Utils/Loaders";
 import Menu from '../../UI/Menu/Menu';
 import { CONTENT } from '../../Content'
+import Player from '../../UI/Player/Player'
+import '../../UI/Player/Player.css';
 import { OrbitControls } from "../../Utils/OrbitControls";
 import GLTFLoader from 'three-gltf-loader';
 
@@ -66,12 +70,13 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     init = () => {
         // main initialization parameters
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0xFF0FFF);
+        this.scene.background = new THREE.Color(0xFF0FFF, 0);
         this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 100000);
         // this.camera.position.set(0, 5, 556);
         this.camera.position.set(4900, 900, 6800);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.setClearColor( 0xffffff, 0);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.container.appendChild(this.renderer.domElement);
         this.scene.add(this.camera);
@@ -129,11 +134,10 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         let textSequence = [];
         const texts = [
             {
-                path: assetPath8("objects/flyer/greem-jellyfish.gltf"),
-                name: "greem-jellyfish-text",
-                // scale: .04,
-                scale: 20,
-                position: [0, .06, -10],
+                path: assetPath8("objects/flyer/juicy-tender.gltf"),
+                name: "juicy-tender-text",
+                scale: 15,
+                position: [0, 0, 10],
                 rotateY: -30,
             },
             // { 
@@ -144,12 +148,12 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
             //     rotateY: -30,
             // }
         ]
-        let path = assetPath("8/images/keanu.jpg");
-        let textureEquirec = new THREE.TextureLoader().load(path);
-        textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
-        textureEquirec.magFilter = THREE.LinearFilter;
-        textureEquirec.minFilter = THREE.LinearMipMapLinearFilter;
-        textureEquirec.encoding = THREE.sRGBEncoding;
+        // let path = assetPath("8/images/keanu.jpg");
+        // let textureEquirec = new THREE.TextureLoader().load(path);
+        // textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
+        // textureEquirec.magFilter = THREE.LinearFilter;
+        // textureEquirec.minFilter = THREE.LinearMipMapLinearFilter;
+        // textureEquirec.encoding = THREE.sRGBEncoding;
         for (let i = 0; i < texts.length; i++) {
             const text = texts[i];
             const gltfParams = {
@@ -166,7 +170,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                     // textMesh.material = this.initWaterMaterial(.5, 7, text.name);
                     let mixer = new THREE.AnimationMixer(gltf.scene);
                     textSequence.push({
-                        obj: gltf.scene,
+                        scene: gltf.scene,
                         clips: gltf.animations,
                         mixer: mixer
                         // isActive: text.name === "greem-jellyfish-text"
@@ -174,11 +178,16 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                     for (let j = 0; j < gltf.animations.length; j++) {
                         mixer.clipAction(gltf.animations[j]).play();
                     }
-                    let material = gltf.scene.children[0].material;
-                    material.envMap = textureEquirec;
+                    let textMesh = gltf.scene.getObjectByName("ArtistText");//.material;
+                    textMesh.position.y -= 2;
+                    textMesh.position.x -= 4;
+                    textMesh.rotation.x += .4;
+                    let material = textMesh.material
+                    // material.envMap = textureEquirec;
                     material.color.set(0xfffa00);
                     material.needsUpdate = true;
-                    console.log(material);
+                    
+                    // console.log(material);
                     // let textObj = gltf.scene.getObjectByName("ArtistText");
                     // textObj.geometry = this.twist(textObj.geometry);
                     // camera.add(gltf.scene);
@@ -331,19 +340,19 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         const { scene, waterMaterials } = this;
         // Define the curve
         let spline = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(-20, 5, 1),
-            new THREE.Vector3(-10, -5, 1),
-            new THREE.Vector3(-7, -5, 0),
-            new THREE.Vector3(-5, -5, 0),
-            new THREE.Vector3(-3, -5, 0),
-            new THREE.Vector3(0, -5, 0),
-            new THREE.Vector3(4, -5, 0),
-            new THREE.Vector3(7, -5, -1),
-            new THREE.Vector3(10, -5, -1),
-            new THREE.Vector3(20, 5, -1)
+            new THREE.Vector3(-100, -50, -10),
+            new THREE.Vector3(-55, -40, -10),
+            new THREE.Vector3(-50, -40, -10),
+            new THREE.Vector3(-40, -20, -4),
+            new THREE.Vector3(-30, -25, -6),
+            // new THREE.Vector3(0, -5, 0),
+            new THREE.Vector3(20, -38, -8),
+            new THREE.Vector3(70, -35, -3),
+            new THREE.Vector3(90, -25, -2),
+            new THREE.Vector3(100, -30, -1)
         ]);
         spline.type = 'catmullrom';
-        spline.closed = true;
+        spline.closed = false;
         // Set up settings for later extrusion
         let extrudeSettings = {
             steps: 100,
@@ -467,6 +476,8 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         const { textSequence } = this;
         for (let i = 0; i < textSequence.length; i++) {
             textSequence[i].mixer.update(.01);
+            // textSequence[i].scene.children[0].rotation.x += .005;
+            // textSequence[i].scene.children[0].rotation.y += .005;
             // let txt = textSequence[i];
             // if (txt.isActive) {
             //     txt.obj.position.x -= 1;
@@ -478,6 +489,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
             //     }
             // }
         }
+
     }
 
     updateSpriteAnimations() {
@@ -522,9 +534,47 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         renderer.render(scene, camera);
     }
 
+
+    renderFlyerInfo() {
+        return (
+            <Fragment>
+            <div className="flyer-info-bottom">
+                <div>Greem Jellyfish and Globally LTD presents... Juicy Tender</div>
+            </div>
+            <div className="flyer-info-right">
+                <div>Gallery xyz</div>
+                <div>Address sumthin</div>
+                <div>Time O'clock</div>
+                <div>Saturday May 26</div>
+            </div>
+            </Fragment>
+        )
+    }
+
+    renderPlayer = () => {
+        let content = CONTENT["/8"];
+        // const { content, mediaRef } = this.props;
+        // const { hasEnteredWorld } = this.state;
+        // if (this.props.renderPlayer) {
+            return (
+                <div className="player">
+                <Player
+                    trackList={content.tracks}
+                    message={content.artist}
+                    fillColor={content.theme.iconColor}
+                    mediaRef={element => this.mediaElement = element}
+                    // initialized={hasEnteredWorld}
+                />
+                </div>
+            );
+        // }
+    }
+
     render() {
         return (
             <Fragment>
+                                {this.renderFlyerInfo()}
+
                 {/* <Menu
                     content={CONTENT[window.location.pathname]}
                     mediaRef={el => this.mediaElement = el}
@@ -533,6 +583,8 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                 <div className="release" id="release008">
                     <div ref={(element) => this.container = element} />}
                 </div>
+                {this.renderPlayer()}
+                
             </Fragment>
         );
     }
