@@ -221,7 +221,6 @@ class HomeMobile extends Component {
   }
 
   componentWillUnmount() {
-    this.stop();
     window.removeEventListener("resize", this.onWindowResize, false);
     document.removeEventListener("mousemove", this.onMouseMove, false);
     document.removeEventListener("touchstart", this.onMouseMove, false);
