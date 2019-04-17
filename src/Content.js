@@ -276,7 +276,7 @@ export const CONTENT = {
     }
   },
   "/8": {
-    artist: "",
+    artist: "GREEM JELLYFISH",
     tracks: [
       {
         title: "JUICY AND TENDER",
@@ -303,12 +303,18 @@ export const CONTENT = {
     }
   },
   "/greem-jellyfish-and-globally-ltd-present": {
-    artist: "GREEM JELLYFISH",
-    tracks: [],
+    artist: "",
+    tracks: [
+      {
+        title: "",
+        id: "220556854",
+      },
+    ],
     theme: {
-      message: "Address and date and info",
+      message: "DUR DUR DUR DUR DUR DUR DUR DUR",
+      purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
       iconColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.5)',
+      fillColor: 'rgba(0, 0, 0, 0.)',
       textColor: '#fff',
       navColor: '#fff',
       controls: []
