@@ -120,8 +120,8 @@ class Player extends PureComponent {
   handlePlaylistClick = (e) => {
     e.preventDefault();
     const trackIdx = Number(e.target.getAttribute('data-id'));
-    console.log("trackIdx is", trackIdx)
-    this.setCurrentTrack(trackIdx);
+    const track = trackList[trackIdx];
+    this.setCurrentTrack(trackIdx, track);
   }
 
   renderPlaylist() {

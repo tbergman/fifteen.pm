@@ -224,17 +224,17 @@ class Release0004_JonCannon extends Component {
   };
 
   playCurPlanet = () => {
-    this.getCurPlanet().userData.video.play();
+    this.getCurPlanet().userData.media.play();
   };
 
   pausePrevPlanet = () => {
-    this.getPrevPlanet().userData.video.pause();
+    this.getPrevPlanet().userData.media.pause();
   };
 
   pausePlanets = () => {
     for (let i = 0; i < C.PLANETS.length; i++) {
       if (i !== this.state.prevPlanetIdx) {
-        this.getPlanetByIdx(i).userData.video.pause();
+        this.getPlanetByIdx(i).userData.media.pause();
       }
     }
   };

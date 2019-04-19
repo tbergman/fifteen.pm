@@ -73,11 +73,9 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
         this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 100000);
-        // this.camera.position.set(0, 5, 556);
         this.camera.position.set(4900, 900, 6800);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
-        // this.renderer.setClearColor(0xffffff, 0);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.container.appendChild(this.renderer.domElement);
         this.scene.add(this.camera);
@@ -87,8 +85,6 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         this.controls.enabled = true;
         this.controls.autoRotate = true;
         this.controls.autoRotateSpeed = 1;
-        // this.controls.target = new THREE.Vector3(.5, .5, .5);
-
         this.clock = new THREE.Clock();
         // release-specific objects
         this.waterMaterials = {};
@@ -97,107 +93,12 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         this.office = undefined;
         this.chromaMesh = undefined;
         // release-specific initilization
-        this.textSequence = this.initText(this.textSequence);
+        // this.textSequence = this.initText(this.textSequence);
         this.initLights();
         this.initTube();
         this.initChromaVid(); // order matters... everything that will be in/on office should load first... write a chain?
         // this.initSprites();
-        this.initOffice();
-    }
-
-    // twist(bufferGeometry) {
-    //     const quaternion = new THREE.Quaternion();
-    //     const arr = bufferGeometry.attributes.position.array;
-    //     let twistedPoints = [];
-    //     for (let i = 2; i < arr.length; i+=3) {
-    //       // a single vertex Y position
-    //       const yPos = arr[i-1];
-    //       const twistAmount = 10;
-    //       const upVec = new THREE.Vector3(0, 1, 0);
-    //       quaternion.setFromAxisAngle(
-    //         upVec, 
-    //         (Math.PI / 180) * (yPos / twistAmount)
-    //       );
-    //       let vertex = new THREE.Vector3(arr[i-2], arr[i-1], arr[i]);            
-    //       let twisted = vertex.applyQuaternion(quaternion);
-    //     //   twistedPoints.push(twisted);
-    //       twistedPoints.push(twisted.x);
-    //       twistedPoints.push(twisted.y);
-    //       twistedPoints.push(twisted.z);
-    //     }
-    //     // bufferGeometry.computeBoundingSphere();
-    //     // bufferGeometry.setFromPoints(twistedPoints);
-    //     return new THREE.BufferGeometry().setFromPoints(twistedPoints);//bufferGeometry;
-    //   }
-
-    initText = () => {
-        const { camera, gltfLoader } = this;
-        let textSequence = [];
-        const texts = [
-            {
-                path: assetPath8("objects/flyer/juicy-tender1.gltf"),
-                name: "juicy-tender-text",
-                scale: 15,
-                position: [0, 0, 10],
-                rotateY: -30,
-            },
-            // { 
-            //     path: assetPath8("objects/flyer/globally-ltd.gltf"),
-            //     name: "globally-ltd-text",
-            //     scale: .05,
-            //     position: [0, .03, -10],
-            //     rotateY: -30,
-            // }
-        ]
-        // let path = assetPath("8/images/keanu.jpg");
-        // let textureEquirec = new THREE.TextureLoader().load(path);
-        // textureEquirec.mapping = THREE.EquirectangularReflectionMapping;
-        // textureEquirec.magFilter = THREE.LinearFilter;
-        // textureEquirec.minFilter = THREE.LinearMipMapLinearFilter;
-        // textureEquirec.encoding = THREE.sRGBEncoding;
-        for (let i = 0; i < texts.length; i++) {
-            const text = texts[i];
-            const gltfParams = {
-                url: text.path,
-                name: text.name,
-                position: text.position,
-                rotateX: 0,
-                rotateY: text.rotateY,
-                rotateZ: 0,
-                relativeScale: text.scale,
-                loader: gltfLoader,
-                onSuccess: (gltf) => {
-                    // let textMesh = gltf.scene.children[0];
-                    // textMesh.material = this.initWaterMaterial(.5, 7, text.name);
-                    let mixer = new THREE.AnimationMixer(gltf.scene);
-                    textSequence.push({
-                        scene: gltf.scene,
-                        clips: gltf.animations,
-                        mixer: mixer
-                        // isActive: text.name === "greem-jellyfish-text"
-                    });
-                    for (let j = 0; j < gltf.animations.length; j++) {
-                        mixer.clipAction(gltf.animations[j]).play();
-                    }
-                    let textMesh = gltf.scene.getObjectByName("ArtistText");//.material;
-                    textMesh.position.y -= 2;
-                    textMesh.position.x -= 4;
-                    textMesh.rotation.x += .4;
-                    let material = textMesh.material
-                    // material.envMap = textureEquirec;
-                    material.color.set(0xfff);
-                    material.needsUpdate = true;
-
-                    // console.log(material);
-                    // let textObj = gltf.scene.getObjectByName("ArtistText");
-                    // textObj.geometry = this.twist(textObj.geometry);
-                    // camera.add(gltf.scene);
-                    this.scene.add(gltf.scene);
-                }
-            }
-            loadGLTF({ ...gltfParams });
-        }
-        return textSequence;
+        // this.initOffice();
     }
 
     initWaterMaterial = (alpha, waterY, name) => {
@@ -258,47 +159,47 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     }
 
     initChromaVid = () => {
-        let videoPlane = new THREE.PlaneBufferGeometry(1, 1);
-        const videoObj = {
-            type: 'video',
-            mimetype: 'video/mp4',
-            name: 'greem-vid1',
-            sources: multiSourceVideo('MVI_9621-CHORUS'),
-            geometry: videoPlane,
-            position: [0, 0, 0],
-            playbackRate: 1,
-            loop: true,
-            invert: false,
-            volume: 1,
-            muted: true,
-            // axis: new THREE.Vector3(1,0, 0).normalize(),
-            angle: 0.0
-        };
-        let videoMesh = loadVideo({ ...videoObj })
-        let chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
-        this.chromaMaterial = new THREE.ShaderMaterial({
-            uniforms: {
-                u_time: { type: 'f', value: 0.0 },
-                iChannel0: { value: videoMesh.material.map }
-            },
-            vertexShader: chromaVertexShader,
-            fragmentShader: chromaFragmentShader,
-            transparent: true,
-            side: THREE.DoubleSide
-        });
-        this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
-        this.chromaMesh.position.y -= .5;
-        this.chromaMesh.position.z += 1.5;
-        this.chromaMesh.rotation.x += Math.PI / 2;
-        this.chromaMesh.scale.set(.3, .3, .3);
-        videoMesh.userData.video.addEventListener("canplay", () => {
-            setInterval(() => {
-                const video = videoMesh.userData.video;
-                if (this.mediaElement && !this.mediaElement.paused && video.paused) {
-                    videoMesh.userData.video.play();
-                }
-            }, 100);
-        })
+        const { camera, scene } = this;
+        // const videoObj = {
+        //     type: 'video',
+        //     mimetype: 'video/mp4',
+        //     name: 'greem-vid1',
+        //     sources: multiSourceVideo('MVI_9621-CHORUS'),
+        //     geometry: videoPlane,
+        //     position: [0, 0, 0],
+        //     playbackRate: 1,
+        //     loop: true,
+        //     invert: false,
+        //     volume: 1,
+        //     muted: false,
+        //     angle: 0.0
+        // };
+        // let activated = false;
+        // let videoMesh = loadVideo({ ...videoObj })
+        const refreshId = setInterval(() => {
+            if (this.auxMedia[0].media) {
+                let videoMesh = this.auxMedia[0].mesh;
+                let chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
+                this.chromaMaterial = new THREE.ShaderMaterial({
+                    uniforms: {
+                        u_time: { type: 'f', value: 0.0 },
+                        iChannel0: { value: videoMesh.material.map }
+                    },
+                    vertexShader: chromaVertexShader,
+                    fragmentShader: chromaFragmentShader,
+                    transparent: true,
+                });
+                this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
+                this.chromaMesh.scale.multiplyScalar(20);
+                this.chromaMesh.position.set(-30, 0, -10000);
+                camera.add(this.chromaMesh);
+                clearInterval(refreshId);
+            }
+        }, 100);
+    }
+
+    onPlayButtonPress() {
+        this.initChromaVid();
     }
 
     initLights = () => {
@@ -415,8 +316,8 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                 this.office = gltf.scene;
                 this.office.position.x = -20;//window.innerWidth/2.0;
                 // this.office.add(this.chromaMesh);
-                const videoWall = this.office.getObjectByName("walls005_11")
-                videoWall.add(this.chromaMesh);
+                // const videoWall = this.office.getObjectByName("walls005_11")
+                // videoWall.add(this.chromaMesh);
                 scene.add(gltf.scene);
             }
         }
@@ -473,26 +374,6 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         return lightIntensity;
     }
 
-    updateText() {
-        const { textSequence } = this;
-        for (let i = 0; i < textSequence.length; i++) {
-            textSequence[i].mixer.update(.01);
-            // textSequence[i].scene.children[0].rotation.x += .005;
-            // textSequence[i].scene.children[0].rotation.y += .005;
-            // let txt = textSequence[i];
-            // if (txt.isActive) {
-            //     txt.obj.position.x -= 1;
-            //     if (txt.obj.position.x <= -30) {
-            //         txt.isActive = false;
-            //         const nextActiveIdx = i + 1 == textSequence.length ? 0 : i;
-            //         textSequence[nextActiveIdx].isActive = true;
-
-            //     }
-            // }
-        }
-
-    }
-
     updateSpriteAnimations() {
         const { clock, spriteAnimations } = this;
         // TODO figure out how to organize this and where to put it (probably in constants)
@@ -528,9 +409,11 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         const { renderer, scene, camera, controls, clock, chromaMaterial } = this;
         let lightIntensity = this.updateLights();
         this.updateWaterMaterials(lightIntensity);
-        this.updateText();
+        // this.updateText();
         // this.updateSpriteAnimations();
-        chromaMaterial.uniforms.u_time.value = this.clock.getElapsedTime();
+        if (chromaMaterial) {
+            chromaMaterial.uniforms.u_time.value = this.clock.getElapsedTime();
+        }
         controls.update(clock.getDelta());
         renderer.render(scene, camera);
     }
@@ -540,7 +423,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         return (
             <Fragment>
                 <div className="flyer-info-bottom">
-                    <div>Greem Jellyfish and Globally LTD presents... Juicy Tender</div>
+                    <div>Greem Jellyfish and Globally LTD present... Juicy Tender</div>
                 </div>
                 <div className="flyer-info-right">
                     <div>Gallery xyz</div>
@@ -553,10 +436,29 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     }
 
     renderPlayer = () => {
-        let content = CONTENT[window.location.pathname];
+        const content = CONTENT[window.location.pathname];
         // const { content, mediaRef } = this.props;
         // const { hasEnteredWorld } = this.state;
         // if (this.props.renderPlayer) {
+        const vidMeta = {
+            type: 'video',
+            mimetype: 'video/mp4',
+            name: 'greem-vid1',
+            sources: multiSourceVideo('MVI_9621-CHORUS'),
+            geometry: new THREE.PlaneBufferGeometry(1, 1),
+            position: [0, 0, 0],
+            playbackRate: 1,
+            loop: true,
+            invert: true,
+            volume: 1,
+            muted: false,
+            angle: 0.0
+        };
+        this.auxMedia = [
+            {
+                meta: vidMeta,
+                mesh: undefined,
+            }];
         return (
             <div className="player">
                 <Player
@@ -564,6 +466,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                     message={content.artist}
                     fillColor={content.theme.iconColor}
                     mediaRef={element => this.mediaElement = element}
+                    auxMedia={this.auxMedia}
                 // initialized={hasEnteredWorld}
                 />
             </div>
@@ -575,11 +478,6 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         return (
             <Fragment>
                 {this.renderFlyerInfo()}
-                {/* <Menu
-                    content={CONTENT[window.location.pathname]}
-                    mediaRef={el => this.mediaElement = el}
-                    didEnterWorld={() => { this.hasEntered = true }}
-                /> */}
                 <div className="release" id="greemJellyFishFlyer">
                     <div ref={(element) => this.container = element} />}
                 </div>

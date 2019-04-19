@@ -84,7 +84,7 @@ export const loadVideo = ({
   // set position
   videoMesh.position.set(...position);
   videoMesh.name = name;
-  videoMesh.userData.video = videoElement;
+  videoMesh.userData.media = videoElement;
   // rotate
   rotateObject(videoMesh, rotateX, rotateY, rotateZ);
   return videoMesh;
