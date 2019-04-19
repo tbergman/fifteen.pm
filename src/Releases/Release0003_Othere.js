@@ -652,7 +652,7 @@ class Release0003_Othere extends PureComponent {
         <Menu
           menuIconFillColor="red"
           content={CONTENT[window.location.pathname]}
-          audioRef={el => this.audioElement = el}
+          mediaRef={el => this.audioElement = el}
         />
         <div className="release">
           <div ref={element => this.container = element} />

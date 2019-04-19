@@ -541,7 +541,7 @@ class Release0006_Vveiss extends Component {
         <Menu
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="white"
-          audioRef={el => this.audioElement = el}
+          mediaRef={el => this.audioElement = el}
         />
         <div ref={element => this.container = element} />
       </Fragment>

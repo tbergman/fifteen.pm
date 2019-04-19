@@ -33,7 +33,8 @@ export const CONTENT = {
     tracks: [
       {
         title: "Wun 4 Jas",
-        id: "466084773"
+        id: "466084773",
+        type: "soundcloud"
       }
     ],
     theme: {
@@ -59,7 +60,9 @@ export const CONTENT = {
     tracks: [
       {
         title: "Timer",
-        id: "475418370"
+        id: "475418370",
+        type: "soundcloud"
+
       }
     ],
     theme: {
@@ -88,7 +91,9 @@ export const CONTENT = {
     tracks: [
       {
         title: "Let's Beach",
-        id: "482138307"
+        id: "482138307",
+        type: "soundcloud"
+
       }
     ],
     theme: {
@@ -122,15 +127,21 @@ export const CONTENT = {
     tracks: [
       {
         title: "Nothing (Blood)",
-        id: "507660189"
+        id: "507660189",
+        type: "soundcloud"
+
       },
       {
         title: "Miracle Center",
-        id: "513518607"
+        id: "513518607",
+        type: "soundcloud"
+
       },
       {
         title: "Finesse",
-        id: "513518595"
+        id: "513518595",
+        type: "soundcloud"
+
       }
     ],
     theme: {
@@ -168,11 +179,15 @@ export const CONTENT = {
     tracks: [
       {
         title: "Heaven",
-        id: "514219014"
+        id: "514219014",
+        type: "soundcloud"
+
       },
       {
         title: "Bullseye",
-        id: "514219020"
+        id: "514219020",
+        type: "soundcloud"
+
       }
     ],
     theme: {
@@ -201,7 +216,9 @@ export const CONTENT = {
     tracks: [
       {
         title: "ESCAPE VELOCITY",
-        id: "529074519"
+        id: "529074519",
+        type: "soundcloud"
+
       }
     ],
     theme: {
@@ -227,7 +244,7 @@ export const CONTENT = {
       {
         title: "GOLDEN GROOVE",
         id: "565459281",
-        secretToken: "s-BOQ7b"
+        type: "soundcloud"
       }
     ],
     theme: {

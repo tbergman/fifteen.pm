@@ -644,7 +644,7 @@ class Release0002_YearUnknown extends Component {
       <Fragment>
         <Menu
           content={CONTENT[window.location.pathname]}
-          audioRef={el => this.audioElement = el}
+          mediaRef={el => this.audioElement = el}
         />
         <div className="release">
           <div ref={element => this.container = element} />

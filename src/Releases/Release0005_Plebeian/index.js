@@ -10,7 +10,7 @@ import { loadGLTF } from "../../Utils/Loaders";
 import { assetPath } from "../../Utils/assets";
 import { cameraViews } from "./Utils/cameraViews";
 import { CONTENT } from "../../Content";
-import { soundcloudTrackIdFromSrc } from "../../Utils/SoundcloudUtils";
+import { soundcloudTrackIdFromSrc } from "../../Utils/Audio/SoundcloudUtils";
 import Menu from '../../UI/Menu/Menu';
 
 export const assetPath5 = (p) => {
@@ -441,7 +441,7 @@ class Release0005_Plebeian extends Component {
         <Menu
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="white"
-          audioRef={el => this.audioElement = el}
+          mediaRef={el => this.audioElement = el}
           didEnterWorld={() => { this.hasEntered = true }}
         />
         <div ref={element => this.container = element} />

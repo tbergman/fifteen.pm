@@ -295,7 +295,7 @@ class Release0001_Yahceph extends PureComponent {
       <Fragment>
         <Menu
           content={CONTENT[window.location.pathname]}
-          audioRef={el => this.audioElement = el}
+          mediaRef={el => this.audioElement = el}
           didEnterWorld={() => { this.hasEntered = true }}
         />
         <div

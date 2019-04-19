@@ -20,7 +20,7 @@ class Menu extends PureComponent {
 
   static defaultProps = {
     overlayOpen: true,
-    renderPlayer: true,
+    shouldRenderPlayer: true,
     loading: false
   };
 
@@ -237,15 +237,15 @@ class Menu extends PureComponent {
   };
 
   renderPlayer = () => {
-    const { content, audioRef } = this.props;
+    const { content, mediaRef } = this.props;
     const { hasEnteredWorld } = this.state;
-    if (this.props.renderPlayer) {
+    if (this.props.shouldRenderPlayer) {
       return (
         <Player
           trackList={content.tracks}
           message={content.artist}
           fillColor={content.theme.iconColor}
-          audioRef={audioRef}
+          mediaRef={mediaRef}
           initialized={hasEnteredWorld}
         />
       );
