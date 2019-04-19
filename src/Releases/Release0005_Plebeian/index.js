@@ -282,17 +282,9 @@ class Release0005_Plebeian extends Component {
   }
 
   renderCoin = (gltfObj) => {
-    this.cubeTextureLoader.setPath(assetPath5('objects/old_coin/textures/Material_25_normal.png/'));
-    var cubeTexture = this.cubeTextureLoader.load([
-      '4.jpg', '5.jpg',
-      '6.jpg', '4.jpg',
-      '5.jpg', '6.jpg',
-    ]);
-
     const coinObj = gltfObj.scene.children[0].children[0];
     const updatedCoinMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      envMap: cubeTexture
+      color: 0xffffff
     });
     coinObj.material = updatedCoinMaterial;
     coinObj.scale.set(0.06, 0.06, 0.06);

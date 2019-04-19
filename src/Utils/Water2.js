@@ -40,8 +40,8 @@ export const Water2 = (function () {
     var textureLoader = new THREE.TextureLoader();
 
     var flowMap = options.flowMap || undefined;
-    var normalMap0 = options.normalMap0 || textureLoader.load('assets/utils/water/textures/water/Water_1_M_Normal.jpg');
-    var normalMap1 = options.normalMap1 || textureLoader.load('assets/utils/water/textures/water/Water_2_M_Normal.jpg');
+    var normalMap0 = options.normalMap0 || textureLoader.load('assets/shared/images/water/textures/water/Water_1_M_Normal.jpg');
+    var normalMap1 = options.normalMap1 || textureLoader.load('assets/shared/images/water/textures/water/Water_2_M_Normal.jpg');
 
     var cycle = 0.15; // a cycle of a flow map phase
     var halfCycle = cycle * 0.5;
