@@ -1,24 +1,28 @@
 import React, { Fragment, PureComponent } from 'react';
 import './Player.css'
-import { formatSoundcloudSrc } from "../../Utils/Audio/SoundcloudUtils";
-import { multiSourceVideo } from "../../Utils/Video/paths";
+import { formatSoundcloudSrc } from "../../Utils/SoundcloudUtils";
+import { loadVideo } from '../../Utils/Loaders';
 
 class Player extends PureComponent {
   state = {
     paused: true, // Assume autoplay doesn't work.
-    mediaSource: this.getMediaSource(this.props.trackList[0]),
-    mediaElement: document.getElementById('media-player'),
+    src: formatSoundcloudSrc(
+      this.props.trackList[0].id,
+      this.props.trackList[0].secretToken
+    ),
+    audioElement: document.getElementById('audio-player'),
     curTrackIdx: 0,
   }
 
   static defaultProps = {
     fillColor: '#ffffff',
     selectedColor: '#fa0afa',
+    type: 'audio/mpeg'
   }
 
   componentDidMount() {
     this.setState({ paused: true });
-    this.updateMediaElement();
+    this.updateAudioElement();
     if (!("ontouchstart" in document.documentElement)) {
       document.documentElement.className += "no-touch";
     }
@@ -26,66 +30,49 @@ class Player extends PureComponent {
 
   componentDidUpdate = (prevProps, prevState) => {
     if (prevState.curTrackIdx !== this.state.curTrackIdx) {
-      this.updateMediaElement();
-      if (!this.state.paused) {
+      this.updateAudioElement();
+      if (this.props.initialized && !this.state.paused) {
         this.handlePlay();
       }
-    } 
-    else if (!prevProps.initialized && this.props.initialized) {
+    } else if (!prevProps.initialized && this.props.initialized) {
       this.handlePlay();
     }
   }
 
   componentWillUnmount() {
-    const { mediaElement } = this.state;
-    mediaElement.removeEventListener('playing', this.resetPlayer, false);
-    mediaElement.removeEventListener('ended', this.advanceTrack, false);
+    const { audioElement } = this.state;
+    audioElement.removeEventListener('playing', this.resetPlayer, false);
+    audioElement.removeEventListener('ended', this.advanceTrack, false);
   }
 
-  getMediaSource(trackInfo) {
-    // TODO: Does it make the most sense for multi-audio tracks to create a single audio tag with multiple sources?
-    if (trackInfo.type === "soundcloud") {
-      // videos have multiple src for same content, so sources stored as lists
-      return [{
-        src: formatSoundcloudSrc(trackInfo.id, trackInfo.secretToken),
-        type: "audio/mpeg"
-      }]
-    } else if (trackInfo.type === "video") {
-      return multiSourceVideo(trackInfo.id)
-    } else throw "Unsupported track type."
-  }
-
-
-  updateMediaElement() {
+  updateAudioElement() {
     this.setState({
-      mediaElement: document.getElementById('media-player')
+      audioElement: document.getElementById('audio-player')
     }, () => {
-      const { mediaElement } = this.state;
-      mediaElement.addEventListener('playing', this.resetPlayer, false);
-      mediaElement.addEventListener('ended', this.advanceTrack, false);
+      const { audioElement } = this.state;
+      audioElement.addEventListener('playing', this.resetPlayer, false);
+      audioElement.addEventListener('ended', this.advanceTrack, false);
     });
   }
 
   isPlaying() {
     // Check if the audio is playing
-    const { mediaElement } = this.state;
-    return mediaElement.duration > 0
-      && !mediaElement.paused
-      && !mediaElement.ended;
+    const { audioElement } = this.state;
+    return audioElement.duration > 0
+      && !audioElement.paused
+      && !audioElement.ended;
   }
 
   resetPlayer = () => {
-    let {paused} = this.state;
-    if (this.isPlaying() && paused) {
+    if (this.isPlaying()) {
       this.setState({ paused: false });
     }
   }
 
-  setCurrentTrack(trackIdx) {
-    const {trackList} = this.props;
+  setCurrentTrack(trackIdx, { id, secretToken }) {
     this.setState({
       curTrackIdx: trackIdx,
-      mediaSource: this.getMediaSource(trackList[trackIdx]),
+      src: formatSoundcloudSrc(id, secretToken),
       paused: false
     });
   }
@@ -95,19 +82,64 @@ class Player extends PureComponent {
     const { trackList } = this.props;
     const { curTrackIdx } = this.state;
     const nextTrackIdx = curTrackIdx + 1 === trackList.length ? 0 : curTrackIdx + 1;
-    this.setCurrentTrack(nextTrackIdx);
+    const track = trackList[nextTrackIdx];
+
+    this.setCurrentTrack(nextTrackIdx, track);
   }
-  
+
+  loadAux(mediaObj) {
+    if (mediaObj.meta.type === "video") {
+      mediaObj.mesh = loadVideo({ ...mediaObj.meta });
+      mediaObj.media = mediaObj.mesh.userData.media;
+      mediaObj.media.addEventListener("canplay", () => {
+        mediaObj.media.play();
+      });
+    }
+  }
+
+  handleAuxPlay() {
+    const { auxMedia } = this.props;
+    if (auxMedia && auxMedia.length) {
+      for (let i = 0; i < auxMedia.length; i++) {
+        let mediaObj = auxMedia[i];
+        if (!mediaObj.media) {
+          this.loadAux(mediaObj);
+        }
+        else if (mediaObj.media.paused) {
+          mediaObj.media.play();
+        }
+      }
+    }
+  }
+
+  handleAuxPause() {
+    const { auxMedia } = this.props;
+    if (auxMedia && auxMedia.length) {
+      for (let i = 0; i < auxMedia.length; i++) {
+        let mediaObj = auxMedia[i];
+        if (!mediaObj.media.paused) {
+          mediaObj.media.pause();
+        }
+      }
+    }
+  }
+
+
   handlePlay() {
-    this.setState({ paused: false }, () => {
-      this.state.mediaElement.play();
-    });
+    this.handleAuxPlay();
+    // this.setState({ paused: false }, () => {
+    //   this.state.audioElement.play();
+    //   this.handleAuxPlay();
+    // });
   }
 
   handlePause() {
-    this.setState({ paused: true }, () => {
-      this.state.mediaElement.pause();
-    });
+    this.handleAuxPause();
+
+    // this.setState({ paused: true }, () => {
+    //   this.state.audioElement.pause();
+    //   this.handleAuxPause();
+    // });
   }
 
   handlePlayButtonClick = (e) => {
@@ -119,6 +151,7 @@ class Player extends PureComponent {
 
   handlePlaylistClick = (e) => {
     e.preventDefault();
+    const { trackList } = this.props;
     const trackIdx = Number(e.target.getAttribute('data-id'));
     const track = trackList[trackIdx];
     this.setCurrentTrack(trackIdx, track);
@@ -185,44 +218,40 @@ class Player extends PureComponent {
   }
 
   renderAudioTag() {
-    const { mediaRef } = this.props; // NOTE: This mediaRef causes this component to constantly re-render.
-    const { mediaSource } = this.state;
-    const source = mediaSource[0];
+    const { type, mediaRef } = this.props;
+    const { src } = this.state;
     return (
       <audio
-        key={source.src}
-        id="media-player"
+        key={src}
+        id="audio-player"
         crossOrigin="anonymous"
         ref={mediaRef}
       >
-        <source src={source.src} type={source.type} />
+        <source src={src} type={type} />
       </audio>
     );
   }
 
   renderVideoTag() {
-    const { mediaRef } = this.props;
-    const { mediaSource } = this.state;
+    const { type, mediaRef } = this.props;
+    const { src } = this.state;
     return (
       <video
-        key={mediaSource[0].src}
+        key={src}
         id="video-player"
         crossOrigin="anonymous"
         ref={mediaRef}
       >
-        {mediaSource.map((source, idx) => (
-          <source src={source.src} type={source.type} />
-        ))}
+        <source src={src} type={type} />
       </video>
     )
   }
 
   renderMediaTag() {
-    let { mediaSource } = this.state;
-    const typ = mediaSource[0].type; // videos have multiple src for same content, so sources stored as lists
-    if (typ === "audio/mpeg") {
+    const { type } = this.props;
+    if (type === "audio/mpeg") {
       return this.renderAudioTag();
-    } else if (typ === "video/mp4") {
+    } else if (type === "video/mp4") {
       return this.renderVideoTag();
     } else throw "Unsupported media type for Player."
   }

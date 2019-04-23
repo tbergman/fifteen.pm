@@ -11,13 +11,13 @@ import {
 import { assetPath } from "./Utils/assets";
 
 export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
-    "/1": "#FF69B4",
-    "/3": "red"
+  "/1": "#FF69B4",
+  "/3": "red"
 }
 
 export const CONTENT = {
   "/": {
-    home: true,
+    home: true, // TODO rm
     theme: {
       message:
         "globally.ltd invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
@@ -62,7 +62,6 @@ export const CONTENT = {
         title: "Timer",
         id: "475418370",
         type: "soundcloud"
-
       }
     ],
     theme: {
@@ -93,7 +92,6 @@ export const CONTENT = {
         title: "Let's Beach",
         id: "482138307",
         type: "soundcloud"
-
       }
     ],
     theme: {
@@ -122,26 +120,23 @@ export const CONTENT = {
     }
   },
   "/4": {
-    artist: "JON CANNON", 
+    artist: "JON CANNON",
     textModel: assetPath("4/objects/text.gltf"),
     tracks: [
       {
         title: "Nothing (Blood)",
         id: "507660189",
         type: "soundcloud"
-
       },
       {
         title: "Miracle Center",
         id: "513518607",
         type: "soundcloud"
-
       },
       {
         title: "Finesse",
         id: "513518595",
         type: "soundcloud"
-
       }
     ],
     theme: {
@@ -181,13 +176,11 @@ export const CONTENT = {
         title: "Heaven",
         id: "514219014",
         type: "soundcloud"
-
       },
       {
         title: "Bullseye",
         id: "514219020",
         type: "soundcloud"
-
       }
     ],
     theme: {
@@ -218,7 +211,6 @@ export const CONTENT = {
         title: "ESCAPE VELOCITY",
         id: "529074519",
         type: "soundcloud"
-
       }
     ],
     theme: {
@@ -281,6 +273,7 @@ export const CONTENT = {
       {
         title: "JUICY AND TENDER",
         id: "220556854",
+        type: "soundcloud"
       },
     ],
     theme: {
@@ -307,14 +300,15 @@ export const CONTENT = {
     tracks: [
       {
         title: "",
-        id: "220556854",
-      },
+        type: "video",
+        id: "assets/8/videos/MVI_9621-CHORUS" 
+      }
     ],
     theme: {
       message: "DUR DUR DUR DUR DUR DUR DUR DUR",
       purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
       iconColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.)',
+      fillColor: 'rgba(255, 0, 0, 0.5)',
       textColor: '#fff',
       navColor: '#fff',
       controls: []
@@ -344,4 +338,3 @@ tracks: [
       }
 ],
 */
-  

@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --progress --color --config ./config/webpack.config.js",
+    "start-bs": "webpack-dev-server --disableHostCheck true --progress --color --config ./config/webpack.config.js",
     "build": "webpack --mode production --config ./config/webpack.config.js",
     "test": "jest",
     "deploy-dev": "scripts/deploy.sh  s3://dev.globally.ltd E2RNC34S3LB4YH gltd",
