@@ -42,6 +42,8 @@ export const loadVideo = ({
     rotateX, rotateY, rotateZ, repeat  }) => {
   // initialize video element
   let videoElement = document.createElement('video');
+  videoElement.playsInline = true;
+  videoElement.post = "https://dummyimage.com/320x240/ffffff/fff";
   videoElement.crossOrigin = 'anonymous';
   videoElement.loop = loop;
   videoElement.muted = muted;

@@ -300,8 +300,9 @@ export const CONTENT = {
     tracks: [
       {
         title: "",
-        type: "video",
-        id: "assets/8/videos/MVI_9621-CHORUS" 
+        type: "soundcloud",
+        id: "137548755"
+        // id: "assets/8/videos/MVI_9621-CHORUS" 
       }
     ],
     theme: {

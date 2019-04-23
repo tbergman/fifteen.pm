@@ -40,9 +40,9 @@ const multiSourceVideo = (path) => ([
 class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     componentDidMount() {
         this.init();
-        //   window.addEventListener('mousemove', this.onDocumentMouseMove, false);
-        //   window.addEventListener("touchstart", this.onDocumentMouseMove, false);
-        //   window.addEventListener("touchmove", this.onDocumentMouseMove, false);
+          window.addEventListener('mousemove', this.onDocumentMouseMove, false);
+          window.addEventListener("touchstart", this.onDocumentMouseMove, false);
+          window.addEventListener("touchmove", this.onDocumentMouseMove, false);
         window.addEventListener('resize', this.onWindowResize, false);
         this.animate();
     }
@@ -50,14 +50,18 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     componentWillUnmount() {
         this.stop();
         window.removeEventListener('resize', this.onWindowResize, false);
-        // window.removeEventListener('mousemove', this.onDocumentMouseMove, false);
-        // window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
-        // window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
+        window.removeEventListener('mousemove', this.onDocumentMouseMove, false);
+        window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
+        window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
         this.container.removeChild(this.renderer.domElement);
     }
 
     stop = () => {
         cancelAnimationFrame(this.frameId);
+    }
+
+    onDocumentMouseMove(){
+
     }
 
     onWindowResize = debounce(() => {
@@ -98,7 +102,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         this.initTube();
         this.initChromaVid(); // order matters... everything that will be in/on office should load first... write a chain?
         // this.initSprites();
-        // this.initOffice();
+        this.initOffice();
     }
 
     initWaterMaterial = (alpha, waterY, name) => {
@@ -188,11 +192,17 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                     vertexShader: chromaVertexShader,
                     fragmentShader: chromaFragmentShader,
                     transparent: true,
+                    side: THREE.DoubleSide
                 });
                 this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
-                this.chromaMesh.scale.multiplyScalar(20);
-                this.chromaMesh.position.set(-30, 0, -10000);
-                camera.add(this.chromaMesh);
+                // this.chromaMesh.scale.multiplyScalar(20);
+                // this.chromaMesh.position.set(-30, 0, -10000);
+                this.chromaMesh.position.y -= .5;
+                this.chromaMesh.position.z += 1.5;
+                this.chromaMesh.rotation.x += Math.PI / 2;
+                this.chromaMesh.scale.set(.3, .3, .3);
+                // camera.add(this.chromaMesh);
+                this.videoWall.add(this.chromaMesh);
                 clearInterval(refreshId);
             }
         }, 100);
@@ -316,8 +326,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                 this.office = gltf.scene;
                 this.office.position.x = -20;//window.innerWidth/2.0;
                 // this.office.add(this.chromaMesh);
-                // const videoWall = this.office.getObjectByName("walls005_11")
-                // videoWall.add(this.chromaMesh);
+                this.videoWall = this.office.getObjectByName("walls005_11")
                 scene.add(gltf.scene);
             }
         }
@@ -444,14 +453,14 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
             type: 'video',
             mimetype: 'video/mp4',
             name: 'greem-vid1',
-            sources: multiSourceVideo('MVI_9621-CHORUS'),
+            sources: multiSourceVideo('MVI_9621-CHORUS-640-480'),
             geometry: new THREE.PlaneBufferGeometry(1, 1),
             position: [0, 0, 0],
             playbackRate: 1,
             loop: true,
             invert: true,
-            volume: 1,
-            muted: false,
+            volume: .1,
+            muted: true,
             angle: 0.0
         };
         this.auxMedia = [

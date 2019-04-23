@@ -1,6 +1,6 @@
 import React, { Fragment, PureComponent } from 'react';
 import './Player.css'
-import { formatSoundcloudSrc } from "../../Utils/SoundcloudUtils";
+import { formatSoundcloudSrc } from "../../Utils/Audio/SoundcloudUtils";
 import { loadVideo } from '../../Utils/Loaders';
 
 class Player extends PureComponent {
@@ -90,9 +90,12 @@ class Player extends PureComponent {
   loadAux(mediaObj) {
     if (mediaObj.meta.type === "video") {
       mediaObj.mesh = loadVideo({ ...mediaObj.meta });
+      mediaObj.mesh.visible = false;
       mediaObj.media = mediaObj.mesh.userData.media;
+      mediaObj.media.visible = false;
       mediaObj.media.addEventListener("canplay", () => {
         mediaObj.media.play();
+        mediaObj.mesh.visible = true;
       });
     }
   }
@@ -105,7 +108,7 @@ class Player extends PureComponent {
         if (!mediaObj.media) {
           this.loadAux(mediaObj);
         }
-        else if (mediaObj.media.paused) {
+        if (mediaObj.media.paused) {
           mediaObj.media.play();
         }
       }
@@ -126,20 +129,17 @@ class Player extends PureComponent {
 
 
   handlePlay() {
-    this.handleAuxPlay();
-    // this.setState({ paused: false }, () => {
-    //   this.state.audioElement.play();
-    //   this.handleAuxPlay();
-    // });
+    this.setState({ paused: false }, () => {
+      this.state.audioElement.play();
+      this.handleAuxPlay();
+    });
   }
 
   handlePause() {
-    this.handleAuxPause();
-
-    // this.setState({ paused: true }, () => {
-    //   this.state.audioElement.pause();
-    //   this.handleAuxPause();
-    // });
+    this.setState({ paused: true }, () => {
+      this.state.audioElement.pause();
+      this.handleAuxPause();
+    });
   }
 
   handlePlayButtonClick = (e) => {
@@ -231,27 +231,12 @@ class Player extends PureComponent {
       </audio>
     );
   }
-
-  renderVideoTag() {
-    const { type, mediaRef } = this.props;
-    const { src } = this.state;
-    return (
-      <video
-        key={src}
-        id="video-player"
-        crossOrigin="anonymous"
-        ref={mediaRef}
-      >
-        <source src={src} type={type} />
-      </video>
-    )
-  }
-
+  
   renderMediaTag() {
     const { type } = this.props;
     if (type === "audio/mpeg") {
       return this.renderAudioTag();
-    } else if (type === "video/mp4") {
+    } else if (type === "video/mp4") { // TODO nope, this could be /webm. To be handled in feature/hierarchy-refactor
       return this.renderVideoTag();
     } else throw "Unsupported media type for Player."
   }
