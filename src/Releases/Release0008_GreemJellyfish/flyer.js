@@ -404,13 +404,12 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         return (
             <Fragment>
                 <div className="flyer-info-bottom">
-                    <div>Greem Jellyfish and 149... Juicy Tender</div>
+                    <div>Greem Jellyfish and GLTD present... Juicy Tender</div>
                 </div>
                 <div className="flyer-info-right">
-                    <div>Gallery xyz</div>
-                    <div>Address sumthin</div>
-                    <div>Time O'clock</div>
-                    <div>Saturday May 26</div>
+                    <div><a href="https://www.instagram.com/182ave.c">182 Ave. C</a></div>
+                    <div>7-10PM</div>
+                    <div>Saturday May 25</div>
                 </div>
             </Fragment>
         )

@@ -297,7 +297,7 @@ export const CONTENT = {
       ]
     }
   },
-  "/greem-jellyfish-and-globally-ltd-present": {
+  "/greem-and-gltd-at-149ave-c": {
     artist: "",
     tracks: [
       {
