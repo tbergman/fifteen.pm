@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route } from 'react-router-dom';
@@ -27,7 +28,6 @@ ReactDOM.render(
             <Route path="/6" component={Release0006_Vveiss} />
             <Route path="/7" component={Release0007_JonFay} />
             <Route path="/greem-jellyfish-and-globally-ltd-present" component={Release0008_GreemJellyFish_EventFlyer} />
-
         </div>
     </Router>,
     document.getElementById('root')
