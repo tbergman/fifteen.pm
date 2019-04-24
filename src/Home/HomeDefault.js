@@ -181,7 +181,7 @@ class HomeDefault extends PureComponent {
     mesh.name = meta.name;
     mesh.userData.path = meta.path;
     this.scene.add(mesh);
-    return mesh;x
+    return mesh; x
   }
 
   initReleaseText = (meta, pos, i) => {
@@ -221,7 +221,9 @@ class HomeDefault extends PureComponent {
   }, 50);
 
   animate = () => {
-    requestAnimationFrame(this.animate);
+    setTimeout(() => {
+      requestAnimationFrame(this.animate);
+    }, 1000 / 30);
     this.renderScene();
   }
 
@@ -272,7 +274,7 @@ class HomeDefault extends PureComponent {
       <Fragment>
         <Menu
           overlayOpen={false}
-          renderPlayer={false}
+          shouldRenderPlayer={false}
         />
         <div className="release" ref={element => this.container = element} />
       </Fragment>
