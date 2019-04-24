@@ -19,7 +19,6 @@ class Logo extends Component {
   }
 
   render() {
-    console.log("IN LOGO", window.location.pathname);
     const {fillColor} = this.props;
     return (
       <div className="logo-wrapper"

@@ -4,8 +4,7 @@ import Player from "../Player/Player";
 import Navigation from "../Navigation/Navigation";
 import anime from "animejs";
 import { SHAPES, MENU_ICON_OPEN } from "./MenuConstants";
-import { CONTENT } from "../../Content";
-import { isNoUIMode } from "../../Utils/modes";
+import { CONTENT, TOTAL_RELEASES } from "../../Content";
 import "./Menu.css";
 import { PurchaseLink } from "../Controls/Icons";
 
@@ -21,7 +20,8 @@ class Menu extends PureComponent {
   static defaultProps = {
     overlayOpen: true,
     shouldRenderPlayer: true,
-    loading: false
+    loading: false,
+    totalReleases: TOTAL_RELEASES
   };
 
   componentDidMount() {
@@ -75,14 +75,12 @@ class Menu extends PureComponent {
       </svg>
     );
     let style = {
-      display: isNoUIMode() ? "none" : {},
       marginBottom: "20px",
       marginLeft: "20px"
     };
     if (!this.state.home) {
       style = {
         marginLeft: this.props.content.tracks.length > 1 ? "0px" : "-40px",
-        display: isNoUIMode() ? "none" : {}
       };
     }
     return (
@@ -132,7 +130,7 @@ class Menu extends PureComponent {
             target="_blank"
             href={this.state.theme.purchaseLink}
             style={{
-              color: this.state.theme.textColor    
+              color: this.state.theme.textColor
             }}
           >buy me
         </a>
@@ -252,11 +250,15 @@ class Menu extends PureComponent {
     }
   };
 
-  renderNavigation = () => (
-    <Navigation
-      fillColor={this.state.theme.navColor}
-    />
-  );
+  renderNavigation = () => {
+    const { totalReleases } = this.props;
+    return (
+      <Navigation
+        fillColor={this.state.theme.navColor} // TODO this should be a prop
+        totalReleases={totalReleases}
+      />
+    )
+  };
 
   renderFooter = () => {
     return (<div className="footer" id={this.state.hasEnteredWorld || this.state.home ? 'display' : 'hidden'}>
