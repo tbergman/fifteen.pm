@@ -4,15 +4,14 @@ import debounce from 'lodash/debounce';
 import '../Release.css';
 import './flyer.css';
 
-// import {DRACOLoader} from "three-full";
 import { assetPath } from "../../Utils/assets";
 import { loadVideo, loadImage, loadGLTF } from "../../Utils/Loaders";
-import Menu from '../../UI/Menu/Menu';
 import { CONTENT } from '../../Content'
 import Player from '../../UI/Player/Player'
 import '../../UI/Player/Player.css';
 import { OrbitControls } from "../../Utils/OrbitControls";
 import GLTFLoader from 'three-gltf-loader';
+import {CONSTANTS} from "./flyerConstants.js";
 
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';
@@ -32,17 +31,12 @@ const assetPath8Videos = (p) => {
     return assetPath8("videos/" + p);
 };
 
-const multiSourceVideo = (path) => ([
-    { type: 'video/mp4', src: assetPath8Videos(`${path}.mp4`) },
-    { type: 'video/webm', src: assetPath8Videos(`${path}.webm`) }
-]);
-
 class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     componentDidMount() {
         this.init();
-          window.addEventListener('mousemove', this.onDocumentMouseMove, false);
-          window.addEventListener("touchstart", this.onDocumentMouseMove, false);
-          window.addEventListener("touchmove", this.onDocumentMouseMove, false);
+        window.addEventListener('mousemove', this.onDocumentMouseMove, false);
+        window.addEventListener("touchstart", this.onDocumentMouseMove, false);
+        window.addEventListener("touchmove", this.onDocumentMouseMove, false);
         window.addEventListener('resize', this.onWindowResize, false);
         this.animate();
     }
@@ -60,8 +54,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         cancelAnimationFrame(this.frameId);
     }
 
-    onDocumentMouseMove(){
-
+    onDocumentMouseMove() {
     }
 
     onWindowResize = debounce(() => {
@@ -76,7 +69,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
-        this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 100000);
+        this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 15000);
         this.camera.position.set(4900, 900, 6800);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -89,6 +82,8 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         this.controls.enabled = true;
         this.controls.autoRotate = true;
         this.controls.autoRotateSpeed = 1;
+        this.controls.minDistance = 250;
+        this.controls.maxDistance = 10000;
         this.clock = new THREE.Clock();
         // release-specific objects
         this.waterMaterials = {};
@@ -97,7 +92,6 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         this.office = undefined;
         this.chromaMesh = undefined;
         // release-specific initilization
-        // this.textSequence = this.initText(this.textSequence);
         this.initLights();
         this.initTube();
         this.initChromaVid(); // order matters... everything that will be in/on office should load first... write a chain?
@@ -164,25 +158,9 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
 
     initChromaVid = () => {
         const { camera, scene } = this;
-        // const videoObj = {
-        //     type: 'video',
-        //     mimetype: 'video/mp4',
-        //     name: 'greem-vid1',
-        //     sources: multiSourceVideo('MVI_9621-CHORUS'),
-        //     geometry: videoPlane,
-        //     position: [0, 0, 0],
-        //     playbackRate: 1,
-        //     loop: true,
-        //     invert: false,
-        //     volume: 1,
-        //     muted: false,
-        //     angle: 0.0
-        // };
-        // let activated = false;
-        // let videoMesh = loadVideo({ ...videoObj })
         const refreshId = setInterval(() => {
-            if (this.auxMedia[0].media) {
-                let videoMesh = this.auxMedia[0].mesh;
+            if (CONSTANTS.auxMedia[0].media) {
+                let videoMesh = CONSTANTS.auxMedia[0].mesh;
                 let chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
                 this.chromaMaterial = new THREE.ShaderMaterial({
                     uniforms: {
@@ -195,13 +173,10 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                     side: THREE.DoubleSide
                 });
                 this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
-                // this.chromaMesh.scale.multiplyScalar(20);
-                // this.chromaMesh.position.set(-30, 0, -10000);
                 this.chromaMesh.position.y -= .5;
                 this.chromaMesh.position.z += 1.5;
                 this.chromaMesh.rotation.x += Math.PI / 2;
                 this.chromaMesh.scale.set(.3, .3, .3);
-                // camera.add(this.chromaMesh);
                 this.videoWall.add(this.chromaMesh);
                 clearInterval(refreshId);
             }
@@ -223,19 +198,8 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
 
         let cameraLight = new THREE.SpotLight(0xfff000, 1, 1000);
         cameraLight.position.set(camera.position.x, camera.position.y, camera.position.z);
-        // cameraLight.position.z += 10
-        // scene.add(cameraLight);
         camera.add(cameraLight);
-        // const sphereSize = 1;
-        // const pointLightHelper = new THREE.SpotLightHelper(cameraLight, sphereSize);
         cameraLight.lookAt(new THREE.Vector3());
-        // scene.add(pointLightHelper);
-
-        let spotLight = new THREE.SpotLight(0xff0000, 100, 1000);
-        spotLight.position.set(-10, 100, 0);
-        spotLight.lookAt(new THREE.Vector3());
-        // const spotLightHelper = new THREE.SpotLightHelper(spotLight, sphereSize);
-        // scene.add(spotLightHelper);
 
         // add subtle ambient lighting
         var ambientLight = new THREE.AmbientLight(0xbbbbbb);
@@ -245,7 +209,6 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         var directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 1, 1).normalize();
         scene.add(directionalLight);
-
     }
 
     initTube = () => {
@@ -281,7 +244,6 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         let shape = new THREE.Shape(pts);
         // Extrude the triangle along the CatmullRom curve
         let geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-        // let geometry = new THREE.BoxGeometry(1, 1, 1);
         let material = new THREE.MeshPhongMaterial({ color: 0xb00000 });
         // Create mesh with the resulting geometry
         let tube = new THREE.Mesh(geometry, material);
@@ -308,15 +270,26 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
             loader: gltfLoader,
             onSuccess: (gltf) => {
                 const { scene, waterMaterials } = this;
-
                 const alpha = .1;
                 const waterY = 107.;
                 let waterMaterial = this.initWaterMaterial(alpha, waterY, name);
                 const object = gltf.scene.children[0].getObjectByProperty('mesh');
+                const defaultMaterial = new THREE.MeshStandardMaterial({
+                    color: 0xFB0082,
+                    metalness: 0.5,
+                    roughness: 0.0,
+                    skinning: true,
+                    fog: true,
+                    needsUpdate: true,
+                    transparent: true,
+                    opacity: 0.5
+                  });
                 if (object) {
                     object.traverse(function (node) {
-                        if (node.isMesh) {
+                        if (node.isMesh && CONSTANTS.officeWaterSurfaces.includes(node.name)) {
                             node.material = waterMaterial;
+                        } else if (node.isMesh){
+                            node.material = defaultMaterial;
                         }
                     });
                 }
@@ -360,7 +333,9 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     }
 
     animate = () => {
-        this.frameId = window.requestAnimationFrame(this.animate);
+        setTimeout(() => {
+            this.frameId = window.requestAnimationFrame(this.animate);
+        }, 1000 / 30 );
         this.renderScene();
     }
 
@@ -369,7 +344,6 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         for (const objName in waterMaterials) {
             waterMaterials[objName].uniforms.u_time.value += 0.05;
             waterMaterials[objName].uniforms.lightIntensity.value = lightIntensity;
-
         }
     }
 
@@ -418,7 +392,6 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         const { renderer, scene, camera, controls, clock, chromaMaterial } = this;
         let lightIntensity = this.updateLights();
         this.updateWaterMaterials(lightIntensity);
-        // this.updateText();
         // this.updateSpriteAnimations();
         if (chromaMaterial) {
             chromaMaterial.uniforms.u_time.value = this.clock.getElapsedTime();
@@ -427,12 +400,11 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         renderer.render(scene, camera);
     }
 
-
     renderFlyerInfo() {
         return (
             <Fragment>
                 <div className="flyer-info-bottom">
-                    <div>Greem Jellyfish and Globally LTD present... Juicy Tender</div>
+                    <div>Greem Jellyfish and 149... Juicy Tender</div>
                 </div>
                 <div className="flyer-info-right">
                     <div>Gallery xyz</div>
@@ -446,28 +418,6 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
 
     renderPlayer = () => {
         const content = CONTENT[window.location.pathname];
-        // const { content, mediaRef } = this.props;
-        // const { hasEnteredWorld } = this.state;
-        // if (this.props.renderPlayer) {
-        const vidMeta = {
-            type: 'video',
-            mimetype: 'video/mp4',
-            name: 'greem-vid1',
-            sources: multiSourceVideo('MVI_9621-CHORUS-640-480'),
-            geometry: new THREE.PlaneBufferGeometry(1, 1),
-            position: [0, 0, 0],
-            playbackRate: 1,
-            loop: true,
-            invert: true,
-            volume: .1,
-            muted: true,
-            angle: 0.0
-        };
-        this.auxMedia = [
-            {
-                meta: vidMeta,
-                mesh: undefined,
-            }];
         return (
             <div className="player">
                 <Player
@@ -475,23 +425,20 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                     message={content.artist}
                     fillColor={content.theme.iconColor}
                     mediaRef={element => this.mediaElement = element}
-                    auxMedia={this.auxMedia}
-                // initialized={hasEnteredWorld}
+                    auxMedia={CONSTANTS.auxMedia}
                 />
             </div>
         );
-        // }
     }
 
     render() {
         return (
             <Fragment>
-                {this.renderFlyerInfo()}
-                <div className="release" id="greemJellyFishFlyer">
-                    <div ref={(element) => this.container = element} />}
+                    {this.renderFlyerInfo()}
+                    <div className="release" id="greemJellyFishFlyer">
+                        <div ref={(element) => this.container = element} />}
                 </div>
-                {this.renderPlayer()}
-
+                    {this.renderPlayer()}
             </Fragment>
         );
     }
