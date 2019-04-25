@@ -412,7 +412,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     }
 
     renderPlayer = () => {
-        const content = CONTENT[window.location.pathname];
+        const content = CONTENT["/greem-and-gltd-at-149ave-c"]
         return (
             <div className="player">
                 <Player
