@@ -11,47 +11,47 @@ jobs:
   checkout:
     <<: *defaults
     steps:
-      - restore_cache:
-          key: v2-source-{{ .Branch }}-{{ .Revision }}
+      # - restore_cache:
+      #     key: v2-source-{{ .Branch }}-{{ .Revision }}
       - run: 
           name: Install git-lfs
           command: "curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get update && sudo apt-get install -y git-lfs && sudo rm -rf /var/lib/apt/lists/*"
       - checkout
-      - save_cache:
-          key: v2-source-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - "~/releases"
+      # - save_cache:
+      #     key: v2-source-{{ .Branch }}-{{ .Revision }}
+      #     paths:
+      #       - "~/releases"
 
   install:
     <<: *defaults
     steps:
-      - restore_cache:
-          name: Restore Source Cache
-          key: v2-source-{{ .Branch }}-{{ .Revision }}
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          key: v2-yarn-packages-{{ checksum "yarn.lock" }}
+      # - restore_cache:
+      #     name: Restore Source Cache
+      #     key: v2-source-{{ .Branch }}-{{ .Revision }}
+      # - restore_cache:
+      #     name: Restore Yarn Package Cache
+      #     key: v2-yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: "Upgrade Yarn"
           command: "curl -o- -L 'https://yarnpkg.com/install.sh' | bash"
       - run:
           name: "Yarn install"
           command: yarn install
-      - save_cache:
-          name: Save Yarn Package Cache
-          key: v2-yarn-packages-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
+      # - save_cache:
+      #     name: Save Yarn Package Cache
+      #     key: v2-yarn-packages-{{ checksum "yarn.lock" }}
+      #     paths:
+      #       - ~/.cache/yarn
 
   test:
     <<: *defaults
     steps:
-      - restore_cache:
-          name: Restore Source Cache
-          key: v2-source-{{ .Branch }}-{{ .Revision }}
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          key: 1-yarn-packages-{{ checksum "yarn.lock" }}
+      # - restore_cache:
+      #     name: Restore Source Cache
+      #     key: v2-source-{{ .Branch }}-{{ .Revision }}
+      # - restore_cache:
+      #     name: Restore Yarn Package Cache
+      #     key: 1-yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: "Test"
           command: "echo 'who needs tests?' > /dev/null"
@@ -64,12 +64,12 @@ jobs:
       - STAGING_DISTRIBUTION_ID: E2RNC34S3LB4YH
       - PRODUCTION_DISTRIBUTION_ID: E36B2H2DAB37RY
     steps:
-      - restore_cache:
-          name: Restore Source Cache
-          key: v2-source-{{ .Branch }}-{{ .Revision }}
-      - restore_cache:
-          name: Restore Yarn Package Cache
-          key: v2-yarn-packages-{{ checksum "yarn.lock" }}
+      # - restore_cache:
+      #     name: Restore Source Cache
+      #     key: v2-source-{{ .Branch }}-{{ .Revision }}
+      # - restore_cache:
+      #     name: Restore Yarn Package Cache
+      #     key: v2-yarn-packages-{{ checksum "yarn.lock" }}
       # TODO: figure out why we need to re-install chalk here?
       - run: yarn add chalk
       # Install awscli
