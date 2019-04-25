@@ -19,4 +19,4 @@ aws $profile_arg s3 sync dist/ $1 --exclude '*.mp4*' --exclude '*.webm*' --acl p
 # push non-gzipped assets
 aws $profile_arg s3 sync dist/ $1 --include '*.mp4*' --include '*.webm*' --acl public-read
 # refresh cloudfront
-aws cloudfront create-invalidation --distribution-id $2 --paths '/*' > /dev/null
+aws $profile_arg cloudfront create-invalidation --distribution-id $2 --paths '/*' > /dev/null
