@@ -85,7 +85,6 @@ const SCRATCHY_MOMENTS = getRandomMoments(SONG_LENGTH, N_SCRATCHY_MOMENTS)
 class Release0003_Othere extends PureComponent {
   constructor() {
     super();
-
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xFFFFFF);
     this.camera = new THREE.PerspectiveCamera(80, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 3000);
@@ -98,7 +97,6 @@ class Release0003_Othere extends PureComponent {
 
   state = {
     allOrbs: false
-
   }
 
   componentDidMount() {
@@ -333,7 +331,9 @@ class Release0003_Othere extends PureComponent {
   }
 
   animate = () => {
-    this.frameId = window.requestAnimationFrame(this.animate);
+    setTimeout(() => {
+      this.frameId = window.requestAnimationFrame(this.animate);
+    }, 1000 / 30);
     this.renderScene();
   }
 
@@ -621,7 +621,7 @@ class Release0003_Othere extends PureComponent {
     }
 
     if (!onLoPassSphere) {
-      if (!this.audioStream){
+      if (!this.audioStream) {
         return;
       }
       this.scene.background = new THREE.Color(0xFFFFFF);

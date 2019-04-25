@@ -247,7 +247,9 @@ class Release0001_Yahceph extends PureComponent {
   }
 
   animate = () => {
-    this.frameId = window.requestAnimationFrame(this.animate);
+    setTimeout(() => {
+      this.frameId = window.requestAnimationFrame(this.animate);
+    }, 1000 / 30);
     this.renderScene();
   }
 

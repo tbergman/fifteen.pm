@@ -553,7 +553,9 @@ class Release0002_YearUnknown extends Component {
   }
 
   animate = () => {
-    requestAnimationFrame(this.animate);
+    setTimeout(() => {
+      this.frameId = window.requestAnimationFrame(this.animate);
+    }, 1000 / 30);
 
     let time = Date.now();
     this.controls.update(time - this.startTime);
