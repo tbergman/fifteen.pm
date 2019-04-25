@@ -303,18 +303,18 @@ export const CONTENT = {
       {
         title: "",
         type: "soundcloud",
-        id: "137548755"
-        // id: "assets/8/videos/MVI_9621-CHORUS" 
+        id: "610976673",
+        secretToken: "s-7EwJv"
       }
     ],
     theme: {
-      message: "DUR DUR DUR DUR DUR DUR DUR DUR",
-      purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
-      iconColor: '#fff',
-      fillColor: 'rgba(255, 0, 0, 0.5)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: []
+      // message: "DUR DUR DUR DUR DUR DUR DUR DUR",
+      // purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
+      // iconColor: '#fff',
+      // fillColor: 'rgba(255, 0, 0, 0.5)',
+      // textColor: '#fff',
+      // navColor: '#fff',
+      // controls: []
     }
   }
 };

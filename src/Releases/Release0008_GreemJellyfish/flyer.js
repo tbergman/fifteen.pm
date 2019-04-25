@@ -70,9 +70,9 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
         this.camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 1, 15000);
-        this.camera.position.set(4900, 900, 6800);
+        this.camera.position.set(3900, 600, 5800);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.setPixelRatio(window.devicePixelRatio)
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.container.appendChild(this.renderer.domElement);
         this.scene.add(this.camera);
@@ -173,7 +173,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                     side: THREE.DoubleSide
                 });
                 this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
-                this.chromaMesh.position.y -= .5;
+                this.chromaMesh.position.y -= 2.5;
                 this.chromaMesh.position.z += 1.5;
                 this.chromaMesh.rotation.x += Math.PI / 2;
                 this.chromaMesh.scale.set(.3, .3, .3);
@@ -181,10 +181,6 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                 clearInterval(refreshId);
             }
         }, 100);
-    }
-
-    onPlayButtonPress() {
-        this.initChromaVid();
     }
 
     initLights = () => {

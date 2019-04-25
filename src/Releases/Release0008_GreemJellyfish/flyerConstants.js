@@ -27,8 +27,8 @@ export const CONSTANTS = {
             playbackRate: 1,
             loop: true,
             invert: true,
-            volume: .1,
-            muted: true,
+            volume: .8,
+            muted: false,
             angle: 0.0
         },
         mesh: undefined,
