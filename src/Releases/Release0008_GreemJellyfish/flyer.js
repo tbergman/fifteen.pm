@@ -1,17 +1,17 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import * as THREE from "three";
 import debounce from 'lodash/debounce';
 import '../Release.css';
 import './flyer.css';
 
 import { assetPath } from "../../Utils/assets";
-import { loadVideo, loadImage, loadGLTF } from "../../Utils/Loaders";
+import { loadImage, loadGLTF } from "../../Utils/Loaders";
 import { CONTENT } from '../../Content'
 import Player from '../../UI/Player/Player'
 import '../../UI/Player/Player.css';
 import { OrbitControls } from "../../Utils/OrbitControls";
 import GLTFLoader from 'three-gltf-loader';
-import {CONSTANTS} from "./flyerConstants.js";
+import { CONSTANTS } from "./flyerConstants.js";
 
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';
@@ -31,7 +31,7 @@ const assetPath8Videos = (p) => {
     return assetPath8("videos/" + p);
 };
 
-class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
+class Release0008_GreemJellyFish_EventFlyer extends Component {
     componentDidMount() {
         this.init();
         window.addEventListener('mousemove', this.onDocumentMouseMove, false);
@@ -173,7 +173,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                     side: THREE.DoubleSide
                 });
                 this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
-                this.chromaMesh.position.y -= 2.5;
+                this.chromaMesh.position.y -= .5;
                 this.chromaMesh.position.z += 1.5;
                 this.chromaMesh.rotation.x += Math.PI / 2;
                 this.chromaMesh.scale.set(.3, .3, .3);
@@ -279,12 +279,12 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
                     needsUpdate: true,
                     transparent: true,
                     opacity: 0.5
-                  });
+                });
                 if (object) {
                     object.traverse(function (node) {
                         if (node.isMesh && CONSTANTS.officeWaterSurfaces.includes(node.name)) {
                             node.material = waterMaterial;
-                        } else if (node.isMesh){
+                        } else if (node.isMesh) {
                             node.material = defaultMaterial;
                         }
                     });
@@ -331,7 +331,7 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     animate = () => {
         setTimeout(() => {
             this.frameId = window.requestAnimationFrame(this.animate);
-        }, 1000 / 30 );
+        }, 1000 / 30);
         this.renderScene();
     }
 
@@ -429,11 +429,11 @@ class Release0008_GreemJellyFish_EventFlyer extends PureComponent {
     render() {
         return (
             <Fragment>
-                    {this.renderFlyerInfo()}
-                    <div className="release" id="greemJellyFishFlyer">
-                        <div ref={(element) => this.container = element} />}
+                {this.renderFlyerInfo()}
+                <div className="release" id="greemJellyFishFlyer">
+                    <div ref={(element) => this.container = element} />}
                 </div>
-                    {this.renderPlayer()}
+                {this.renderPlayer()}
             </Fragment>
         );
     }
