@@ -33,6 +33,10 @@
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 } 
 
+.flyer-info-right > div {
+    margin-top: 20px;
+}
+
 .player {
     position: absolute;
     display: -ms-flexbox;
@@ -47,6 +51,7 @@
 
   @media screen and (max-width: 42em) {
   .player{
-      bottom: 50px;
+      bottom: 30px;
+      left: -40px;
   }
 }

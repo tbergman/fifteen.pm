@@ -269,35 +269,7 @@ export const CONTENT = {
       ]
     }
   },
-  "/8": {
-    artist: "GREEM JELLYFISH",
-    tracks: [
-      {
-        title: "JUICY AND TENDER",
-        id: "220556854",
-        type: "soundcloud"
-      },
-    ],
-    theme: {
-      message: "DUR DUR DUR DUR DUR DUR DUR DUR",
-      purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
-      iconColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.5)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: ArrowKeys,
-          instructions: "use arrow keys to orbit around"
-        },
-        {
-          icon: MouseMove,
-          instructions: "move mouse to yaw around"
-        }
-      ]
-    }
-  },
-  "/greem-and-gltd-at-149ave-c": {
+  "/greem-and-gltd-opening": {
     artist: "",
     tracks: [
       {

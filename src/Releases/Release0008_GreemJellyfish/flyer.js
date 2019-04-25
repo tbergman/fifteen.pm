@@ -403,16 +403,16 @@ class Release0008_GreemJellyFish_EventFlyer extends Component {
                     <div>Greem Jellyfish and GLTD present... Juicy Tender</div>
                 </div>
                 <div className="flyer-info-right">
-                    <div><a href="https://www.instagram.com/182ave.c">182 Ave. C</a></div>
+                    <div><a href="https://www.instagram.com/182ave.c">Gallery @ 182 Ave. C</a></div>
+                    <div>Saturday, May 25</div>
                     <div>7-10PM</div>
-                    <div>Saturday May 25</div>
                 </div>
             </Fragment>
         )
     }
 
     renderPlayer = () => {
-        const content = CONTENT["/greem-and-gltd-at-149ave-c"]
+        const content = CONTENT[window.location.pathname];
         return (
             <div className="player">
                 <Player

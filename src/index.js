@@ -15,6 +15,7 @@ import Release0006_Vveiss from "./Releases/Release0006_Vveiss/index";
 import Release0007_JonFay from "./Releases/Release0007_JonFay/index";
 import Release0008_GreemJellyFish_EventFlyer from "./Releases/Release0008_GreemJellyFish/flyer";
 
+
 ReactDOM.render(
     <Router history={history}>
         <div>
@@ -27,8 +28,8 @@ ReactDOM.render(
             <Route path="/5" component={Release0005_Plebeian} />
             <Route path="/6" component={Release0006_Vveiss} />
             <Route path="/7" component={Release0007_JonFay} />
-            <Route path="/greem-and-gltd-at-149ave-c" component={Release0007_JonFay} />
-            {/* Release0008_GreemJellyFish_EventFlyer} /> */}
+            <Route path="/greem-and-gltd-opening" component={Release0008_GreemJellyFish_EventFlyer} />
+            
         </div>
     </Router>,
     document.getElementById('root')
