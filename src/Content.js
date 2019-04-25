@@ -11,13 +11,15 @@ import {
 import { assetPath } from "./Utils/assets";
 
 export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
-    "/1": "#FF69B4",
-    "/3": "red"
+  "/1": "#FF69B4",
+  "/3": "red"
 }
+
+export const TOTAL_RELEASES = 7;
 
 export const CONTENT = {
   "/": {
-    home: true,
+    home: true, // TODO rm
     theme: {
       message:
         "globally.ltd invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
@@ -33,7 +35,8 @@ export const CONTENT = {
     tracks: [
       {
         title: "Wun 4 Jas",
-        id: "466084773"
+        id: "466084773",
+        type: "soundcloud"
       }
     ],
     theme: {
@@ -59,7 +62,8 @@ export const CONTENT = {
     tracks: [
       {
         title: "Timer",
-        id: "475418370"
+        id: "475418370",
+        type: "soundcloud"
       }
     ],
     theme: {
@@ -88,7 +92,8 @@ export const CONTENT = {
     tracks: [
       {
         title: "Let's Beach",
-        id: "482138307"
+        id: "482138307",
+        type: "soundcloud"
       }
     ],
     theme: {
@@ -117,20 +122,23 @@ export const CONTENT = {
     }
   },
   "/4": {
-    artist: "JON CANNON", 
+    artist: "JON CANNON",
     textModel: assetPath("4/objects/text.gltf"),
     tracks: [
       {
         title: "Nothing (Blood)",
-        id: "507660189"
+        id: "507660189",
+        type: "soundcloud"
       },
       {
         title: "Miracle Center",
-        id: "513518607"
+        id: "513518607",
+        type: "soundcloud"
       },
       {
         title: "Finesse",
-        id: "513518595"
+        id: "513518595",
+        type: "soundcloud"
       }
     ],
     theme: {
@@ -168,11 +176,13 @@ export const CONTENT = {
     tracks: [
       {
         title: "Heaven",
-        id: "514219014"
+        id: "514219014",
+        type: "soundcloud"
       },
       {
         title: "Bullseye",
-        id: "514219020"
+        id: "514219020",
+        type: "soundcloud"
       }
     ],
     theme: {
@@ -201,7 +211,8 @@ export const CONTENT = {
     tracks: [
       {
         title: "ESCAPE VELOCITY",
-        id: "529074519"
+        id: "529074519",
+        type: "soundcloud"
       }
     ],
     theme: {
@@ -227,7 +238,7 @@ export const CONTENT = {
       {
         title: "GOLDEN GROOVE",
         id: "565459281",
-        secretToken: "s-BOQ7b"
+        type: "soundcloud"
       }
     ],
     theme: {
@@ -258,12 +269,31 @@ export const CONTENT = {
       ]
     }
   },
+  "/greem-and-gltd-opening": {
+    artist: "",
+    tracks: [
+      {
+        title: "",
+        type: "soundcloud",
+        id: "610976673",
+        secretToken: "s-7EwJv"
+      }
+    ],
+    theme: {
+      message: "DUR DUR DUR DUR DUR DUR DUR DUR",
+      purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
+      iconColor: '#fff',
+      fillColor: 'rgba(255, 0, 0, 0.5)',
+      textColor: '#fff',
+      navColor: '#fff',
+      controls: []
+    }
+  }
 };
 
 
 /*
 For devving, easy to swap in:
-
 tracks: [
       { // These tracks are useful for devving on the player
         title: "Fake short song 1",

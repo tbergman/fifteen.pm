@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/releases
   docker:
-    - image: circleci/node:8.15.1
+    - image: circleci/node:12.0.0
   dependencies:
     override:
       - yarn
@@ -51,7 +51,7 @@ jobs:
           key: v1-source-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           name: Restore Yarn Package Cache
-          key: 1-yarn-packages-{{ checksum "yarn.lock" }}
+          key: v1-yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: "Test"
           command: "echo 'who needs tests?' > /dev/null"

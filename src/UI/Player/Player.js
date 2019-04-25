@@ -1,6 +1,7 @@
 import React, { Fragment, PureComponent } from 'react';
 import './Player.css'
-import { formatSoundcloudSrc } from "../../Utils/SoundcloudUtils";
+import { formatSoundcloudSrc } from "../../Utils/Audio/SoundcloudUtils";
+import { loadVideo } from '../../Utils/Loaders';
 
 class Player extends PureComponent {
   state = {
@@ -86,15 +87,58 @@ class Player extends PureComponent {
     this.setCurrentTrack(nextTrackIdx, track);
   }
 
+  loadAux(mediaObj) {
+    if (mediaObj.meta.type === "video") {
+      mediaObj.mesh = loadVideo({ ...mediaObj.meta });
+      mediaObj.mesh.visible = false;
+      mediaObj.media = mediaObj.mesh.userData.media;
+      mediaObj.media.visible = false;
+      mediaObj.media.addEventListener("canplay", () => {
+        mediaObj.media.play();
+        mediaObj.mesh.visible = true;
+      });
+    }
+  }
+
+  handleAuxPlay() {
+    const { auxMedia } = this.props;
+    if (auxMedia && auxMedia.length) {
+      for (let i = 0; i < auxMedia.length; i++) {
+        let mediaObj = auxMedia[i];
+        if (!mediaObj.media) {
+          this.loadAux(mediaObj);
+        }
+        if (mediaObj.media.paused) {
+          mediaObj.media.play();
+        }
+      }
+    }
+  }
+
+  handleAuxPause() {
+    const { auxMedia } = this.props;
+    if (auxMedia && auxMedia.length) {
+      for (let i = 0; i < auxMedia.length; i++) {
+        let mediaObj = auxMedia[i];
+        if (!mediaObj.media.paused) {
+          mediaObj.media.pause();
+        }
+      }
+    }
+  }
+
+
   handlePlay() {
     this.setState({ paused: false }, () => {
       this.state.audioElement.play();
+      this.handleAuxPlay();
     });
   }
 
   handlePause() {
     this.setState({ paused: true }, () => {
       this.state.audioElement.pause();
+      this.handleAuxPause();
     });
   }
 
@@ -110,7 +154,6 @@ class Player extends PureComponent {
     const { trackList } = this.props;
     const trackIdx = Number(e.target.getAttribute('data-id'));
     const track = trackList[trackIdx];
-
     this.setCurrentTrack(trackIdx, track);
   }
 
@@ -175,20 +218,27 @@ class Player extends PureComponent {
   }
 
   renderAudioTag() {
-    const { type, audioRef } = this.props;
+    const { type, mediaRef } = this.props;
     const { src } = this.state;
-
     return (
       <audio
         key={src}
         id="audio-player"
-        // autoPlay
         crossOrigin="anonymous"
-        ref={audioRef}
+        ref={mediaRef}
       >
         <source src={src} type={type} />
       </audio>
     );
+  }
+  
+  renderMediaTag() {
+    const { type } = this.props;
+    if (type === "audio/mpeg") {
+      return this.renderAudioTag();
+    } else if (type === "video/mp4") { // TODO nope, this could be /webm. To be handled in feature/hierarchy-refactor
+      return this.renderVideoTag();
+    } else throw "Unsupported media type for Player."
   }
 
 
@@ -196,7 +246,7 @@ class Player extends PureComponent {
     return (
       <Fragment>
         {this.renderPlayerElements()}
-        {this.renderAudioTag()}
+        {this.renderMediaTag()}
       </Fragment>
     );
   }

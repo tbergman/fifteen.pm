@@ -1,0 +1,57 @@
+.flyer-info-bottom {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 0 40px 10px 10px;
+}
+
+.flyer-info-right {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0 20px 50px 0;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+
+    /* Legacy vendor prefixes that you probably don't need... */
+  
+    /* Safari */
+    -webkit-transform: rotate(180deg);
+  
+    /* Firefox */
+    -moz-transform: rotate(180deg);
+  
+    /* IE */
+    -ms-transform: rotate(180deg);
+  
+    /* Opera */
+    -o-transform: rotate(180deg);
+  
+    /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+} 
+
+.flyer-info-right > div {
+    margin-top: 20px;
+}
+
+.player {
+    position: absolute;
+    display: -ms-flexbox;
+    display: flex;
+    bottom: 0;
+    width: 100%;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    -ms-flex-align: start;
+    align-items: center;
+  }
+
+  @media screen and (max-width: 42em) {
+  .player{
+      bottom: 30px;
+      left: -40px;
+  }
+}

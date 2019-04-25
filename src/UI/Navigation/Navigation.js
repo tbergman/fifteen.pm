@@ -6,7 +6,6 @@ class Navigation extends Component {
   state = {
     currentLocation: window.location.pathname,
     currentIndex: parseInt(window.location.pathname.replace("/", "")),
-    totalReleases: Object.keys(CONTENT).length - 1
   };
 
   static defaultProps = {
@@ -18,13 +17,15 @@ class Navigation extends Component {
   };
 
   getPrevReleasePath = () => {
+    const {currentIndex} = this.state;
+    const {totalReleases} = this.props;
     let prevRelease;
     if (this.isHome()) {
-      prevRelease = "/" + this.state.totalReleases.toString();
-    } else if (this.state.currentIndex == 1) {
+      prevRelease = "/" + totalReleases.toString();
+    } else if (currentIndex == 1) {
       prevRelease = "/";
     } else {
-      prevRelease = "/" + (this.state.currentIndex - 1).toString();
+      prevRelease = "/" + (currentIndex - 1).toString();
     }
     return prevRelease;
   };
@@ -45,13 +46,15 @@ class Navigation extends Component {
   );
 
   getNextReleasePath = () => {
+    const {currentIndex} = this.state;
+    const {totalReleases} = this.props;
     let nextRelease;
-    if (this.state.currentIndex == this.state.totalReleases) {
+    if (currentIndex == totalReleases) {
       nextRelease = "/";
     } else if (this.isHome()) {
       nextRelease = "/1";
     } else {
-      nextRelease = "/" + (this.state.currentIndex + 1).toString();
+      nextRelease = "/" + (currentIndex + 1).toString();
     }
     return nextRelease;
   };

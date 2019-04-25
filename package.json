@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --progress --color --config ./config/webpack.config.js",
+    "start-bs": "webpack-dev-server --disableHostCheck true --progress --color --config ./config/webpack.config.js",
     "build": "webpack --mode production --config ./config/webpack.config.js",
     "test": "jest",
     "deploy-dev": "scripts/deploy.sh  s3://dev.globally.ltd E2RNC34S3LB4YH gltd",
@@ -68,11 +69,13 @@
   },
   "dependencies": {
     "animejs": "^3.0.1",
+    "babel-polyfill": "^6.26.0",
     "cannon": "^0.6.2",
     "glslify-loader": "^2.0.0",
     "jest-cli": "^24.7.0",
     "raw-loader": "^2.0.0",
     "react": "^16.8.6",
+    "react-app-polyfill": "^1.0.0",
     "react-dom": "^16.8.6",
     "react-media": "^1.9.2",
     "react-modal": "^3.8.1",
