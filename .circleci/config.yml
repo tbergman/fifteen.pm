@@ -12,16 +12,13 @@ jobs:
     <<: *defaults
     steps:
       - restore_cache:
-          keys:
-            - source-{{ .Branch }}-{{ .Revision }}
-            - source-{{ .Branch }}-
-            - source-
+          key: v1-source-{{ .Branch }}-{{ .Revision }}
       - run: 
           name: Install git-lfs
           command: "curl -sSL https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash && sudo apt-get update && sudo apt-get install -y git-lfs && sudo rm -rf /var/lib/apt/lists/*"
       - checkout
       - save_cache:
-          key: source-{{ .Branch }}-{{ .Revision }}
+          key: v1-source-{{ .Branch }}-{{ .Revision }}
           paths:
             - "~/releases"
 
@@ -30,11 +27,10 @@ jobs:
     steps:
       - restore_cache:
           name: Restore Source Cache
-          key: source-{{ .Branch }}-{{ .Revision }}
+          key: v1-source-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
+          key: v1-yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: "Upgrade Yarn"
           command: "curl -o- -L 'https://yarnpkg.com/install.sh' | bash"
@@ -43,7 +39,7 @@ jobs:
           command: yarn install
       - save_cache:
           name: Save Yarn Package Cache
-          key: yarn-packages-{{ checksum "yarn.lock" }}
+          key: v1-yarn-packages-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
 
@@ -52,11 +48,10 @@ jobs:
     steps:
       - restore_cache:
           name: Restore Source Cache
-          key: source-{{ .Branch }}-{{ .Revision }}
+          key: v1-source-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
+          key: 1-yarn-packages-{{ checksum "yarn.lock" }}
       - run:
           name: "Test"
           command: "echo 'who needs tests?' > /dev/null"
@@ -71,15 +66,12 @@ jobs:
     steps:
       - restore_cache:
           name: Restore Source Cache
-          key: source-{{ .Branch }}-{{ .Revision }}
+          key: v1-source-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           name: Restore Yarn Package Cache
-          keys:
-            - yarn-packages-{{ checksum "yarn.lock" }}
+          key: v1-yarn-packages-{{ checksum "yarn.lock" }}
       # TODO: figure out why we need to re-install chalk here?
-      - run:
-          name: "Install chalk"
-          command: yarn add chalk
+      - run: yarn add chalk
       # Install awscli
       - run: sudo apt-get update && sudo apt-get install -y python-dev
       - run: sudo curl -O https://bootstrap.pypa.io/get-pip.py
