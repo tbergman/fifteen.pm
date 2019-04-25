@@ -369,7 +369,9 @@ class Release0004_JonCannon extends Component {
   };
 
   animate = () => {
-    this.frameId = window.requestAnimationFrame(this.animate);
+    setTimeout(() => {
+      this.frameId = window.requestAnimationFrame(this.animate);
+    }, 1000 / 30)
     this.renderScene();
   };
 
