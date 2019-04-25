@@ -308,13 +308,13 @@ export const CONTENT = {
       }
     ],
     theme: {
-      // message: "DUR DUR DUR DUR DUR DUR DUR DUR",
-      // purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
-      // iconColor: '#fff',
-      // fillColor: 'rgba(255, 0, 0, 0.5)',
-      // textColor: '#fff',
-      // navColor: '#fff',
-      // controls: []
+      message: "DUR DUR DUR DUR DUR DUR DUR DUR",
+      purchaseLink: "https://gltd.bandcamp.com/track/golden-groove",
+      iconColor: '#fff',
+      fillColor: 'rgba(255, 0, 0, 0.5)',
+      textColor: '#fff',
+      navColor: '#fff',
+      controls: []
     }
   }
 };
