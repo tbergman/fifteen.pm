@@ -52,6 +52,6 @@
   @media screen and (max-width: 42em) {
   .player{
       bottom: 30px;
-      left: -30px;
+      left: -20px;
   }
 }
