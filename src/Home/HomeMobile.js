@@ -252,11 +252,11 @@ class HomeMobile extends Component {
   render() {
     return (
       <Fragment>
-        <Menu
+        {/* <Menu
           overlayOpen={false}
           renderPlayer={false}
           ref={element => this.menuRef = element}
-        />
+        /> */}
         {!this.state.overlayOpen && this.renderReleaseas()}
         <div ref={element => this.container = element} />
       </Fragment>
