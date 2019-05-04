@@ -269,7 +269,7 @@ export const CONTENT = {
       ]
     }
   },
-  "/greem-and-11-11pm-opening": {
+  "/greem-and-fifteenpm-opening": {
     artist: "",
     tracks: [
       {
@@ -289,7 +289,7 @@ export const CONTENT = {
       controls: []
     }
   },
-  "/greem-and-fifteenpm-opening": {
+  "/8": {
     artist: "",
     tracks: [
       {
