@@ -12,7 +12,7 @@ import '../../UI/Player/Player.css';
 // import { OrbitControls } from "../../Utils/OrbitControls";
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 import GLTFLoader from 'three-gltf-loader';
-import { CONSTANTS } from "./flyerConstants.js";
+import { OFFICE, FALLING, FOREST, CONSTANTS } from "./constants.js";
 
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';
@@ -33,12 +33,11 @@ const assetPath8Videos = (p) => {
     return assetPath8("videos/" + p);
 };
 
-const OFFICE = "office";
-const FOREST = "forest"
+const SECTIONS = CONSTANTS.sections;
 
 export default class Release0008_GreemJellyFish extends Component {
     state = {
-        location: FOREST
+        location: SECTIONS[0] // this '0' refers to track time, it's not an array index
     }
 
     componentDidMount() {
@@ -57,6 +56,13 @@ export default class Release0008_GreemJellyFish extends Component {
         window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
         window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
         this.container.removeChild(this.renderer.domElement);
+    }
+
+    componentDidUpdate = (prevProps, prevState) => {
+        const { location } = this.state;
+        if (prevState.location !== location) {
+            this.updateLocation(prevState.location, location);
+        }
     }
 
     stop = () => {
@@ -105,13 +111,44 @@ export default class Release0008_GreemJellyFish extends Component {
         this.office = undefined;
         this.chromaMesh = undefined;
         // release-specific initilization
+        this.locations = {}
         this.initLights();
         // this.initTube();
         this.initChromaVidMaterial();
         this.initSprites();
         this.initOffice();
-        this.initWaterfall();
+        this.initForest();
+        this.initScene();
+        this.trackSections = this.initTrackSections();
+    }
 
+    // TODO setup callback pattern on gltf loads rather than set interval...
+    initScene() {
+        const { locations } = this;
+        const { location } = this.state;
+        const refreshId = setInterval(() => {
+            if (locations[location]) {
+                locations[location].visible = true;
+                clearInterval(refreshId);
+            }
+        }, 100);
+    }
+
+
+
+    initTrackSections() {
+        // TODO will this always be ordered?
+        const sectionStartTimeKeys = Object.keys(SECTIONS);
+        const sections = [];
+        for (let i = 0; i < sectionStartTimeKeys.length; i++) {
+            sections.push({
+                start: parseFloat(sectionStartTimeKeys[i]),
+                end: i < sectionStartTimeKeys.length - 1 ? parseFloat(sectionStartTimeKeys[i + 1])
+                    : CONSTANTS.songLength,
+                location: SECTIONS[sectionStartTimeKeys[i]]
+            })
+        }
+        return sections;
     }
 
     initWaterMaterial = (alpha, waterY, name, side) => {
@@ -171,23 +208,6 @@ export default class Release0008_GreemJellyFish extends Component {
             }
         }, 100);
     }
-
-    translateChromaVid = (location) => {
-        const { chromaMesh, chromaMaterial, officeWall, waterFall } = this;
-        // TODO need to set declaritive positions rather than adding/subtracting since it is the same object being moved to totally different locations
-        if (location === OFFICE) {
-            chromaMesh.position.y += .2;
-            chromaMesh.position.z += 1.5;
-            chromaMesh.rotation.x += Math.PI / 2;
-            chromaMesh.scale.set(.3, .3, .3);
-            officeWall.add(chromaMesh);
-        }
-        if (location === FOREST){
-            waterFall.add(chromaMesh)
-        }
-        chromaMesh.userData.location = location;
-    }
-
 
     initLights = () => {
         const { scene, camera } = this;
@@ -254,7 +274,7 @@ export default class Release0008_GreemJellyFish extends Component {
         scene.add(tube);
     }
 
-    initWaterfall() {
+    initForest() {
         const { gltfLoader } = this;
         const name = "office";
         const gltfParams = {
@@ -284,10 +304,11 @@ export default class Release0008_GreemJellyFish extends Component {
                         node.material = rockMaterial;
                     }
                 });
-                this.forest = gltf.scene;
-                this.forest.visible = false;
-                scene.add(this.forest);
+                const forest = gltf.scene;
+                forest.visible = false;
+                scene.add(forest);
                 this.waterFall = waterPlane;
+                this.locations[FOREST] = forest;
             }
         }
         loadGLTF({ ...gltfParams });
@@ -331,16 +352,11 @@ export default class Release0008_GreemJellyFish extends Component {
                         // }
                     });
                 }
-                // gltf.scene.position.y -= 10;
-                // gltf.scene.position.z += 10;
-                // gltf.scene.rotation.y += Math.PI / 5.0;
-                // this.office = gltf.scene;
-                // this.office.position.x = -20;
-                this.office = gltf.scene;
-                this.office.visible=false;
-                scene.add(this.office);
-                this.officeWall = this.office.getObjectByName("walls005_11");
-                // this.addChromaVid(officeVideoWall);
+                const office = gltf.scene;
+                office.visible = false;
+                scene.add(office);
+                this.officeWall = office.getObjectByName("walls005_11");
+                this.locations[OFFICE] = office;
             }
         }
         loadGLTF({ ...gltfParams });
@@ -433,7 +449,7 @@ export default class Release0008_GreemJellyFish extends Component {
         const { waterMaterials } = this;
         for (const objName in waterMaterials) {
             // TODO - check if we can use this check for efficiency
-            if(waterMaterials[objName].visible){
+            if (waterMaterials[objName].visible) {
                 waterMaterials[objName].uniforms.u_time.value += 0.5;
             }
             //waterMaterials[objName].uniforms.lightIntensity.value = lightIntensity;
@@ -506,36 +522,67 @@ export default class Release0008_GreemJellyFish extends Component {
         }
     }
 
+    updateLocation(prevLocation, curLocation) {
+        const { locations } = this;
+        locations[prevLocation].visible = false;
+        locations[curLocation].visible = true;
+    }
 
-    updateLocation(){
-        const {location} = this.state;
-        const {forest, office} = this;
+    updateTrackSection() {
+        const { location } = this.state;
+        const { trackSections, locations, chromaMesh } = this;
+        const forest = locations[FOREST];
+        const office = locations[OFFICE];
         if (!forest || !office) return; // onload...
-        if (location === OFFICE && !office.visible){
-            forest.visible = false;
-            office.visible = true
-        } else if(location === FOREST && !forest.visible){
-            office.visible = false;
-            forest.visible = true;
+        if (!chromaMesh) return;
+        const currentTime = chromaMesh.material.uniforms.iChannel0.value.image.currentTime;
+        for (const idx in trackSections) {
+            const section = trackSections[idx];
+            if (currentTime >= section.start && currentTime < section.end) {
+                const curLocation = section.location;
+                if (location !== curLocation) {
+                    this.setState({
+                        location: curLocation
+                    })
+                }
+                break;
+            }
         }
+    }
 
+
+    updateVideo() {
+        const { officeWall, waterFall, chromaMesh, chromaMaterial, clock } = this;
+        const { location } = this.state;
+        if (chromaMesh) {
+            if (chromaMesh.userData.location != location) {
+                // TODO need to set declaritive positions rather than adding/subtracting since it is the same object being moved to totally different locations
+                if (location === OFFICE && officeWall) {
+                    chromaMesh.position.y += .2;
+                    chromaMesh.position.z += 1.5;
+                    chromaMesh.rotation.x += Math.PI / 2;
+                    chromaMesh.scale.set(.3, .3, .3);
+                    officeWall.add(chromaMesh);
+                }
+                if (location === FOREST && waterFall) {
+                    waterFall.add(chromaMesh)
+                }
+                chromaMesh.userData.location = location;
+            }
+            chromaMaterial.uniforms.u_time.value = clock.getElapsedTime();
+        }
     }
 
 
     renderScene = () => {
-        const { renderer, scene, camera, controls, clock, chromaMesh, chromaMaterial } = this;
-        const { location } = this.state;
-        // let lightIntensity = this.updateLights();
-        this.updateWaterMaterials();//lightIntensity);
+        const { renderer, scene, camera, controls, clock } = this;
+        // let lightIntensity = this.updateLights(); // TODO currently too computationally intensive
+        this.updateWaterMaterials();
         this.updateSpriteAnimations();
-        this.updateLocation();
+        this.updateTrackSection();
+        // TODO controls will lock, order matters here (updating control before updating video; not sure why)
         controls.update(clock.getDelta());
-        if (chromaMesh) {
-            if (chromaMesh.userData.location != location) {
-                this.translateChromaVid(location);
-            }
-            chromaMaterial.uniforms.u_time.value = clock.getElapsedTime();
-        }
+        this.updateVideo();
         renderer.render(scene, camera);
     }
 
