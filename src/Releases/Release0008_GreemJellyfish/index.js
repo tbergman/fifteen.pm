@@ -3,7 +3,7 @@ import * as THREE from "three";
 import debounce from 'lodash/debounce';
 import '../Release.css';
 
-import { assetPath } from "../../Utils/assets";
+
 import { loadImage, loadGLTF } from "../../Utils/Loaders";
 import { CONTENT } from '../../Content'
 import Player from '../../UI/Player/Player'
@@ -12,7 +12,17 @@ import '../../UI/Player/Player.css';
 // import { OrbitControls } from "../../Utils/OrbitControls";
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 import GLTFLoader from 'three-gltf-loader';
-import { OFFICE, FALLING, FOREST, CONSTANTS } from "./constants.js";
+import {
+    OFFICE,
+    FALLING,
+    FOREST,
+    REBECCA,
+    ALEXA,
+    DENNIS,
+    TRACK_SECTIONS,
+    CONSTANTS
+} from "./constants.js";
+import { assetPath8 } from "./utils.js";
 
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';
@@ -24,20 +34,12 @@ import riverVertexShader from '!raw-loader!glslify-loader!../../Shaders/riverVer
 import riverFragmentShader from '!raw-loader!glslify-loader!../../Shaders/riverFragment.glsl';
 import { notEqual } from 'assert';
 
-
-const assetPath8 = (p) => {
-    return assetPath("8/" + p);
-};
-
-const assetPath8Videos = (p) => {
-    return assetPath8("videos/" + p);
-};
-
-const SECTIONS = CONSTANTS.sections;
-
+const ANIMATION_CLIP_NAMES = CONSTANTS.animationClipNames;
+const SPRITE_NAMES = CONSTANTS.spriteNames;
 export default class Release0008_GreemJellyFish extends Component {
     state = {
-        location: SECTIONS[0] // this '0' refers to track time, it's not an array index
+        location: TRACK_SECTIONS[0].location,
+        section: TRACK_SECTIONS[0],
     }
 
     componentDidMount() {
@@ -59,9 +61,9 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        const { location } = this.state;
-        if (prevState.location !== location) {
-            this.updateLocation(prevState.location, location);
+        const { section } = this.state;
+        if (prevState.section.location !== section.location) {
+            this.updateLocation(prevState.section.location, section.location);
         }
     }
 
@@ -106,7 +108,6 @@ export default class Release0008_GreemJellyFish extends Component {
         this.clock = new THREE.Clock();
         // release-specific objects
         this.waterMaterials = {};
-        this.sprites = [];
         this.spriteAnimations = {};
         this.office = undefined;
         this.chromaMesh = undefined;
@@ -118,8 +119,8 @@ export default class Release0008_GreemJellyFish extends Component {
         this.initSprites();
         this.initOffice();
         this.initForest();
+        this.initFalling();
         this.initScene();
-        this.trackSections = this.initTrackSections();
     }
 
     // TODO setup callback pattern on gltf loads rather than set interval...
@@ -132,23 +133,6 @@ export default class Release0008_GreemJellyFish extends Component {
                 clearInterval(refreshId);
             }
         }, 100);
-    }
-
-
-
-    initTrackSections() {
-        // TODO will this always be ordered?
-        const sectionStartTimeKeys = Object.keys(SECTIONS);
-        const sections = [];
-        for (let i = 0; i < sectionStartTimeKeys.length; i++) {
-            sections.push({
-                start: parseFloat(sectionStartTimeKeys[i]),
-                end: i < sectionStartTimeKeys.length - 1 ? parseFloat(sectionStartTimeKeys[i + 1])
-                    : CONSTANTS.songLength,
-                location: SECTIONS[sectionStartTimeKeys[i]]
-            })
-        }
-        return sections;
     }
 
     initWaterMaterial = (alpha, waterY, name, side) => {
@@ -229,7 +213,7 @@ export default class Release0008_GreemJellyFish extends Component {
         scene.add(directionalLight);
     }
 
-    initTube = () => {
+    initFalling = () => {
         const { scene, waterMaterials } = this;
         // Define the curve
         let spline = new THREE.CatmullRomCurve3([
@@ -271,7 +255,9 @@ export default class Release0008_GreemJellyFish extends Component {
         let waterMaterial = this.initWaterMaterial(alpha, waterY, waterMaterialName);
         tube.material = waterMaterial;
         tube.position.z += 1.;
+        tube.visible = false;
         scene.add(tube);
+        this.locations[FALLING] = tube;
     }
 
     initForest() {
@@ -280,9 +266,9 @@ export default class Release0008_GreemJellyFish extends Component {
         const gltfParams = {
             url: assetPath8('objects/blocky-rocks/waterfall.gltf'),
             name: name,
-            position: [25, 0, 0],
+            position: [5, 0, -15],
             rotateX: 0,
-            rotateY: 100,
+            rotateY: 180,
             rotateZ: 0,
             relativeScale: 1,//.05,
             loader: gltfLoader,
@@ -362,34 +348,6 @@ export default class Release0008_GreemJellyFish extends Component {
         loadGLTF({ ...gltfParams });
     }
 
-    initSprites = () => {
-        const { gltfLoader } = this;
-        const rebeccaParams = {
-            url: assetPath8("objects/rebecca/rebecca.gltf"),
-            name: "rebecca",
-            position: [2, -0, -8],
-            rotateX: 0,
-            rotateY: 0,
-            rotateZ: 0,
-            relativeScale: 1,
-            loader: gltfLoader,
-            onSuccess: this.onSpriteLoad
-        }
-        loadGLTF({ ...rebeccaParams });
-        const dennisParams = {
-            url: assetPath8("objects/dennis/dennis.gltf"),
-            name: "dennis",
-            position: [5, .1, -8],
-            rotateX: 0,
-            rotateY: 0,
-            rotateZ: 0,
-            relativeScale: 1,
-            loader: gltfLoader,
-            onSuccess: this.onSpriteLoad
-        }
-        loadGLTF({ ...dennisParams })
-    }
-
     initRockMaterial() {
         const { textureLoader } = this;
         var loader = new THREE.CubeTextureLoader();
@@ -417,9 +375,50 @@ export default class Release0008_GreemJellyFish extends Component {
         });
     }
 
+    initSprites = () => {
+        const { gltfLoader } = this;
+        const alexaParams = {
+            url: assetPath8("objects/alexa/alexa.gltf"),
+            name: ALEXA,
+            position: [4, 0, -5],
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            relativeScale: 1,
+            loader: gltfLoader,
+            onSuccess: this.onSpriteLoad
+        }
+        loadGLTF({ ...alexaParams });
+        const rebeccaParams = {
+            url: assetPath8("objects/rebecca/rebecca.gltf"),
+            name: REBECCA,
+            position: [2, 0, -8],
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            relativeScale: 1,
+            loader: gltfLoader,
+            onSuccess: this.onSpriteLoad
+        }
+        loadGLTF({ ...rebeccaParams });
+        const dennisParams = {
+            url: assetPath8("objects/dennis/dennis.gltf"),
+            name: DENNIS,
+            position: [5, .1, -8],
+            rotateX: 0,
+            rotateY: 0,
+            rotateZ: 0,
+            relativeScale: 1,
+            loader: gltfLoader,
+            onSuccess: this.onSpriteLoad
+        }
+        loadGLTF({ ...dennisParams })
+    }
+
     onSpriteLoad = (gltf) => {
+        const { section } = this.state;
         const { scene, spriteAnimations } = this;
-        // SETUP MATERIAL
+        // setup material
         const object = gltf.scene.children[0].getObjectByProperty('mesh');
         const rockMaterial = this.initRockMaterial();
         if (object) {
@@ -428,15 +427,21 @@ export default class Release0008_GreemJellyFish extends Component {
             });
         }
         scene.add(gltf.scene);
-        // SETUP ANIMATION
+        // setup animation collection
         // one mixer per object
-        let mixer = new THREE.AnimationMixer(gltf.scene);
+        const mixer = new THREE.AnimationMixer(gltf.scene);
+        const firstClip = THREE.AnimationClip.findByName(
+            gltf.animations,
+            ANIMATION_CLIP_NAMES[section.location][0]
+        );
+        mixer.clipAction(firstClip).play();
         spriteAnimations[gltf.name] = {
-            mixer: mixer,
-            clips: gltf.animations
+            mixer: new THREE.AnimationMixer(gltf.scene),
+            clips: gltf.animations,
+            curClip: firstClip,
         };
-        this.sprites.push(gltf);
     }
+
 
     animate = () => {
         setTimeout(() => {
@@ -466,59 +471,35 @@ export default class Release0008_GreemJellyFish extends Component {
         return lightIntensity;
     }
 
+    transitionAnimation(spriteAnimation, nextClipName) {
+        const curClip = spriteAnimation.curClip;
+        if (nextClipName != curClip.name) {
+            const nextClip = THREE.AnimationClip.findByName(spriteAnimation.clips, nextClipName);
+            const curAction = spriteAnimation.mixer.clipAction(curClip)
+            const nextAction = spriteAnimation.mixer.clipAction(nextClip);
+            const fadeInTime = 1.;
+            nextAction.enabled = true; // This needs to be set...
+            nextAction.play()
+            curAction.crossFadeTo(nextAction, fadeInTime);
+            spriteAnimation.curClip = nextClip;
+        }
+    }
+
     updateSpriteAnimations() {
-        const { clock, spriteAnimations } = this;
-        // TODO figure out how to organize this and where to put it (probably in constants)
-        const animationMap = {
-            rebecca: {
-                sadWorldClips: [
-                    "Defeated",
-                    "SadHandsClasped"
-                ]
-            },
-            dennis: {
-                sadWorldClips: [
-                    "sitting1",
-                    "sitting2"
-                ]
-            }
-        }
-        const animation = spriteAnimations["rebecca"];
-        // remove me --> just testing it works on load
-        if (!animation) {
-            return
-        }
-        animation.curClip = THREE.AnimationClip.findByName(animation.clips, "Defeated")
-        animation.action = animation.mixer.clipAction(animation.curClip)
-        animation.action.timeScale = 1 / 10;
-        animation.action.play();
-
-        const dennisAnimation = spriteAnimations.dennis;
-        if (!dennisAnimation) {
-            return
-        }
-        dennisAnimation.curClip = THREE.AnimationClip.findByName(dennisAnimation.clips, "sitting1")
-        dennisAnimation.action = dennisAnimation.mixer.clipAction(dennisAnimation.curClip)
-        dennisAnimation.action.timeScale = 1 / 10;
-        dennisAnimation.action.play();
-
-        // end remove me
-        // play/pause/blend spriteAnimations
-        // if (this.mediaElement.currentTime >= 1 && this.mediaElement.currentTime < 5) {
-        //     animation.curClip = THREE.AnimationClip.findByName(animation.clips, "Defeated")
-        //     animation.action = animation.mixer.clipAction(animation.curClip)
-        //     animation.action.play();
-        // } else if (this.mediaElement.currentTime >= 5 && animation.curClip.name != "SadHandsClasped") {
-        //     animation.curClip = THREE.AnimationClip.findByName(animation.clips, "SadHandsClasped")
-        //     let nextAction = animation.mixer.clipAction(animation.curClip);
-        //     nextAction.play();
-        //     const fadeInTime = 1;
-        //     animation.action.crossFadeTo(nextAction, fadeInTime); //crossFadeTo(nextAction, fadeInTime);
-        //     animation.action = nextAction;
-        // }
-        // update all mixers
-        for (const objName in spriteAnimations) {
-            spriteAnimations[objName].mixer.update(.1);// TODO clock.getDelta() is not the value you're looking for here...;
+        const { section } = this.state;
+        const { spriteAnimations } = this;
+        const clipNames = ANIMATION_CLIP_NAMES[section.location]; // clip names by location
+        const currentTime = this.getVideoCurrentTime();
+        const timeLeftInSection = section.end - currentTime;
+        const proportionOfSectionCompleted = 1. - timeLeftInSection / parseFloat(section.length);
+        for (const spriteName in spriteAnimations) {
+            const spriteAnimation = spriteAnimations[spriteName];
+            if (!spriteAnimation) continue; // TODO these is an onLoad/init issue...
+            // just toggling between two animations per section...
+            const clipName = clipNames[0];
+            if (proportionOfSectionCompleted > .5 && clipNames.length > 1) clipName = clipNames[1];
+            this.transitionAnimation(spriteAnimation, clipName)
+            spriteAnimation.mixer.update(.1);
         }
     }
 
@@ -528,28 +509,11 @@ export default class Release0008_GreemJellyFish extends Component {
         locations[curLocation].visible = true;
     }
 
-    updateTrackSection() {
-        const { location } = this.state;
-        const { trackSections, locations, chromaMesh } = this;
-        const forest = locations[FOREST];
-        const office = locations[OFFICE];
-        if (!forest || !office) return; // onload...
-        if (!chromaMesh) return;
-        const currentTime = chromaMesh.material.uniforms.iChannel0.value.image.currentTime;
-        for (const idx in trackSections) {
-            const section = trackSections[idx];
-            if (currentTime >= section.start && currentTime < section.end) {
-                const curLocation = section.location;
-                if (location !== curLocation) {
-                    this.setState({
-                        location: curLocation
-                    })
-                }
-                break;
-            }
-        }
+    getVideoCurrentTime() {
+        const { chromaMesh } = this;
+        if (!chromaMesh) return 0;
+        return chromaMesh.material.uniforms.iChannel0.value.image.currentTime;
     }
-
 
     updateVideo() {
         const { officeWall, waterFall, chromaMesh, chromaMaterial, clock } = this;
@@ -573,6 +537,26 @@ export default class Release0008_GreemJellyFish extends Component {
         }
     }
 
+    updateTrackSection() {
+        const { section } = this.state;
+        const { locations, chromaMesh } = this;
+        const forest = locations[FOREST];
+        const office = locations[OFFICE];
+        if (!forest || !office) return; // onload...
+        if (!chromaMesh) return;
+        const currentTime = this.getVideoCurrentTime();
+        for (const idx in TRACK_SECTIONS) {
+            const trackSection = TRACK_SECTIONS[idx];
+            if (currentTime >= trackSection.start && currentTime < trackSection.end) {
+                if (section !== trackSection) {
+                    this.setState({
+                        section: trackSection
+                    })
+                }
+                break;
+            }
+        }
+    }
 
     renderScene = () => {
         const { renderer, scene, camera, controls, clock } = this;
