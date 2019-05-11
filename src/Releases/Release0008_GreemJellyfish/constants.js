@@ -37,10 +37,8 @@ export const CONSTANTS = {
   bpm: 130.0,
   songLength: 145.,
   sections: {
-    0.: FOREST,//FALLING, // INSTRUMENTAL
-    3.: OFFICE, // VERSE1,
-    6.: FOREST,//ALLING, // INSTRUMENTAL,
-    8.: OFFICE,
+    0.: FALLING,//FALLING, //INSTRUMENTAL
+    0.1: FALLING,
     15.: OFFICE, // VERSE1,
     21: FALLING, // INSTRUMENTAL,
     29.: OFFICE, // VERSE2,

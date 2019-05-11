@@ -8,9 +8,8 @@ import { loadImage, loadGLTF } from "../../Utils/Loaders";
 import { CONTENT } from '../../Content'
 import Player from '../../UI/Player/Player'
 import '../../UI/Player/Player.css';
+import { OrbitControls } from 'three-full';
 // import { FirstPersonControls } from "../../Utils/FirstPersonControls";
-// import { OrbitControls } from "../../Utils/OrbitControls";
-import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 import GLTFLoader from 'three-gltf-loader';
 import {
     OFFICE,
@@ -38,8 +37,7 @@ const ANIMATION_CLIP_NAMES = CONSTANTS.animationClipNames;
 const SPRITE_NAMES = CONSTANTS.spriteNames;
 export default class Release0008_GreemJellyFish extends Component {
     state = {
-        location: TRACK_SECTIONS[0].location,
-        section: TRACK_SECTIONS[0],
+        section: TRACK_SECTIONS[0.],
     }
 
     componentDidMount() {
@@ -86,9 +84,9 @@ export default class Release0008_GreemJellyFish extends Component {
         // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
-        this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, 1, 15000);
+        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 15000);
         // this.camera.position.set(3900, 600, 5800);
-        this.camera.position.set(4, 1.2, -2.4);
+        this.camera.position.set(0, 0, .1);
         // this.camera.position.set(0, 1, 0);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio)
@@ -98,11 +96,9 @@ export default class Release0008_GreemJellyFish extends Component {
         const manager = new THREE.LoadingManager();
         this.gltfLoader = new GLTFLoader(manager);
         this.textureLoader = new THREE.TextureLoader();
-        this.controls = new FirstPersonControls(this.camera);
-        const FIRST_PERSON_CONTROL_SPEED = .1;
-        const FIRST_PERSON_CONTROL_MOVEMENT = 10;
-        this.controls.lookSpeed = .05;
-        this.controls.movementSpeed = FIRST_PERSON_CONTROL_MOVEMENT;
+        this.controls = new OrbitControls(this.camera);
+        this.controls.lookSpeed = .1;
+        this.controls.movementSpeed = 10;
         this.controls.enabled = true;
         this.controls.mouseMotionActive = false;//true;
         this.clock = new THREE.Clock();
@@ -126,10 +122,10 @@ export default class Release0008_GreemJellyFish extends Component {
     // TODO setup callback pattern on gltf loads rather than set interval...
     initScene() {
         const { locations } = this;
-        const { location } = this.state;
+        const { section } = this.state;
         const refreshId = setInterval(() => {
-            if (locations[location]) {
-                locations[location].visible = true;
+            if (locations[section.location]) {
+                locations[section.location].visible = true;
                 clearInterval(refreshId);
             }
         }, 100);
@@ -217,16 +213,13 @@ export default class Release0008_GreemJellyFish extends Component {
         const { scene, waterMaterials } = this;
         // Define the curve
         let spline = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(-100, -50, -10),
-            new THREE.Vector3(-55, -40, -10),
-            new THREE.Vector3(-50, -40, -10),
-            new THREE.Vector3(-40, -20, -4),
-            new THREE.Vector3(-30, -25, -6),
-            // new THREE.Vector3(0, -5, 0),
-            new THREE.Vector3(20, -38, -8),
-            new THREE.Vector3(70, -35, -3),
-            new THREE.Vector3(90, -25, -2),
-            new THREE.Vector3(100, -30, -1)
+            new THREE.Vector3(-300, 40, -300),
+            new THREE.Vector3(-50, -40,-420),
+            new THREE.Vector3(-40, -20, -444),
+            new THREE.Vector3(420, -25, -446),
+            new THREE.Vector3(20, -420, -448),
+            new THREE.Vector3(70, -35, -430),
+            new THREE.Vector3(30, 300, -420),
         ]);
         spline.type = 'catmullrom';
         spline.closed = false;
@@ -239,7 +232,7 @@ export default class Release0008_GreemJellyFish extends Component {
         // Define a polygon
         let pts = [], count = 7;
         for (let i = 0; i < count; i++) {
-            let l = 1;
+            let l = 4;
             let a = 2 * i / count * Math.PI;
             pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
         }
@@ -264,11 +257,11 @@ export default class Release0008_GreemJellyFish extends Component {
         const { gltfLoader } = this;
         const name = "office";
         const gltfParams = {
-            url: assetPath8('objects/blocky-rocks/waterfall.gltf'),
+            url: assetPath8('objects/blocky-rocks/waterfall.glb'), //.gltf'),
             name: name,
-            position: [5, 0, -15],
+            position: [0, 0, -15],
             rotateX: 0,
-            rotateY: 180,
+            rotateY: 0,
             rotateZ: 0,
             relativeScale: 1,//.05,
             loader: gltfLoader,
@@ -471,13 +464,12 @@ export default class Release0008_GreemJellyFish extends Component {
         return lightIntensity;
     }
 
-    transitionAnimation(spriteAnimation, nextClipName) {
+    transitionAnimation(spriteAnimation, nextClipName, fadeInTime) {
         const curClip = spriteAnimation.curClip;
         if (nextClipName != curClip.name) {
             const nextClip = THREE.AnimationClip.findByName(spriteAnimation.clips, nextClipName);
             const curAction = spriteAnimation.mixer.clipAction(curClip)
             const nextAction = spriteAnimation.mixer.clipAction(nextClip);
-            const fadeInTime = 1.;
             nextAction.enabled = true; // This needs to be set...
             nextAction.play()
             curAction.crossFadeTo(nextAction, fadeInTime);
@@ -487,19 +479,21 @@ export default class Release0008_GreemJellyFish extends Component {
 
     updateSpriteAnimations() {
         const { section } = this.state;
-        const { spriteAnimations } = this;
+        const { spriteAnimations, clock } = this;
         const clipNames = ANIMATION_CLIP_NAMES[section.location]; // clip names by location
         const currentTime = this.getVideoCurrentTime();
         const timeLeftInSection = section.end - currentTime;
         const proportionOfSectionCompleted = 1. - timeLeftInSection / parseFloat(section.length);
+        const fadeInCutoff = .75;
+        const fadeInTime = fadeInCutoff * section.length;
         for (const spriteName in spriteAnimations) {
             const spriteAnimation = spriteAnimations[spriteName];
             if (!spriteAnimation) continue; // TODO these is an onLoad/init issue...
             // just toggling between two animations per section...
             const clipName = clipNames[0];
-            if (proportionOfSectionCompleted > .5 && clipNames.length > 1) clipName = clipNames[1];
-            this.transitionAnimation(spriteAnimation, clipName)
-            spriteAnimation.mixer.update(.1);
+            if (proportionOfSectionCompleted > fadeInCutoff && clipNames.length > 1) clipName = clipNames[1];
+            this.transitionAnimation(spriteAnimation, clipName, fadeInTime)
+            spriteAnimation.mixer.update(.1);//clock.getDelta());
         }
     }
 
