@@ -1,5 +1,5 @@
 {
-  "name": "gltd",
+  "name": "11-11.pm",
   "version": "0.1.0",
   "private": true,
   "main": "index.js",
@@ -8,8 +8,8 @@
     "start-bs": "webpack-dev-server --disableHostCheck true --progress --color --config ./config/webpack.config.js",
     "build": "webpack --mode production --config ./config/webpack.config.js",
     "test": "jest",
-    "deploy-dev": "scripts/deploy.sh  s3://dev.globally.ltd E2RNC34S3LB4YH gltd",
-    "deploy-prod": "scripts/deploy.sh s3://globally.ltd     E36B2H2DAB37RY gltd"
+    "deploy-dev": "scripts/deploy.sh  s3://dev.11-11.pm E3KSPISIGXJVBA gltd",
+    "deploy-prod": "scripts/deploy.sh s3://11-11.pm     E2M1ONEXXD8105 gltd"
   },
   "repository": {
     "type": "git",
