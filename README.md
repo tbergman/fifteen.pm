@@ -2,8 +2,8 @@
 
 ## Globally Limited
 
-- [HOMEPAGE](https://globally.ltd)
-- [BANDCAMP](https://gltd.bandcamp.com)
+- [HOMEPAGE](https://11-11.pm)
+- [BANDCAMP](https://1111pm.bandcamp.com)
 - [SOUNDCLOUD](https://soundcloud.com)
 - [EMAIL](mailto:dev[at]globally[dot]ltd)
 
