@@ -22,7 +22,8 @@ export const CONSTANTS = {
       type: 'video',
       mimetype: 'video/mp4',
       name: 'greem-vid1',
-      sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
+      sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'),
+      //sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
       geometry: new THREE.PlaneBufferGeometry(1, 1),
       position: [0, 0, 0],
       playbackRate: 1,
@@ -37,9 +38,10 @@ export const CONSTANTS = {
   bpm: 130.0,
   songLength: 145.,
   sections: {
-    0.: FALLING,//FALLING, //INSTRUMENTAL
-    0.1: FALLING,
-    15.: OFFICE, // VERSE1,
+    // 0.: FALLING,//FALLING, //INSTRUMENTAL
+    0.: OFFICE,//FOREST,
+    0.1: OFFICE,//FOREST,//ALLING,
+    // 15.: OFFICE, // VERSE1,
     21: FALLING, // INSTRUMENTAL,
     29.: OFFICE, // VERSE2,
     51.: FOREST, // CHORUS,

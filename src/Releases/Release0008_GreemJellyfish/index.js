@@ -183,6 +183,9 @@ export default class Release0008_GreemJellyFish extends Component {
                 });
                 let chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
                 this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
+                this.chromaMesh.scale.set(.3);
+                this.chromaMesh.position.set(0,0,10);
+                console.log(this.chromaMesh);
                 this.chromaMesh.userData.location = undefined;
                 clearInterval(refreshId);
             }
@@ -257,7 +260,7 @@ export default class Release0008_GreemJellyFish extends Component {
         const { gltfLoader } = this;
         const name = "office";
         const gltfParams = {
-            url: assetPath8('objects/blocky-rocks/waterfall.glb'), //.gltf'),
+            url: assetPath8('objects/blocky-rocks/waterfall.glb'),
             name: name,
             position: [0, 0, -15],
             rotateX: 0,
@@ -435,7 +438,6 @@ export default class Release0008_GreemJellyFish extends Component {
         };
     }
 
-
     animate = () => {
         setTimeout(() => {
             this.frameId = window.requestAnimationFrame(this.animate);
@@ -511,21 +513,21 @@ export default class Release0008_GreemJellyFish extends Component {
 
     updateVideo() {
         const { officeWall, waterFall, chromaMesh, chromaMaterial, clock } = this;
-        const { location } = this.state;
+        const { section } = this.state;
         if (chromaMesh) {
-            if (chromaMesh.userData.location != location) {
+            if (chromaMesh.userData.location != section.location) {
                 // TODO need to set declaritive positions rather than adding/subtracting since it is the same object being moved to totally different locations
-                if (location === OFFICE && officeWall) {
-                    chromaMesh.position.y += .2;
-                    chromaMesh.position.z += 1.5;
-                    chromaMesh.rotation.x += Math.PI / 2;
+                if (section.location === OFFICE && officeWall) {
+                    // chromaMesh.position.y += .2;
+                    // chromaMesh.position.z += 1.5;
+                    // chromaMesh.rotation.x += Math.PI / 2;
                     chromaMesh.scale.set(.3, .3, .3);
                     officeWall.add(chromaMesh);
                 }
-                if (location === FOREST && waterFall) {
+                if (section.location === FOREST && waterFall) {
                     waterFall.add(chromaMesh)
                 }
-                chromaMesh.userData.location = location;
+                chromaMesh.userData.location = section.location;
             }
             chromaMaterial.uniforms.u_time.value = clock.getElapsedTime();
         }
