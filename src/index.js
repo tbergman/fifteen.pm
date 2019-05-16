@@ -27,7 +27,7 @@ ReactDOM.render(
             <Route path="/5" component={Release0005_Plebeian} />
             <Route path="/6" component={Release0006_Vveiss} />
             <Route path="/7" component={Release0007_JonFay} />
-            <Route path="/greem-and-gltd-opening" component={Release0008_GreemJellyfish_EventFlyer} />
+            <Route path="/greem-and-11-11pm-opening" component={Release0008_GreemJellyfish_EventFlyer} />
             
         </div>
     </Router>,

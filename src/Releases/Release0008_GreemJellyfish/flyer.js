@@ -400,7 +400,7 @@ class Release0008_GreemJellyFish_EventFlyer extends Component {
         return (
             <Fragment>
                 <div className="flyer-info-bottom">
-                    <div>Greem Jellyfish and GLTD present... Juicy Tender</div>
+                    <div>Greem Jellyfish and 11:11pm present... Juicy Tender</div>
                 </div>
                 <div className="flyer-info-right">
                     <div><a href="https://www.instagram.com/182ave.c">Gallery @ 182 Ave. C</a></div>
