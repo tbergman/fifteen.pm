@@ -269,7 +269,7 @@ export const CONTENT = {
       ]
     }
   },
-  "/greem-and-gltd-opening": {
+  "/greem-and-11-11pm-opening": {
     artist: "",
     tracks: [
       {
