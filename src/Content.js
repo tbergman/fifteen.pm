@@ -22,7 +22,7 @@ export const CONTENT = {
     home: true, // TODO rm
     theme: {
       message:
-        "11-11.pm invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
+        "fifteen.pm invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
       iconColor: 'white',
       navColor: '#fff',
       fillColor: 'rgba(0, 0, 0, 0.5)',
@@ -42,7 +42,7 @@ export const CONTENT = {
     theme: {
       message:
         'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
-      purchaseLink: "https://1111pm.bandcamp.com/track/wun-4-jas",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/wun-4-jas",
       iconColor: '#fff',
       fillColor: 'rgba(255,105,180, 1)',
       logoSvgFillColor: 'rgba(255,105,180, 1)',
@@ -69,7 +69,7 @@ export const CONTENT = {
     theme: {
       message:
         "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly drum disturbance.",
-      purchaseLink: "https://1111pm.bandcamp.com/track/timer",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/timer",
       iconColor: '#fff',
       fillColor: 'rgba(127, 0, 255, 0.5)',
       textColor: '#fff',
@@ -99,7 +99,7 @@ export const CONTENT = {
     theme: {
       message:
         "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
-      purchaseLink: "https://1111pm.bandcamp.com/track/lets-beach",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/lets-beach",
       iconColor: 'rgba(255, 0, 0, 1)',
       navColor: 'rgba(255, 0, 0, 1)',
       fillColor: 'rgba(255, 0, 0, 0.7)',
@@ -144,7 +144,7 @@ export const CONTENT = {
     theme: {
       message:
         "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
-      purchaseLink: "https://1111pm.bandcamp.com/album/ep-1",
+      purchaseLink: "https://fifteenpm.bandcamp.com/album/ep-1",
       iconColor: '#fff',
       fillColor: 'rgba(0, 0, 0, 0.5)',
       textColor: '#fff',
@@ -188,7 +188,7 @@ export const CONTENT = {
     theme: {
       message:
         "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
-      purchaseLink: "https://1111pm.bandcamp.com/album/heaven",
+      purchaseLink: "https://fifteenpm.bandcamp.com/album/heaven",
       iconColor: '#fff',
       fillColor: 'rgba(40, 47, 175, 1)',
       textColor: '#fff',
@@ -218,7 +218,7 @@ export const CONTENT = {
     theme: {
       message:
         "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
-      purchaseLink: "https://1111pm.bandcamp.com/track/escape-velocity",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/escape-velocity",
       iconColor: '#fff',
       fillColor: 'rgba(127, 0, 255, 0.4)',
       textColor: '#fff',
@@ -243,7 +243,7 @@ export const CONTENT = {
     ],
     theme: {
       message: "In this 22-minute meditation, Jon Fay captures the infinite pulse of the rave as it empties into the dawn.",
-      purchaseLink: "https://1111pm.bandcamp.com/track/golden-groove",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
       iconColor: '#fff',
       fillColor: 'rgba(255, 102, 0, 0.4)',
       textColor: '#fff',
@@ -281,7 +281,27 @@ export const CONTENT = {
     ],
     theme: {
       message: "DUR DUR DUR DUR DUR DUR DUR DUR",
-      purchaseLink: "https://1111pm.bandcamp.com/track/golden-groove",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
+      iconColor: '#fff',
+      fillColor: 'rgba(255, 0, 0, 0.5)',
+      textColor: '#fff',
+      navColor: '#fff',
+      controls: []
+    }
+  },
+  "/greem-and-fifteenpm-opening": {
+    artist: "",
+    tracks: [
+      {
+        title: "",
+        type: "soundcloud",
+        id: "610976673",
+        secretToken: "s-7EwJv"
+      }
+    ],
+    theme: {
+      message: "DUR DUR DUR DUR DUR DUR DUR DUR",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
       iconColor: '#fff',
       fillColor: 'rgba(255, 0, 0, 0.5)',
       textColor: '#fff',
