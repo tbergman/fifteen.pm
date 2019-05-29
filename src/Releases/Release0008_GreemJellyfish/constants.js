@@ -22,14 +22,14 @@ export const CONSTANTS = {
       type: 'video',
       mimetype: 'video/mp4',
       name: 'greem-vid1',
-      sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'),
-      //sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
+      sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'), // easier to use while devving
+      // sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
       geometry: new THREE.PlaneBufferGeometry(1, 1),
       position: [0, 0, 0],
       playbackRate: 1,
       loop: true,
       invert: true,
-      volume: .8,
+      volume: .0,
       muted: false,
       angle: 0.0
     },
@@ -39,8 +39,12 @@ export const CONSTANTS = {
   songLength: 145.,
   sections: {
     // 0.: FALLING,//FALLING, //INSTRUMENTAL
-    0.: OFFICE,//FOREST,
-    0.1: OFFICE,//FOREST,//ALLING,
+    0.: FALLING,
+    1.: FALLING,
+    2.: FALLING,
+    // 0.: OFFICE,// TODO adding these three in a row is a hack, can't figure out why the animations don't start cleanly otherwise.
+    // 1.: OFFICE,
+    // 2.: OFFICE,
     // 15.: OFFICE, // VERSE1,
     21: FALLING, // INSTRUMENTAL,
     29.: OFFICE, // VERSE2,
@@ -58,7 +62,12 @@ export const CONSTANTS = {
     FALLING: ["falling"],
     FOREST: ["forest_1", "forest_2"]
   },
-  spriteNames: [ALEXA, REBECCA, DENNIS]
+  spriteNames: [ALEXA, REBECCA, DENNIS],
+  spriteStartPos: {
+    ALEXA: [4, 0, -5],
+    REBECCA: [2, 0, -8],
+    DENNIS: [5, .1, -8],
+  }
 }
 
 function initTrackSections() {

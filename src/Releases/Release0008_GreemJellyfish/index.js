@@ -9,7 +9,7 @@ import { CONTENT } from '../../Content'
 import Player from '../../UI/Player/Player'
 import '../../UI/Player/Player.css';
 import { OrbitControls } from 'three-full';
-// import { FirstPersonControls } from "../../Utils/FirstPersonControls";
+import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 import GLTFLoader from 'three-gltf-loader';
 import {
     OFFICE,
@@ -31,13 +31,19 @@ import chromaFragmentShader from '!raw-loader!glslify-loader!../../Shaders/chrom
 import riverVertexShader from '!raw-loader!glslify-loader!../../Shaders/riverVertex.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
 import riverFragmentShader from '!raw-loader!glslify-loader!../../Shaders/riverFragment.glsl';
-import { notEqual } from 'assert';
+/* eslint import/no-webpack-loader-syntax: off */
+import marchingCubeFragmentShader from '!raw-loader!glslify-loader!../../Shaders/hgSDF.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import simpleVertexShader from '!raw-loader!glslify-loader!../../Shaders/simpleVertex.glsl';
+
+// import { notEqual } from 'assert';
 
 const ANIMATION_CLIP_NAMES = CONSTANTS.animationClipNames;
 const SPRITE_NAMES = CONSTANTS.spriteNames;
 export default class Release0008_GreemJellyFish extends Component {
     state = {
         section: TRACK_SECTIONS[0.],
+        videoActive: false,
     }
 
     componentDidMount() {
@@ -62,6 +68,8 @@ export default class Release0008_GreemJellyFish extends Component {
         const { section } = this.state;
         if (prevState.section.location !== section.location) {
             this.updateLocation(prevState.section.location, section.location);
+            this.updateVideoTransform(prevState.section.location, section.location);
+            // this.updateCameraTransform(section.location);
         }
     }
 
@@ -84,10 +92,13 @@ export default class Release0008_GreemJellyFish extends Component {
         // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
-        this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 15000);
+        this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, 1, 1500);
         // this.camera.position.set(3900, 600, 5800);
-        this.camera.position.set(0, 0, .1);
-        // this.camera.position.set(0, 1, 0);
+        this.camera.position.set(4, 1.2, -2.4);
+        // this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
+        // // this.camera.position.set(3900, 600, 5800);
+        // this.camera.position.set(0, 0, 15);
+        // // this.camera.position.set(0, 1, 0);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio)
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -96,11 +107,30 @@ export default class Release0008_GreemJellyFish extends Component {
         const manager = new THREE.LoadingManager();
         this.gltfLoader = new GLTFLoader(manager);
         this.textureLoader = new THREE.TextureLoader();
-        this.controls = new OrbitControls(this.camera);
-        this.controls.lookSpeed = .1;
-        this.controls.movementSpeed = 10;
-        this.controls.enabled = true;
-        this.controls.mouseMotionActive = false;//true;
+        // this.controls = new FirstPersonControls(this.camera)
+        this.controls = new OrbitControls(this.camera)
+        this.controls.target = new THREE.Vector3(4, 0, -5);//CONSTANTS.spriteStartPos[ALEXA]); 
+        // TODO hack where should this happen/go
+        // this.controls.target = new THREE.Vector3(CONSTANTS.spriteStartPos[ALEXA]);
+        // this.camera.rotateY += -180
+        //   this.camera.lookAt(new THREE.Vector3(CONSTANTS.spriteStartPos[ALEXA]));
+        //    this.camera.position.set(3,  .5, -2)
+        //    this.camera.rotation.set(-0.11992397372604029, 0.03307294393788508, 0.003984615119172061)
+        this.camera.position.set(3.7664189221303097, 1.9469800595649362, 0.3746167505170739)
+        this.camera.rotation.set(-0.1984665447828528, -0.06484084312275079, -0.013030532093610919)
+        //  const FIRST_PERSON_CONTROL_SPEED = .1;
+        //      const FIRST_PERSON_CONTROL_MOVEMENT = 10;
+        //this.controls.lookSpeed = .05;
+        //this.controls.movementSpeed = FIRST_PERSON_CONTROL_MOVEMENT;
+        //this.controls.enabled = true;
+        // this.controls.heightMin = .25;
+        // this.controls.heightMax = .75;
+        //this.controls.mouseMotionActive = false;//true;
+        // this.controls = new OrbitControls(this.camera);
+        // this.controls.lookSpeed = .1;
+        // this.controls.movementSpeed = 10;
+        // this.controls.enabled = true;
+        // this.controls.mouseMotionActive = false;//true;
         this.clock = new THREE.Clock();
         // release-specific objects
         this.waterMaterials = {};
@@ -111,11 +141,11 @@ export default class Release0008_GreemJellyFish extends Component {
         this.locations = {}
         this.initLights();
         // this.initTube();
-        this.initChromaVidMaterial();
+        this.initVid();
         this.initSprites();
         this.initOffice();
         this.initForest();
-        this.initFalling();
+        this.initBlobs();
         this.initScene();
     }
 
@@ -126,6 +156,8 @@ export default class Release0008_GreemJellyFish extends Component {
         const refreshId = setInterval(() => {
             if (locations[section.location]) {
                 locations[section.location].visible = true;
+                // this.updateCameraTransform(section.location)
+
                 clearInterval(refreshId);
             }
         }, 100);
@@ -167,8 +199,11 @@ export default class Release0008_GreemJellyFish extends Component {
         return waterMaterial;
     }
 
-    initChromaVidMaterial = () => {
+
+
+    initVid = () => {
         const refreshId = setInterval(() => {
+            // the media is loaded by the player... this is in lieu of a proper callback behavior for the player.
             if (CONSTANTS.auxMedia[0].media) {
                 let videoMesh = CONSTANTS.auxMedia[0].mesh;
                 this.chromaMaterial = new THREE.ShaderMaterial({
@@ -183,9 +218,9 @@ export default class Release0008_GreemJellyFish extends Component {
                 });
                 let chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
                 this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
-                this.chromaMesh.scale.set(.3);
-                this.chromaMesh.position.set(0,0,10);
-                console.log(this.chromaMesh);
+                this.chromaMesh.scale.set(.3, .3, .3);
+                // this.chromaMesh.position.set(0,0,0);
+                // this.chromaMesh.rotation.set(0, 90, 0);
                 this.chromaMesh.userData.location = undefined;
                 clearInterval(refreshId);
             }
@@ -212,48 +247,61 @@ export default class Release0008_GreemJellyFish extends Component {
         scene.add(directionalLight);
     }
 
-    initFalling = () => {
-        const { scene, waterMaterials } = this;
-        // Define the curve
-        let spline = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(-300, 40, -300),
-            new THREE.Vector3(-50, -40,-420),
-            new THREE.Vector3(-40, -20, -444),
-            new THREE.Vector3(420, -25, -446),
-            new THREE.Vector3(20, -420, -448),
-            new THREE.Vector3(70, -35, -430),
-            new THREE.Vector3(30, 300, -420),
-        ]);
-        spline.type = 'catmullrom';
-        spline.closed = false;
-        // Set up settings for later extrusion
-        let extrudeSettings = {
-            steps: 100,
-            bevelEnabled: false,
-            extrudePath: spline
-        };
-        // Define a polygon
-        let pts = [], count = 7;
-        for (let i = 0; i < count; i++) {
-            let l = 4;
-            let a = 2 * i / count * Math.PI;
-            pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
+    initBlobs = () => {
+        const { camera, clock, scene } = this;
+        const numLights = 5;
+        const width = numLights;
+        const height = 1.;
+        this.blobLightDataSize = width * height;
+        this.blobLightPositionRadius = .7;
+        this.blobLightPositionCenter = new THREE.Vector2(-.1, -.2)
+        this.blobLightPositions = new Uint8Array(3 * this.blobLightDataSize);
+        this.blobLightFall = new Uint8Array(3 * this.blobLightDataSize);
+        this.blobLightCols = new Uint8Array(3 * this.blobLightDataSize)
+        for (let i = 0; i < this.blobLightDataSize; i++) {
+            const stride = i * 3;
+            this.blobLightPositions[stride] = Math.floor(this.blobLightPositionCenter.x + this.blobLightPositionRadius * Math.cos(clock.getElapsedTime()) * 255);
+            this.blobLightPositions[stride + 1] = Math.floor(this.blobLightPositionCenter.y + this.blobLightPositionRadius * Math.sin(clock.getElapsedTime()) * 255);
+            this.blobLightPositions[stride + 2] = 0
+            this.blobLightFall[stride] = Math.floor(0.5 * 255.);
+            this.blobLightFall[stride + 1] = Math.floor(0.5 * 255.);
+            this.blobLightFall[stride + 2] = Math.floor(Math.cos(clock.getElapsedTime()) * 255.)
+            this.blobLightCols[stride] = Math.floor(.9 * 255)
+            this.blobLightCols[stride + 1] = Math.floor(.1 * 255)
+            this.blobLightCols[stride + 2] = 0
         }
-        let shape = new THREE.Shape(pts);
-        // Extrude the triangle along the CatmullRom curve
-        let geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-        let material = new THREE.MeshPhongMaterial({ color: 0xb00000 });
-        // Create mesh with the resulting geometry
-        let tube = new THREE.Mesh(geometry, material);
-        let alpha = 1.0; // TODO not working
-        const waterY = 28.;
-        let waterMaterialName = "tube";
-        let waterMaterial = this.initWaterMaterial(alpha, waterY, waterMaterialName);
-        tube.material = waterMaterial;
-        tube.position.z += 1.;
-        tube.visible = false;
-        scene.add(tube);
-        this.locations[FALLING] = tube;
+        let sLightPos = new THREE.DataTexture(this.blobLightPositions, width, height, THREE.RGBFormat);
+        sLightPos.needsUpdate = true;
+        let sLightFall = new THREE.DataTexture(this.blobLightFall, width, height, THREE.RGBFormat);
+        sLightFall.needsUpdate = true;
+        let sLightCol = new THREE.DataTexture(this.blobLightCols, width, height, THREE.RGBFormat);
+        sLightCol.needsUpdate = true; // TODO maybe not
+        this.blobMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                uCamPos: { value: this.camera.position },
+                uCamFov: { value: 1. },
+                uLookAtPos: { value: new THREE.Vector3() },
+                uNumLights: { type: 'i', value: 5 },
+                sLightCol: { value: sLightCol }, //new THREE.Vector3(1, 1, 0) },
+                sLightPos: { value: sLightPos }, // TODO update this on a sin wave
+                sLightFall: { value: sLightFall },// new THREE.Vector3(0.5, 0.5, 0.2)}, // TODO update
+                uBgColor: { value: new THREE.Vector3(0, 0, 0) },
+                uTime: { value: clock.getDelta() },
+                uDisplacementOffset: { type: 'f', value: 1.5 },
+                uSp1: { value: new THREE.Vector3(0, 4, 9) },
+                uSp2: { value: new THREE.Vector3(0, -4, 9) },
+                uRadius: { value: 1.5 },
+            },
+            vertexShader: simpleVertexShader,
+            fragmentShader: marchingCubeFragmentShader,
+            transparent: true,
+        });
+        const geometry = new THREE.PlaneGeometry(10, 10, 4);
+        const plane = new THREE.Mesh(geometry, this.blobMaterial);
+        plane.visible = true;//false;
+        plane.position.set(0, 0, -10)
+        scene.add(plane);
+        this.locations[FALLING] = plane;
     }
 
     initForest() {
@@ -376,7 +424,7 @@ export default class Release0008_GreemJellyFish extends Component {
         const alexaParams = {
             url: assetPath8("objects/alexa/alexa.gltf"),
             name: ALEXA,
-            position: [4, 0, -5],
+            position: CONSTANTS.spriteStartPos[ALEXA],
             rotateX: 0,
             rotateY: 0,
             rotateZ: 0,
@@ -388,7 +436,7 @@ export default class Release0008_GreemJellyFish extends Component {
         const rebeccaParams = {
             url: assetPath8("objects/rebecca/rebecca.gltf"),
             name: REBECCA,
-            position: [2, 0, -8],
+            position: CONSTANTS.spriteStartPos[REBECCA],
             rotateX: 0,
             rotateY: 0,
             rotateZ: 0,
@@ -400,7 +448,7 @@ export default class Release0008_GreemJellyFish extends Component {
         const dennisParams = {
             url: assetPath8("objects/dennis/dennis.gltf"),
             name: DENNIS,
-            position: [5, .1, -8],
+            position: CONSTANTS.spriteStartPos[DENNIS],
             rotateX: 0,
             rotateY: 0,
             rotateZ: 0,
@@ -456,6 +504,24 @@ export default class Release0008_GreemJellyFish extends Component {
         }
     }
 
+    updateBlobMateral() {
+        const { blobMaterial, blobLightPositions, blobLightPositionRadius, blobLightCols, blobLightPositionCenter, blobLightDataSize, blobLightFall, sLightPos, clock } = this;
+        const elapsedTime = clock.getElapsedTime()
+        blobMaterial.uniforms.uTime.value = elapsedTime * .3;
+        for (let i = 0; i < blobLightDataSize; i++) {
+            const stride = blobLightDataSize * i;
+            blobLightPositions[stride] = Math.floor((blobLightPositionCenter.x + blobLightPositionRadius * Math.cos(elapsedTime)) * 255)
+            blobLightPositions[stride + 1] = Math.floor((blobLightPositionCenter.y + blobLightPositionRadius * Math.sin(elapsedTime)) * 255)
+            blobLightPositions[stride + 2] = 100
+            blobLightFall[stride] = Math.floor(.5 * 255);
+            blobLightFall[stride + 1] = Math.floor(.5 * 255);
+            blobLightFall[stride + 2] = Math.floor(Math.abs(Math.cos(elapsedTime + i)) * 255.);
+            blobLightCols[stride] = 255. - (Math.random() * 50)
+            blobLightCols[stride + 1] = 0.//Math.floor(Math.random() * 255)
+            blobLightCols[stride + 2] = 0.//Math.floor(Math.random() * 255)
+        }
+    }
+
     updateLights() {
         const { clock, pointLight } = this;
         pointLight.userData.angle -= 0.025;
@@ -469,6 +535,7 @@ export default class Release0008_GreemJellyFish extends Component {
     transitionAnimation(spriteAnimation, nextClipName, fadeInTime) {
         const curClip = spriteAnimation.curClip;
         if (nextClipName != curClip.name) {
+            // console.log("next clip", nextClipName, 'cur clikp', curClip.name)
             const nextClip = THREE.AnimationClip.findByName(spriteAnimation.clips, nextClipName);
             const curAction = spriteAnimation.mixer.clipAction(curClip)
             const nextAction = spriteAnimation.mixer.clipAction(nextClip);
@@ -477,6 +544,7 @@ export default class Release0008_GreemJellyFish extends Component {
             curAction.crossFadeTo(nextAction, fadeInTime);
             spriteAnimation.curClip = nextClip;
         }
+
     }
 
     updateSpriteAnimations() {
@@ -511,36 +579,48 @@ export default class Release0008_GreemJellyFish extends Component {
         return chromaMesh.material.uniforms.iChannel0.value.image.currentTime;
     }
 
-    updateVideo() {
-        const { officeWall, waterFall, chromaMesh, chromaMaterial, clock } = this;
-        const { section } = this.state;
-        if (chromaMesh) {
-            if (chromaMesh.userData.location != section.location) {
-                // TODO need to set declaritive positions rather than adding/subtracting since it is the same object being moved to totally different locations
-                if (section.location === OFFICE && officeWall) {
-                    // chromaMesh.position.y += .2;
-                    // chromaMesh.position.z += 1.5;
-                    // chromaMesh.rotation.x += Math.PI / 2;
-                    chromaMesh.scale.set(.3, .3, .3);
-                    officeWall.add(chromaMesh);
-                }
-                if (section.location === FOREST && waterFall) {
-                    waterFall.add(chromaMesh)
-                }
-                chromaMesh.userData.location = section.location;
-            }
-            chromaMaterial.uniforms.u_time.value = clock.getElapsedTime();
+    updateVideoTransform(prevLocation, curLocation) {
+        const { locations, officeWall, waterFall, chromaMesh, chromaMaterial, clock } = this;
+        if (!chromaMesh) return;
+        locations[prevLocation].remove(chromaMesh)
+        locations[curLocation].add(chromaMesh)
+        chromaMesh.position.set(0, 0, 0);
+        if (curLocation == OFFICE) {
+            chromaMesh.position.y += 1;
+            chromaMesh.position.x += 3.5;
+            chromaMesh.position.z -= 9;
         }
     }
 
-    updateTrackSection() {
+    updateCameraTransform(curLocation) {
+        const { camera } = this;
+        console.log("prev", curLocation)
+        if (curLocation === OFFICE) {
+            // console.log("SETTING POSITION")
+            // camera.position.set(-4.5, 0, 0);
+            // camera.rotation.set(180, 0, 0);
+        }
+    }
+
+    updateVideo() {
+        const { clock, chromaMaterial } = this;
+        const { videoActive } = this.state
+        if (!chromaMaterial) return;
+        if (!videoActive) {
+            // just set the video as active and in a location after it's been initialized for the first time
+            this.updateVideoTransform(OFFICE, OFFICE);
+            this.setState({ videoActive: true });
+        }
+        chromaMaterial.uniforms.u_time.value = clock.getElapsedTime();
+    }
+
+    updateTrackSectionState() {
         const { section } = this.state;
-        const { locations, chromaMesh } = this;
+        const { locations } = this;
         const forest = locations[FOREST];
         const office = locations[OFFICE];
         if (!forest || !office) return; // onload...
-        if (!chromaMesh) return;
-        const currentTime = this.getVideoCurrentTime();
+        const currentTime = this.getVideoCurrentTime(); // returns 0 if chromaMesh undefined
         for (const idx in TRACK_SECTIONS) {
             const trackSection = TRACK_SECTIONS[idx];
             if (currentTime >= trackSection.start && currentTime < trackSection.end) {
@@ -554,15 +634,28 @@ export default class Release0008_GreemJellyFish extends Component {
         }
     }
 
+    // anything that needs to change in an active section
+    updateTrackSectionDeltas() {
+        const { section } = this.state;
+        const { blobMaterial } = this;
+        if (section.location === FALLING) {
+            this.updateBlobMateral();
+        }
+        if (section.location === FOREST) {
+            this.updateWaterMaterials();
+        }
+    }
+
     renderScene = () => {
         const { renderer, scene, camera, controls, clock } = this;
         // let lightIntensity = this.updateLights(); // TODO currently too computationally intensive
-        this.updateWaterMaterials();
         this.updateSpriteAnimations();
-        this.updateTrackSection();
+        this.updateTrackSectionState();
         // TODO controls will lock, order matters here (updating control before updating video; not sure why)
-        controls.update(clock.getDelta());
-        this.updateVideo();
+        // controls.update(clock.getDelta());
+        // console.log(this.camera.position, this.camera.rotation, this.controls)
+        this.updateVideo()
+        this.updateTrackSectionDeltas();
         renderer.render(scene, camera);
     }
 
