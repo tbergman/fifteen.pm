@@ -308,6 +308,26 @@ export const CONTENT = {
       navColor: '#fff',
       controls: []
     }
+  },
+  "/g": {
+    artist: "",
+    tracks: [
+      {
+        title: "",
+        type: "soundcloud",
+        id: "610976673",
+        secretToken: "s-7EwJv"
+      }
+    ],
+    theme: {
+      message: "DUR DUR DUR DUR DUR DUR DUR DUR",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
+      iconColor: '#fff',
+      fillColor: 'rgba(255, 0, 0, 0.5)',
+      textColor: '#fff',
+      navColor: '#fff',
+      controls: []
+    }
   }
 };
 
