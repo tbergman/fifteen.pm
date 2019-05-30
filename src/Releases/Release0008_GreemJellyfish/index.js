@@ -7,6 +7,7 @@ import '../Release.css';
 import { loadImage, loadGLTF } from "../../Utils/Loaders";
 import { Water2 } from "../../Utils/Water2"
 import { CONTENT } from '../../Content'
+import Menu from '../../UI/Menu/Menu';
 import Player from '../../UI/Player/Player'
 import '../../UI/Player/Player.css';
 import { OrbitControls, Reflector, EffectComposer } from 'three-full';
@@ -23,7 +24,7 @@ import {
     CONSTANTS
 } from "./constants.js";
 import { assetPath8 } from "./utils.js";
-import { initFoamGripMaterial, initRockMaterial, initWaterMaterial, initTransluscentMaterial } from "./materials.js";
+import { initFoamGripMaterial, initRockMaterial, initTransluscentMaterial, initPinkShinyMaterial } from "./materials.js";
 
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';
@@ -124,6 +125,7 @@ export default class Release0008_GreemJellyFish extends Component {
         this.initForest();
         this.initBlobs();
         this.initScene();
+        this.muteMainAudio();
     }
 
     // TODO setup callback pattern on gltf loads rather than set interval...
@@ -148,6 +150,7 @@ export default class Release0008_GreemJellyFish extends Component {
         materials.rock = initRockMaterial(textureLoader); // waterfall video
         materials.foam = initFoamGripMaterial(textureLoader);
         //materials.water = initWaterMaterial(textureLoader, renderer.domElement.width, renderer.domElement.height);
+        materials.pinkShiny = initPinkShinyMaterial();
         materials.transluscent = initTransluscentMaterial(.25);
     }
 
@@ -207,38 +210,40 @@ export default class Release0008_GreemJellyFish extends Component {
         this.blobLightPositions = new Uint8Array(3 * this.blobLightDataSize);
         this.blobLightFall = new Uint8Array(3 * this.blobLightDataSize);
         this.blobLightCols = new Uint8Array(3 * this.blobLightDataSize)
+        this.blobSphere1Center = new THREE.Vector3(0, 4, 0);
+        this.blobSphere2Center = new THREE.Vector3(0, -4, 0);
         for (let i = 0; i < this.blobLightDataSize; i++) {
             const stride = i * 3;
             this.blobLightPositions[stride] = Math.floor(this.blobLightPositionCenter.x + this.blobLightPositionRadius * Math.cos(clock.getElapsedTime()) * 255);
             this.blobLightPositions[stride + 1] = Math.floor(this.blobLightPositionCenter.y + this.blobLightPositionRadius * Math.sin(clock.getElapsedTime()) * 255);
-            this.blobLightPositions[stride + 2] = 0
+            this.blobLightPositions[stride + 2] = 100;
             this.blobLightFall[stride] = Math.floor(0.5 * 255.);
             this.blobLightFall[stride + 1] = Math.floor(0.5 * 255.);
-            this.blobLightFall[stride + 2] = Math.floor(Math.cos(clock.getElapsedTime()) * 255.)
-            this.blobLightCols[stride] = Math.floor(.9 * 255)
-            this.blobLightCols[stride + 1] = Math.floor(.1 * 255)
-            this.blobLightCols[stride + 2] = 0
+            this.blobLightFall[stride + 2] = Math.floor(Math.cos(clock.getElapsedTime()) * 255.);
+            this.blobLightCols[stride] = Math.floor(.9 * 255);
+            this.blobLightCols[stride + 1] = Math.floor(.1 * 255);
+            this.blobLightCols[stride + 2] = Math.floor(.0 * 255);
         }
         let sLightPos = new THREE.DataTexture(this.blobLightPositions, width, height, THREE.RGBFormat);
         sLightPos.needsUpdate = true;
         let sLightFall = new THREE.DataTexture(this.blobLightFall, width, height, THREE.RGBFormat);
         sLightFall.needsUpdate = true;
         let sLightCol = new THREE.DataTexture(this.blobLightCols, width, height, THREE.RGBFormat);
-        sLightCol.needsUpdate = true; // TODO maybe not
+        sLightCol.needsUpdate = true;
         this.blobMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 uCamPos: { value: this.camera.position },
-                uCamFov: { value: 4. }, // TODO ?
-                uLookAtPos: { value: new THREE.Vector3(4, 0, -5) }, // CONSTANTS.spriteStartPos[ALEXA]); 
+                uCamFov: { value: 45. }, // TODO ?
+                uLookAtPos: { value: new THREE.Vector3(0, 0, 0) }, // CONSTANTS.spriteStartPos[ALEXA]); 
                 uNumLights: { type: 'i', value: 5 },
                 sLightCol: { value: sLightCol },
                 sLightPos: { value: sLightPos },
                 sLightFall: { value: sLightFall },
                 uBgColor: { value: new THREE.Vector3(0, 0, 0) },
-                uTime: { value: clock.getDelta() },
-                uDisplacementOffset: { type: 'f', value: 1.5 },
-                uSp1: { value: new THREE.Vector3(0, 4, 0) },
-                uSp2: { value: new THREE.Vector3(0, -4, 0) },
+                uTime: { value: 0 },
+                uDisplacementOffset: { type: 'f', value: .5 },
+                uSp1: { value: this.blobSphere1Center },
+                uSp2: { value: this.blobSphere2Center },
                 uRadius: { value: 1.5 },
             },
             vertexShader: simpleVertexShader,
@@ -331,7 +336,11 @@ export default class Release0008_GreemJellyFish extends Component {
                 const object = gltf.scene.children[0].getObjectByProperty('mesh');
                 if (object) {
                     object.traverse(function (node) {
-                        node.material = materials.transluscent;
+                        if (node.name.includes('furniture')) {
+                            node.material = materials.transluscent;
+                        } else {
+                            node.material = materials.pinkShiny;
+                        }
                     });
                 }
                 const office = gltf.scene;
@@ -411,6 +420,16 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
 
+    muteMainAudio() {
+        const { mediaElement } = this;
+        const refreshId = setInterval(() => {
+            if (mediaElement) {  
+                mediaElement.volume = 0;
+                clearInterval(refreshId);
+            }
+        }, 100);
+    }
+
     animate = () => {
         setTimeout(() => {
             this.frameId = window.requestAnimationFrame(this.animate);
@@ -418,28 +437,17 @@ export default class Release0008_GreemJellyFish extends Component {
         this.renderScene();
     }
 
-    updateWaterMaterial() {
-        const { materials } = this;
-        // if (materials.water.visible) {
-        //     materials.water.uniforms.u_time.value += 0.5;
-        // }
-    }
-
     updateBlobMateral() {
-        const { blobMaterial, blobLightPositions, blobLightPositionRadius, blobLightCols, blobLightPositionCenter, blobLightDataSize, blobLightFall, sLightPos, clock } = this;
+        const { blobMaterial, blobSphere1Center, blobSphere2Center, blobLightPositions, blobLightPositionRadius, blobLightCols, blobLightPositionCenter, blobLightDataSize, blobLightFall, sLightPos, clock } = this;
         const elapsedTime = clock.getElapsedTime()
         blobMaterial.uniforms.uTime.value = elapsedTime * .1;
-        for (let i = 0; i < blobLightDataSize; i++) {
-            const stride = blobLightDataSize * i;
-            blobLightPositions[stride] = Math.floor((blobLightPositionCenter.x + blobLightPositionRadius * Math.cos(elapsedTime)) * 255)
-            blobLightPositions[stride + 1] = Math.floor((blobLightPositionCenter.y + blobLightPositionRadius * Math.sin(elapsedTime)) * 255)
-            blobLightPositions[stride + 2] = 100
-            blobLightFall[stride] = Math.floor(.5 * 255);
-            blobLightFall[stride + 1] = Math.floor(.5 * 255);
-            blobLightFall[stride + 2] = Math.floor(Math.abs(Math.cos(elapsedTime + i)) * 255.);
-            blobLightCols[stride] = 255. - (Math.random() * 50)
-            blobLightCols[stride + 1] = 0.//Math.floor(Math.random() * 255)
-            blobLightCols[stride + 2] = 0.//Math.floor(Math.random() * 255)
+        blobSphere1Center.y += .04;
+        if (blobSphere1Center.y > 5) {
+            blobSphere1Center.y = -6;
+        }
+        blobSphere2Center.y += .03;
+        if (blobSphere2Center.y > 5) {
+            blobSphere2Center.y = -6;
         }
     }
 
@@ -464,7 +472,6 @@ export default class Release0008_GreemJellyFish extends Component {
             curAction.crossFadeTo(nextAction, fadeInTime);
             spriteAnimation.curClip = nextClip;
         }
-
     }
 
     updateSpriteAnimations() {
@@ -490,11 +497,11 @@ export default class Release0008_GreemJellyFish extends Component {
 
     updateLocation(prevLocation, curLocation) {
         const { locations } = this;
-        for (let i = 0; i < locations[prevLocation].length; i++) {
-            locations[prevLocation][i].visible = false;
-        }
         for (let i = 0; i < locations[curLocation].length; i++) {
             locations[curLocation][i].visible = true;
+        }
+        for (let i = 0; i < locations[prevLocation].length; i++) {
+            locations[prevLocation][i].visible = false;
         }
     }
 
@@ -519,8 +526,8 @@ export default class Release0008_GreemJellyFish extends Component {
     updateVideoTransform(prevLocation, curLocation) {
         const { videoParents, chromaMesh } = this;
         if (!chromaMesh) return;
-        videoParents[prevLocation].remove(chromaMesh);
         videoParents[curLocation].add(chromaMesh);
+        videoParents[prevLocation].remove(chromaMesh);
         this.setVideoTransform()
     }
 
@@ -568,7 +575,6 @@ export default class Release0008_GreemJellyFish extends Component {
             this.updateBlobMateral();
         }
         if (section.location === FOREST) {
-            this.updateWaterMaterial();
             controls.update(clock.getDelta());
         }
         if (section.location === OFFICE) {
@@ -593,34 +599,24 @@ export default class Release0008_GreemJellyFish extends Component {
         // let lightIntensity = this.updateLights(); // TODO currently too computationally intensive
         this.updateSpriteAnimations();
         this.updateTrackSectionState();
-        // TODO controls will lock, order matters here (updating control before updating video; not sure why)
-        this.updateVideo()
         this.updateTrackSectionDeltas();
+        this.updateVideo()
         renderer.render(scene, camera);
-    }
-
-    renderPlayer = () => {
-        const content = CONTENT[window.location.pathname];
-        return (
-            <div className="player">
-                <Player
-                    trackList={content.tracks}
-                    message={content.artist}
-                    fillColor={content.theme.iconColor}
-                    mediaRef={element => this.mediaElement = element}
-                    auxMedia={CONSTANTS.auxMedia}
-                />
-            </div>
-        );
     }
 
     render() {
         return (
             <Fragment>
+                <Menu
+                    content={CONTENT[window.location.pathname]}
+                    // menuIconFillColor="white"
+                    menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
+                    mediaRef={el => this.mediaElement = el}
+                    auxMedia={CONSTANTS.auxMedia}
+                />
                 <div className="release" id="greemJellyFishFlyer">
                     <div ref={(element) => this.container = element} />}
                 </div>
-                {this.renderPlayer()}
             </Fragment>
         );
     }

@@ -60,7 +60,7 @@ export function initRockMaterial(textureLoader, envMap) {
 }
 
 
-export function initWaterMaterial (textureLoader, width, height, side) {
+export function initWaterMaterial(textureLoader, width, height, side) {
 	const waterY = 103.;
 	const alpha = 1.;
 	// const rockTexture1 = textureLoader.load(assetPath8("images/tiny3.png"))
@@ -94,14 +94,27 @@ export function initWaterMaterial (textureLoader, width, height, side) {
 	waterMaterial.uniforms.u_resolution.value.x = width;
 	waterMaterial.uniforms.u_resolution.value.y = height;
 	return waterMaterial;
-} 
+}
 
 
-export function initTransluscentMaterial(opacity){
-	return new THREE.MeshStandardMaterial( {
+export function initTransluscentMaterial(opacity) {
+	return new THREE.MeshStandardMaterial({
 		opacity: opacity,
 		premultipliedAlpha: true,
 		transparent: true,
 		skinning: true
-	} );
+	});
+}
+
+export function initPinkShinyMaterial() {
+	return new THREE.MeshStandardMaterial({
+		color: 0xFB0082,
+		metalness: 0.5,
+		roughness: 0.0,
+		skinning: true,
+		fog: true,
+		needsUpdate: true,
+		transparent: true,
+		opacity: 0.5
+	});
 }

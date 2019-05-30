@@ -42,9 +42,11 @@ export const CONSTANTS = {
   bpm: 130.0,
   songLength: 145.,
   sections: {
+    // 0.: OFFICE,
     0.: OFFICE,
+    // 1.: OFFICE,
     // 1.: FALLING,
-    // 2.: OFFICE,
+    // 2.: FALLING,// 2.: OFFICE,
     // 1.: FOREST,
     // 2.: FOREST,
     // 3.: OFFICE,
@@ -95,8 +97,8 @@ export const CONSTANTS = {
       scale: { x: .8, y: .8, z: .8 }
     },
     FALLING: {
-      position: { x: -6, y: 1, z: 1 },
-      rotation: { x: 0, y: 0, z: Math.PI * - 0.5 },
+      position: { x: 6, y: 1, z: 1 },
+      rotation: { x: 0, y: 0, z: Math.PI * 0.5 },
       scale: { x: .3, y: .3, z: .3 }
     }
   },

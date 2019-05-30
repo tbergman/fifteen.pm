@@ -290,18 +290,17 @@ export const CONTENT = {
     }
   },
   "/8": {
-    artist: "",
+    artist: "Greem Jellyf.",
     tracks: [
       {
-        title: "",
+        title: "Juicy Tender",
         type: "soundcloud",
-        id: "610976673",
-        secretToken: "s-7EwJv"
+        id: "565459281",
       }
     ],
     theme: {
-      message: "DUR DUR DUR DUR DUR DUR DUR DUR",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
+      message: "Rebecca, Dennis, and Alexa -. link to gallery description.link to instagram post with footage from opening",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/juicy-tender",
       iconColor: '#fff',
       fillColor: 'rgba(255, 0, 0, 0.5)',
       textColor: '#fff',
