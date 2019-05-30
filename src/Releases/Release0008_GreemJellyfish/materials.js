@@ -27,7 +27,7 @@ export function initFoamGripMaterial(textureLoader) {
 		normalMap: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-normal.png")),
 		aoMap: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-ao.png")),
 		specularMap: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-albedo.png")),
-		envMap: envMapCube
+		envMap: envMapCube,
 	})
 }
 
@@ -65,7 +65,6 @@ export function initWaterMaterial (textureLoader, width, height, side) {
 	const alpha = 1.;
 	// const rockTexture1 = textureLoader.load(assetPath8("images/tiny3.png"))
 	const rockTileTexture2 = textureLoader.load(assetPath8("images/tiny2.png"));
-	console.log(rockTileTexture2)
 	let waterMaterial = new THREE.ShaderMaterial({
 		fragmentShader: riverFragmentShader,
 		vertexShader: skinningVertexShader,

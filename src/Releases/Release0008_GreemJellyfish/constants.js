@@ -33,28 +33,33 @@ export const CONSTANTS = {
       playbackRate: 1,
       loop: true,
       invert: true,
-      volume: .0,
+      volume: .4,
       muted: false,
       angle: 0.0
     },
-    mesh: undefined,  
+    mesh: undefined,
   }],
   bpm: 130.0,
   songLength: 145.,
   sections: {
     0.: OFFICE,
-    // 5.: FALLING,
-    // 10: FOREST,
-    // 18: FALLING,
-    // 21: FALLING, // INSTRUMENTAL,
-    // 29.: OFFICE, // VERSE2,
-    // 51.: FOREST, // CHORUS,
-    // 66.: OFFICE, // VERSE2,
-    // 80.: FALLING, // INSTRUMENTAL,
-    // 88.: FOREST, // CHORUS,
-    // 103.: FOREST, // BRIDGE,
-    // 118.: FOREST, // CHORUS,
-    // 134: FALLING, // INSTRUMENTAL
+    // 1.: FALLING,
+    // 2.: OFFICE,
+    // 1.: FOREST,
+    // 2.: FOREST,
+    // 3.: OFFICE,
+    5.: FALLING,
+    10: FOREST,
+    18: FALLING,
+    21: FALLING, // INSTRUMENTAL,
+    29.: OFFICE, // VERSE2,
+    51.: FOREST, // CHORUS,
+    66.: OFFICE, // VERSE2,
+    80.: FALLING, // INSTRUMENTAL,
+    88.: FOREST, // CHORUS,
+    103.: FOREST, // BRIDGE,
+    118.: FOREST, // CHORUS,
+    134: FALLING, // INSTRUMENTAL
   },
   animationClipNames: {
     OFFICE: ["office_1", "office_2"],
@@ -63,9 +68,10 @@ export const CONSTANTS = {
   },
   spriteNames: [ALEXA, REBECCA, DENNIS],
   spriteStartPos: {
-    ALEXA: [4, 0, -5],
-    REBECCA: [2, 0, -8],
-    DENNIS: [5, .1, -8],
+    //ALEXA: [4, 0, -5],
+    ALEXA: [0, 0, 0],
+    REBECCA: [-2, -.2, -3],
+    DENNIS: [1, .1, -3.2],
   },
   trackSectionSpriteMaterialLookup: {
     FOREST: TRANSLUSCENT,
@@ -76,6 +82,41 @@ export const CONSTANTS = {
     FOREST: .03,
     FALLING: .1,
     OFFICE: .02,
+  },
+  videoTransforms: {
+    OFFICE: {
+      position: { x: 3.5, y: 1, z: -9 },
+      rotation: { x: 90, y: 0, z: 0 },
+      scale: { x: .3, y: .3, z: .3 }
+    },
+    FOREST: {
+      position: { x: -4, y: -5, z: 0 },
+      rotation: { x: 0, y: 0, z: Math.PI * -.25 },
+      scale: { x: .8, y: .8, z: .8 }
+    },
+    FALLING: {
+      position: { x: -6, y: 1, z: 1 },
+      rotation: { x: 0, y: 0, z: Math.PI * - 0.5 },
+      scale: { x: .3, y: .3, z: .3 }
+    }
+  },
+  cameraTransform: {
+    OFFICE: {
+      // position: {x: 0, y: 0, z: 0},
+      // rotation: {x: 0, y: 0, z: 0}
+      position: { x: 0, y: 1.1, z: 5.4 },
+      rotation: { x: 0, y: 0, z: 0 },
+      //position: { x: 3.7664189221303097, y: 1.9469800595649362, z: 0.3746167505170739 },
+      //rotation: { x: -0.1984665447828528, y: -0.06484084312275079, z: -0.013030532093610919 }
+    },
+    FOREST: {
+      position: { x: -6.911336867395235, y: 35.171791211103574, z: 21.186446198100736 },
+      rotation: { x: -0.8936867517856268, y: -0.09255757666672404, z: -0.11446990020179652 }
+    },
+    FALLING: {
+      position: { x: 0, y: 0, z: 12 },
+      rotation: { x: 0, y: 0, z: 0 },
+    }
   }
 }
 

@@ -9,7 +9,7 @@ import { Water2 } from "../../Utils/Water2"
 import { CONTENT } from '../../Content'
 import Player from '../../UI/Player/Player'
 import '../../UI/Player/Player.css';
-import { OrbitControls } from 'three-full';
+import { OrbitControls, Reflector, EffectComposer } from 'three-full';
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 import GLTFLoader from 'three-gltf-loader';
 import {
@@ -37,11 +37,10 @@ import simpleVertexShader from '!raw-loader!glslify-loader!../../Shaders/simpleV
 // import { notEqual } from 'assert';
 
 const ANIMATION_CLIP_NAMES = CONSTANTS.animationClipNames;
-const SPRITE_NAMES = CONSTANTS.spriteNames;
+
 export default class Release0008_GreemJellyFish extends Component {
     state = {
         section: TRACK_SECTIONS[0.],
-        videoActive: false,
     }
 
     componentDidMount() {
@@ -67,8 +66,8 @@ export default class Release0008_GreemJellyFish extends Component {
         if (prevState.section.location !== section.location) {
             this.updateLocation(prevState.section.location, section.location);
             this.updateVideoTransform(prevState.section.location, section.location);
-            // this.updateCameraTransform(section.location);
             this.updateSpriteMaterial(section.location);
+            this.updateCameraTransform();
         }
     }
 
@@ -103,16 +102,14 @@ export default class Release0008_GreemJellyFish extends Component {
         // this.controls = new FirstPersonControls(this.camera)
         this.controls = new OrbitControls(this.camera)
         this.controls.autoRotate = true
-        this.controls.target = new THREE.Vector3(4, 0, -5);//CONSTANTS.spriteStartPos[ALEXA]); 
-        // TODO hack where should this happen/go
-        this.camera.position.set(3.7664189221303097, 1.9469800595649362, 0.3746167505170739)
-        this.camera.rotation.set(-0.1984665447828528, -0.06484084312275079, -0.013030532093610919)
+        this.controls.target = new THREE.Vector3(0, 0, 0); // CONSTANTS.spriteStartPos[ALEXA]); 
         this.clock = new THREE.Clock();
         // release-specific objects
         this.sprites = [];
         this.materials = {}
         this.spriteAnimations = {};
-        this.chromaMesh = undefined;
+        // this.chromaMesh = undefined;
+        this.videoParents = {};
         this.locations = {
             FOREST: [],
             OFFICE: [],
@@ -121,7 +118,7 @@ export default class Release0008_GreemJellyFish extends Component {
         // release-specific initilization
         this.initMaterials();
         this.initLights();
-        this.initVid();
+        this.initVideo();
         this.initSprites();
         this.initOffice();
         this.initForest();
@@ -139,6 +136,7 @@ export default class Release0008_GreemJellyFish extends Component {
                     // note/todo: this logic will miss elements of a location - will pass if only some are ready...
                     // since we're starting in the office, not as big a deal...
                     locations[section.location][i].visible = true;
+                    this.updateCameraTransform()
                 }
                 clearInterval(refreshId);
             }
@@ -149,11 +147,11 @@ export default class Release0008_GreemJellyFish extends Component {
         const { materials, textureLoader, renderer } = this;
         materials.rock = initRockMaterial(textureLoader); // waterfall video
         materials.foam = initFoamGripMaterial(textureLoader);
-        materials.water = initWaterMaterial(textureLoader, renderer.domElement.width, renderer.domElement.height);
+        //materials.water = initWaterMaterial(textureLoader, renderer.domElement.width, renderer.domElement.height);
         materials.transluscent = initTransluscentMaterial(.25);
     }
 
-    initVid = () => {
+    initVideo = () => {
         const refreshId = setInterval(() => {
             // the media is loaded by the player... this is in lieu of a proper callback behavior for the player.
             if (CONSTANTS.auxMedia[0].media) { // greem video
@@ -166,14 +164,13 @@ export default class Release0008_GreemJellyFish extends Component {
                     vertexShader: chromaVertexShader,
                     fragmentShader: chromaFragmentShader,
                     transparent: true,
-                    side: THREE.DoubleSide
+                    side: THREE.DoubleSide,
+                    needsUpdate: true,
+                    skinning: true
                 });
                 let chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
                 this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
-                this.chromaMesh.scale.set(.3, .3, .3);
-                // this.chromaMesh.position.set(0,0,0);
-                // this.chromaMesh.rotation.set(0, 90, 0);
-                this.chromaMesh.userData.location = undefined;
+                this.setVideoTransform();
                 clearInterval(refreshId);
             }
         }, 100);
@@ -199,10 +196,8 @@ export default class Release0008_GreemJellyFish extends Component {
         scene.add(directionalLight);
     }
 
-
-
     initBlobs = () => {
-        const { camera, locations, clock, scene } = this;
+        const { camera, locations, videoParents, clock, scene } = this;
         const numLights = 5;
         const width = numLights;
         const height = 1.;
@@ -234,11 +229,11 @@ export default class Release0008_GreemJellyFish extends Component {
             uniforms: {
                 uCamPos: { value: this.camera.position },
                 uCamFov: { value: 4. }, // TODO ?
-                uLookAtPos: { value: new THREE.Vector3() }, // TODO ?
+                uLookAtPos: { value: new THREE.Vector3(4, 0, -5) }, // CONSTANTS.spriteStartPos[ALEXA]); 
                 uNumLights: { type: 'i', value: 5 },
-                sLightCol: { value: sLightCol }, //new THREE.Vector3(1, 1, 0) },
-                sLightPos: { value: sLightPos }, // TODO update this on a sin wave
-                sLightFall: { value: sLightFall },// new THREE.Vector3(0.5, 0.5, 0.2)}, // TODO update
+                sLightCol: { value: sLightCol },
+                sLightPos: { value: sLightPos },
+                sLightFall: { value: sLightFall },
                 uBgColor: { value: new THREE.Vector3(0, 0, 0) },
                 uTime: { value: clock.getDelta() },
                 uDisplacementOffset: { type: 'f', value: 1.5 },
@@ -250,22 +245,23 @@ export default class Release0008_GreemJellyFish extends Component {
             fragmentShader: marchingCubeFragmentShader,
             transparent: true,
         });
-        const geometry = new THREE.PlaneGeometry(40, 20, 4);
+        const geometry = new THREE.PlaneGeometry(16, 9, 1);
         const plane = new THREE.Mesh(geometry, this.blobMaterial);
         plane.visible = false;
-        plane.position.set(0, 0, -20)
+        plane.position.set(0, 0, -8)
         scene.add(plane);
+        videoParents[FALLING] = plane;
         locations[FALLING].push(plane);
     }
 
     initForest() {
-        const { gltfLoader, locations, scene, materials } = this;
+        const { gltfLoader, locations, scene, videoParents, materials } = this;
         const name = "forest";
         // add rocks
         const gltfParams = {
             url: assetPath8('objects/waterfall/rocks.glb'),
             name: name,
-            position: [5, 0, -15],
+            position: [1, 0, -10],
             rotateX: 0,
             rotateY: 0,
             rotateZ: 0,
@@ -306,16 +302,25 @@ export default class Release0008_GreemJellyFish extends Component {
         water.rotation.x = Math.PI * -0.5;
         water.visible = false
         scene.add(water);
-        locations[FOREST].push(water)
+        locations[FOREST].push(water);
+        var riverBottomGeometry = new THREE.PlaneBufferGeometry(16, 9);
+        var riverBottomMaterial = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0. });
+        var riverBottom = new THREE.Mesh(riverBottomGeometry, riverBottomMaterial);
+        riverBottom.position.z -= 5;
+        riverBottom.rotation.x = Math.PI * - 0.5;
+        riverBottom.visible = false
+        scene.add(riverBottom);
+        locations[FOREST].push(riverBottom)
+        videoParents[FOREST] = riverBottom;
     }
 
     initOffice = () => {
-        const { gltfLoader, locations, materials } = this;
+        const { gltfLoader, videoParents, locations, materials } = this;
         const name = "office";
         const gltfParams = {
             url: assetPath8('objects/office/scene.gltf'),
             name: name,
-            position: [0, 0, 0],
+            position: [-4, 0, 5],
             rotateX: 0,
             rotateY: 0,
             rotateZ: 0,
@@ -324,37 +329,20 @@ export default class Release0008_GreemJellyFish extends Component {
             onSuccess: (gltf) => {
                 const { scene } = this;
                 const object = gltf.scene.children[0].getObjectByProperty('mesh');
-                const defaultMaterial = new THREE.MeshStandardMaterial({
-                    color: 0xFB0082,
-                    metalness: 0.5,
-                    roughness: 0.0,
-                    skinning: true,
-                    fog: true,
-                    needsUpdate: true,
-                    transparent: true,
-                    opacity: 0.5,
-                    side: THREE.DoubleSide
-                });
                 if (object) {
                     object.traverse(function (node) {
-                        // if (node.isMesh && CONSTANTS.officeWaterSurfaces.includes(node.name)) {
-                        //     node.material = waterMaterial;
-                        // } else if (node.isMesh) {
-                        node.material = defaultMaterial;
-                        // }
+                        node.material = materials.transluscent;
                     });
                 }
                 const office = gltf.scene;
                 office.visible = false;
                 scene.add(office);
-                this.officeWall = office.getObjectByName("walls005_11");
+                videoParents[OFFICE] = office.getObjectByName("walls005_11");
                 locations[OFFICE].push(office);
             }
         }
         loadGLTF({ ...gltfParams });
     }
-
-
 
     initSprites = () => {
         const { gltfLoader } = this;
@@ -432,15 +420,15 @@ export default class Release0008_GreemJellyFish extends Component {
 
     updateWaterMaterial() {
         const { materials } = this;
-        if (materials.water.visible) {
-            materials.water.uniforms.u_time.value += 0.5;
-        }
+        // if (materials.water.visible) {
+        //     materials.water.uniforms.u_time.value += 0.5;
+        // }
     }
 
     updateBlobMateral() {
         const { blobMaterial, blobLightPositions, blobLightPositionRadius, blobLightCols, blobLightPositionCenter, blobLightDataSize, blobLightFall, sLightPos, clock } = this;
         const elapsedTime = clock.getElapsedTime()
-        blobMaterial.uniforms.uTime.value = elapsedTime * .3;
+        blobMaterial.uniforms.uTime.value = elapsedTime * .1;
         for (let i = 0; i < blobLightDataSize; i++) {
             const stride = blobLightDataSize * i;
             blobLightPositions[stride] = Math.floor((blobLightPositionCenter.x + blobLightPositionRadius * Math.cos(elapsedTime)) * 255)
@@ -468,8 +456,6 @@ export default class Release0008_GreemJellyFish extends Component {
     transitionAnimation(spriteAnimation, nextClipName, fadeInTime) {
         const curClip = spriteAnimation.curClip;
         if (nextClipName != curClip.name) {
-            console.log('transition...')
-            // console.log("next clip", nextClipName, 'cur clikp', curClip.name)
             const nextClip = THREE.AnimationClip.findByName(spriteAnimation.clips, nextClipName);
             const curAction = spriteAnimation.mixer.clipAction(curClip)
             const nextAction = spriteAnimation.mixer.clipAction(nextClip);
@@ -508,9 +494,6 @@ export default class Release0008_GreemJellyFish extends Component {
             locations[prevLocation][i].visible = false;
         }
         for (let i = 0; i < locations[curLocation].length; i++) {
-            
-            console.log("SET this visible", locations[curLocation][i]);
-            
             locations[curLocation][i].visible = true;
         }
     }
@@ -521,42 +504,39 @@ export default class Release0008_GreemJellyFish extends Component {
         return chromaMesh.material.uniforms.iChannel0.value.image.currentTime;
     }
 
-    updateVideoTransform(prevLocation, curLocation) {
-        const { locations, officeWall, chromaMesh, chromaMaterial, clock } = this;
-        if (!chromaMesh) return;
-        for (let i = 0; i < locations[prevLocation].length; i++) {
-            locations[curLocation][i].remove(chromaMesh)
-        }
-        for (let i = 0; i < locations[curLocation][length]; i++) {
-            locations[curLocation][i].add(chromaMesh)
-        }
-        chromaMesh.position.set(0, 0, 0);
-        if (curLocation == OFFICE) {
-            chromaMesh.position.y += 1;
-            chromaMesh.position.x += 3.5;
-            chromaMesh.position.z -= 9;
-        }
+    setVideoTransform() {
+        const { chromaMesh } = this;
+        const { section } = this.state;
+        const transform = CONSTANTS.videoTransforms[section.location]
+        const pos = transform.position;
+        const rot = transform.rotation;
+        const scale = transform.scale;
+        chromaMesh.position.set(pos.x, pos.y, pos.z);
+        chromaMesh.rotation.set(rot.x, rot.y, rot.z);
+        chromaMesh.scale.set(scale.x, scale.y, scale.z);
     }
 
-    updateCameraTransform(curLocation) {
+    updateVideoTransform(prevLocation, curLocation) {
+        const { videoParents, chromaMesh } = this;
+        if (!chromaMesh) return;
+        videoParents[prevLocation].remove(chromaMesh);
+        videoParents[curLocation].add(chromaMesh);
+        this.setVideoTransform()
+    }
+
+    updateCameraTransform() {
         const { camera } = this;
-        console.log("prev", curLocation)
-        if (curLocation === OFFICE) {
-            // console.log("SETTING POSITION")
-            // camera.position.set(-4.5, 0, 0);
-            // camera.rotation.set(180, 0, 0);
-        }
+        const { section } = this.state;
+        const transform = CONSTANTS.cameraTransform[section.location];
+        const pos = transform.position;
+        const rot = transform.rotation;
+        camera.position.set(pos.x, pos.y, pos.z);
+        camera.rotation.set(rot.x, rot.y, rot.z);
     }
 
     updateVideo() {
         const { clock, chromaMaterial } = this;
-        const { videoActive } = this.state
         if (!chromaMaterial) return;
-        if (!videoActive) {
-            // TODO fix up... just setting the video as active and in a location after it's been initialized for the first time
-            this.updateVideoTransform(OFFICE, OFFICE);
-            this.setState({ videoActive: true });
-        }
         chromaMaterial.uniforms.u_time.value = clock.getElapsedTime();
     }
 
@@ -582,13 +562,17 @@ export default class Release0008_GreemJellyFish extends Component {
 
     // anything that needs to change in an active section
     updateTrackSectionDeltas() {
+        const { controls, clock } = this;
         const { section } = this.state;
-        const { blobMaterial } = this;
         if (section.location === FALLING) {
             this.updateBlobMateral();
         }
         if (section.location === FOREST) {
             this.updateWaterMaterial();
+            controls.update(clock.getDelta());
+        }
+        if (section.location === OFFICE) {
+            controls.update(clock.getDelta());
         }
     }
 
@@ -610,8 +594,6 @@ export default class Release0008_GreemJellyFish extends Component {
         this.updateSpriteAnimations();
         this.updateTrackSectionState();
         // TODO controls will lock, order matters here (updating control before updating video; not sure why)
-        // controls.update(clock.getDelta());
-        // console.log(this.camera.position, this.camera.rotation, this.controls)
         this.updateVideo()
         this.updateTrackSectionDeltas();
         renderer.render(scene, camera);
