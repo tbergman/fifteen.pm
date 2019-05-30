@@ -26,8 +26,8 @@ export const CONSTANTS = {
       type: 'video',
       mimetype: 'video/mp4',
       name: 'greem-vid1',
-      sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'), // easier to use while devving
-      // sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
+      // sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'), // easier to use while devving
+      sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
       geometry: new THREE.PlaneBufferGeometry(1, 1),
       position: [0, 0, 0],
       playbackRate: 1,
@@ -43,13 +43,15 @@ export const CONSTANTS = {
   songLength: 145.,
   sections: {
     // 0.: OFFICE,
-    0.: OFFICE,
+    0.: OFFICE, // TODO what is this bug
+    1.: OFFICE,
+    2.: OFFICE,
     // 1.: OFFICE,
     // 1.: FALLING,
     // 2.: FALLING,// 2.: OFFICE,
     // 1.: FOREST,
     // 2.: FOREST,
-    // 3.: OFFICE,
+    // 2.: OFFICE,
     5.: FALLING,
     10: FOREST,
     18: FALLING,
@@ -87,8 +89,8 @@ export const CONSTANTS = {
   },
   videoTransforms: {
     OFFICE: {
-      position: { x: 3.5, y: 1, z: -9 },
-      rotation: { x: 90, y: 0, z: 0 },
+      position: { x: 0, y: 8, z: 1.3 },
+      rotation: { x: Math.PI * .5, y: 0, z: 0 },
       scale: { x: .3, y: .3, z: .3 }
     },
     FOREST: {
@@ -104,12 +106,8 @@ export const CONSTANTS = {
   },
   cameraTransform: {
     OFFICE: {
-      // position: {x: 0, y: 0, z: 0},
-      // rotation: {x: 0, y: 0, z: 0}
       position: { x: 0, y: 1.1, z: 5.4 },
-      rotation: { x: 0, y: 0, z: 0 },
-      //position: { x: 3.7664189221303097, y: 1.9469800595649362, z: 0.3746167505170739 },
-      //rotation: { x: -0.1984665447828528, y: -0.06484084312275079, z: -0.013030532093610919 }
+      rotation: { x: Math.PI * .1, y: 0, z: 0 },
     },
     FOREST: {
       position: { x: -6.911336867395235, y: 35.171791211103574, z: 21.186446198100736 },
@@ -118,6 +116,18 @@ export const CONSTANTS = {
     FALLING: {
       position: { x: 0, y: 0, z: 12 },
       rotation: { x: 0, y: 0, z: 0 },
+    }
+  },
+  cameraOrbit: {
+    OFFICE: {
+      offset: { x: 3, z: 3 },
+      speed: { x: .1, z: .1 },
+      lookAt: {x: 0, y: 1., z: 0}
+    },
+    FOREST: {
+      offset: { x: 3, z: 1 },
+      speed: { x: .1, z: .1 },
+      lookAt: { x: 0, y: 1., z: 0}
     }
   }
 }

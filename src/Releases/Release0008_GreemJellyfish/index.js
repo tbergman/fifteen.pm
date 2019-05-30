@@ -2,13 +2,11 @@ import React, { Component, Fragment } from 'react';
 import * as THREE from "three";
 import debounce from 'lodash/debounce';
 import '../Release.css';
-
-
 import { loadImage, loadGLTF } from "../../Utils/Loaders";
 import { Water2 } from "../../Utils/Water2"
 import { CONTENT } from '../../Content'
-import Menu from '../../UI/Menu/Menu';
 import Player from '../../UI/Player/Player'
+import Menu from '../../UI/Menu/Menu';
 import '../../UI/Player/Player.css';
 import { OrbitControls, Reflector, EffectComposer } from 'three-full';
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
@@ -91,7 +89,7 @@ export default class Release0008_GreemJellyFish extends Component {
         // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
-        this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, 1, 1500);
+        this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, .1, 1500);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio)
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -101,9 +99,12 @@ export default class Release0008_GreemJellyFish extends Component {
         this.gltfLoader = new GLTFLoader(manager);
         this.textureLoader = new THREE.TextureLoader();
         // this.controls = new FirstPersonControls(this.camera)
+        // this.controls.enabled = true;
+        // this.controls.mouseMotionActive = true;
+        // this.controls.lookSpeed = .5;
         this.controls = new OrbitControls(this.camera)
-        this.controls.autoRotate = true
-        this.controls.target = new THREE.Vector3(0, 0, 0); // CONSTANTS.spriteStartPos[ALEXA]); 
+        // this.controls.autoRotate = true
+        // this.controls.target = new THREE.Vector3(0, 0, 0); // CONSTANTS.spriteStartPos[ALEXA]); 
         this.clock = new THREE.Clock();
         // release-specific objects
         this.sprites = [];
@@ -255,7 +256,6 @@ export default class Release0008_GreemJellyFish extends Component {
         plane.visible = false;
         plane.position.set(0, 0, -8)
         scene.add(plane);
-        videoParents[FALLING] = plane;
         locations[FALLING].push(plane);
     }
 
@@ -423,7 +423,7 @@ export default class Release0008_GreemJellyFish extends Component {
     muteMainAudio() {
         const { mediaElement } = this;
         const refreshId = setInterval(() => {
-            if (mediaElement) {  
+            if (mediaElement) {
                 mediaElement.volume = 0;
                 clearInterval(refreshId);
             }
@@ -523,22 +523,42 @@ export default class Release0008_GreemJellyFish extends Component {
         chromaMesh.scale.set(scale.x, scale.y, scale.z);
     }
 
+    orbitCamera() {
+        const { camera, scene, clock } = this;
+
+        // 2 * Math.PI / 60 / 60 * .25
+
+    }
+
     updateVideoTransform(prevLocation, curLocation) {
         const { videoParents, chromaMesh } = this;
         if (!chromaMesh) return;
-        videoParents[curLocation].add(chromaMesh);
-        videoParents[prevLocation].remove(chromaMesh);
-        this.setVideoTransform()
+        if (curLocation in videoParents) {
+            videoParents[curLocation].add(chromaMesh);
+            this.setVideoTransform()
+        }
+        if (prevLocation in videoParents) videoParents[prevLocation].remove(chromaMesh);
     }
 
     updateCameraTransform() {
-        const { camera } = this;
+        const { camera, clock, scene } = this;
         const { section } = this.state;
         const transform = CONSTANTS.cameraTransform[section.location];
         const pos = transform.position;
-        const rot = transform.rotation;
-        camera.position.set(pos.x, pos.y, pos.z);
-        camera.rotation.set(rot.x, rot.y, rot.z);
+        if (section.location in CONSTANTS.cameraOrbit) {
+            const offset = CONSTANTS.cameraOrbit[section.location].offset;
+            const rotationSpeed = CONSTANTS.cameraOrbit[section.location].speed;
+            const lookAt = CONSTANTS.cameraOrbit[section.location].lookAt;
+            camera.position.x = Math.cos(clock.getElapsedTime() * rotationSpeed.x) * offset.x;// * 3; // TODO looks cools as close up
+            camera.position.z = Math.sin(clock.getElapsedTime() * rotationSpeed.z) * offset.z; //  TODO looks cools as close up
+            camera.position.y = pos.y
+            camera.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z))
+        } else {
+            const rot = transform.rotation;
+            camera.position.set(pos.x, pos.y, pos.z)
+            camera.rotation.set(rot.x, rot.y, rot.z);
+            camera.lookAt(scene.position);
+        }
     }
 
     updateVideo() {
@@ -575,10 +595,16 @@ export default class Release0008_GreemJellyFish extends Component {
             this.updateBlobMateral();
         }
         if (section.location === FOREST) {
-            controls.update(clock.getDelta());
+            this.updateVideo()
+            // this.orbitCamera();
+            // controls.update(clock.getDelta());
         }
         if (section.location === OFFICE) {
-            controls.update(clock.getDelta());
+            this.updateVideo()
+            this.updateCameraTransform()
+            //orbitCamera()
+            // controls.rotateLeft(2 * Math.PI / 60 / 60 * .25)
+            // controls.update(clock.getDelta());
         }
     }
 
@@ -596,11 +622,9 @@ export default class Release0008_GreemJellyFish extends Component {
 
     renderScene = () => {
         const { renderer, scene, camera, controls, clock } = this;
-        // let lightIntensity = this.updateLights(); // TODO currently too computationally intensive
         this.updateSpriteAnimations();
         this.updateTrackSectionState();
         this.updateTrackSectionDeltas();
-        this.updateVideo()
         renderer.render(scene, camera);
     }
 
@@ -609,12 +633,11 @@ export default class Release0008_GreemJellyFish extends Component {
             <Fragment>
                 <Menu
                     content={CONTENT[window.location.pathname]}
-                    // menuIconFillColor="white"
                     menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
                     mediaRef={el => this.mediaElement = el}
                     auxMedia={CONSTANTS.auxMedia}
                 />
-                <div className="release" id="greemJellyFishFlyer">
+                <div className="release" id="greemJellyFishRelease">
                     <div ref={(element) => this.container = element} />}
                 </div>
             </Fragment>
