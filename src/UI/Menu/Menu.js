@@ -235,7 +235,7 @@ class Menu extends PureComponent {
   };
 
   renderPlayer = () => {
-    const { content, mediaRef } = this.props;
+    const { content, mediaRef, auxMedia } = this.props;
     const { hasEnteredWorld } = this.state;
     if (this.props.shouldRenderPlayer) {
       return (
@@ -245,6 +245,7 @@ class Menu extends PureComponent {
           fillColor={content.theme.iconColor}
           mediaRef={mediaRef}
           initialized={hasEnteredWorld}
+          auxMedia={auxMedia}
         />
       );
     }
