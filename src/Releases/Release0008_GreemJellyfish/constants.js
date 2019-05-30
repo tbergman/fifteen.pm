@@ -5,6 +5,10 @@ import { multiSourceVideo } from '../../Utils/Video/paths.js';
 export const OFFICE = "OFFICE";
 export const FOREST = "FOREST";
 export const FALLING = "FALLING";
+export const ROCK = "rock"
+export const FOAM = "foam"
+export const WATER = "water"
+export const TRANSLUSCENT = "transluscent"
 export const REBECCA = "REBECCA";
 export const ALEXA = "ALEXA";
 export const DENNIS = "DENNIS";
@@ -33,30 +37,25 @@ export const CONSTANTS = {
       muted: false,
       angle: 0.0
     },
-    mesh: undefined,
+    mesh: undefined,  
   }],
   bpm: 130.0,
   songLength: 145.,
   sections: {
-    // 0.: FALLING,//FALLING, //INSTRUMENTAL
-    0.: FALLING,
-    1.: FALLING,
-    2.: FALLING,
-    // 0.: OFFICE,// TODO adding these three in a row is a hack, can't figure out why the animations don't start cleanly otherwise.
-    // 1.: OFFICE,
-    // 2.: OFFICE,
-    // 15.: OFFICE, // VERSE1,
-    21: FALLING, // INSTRUMENTAL,
-    29.: OFFICE, // VERSE2,
-    51.: FOREST, // CHORUS,
-    66.: OFFICE, // VERSE2,
-    80.: FALLING, // INSTRUMENTAL,
-    88.: FOREST, // CHORUS,
-    103.: FOREST, // BRIDGE,
-    118.: FOREST, // CHORUS,
-    134: FALLING, // INSTRUMENTAL
+    0.: OFFICE,
+    // 5.: FALLING,
+    // 10: FOREST,
+    // 18: FALLING,
+    // 21: FALLING, // INSTRUMENTAL,
+    // 29.: OFFICE, // VERSE2,
+    // 51.: FOREST, // CHORUS,
+    // 66.: OFFICE, // VERSE2,
+    // 80.: FALLING, // INSTRUMENTAL,
+    // 88.: FOREST, // CHORUS,
+    // 103.: FOREST, // BRIDGE,
+    // 118.: FOREST, // CHORUS,
+    // 134: FALLING, // INSTRUMENTAL
   },
-  animationTimeScale: 1 / 8,//10,
   animationClipNames: {
     OFFICE: ["office_1", "office_2"],
     FALLING: ["falling"],
@@ -67,6 +66,16 @@ export const CONSTANTS = {
     ALEXA: [4, 0, -5],
     REBECCA: [2, 0, -8],
     DENNIS: [5, .1, -8],
+  },
+  trackSectionSpriteMaterialLookup: {
+    FOREST: TRANSLUSCENT,
+    FALLING: ROCK,
+    OFFICE: FOAM
+  },
+  animationSpeed: {
+    FOREST: .03,
+    FALLING: .1,
+    OFFICE: .02,
   }
 }
 

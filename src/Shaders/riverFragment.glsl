@@ -16,17 +16,17 @@ varying vec3 vecPos;
 varying vec3 vecNormal;
 
 
-struct PointLight {
-  vec3 color;
-  vec3 position; // light position, in camera coordinates
-  float distance; // used for attenuation purposes. Since
-                  // we're writing our own shader, it can
-                  // really be anything we want (as long
-                  // as we assign it to our light in its
-                  // "distance" field
-};
+// struct PointLight {
+//   vec3 color;
+//   vec3 position; // light position, in camera coordinates
+//   float distance; // used for attenuation purposes. Since
+//                   // we're writing our own shader, it can
+//                   // really be anything we want (as long
+//                   // as we assign it to our light in its
+//                   // "distance" field
+// };
  
-uniform PointLight pointLights[NUM_POINT_LIGHTS];
+// uniform PointLight pointLights[NUM_POINT_LIGHTS];
 
 float rand(vec2 n) 
 {
@@ -103,14 +103,14 @@ void main()
 
 
     // light stuff
-    vec4 addedLights = vec4(0.1, 0.1, 0.1, u_alpha);
-    for(int l = 0; l < NUM_POINT_LIGHTS; l++) {
-        vec3 adjustedLight = pointLights[l].position + cameraPosition;
-        vec3 lightDirection = normalize(vecPos - adjustedLight);
-        addedLights.rgb += clamp(dot(-lightDirection, vecNormal), 0.0, 1.0) * pointLights[l].color * lightIntensity;
-    }
+    // vec4 addedLights = vec4(0.1, 0.1, 0.1, u_alpha);
+    // for(int l = 0; l < NUM_POINT_LIGHTS; l++) {
+    //     vec3 adjustedLight = pointLights[l].position + cameraPosition;
+    //     vec3 lightDirection = normalize(vecPos - adjustedLight);
+    //     addedLights.rgb += clamp(dot(-lightDirection, vecNormal), 0.0, 1.0) * pointLights[l].color * lightIntensity;
+    // }
 
-    vec4 col = vec4(vec3(c), u_alpha) + texture2D(textureSampler, vUv) * addedLights;
+    vec4 col = vec4(vec3(c), u_alpha) + texture2D(textureSampler, vUv);// * addedLights;
 
 
     gl_FragColor = col;    

@@ -5,6 +5,7 @@ import '../Release.css';
 
 
 import { loadImage, loadGLTF } from "../../Utils/Loaders";
+import { Water2 } from "../../Utils/Water2"
 import { CONTENT } from '../../Content'
 import Player from '../../UI/Player/Player'
 import '../../UI/Player/Player.css';
@@ -22,15 +23,12 @@ import {
     CONSTANTS
 } from "./constants.js";
 import { assetPath8 } from "./utils.js";
+import { initFoamGripMaterial, initRockMaterial, initWaterMaterial, initTransluscentMaterial } from "./materials.js";
 
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaFragmentShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyFragment.glsl';
-/* eslint import/no-webpack-loader-syntax: off */
-import riverVertexShader from '!raw-loader!glslify-loader!../../Shaders/riverVertex.glsl';
-/* eslint import/no-webpack-loader-syntax: off */
-import riverFragmentShader from '!raw-loader!glslify-loader!../../Shaders/riverFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
 import marchingCubeFragmentShader from '!raw-loader!glslify-loader!../../Shaders/hgSDF.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
@@ -70,6 +68,7 @@ export default class Release0008_GreemJellyFish extends Component {
             this.updateLocation(prevState.section.location, section.location);
             this.updateVideoTransform(prevState.section.location, section.location);
             // this.updateCameraTransform(section.location);
+            this.updateSpriteMaterial(section.location);
         }
     }
 
@@ -93,12 +92,6 @@ export default class Release0008_GreemJellyFish extends Component {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
         this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, 1, 1500);
-        // this.camera.position.set(3900, 600, 5800);
-        this.camera.position.set(4, 1.2, -2.4);
-        // this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 500);
-        // // this.camera.position.set(3900, 600, 5800);
-        // this.camera.position.set(0, 0, 15);
-        // // this.camera.position.set(0, 1, 0);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio)
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -109,38 +102,25 @@ export default class Release0008_GreemJellyFish extends Component {
         this.textureLoader = new THREE.TextureLoader();
         // this.controls = new FirstPersonControls(this.camera)
         this.controls = new OrbitControls(this.camera)
+        this.controls.autoRotate = true
         this.controls.target = new THREE.Vector3(4, 0, -5);//CONSTANTS.spriteStartPos[ALEXA]); 
         // TODO hack where should this happen/go
-        // this.controls.target = new THREE.Vector3(CONSTANTS.spriteStartPos[ALEXA]);
-        // this.camera.rotateY += -180
-        //   this.camera.lookAt(new THREE.Vector3(CONSTANTS.spriteStartPos[ALEXA]));
-        //    this.camera.position.set(3,  .5, -2)
-        //    this.camera.rotation.set(-0.11992397372604029, 0.03307294393788508, 0.003984615119172061)
         this.camera.position.set(3.7664189221303097, 1.9469800595649362, 0.3746167505170739)
         this.camera.rotation.set(-0.1984665447828528, -0.06484084312275079, -0.013030532093610919)
-        //  const FIRST_PERSON_CONTROL_SPEED = .1;
-        //      const FIRST_PERSON_CONTROL_MOVEMENT = 10;
-        //this.controls.lookSpeed = .05;
-        //this.controls.movementSpeed = FIRST_PERSON_CONTROL_MOVEMENT;
-        //this.controls.enabled = true;
-        // this.controls.heightMin = .25;
-        // this.controls.heightMax = .75;
-        //this.controls.mouseMotionActive = false;//true;
-        // this.controls = new OrbitControls(this.camera);
-        // this.controls.lookSpeed = .1;
-        // this.controls.movementSpeed = 10;
-        // this.controls.enabled = true;
-        // this.controls.mouseMotionActive = false;//true;
         this.clock = new THREE.Clock();
         // release-specific objects
-        this.waterMaterials = {};
+        this.sprites = [];
+        this.materials = {}
         this.spriteAnimations = {};
-        this.office = undefined;
         this.chromaMesh = undefined;
+        this.locations = {
+            FOREST: [],
+            OFFICE: [],
+            FALLING: []
+        }
         // release-specific initilization
-        this.locations = {}
+        this.initMaterials();
         this.initLights();
-        // this.initTube();
         this.initVid();
         this.initSprites();
         this.initOffice();
@@ -150,61 +130,33 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
     // TODO setup callback pattern on gltf loads rather than set interval...
-    initScene() {
+    initScene = () => {
         const { locations } = this;
         const { section } = this.state;
         const refreshId = setInterval(() => {
-            if (locations[section.location]) {
-                locations[section.location].visible = true;
-                // this.updateCameraTransform(section.location)
-
+            if (locations[section.location].length) {
+                for (let i = 0; i < locations[section.location].length; i++) {
+                    // note/todo: this logic will miss elements of a location - will pass if only some are ready...
+                    // since we're starting in the office, not as big a deal...
+                    locations[section.location][i].visible = true;
+                }
                 clearInterval(refreshId);
             }
         }, 100);
     }
 
-    initWaterMaterial = (alpha, waterY, name, side) => {
-        const { textureLoader } = this;
-        const rockTexture1 = textureLoader.load(assetPath8("images/tiny3.png"))
-        const rockTileTexture2 = textureLoader.load(assetPath8("images/tiny2.png"));
-        let waterMaterial = new THREE.ShaderMaterial({
-            fragmentShader: riverFragmentShader,
-            vertexShader: riverVertexShader,
-            lights: true,
-            fog: true,
-            transparent: true,
-            needsUpdate: true,
-            uniforms: THREE.UniformsUtils.merge([
-                THREE.UniformsLib["lights"],
-            ]),
-            side: side ? side : THREE.FrontSide
-        });
-        // potentially add env map: view-source:https://2pha.com/demos/threejs/shaders/fresnel_cube_env.html
-        // waterMaterial.uniforms.envMap = textureEquirec
-        waterMaterial.uniforms.u_alpha = { type: 'f', value: alpha || 1.0 };
-        waterMaterial.uniforms.waterY = { type: 'f', value: waterY };
-        waterMaterial.uniforms.lightIntensity = { type: 'f', value: 1.0 };
-        waterMaterial.uniforms.textureSampler = { type: 't', value: rockTileTexture2 }; //imgMesh2.material.map };
-        waterMaterial.uniforms.u_time = { type: 'f', value: 1.0 };
-        waterMaterial.uniforms.u_resolution = { type: "v2", value: new THREE.Vector2() };
-        waterMaterial.uniforms.iChannel0 = { value: rockTileTexture2 }; //imgMesh1.material.map };
-        waterMaterial.uniforms.iChannel1 = { value: rockTileTexture2 };//imgMesh2.material.map };
-        waterMaterial.uniforms.iChannel0.value.wrapS = THREE.RepeatWrapping;
-        waterMaterial.uniforms.iChannel0.value.wrapT = THREE.RepeatWrapping;
-        waterMaterial.uniforms.iChannel1.value.wrapS = THREE.RepeatWrapping;
-        waterMaterial.uniforms.iChannel1.value.wrapT = THREE.RepeatWrapping;
-        waterMaterial.uniforms.u_resolution.value.x = this.renderer.domElement.width;
-        waterMaterial.uniforms.u_resolution.value.y = this.renderer.domElement.height;
-        this.waterMaterials[name] = waterMaterial;
-        return waterMaterial;
+    initMaterials() {
+        const { materials, textureLoader, renderer } = this;
+        materials.rock = initRockMaterial(textureLoader); // waterfall video
+        materials.foam = initFoamGripMaterial(textureLoader);
+        materials.water = initWaterMaterial(textureLoader, renderer.domElement.width, renderer.domElement.height);
+        materials.transluscent = initTransluscentMaterial(.25);
     }
-
-
 
     initVid = () => {
         const refreshId = setInterval(() => {
             // the media is loaded by the player... this is in lieu of a proper callback behavior for the player.
-            if (CONSTANTS.auxMedia[0].media) {
+            if (CONSTANTS.auxMedia[0].media) { // greem video
                 let videoMesh = CONSTANTS.auxMedia[0].mesh;
                 this.chromaMaterial = new THREE.ShaderMaterial({
                     uniforms: {
@@ -229,26 +181,28 @@ export default class Release0008_GreemJellyFish extends Component {
 
     initLights = () => {
         const { scene, camera } = this;
-        scene.add(new THREE.AmbientLight(0x0fffff));
-        this.pointLight = new THREE.PointLight(0xfff000, 1, 100);
-        this.pointLight.userData.angle = 0.0;
-        this.pointLight.castShadow = true;
-        this.pointLight.position.set(0, 2, 2);
-        scene.add(this.pointLight);
-        let cameraLight = new THREE.SpotLight(0xfff000, 1, 1000);
-        cameraLight.position.set(camera.position.x, camera.position.y, camera.position.z);
-        camera.add(cameraLight);
-        // add subtle ambient lighting
-        var ambientLight = new THREE.AmbientLight(0xbbbbbb);
-        scene.add(ambientLight);
-        // directional lighting
+        // scene.add(new THREE.AmbientLight(0x0fffff));
+        // this.pointLight = new THREE.PointLight(0xfff000, 1, 100);
+        // this.pointLight.userData.angle = 0.0;
+        // this.pointLight.castShadow = true;
+        // this.pointLight.position.set(0, 2, 2);
+        // scene.add(this.pointLight);
+        // let cameraLight = new THREE.SpotLight(0xfff000, .5, 1000);
+        // cameraLight.position.set(camera.position.x, camera.position.y, camera.position.z);
+        // camera.add(cameraLight);
+        // // add subtle ambient lighting
+        // var ambientLight = new THREE.AmbientLight(0xbbbbbb);
+        // scene.add(ambientLight);
+        // // directional lighting
         var directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 1, 1).normalize();
         scene.add(directionalLight);
     }
 
+
+
     initBlobs = () => {
-        const { camera, clock, scene } = this;
+        const { camera, locations, clock, scene } = this;
         const numLights = 5;
         const width = numLights;
         const height = 1.;
@@ -279,8 +233,8 @@ export default class Release0008_GreemJellyFish extends Component {
         this.blobMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 uCamPos: { value: this.camera.position },
-                uCamFov: { value: 1. },
-                uLookAtPos: { value: new THREE.Vector3() },
+                uCamFov: { value: 4. }, // TODO ?
+                uLookAtPos: { value: new THREE.Vector3() }, // TODO ?
                 uNumLights: { type: 'i', value: 5 },
                 sLightCol: { value: sLightCol }, //new THREE.Vector3(1, 1, 0) },
                 sLightPos: { value: sLightPos }, // TODO update this on a sin wave
@@ -288,64 +242,75 @@ export default class Release0008_GreemJellyFish extends Component {
                 uBgColor: { value: new THREE.Vector3(0, 0, 0) },
                 uTime: { value: clock.getDelta() },
                 uDisplacementOffset: { type: 'f', value: 1.5 },
-                uSp1: { value: new THREE.Vector3(0, 4, 9) },
-                uSp2: { value: new THREE.Vector3(0, -4, 9) },
+                uSp1: { value: new THREE.Vector3(0, 4, 0) },
+                uSp2: { value: new THREE.Vector3(0, -4, 0) },
                 uRadius: { value: 1.5 },
             },
             vertexShader: simpleVertexShader,
             fragmentShader: marchingCubeFragmentShader,
             transparent: true,
         });
-        const geometry = new THREE.PlaneGeometry(10, 10, 4);
+        const geometry = new THREE.PlaneGeometry(40, 20, 4);
         const plane = new THREE.Mesh(geometry, this.blobMaterial);
-        plane.visible = true;//false;
-        plane.position.set(0, 0, -10)
+        plane.visible = false;
+        plane.position.set(0, 0, -20)
         scene.add(plane);
-        this.locations[FALLING] = plane;
+        locations[FALLING].push(plane);
     }
 
     initForest() {
-        const { gltfLoader } = this;
-        const name = "office";
+        const { gltfLoader, locations, scene, materials } = this;
+        const name = "forest";
+        // add rocks
         const gltfParams = {
-            url: assetPath8('objects/blocky-rocks/waterfall.glb'),
+            url: assetPath8('objects/waterfall/rocks.glb'),
             name: name,
-            position: [0, 0, -15],
+            position: [5, 0, -15],
             rotateX: 0,
             rotateY: 0,
             rotateZ: 0,
             relativeScale: 1,//.05,
             loader: gltfLoader,
             onSuccess: (gltf) => {
-                const { scene, waterMaterials } = this;
-                const waterPlane = gltf.scene.getObjectByName('WaterPlane');
-                const waterY = 107.;
-                const waterMaterialName = "waterfall";
-                const alpha = .1;
-                const side = THREE.DoubleSide;
-                // add water
-                let waterMaterial = this.initWaterMaterial(alpha, waterY, waterMaterialName, side);
-                waterPlane.material = waterMaterial;
-                // add rock material
-                let rockMaterial = this.initRockMaterial();
+                const { scene, textureLoader } = this;
                 const object = gltf.scene.getObjectByProperty('mesh');
                 object.traverse(function (node) {
                     if (node.name.includes("rock")) {
-                        node.material = rockMaterial;
+                        node.material = materials.rock;
                     }
                 });
-                const forest = gltf.scene;
-                forest.visible = false;
-                scene.add(forest);
-                this.waterFall = waterPlane;
-                this.locations[FOREST] = forest;
+                const rocks = gltf.scene;
+                rocks.visible = false;
+                scene.add(rocks);
+                //  this.waterFall = waterPlane;
+                locations[FOREST].push(rocks);
             }
         }
         loadGLTF({ ...gltfParams });
+        // add water
+        const params = {
+            color: '#ffffff',
+            scale: 4,
+            flowX: 1,
+            flowY: 1
+        };
+        const waterGeometry = new THREE.PlaneBufferGeometry(50, 50);
+        const water = new Water2(waterGeometry, {
+            color: params.color,
+            scale: params.scale,
+            flowDirection: new THREE.Vector2(params.flowX, params.flowY),
+            textureWidth: 512,
+            textureHeight: 512
+        });
+        water.position.y = .1;
+        water.rotation.x = Math.PI * -0.5;
+        water.visible = false
+        scene.add(water);
+        locations[FOREST].push(water)
     }
 
     initOffice = () => {
-        const { gltfLoader } = this;
+        const { gltfLoader, locations, materials } = this;
         const name = "office";
         const gltfParams = {
             url: assetPath8('objects/office/scene.gltf'),
@@ -357,10 +322,7 @@ export default class Release0008_GreemJellyFish extends Component {
             relativeScale: 1,
             loader: gltfLoader,
             onSuccess: (gltf) => {
-                const { scene, waterMaterials } = this;
-                const alpha = .1;
-                const waterY = 107.;
-                let waterMaterial = this.initWaterMaterial(alpha, waterY, name);
+                const { scene } = this;
                 const object = gltf.scene.children[0].getObjectByProperty('mesh');
                 const defaultMaterial = new THREE.MeshStandardMaterial({
                     color: 0xFB0082,
@@ -386,38 +348,13 @@ export default class Release0008_GreemJellyFish extends Component {
                 office.visible = false;
                 scene.add(office);
                 this.officeWall = office.getObjectByName("walls005_11");
-                this.locations[OFFICE] = office;
+                locations[OFFICE].push(office);
             }
         }
         loadGLTF({ ...gltfParams });
     }
 
-    initRockMaterial() {
-        const { textureLoader } = this;
-        var loader = new THREE.CubeTextureLoader();
-        loader.setPath(assetPath8('textures/env-maps/'));
-        var textureCube = loader.load(Array(6).fill('office-space1.jpg'));
-        const normalMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-normal.png"));
-        const roughnessMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-rough.png"));
-        const metalnessMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-metal.png"));
-        var aoMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-ao.png"));
-        var displacementMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-height"));
-        // TODO playaround
-        return new THREE.MeshStandardMaterial({
-            color: 0xff3366,//ffffff,
-            roughness: .4,
-            metalness: .5,
-            skinning: true,
-            normalMap: normalMap,
-            roughnessMap: roughnessMap,
-            metalnessMap: metalnessMap,
-            aoMap: aoMap,
-            displacementMap: displacementMap,
-            displacementScale: 2.4, // TODO play around
-            displacementBias: - 0.428408, // TODO play around
-            envMap: textureCube
-        });
-    }
+
 
     initSprites = () => {
         const { gltfLoader } = this;
@@ -461,15 +398,11 @@ export default class Release0008_GreemJellyFish extends Component {
 
     onSpriteLoad = (gltf) => {
         const { section } = this.state;
-        const { scene, spriteAnimations } = this;
-        // setup material
-        const object = gltf.scene.children[0].getObjectByProperty('mesh');
-        const rockMaterial = this.initRockMaterial();
-        if (object) {
-            object.traverse(function (node) {
-                node.material = rockMaterial;
-            });
-        }
+        const { scene, sprites, spriteAnimations } = this;
+        // store sprites for updates
+        // set material of first section
+        sprites.push(gltf.scene);
+        this.updateSpriteMaterial(section.location)
         scene.add(gltf.scene);
         // setup animation collection
         // one mixer per object
@@ -484,7 +417,11 @@ export default class Release0008_GreemJellyFish extends Component {
             clips: gltf.animations,
             curClip: firstClip,
         };
+        const firstAction = spriteAnimations[gltf.name].mixer.clipAction(firstClip)
+        firstAction.enabled = true;
+        firstAction.play();
     }
+
 
     animate = () => {
         setTimeout(() => {
@@ -493,14 +430,10 @@ export default class Release0008_GreemJellyFish extends Component {
         this.renderScene();
     }
 
-    updateWaterMaterials(lightIntensity) {
-        const { waterMaterials } = this;
-        for (const objName in waterMaterials) {
-            // TODO - check if we can use this check for efficiency
-            if (waterMaterials[objName].visible) {
-                waterMaterials[objName].uniforms.u_time.value += 0.5;
-            }
-            //waterMaterials[objName].uniforms.lightIntensity.value = lightIntensity;
+    updateWaterMaterial() {
+        const { materials } = this;
+        if (materials.water.visible) {
+            materials.water.uniforms.u_time.value += 0.5;
         }
     }
 
@@ -535,6 +468,7 @@ export default class Release0008_GreemJellyFish extends Component {
     transitionAnimation(spriteAnimation, nextClipName, fadeInTime) {
         const curClip = spriteAnimation.curClip;
         if (nextClipName != curClip.name) {
+            console.log('transition...')
             // console.log("next clip", nextClipName, 'cur clikp', curClip.name)
             const nextClip = THREE.AnimationClip.findByName(spriteAnimation.clips, nextClipName);
             const curAction = spriteAnimation.mixer.clipAction(curClip)
@@ -554,7 +488,7 @@ export default class Release0008_GreemJellyFish extends Component {
         const currentTime = this.getVideoCurrentTime();
         const timeLeftInSection = section.end - currentTime;
         const proportionOfSectionCompleted = 1. - timeLeftInSection / parseFloat(section.length);
-        const fadeInCutoff = .75;
+        const fadeInCutoff = .5;
         const fadeInTime = fadeInCutoff * section.length;
         for (const spriteName in spriteAnimations) {
             const spriteAnimation = spriteAnimations[spriteName];
@@ -563,14 +497,22 @@ export default class Release0008_GreemJellyFish extends Component {
             const clipName = clipNames[0];
             if (proportionOfSectionCompleted > fadeInCutoff && clipNames.length > 1) clipName = clipNames[1];
             this.transitionAnimation(spriteAnimation, clipName, fadeInTime)
-            spriteAnimation.mixer.update(.1);//clock.getDelta());
+            spriteAnimation.mixer.update(CONSTANTS.animationSpeed[section.location]);//clock.getDelta());
+
         }
     }
 
     updateLocation(prevLocation, curLocation) {
         const { locations } = this;
-        locations[prevLocation].visible = false;
-        locations[curLocation].visible = true;
+        for (let i = 0; i < locations[prevLocation].length; i++) {
+            locations[prevLocation][i].visible = false;
+        }
+        for (let i = 0; i < locations[curLocation].length; i++) {
+            
+            console.log("SET this visible", locations[curLocation][i]);
+            
+            locations[curLocation][i].visible = true;
+        }
     }
 
     getVideoCurrentTime() {
@@ -580,10 +522,14 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
     updateVideoTransform(prevLocation, curLocation) {
-        const { locations, officeWall, waterFall, chromaMesh, chromaMaterial, clock } = this;
+        const { locations, officeWall, chromaMesh, chromaMaterial, clock } = this;
         if (!chromaMesh) return;
-        locations[prevLocation].remove(chromaMesh)
-        locations[curLocation].add(chromaMesh)
+        for (let i = 0; i < locations[prevLocation].length; i++) {
+            locations[curLocation][i].remove(chromaMesh)
+        }
+        for (let i = 0; i < locations[curLocation][length]; i++) {
+            locations[curLocation][i].add(chromaMesh)
+        }
         chromaMesh.position.set(0, 0, 0);
         if (curLocation == OFFICE) {
             chromaMesh.position.y += 1;
@@ -607,7 +553,7 @@ export default class Release0008_GreemJellyFish extends Component {
         const { videoActive } = this.state
         if (!chromaMaterial) return;
         if (!videoActive) {
-            // just set the video as active and in a location after it's been initialized for the first time
+            // TODO fix up... just setting the video as active and in a location after it's been initialized for the first time
             this.updateVideoTransform(OFFICE, OFFICE);
             this.setState({ videoActive: true });
         }
@@ -617,9 +563,9 @@ export default class Release0008_GreemJellyFish extends Component {
     updateTrackSectionState() {
         const { section } = this.state;
         const { locations } = this;
-        const forest = locations[FOREST];
-        const office = locations[OFFICE];
-        if (!forest || !office) return; // onload...
+        const forestElements = locations[FOREST];
+        const officeElements = locations[OFFICE];
+        if (!forestElements || !officeElements) return; // onload...
         const currentTime = this.getVideoCurrentTime(); // returns 0 if chromaMesh undefined
         for (const idx in TRACK_SECTIONS) {
             const trackSection = TRACK_SECTIONS[idx];
@@ -642,7 +588,19 @@ export default class Release0008_GreemJellyFish extends Component {
             this.updateBlobMateral();
         }
         if (section.location === FOREST) {
-            this.updateWaterMaterials();
+            this.updateWaterMaterial();
+        }
+    }
+
+    updateSpriteMaterial(location) {
+        const { sprites, materials } = this;
+        for (let i = 0; i < sprites.length; i++) {
+            const object = sprites[i].children[0].getObjectByProperty('mesh');
+            if (object) {
+                object.traverse(function (node) {
+                    node.material = materials[CONSTANTS.trackSectionSpriteMaterialLookup[location]];
+                });
+            }
         }
     }
 

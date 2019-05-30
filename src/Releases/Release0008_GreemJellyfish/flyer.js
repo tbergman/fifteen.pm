@@ -18,7 +18,7 @@ import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaK
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaFragmentShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
-import riverVertexShader from '!raw-loader!glslify-loader!../../Shaders/riverVertex.glsl';
+import riverVertexShader from '!raw-loader!glslify-loader!../../Shaders/simpleVertex.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
 import riverFragmentShader from '!raw-loader!glslify-loader!../../Shaders/riverFragment.glsl';
 
