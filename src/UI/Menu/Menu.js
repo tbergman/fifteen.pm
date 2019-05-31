@@ -198,7 +198,7 @@ class Menu extends PureComponent {
     return (<div className="overlay-svg">
       <svg
         ref={element => (this.svg = element)}
-        viewBox="0 0 1098 724"
+        viewBox={`0 0 1098 724`}
       >
         <g fill={this.state.theme.fillColor}>
           <path

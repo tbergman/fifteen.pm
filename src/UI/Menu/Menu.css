@@ -47,12 +47,7 @@
 
 .overlay-svg {
   position: absolute;
-  align-items: center;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
   background: transparent;
   border: none;
   z-index: 1;
@@ -60,15 +55,13 @@
 
 .overlay-svg svg {
   width: 100%;
+  transform: scale(5.5) translateX(150px) translateY(75px);
 }
 
 .overlay-header {
   font-size: 16px;
   font-weight: 100;
   margin-bottom: 1rem;
-  /* display: flex; */
-  /* align-items: center; */
-  /* justify-content: center; */
   width: 100%; 
 }
 
@@ -107,11 +100,7 @@
 .overlay-content-item {
   display: flex;
   width: 100%;
-  /* justify-content: center; */
-  /* align-items: center; */
   margin-bottom: 10px;
-  /* max-width: 80%; */
-  /* align-self: flex-end; */
 }
 
 .overlay-content-icon {
@@ -157,38 +146,79 @@
   line-height: 36px;
 }
 
-/* width */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 14px;
+  height: 18px;
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #f1f1f1; 
-}
-
-/* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #554; 
+  height: 6px;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-clip: padding-box;
+  -webkit-border-radius: 7px;
+  background-color: rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
 }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
-@media screen and (max-width: 56em) {
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+
+/* big landscape tablets, laptops, and desktops */
+@media (max-width:1025px) {
+  .overlay-header-and-controls {
+    max-width: 80%; 
+  } 
+  .overlay-svg svg {
+    transform: rotate(180deg) scaleX(3.33) scaleY(5.25) translateX(-125px) translateY(-80px)
+  } 
+}
+
+/* tablet, landscape iPad, lo-res laptops ands desktops */
+@media screen and (max-width:961px) {
+  .overlay-header-and-controls {
+    max-width: 90%; 
+  } 
+  .overlay-svg svg {
+    transform: rotate(180deg) scaleX(3.0) scaleY(5.25) translateX(-100px) translateY(-80px)
+  }
+}
+
+/* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
+@media screen and (max-width:641px){
+  .overlay-header-and-controls {
+    max-width: 90%; 
+  } 
+  .overlay-svg svg {
+    transform: rotate(180deg) scaleX(1.75) scaleY(5.25) translateX(-100px) translateY(-80px)
+  }
+}
+
+
+ /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
+@media screen and (max-width: 500px) {
+  .overlay-header-and-controls {
+    max-width: 80%; 
+  }
   .overlay-content {
     padding: 0 4rem;
     font-size: 14px;
   }
+
   .overlay-svg svg {
-    height: 100%;
-    width: 100%;
+    transform: rotate(180deg) scaleX(1.5) scaleY(5.25) translateX(-50px) translateY(-80px)
   }
+
   .overlay-header-message {
     padding-top: 30px;
-    max-height: 200px;
+    max-height: 600px;
 
   }
   .overlay-button {
@@ -202,14 +232,18 @@
   }
 }
 
-@media screen and (max-width: 28em) {
+@media screen and (max-width:380px) {
+/* @media screen and (max-width: 28em) { */
+  .overlay-header-and-controls{
+    max-width: 99%; 
+  }
+
   .overlay-svg svg {
-    height: 100%;
-    width: 100%;
+    transform: rotate(180deg) scaleX(1.5) scaleY(4.25) translateX(-30px) translateY(-80px)
   }
   .overlay-header {
-    flex-direction: column;
-    align-items: flex-start;
+    /* flex-direction: column; */
+    /* align-items: flex-start; */
     font-size: 14px;
     margin-bottom: 5px;
   }
@@ -221,7 +255,7 @@
   }
   .overlay-header-message {
     font-size: 11px;
-    max-height: 100px;
+    max-height: 400px;
   }
   .overlay-content-item-text {
     font-size: 10px;
@@ -229,4 +263,4 @@
   .enter-container {
     font-size: 10px;
   }
-}
+} 
