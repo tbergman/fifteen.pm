@@ -1050,7 +1050,7 @@ vec4 addLighting(vec3 shadedColor, vec3 rayOrigin, vec3 rayDist){
 
 vec3 rayMarch( in vec3 rayOrigin, in vec3 rayDist ){
 	float totalDistTrav	 				= 0.0;
-	const int numSteps	 				= 5;
+	const int numSteps	 				= 4;
 	const float minHitDist 				= 0.1;
 	const float maxTraceDist 			= 25.0;
 
