@@ -28,9 +28,9 @@ export const CONSTANTS = {
       type: 'video',
       mimetype: 'video/mp4',
       name: 'greem-vid1',
-      sources: multiSourceVideo('/assets/8/videos/jt'),
+      // sources: multiSourceVideo('/assets/8/videos/jt-reduced'),
       // sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'), // easier to use while devving
-      //sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
+      sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
       geometry: new THREE.PlaneBufferGeometry(1, 1),
       position: [0, 0, 0],
       playbackRate: 1,
@@ -50,12 +50,13 @@ export const CONSTANTS = {
     OFFICE: 1,
     FALLING: 1
   },
+  // TODO - speed not being used, offset being used only for y rather than orbit features
   sectionsDev: {
     0.: {
       location: FALLING,
       camera: {
         type: ORBIT,
-        offset: { x: 3, z: 3, y: 1.1 },
+        offset: { x: 5, z: 3, y: -10.1 },
         speed: { x: .1, z: .1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
@@ -74,7 +75,7 @@ export const CONSTANTS = {
       location: FALLING,
       camera: {
         type: ORBIT,
-        offset: { x: 3, z: 3, y: 1.1 },
+        offset: { x: 3, z: 3, y: -4.1 },
         speed: { x: .1, z: .1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
@@ -150,7 +151,7 @@ export const CONSTANTS = {
       location: FALLING,
       camera: {
         type: STILL,
-        position: { x: 0, y: 0, z: 12 },
+        position: { x: 3, y: -5, z: 12 },
         rotation: { x: 0, y: 0, z: 0 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
