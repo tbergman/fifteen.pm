@@ -102,7 +102,7 @@ export default class Release0008_GreemJellyFish extends Component {
         this.camera.updateProjectionMatrix();
     }, 50);
 
-    init = () => {
+    init () {
         // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
