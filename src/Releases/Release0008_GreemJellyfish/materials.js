@@ -32,7 +32,7 @@ export function initFoamGripMaterial(textureLoader) {
 }
 
 
-export function initRockMaterial(textureLoader, envMap) {
+export function initRockMaterial(textureLoader) {
 
 	var loader = new THREE.CubeTextureLoader();
 	loader.setPath(assetPath8('textures/env-maps/'));

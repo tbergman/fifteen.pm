@@ -12,6 +12,8 @@ export const TRANSLUSCENT = "transluscent"
 export const REBECCA = "REBECCA";
 export const ALEXA = "ALEXA";
 export const DENNIS = "DENNIS";
+export const ORBIT = "orbit" // orbit-style camera
+export const STILL = "still" // still-set camera
 
 export const CONSTANTS = {
   officeWaterSurfaces: [
@@ -42,37 +44,103 @@ export const CONSTANTS = {
   bpm: 130.0,
   songLength: 145.,
   sections: {
-    // 0.: OFFICE,
-    0.: OFFICE, // TODO what is this bug
-    1.: OFFICE,
-    2.: OFFICE,
-    // 1.: OFFICE,
-    // 1.: FALLING,
-    // 2.: FALLING,// 2.: OFFICE,
-    // 1.: FOREST,
-    // 2.: FOREST,
-    // 2.: OFFICE,
-    5.: FALLING,
-    10: FOREST,
-    18: FALLING,
-    21: FALLING, // INSTRUMENTAL,
-    29.: OFFICE, // VERSE2,
-    51.: FOREST, // CHORUS,
-    66.: OFFICE, // VERSE2,
-    80.: FALLING, // INSTRUMENTAL,
-    88.: FOREST, // CHORUS,
-    103.: FOREST, // BRIDGE,
-    118.: FOREST, // CHORUS,
-    134: FALLING, // INSTRUMENTAL
+    0.: {
+      location: OFFICE,
+      camera: {
+        type: ORBIT,
+        offset: { x: 3, z: 3, y: 1.1 },
+        speed: { x: .1, z: .1 },
+        lookAt: { x: 0, y: 1., z: 0 },
+      }
+    },
+    18: {
+      location: FALLING,
+      camera: {
+        type: STILL,
+        position: { x: 0, y: 0, z: 12 },
+        rotation: { x: 0, y: 0, z: 0 },
+      }
+    },
+    // 21: FALLING, // INSTRUMENTAL,
+    29.: {
+      location: OFFICE,
+      camera: {
+        type: ORBIT,
+        offset: { x: 3, z: 3, y: 1.1 },
+        speed: { x: .1, z: .1 },
+        lookAt: { x: 0, y: 1., z: 0 },
+      }
+    }, // VERSE2,
+    51.: {
+      location: FOREST,
+      camera: {
+        type: ORBIT,
+        offset: { x: 3, z: 10, y: 35.1 },
+        speed: { x: .1, z: .1 },
+        lookAt: { x: 0, y: 1., z: 0 },
+      }
+    }, // CHORUS,
+    66.: {
+      location: OFFICE,
+      camera: {
+        type: STILL,
+        position: { x: 0, y: 3.1, z: 5.4 },
+        rotation: { x: Math.PI * .1, y: 0, z: 0 },
+      }
+    }, // VERSE2,
+    80.: {
+      location: FALLING,
+      camera: {
+        type: STILL,
+        position: { x: 0, y: 0, z: 12 },
+        rotation: { x: 0, y: 0, z: 0 },
+      }
+    }, // INSTRUMENTAL,
+    88.: {
+      location: FOREST,
+      camera: {
+        type: ORBIT, //UPDATED
+        offset: { x: 10, z: 10, y: 5.1 },
+        speed: { x: -.5, z: -.5 },
+        lookAt: { x: 0, y: 1., z: 0 },
+      }
+    }, // CHORUS,
+    103.: {
+      location: FOREST,
+      camera: {
+        type: STILL,
+        camera: {
+          type: STILL, // UPDATED
+          position: { x: 0.505702463243422, y: 1.9908183938754178, z: 10.072518803231938 },
+          rotation: { x: -0.19513349847872039, y: 0.04921356457916186, z: 0.009722755679543641 },
+        }
+      }, // BRIDGE,
+      118.: {
+        location: FOREST,
+        camera: {
+          type: STILL,
+          position: { x: -6.911336867395235, y: 35.171791211103574, z: 21.186446198100736 },
+          rotation: { x: -0.8936867517856268, y: -0.09255757666672404, z: -0.11446990020179652 },
+        }
+      }, // CHORUS,
+      134: {
+        location: FALLING,
+        camera: {
+          type: STILL,
+          position: { x: 0, y: 0, z: 12 },
+          rotation: { x: 0, y: 0, z: 0 },
+        }
+      }, // INSTRUMENTAL
+    },
   },
   animationClipNames: {
     OFFICE: ["office_1", "office_2"],
     FALLING: ["falling"],
     FOREST: ["forest_1", "forest_2"]
   },
+  animationFadeInRatio: .1,
   spriteNames: [ALEXA, REBECCA, DENNIS],
   spriteStartPos: {
-    //ALEXA: [4, 0, -5],
     ALEXA: [0, 0, 0],
     REBECCA: [-2, -.2, -3],
     DENNIS: [1, .1, -3.2],
@@ -103,34 +171,9 @@ export const CONSTANTS = {
       rotation: { x: 0, y: 0, z: Math.PI * 0.5 },
       scale: { x: .3, y: .3, z: .3 }
     }
-  },
-  cameraTransform: {
-    OFFICE: {
-      position: { x: 0, y: 1.1, z: 5.4 },
-      rotation: { x: Math.PI * .1, y: 0, z: 0 },
-    },
-    FOREST: {
-      position: { x: -6.911336867395235, y: 35.171791211103574, z: 21.186446198100736 },
-      rotation: { x: -0.8936867517856268, y: -0.09255757666672404, z: -0.11446990020179652 }
-    },
-    FALLING: {
-      position: { x: 0, y: 0, z: 12 },
-      rotation: { x: 0, y: 0, z: 0 },
-    }
-  },
-  cameraOrbit: {
-    OFFICE: {
-      offset: { x: 3, z: 3 },
-      speed: { x: .1, z: .1 },
-      lookAt: {x: 0, y: 1., z: 0}
-    },
-    FOREST: {
-      offset: { x: 3, z: 1 },
-      speed: { x: .1, z: .1 },
-      lookAt: { x: 0, y: 1., z: 0}
-    }
   }
 }
+  
 
 function initTrackSections() {
   // TODO will this always be ordered?
@@ -143,8 +186,9 @@ function initTrackSections() {
     sections.push({
       start: start,
       end: end,
-      location: CONSTANTS.sections[sectionStartTimeKeys[i]],
-      length: end - start
+      location: CONSTANTS.sections[sectionStartTimeKeys[i]].location,
+      length: end - start,
+      camera: CONSTANTS.sections[sectionStartTimeKeys[i]].camera
     })
   }
   return sections;

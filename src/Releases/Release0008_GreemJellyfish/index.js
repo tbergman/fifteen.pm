@@ -2,14 +2,13 @@ import React, { Component, Fragment } from 'react';
 import * as THREE from "three";
 import debounce from 'lodash/debounce';
 import '../Release.css';
-import { loadImage, loadGLTF } from "../../Utils/Loaders";
+import { isIE } from "../../Utils/BrowserDetection.js";
+import { loadGLTF } from "../../Utils/Loaders";
 import { Water2 } from "../../Utils/Water2"
 import { CONTENT } from '../../Content'
-import Player from '../../UI/Player/Player'
 import Menu from '../../UI/Menu/Menu';
 import '../../UI/Player/Player.css';
-import { OrbitControls, Reflector, EffectComposer } from 'three-full';
-import { FirstPersonControls } from "../../Utils/FirstPersonControls";
+import { OrbitControls } from 'three-full';
 import GLTFLoader from 'three-gltf-loader';
 import {
     OFFICE,
@@ -19,7 +18,9 @@ import {
     ALEXA,
     DENNIS,
     TRACK_SECTIONS,
-    CONSTANTS
+    ORBIT,
+    STILL,
+    CONSTANTS,
 } from "./constants.js";
 import { assetPath8 } from "./utils.js";
 import { initFoamGripMaterial, initRockMaterial, initTransluscentMaterial, initPinkShinyMaterial } from "./materials.js";
@@ -33,8 +34,6 @@ import marchingCubeFragmentShader from '!raw-loader!glslify-loader!../../Shaders
 /* eslint import/no-webpack-loader-syntax: off */
 import simpleVertexShader from '!raw-loader!glslify-loader!../../Shaders/simpleVertex.glsl';
 
-// import { notEqual } from 'assert';
-
 const ANIMATION_CLIP_NAMES = CONSTANTS.animationClipNames;
 
 export default class Release0008_GreemJellyFish extends Component {
@@ -44,9 +43,9 @@ export default class Release0008_GreemJellyFish extends Component {
 
     componentDidMount() {
         this.init();
-        window.addEventListener('mousemove', this.onDocumentMouseMove, false);
-        window.addEventListener("touchstart", this.onDocumentMouseMove, false);
-        window.addEventListener("touchmove", this.onDocumentMouseMove, false);
+        //window.addEventListener('mousemove', this.onDocumentMouseMove, false);
+        //window.addEventListener("touchstart", this.onDocumentMouseMove, false);
+        //window.addEventListener("touchmove", this.onDocumentMouseMove, false);
         window.addEventListener('resize', this.onWindowResize, false);
         this.animate();
     }
@@ -64,9 +63,6 @@ export default class Release0008_GreemJellyFish extends Component {
         const { section } = this.state;
         if (prevState.section.location !== section.location) {
             this.updateLocation(prevState.section.location, section.location);
-            this.updateVideoTransform(prevState.section.location, section.location);
-            this.updateSpriteMaterial(section.location);
-            this.updateCameraTransform();
         }
     }
 
@@ -98,19 +94,12 @@ export default class Release0008_GreemJellyFish extends Component {
         const manager = new THREE.LoadingManager();
         this.gltfLoader = new GLTFLoader(manager);
         this.textureLoader = new THREE.TextureLoader();
-        // this.controls = new FirstPersonControls(this.camera)
-        // this.controls.enabled = true;
-        // this.controls.mouseMotionActive = true;
-        // this.controls.lookSpeed = .5;
         this.controls = new OrbitControls(this.camera)
-        // this.controls.autoRotate = true
-        // this.controls.target = new THREE.Vector3(0, 0, 0); // CONSTANTS.spriteStartPos[ALEXA]); 
         this.clock = new THREE.Clock();
         // release-specific objects
         this.sprites = [];
         this.materials = {}
         this.spriteAnimations = {};
-        // this.chromaMesh = undefined;
         this.videoParents = {};
         this.locations = {
             FOREST: [],
@@ -135,12 +124,8 @@ export default class Release0008_GreemJellyFish extends Component {
         const { section } = this.state;
         const refreshId = setInterval(() => {
             if (locations[section.location].length) {
-                for (let i = 0; i < locations[section.location].length; i++) {
-                    // note/todo: this logic will miss elements of a location - will pass if only some are ready...
-                    // since we're starting in the office, not as big a deal...
-                    locations[section.location][i].visible = true;
-                    this.updateCameraTransform()
-                }
+                this.setVisible(section.location);
+                this.updateCameraTransform();
                 clearInterval(refreshId);
             }
         }, 100);
@@ -148,9 +133,8 @@ export default class Release0008_GreemJellyFish extends Component {
 
     initMaterials() {
         const { materials, textureLoader, renderer } = this;
-        materials.rock = initRockMaterial(textureLoader); // waterfall video
+        materials.rock = initRockMaterial(textureLoader);
         materials.foam = initFoamGripMaterial(textureLoader);
-        //materials.water = initWaterMaterial(textureLoader, renderer.domElement.width, renderer.domElement.height);
         materials.pinkShiny = initPinkShinyMaterial();
         materials.transluscent = initTransluscentMaterial(.25);
     }
@@ -182,19 +166,6 @@ export default class Release0008_GreemJellyFish extends Component {
 
     initLights = () => {
         const { scene, camera } = this;
-        // scene.add(new THREE.AmbientLight(0x0fffff));
-        // this.pointLight = new THREE.PointLight(0xfff000, 1, 100);
-        // this.pointLight.userData.angle = 0.0;
-        // this.pointLight.castShadow = true;
-        // this.pointLight.position.set(0, 2, 2);
-        // scene.add(this.pointLight);
-        // let cameraLight = new THREE.SpotLight(0xfff000, .5, 1000);
-        // cameraLight.position.set(camera.position.x, camera.position.y, camera.position.z);
-        // camera.add(cameraLight);
-        // // add subtle ambient lighting
-        // var ambientLight = new THREE.AmbientLight(0xbbbbbb);
-        // scene.add(ambientLight);
-        // // directional lighting
         var directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 1, 1).normalize();
         scene.add(directionalLight);
@@ -240,7 +211,7 @@ export default class Release0008_GreemJellyFish extends Component {
                 sLightCol: { value: sLightCol },
                 sLightPos: { value: sLightPos },
                 sLightFall: { value: sLightFall },
-                uBgColor: { value: new THREE.Vector3(0, 0, 0) },
+                uBgColor: { value: new THREE.Vector3(1., 15. / 255., 1) },
                 uTime: { value: 0 },
                 uDisplacementOffset: { type: 'f', value: .5 },
                 uSp1: { value: this.blobSphere1Center },
@@ -356,7 +327,7 @@ export default class Release0008_GreemJellyFish extends Component {
     initSprites = () => {
         const { gltfLoader } = this;
         const alexaParams = {
-            url: assetPath8("objects/alexa/alexa.gltf"),
+            url: assetPath8("objects/alexa/alexa.glb"),
             name: ALEXA,
             position: CONSTANTS.spriteStartPos[ALEXA],
             rotateX: 0,
@@ -419,12 +390,20 @@ export default class Release0008_GreemJellyFish extends Component {
         firstAction.play();
     }
 
-
     muteMainAudio() {
         const { mediaElement } = this;
         const refreshId = setInterval(() => {
             if (mediaElement) {
-                mediaElement.volume = 0;
+                if (isIE) {
+                    mediaElement.volume = 0;
+                } else {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = audioCtx.createMediaElementSource(mediaElement);
+                    const gainNode = audioCtx.createGain();
+                    gainNode.gain.value = 0;
+                    source.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                }
                 clearInterval(refreshId);
             }
         }, 100);
@@ -437,17 +416,43 @@ export default class Release0008_GreemJellyFish extends Component {
         this.renderScene();
     }
 
+    updateLocation(prevLocation, curLocation) {
+        this.updateLocationVisibility(prevLocation, curLocation);
+        this.updateVideoTransform(prevLocation, curLocation);
+        this.updateSpriteMaterial(curLocation);
+        this.updateCameraTransform();
+    }
+
+    setVisible(location) {
+        const { locations } = this;
+        for (let i = 0; i < locations[location].length; i++) {
+            locations[location][i].visible = true;
+        }
+    }
+
+    setInvisible(location) {
+        const { locations } = this;
+        for (let i = 0; i < locations[location].length; i++) {
+            locations[location][i].visible = false;
+        }
+    }
+
+    updateLocationVisibility(prevLocation, curLocation) {
+        this.setVisible(curLocation);
+        this.setInvisible(prevLocation);
+    }
+
     updateBlobMateral() {
         const { blobMaterial, blobSphere1Center, blobSphere2Center, blobLightPositions, blobLightPositionRadius, blobLightCols, blobLightPositionCenter, blobLightDataSize, blobLightFall, sLightPos, clock } = this;
         const elapsedTime = clock.getElapsedTime()
         blobMaterial.uniforms.uTime.value = elapsedTime * .1;
         blobSphere1Center.y += .04;
-        if (blobSphere1Center.y > 5) {
-            blobSphere1Center.y = -6;
+        if (blobSphere1Center.y > 7) {
+            blobSphere1Center.y = -7;
         }
         blobSphere2Center.y += .03;
-        if (blobSphere2Center.y > 5) {
-            blobSphere2Center.y = -6;
+        if (blobSphere2Center.y > 7) {
+            blobSphere2Center.y = -7;
         }
     }
 
@@ -481,7 +486,7 @@ export default class Release0008_GreemJellyFish extends Component {
         const currentTime = this.getVideoCurrentTime();
         const timeLeftInSection = section.end - currentTime;
         const proportionOfSectionCompleted = 1. - timeLeftInSection / parseFloat(section.length);
-        const fadeInCutoff = .5;
+        const fadeInCutoff = CONSTANTS.animationFadeInRatio;
         const fadeInTime = fadeInCutoff * section.length;
         for (const spriteName in spriteAnimations) {
             const spriteAnimation = spriteAnimations[spriteName];
@@ -491,17 +496,6 @@ export default class Release0008_GreemJellyFish extends Component {
             if (proportionOfSectionCompleted > fadeInCutoff && clipNames.length > 1) clipName = clipNames[1];
             this.transitionAnimation(spriteAnimation, clipName, fadeInTime)
             spriteAnimation.mixer.update(CONSTANTS.animationSpeed[section.location]);//clock.getDelta());
-
-        }
-    }
-
-    updateLocation(prevLocation, curLocation) {
-        const { locations } = this;
-        for (let i = 0; i < locations[curLocation].length; i++) {
-            locations[curLocation][i].visible = true;
-        }
-        for (let i = 0; i < locations[prevLocation].length; i++) {
-            locations[prevLocation][i].visible = false;
         }
     }
 
@@ -512,8 +506,9 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
     setVideoTransform() {
-        const { chromaMesh } = this;
+        const { videoParents, chromaMesh } = this;
         const { section } = this.state;
+        videoParents[section.location].add(chromaMesh);
         const transform = CONSTANTS.videoTransforms[section.location]
         const pos = transform.position;
         const rot = transform.rotation;
@@ -523,39 +518,35 @@ export default class Release0008_GreemJellyFish extends Component {
         chromaMesh.scale.set(scale.x, scale.y, scale.z);
     }
 
-    orbitCamera() {
-        const { camera, scene, clock } = this;
-
-        // 2 * Math.PI / 60 / 60 * .25
-
-    }
-
+    /**
+     *  Called whenever section changes state 
+     */
     updateVideoTransform(prevLocation, curLocation) {
         const { videoParents, chromaMesh } = this;
         if (!chromaMesh) return;
-        if (curLocation in videoParents) {
-            videoParents[curLocation].add(chromaMesh);
-            this.setVideoTransform()
-        }
+        if (curLocation in videoParents) this.setVideoTransform();
         if (prevLocation in videoParents) videoParents[prevLocation].remove(chromaMesh);
     }
 
+    /**
+     * Called whenever section changes state (which can be the same location with new camera info.)
+     */
     updateCameraTransform() {
-        const { camera, clock, scene } = this;
+        const { camera, clock, scene, controls } = this;
         const { section } = this.state;
-        const transform = CONSTANTS.cameraTransform[section.location];
-        const pos = transform.position;
-        if (section.location in CONSTANTS.cameraOrbit) {
-            const offset = CONSTANTS.cameraOrbit[section.location].offset;
-            const rotationSpeed = CONSTANTS.cameraOrbit[section.location].speed;
-            const lookAt = CONSTANTS.cameraOrbit[section.location].lookAt;
+        const cameraInfo = section.camera;
+        if (cameraInfo.type === ORBIT) {
+            const offset = cameraInfo.offset;
+            const rotationSpeed = cameraInfo.speed;
+            const lookAt = cameraInfo.lookAt;
             camera.position.x = Math.cos(clock.getElapsedTime() * rotationSpeed.x) * offset.x;// * 3; // TODO looks cools as close up
             camera.position.z = Math.sin(clock.getElapsedTime() * rotationSpeed.z) * offset.z; //  TODO looks cools as close up
-            camera.position.y = pos.y
-            camera.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z))
-        } else {
-            const rot = transform.rotation;
-            camera.position.set(pos.x, pos.y, pos.z)
+            camera.position.y = offset.y;
+            camera.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z));
+        } else if (cameraInfo.type === STILL) {
+            const pos = cameraInfo.position;
+            const rot = cameraInfo.rotation;
+            camera.position.set(pos.x, pos.y, pos.z);
             camera.rotation.set(rot.x, rot.y, rot.z);
             camera.lookAt(scene.position);
         }
@@ -596,15 +587,11 @@ export default class Release0008_GreemJellyFish extends Component {
         }
         if (section.location === FOREST) {
             this.updateVideo()
-            // this.orbitCamera();
-            // controls.update(clock.getDelta());
+            this.updateCameraTransform()
         }
         if (section.location === OFFICE) {
             this.updateVideo()
             this.updateCameraTransform()
-            //orbitCamera()
-            // controls.rotateLeft(2 * Math.PI / 60 / 60 * .25)
-            // controls.update(clock.getDelta());
         }
     }
 
@@ -637,8 +624,8 @@ export default class Release0008_GreemJellyFish extends Component {
                     mediaRef={el => this.mediaElement = el}
                     auxMedia={CONSTANTS.auxMedia}
                 />
-                <div className="release" id="greemJellyFishRelease">
-                    <div ref={(element) => this.container = element} />}
+                <div className="release">
+                    <div ref={(element) => this.container = element} />
                 </div>
             </Fragment>
         );
