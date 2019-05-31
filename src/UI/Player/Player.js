@@ -90,7 +90,6 @@ class Player extends PureComponent {
   loadAux(mediaObj) {
     if (mediaObj.meta.type === "video") {
       mediaObj.mesh = loadVideo({ ...mediaObj.meta });
-      mediaObj.mesh.visible = false;
       mediaObj.media = mediaObj.mesh.userData.media;
       mediaObj.media.visible = false;
       mediaObj.media.addEventListener("canplay", () => {
