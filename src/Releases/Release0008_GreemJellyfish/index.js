@@ -43,23 +43,7 @@ export default class Release0008_GreemJellyFish extends Component {
 
     componentDidMount() {
         this.init();
-        //window.addEventListener('mousemove', this.onDocumentMouseMove, false);
-        //window.addEventListener("touchstart", this.onDocumentMouseMove, false);
         window.addEventListener("touchmove", this.onTouchMove, false);
-        /* Feature detection */
-        // var passiveIfSupported = false;
-
-        // try {
-        //     window.addEventListener("test", null, Object.defineProperty({}, "passive", { get: function () { passiveIfSupported = { passive: true }; } }));
-        // } catch (err) { }
-
-        // window.addEventListener('scroll', function (event) {
-        //     /* do something */
-        //     // can't use event.preventDefault();
-        // }, passiveIfSupported);
-        // window.addEventListener('gesturestart', this.gestureEvent, false);
-        // window.addEventListener('gesturechange', this.gestureEvent, false);
-        // window.addEventListener('gestureend', this.gestureEvent, false);
         window.addEventListener('resize', this.onWindowResize, false);
         this.animate();
     }
@@ -67,11 +51,6 @@ export default class Release0008_GreemJellyFish extends Component {
     componentWillUnmount() {
         this.stop();
         window.removeEventListener('resize', this.onWindowResize, false);
-        // window.removeEventListener('mousemove', this.onDocumentMouseMove, false);
-        // window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
-        // window.removeEventListener('gesturestart', this.gestureEvent, false);
-        // window.removeEventListener('gesturechange', this.gestureEvent, false);
-        // window.removeEventListener('gestureend', this.gestureEvent, false);
         window.removeEventListener("touchmove", this.onTouchMove, false);
         this.container.removeChild(this.renderer.domElement);
     }
@@ -102,7 +81,7 @@ export default class Release0008_GreemJellyFish extends Component {
         this.camera.updateProjectionMatrix();
     }, 50);
 
-    init () {
+    init() {
         // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
@@ -118,6 +97,7 @@ export default class Release0008_GreemJellyFish extends Component {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.minDistance = 4;
         this.controls.maxDistance = 40;
+        this.controls.autoRotate = true;
         this.clock = new THREE.Clock();
         // release-specific objects
         this.sprites = [];
@@ -552,41 +532,12 @@ export default class Release0008_GreemJellyFish extends Component {
         const { camera, clock, scene, controls } = this;
         const { section } = this.state;
         const cameraInfo = section.camera;
-        if (cameraInfo.type === ORBIT) {
-            //this.updateOrbitCamera();
-            const lookAt = cameraInfo.lookAt;
-            const offset = cameraInfo.offset;
-            controls.autoRotate = true;
-            controls.target = new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z);
-            camera.position.y = offset.y;
-        } else if (cameraInfo.type === STILL) {
-            const pos = cameraInfo.position;
-            const rot = cameraInfo.rotation;
-            const lookAt = cameraInfo.lookAt;
-            camera.position.set(pos.x, pos.y, pos.z);
-            camera.rotation.set(rot.x, rot.y, rot.z);
-            // camera.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.x));
-            controls.autoRotate = true;
-            controls.target = new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z);
-
-        }
+        const pos = cameraInfo.position;
+        camera.position.set(pos.x, pos.y, pos.z);
+        const lookAt = cameraInfo.lookAt;
+        const offset = cameraInfo.offset;
+        controls.target = new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z);
     }
-
-    // updateCameraTransformOnAnimationFrame(){
-
-    // }
-
-    // updateOrbitCamera() {
-    //     const { camera, clock, scene, controls } = this;
-    //     const { section } = this.state;
-    //     const cameraInfo = section.camera;
-    //     if (cameraInfo.type != ORBIT) return;
-    //     const offset = cameraInfo.offset;
-    //     const rotationSpeed = cameraInfo.speed;
-    //     camera.position.x = Math.cos(clock.getElapsedTime() * rotationSpeed.x) * offset.x;// * 3; // TODO looks cools as close up
-    //     camera.position.z = Math.sin(clock.getElapsedTime() * rotationSpeed.z) * offset.z; //  TODO looks cools as close up
-    //     camera.position.y = offset.y;
-    // }
 
     updateVideoChroma() {
         const { clock, chromaMaterial } = this;

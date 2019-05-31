@@ -50,51 +50,40 @@ export const CONSTANTS = {
     OFFICE: 1,
     FALLING: 1
   },
-  // TODO - speed not being used, offset being used only for y rather than orbit features
   sectionsDev: {
     0.: {
-      location: FALLING,
+      location: FOREST,
       camera: {
-        type: ORBIT,
-        offset: { x: 5, z: 3, y: -10.1 },
-        speed: { x: .1, z: .1 },
+        position: { x: 5, z: 3, y: 2.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
     3: {
-      location: FALLING,
+      location: FOREST,
       camera: {
-        type: STILL,
         position: { x: 0, y: 0, z: 12 },
-        rotation: { x: 0, y: 0, z: 0 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
-    // 21: FALLING, // INSTRUMENTAL,
+    // 21: FOREST, // INSTRUMENTAL,
     6.: {
-      location: FALLING,
+      location: FOREST,
       camera: {
-        type: ORBIT,
-        offset: { x: 3, z: 3, y: -4.1 },
-        speed: { x: .1, z: .1 },
+        position: { x: 3, z: 3, y: -4.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // VERSE2,
     9.: {
-      location: FALLING,
+      location: FOREST,
       camera: {
-        type: ORBIT,
-        offset: { x: 3, z: 3, y: 35.1 },
-        speed: { x: .1, z: .1 },
+        position: { x: 3, z: 3, y: 35.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // CHORUS,
     12.: {
-      location: FALLING,
+      location: FOREST,
       camera: {
-        type: STILL,
         position: { x: 0, y: 1.1, z: 8.4 },
-        rotation: { x: Math.PI * .2, y: 0, z: 0 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // VERSE2,
@@ -104,18 +93,14 @@ export const CONSTANTS = {
     0.: {
       location: OFFICE,
       camera: {
-        type: ORBIT,
-        offset: { x: 3, z: 3, y: 1.1 },
-        speed: { x: .1, z: .1 },
+        position: { x: 3, z: 3, y: 1.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
     18: {
       location: FALLING,
       camera: {
-        type: STILL,
         position: { x: 0, y: 0, z: 12 },
-        rotation: { x: 0, y: 0, z: 0 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
@@ -123,36 +108,28 @@ export const CONSTANTS = {
     29.: {
       location: OFFICE,
       camera: {
-        type: ORBIT,
-        offset: { x: 3, z: 3, y: 1.1 },
-        speed: { x: .1, z: .1 },
+        position: { x: 3, z: 3, y: 1.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // VERSE2,
     51.: {
       location: FOREST,
       camera: {
-        type: ORBIT,
-        offset: { x: 3, z: 3, y: 35.1 },
-        speed: { x: .1, z: .1 },
+        position: { x: 3, z: 3, y: 35.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // CHORUS,
     66.: {
       location: OFFICE,
       camera: {
-        type: STILL,
         position: { x: 0, y: 1.1, z: 8.4 },
-        rotation: { x: Math.PI * .2, y: 0, z: 0 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // VERSE2,
     80.: {
       location: FALLING,
       camera: {
-        type: STILL,
         position: { x: 3, y: -5, z: 12 },
-        rotation: { x: 0, y: 0, z: 0 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // INSTRUMENTAL,
@@ -160,38 +137,37 @@ export const CONSTANTS = {
     88.: {
       location: FOREST,
       camera: {
-        type: ORBIT, //UPDATED
-        offset: { x: 10, z: 10, y: 8.1 },
-        speed: { x: -.2, z: -.2 },
+        position: { x: 10, z: 10, y: 8.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
-    }, // CHORUS,
+    }, 
+    105.: {
+      location: FOREST,
+      camera: {
+        position: { x: 0, z:0, y: 35.1 },
+        lookAt: { x: 0, y: 1., z: 0 },
+      }
+    },
     103.: {
       location: FOREST,
       camera: {
         type: STILL,
         camera: {
-          type: STILL, // UPDATED
           position: { x: 0.505702463243422, y: 1.9908183938754178, z: 10.072518803231938 },
-          rotation: { x: -0.19513349847872039, y: 0.04921356457916186, z: 0.009722755679543641 },
           lookAt: { x: 0, y: 1., z: 0 },
         }
       }, // BRIDGE,
       118.: {
         location: FOREST,
         camera: {
-          type: STILL,
-          position: { x: -6.911336867395235, y: 35.171791211103574, z: 21.186446198100736 },
-          rotation: { x: -0.8936867517856268, y: -0.09255757666672404, z: -0.11446990020179652 },
+          position: { x: 5, y:3, z: 2},
           lookAt: { x: 0, y: 1., z: 0 },
         }
       }, // CHORUS,
       134: {
         location: FALLING,
         camera: {
-          type: STILL,
           position: { x: 0, y: 0, z: 12 },
-          rotation: { x: 0, y: 0, z: 0 },
           lookAt: { x: 0, y: 1., z: 0 },
         }
       }, // INSTRUMENTAL
