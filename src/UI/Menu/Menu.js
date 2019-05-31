@@ -176,14 +176,17 @@ class Menu extends PureComponent {
     } = this.state;
     return (
       <div className="overlay-content">
-        <div className="overlay-header" style={{ textColor: textColor }}>
-          <div className="overlay-header-message">{message}</div>
-        </div>
-        <Fragment>
+        <div className="overlay-header-and-controls">
+          <div className="overlay-header" style={{ textColor: textColor }}>
+            <div className="overlay-header-message">
+              {message}
+            </div>
+          </div>
+
           {!home && this.renderControlInfo()}
           {!home && this.renderPurchaseLink()}
-          {this.renderEnterButton()}
-        </Fragment>
+        </div>
+        {this.renderEnterButton()}
       </div>
     );
   }
