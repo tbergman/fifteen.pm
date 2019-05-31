@@ -43,6 +43,12 @@ export const CONSTANTS = {
   }],
   bpm: 130.0,
   songLength: 145.,
+  // make sure everything's loaded on init
+  numElementsPerLocation: {
+    FOREST: 3,
+    OFFICE: 1,
+    FALLING: 1
+  },
   sections: {
     0.: {
       location: OFFICE,
@@ -59,6 +65,7 @@ export const CONSTANTS = {
         type: STILL,
         position: { x: 0, y: 0, z: 12 },
         rotation: { x: 0, y: 0, z: 0 },
+        lookAt: { x: 0, y: 1., z: 0 },
       }
     },
     // 21: FALLING, // INSTRUMENTAL,
@@ -75,7 +82,7 @@ export const CONSTANTS = {
       location: FOREST,
       camera: {
         type: ORBIT,
-        offset: { x: 3, z: 10, y: 35.1 },
+        offset: { x: 3, z: 3, y: 35.1 },
         speed: { x: .1, z: .1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
@@ -84,8 +91,9 @@ export const CONSTANTS = {
       location: OFFICE,
       camera: {
         type: STILL,
-        position: { x: 0, y: 3.1, z: 5.4 },
-        rotation: { x: Math.PI * .1, y: 0, z: 0 },
+        position: { x: 0, y: 1.1, z: 8.4 },
+        rotation: { x: Math.PI * .2, y: 0, z: 0 },
+        lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // VERSE2,
     80.: {
@@ -94,14 +102,16 @@ export const CONSTANTS = {
         type: STILL,
         position: { x: 0, y: 0, z: 12 },
         rotation: { x: 0, y: 0, z: 0 },
+        lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // INSTRUMENTAL,
+    // TODO Is there a bug here???
     88.: {
       location: FOREST,
       camera: {
         type: ORBIT, //UPDATED
         offset: { x: 10, z: 10, y: 5.1 },
-        speed: { x: -.5, z: -.5 },
+        speed: { x: -.2, z: -.2 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // CHORUS,
@@ -113,6 +123,7 @@ export const CONSTANTS = {
           type: STILL, // UPDATED
           position: { x: 0.505702463243422, y: 1.9908183938754178, z: 10.072518803231938 },
           rotation: { x: -0.19513349847872039, y: 0.04921356457916186, z: 0.009722755679543641 },
+          lookAt: { x: 0, y: 1., z: 0 },
         }
       }, // BRIDGE,
       118.: {
@@ -121,6 +132,7 @@ export const CONSTANTS = {
           type: STILL,
           position: { x: -6.911336867395235, y: 35.171791211103574, z: 21.186446198100736 },
           rotation: { x: -0.8936867517856268, y: -0.09255757666672404, z: -0.11446990020179652 },
+          lookAt: { x: 0, y: 1., z: 0 },
         }
       }, // CHORUS,
       134: {
@@ -129,6 +141,7 @@ export const CONSTANTS = {
           type: STILL,
           position: { x: 0, y: 0, z: 12 },
           rotation: { x: 0, y: 0, z: 0 },
+          lookAt: { x: 0, y: 1., z: 0 },
         }
       }, // INSTRUMENTAL
     },
@@ -173,7 +186,7 @@ export const CONSTANTS = {
     }
   }
 }
-  
+
 
 function initTrackSections() {
   // TODO will this always be ordered?

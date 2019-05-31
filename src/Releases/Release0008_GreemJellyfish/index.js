@@ -45,7 +45,10 @@ export default class Release0008_GreemJellyFish extends Component {
         this.init();
         //window.addEventListener('mousemove', this.onDocumentMouseMove, false);
         //window.addEventListener("touchstart", this.onDocumentMouseMove, false);
-        //window.addEventListener("touchmove", this.onDocumentMouseMove, false);
+        window.addEventListener("touchmove", this.onTouchMove, false);
+        // window.addEventListener('gesturestart', this.gestureEvent, false);
+        // window.addEventListener('gesturechange', this.gestureEvent, false);
+        // window.addEventListener('gestureend', this.gestureEvent, false);
         window.addEventListener('resize', this.onWindowResize, false);
         this.animate();
     }
@@ -53,9 +56,12 @@ export default class Release0008_GreemJellyFish extends Component {
     componentWillUnmount() {
         this.stop();
         window.removeEventListener('resize', this.onWindowResize, false);
-        window.removeEventListener('mousemove', this.onDocumentMouseMove, false);
-        window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
-        window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
+        // window.removeEventListener('mousemove', this.onDocumentMouseMove, false);
+        // window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
+        // window.removeEventListener('gesturestart', this.gestureEvent, false);
+        // window.removeEventListener('gesturechange', this.gestureEvent, false);
+        // window.removeEventListener('gestureend', this.gestureEvent, false);
+        window.removeEventListener("touchmove", this.onTouchMove, false);
         this.container.removeChild(this.renderer.domElement);
     }
 
@@ -64,6 +70,10 @@ export default class Release0008_GreemJellyFish extends Component {
         if (prevState.section.location !== section.location) {
             this.updateLocation(prevState.section.location, section.location);
         }
+    }
+
+    onTouchMove(e) {
+        if (e.scale !== 1) { event.preventDefault(); }
     }
 
     stop = () => {
@@ -94,14 +104,16 @@ export default class Release0008_GreemJellyFish extends Component {
         const manager = new THREE.LoadingManager();
         this.gltfLoader = new GLTFLoader(manager);
         this.textureLoader = new THREE.TextureLoader();
-        this.controls = new OrbitControls(this.camera)
+        this.controls = new OrbitControls(this.camera);
+        this.controls.minDistance = 4;
+        this.controls.maxDistance = 50;
         this.clock = new THREE.Clock();
         // release-specific objects
         this.sprites = [];
         this.materials = {}
         this.spriteAnimations = {};
         this.videoParents = {};
-        this.locations = {
+        this.locationElements = {
             FOREST: [],
             OFFICE: [],
             FALLING: []
@@ -120,12 +132,17 @@ export default class Release0008_GreemJellyFish extends Component {
 
     // TODO setup callback pattern on gltf loads rather than set interval...
     initScene = () => {
-        const { locations } = this;
+        const { locationElements } = this;
         const { section } = this.state;
         const refreshId = setInterval(() => {
-            if (locations[section.location].length) {
+            const totalNumElementsForLocation = CONSTANTS.numElementsPerLocation[section.location]
+            let numDefinedLocationElements = 0;
+            for (let i = 0; i < locationElements[section.location].length; i++) {
+                if (locationElements[section.location][i] != undefined) numDefinedLocationElements += 1;
+            }
+            if (numDefinedLocationElements === totalNumElementsForLocation) {
                 this.setVisible(section.location);
-                this.updateCameraTransform();
+                this.updateCameraTransformOnChange();
                 clearInterval(refreshId);
             }
         }, 100);
@@ -144,6 +161,7 @@ export default class Release0008_GreemJellyFish extends Component {
             // the media is loaded by the player... this is in lieu of a proper callback behavior for the player.
             if (CONSTANTS.auxMedia[0].media) { // greem video
                 let videoMesh = CONSTANTS.auxMedia[0].mesh;
+                videoMesh.visible = false;
                 this.chromaMaterial = new THREE.ShaderMaterial({
                     uniforms: {
                         u_time: { type: 'f', value: 0.0 },
@@ -172,7 +190,7 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
     initBlobs = () => {
-        const { camera, locations, videoParents, clock, scene } = this;
+        const { camera, locationElements, videoParents, clock, scene } = this;
         const numLights = 5;
         const width = numLights;
         const height = 1.;
@@ -227,11 +245,11 @@ export default class Release0008_GreemJellyFish extends Component {
         plane.visible = false;
         plane.position.set(0, 0, -8)
         scene.add(plane);
-        locations[FALLING].push(plane);
+        locationElements[FALLING].push(plane);
     }
 
     initForest() {
-        const { gltfLoader, locations, scene, videoParents, materials } = this;
+        const { gltfLoader, locationElements, scene, videoParents, materials } = this;
         const name = "forest";
         // add rocks
         const gltfParams = {
@@ -254,8 +272,7 @@ export default class Release0008_GreemJellyFish extends Component {
                 const rocks = gltf.scene;
                 rocks.visible = false;
                 scene.add(rocks);
-                //  this.waterFall = waterPlane;
-                locations[FOREST].push(rocks);
+                locationElements[FOREST].push(rocks);
             }
         }
         loadGLTF({ ...gltfParams });
@@ -274,11 +291,11 @@ export default class Release0008_GreemJellyFish extends Component {
             textureWidth: 512,
             textureHeight: 512
         });
-        water.position.y = .1;
+        water.position.y = .2;
         water.rotation.x = Math.PI * -0.5;
         water.visible = false
         scene.add(water);
-        locations[FOREST].push(water);
+        locationElements[FOREST].push(water);
         var riverBottomGeometry = new THREE.PlaneBufferGeometry(16, 9);
         var riverBottomMaterial = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0. });
         var riverBottom = new THREE.Mesh(riverBottomGeometry, riverBottomMaterial);
@@ -286,12 +303,12 @@ export default class Release0008_GreemJellyFish extends Component {
         riverBottom.rotation.x = Math.PI * - 0.5;
         riverBottom.visible = false
         scene.add(riverBottom);
-        locations[FOREST].push(riverBottom)
+        locationElements[FOREST].push(riverBottom)
         videoParents[FOREST] = riverBottom;
     }
 
     initOffice = () => {
-        const { gltfLoader, videoParents, locations, materials } = this;
+        const { gltfLoader, videoParents, locationElements, materials } = this;
         const name = "office";
         const gltfParams = {
             url: assetPath8('objects/office/scene.gltf'),
@@ -318,7 +335,7 @@ export default class Release0008_GreemJellyFish extends Component {
                 office.visible = false;
                 scene.add(office);
                 videoParents[OFFICE] = office.getObjectByName("walls005_11");
-                locations[OFFICE].push(office);
+                locationElements[OFFICE].push(office);
             }
         }
         loadGLTF({ ...gltfParams });
@@ -420,20 +437,20 @@ export default class Release0008_GreemJellyFish extends Component {
         this.updateLocationVisibility(prevLocation, curLocation);
         this.updateVideoTransform(prevLocation, curLocation);
         this.updateSpriteMaterial(curLocation);
-        this.updateCameraTransform();
+        this.updateCameraTransformOnChange();
     }
 
     setVisible(location) {
-        const { locations } = this;
-        for (let i = 0; i < locations[location].length; i++) {
-            locations[location][i].visible = true;
+        const { locationElements } = this;
+        for (let i = 0; i < locationElements[location].length; i++) {
+            locationElements[location][i].visible = true;
         }
     }
 
     setInvisible(location) {
-        const { locations } = this;
-        for (let i = 0; i < locations[location].length; i++) {
-            locations[location][i].visible = false;
+        const { locationElements } = this;
+        for (let i = 0; i < locationElements[location].length; i++) {
+            locationElements[location][i].visible = false;
         }
     }
 
@@ -531,28 +548,40 @@ export default class Release0008_GreemJellyFish extends Component {
     /**
      * Called whenever section changes state (which can be the same location with new camera info.)
      */
-    updateCameraTransform() {
+    updateCameraTransformOnChange() {
         const { camera, clock, scene, controls } = this;
         const { section } = this.state;
         const cameraInfo = section.camera;
         if (cameraInfo.type === ORBIT) {
-            const offset = cameraInfo.offset;
-            const rotationSpeed = cameraInfo.speed;
+            //this.updateOrbitCamera();
             const lookAt = cameraInfo.lookAt;
-            camera.position.x = Math.cos(clock.getElapsedTime() * rotationSpeed.x) * offset.x;// * 3; // TODO looks cools as close up
-            camera.position.z = Math.sin(clock.getElapsedTime() * rotationSpeed.z) * offset.z; //  TODO looks cools as close up
-            camera.position.y = offset.y;
-            camera.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z));
+            // camera.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z));
+            controls.autoRotate = true;
+            controls.target = new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z);
+
         } else if (cameraInfo.type === STILL) {
             const pos = cameraInfo.position;
             const rot = cameraInfo.rotation;
+            const lookAt = cameraInfo.lookAt;
             camera.position.set(pos.x, pos.y, pos.z);
             camera.rotation.set(rot.x, rot.y, rot.z);
-            camera.lookAt(scene.position);
+            // camera.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.x));
         }
     }
 
-    updateVideo() {
+    updateOrbitCamera() {
+        const { camera, clock, scene, controls } = this;
+        const { section } = this.state;
+        const cameraInfo = section.camera;
+        if (cameraInfo.type != ORBIT) return;
+        const offset = cameraInfo.offset;
+        const rotationSpeed = cameraInfo.speed;
+        camera.position.x = Math.cos(clock.getElapsedTime() * rotationSpeed.x) * offset.x;// * 3; // TODO looks cools as close up
+        camera.position.z = Math.sin(clock.getElapsedTime() * rotationSpeed.z) * offset.z; //  TODO looks cools as close up
+        camera.position.y = offset.y;
+    }
+
+    updateVideoChroma() {
         const { clock, chromaMaterial } = this;
         if (!chromaMaterial) return;
         chromaMaterial.uniforms.u_time.value = clock.getElapsedTime();
@@ -560,9 +589,9 @@ export default class Release0008_GreemJellyFish extends Component {
 
     updateTrackSectionState() {
         const { section } = this.state;
-        const { locations } = this;
-        const forestElements = locations[FOREST];
-        const officeElements = locations[OFFICE];
+        const { locationElements } = this;
+        const forestElements = locationElements[FOREST];
+        const officeElements = locationElements[OFFICE];
         if (!forestElements || !officeElements) return; // onload...
         const currentTime = this.getVideoCurrentTime(); // returns 0 if chromaMesh undefined
         for (const idx in TRACK_SECTIONS) {
@@ -586,12 +615,13 @@ export default class Release0008_GreemJellyFish extends Component {
             this.updateBlobMateral();
         }
         if (section.location === FOREST) {
-            this.updateVideo()
-            this.updateCameraTransform()
+            this.updateVideoChroma()
+            // if (section.camera.type === ORBIT) this.updateOrbitCamera();
         }
         if (section.location === OFFICE) {
-            this.updateVideo()
-            this.updateCameraTransform()
+            this.updateVideoChroma()
+            controls.update(clock.getDelta());
+            // if (section.camera.type === ORBIT) this.updateOrbitCamera();
         }
     }
 
