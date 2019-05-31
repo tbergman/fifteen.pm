@@ -28,9 +28,9 @@ export const CONSTANTS = {
       type: 'video',
       mimetype: 'video/mp4',
       name: 'greem-vid1',
-      // sources: multiSourceVideo('/assets/8/videos/jt-reduced'),
+      sources: multiSourceVideo('/assets/8/videos/jt-reduced'),
       // sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'), // easier to use while devving
-      sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
+      // sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
       geometry: new THREE.PlaneBufferGeometry(1, 1),
       position: [0, 0, 0],
       playbackRate: 1,
