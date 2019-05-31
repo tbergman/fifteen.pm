@@ -65,8 +65,8 @@ class HomeDefault extends PureComponent {
     const textureLoader = new THREE.TextureLoader();
     const rockMaterial = initRockMaterial(textureLoader);
     rockMaterial.color.set(0xFFAFFF);
-    rockMaterial.displacementScale = -200;
-    rockMaterial.displacementBias = -100;
+    // rockMaterial.displacementScale = -200;
+    rockMaterial.displacementBias = -40;
     const name = "forest";
     // add rocks
     const gltfParams = {
