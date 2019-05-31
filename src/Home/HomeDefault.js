@@ -70,7 +70,7 @@ class HomeDefault extends PureComponent {
     const name = "forest";
     // add rocks
     const gltfParams = {
-      url: assetPath('8/objects/waterfall/rocks2.glb'),
+      url: assetPath('8/objects/waterfall/rocks.glb'),
       name: name,
       position: [1, 0, -10],
       rotateX: 0,
