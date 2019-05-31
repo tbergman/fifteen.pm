@@ -10,6 +10,7 @@ html, body {
   width: 100%;
   overflow: hidden;
   position: fixed;
+    -webkit-text-size-adjust: none
 }
 
 body {
