@@ -6,7 +6,7 @@ import GLTFLoader from 'three-gltf-loader';
 import { loadGLTF } from '../Utils/Loaders';
 import { assetPath } from "../Utils/assets";
 import Menu from "../UI/Menu/Menu";
-import {OrbitControls} from 'three-full';
+import { OrbitControls } from 'three-full';
 import { initRockMaterial } from '../Releases/Release0008_GreemJellyfish/materials.js';
 import { Water2 } from "../Utils/Water2"
 
@@ -14,11 +14,11 @@ class HomeDefault extends PureComponent {
   state = {
     overlayOpen: false,
   }
-   
+
   componentDidMount() {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xFF0FFF);
-    this.camera = new THREE.PerspectiveCamera(24, window.innerWidth/window.innerHeight, 1, 3000);
+    this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, 1, 3000);
     this.camera.position.set(2.095357312111118, 0.8505415314262585, 11.67921580831209);
     this.camera.rotation.set(-0.042438732895147505, 0.3365395324927288, 0.01402173472318894);
     this.camera.lookAt(new THREE.Vector3());
@@ -50,11 +50,13 @@ class HomeDefault extends PureComponent {
   }
 
   initLights = () => {
-    const { scene, camera } = this;
-    var directionalLight = new THREE.DirectionalLight(0xffffff);
+    const { scene } = this;
+    const ambientLight = new THREE.AmbientLight(0xFF0FFF);
+    scene.add(ambientLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff);
     directionalLight.position.set(1, 1, 1).normalize();
     scene.add(directionalLight);
-}
+  }
 
   initForest() {
     const { scene, materials } = this;
@@ -62,8 +64,8 @@ class HomeDefault extends PureComponent {
     const gltfLoader = new GLTFLoader(manager);
     const textureLoader = new THREE.TextureLoader();
     const rockMaterial = initRockMaterial(textureLoader);
-    console.log(rockMaterial);
-   rockMaterial.displacementScale = -200;
+    rockMaterial.color.set(0xFFAFFF);
+    rockMaterial.displacementScale = -200;
     rockMaterial.displacementBias = -100;
     const name = "forest";
     // add rocks

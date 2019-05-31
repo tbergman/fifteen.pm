@@ -33,30 +33,38 @@ export function initFoamGripMaterial(textureLoader) {
 
 
 export function initRockMaterial(textureLoader) {
-
-	var loader = new THREE.CubeTextureLoader();
+	const loader = new THREE.CubeTextureLoader();
 	loader.setPath(assetPath8('textures/env-maps/'));
-	var textureCube = loader.load(Array(6).fill('office-space1.jpg'));
-	const normalMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-normal.png"));
-	const roughnessMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-rough.png"));
+	const textureCube = loader.load(Array(6).fill('office-space1.jpg'));
+		const normalMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-normal.png"));
+		const roughnessMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-rough.png"));
 	const metalnessMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-metal.png"));
-	var aoMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-ao.png"));
-	var displacementMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-height"));
+	const aoMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-ao.png"));
+	const displacementMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-height"));
+	const albedoMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-alb.png"))
+	albedoMap.repeat.set(3, 3);
+	albedoMap.wrapS = THREE.RepeatWrapping;
+	albedoMap.wrapT = THREE.RepeatWrapping;
+	normalMap.wrapS = THREE.RepeatWrapping;
+	normalMap.wrapT = THREE.RepeatWrapping;
 	// TODO playaround
-	return new THREE.MeshStandardMaterial({
+	const mat = new THREE.MeshStandardMaterial({
 		color: 0xFF0FFF,
 		roughness: .4,
 		metalness: .5,
 		skinning: true,
+		map: albedoMap,
 		normalMap: normalMap,
 		roughnessMap: roughnessMap,
 		metalnessMap: metalnessMap,
 		aoMap: aoMap,
 		displacementMap: displacementMap,
-		displacementScale: 2.4, // TODO play around
-		displacementBias: - 0.428408, // TODO play around
+		displacementScale: 20.4, // TODO play around
+		displacementBias: -.01,
 		envMap: textureCube
 	});
+	console.log(mat);
+	return mat;
 }
 
 
