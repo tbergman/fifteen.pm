@@ -19,9 +19,9 @@
 
 #play-button-container text {
     font-family: 'Roboto Mono', monospace;
-    font-size: 28px;
+    font-size: 25px;
     font-weight: bold;
-    letter-spacing: 10px;
+    letter-spacing: 9px;
     fill: #ffffff;
     stroke: #ffffff;
 }
