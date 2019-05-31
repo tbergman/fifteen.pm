@@ -46,6 +46,17 @@ export default class Release0008_GreemJellyFish extends Component {
         //window.addEventListener('mousemove', this.onDocumentMouseMove, false);
         //window.addEventListener("touchstart", this.onDocumentMouseMove, false);
         window.addEventListener("touchmove", this.onTouchMove, false);
+        /* Feature detection */
+        // var passiveIfSupported = false;
+
+        // try {
+        //     window.addEventListener("test", null, Object.defineProperty({}, "passive", { get: function () { passiveIfSupported = { passive: true }; } }));
+        // } catch (err) { }
+
+        // window.addEventListener('scroll', function (event) {
+        //     /* do something */
+        //     // can't use event.preventDefault();
+        // }, passiveIfSupported);
         // window.addEventListener('gesturestart', this.gestureEvent, false);
         // window.addEventListener('gesturechange', this.gestureEvent, false);
         // window.addEventListener('gestureend', this.gestureEvent, false);
@@ -104,9 +115,9 @@ export default class Release0008_GreemJellyFish extends Component {
         const manager = new THREE.LoadingManager();
         this.gltfLoader = new GLTFLoader(manager);
         this.textureLoader = new THREE.TextureLoader();
-        this.controls = new OrbitControls(this.camera);
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.minDistance = 4;
-        this.controls.maxDistance = 50;
+        this.controls.maxDistance = 40;
         this.clock = new THREE.Clock();
         // release-specific objects
         this.sprites = [];
@@ -224,11 +235,12 @@ export default class Release0008_GreemJellyFish extends Component {
             uniforms: {
                 uCamPos: { value: this.camera.position },
                 uCamFov: { value: 45. }, // TODO ?
-                uLookAtPos: { value: new THREE.Vector3(0, 0, 0) }, // CONSTANTS.spriteStartPos[ALEXA]); 
+                uLookAtPos: { value: new THREE.Vector3(0, 0, 0) },
                 uNumLights: { type: 'i', value: 5 },
                 sLightCol: { value: sLightCol },
                 sLightPos: { value: sLightPos },
                 sLightFall: { value: sLightFall },
+                // same as bg
                 uBgColor: { value: new THREE.Vector3(1., 15. / 255., 1) },
                 uTime: { value: 0 },
                 uDisplacementOffset: { type: 'f', value: .5 },
@@ -240,11 +252,12 @@ export default class Release0008_GreemJellyFish extends Component {
             fragmentShader: marchingCubeFragmentShader,
             transparent: true,
         });
-        const geometry = new THREE.PlaneGeometry(16, 9, 1);
+        const geometry = new THREE.PlaneGeometry(32, 18, 1);
         const plane = new THREE.Mesh(geometry, this.blobMaterial);
         plane.visible = false;
-        plane.position.set(0, 0, -8)
+        plane.position.set(0, 0, -28)
         scene.add(plane);
+        camera.add(plane);
         locationElements[FALLING].push(plane);
     }
 
@@ -455,23 +468,10 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
     updateLocationVisibility(prevLocation, curLocation) {
-        this.setVisible(curLocation);
         this.setInvisible(prevLocation);
+        this.setVisible(curLocation);
     }
 
-    updateBlobMateral() {
-        const { blobMaterial, blobSphere1Center, blobSphere2Center, blobLightPositions, blobLightPositionRadius, blobLightCols, blobLightPositionCenter, blobLightDataSize, blobLightFall, sLightPos, clock } = this;
-        const elapsedTime = clock.getElapsedTime()
-        blobMaterial.uniforms.uTime.value = elapsedTime * .1;
-        blobSphere1Center.y += .04;
-        if (blobSphere1Center.y > 7) {
-            blobSphere1Center.y = -7;
-        }
-        blobSphere2Center.y += .03;
-        if (blobSphere2Center.y > 7) {
-            blobSphere2Center.y = -7;
-        }
-    }
 
     updateLights() {
         const { clock, pointLight } = this;
@@ -503,7 +503,7 @@ export default class Release0008_GreemJellyFish extends Component {
         const currentTime = this.getVideoCurrentTime();
         const timeLeftInSection = section.end - currentTime;
         const proportionOfSectionCompleted = 1. - timeLeftInSection / parseFloat(section.length);
-        const fadeInCutoff = CONSTANTS.animationFadeInRatio;
+        const fadeInCutoff = CONSTANTS.animationFadeInRatio[section.location];
         const fadeInTime = fadeInCutoff * section.length;
         for (const spriteName in spriteAnimations) {
             const spriteAnimation = spriteAnimations[spriteName];
@@ -555,10 +555,10 @@ export default class Release0008_GreemJellyFish extends Component {
         if (cameraInfo.type === ORBIT) {
             //this.updateOrbitCamera();
             const lookAt = cameraInfo.lookAt;
-            // camera.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z));
+            const offset = cameraInfo.offset;
             controls.autoRotate = true;
             controls.target = new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z);
-
+            camera.position.y = offset.y;
         } else if (cameraInfo.type === STILL) {
             const pos = cameraInfo.position;
             const rot = cameraInfo.rotation;
@@ -566,25 +566,47 @@ export default class Release0008_GreemJellyFish extends Component {
             camera.position.set(pos.x, pos.y, pos.z);
             camera.rotation.set(rot.x, rot.y, rot.z);
             // camera.lookAt(new THREE.Vector3(lookAt.x, lookAt.y, lookAt.x));
+            controls.autoRotate = true;
+            controls.target = new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z);
+
         }
     }
 
-    updateOrbitCamera() {
-        const { camera, clock, scene, controls } = this;
-        const { section } = this.state;
-        const cameraInfo = section.camera;
-        if (cameraInfo.type != ORBIT) return;
-        const offset = cameraInfo.offset;
-        const rotationSpeed = cameraInfo.speed;
-        camera.position.x = Math.cos(clock.getElapsedTime() * rotationSpeed.x) * offset.x;// * 3; // TODO looks cools as close up
-        camera.position.z = Math.sin(clock.getElapsedTime() * rotationSpeed.z) * offset.z; //  TODO looks cools as close up
-        camera.position.y = offset.y;
-    }
+    // updateCameraTransformOnAnimationFrame(){
+
+    // }
+
+    // updateOrbitCamera() {
+    //     const { camera, clock, scene, controls } = this;
+    //     const { section } = this.state;
+    //     const cameraInfo = section.camera;
+    //     if (cameraInfo.type != ORBIT) return;
+    //     const offset = cameraInfo.offset;
+    //     const rotationSpeed = cameraInfo.speed;
+    //     camera.position.x = Math.cos(clock.getElapsedTime() * rotationSpeed.x) * offset.x;// * 3; // TODO looks cools as close up
+    //     camera.position.z = Math.sin(clock.getElapsedTime() * rotationSpeed.z) * offset.z; //  TODO looks cools as close up
+    //     camera.position.y = offset.y;
+    // }
 
     updateVideoChroma() {
         const { clock, chromaMaterial } = this;
         if (!chromaMaterial) return;
         chromaMaterial.uniforms.u_time.value = clock.getElapsedTime();
+    }
+
+
+    updateBlobMateral() {
+        const { blobMaterial, blobSphere1Center, blobSphere2Center, clock } = this;
+        const elapsedTime = clock.getElapsedTime()
+        blobMaterial.uniforms.uTime.value = elapsedTime * .05;
+        blobSphere1Center.y += .04;
+        if (blobSphere1Center.y > 7) {
+            blobSphere1Center.y = -7;
+        }
+        blobSphere2Center.y += .03;
+        if (blobSphere2Center.y > 7) {
+            blobSphere2Center.y = -7;
+        }
     }
 
     updateTrackSectionState() {
@@ -620,7 +642,6 @@ export default class Release0008_GreemJellyFish extends Component {
         }
         if (section.location === OFFICE) {
             this.updateVideoChroma()
-            controls.update(clock.getDelta());
             // if (section.camera.type === ORBIT) this.updateOrbitCamera();
         }
     }
@@ -639,6 +660,7 @@ export default class Release0008_GreemJellyFish extends Component {
 
     renderScene = () => {
         const { renderer, scene, camera, controls, clock } = this;
+        controls.update(clock.getDelta());
         this.updateSpriteAnimations();
         this.updateTrackSectionState();
         this.updateTrackSectionDeltas();

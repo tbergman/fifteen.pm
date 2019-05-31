@@ -28,8 +28,9 @@ export const CONSTANTS = {
       type: 'video',
       mimetype: 'video/mp4',
       name: 'greem-vid1',
+      sources: multiSourceVideo('/assets/8/videos/jt'),
       // sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'), // easier to use while devving
-      sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
+      //sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
       geometry: new THREE.PlaneBufferGeometry(1, 1),
       position: [0, 0, 0],
       playbackRate: 1,
@@ -49,7 +50,56 @@ export const CONSTANTS = {
     OFFICE: 1,
     FALLING: 1
   },
+  sectionsDev: {
+    0.: {
+      location: FALLING,
+      camera: {
+        type: ORBIT,
+        offset: { x: 3, z: 3, y: 1.1 },
+        speed: { x: .1, z: .1 },
+        lookAt: { x: 0, y: 1., z: 0 },
+      }
+    },
+    3: {
+      location: FALLING,
+      camera: {
+        type: STILL,
+        position: { x: 0, y: 0, z: 12 },
+        rotation: { x: 0, y: 0, z: 0 },
+        lookAt: { x: 0, y: 1., z: 0 },
+      }
+    },
+    // 21: FALLING, // INSTRUMENTAL,
+    6.: {
+      location: FALLING,
+      camera: {
+        type: ORBIT,
+        offset: { x: 3, z: 3, y: 1.1 },
+        speed: { x: .1, z: .1 },
+        lookAt: { x: 0, y: 1., z: 0 },
+      }
+    }, // VERSE2,
+    9.: {
+      location: FALLING,
+      camera: {
+        type: ORBIT,
+        offset: { x: 3, z: 3, y: 35.1 },
+        speed: { x: .1, z: .1 },
+        lookAt: { x: 0, y: 1., z: 0 },
+      }
+    }, // CHORUS,
+    12.: {
+      location: FALLING,
+      camera: {
+        type: STILL,
+        position: { x: 0, y: 1.1, z: 8.4 },
+        rotation: { x: Math.PI * .2, y: 0, z: 0 },
+        lookAt: { x: 0, y: 1., z: 0 },
+      }
+    }, // VERSE2,
+  },
   sections: {
+    
     0.: {
       location: OFFICE,
       camera: {
@@ -110,7 +160,7 @@ export const CONSTANTS = {
       location: FOREST,
       camera: {
         type: ORBIT, //UPDATED
-        offset: { x: 10, z: 10, y: 5.1 },
+        offset: { x: 10, z: 10, y: 8.1 },
         speed: { x: -.2, z: -.2 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
@@ -151,10 +201,14 @@ export const CONSTANTS = {
     FALLING: ["falling"],
     FOREST: ["forest_1", "forest_2"]
   },
-  animationFadeInRatio: .1,
+  animationFadeInRatio: {
+    FOREST: .1,
+    FALLING: .1,
+    OFFICE: .25
+  },
   spriteNames: [ALEXA, REBECCA, DENNIS],
   spriteStartPos: {
-    ALEXA: [0, 0, 0],
+    ALEXA: [0, -.1, 0],
     REBECCA: [-2, -.2, -3],
     DENNIS: [1, .1, -3.2],
   },
@@ -165,7 +219,7 @@ export const CONSTANTS = {
   },
   animationSpeed: {
     FOREST: .03,
-    FALLING: .1,
+    FALLING: .05,
     OFFICE: .02,
   },
   videoTransforms: {
