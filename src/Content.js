@@ -290,7 +290,7 @@ export const CONTENT = {
     }
   },
   "/8": {
-    artist: "Greem Jellyf.",
+    artist: "GREEM JELLYFISH",
     tracks: [
       {
         title: "Juicy Tender",
@@ -299,7 +299,19 @@ export const CONTENT = {
       }
     ],
     theme: {
-      message: "Rebecca, Dennis, and Alexa -. link to gallery description.link to instagram post with footage from opening",
+      message: "We begin in a sterile office space. Ceiling tiles flutter overhead from the force of air conditioning. A worker hunches in her seat. \n\
+      \n\
+      Rebecca runs a successful cyber security startup. Alexa is her lesbian partner and co-founder. They hack businesses and governments to find weaknesses in their systems. All they do is work, eighty-hour weeks of numbing labor. \n\
+      \n\
+      One day, Alexa surprises her with a secret gift: a flight out of town; a chance for her to finally relax. Hearing the distant melody of a mystic bell, she senses an oncoming jolt of excitement. \n\
+      \n\
+      Rebecca arrives at the airport and her anxieties begin to melt away… until she realizes she’s late for her flight. She almost has a nervous breakdown because she doesn’t want to disappoint Alexa. Remembering a vulnerability she recently discovered, she breaks into the airline’s network and miraculously stops the plane. As her heart rate crescendos, a simple, strong bassline plays, and she’s ushered onboard \n\
+      \n\
+      Waking at her destination, she immediately descends into nature, getting lost. She searches for juicy, tender food like scallops and mushrooms, basking in the pleasures of the secluded wilderness. \n\
+      \n\
+      Once she grows restless, Rebecca returns to the city, to a liquid sanctuary of pink and purple hues, to the dancefloor. There she discovers Alexa with another woman. \n\
+      \n\
+      Juicy Tender is an exploration of exodus and urban life. Though we leave the city in search of extraordinary experiences, we sometimes return to loneliness. Ultimately, refuge is not a place but a set of material conditions: Art, Food, Music, Mountain, Ocean, Family, Friend.",
       purchaseLink: "https://fifteenpm.bandcamp.com/track/juicy-tender",
       iconColor: '#fff',
       fillColor: 'rgba(255, 0, 0, 0.5)',
