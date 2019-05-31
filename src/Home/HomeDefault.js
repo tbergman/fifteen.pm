@@ -63,9 +63,7 @@ class HomeDefault extends PureComponent {
     const manager = new THREE.LoadingManager();
     const gltfLoader = new GLTFLoader(manager);
     const textureLoader = new THREE.TextureLoader();
-    const rockMaterial = initRockMaterial(textureLoader);
-    rockMaterial.color.set(0xFFAFFF);
-    // rockMaterial.displacementScale = -200;
+    const rockMaterial = initRockMaterial(textureLoader, 0xFFAFFF);
     rockMaterial.displacementBias = -40;
     const name = "forest";
     // add rocks
@@ -76,7 +74,7 @@ class HomeDefault extends PureComponent {
       rotateX: 0,
       rotateY: 0,
       rotateZ: 0,
-      relativeScale: 1,//.05,
+      relativeScale: 1,
       loader: gltfLoader,
       onSuccess: (gltf) => {
         const { scene, textureLoader } = this;

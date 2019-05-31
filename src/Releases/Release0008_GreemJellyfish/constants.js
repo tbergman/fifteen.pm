@@ -5,7 +5,7 @@ import { multiSourceVideo } from '../../Utils/Video/paths.js';
 export const OFFICE = "OFFICE";
 export const FOREST = "FOREST";
 export const FALLING = "FALLING";
-export const ROCK = "rock"
+export const PINK_ROCK = "pinkRock"
 export const FOAM = "foam"
 export const WATER = "water"
 export const TRANSLUSCENT = "transluscent"
@@ -52,29 +52,29 @@ export const CONSTANTS = {
   },
   sectionsDev: {
     0.: {
-      location: FOREST,
+      location: FALLING,
       camera: {
         position: { x: 5, z: 3, y: 2.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
     3: {
-      location: FOREST,
+      location: FALLING,
       camera: {
         position: { x: 0, y: 0, z: 12 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
-    // 21: FOREST, // INSTRUMENTAL,
+    // 21: FALLING, // INSTRUMENTAL,
     6.: {
-      location: FOREST,
+      location: FALLING,
       camera: {
         position: { x: 3, z: 3, y: -4.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // VERSE2,
     9.: {
-      location: FOREST,
+      location: FALLING,
       camera: {
         position: { x: 3, z: 3, y: 35.1 },
         lookAt: { x: 0, y: 1., z: 0 },
@@ -89,7 +89,6 @@ export const CONSTANTS = {
     }, // VERSE2,
   },
   sections: {
-    
     0.: {
       location: OFFICE,
       camera: {
@@ -191,7 +190,7 @@ export const CONSTANTS = {
   },
   trackSectionSpriteMaterialLookup: {
     FOREST: TRANSLUSCENT,
-    FALLING: ROCK,
+    FALLING: PINK_ROCK,
     OFFICE: FOAM
   },
   animationSpeed: {

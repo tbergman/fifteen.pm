@@ -23,7 +23,7 @@ import {
     CONSTANTS,
 } from "./constants.js";
 import { assetPath8 } from "./utils.js";
-import { initFoamGripMaterial, initRockMaterial, initTransluscentMaterial, initPinkShinyMaterial } from "./materials.js";
+import { initFoamGripMaterial, initRockMaterial, initPinkRockMaterial, initTransluscentMaterial, initPinkShinyMaterial } from "./materials.js";
 
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';
@@ -140,10 +140,11 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
     initMaterials() {
-        const { materials, textureLoader, renderer } = this;
-        materials.rock = initRockMaterial(textureLoader);
+        const { materials, textureLoader } = this;
+        materials.purpleRock = initRockMaterial(textureLoader, 0xFF0FFF);
         materials.foam = initFoamGripMaterial(textureLoader);
-        materials.pinkShiny = initPinkShinyMaterial();
+        materials.pinkShiny = initPinkShinyMaterial(textureLoader);
+        materials.pinkRock = initPinkRockMaterial(textureLoader);
         materials.transluscent = initTransluscentMaterial(.25);
     }
 
@@ -259,7 +260,7 @@ export default class Release0008_GreemJellyFish extends Component {
                 const object = gltf.scene.getObjectByProperty('mesh');
                 object.traverse(function (node) {
                     if (node.name.includes("rock")) {
-                        node.material = materials.rock;
+                        node.material = materials.purpleRock;
                     }
                 });
                 const rocks = gltf.scene;

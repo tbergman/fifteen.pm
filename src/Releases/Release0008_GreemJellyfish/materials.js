@@ -32,12 +32,19 @@ export function initFoamGripMaterial(textureLoader) {
 }
 
 
-export function initRockMaterial(textureLoader) {
+export function initPinkRockMaterial(textureLoader) {
+	const mat = initRockMaterial(textureLoader, 0xFF0FFF);
+	const albedoMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-alb-pink.png"));
+	mat.map = albedoMap;
+	return mat;
+}
+
+export function initRockMaterial(textureLoader, color) {
 	const loader = new THREE.CubeTextureLoader();
 	loader.setPath(assetPath8('textures/env-maps/'));
 	const textureCube = loader.load(Array(6).fill('office-space1.jpg'));
-		const normalMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-normal.png"));
-		const roughnessMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-rough.png"));
+	const normalMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-normal.png"));
+	const roughnessMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-rough.png"));
 	const metalnessMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-metal.png"));
 	const aoMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-ao.png"));
 	const displacementMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-height"));
@@ -49,7 +56,7 @@ export function initRockMaterial(textureLoader) {
 	normalMap.wrapT = THREE.RepeatWrapping;
 	// TODO playaround
 	const mat = new THREE.MeshStandardMaterial({
-		color: 0xFF0FFF,
+		color: color,
 		roughness: .4,
 		metalness: .5,
 		skinning: true,
@@ -63,7 +70,6 @@ export function initRockMaterial(textureLoader) {
 		displacementBias: -.01,
 		envMap: textureCube
 	});
-	console.log(mat);
 	return mat;
 }
 
