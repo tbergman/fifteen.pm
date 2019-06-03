@@ -22,11 +22,11 @@ class HomeDefault extends PureComponent {
     this.camera.position.set(2.095357312111118, 0.8505415314262585, 11.67921580831209);
     this.camera.rotation.set(-0.042438732895147505, 0.3365395324927288, 0.01402173472318894);
     this.camera.lookAt(new THREE.Vector3());
-    this.controls = new OrbitControls(this.camera)
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     window.addEventListener('resize', this.onWindowResize, false);
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
     this.init();
     this.animate();
   }

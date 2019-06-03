@@ -6,8 +6,6 @@ import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import './HomeMobile.css';
 import { assetPath } from "../Utils/assets";
-import Menu from "../UI/Menu/Menu";
-
 
 const MARGIN = 0;
 const SCREEN_WIDTH = window.innerWidth;
@@ -53,7 +51,7 @@ class HomeMobile extends Component {
     this.vblur = new ShaderPass(VerticalTiltShiftShader);
     this.renderModel = new RenderPass(this.scene, this.camera);
     this.composer = new EffectComposer(this.renderer, this.renderTarget);
-    this.controls = new OrbitControls(this.camera);
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
   }
 
 
