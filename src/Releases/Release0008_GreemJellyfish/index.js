@@ -18,8 +18,6 @@ import {
     ALEXA,
     DENNIS,
     TRACK_SECTIONS,
-    ORBIT,
-    STILL,
     CONSTANTS,
 } from "./constants.js";
 import { assetPath8 } from "./utils.js";
@@ -112,6 +110,7 @@ export default class Release0008_GreemJellyFish extends Component {
         // release-specific initilization
         this.initMaterials();
         this.initLights();
+        // this.initEffectComposer();
         this.initVideo();
         this.initSprites();
         this.initOffice();
@@ -154,9 +153,10 @@ export default class Release0008_GreemJellyFish extends Component {
             if (CONSTANTS.auxMedia[0].media) { // greem video
                 let videoMesh = CONSTANTS.auxMedia[0].mesh;
                 videoMesh.visible = false;
-                this.chromaMaterial = new THREE.ShaderMaterial({
+                const chromaMaterial = new THREE.ShaderMaterial({
                     uniforms: {
-                        u_time: { type: 'f', value: 0.0 },
+                        uAddDots: { type: 'b', value: false },
+                        uResolution: { value: new THREE.Vector2(16, 9) },
                         iChannel0: { value: videoMesh.material.map }
                     },
                     vertexShader: chromaVertexShader,
@@ -166,22 +166,22 @@ export default class Release0008_GreemJellyFish extends Component {
                     needsUpdate: true,
                     skinning: true
                 });
-                let chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
-                this.chromaMesh = new THREE.Mesh(chromaPlane, this.chromaMaterial);
+                const chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
+                this.chromaMesh = new THREE.Mesh(chromaPlane, chromaMaterial);
                 this.setVideoTransform();
                 clearInterval(refreshId);
             }
         }, 100);
     }
 
-    initLights = () => {
-        const { scene, camera } = this;
+    initLights() {
+        const { scene } = this;
         var directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 1, 1).normalize();
         scene.add(directionalLight);
     }
 
-    initBlobs = () => {
+    initBlobs() {
         const { camera, locationElements, videoParents, clock, scene } = this;
         const numLights = 5;
         const width = numLights;
@@ -298,13 +298,16 @@ export default class Release0008_GreemJellyFish extends Component {
         riverBottom.visible = false
         scene.add(riverBottom);
         locationElements[FOREST].push(riverBottom)
-        videoParents[FOREST] = riverBottom;
+        videoParents[FOREST] = {
+            parent: riverBottom,
+            addDots: false
+        }
     }
 
     initOffice = () => {
         const { gltfLoader, videoParents, locationElements, materials } = this;
         const name = "office";
-        const gltfParams = {
+        const officeParams = {
             url: assetPath8('objects/office/scene.gltf'),
             name: name,
             position: [-4, 0, 5],
@@ -328,11 +331,15 @@ export default class Release0008_GreemJellyFish extends Component {
                 const office = gltf.scene;
                 office.visible = false;
                 scene.add(office);
-                videoParents[OFFICE] = office.getObjectByName("walls005_11");
+                videoParents[OFFICE] = {
+                    parent: office.getObjectByName("walls005_11"),
+                    addDots: true
+                }
                 locationElements[OFFICE].push(office);
             }
         }
-        loadGLTF({ ...gltfParams });
+        loadGLTF({ ...officeParams });
+
     }
 
     initSprites = () => {
@@ -506,7 +513,8 @@ export default class Release0008_GreemJellyFish extends Component {
     setVideoTransform() {
         const { videoParents, chromaMesh } = this;
         const { section } = this.state;
-        videoParents[section.location].add(chromaMesh);
+        videoParents[section.location].parent.add(chromaMesh);
+        chromaMesh.material.uniforms.uAddDots.value = videoParents[section.location].addDots;
         const transform = CONSTANTS.videoTransforms[section.location]
         const pos = transform.position;
         const rot = transform.rotation;
@@ -523,7 +531,8 @@ export default class Release0008_GreemJellyFish extends Component {
         const { videoParents, chromaMesh } = this;
         if (!chromaMesh) return;
         if (curLocation in videoParents) this.setVideoTransform();
-        if (prevLocation in videoParents) videoParents[prevLocation].remove(chromaMesh);
+        if (prevLocation in videoParents) videoParents[prevLocation].parent.remove(chromaMesh);
+
     }
 
     /**
@@ -539,13 +548,6 @@ export default class Release0008_GreemJellyFish extends Component {
         const offset = cameraInfo.offset;
         controls.target = new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z);
     }
-
-    updateVideoChroma() {
-        const { clock, chromaMaterial } = this;
-        if (!chromaMaterial) return;
-        chromaMaterial.uniforms.u_time.value = clock.getElapsedTime();
-    }
-
 
     updateBlobMateral() {
         const { blobMaterial, blobSphere1Center, blobSphere2Center, clock } = this;
@@ -583,19 +585,12 @@ export default class Release0008_GreemJellyFish extends Component {
 
     // anything that needs to change in an active section
     updateTrackSectionDeltas() {
-        const { controls, clock } = this;
         const { section } = this.state;
         if (section.location === FALLING) {
             this.updateBlobMateral();
         }
-        if (section.location === FOREST) {
-            this.updateVideoChroma()
-            // if (section.camera.type === ORBIT) this.updateOrbitCamera();
-        }
-        if (section.location === OFFICE) {
-            this.updateVideoChroma()
-            // if (section.camera.type === ORBIT) this.updateOrbitCamera();
-        }
+        if (section.location === FOREST) {}
+        if (section.location === OFFICE) {}
     }
 
     updateSpriteMaterial(location) {
