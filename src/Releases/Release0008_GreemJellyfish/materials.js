@@ -20,14 +20,19 @@ export function initFoamGripMaterial(textureLoader) {
 
 	// const textureCube = loader.load(Array(6).fill('Barce_Rooftop.png'));
 	return new THREE.MeshPhongMaterial({
-		color: 0xf2f2f2,
-		specular: 0xfdfdfd,
+		color: 0xC0C0C0,
+		specular: 0xC0C0C0,// 0x4c4c4c,
 		shininess: 100,
 		skinning: true,
 		normalMap: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-normal.png")),
 		aoMap: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-ao.png")),
+
 		specularMap: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-albedo.png")),
+		// map: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-albedo.png")),
 		envMap: envMapCube,
+		refractionRatio: 1.0,
+		combine: THREE.AddOperation	
+		
 	})
 }
 
