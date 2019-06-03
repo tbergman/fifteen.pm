@@ -110,7 +110,6 @@ export default class Release0008_GreemJellyFish extends Component {
         // release-specific initilization
         this.initMaterials();
         this.initLights();
-        // this.initEffectComposer();
         this.initVideo();
         this.initSprites();
         this.initOffice();
@@ -176,7 +175,18 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
     initLights() {
-        const { scene } = this;
+        const { scene, camera } = this;
+        // this.pointLight = new THREE.PointLight(0xfff000, 1, 100);
+        // this.pointLight.userData.angle = 0.0;
+        // this.pointLight.castShadow = true;
+        // this.pointLight.position.set(0, 2, 2);
+        // scene.add(this.pointLight);
+        // let cameraLight = new THREE.SpotLight(0xffffff, .1, 1000);
+        // cameraLight.position.set(camera.position.x, camera.position.y, camera.position.z);
+        // camera.add(cameraLight);
+        // add subtle ambient lighting
+        // var ambientLight = new THREE.AmbientLight(0xbbbbbb);
+        // scene.add(ambientLight);
         var directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 1, 1).normalize();
         scene.add(directionalLight);
@@ -409,24 +419,24 @@ export default class Release0008_GreemJellyFish extends Component {
         firstAction.play();
     }
 
-    // muteMainAudio() {
-    //     const { mediaElement } = this;
-    //     const refreshId = setInterval(() => {
-    //         if (mediaElement) {
-    //             if (isIE) {
-    //                 mediaElement.volume = 0;
-    //             } else {
-    //                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    //                 const source = audioCtx.createMediaElementSource(mediaElement);
-    //                 const gainNode = audioCtx.createGain();
-    //                 gainNode.gain.value = 0;
-    //                 source.connect(gainNode);
-    //                 gainNode.connect(audioCtx.destination);
-    //             }
-    //             clearInterval(refreshId);
-    //         }
-    //     }, 100);
-    // }
+    muteMainAudio() {
+        const { mediaElement } = this;
+        const refreshId = setInterval(() => {
+            if (mediaElement) {
+                if (isIE) {
+                    mediaElement.volume = 0;
+                } else {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = audioCtx.createMediaElementSource(mediaElement);
+                    const gainNode = audioCtx.createGain();
+                    gainNode.gain.value = 0;
+                    source.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                }
+                clearInterval(refreshId);
+            }
+        }, 100);
+    }
 
     animate = () => {
         setTimeout(() => {
