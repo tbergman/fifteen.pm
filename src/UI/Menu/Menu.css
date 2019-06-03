@@ -96,6 +96,7 @@
 
 .overlay-controls {
   align-self: flex-start;
+  align-items: center;
 }
 .overlay-content-item {
   display: flex;
