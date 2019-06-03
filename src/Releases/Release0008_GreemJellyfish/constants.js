@@ -44,14 +44,14 @@ export const CONSTANTS = {
   },
   sectionsDev: {
     0.: {
-      location: FALLING,
+      location: OFFICE,
       camera: {
         position: { x: 5, z: 3, y: 2.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
     3: {
-      location: FALLING,
+      location: OFFICE,
       camera: {
         position: { x: 0, y: 0, z: 12 },
         lookAt: { x: 0, y: 1., z: 0 },
@@ -59,7 +59,7 @@ export const CONSTANTS = {
     },
     // 21: FALLING, // INSTRUMENTAL,
     6.: {
-      location: FALLING,
+      location: FOREST,
       camera: {
         position: { x: 3, z: 3, y: -4.1 },
         lookAt: { x: 0, y: 1., z: 0 },
@@ -84,7 +84,7 @@ export const CONSTANTS = {
     0.: {
       location: OFFICE,
       camera: {
-        position: { x: 3, z: 3, y: 1.1 },
+        position: { x: 3, z: 5, y: 1.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
@@ -192,7 +192,7 @@ export const CONSTANTS = {
   },
   videoTransforms: {
     OFFICE: {
-      position: { x: 0, y: 8.5, z: 1.3 },
+      position: { x: 0, y: 8.6, z: 1.3 },
       rotation: { x: Math.PI * .5, y: 0, z: 0 },
       scale: { x: .3, y: .3, z: .3 }
     },

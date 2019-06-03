@@ -126,7 +126,6 @@ export function initPinkShinyMaterial() {
 		metalness: 0.5,
 		roughness: 0.0,
 		skinning: true,
-		fog: true,
 		needsUpdate: true,
 		transparent: true,
 		opacity: 0.5

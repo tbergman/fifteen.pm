@@ -117,7 +117,7 @@ export default class Release0008_GreemJellyFish extends Component {
         this.initForest();
         this.initBlobs();
         this.initScene();
-        this.muteMainAudio();
+        // this.muteMainAudio();
     }
 
     // TODO setup callback pattern on gltf loads rather than set interval...
@@ -133,6 +133,7 @@ export default class Release0008_GreemJellyFish extends Component {
             if (numDefinedLocationElements === totalNumElementsForLocation) {
                 this.setVisible(section.location);
                 this.updateCameraTransformOnChange();
+                this.calibrateVideoAudioAlignment();
                 clearInterval(refreshId);
             }
         }, 100);
@@ -163,8 +164,8 @@ export default class Release0008_GreemJellyFish extends Component {
                     fragmentShader: chromaFragmentShader,
                     transparent: true,
                     side: THREE.DoubleSide,
-                    needsUpdate: true,
-                    skinning: true
+                    // needsUpdate: true,
+                    // skinning: true
                 });
                 const chromaPlane = new THREE.PlaneBufferGeometry(16, 9);
                 this.chromaMesh = new THREE.Mesh(chromaPlane, chromaMaterial);
@@ -408,24 +409,24 @@ export default class Release0008_GreemJellyFish extends Component {
         firstAction.play();
     }
 
-    muteMainAudio() {
-        const { mediaElement } = this;
-        const refreshId = setInterval(() => {
-            if (mediaElement) {
-                if (isIE) {
-                    mediaElement.volume = 0;
-                } else {
-                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    const source = audioCtx.createMediaElementSource(mediaElement);
-                    const gainNode = audioCtx.createGain();
-                    gainNode.gain.value = 0;
-                    source.connect(gainNode);
-                    gainNode.connect(audioCtx.destination);
-                }
-                clearInterval(refreshId);
-            }
-        }, 100);
-    }
+    // muteMainAudio() {
+    //     const { mediaElement } = this;
+    //     const refreshId = setInterval(() => {
+    //         if (mediaElement) {
+    //             if (isIE) {
+    //                 mediaElement.volume = 0;
+    //             } else {
+    //                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    //                 const source = audioCtx.createMediaElementSource(mediaElement);
+    //                 const gainNode = audioCtx.createGain();
+    //                 gainNode.gain.value = 0;
+    //                 source.connect(gainNode);
+    //                 gainNode.connect(audioCtx.destination);
+    //             }
+    //             clearInterval(refreshId);
+    //         }
+    //     }, 100);
+    // }
 
     animate = () => {
         setTimeout(() => {
@@ -439,6 +440,7 @@ export default class Release0008_GreemJellyFish extends Component {
         this.updateVideoTransform(prevLocation, curLocation);
         this.updateSpriteMaterial(curLocation);
         this.updateCameraTransformOnChange();
+        this.calibrateVideoAudioAlignment();
     }
 
     setVisible(location) {
@@ -522,6 +524,17 @@ export default class Release0008_GreemJellyFish extends Component {
         chromaMesh.position.set(pos.x, pos.y, pos.z);
         chromaMesh.rotation.set(rot.x, rot.y, rot.z);
         chromaMesh.scale.set(scale.x, scale.y, scale.z);
+    }
+
+    calibrateVideoAudioAlignment(){
+        const { chromaMesh, mediaElement } = this;
+        if (!chromaMesh) return;
+        console.log(chromaMesh.material.uniforms.iChannel0.value.image);
+        console.log(mediaElement);
+        // handle if video isn't same length as audio
+        const videoElement = chromaMesh.material.uniforms.iChannel0.value.image;
+        const timeDiff = mediaElement.duration - videoElement.duration;
+        chromaMesh.material.uniforms.iChannel0.value.image.currentTime = mediaElement.currentTime - timeDiff;
     }
 
     /**
