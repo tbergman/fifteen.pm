@@ -16,13 +16,6 @@ export const ORBIT = "orbit" // orbit-style camera
 export const STILL = "still" // still-set camera
 
 export const CONSTANTS = {
-  officeWaterSurfaces: [
-    "ceiling005_2",
-    "furniture005_0",
-    "furniture005_1",
-    "walls005_4",
-    "walls005_7"
-  ],
   auxMedia: [{
     meta: {
       type: 'video',
@@ -30,7 +23,6 @@ export const CONSTANTS = {
       name: 'greem-vid1',
       sources: multiSourceVideo('/assets/8/videos/jt-reduced'),
       // sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'), // easier to use while devving
-      // sources: multiSourceVideo('/assets/8/videos/juicy-tender-greenscreen-640-360'),
       geometry: new THREE.PlaneBufferGeometry(1, 1),
       position: [0, 0, 0],
       playbackRate: 1,
@@ -96,7 +88,7 @@ export const CONSTANTS = {
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
-    18: {
+    22.: {
       location: FALLING,
       camera: {
         position: { x: 0, y: 0, z: 12 },
@@ -114,7 +106,7 @@ export const CONSTANTS = {
     51.: {
       location: FOREST,
       camera: {
-        position: { x: 3, z: 3, y: 35.1 },
+        position: { x: 3, z: 8, y: 5.1 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // CHORUS,
@@ -200,7 +192,7 @@ export const CONSTANTS = {
   },
   videoTransforms: {
     OFFICE: {
-      position: { x: 0, y: 8, z: 1.3 },
+      position: { x: 0, y: 8.5, z: 1.3 },
       rotation: { x: Math.PI * .5, y: 0, z: 0 },
       scale: { x: .3, y: .3, z: .3 }
     },
