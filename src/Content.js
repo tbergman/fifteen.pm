@@ -295,8 +295,8 @@ export const CONTENT = {
       {
         title: "Juicy Tender",
         type: "soundcloud",
-        id: "629673933",
-        secretToken: "s-Pga8Z"
+        id: "610976673",
+        secretToken: "s-7EwJv"
       }
     ],
     theme: {
