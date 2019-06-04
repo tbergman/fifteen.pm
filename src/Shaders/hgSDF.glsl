@@ -958,9 +958,9 @@ float mapTheWorld( in vec3 point ){
 	point.y *= .5;
 	float displacement1 				= simplexNoise4D( vec4( point, uTime ) );
 	float sphere1						= distFromSphere1( point );
-	float sphere2						= distFromSphere2( point );
-	float sphere 						= smin(sphere1, sphere2, 0.2);
-	return sphere + ( displacement1 * uDisplacementOffset);
+	// float sphere2						= distFromSphere2( point );
+	// float sphere 						= smin(sphere1, sphere2, 0.2);
+	return sphere1 + ( displacement1 * uDisplacementOffset);
 }
 
 vec3 calculateNormal( in vec3 point ){
