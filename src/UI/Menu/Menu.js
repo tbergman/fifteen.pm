@@ -204,10 +204,7 @@ class Menu extends PureComponent {
     console.log(cy)
     const viewBox = "0 0 100 100"
     return (<div className="overlay-svg">
-      <svg viewBox={viewBox} xmlns="http://www.w3.org/2000/svg">
-        <rect fill={this.state.theme.fillColor} width="50" height={cy} />
-      </svg>
-      {/* <svg
+      <svg
         ref={element => (this.svg = element)}
         viewBox={`0 0 1098 724`}
       >
@@ -217,7 +214,7 @@ class Menu extends PureComponent {
             d={SHAPES[this.state.shapeIndex].path}
           />
         </g>
-      </svg> */}
+      </svg> 
     </div>);
   }
 

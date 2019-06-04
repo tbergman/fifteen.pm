@@ -46,19 +46,15 @@
 }
 
 .overlay-svg {
-  position: absolute;
-  width: 100%;
-  /* height: 100%; */
-  top: 0;
-  /* top: 33%; */
-  background: transparent;
   border: none;
   z-index: 1;
 }
 
 .overlay-svg svg {
-  /* width: 100%; */
-  transform: scale(1.5);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
 }
 
 .overlay-header {
@@ -180,9 +176,6 @@
   .overlay-header-and-controls {
     max-width: 80%; 
   } 
-  /* .overlay-svg svg {
-    transform: rotate(180deg) scaleX(3.33) scaleY(5.25) translateX(-125px) translateY(-80px)
-  }  */
 }
 
 /* tablet, landscape iPad, lo-res laptops ands desktops */
@@ -190,9 +183,9 @@
   .overlay-header-and-controls {
     max-width: 90%; 
   } 
-  /* .overlay-svg svg {
-    transform: rotate(180deg) scaleY(1.5);
-  } */
+  .overlay-svg svg {
+    transform: rotate(180deg) scaleY(1.6);
+  }
 }
 
 /* portrait tablets, portrait iPad, landscape e-readers, landscape 800x480 or 854x480 phones */
@@ -200,9 +193,6 @@
   .overlay-header-and-controls {
     max-width: 90%; 
   } 
-  /* .overlay-svg svg {
-    transform: rotate(180deg) scaleX(1.75) scaleY(5.25) translateX(-100px) translateY(-80px) */
-  /* } */
 }
 
 
@@ -216,9 +206,9 @@
     font-size: 14px;
   }
 
-  /* .overlay-svg svg {
-    transform: rotate(180deg) scaleX(1.5) scaleY(5.25) translateX(-50px) translateY(-80px)
-  } */
+  .overlay-svg svg {
+    transform: rotate(180deg) scaleY(3)
+  }
 
   .overlay-header-message {
     padding-top: 30px;
