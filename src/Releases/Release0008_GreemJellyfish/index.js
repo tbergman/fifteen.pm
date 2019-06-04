@@ -132,7 +132,6 @@ export default class Release0008_GreemJellyFish extends Component {
             if (numDefinedLocationElements === totalNumElementsForLocation) {
                 this.setVisible(section.location);
                 this.updateCameraTransformOnChange();
-                this.calibrateVideoAudioAlignment();
                 clearInterval(refreshId);
             }
         }, 100);
@@ -176,17 +175,6 @@ export default class Release0008_GreemJellyFish extends Component {
 
     initLights() {
         const { scene, camera } = this;
-        // this.pointLight = new THREE.PointLight(0xfff000, 1, 100);
-        // this.pointLight.userData.angle = 0.0;
-        // this.pointLight.castShadow = true;
-        // this.pointLight.position.set(0, 2, 2);
-        // scene.add(this.pointLight);
-        // let cameraLight = new THREE.SpotLight(0xffffff, .1, 1000);
-        // cameraLight.position.set(camera.position.x, camera.position.y, camera.position.z);
-        // camera.add(cameraLight);
-        // add subtle ambient lighting
-        // var ambientLight = new THREE.AmbientLight(0xbbbbbb);
-        // scene.add(ambientLight);
         var directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 1, 1).normalize();
         scene.add(directionalLight);
@@ -441,7 +429,7 @@ export default class Release0008_GreemJellyFish extends Component {
     animate = () => {
         setTimeout(() => {
             this.frameId = window.requestAnimationFrame(this.animate);
-        }, 1000 / 30);
+        }, 1000 / 24);
         this.renderScene();
     }
 
@@ -450,7 +438,6 @@ export default class Release0008_GreemJellyFish extends Component {
         this.updateVideoTransform(prevLocation, curLocation);
         this.updateSpriteMaterial(curLocation);
         this.updateCameraTransformOnChange();
-        this.calibrateVideoAudioAlignment();
     }
 
     setVisible(location) {
@@ -534,18 +521,7 @@ export default class Release0008_GreemJellyFish extends Component {
         chromaMesh.position.set(pos.x, pos.y, pos.z);
         chromaMesh.rotation.set(rot.x, rot.y, rot.z);
         chromaMesh.scale.set(scale.x, scale.y, scale.z);
-    }
-
-    calibrateVideoAudioAlignment(){
-        const { chromaMesh, mediaElement } = this;
-        if (!chromaMesh) return;
-        console.log(chromaMesh.material.uniforms.iChannel0.value.image);
-        console.log(mediaElement);
-        // handle if video isn't same length as audio
-        const videoElement = chromaMesh.material.uniforms.iChannel0.value.image;
-        const timeDiff = mediaElement.duration - videoElement.duration;
-        chromaMesh.material.uniforms.iChannel0.value.image.currentTime = mediaElement.currentTime - timeDiff;
-    }
+    } 
 
     /**
      *  Called whenever section changes state 
@@ -568,9 +544,10 @@ export default class Release0008_GreemJellyFish extends Component {
         const pos = cameraInfo.position;
         camera.position.set(pos.x, pos.y, pos.z);
         const lookAt = cameraInfo.lookAt;
-        const offset = cameraInfo.offset;
+        // camera.lookAt(lookAt.x, lookAt.y, lookAt.z);
         controls.target = new THREE.Vector3(lookAt.x, lookAt.y, lookAt.z);
     }
+
 
     updateBlobMateral() {
         const { blobMaterial, blobSphere1Center, blobSphere2Center, clock } = this;
@@ -608,12 +585,17 @@ export default class Release0008_GreemJellyFish extends Component {
 
     // anything that needs to change in an active section
     updateTrackSectionDeltas() {
+        const { controls, clock } = this;
         const { section } = this.state;
         if (section.location === FALLING) {
             this.updateBlobMateral();
         }
-        if (section.location === FOREST) {}
-        if (section.location === OFFICE) {}
+        if (section.location === FOREST) {
+            
+        }
+        if (section.location === OFFICE) {
+            
+        }
     }
 
     updateSpriteMaterial(location) {

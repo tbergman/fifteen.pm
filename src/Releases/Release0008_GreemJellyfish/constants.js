@@ -21,6 +21,8 @@ export const CONSTANTS = {
       type: 'video',
       mimetype: 'video/mp4',
       name: 'greem-vid1',
+      // sources: multiSourceVideo('/assets/8/videos/jt-reduced-no-audio'),
+      // sources: multiSourceVideo('/assets/8/videos/jt-brian-version'),
       sources: multiSourceVideo('/assets/8/videos/jt-reduced'),
       // sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'), // easier to use while devving
       geometry: new THREE.PlaneBufferGeometry(1, 1),
@@ -46,7 +48,7 @@ export const CONSTANTS = {
     0.: {
       location: OFFICE,
       camera: {
-        position: { x: 5, z: 3, y: 2.1 },
+        position: { x: 10000, y: 12.1, z: 500 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
@@ -61,14 +63,14 @@ export const CONSTANTS = {
     6.: {
       location: FOREST,
       camera: {
-        position: { x: 3, z: 3, y: -4.1 },
+        position: { x: 3, y: -4.1, z: 3 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // VERSE2,
     9.: {
       location: FALLING,
       camera: {
-        position: { x: 3, z: 3, y: 35.1 },
+        position: { x: 3, y: 35.1, z: 3 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // CHORUS,
@@ -84,14 +86,14 @@ export const CONSTANTS = {
     0.: {
       location: OFFICE,
       camera: {
-        position: { x: 3, z: 5, y: 1.1 },
+        position: { x: 10, y: 3.1, z: 5},
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
     22.: {
       location: FALLING,
       camera: {
-        position: { x: 0, y: 0, z: 12 },
+        position: { x: 0, y: 0, z: 16 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
@@ -99,14 +101,14 @@ export const CONSTANTS = {
     29.: {
       location: OFFICE,
       camera: {
-        position: { x: 3, z: 3, y: 1.1 },
+        position: { x: 3, y: 1.1, z: 3 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // VERSE2,
     51.: {
       location: FOREST,
       camera: {
-        position: { x: 3, z: 8, y: 5.1 },
+        position: { x: 3, y: 5.1, z: 8},
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, // CHORUS,
@@ -128,14 +130,14 @@ export const CONSTANTS = {
     88.: {
       location: FOREST,
       camera: {
-        position: { x: 10, z: 10, y: 8.1 },
+        position: { x: 10, y: 8.1, z: 10},
         lookAt: { x: 0, y: 1., z: 0 },
       }
     }, 
     105.: {
       location: FOREST,
       camera: {
-        position: { x: 0, z:0, y: 35.1 },
+        position: { x: 0, y: 35.1, z: 0 },
         lookAt: { x: 0, y: 1., z: 0 },
       }
     },
@@ -177,7 +179,7 @@ export const CONSTANTS = {
   spriteNames: [ALEXA, REBECCA, DENNIS],
   spriteStartPos: {
     ALEXA: [0, -.1, 0],
-    REBECCA: [-2, -.2, -3],
+    REBECCA: [-2, -.2, -3.7],
     DENNIS: [1, .1, -3.2],
   },
   trackSectionSpriteMaterialLookup: {
@@ -192,7 +194,7 @@ export const CONSTANTS = {
   },
   videoTransforms: {
     OFFICE: {
-      position: { x: 0, y: 8.6, z: 1.3 },
+      position: { x: 1.3, y: 8.6, z: 1.5 },
       rotation: { x: Math.PI * .5, y: 0, z: 0 },
       scale: { x: .3, y: .3, z: .3 }
     },
