@@ -195,8 +195,19 @@ class Menu extends PureComponent {
    *  Renders svg modal background (animated blob)
    */
   renderOverlaySvg() {
+    const heightWidthRatio = window.innerWidth/window.innerHeight;
+    const viewBoxWidth = heightWidthRatio * 100;
+    const viewBoxHeight = heightWidthRatio * 100; 
+    // const viewBox = `0 0 ${viewBoxWidth} ${viewBoxHeight}`
+    console.log(heightWidthRatio)
+    const cy = 50 / heightWidthRatio;
+    console.log(cy)
+    const viewBox = "0 0 100 100"
     return (<div className="overlay-svg">
-      <svg
+      <svg viewBox={viewBox} xmlns="http://www.w3.org/2000/svg">
+        <rect fill={this.state.theme.fillColor} width="50" height={cy} />
+      </svg>
+      {/* <svg
         ref={element => (this.svg = element)}
         viewBox={`0 0 1098 724`}
       >
@@ -206,7 +217,7 @@ class Menu extends PureComponent {
             d={SHAPES[this.state.shapeIndex].path}
           />
         </g>
-      </svg>
+      </svg> */}
     </div>);
   }
 
