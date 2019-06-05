@@ -23,7 +23,7 @@ export const CONSTANTS = {
       name: 'greem-vid1',
       // sources: multiSourceVideo('/assets/8/videos/jt-reduced-no-audio'),
       // sources: multiSourceVideo('/assets/8/videos/jt-brian-version'),
-      sources: multiSourceVideo('/assets/8/videos/jt-reduced'),
+      sources: multiSourceVideo('/assets/8/videos/jt-final'),
       // sources: multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'), // easier to use while devving
       geometry: new THREE.PlaneBufferGeometry(1, 1),
       position: [0, 0, 0],

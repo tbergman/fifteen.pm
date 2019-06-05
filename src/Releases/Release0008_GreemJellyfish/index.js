@@ -174,14 +174,14 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
     initLights() {
-        const { scene, camera } = this;
+        const { scene } = this;
         var directionalLight = new THREE.DirectionalLight(0xffffff);
         directionalLight.position.set(1, 1, 1).normalize();
         scene.add(directionalLight);
     }
 
     initBlobs() {
-        const { camera, locationElements, videoParents, clock, scene } = this;
+        const { camera, locationElements, clock, scene } = this;
         const numLights = 5;
         const width = numLights;
         const height = 1.;
@@ -627,6 +627,7 @@ export default class Release0008_GreemJellyFish extends Component {
                     menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
                     mediaRef={el => this.mediaElement = el}
                     auxMedia={CONSTANTS.auxMedia}
+                    useAuxMediaOnly={true}
                 />
                 <div className="release">
                     <div ref={(element) => this.container = element} />

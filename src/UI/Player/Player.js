@@ -92,7 +92,9 @@ class Player extends PureComponent {
       mediaObj.mesh = loadVideo({ ...mediaObj.meta });
       mediaObj.media = mediaObj.mesh.userData.media;
       mediaObj.media.visible = false;
+      
       mediaObj.media.addEventListener("canplay", () => {
+        mediaObj.media.playsinline = true;
         mediaObj.media.play();
         mediaObj.mesh.visible = true;
       });
@@ -108,6 +110,7 @@ class Player extends PureComponent {
           this.loadAux(mediaObj);
         }
         if (mediaObj.media.paused) {
+          mediaObj.visible = true;
           mediaObj.media.play();
         }
       }
@@ -119,6 +122,8 @@ class Player extends PureComponent {
     if (auxMedia && auxMedia.length) {
       for (let i = 0; i < auxMedia.length; i++) {
         let mediaObj = auxMedia[i];
+        mediaObj.visible = false;
+        mediaObj.media.playsinline = true;
         if (!mediaObj.media.paused) {
           mediaObj.media.pause();
         }
@@ -128,15 +133,21 @@ class Player extends PureComponent {
 
 
   handlePlay() {
+    const {useAuxMediaOnly} = this.props;
     this.setState({ paused: false }, () => {
-      this.state.audioElement.play();
+      if (!useAuxMediaOnly){
+        this.state.audioElement.play();
+      }
       this.handleAuxPlay();
     });
   }
 
   handlePause() {
+    const {useAuxMediaOnly} = this.props;
     this.setState({ paused: true }, () => {
-      this.state.audioElement.pause();
+      if (!useAuxMediaOnly){
+        this.state.audioElement.pause();
+      }      
       this.handleAuxPause();
     });
   }

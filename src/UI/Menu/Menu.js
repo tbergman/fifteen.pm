@@ -21,7 +21,8 @@ class Menu extends PureComponent {
     overlayOpen: true,
     shouldRenderPlayer: true,
     loading: false,
-    totalReleases: TOTAL_RELEASES
+    totalReleases: TOTAL_RELEASES,
+    useAuxMediaOnly: false
   };
 
   componentDidMount() {
@@ -195,14 +196,6 @@ class Menu extends PureComponent {
    *  Renders svg modal background (animated blob)
    */
   renderOverlaySvg() {
-    const heightWidthRatio = window.innerWidth/window.innerHeight;
-    const viewBoxWidth = heightWidthRatio * 100;
-    const viewBoxHeight = heightWidthRatio * 100; 
-    // const viewBox = `0 0 ${viewBoxWidth} ${viewBoxHeight}`
-    console.log(heightWidthRatio)
-    const cy = 50 / heightWidthRatio;
-    console.log(cy)
-    const viewBox = "0 0 100 100"
     return (<div className="overlay-svg">
       <svg
         ref={element => (this.svg = element)}
@@ -246,7 +239,7 @@ class Menu extends PureComponent {
   };
 
   renderPlayer = () => {
-    const { content, mediaRef, auxMedia } = this.props;
+    const { content, mediaRef, auxMedia, useAuxMediaOnly } = this.props;
     const { hasEnteredWorld } = this.state;
     if (this.props.shouldRenderPlayer) {
       return (
@@ -257,6 +250,7 @@ class Menu extends PureComponent {
           mediaRef={mediaRef}
           initialized={hasEnteredWorld}
           auxMedia={auxMedia}
+          useAuxOnly={useAuxMediaOnly}
         />
       );
     }

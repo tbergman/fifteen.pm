@@ -184,7 +184,7 @@
     max-width: 90%; 
   } 
   .overlay-svg svg {
-    transform: rotate(180deg) scaleY(1.6);
+    transform: scaleY(3);
   }
 }
 
@@ -206,9 +206,9 @@
     font-size: 14px;
   }
 
-  .overlay-svg svg {
+  /* .overlay-svg svg {
     transform: rotate(180deg) scaleY(3)
-  }
+  } */
 
   .overlay-header-message {
     padding-top: 30px;
@@ -233,7 +233,7 @@
   }
 
   .overlay-svg svg {
-    transform: rotate(180deg) scaleX(1.5) scaleY(4.25) translateX(-30px) translateY(-80px)
+    transform: scaleY(3) translateY(-20px)
   }
   .overlay-header {
     /* flex-direction: column; */
