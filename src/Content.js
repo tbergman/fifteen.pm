@@ -315,7 +315,7 @@ export const CONTENT = {
       Once she grows restless, Rebecca returns to the city, to a liquid sanctuary of pink and purple hues, to the dancefloor. There she discovers Alexa with another woman. \n\
       \n\
       Juicy Tender is an exploration of exodus and urban life. Though we leave the city in search of extraordinary experiences, we sometimes return to loneliness. Ultimately, refuge is not a place but a set of material conditions: Art, Food, Music, Mountain, Ocean, Family, Friend.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/juicy-tender",
+      purchaseLink: "https://fifteenpm.bandcamp.com/album/juicy-tender",
       iconColor: '#fff',
       fillColor: 'rgba(255, 0, 0, 0.5)',
       textColor: '#fff',
