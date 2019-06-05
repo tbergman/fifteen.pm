@@ -43,7 +43,7 @@ class Release0004_JonCannon extends Component {
     lightD.target.position.set(0, 0, 0);
     this.scene.add(lightD);
 
-    this.controls = new FirstPersonControls(this.camera);
+    this.controls = new FirstPersonControls(this.camera, this.render.domElement);
     this.controls.lookSpeed = C.FIRST_PERSON_CONTROL_SPEED;
     this.controls.movementSpeed = C.FIRST_PERSON_CONTROL_MOVEMENT;
     this.controls.enabled = true;

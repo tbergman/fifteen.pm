@@ -10,6 +10,7 @@ html, body {
   width: 100%;
   overflow: hidden;
   position: fixed;
+    -webkit-text-size-adjust: none
 }
 
 body {
@@ -23,6 +24,7 @@ body {
   background-color: #000000;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: contain;
 }
 
 a {

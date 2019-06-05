@@ -57,7 +57,7 @@ class Release0006_Vveiss extends Component {
 
     // this.controls = new OrbitControls(this.camera);
     //
-    this.controls = new FirstPersonControls(this.camera);
+    this.controls = new FirstPersonControls(this.camera, this.render.domElement);
     this.controls.enabled = true;
     this.controls.mouseMotionActive = false;
     this.controls.lookSpeed = .05;

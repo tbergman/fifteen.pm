@@ -21,7 +21,8 @@ class Menu extends PureComponent {
     overlayOpen: true,
     shouldRenderPlayer: true,
     loading: false,
-    totalReleases: TOTAL_RELEASES
+    totalReleases: TOTAL_RELEASES,
+    useAuxMediaOnly: false
   };
 
   componentDidMount() {
@@ -176,14 +177,17 @@ class Menu extends PureComponent {
     } = this.state;
     return (
       <div className="overlay-content">
-        <div className="overlay-header" style={{ textColor: textColor }}>
-          <div className="overlay-header-message">{message}</div>
-        </div>
-        <Fragment>
+        <div className="overlay-header-and-controls">
+          <div className="overlay-header" style={{ textColor: textColor }}>
+            <div className="overlay-header-message">
+              {message}
+            </div>
+          </div>
+
           {!home && this.renderControlInfo()}
           {!home && this.renderPurchaseLink()}
-          {this.renderEnterButton()}
-        </Fragment>
+        </div>
+        {this.renderEnterButton()}
       </div>
     );
   }
@@ -195,7 +199,7 @@ class Menu extends PureComponent {
     return (<div className="overlay-svg">
       <svg
         ref={element => (this.svg = element)}
-        viewBox="0 0 1098 724"
+        viewBox={`0 0 1098 724`}
       >
         <g fill={this.state.theme.fillColor}>
           <path
@@ -203,7 +207,7 @@ class Menu extends PureComponent {
             d={SHAPES[this.state.shapeIndex].path}
           />
         </g>
-      </svg>
+      </svg> 
     </div>);
   }
 
@@ -235,7 +239,7 @@ class Menu extends PureComponent {
   };
 
   renderPlayer = () => {
-    const { content, mediaRef } = this.props;
+    const { content, mediaRef, auxMedia, useAuxMediaOnly } = this.props;
     const { hasEnteredWorld } = this.state;
     if (this.props.shouldRenderPlayer) {
       return (
@@ -245,6 +249,8 @@ class Menu extends PureComponent {
           fillColor={content.theme.iconColor}
           mediaRef={mediaRef}
           initialized={hasEnteredWorld}
+          auxMedia={auxMedia}
+          useAuxOnly={useAuxMediaOnly}
         />
       );
     }

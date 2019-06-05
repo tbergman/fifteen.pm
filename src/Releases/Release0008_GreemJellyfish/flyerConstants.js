@@ -1,13 +1,6 @@
 import * as THREE from "three";
 
 import {multiSourceVideo} from '../../Utils/Video/paths.js'
-// const multiSourceVideo = (path) => ([
-//     { type: 'video/mp4', src: assetPath8Videos(`${path}.mp4`) },
-//     { type: 'video/webm', src: assetPath8Videos(`${path}.webm`) }
-// ]);
-
-// console.log(multiSourceVideo('/assets/8/videos/juicy-tender-loop-640-480'))
-
 export const CONSTANTS = {
     officeWaterSurfaces: [
         "ceiling005_2",
