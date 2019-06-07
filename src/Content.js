@@ -308,14 +308,15 @@ export const CONTENT = {
       fillColor: 'rgba(255, 0, 0, 0.5)',
       textColor: '#fff',
       navColor: '#fff',
-      controls: [ {
+      controls: [{
         icon: MouseMove,
         instructions: "click and drag mouse to look around"
       },
       {
         icon: TwoFingerScroll,
         instructions: "scroll to zoom"
-      }]
+      },
+      ]
     }
   },
   "/g": {
