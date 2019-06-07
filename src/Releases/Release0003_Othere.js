@@ -331,9 +331,7 @@ class Release0003_Othere extends PureComponent {
   }
 
   animate = () => {
-    setTimeout(() => {
-      this.frameId = window.requestAnimationFrame(this.animate);
-    }, 1000 / 30);
+    this.frameId = window.requestAnimationFrame(this.animate);
     this.renderScene();
   }
 
