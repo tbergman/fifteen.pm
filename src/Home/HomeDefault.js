@@ -111,9 +111,7 @@ class HomeDefault extends PureComponent {
   }
 
   animate = () => {
-    setTimeout(() => {
-      requestAnimationFrame(this.animate);
-    }, 1000 / 30);
+    requestAnimationFrame(this.animate);
     this.renderScene();
   }
 

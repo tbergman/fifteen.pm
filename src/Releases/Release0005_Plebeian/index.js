@@ -432,9 +432,7 @@ class Release0005_Plebeian extends Component {
 
       this.renderer.render(this.scene, camera);
     }
-    setTimeout(() => {
-      window.requestAnimationFrame(this.renderScene.bind(this));
-    }, 1000 / 30)
+    window.requestAnimationFrame(this.renderScene.bind(this));
   }
 
   render() {
