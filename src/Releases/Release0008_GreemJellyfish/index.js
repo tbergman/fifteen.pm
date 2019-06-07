@@ -114,7 +114,7 @@ export default class Release0008_GreemJellyFish extends Component {
         this.initSprites();
         this.initOffice();
         this.initForest();
-        this.initBlobs();
+        // this.initBlobs();
         this.initScene();
         // this.muteMainAudio();
     }
@@ -427,9 +427,7 @@ export default class Release0008_GreemJellyFish extends Component {
     }
 
     animate = () => {
-        setTimeout(() => {
-            this.frameId = window.requestAnimationFrame(this.animate);
-        }, 1000 / 24);
+        this.frameId = window.requestAnimationFrame(this.animate);
         this.renderScene();
     }
 
@@ -588,7 +586,7 @@ export default class Release0008_GreemJellyFish extends Component {
         const { controls, clock } = this;
         const { section } = this.state;
         if (section.location === FALLING) {
-            this.updateBlobMateral();
+            // this.updateBlobMateral();
         }
         if (section.location === FOREST) {
             
