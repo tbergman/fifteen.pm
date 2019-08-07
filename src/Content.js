@@ -338,6 +338,44 @@ export const CONTENT = {
       navColor: '#fff',
       controls: []
     }
+  },
+  "/9": {
+    artist: "JAVONNTTE",
+    tracks: [
+      {
+        title: "This Dream",
+        type: "soundcloud",
+        id: "610976673",
+        secretToken: "s-7EwJv"
+      },
+      {
+        title: "City Life",
+        type: "soundcloud",
+        id: "610976673",
+        secretToken: "s-7EwJv"
+      },
+      {
+        title: "Natural",
+        type: "soundcloud",
+        id: "610976673",
+        secretToken: "s-7EwJv"
+      },
+      {
+        title: "House Organ",
+        type: "soundcloud",
+        id: "610976673",
+        secretToken: "s-7EwJv"
+      }
+    ],
+    theme: {
+      message: "The Jazz Experience...",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
+      iconColor: '#fff',
+      fillColor: 'rgba(255, 0, 0, 0.5)',
+      textColor: '#fff',
+      navColor: '#fff',
+      controls: []
+    }
   }
 };
 

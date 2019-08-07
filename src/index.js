@@ -15,6 +15,7 @@ import Release0006_Vveiss from "./Releases/Release0006_Vveiss/index";
 import Release0007_JonFay from "./Releases/Release0007_JonFay/index";
 import Release0008_GreemJellyfish from "./Releases/Release0008_GreemJellyfish/index";
 import Release0008_GreemJellyfish_EventFlyer from "./Releases/Release0008_GreemJellyfish/flyer";
+import Release0009_Javonntte from "./Releases/Release0009_Javonntte/index";
 
 ReactDOM.render(
     <Router history={history}>
@@ -31,6 +32,7 @@ ReactDOM.render(
             <Route path="/greem-and-fifteenpm-opening" component={Release0008_GreemJellyfish_EventFlyer} /> 
             <Route path="/g" component={Release0008_GreemJellyfish_EventFlyer} /> 
             <Route path="/8" component={Release0008_GreemJellyfish} />
+            <Route path="/9" component={Release0009_Javonntte} />
         </div>
     </Router>,
     document.getElementById('root')
