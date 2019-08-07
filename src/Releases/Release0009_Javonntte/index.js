@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import * as THREE from 'three';
-import { Canvas } from 'react-three-fiber';
+import { extend, useThree, useRender, Canvas } from 'react-three-fiber';
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
+extend({ OrbitControls });
+
+function Controls() {
+    const ref = useRef();
+    const { camera } = useThree();
+    useRender(() => ref.current && ref.current.update());
+    return (
+        <orbitControls
+            ref={ref}
+            args={[camera]}
+            enableDamping
+            dampingFactor={0.1}
+            rotateSpeed={0.1}
+        />
+    );
+}
+
+
+//https://codesandbox.io/s/vigorous-poitras-0e02y
 function Thing({ vertices }) {
 
     return (
@@ -25,10 +45,19 @@ function Thing({ vertices }) {
     )
 }
 
+const glConfig = {
+    gammaInput: true,
+    gammaOutput: true
+    //physicallyCorrectLights: true
+};
+
 export default function Release0009_Javonntte({ }) {
     return (
-        <Canvas>
+        <Canvas
+            gl={glConfig}
+        >
             <Thing vertices={[[-1, 0, 0], [0, 1, 0], [1, 0, 0], [0, -1, 0], [-1, 0, 0]]} />
+            <Controls />
         </Canvas>
     );
 }
