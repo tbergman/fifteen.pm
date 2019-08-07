@@ -6,9 +6,7 @@ import HomeMobile from './Home/HomeMobile';
 import Media from 'react-media';
 import './App.css';
 
-class App extends Component {
-
-  render() {
+function App(){
     return (
       <Fragment>
         <Media query="(max-width: 599px)">
@@ -22,7 +20,6 @@ class App extends Component {
         </Media>
       </Fragment>
     );
-  }
 }
 
 export default App;
