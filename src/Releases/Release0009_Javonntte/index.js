@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { extend, useThree, useRender, Canvas } from 'react-three-fiber';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import "./index.css";
 
 extend({ OrbitControls });
 
@@ -43,6 +44,8 @@ function TileGenerator({ halfTilesX, halfTilesZ, tileSize }) {
     const { camera, scene } = useThree();
 
     useEffect(() => {
+        
+        //if (!tiles.Keys) addTiles();
         addTiles();
         // refreshTileMap();
         setStartPos(camera.position);
