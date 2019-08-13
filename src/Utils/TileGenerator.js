@@ -30,20 +30,16 @@ export default function TileGenerator({ tileSize }) {
     const { camera, scene } = useThree();
     const boundary = useRef({ x: 0, z: 0 });
     const [updatedTiles, setUpdatedTiles] = useState(false);
-    const tiles = useRef({});
+    let tiles = {};
     // TODO how to include this in a hook/in the cycle
     addTiles(0);
 
-
-    useEffect(()=>{
-        
-        console.log("use effect");
+    useEffect(() => {
         setUpdatedTiles(false);
-    }, [updatedTiles]);
+    });
 
     useRender((state, time) => {
         if (shouldTriggerTileGeneration(boundary.current, camera.position, tileSize)) {
-            console.log("add tiles")
             boundary.current = { x: camera.position.x, z: camera.position.z };
             addTiles(time);
             refreshTiles(time);
@@ -66,33 +62,33 @@ export default function TileGenerator({ tileSize }) {
 
     function addTile(pos, time) {
         const tilename = nameTile(pos);
-        if (!tiles.current.hasOwnProperty(tilename)) {
-            tiles.current[tilename] = {
+        if (!tiles.hasOwnProperty(tilename)) {
+            tiles[tilename] = {
                 pos: pos,
                 updated: time,
                 name: tilename,
             };
         } else {
-            tiles.current[tilename].updated = time;
+            tiles[tilename].updated = time;
         }
     }
 
     function destroyTile(tile) {
         scene.remove(tile);
-        delete tiles.current[tile.name];
+        delete tiles[tile.name];
     }
 
     function refreshTiles(time) {
         const newTiles = {}
-        for (const tile of Object.values(tiles.current)) {
+        for (const tile of Object.values(tiles)) {
             if (tile.updated != time) {
                 destroyTile(tile);
             } else {
                 newTiles[tile.name] = tile;
             }
         }
-        tiles.current = newTiles;
+        tiles = newTiles;
     }
 
-    return Object.values(tiles.current).map((tile) => Tile(tile));
+    return Object.values(tiles).map((tile) => Tile(tile));
 }
