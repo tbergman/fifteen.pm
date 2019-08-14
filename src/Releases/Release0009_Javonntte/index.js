@@ -22,8 +22,15 @@ function Controls() {
     );
 }
 
+function CityTile(){
+    
+}
 
 function Scene() {
+    const { camera } = useThree();
+    useRender(() => {
+        camera.position.y = .1;
+    })
     return (
         <>
             <Controls />

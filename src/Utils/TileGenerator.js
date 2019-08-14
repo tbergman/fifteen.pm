@@ -2,16 +2,25 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useThree, useResource, useRender } from 'react-three-fiber';
 
-function Tile({ name, pos }) {
+function Tile({ tileSize, name, pos }) {
     const [tileMaterialRef, tileMaterial] = useResource()
     const [tileGeometryRef, tileGeometry] = useResource()
     return (
         <group key={name}>
             <meshBasicMaterial ref={tileMaterialRef} color="white" />
-            <planeGeometry ref={tileGeometryRef} />
+            <planeGeometry args={[tileSize - 1, tileSize - 1]} ref={tileGeometryRef} />
             {tileMaterial && tileGeometry && (
-                <mesh material={tileMaterial} geometry={tileGeometry} position={pos} />
+                <mesh
+                    material={tileMaterial}
+                    geometry={tileGeometry}
+                    position={pos}
+                    rotation={new THREE.Euler(-Math.PI / 2, 0, 0)}
+                />
             )}
+            <mesh position={pos}>
+                <boxGeometry attach="geometry" />
+                <meshBasicMaterial attach="material" color="red" />
+            </mesh>
         </group>
     );
 }
@@ -31,7 +40,7 @@ export default function TileGenerator({ tileSize }) {
     const boundary = useRef({ x: 0, z: 0 });
     const [updatedTiles, setUpdatedTiles] = useState(false);
     let tiles = {};
-    // TODO how to include this in a hook/in the cycle
+    // TODO how to include this initialization in a hook/in the cycle
     addTiles(0);
 
     useEffect(() => {
@@ -67,6 +76,7 @@ export default function TileGenerator({ tileSize }) {
                 pos: pos,
                 updated: time,
                 name: tilename,
+                tileSize: tileSize
             };
         } else {
             tiles[tilename].updated = time;
