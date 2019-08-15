@@ -2,40 +2,36 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useThree, useResource, useRender } from 'react-three-fiber';
 
-function Tile({ tileSize, name, pos }) {
+function DefaultTileFloor(props) {
     const [tileMaterialRef, tileMaterial] = useResource()
     const [tileGeometryRef, tileGeometry] = useResource()
     return (
-        <group key={name}>
+        <>
             <meshBasicMaterial ref={tileMaterialRef} color="white" />
-            <planeGeometry args={[tileSize - 1, tileSize - 1]} ref={tileGeometryRef} />
+            <planeGeometry args={[props.tileSize - 1, props.tileSize - 1]} ref={tileGeometryRef} />
             {tileMaterial && tileGeometry && (
                 <mesh
                     material={tileMaterial}
                     geometry={tileGeometry}
-                    position={pos}
+                    position={props.pos}
                     rotation={new THREE.Euler(-Math.PI / 2, 0, 0)}
                 />
             )}
-            <mesh position={pos}>
-                <boxGeometry attach="geometry" />
-                <meshBasicMaterial attach="material" color="red" />
-            </mesh>
+        </>
+    );
+}
+
+export function Tile(props) {
+    return (
+        <group key={props.name}>
+            {props.floor ? props.floor : DefaultTileFloor(props)}
+            {props.children}
         </group>
     );
 }
 
-function shouldTriggerTileGeneration(prevPos, curPos, tileSize) {
-    const xMove = curPos.x - prevPos.x;
-    const zMove = curPos.z - prevPos.z;
-    return Math.abs(xMove) >= tileSize || Math.abs(zMove) >= tileSize;
-}
-
-function nameTile(pos) {
-    return "Tile_" + pos.x + "_" + pos.z;
-}
-
-export default function TileGenerator({ tileSize }) {
+export default function TileGenerator(props) {
+    const { tileSize } = props;
     const { camera, scene } = useThree();
     const boundary = useRef({ x: 0, z: 0 });
     const [updatedTiles, setUpdatedTiles] = useState(false);
@@ -100,5 +96,15 @@ export default function TileGenerator({ tileSize }) {
         tiles = newTiles;
     }
 
-    return Object.values(tiles).map((tile) => Tile(tile));
+    function shouldTriggerTileGeneration(prevPos, curPos, tileSize) {
+        const xMove = curPos.x - prevPos.x;
+        const zMove = curPos.z - prevPos.z;
+        return Math.abs(xMove) >= tileSize || Math.abs(zMove) >= tileSize;
+    }
+
+    function nameTile(pos) {
+        return "Tile_" + pos.x + "_" + pos.z;
+    }
+
+    return Object.values(tiles).map((tile) => props.Tile(tile));
 }
