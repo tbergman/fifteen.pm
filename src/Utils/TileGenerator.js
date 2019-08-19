@@ -24,7 +24,7 @@ function DefaultTileFloor(props) {
 export function Tile(props) {
     return (
         <group key={props.name}>
-            {/* {props.floor ? props.floor : DefaultTileFloor(props)} */}
+            {props.floor ? props.floor : DefaultTileFloor(props)}
             {props.elements}
         </group>
     );

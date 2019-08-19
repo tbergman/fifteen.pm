@@ -89,12 +89,6 @@ function RedCube(props) {
 
 
 function CityTile(props) {
-    // TODO these are constantly getting re-rendered, no bueno.
-    // if (props.pos.z === 5 || props.pos.x === 5) {
-    //     props.elements = Building(props);
-    // } else {
-    //     props.elements = Building(props);
-    // }
     props.elements = TileElement(props)
     return Tile(props)
 }
@@ -112,8 +106,7 @@ function Scene() {
     const { camera } = useThree();
 
     useRender(() => {
-        // camera.position.y = .1;
-        // console.log(camera.position);
+        camera.position.y = .1;
     })
     return (
         <>
@@ -127,7 +120,6 @@ function Scene() {
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
             />
-            {/* <RedCube pos={{x: 0, y: 0, z: 0}}/> */}
         </>
     );
 }
