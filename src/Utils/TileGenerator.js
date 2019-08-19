@@ -8,7 +8,7 @@ function DefaultTileFloor(props) {
     return (
         <>
             <meshBasicMaterial ref={tileMaterialRef} color="white" />
-            <planeGeometry args={[props.tileSize - 1, props.tileSize - 1]} ref={tileGeometryRef} />
+            <planeGeometry args={[props.size - 1, props.size - 1]} ref={tileGeometryRef} />
             {tileMaterial && tileGeometry && (
                 <mesh
                     material={tileMaterial}
@@ -24,8 +24,8 @@ function DefaultTileFloor(props) {
 export function Tile(props) {
     return (
         <group key={props.name}>
-            {props.floor ? props.floor : DefaultTileFloor(props)}
-            {props.children}
+            {/* {props.floor ? props.floor : DefaultTileFloor(props)} */}
+            {props.elements}
         </group>
     );
 }

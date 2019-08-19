@@ -33,8 +33,12 @@ function Controls() {
     );
 }
 
-function Buildings(props) {
-    const [buildings, setBuildings] = useState(false)
+function Street(props) {
+    return <></>;
+}
+
+function TileElement(props) {
+    const [building, setBuilding] = useState(false);
     const url = assetPath9("objects/structures/weirdos1.glb");
     const onSuccess = (gltf) => {
         const geometries = {}
@@ -45,14 +49,15 @@ function Buildings(props) {
         })
         return geometries
     }
-    useEffect(() => void loadGLTF(url, onSuccess).then(m => setBuildings(m)), [setBuildings])
-
-    return <>
-        {buildings ? (
+    // useEffect(() => {}, []);
+    useEffect(() => void loadGLTF(url, onSuccess).then(b => setBuilding(b)), [setBuilding])
+    // return <></>;
+    const b =  <>
+        {building ? (
             <mesh
-                geometry={buildings["disco1"]} {...props}
+                geometry={building["disco1"]} {...props}
                 position={props.pos}
-                rotation={new THREE.Euler(Math.PI/2, 0, 0)}
+                rotation={new THREE.Euler(Math.PI / 2, 0, 0)}
             >
                 <meshPhysicalMaterial
                     attach="material"
@@ -67,11 +72,34 @@ function Buildings(props) {
             </mesh>
         ) : null}
     </>;
+    console.log(props.pos.z, props.pos.x);
+    if (props.pos.z === 5 || props.pos.x === 5) {
+        return RedCube(props);
+    } else {
+        return b;
+    }
+}
+
+function RedCube(props) {
+    // TODO why/how do i just pass props.pos?
+    return <mesh position={[props.pos.x, props.pos.y, props.pos.z]} scale={[.1, .1, .1]}>
+        <boxGeometry attach="geometry" />
+        <meshBasicMaterial
+            attach="material"
+            color="red"
+        />
+    </mesh>;
 }
 
 
 function CityTile(props) {
-    props.children = Buildings(props);
+    // TODO these are constantly getting re-rendered, no bueno.
+    // if (props.pos.z === 5 || props.pos.x === 5) {
+    //     props.elements = Building(props);
+    // } else {
+    //     props.elements = Building(props);
+    // }
+    props.elements = TileElement(props)
     return Tile(props)
 }
 
@@ -87,14 +115,9 @@ function Scene() {
      */
     const { camera } = useThree();
 
-    const tileGeneratorConfig = {
-        component: CityTile,
-        size: 1,
-        grid: 10
-    }
-
     useRender(() => {
-        camera.position.y = .1;
+        // camera.position.y = .1;
+        // console.log(camera.position);
     })
     return (
         <>
@@ -108,6 +131,7 @@ function Scene() {
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
             />
+            {/* <RedCube pos={{x: 0, y: 0, z: 0}}/> */}
         </>
     );
 }
