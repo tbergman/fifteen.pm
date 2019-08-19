@@ -90,7 +90,7 @@ function Scene() {
     const tileGeneratorConfig = {
         component: CityTile,
         size: 1,
-        grid: 3
+        grid: 10
     }
 
     useRender(() => {
@@ -99,7 +99,7 @@ function Scene() {
     return (
         <>
             <Controls />
-            <TileGenerator Tile={CityTile} tileSize={10} tileGeneratorConfig />
+            <TileGenerator component={CityTile} size={1} grid={10} />
             <directionalLight intensity={3.5} position={[-25, 25, -25]} />
             <spotLight
                 castShadow
