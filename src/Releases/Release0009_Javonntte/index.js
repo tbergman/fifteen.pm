@@ -49,34 +49,30 @@ function TileElement(props) {
         })
         return geometries
     }
-    // useEffect(() => {}, []);
     useEffect(() => void loadGLTF(url, onSuccess).then(b => setBuilding(b)), [setBuilding])
-    // return <></>;
-    const b =  <>
-        {building ? (
-            <mesh
-                geometry={building["disco1"]} {...props}
-                position={props.pos}
-                rotation={new THREE.Euler(Math.PI / 2, 0, 0)}
-            >
-                <meshPhysicalMaterial
-                    attach="material"
-                    roughness={0.8}
-                    metalness={0.6}
-                    emissive="#a4f20d"
-                    // emissiveIntensity={active ? 0.1 : 0}
-                    color="#001000"
-                    fog={true}
-                    shininess={0.5}
-                />
-            </mesh>
-        ) : null}
-    </>;
-    console.log(props.pos.z, props.pos.x);
-    if (props.pos.z === 5 || props.pos.x === 5) {
+    if (props.pos.z % 5 === 0 || props.pos.x % 5 === 0) {
         return RedCube(props);
     } else {
-        return b;
+        return <>
+            {building ? (
+                <mesh
+                    geometry={building["disco1"]} {...props}
+                    position={props.pos}
+                    rotation={new THREE.Euler(Math.PI / 2, 0, 0)}
+                >
+                    <meshPhysicalMaterial
+                        attach="material"
+                        roughness={0.8}
+                        metalness={0.6}
+                        emissive="#a4f20d"
+                        // emissiveIntensity={active ? 0.1 : 0}
+                        color="#001000"
+                        fog={true}
+                        shininess={0.5}
+                    />
+                </mesh>
+            ) : null}
+        </>;
     }
 }
 
