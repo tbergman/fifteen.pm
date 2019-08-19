@@ -35,11 +35,18 @@ export default function TileGenerator(props) {
     const { camera, scene } = useThree();
     const boundary = useRef({ x: 0, z: 0 });
     const [updatedTiles, setUpdatedTiles] = useState(false);
+    // const [tiles, setTiles] = useState({})
     let tiles = {};
     // TODO how to include this initialization in a hook/in the cycle
     addTiles(0);
 
     useEffect(() => {
+        console.log("num tiles:", Object.keys(tiles).length);
+        if (Object.keys(tiles).length === 0){
+            // console.log("adding tiles...")
+            // addTiles(0);
+            // setTiles(addTiles(0));
+        }
         setUpdatedTiles(false);
     });
 
@@ -63,6 +70,7 @@ export default function TileGenerator(props) {
                 addTile(pos, time);
             }
         }
+        return tiles;
     }
 
     function addTile(pos, time) {

@@ -3,7 +3,6 @@ import { extend, useThree, useResource, useRender, Canvas } from 'react-three-fi
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { useSpring, a } from "react-spring/three";
 import TileGenerator, { Tile } from "../../Utils/TileGenerator";
 import "./index.css";
 import { assetPath9 } from "./utils";
@@ -34,7 +33,7 @@ function Controls() {
     );
 }
 
-function WeirdBuilding(props) {
+function Buildings(props) {
     const [buildings, setBuildings] = useState(false)
     const url = assetPath9("objects/structures/weirdos1.glb");
     const onSuccess = (gltf) => {
@@ -47,58 +46,60 @@ function WeirdBuilding(props) {
         return geometries
     }
     useEffect(() => void loadGLTF(url, onSuccess).then(m => setBuildings(m)), [setBuildings])
-    if (buildings) {
-        console.log('buildings?', buildings)
-    }
-    return buildings ? (
-        <mesh geometry={buildings["disco1"]} {...props} >
-            <meshPhysicalMaterial
-                attach="material"
-                roughness={0.8}
-                metalness={0.6}
-                emissive="#a4f20d"
-                // emissiveIntensity={active ? 0.1 : 0}
-                color="#01000"
-                fog={true}
-                shininess={0.5}
-            />
-        </mesh>
-    ) : null;
-}
 
-function WeirdBuildings(props) {
-    // return <Suspense fallback={<RedCube {...props} />}><WeirdBuilding {...props} />}</Suspense>
-    return <WeirdBuilding
-        key={props.name}
-        position={props.pos}
-        // position={[stones[0].x, 0, stones[0].z]}
-        // scale={[1.3, 1.3, 1.3]}
-        // rotation={stones[0].r}
-        // meshName={stones[0].n}
-        // active={stones[0].active}
-        // castShadow
-        // receiveShadow
-        // onClick={stones[0].active ? onActiveClick : null} />
-        {...props}
-    />
+    return <>
+        {buildings ? (
+            <mesh
+                geometry={buildings["disco1"]} {...props}
+                position={props.pos}
+                rotation={new THREE.Euler(Math.PI/2, 0, 0)}
+            >
+                <meshPhysicalMaterial
+                    attach="material"
+                    roughness={0.8}
+                    metalness={0.6}
+                    emissive="#a4f20d"
+                    // emissiveIntensity={active ? 0.1 : 0}
+                    color="#001000"
+                    fog={true}
+                    shininess={0.5}
+                />
+            </mesh>
+        ) : null}
+    </>;
 }
 
 
 function CityTile(props) {
-    props.children = WeirdBuildings(props);
+    props.children = Buildings(props);
     return Tile(props)
 }
 
 
+// TODO maybe find equivalent of shouldComponentUpdate
 function Scene() {
+    /* Note: Known behavior that useThree re-renders childrens thrice:
+       issue: https://github.com/drcmda/react-three-fiber/issues/66
+       example: https://codesandbox.io/s/use-three-renders-thrice-i4k6c
+       tldr: Developer says that changing this behavior requires a major version bump and will be breaking.
+       Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
+       (For instance: a complicated geometry.)
+     */
     const { camera } = useThree();
+
+    const tileGeneratorConfig = {
+        component: CityTile,
+        size: 1,
+        grid: 3
+    }
+
     useRender(() => {
         camera.position.y = .1;
     })
     return (
         <>
             <Controls />
-            <TileGenerator Tile={CityTile} tileSize={10} />
+            <TileGenerator Tile={CityTile} tileSize={10} tileGeneratorConfig />
             <directionalLight intensity={3.5} position={[-25, 25, -25]} />
             <spotLight
                 castShadow
@@ -112,14 +113,18 @@ function Scene() {
 }
 
 export default function Release0009_Javonntte({ }) {
-    // TODO: the id for Canvas should be "canvas" and its css should live alongside a generic release canvas
+    // TODO: the id for Canvas should be "canvas" and its css should live alongside a generic release canvas    
     return (
-        <Canvas id="root"
-            onCreated={({ gl }) => {
-                gl.shadowMap.enabled = true
-                gl.shadowMap.type = THREE.PCFSoftShadowMap
-            }}>
-            <Scene />
-        </Canvas>
+        <>
+            <Canvas id="root"
+                onCreated={({ gl }) => {
+                    gl.shadowMap.enabled = true
+                    gl.shadowMap.type = THREE.PCFSoftShadowMap
+                }}>
+                <Scene />
+            </Canvas>
+        </>
     );
+
+
 }
