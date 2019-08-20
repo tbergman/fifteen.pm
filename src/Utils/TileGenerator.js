@@ -30,22 +30,22 @@ export function Tile(props) {
     );
 }
 
-export default function TileGenerator(props) {
-    const tileSize = props.size;
-    const grid = props.grid;
-    const tileComponent = props.component;
+export default function TileGenerator({ size, grid, component }) {
+    // const size = props.size;
+    // const grid = props.grid;
+    // const component = props.component;
+
     const { camera, scene } = useThree();
     const boundary = useRef({ x: 0, z: 0 });
     const [updatedTiles, setUpdatedTiles] = useState(false);
     // const [tiles, setTiles] = useState({})
     const [time, setTime] = useState(0);
-
     let tiles = {};
     // TODO how to include this initialization in a hook/in the cycle
     addTiles();
 
     useEffect(() => {
-        if (shouldTriggerTileGeneration(boundary.current, camera.position, tileSize)) {
+        if (shouldTriggerTileGeneration(boundary.current, camera.position, size)) {
             boundary.current = { x: camera.position.x, z: camera.position.z };
             addTiles(time);
             refreshTiles(time);
@@ -59,14 +59,15 @@ export default function TileGenerator(props) {
         setTime(time);
     });
 
+    
     function addTiles() {
         // force integer position rounded to nearest tilesize (integers for navigation)
-        const cameraX = Math.floor(camera.position.x / tileSize) * tileSize;
-        const cameraZ = Math.floor(camera.position.z / tileSize) * tileSize;
+        const cameraX = Math.floor(camera.position.x / size) * size;
+        const cameraZ = Math.floor(camera.position.z / size) * size;
         const halfTiles = Math.floor(grid / 2);
         for (let x = -halfTiles; x < halfTiles; x++) {
             for (let z = -halfTiles; z < halfTiles; z++) {
-                const pos = new THREE.Vector3((x * tileSize + cameraX), 0, (z * tileSize + cameraZ));
+                const pos = new THREE.Vector3((x * size + cameraX), 0, (z * size + cameraZ));
                 addTile(pos);
             }
         }
@@ -79,7 +80,7 @@ export default function TileGenerator(props) {
                 pos: pos,
                 updated: time,
                 name: tilename,
-                tileSize: tileSize
+                size: size
             };
         } else {
             tiles[tilename].updated = time;
@@ -103,15 +104,15 @@ export default function TileGenerator(props) {
         tiles = newTiles;
     }
 
-    function shouldTriggerTileGeneration(prevPos, curPos, tileSize) {
+    function shouldTriggerTileGeneration(prevPos, curPos, size) {
         const xMove = curPos.x - prevPos.x;
         const zMove = curPos.z - prevPos.z;
-        return Math.abs(xMove) >= tileSize || Math.abs(zMove) >= tileSize;
+        return Math.abs(xMove) >= size || Math.abs(zMove) >= size;
     }
 
     function nameTile(pos) {
-        return "Tile_" + pos.x + "_" + pos.z;
+        return "tile_" + pos.x + "_" + pos.z;
     }
 
-    return Object.values(tiles).map((tile) => tileComponent(tile));
+    return Object.values(tiles).map((props) => component(props));
 }

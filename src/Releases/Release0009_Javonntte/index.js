@@ -38,6 +38,7 @@ function Street(props) {
 }
 
 function TileElement(props) {
+    console.log('render1');
     const [building, setBuilding] = useState(false);
     const url = assetPath9("objects/structures/weirdos1.glb");
     const onSuccess = (gltf) => {
@@ -89,13 +90,16 @@ function RedCube(props) {
 
 
 function CityTile(props) {
-    props.elements = TileElement(props)
-    return Tile(props)
+    console.log("render CityTile");
+    // TODO - constant re-rendering must be fixed!
+    props.elements = TileElement(props);
+    return Tile(props);
 }
 
 
 // TODO maybe find equivalent of shouldComponentUpdate
 function Scene() {
+    console.log('render2');
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
        example: https://codesandbox.io/s/use-three-renders-thrice-i4k6c
@@ -104,9 +108,25 @@ function Scene() {
        (For instance: a complicated geometry.)
      */
     const { camera } = useThree();
-
+    useEffect(() => {
+        // console.log(camera);        
+        /* camera defaults:
+            aspect: 4.087591240875913 (width/height)
+            far: 1000
+            filmGauge: 35
+            filmOffset: 0
+            focus: 10
+            fov: 75
+            frustumCulled: true
+        */
+       camera.fov = 40;
+    }, [])
     useRender(() => {
-        camera.position.y = .1;
+        camera.position.y = 3.;
+        // let lookAtPos = camera.position.copy(); // TODO this is erroring on 'Cannot read property 'x' of undefined'
+        let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+        lookAtPos.y = 0;
+        camera.lookAt(lookAtPos);
     })
     return (
         <>
@@ -122,13 +142,15 @@ function Scene() {
             />
         </>
     );
+    return <></>;
 }
 
 export default function Release0009_Javonntte({ }) {
     // TODO: the id for Canvas should be "canvas" and its css should live alongside a generic release canvas    
+    console.log('render1');
     return (
         <>
-            <Canvas id="root"
+            <Canvas id="canvas"
                 onCreated={({ gl }) => {
                     gl.shadowMap.enabled = true
                     gl.shadowMap.type = THREE.PCFSoftShadowMap
@@ -137,6 +159,4 @@ export default function Release0009_Javonntte({ }) {
             </Canvas>
         </>
     );
-
-
 }
