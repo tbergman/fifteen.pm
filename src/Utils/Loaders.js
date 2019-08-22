@@ -114,3 +114,14 @@ export const loadGLTF2 = ({ url, loader, onSuccess, onError }) => {
     return onSuccess(object);
   }, onError);
 }
+
+
+// TODO - pass in initialized loader
+// TODO - replace all uses of loadGLTF with loadGLTF3?
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+export function loadGLTF3(url, onSuccess) {
+    return Promise.resolve(
+        new Promise((resolve, reject) => {
+            return new GLTFLoader().load(url, resolve, null, reject)
+        }).then(gltf => { return onSuccess(gltf) }));
+}

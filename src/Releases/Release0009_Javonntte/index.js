@@ -1,15 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import TileGenerator from "../../Utils/TileGenerator";
-import "./index.css";
 import { CityTile } from "./tiles";
 import { assetPath9 } from "./utils";
+import "./index.css";
 
 extend({ OrbitControls });
-
-
 
 function Controls() {
     const controls = useRef();
@@ -37,16 +35,6 @@ function Scene() {
      */
     const { camera } = useThree();
     useEffect(() => {
-        // console.log(camera);        
-        /* camera defaults:
-            aspect: 4.087591240875913 (width/height)
-            far: 1000
-            filmGauge: 35
-            filmOffset: 0
-            focus: 10
-            fov: 75
-            frustumCulled: true
-        */
         camera.fov = 40;
     }, [])
     useRender(() => {
@@ -60,12 +48,21 @@ function Scene() {
     return (
         <>
             <Controls />
-            <TileGenerator url={url} size={1} grid={10} generateTile={CityTile} />
+            <TileGenerator
+                url={url}
+                size={1}
+                grid={10}
+                generateTile={CityTile}
+            />
             <directionalLight intensity={3.5} position={[-25, 25, -25]} />
             <spotLight
                 castShadow
                 intensity={2}
-                position={[camera.position.x, camera.position.y + 1, camera.position.z]}
+                position={
+                    [camera.position.x,
+                    camera.position.y + 1,
+                    camera.position.z]
+                }
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
             />
