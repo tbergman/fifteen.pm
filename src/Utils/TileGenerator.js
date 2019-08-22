@@ -2,33 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useThree, useResource, useRender } from 'react-three-fiber';
 
-
-
-
-function TileFloor(props) {
-    const [tileMaterialRef, tileMaterial] = useResource()
-    const [tileGeometryRef, tileGeometry] = useResource()
-    return (
-        <>
-            <meshBasicMaterial ref={tileMaterialRef} color="white" />
-            <planeGeometry args={[props.size - 1, props.size - 1]} ref={tileGeometryRef} />
-            {tileMaterial && tileGeometry && (
-                <mesh
-                    material={tileMaterial}
-                    geometry={tileGeometry}
-                    position={props.pos}
-                    rotation={new THREE.Euler(-Math.PI / 2, 0, 0)}
-                />
-            )}
-        </>
-    );
-}
-
-// export function Tile(props) {
-//     return (
-//    );
-// }
-
 export default function TileGenerator({ size, grid, url, generateTile }) {
     const { camera, scene } = useThree();
     const [updatedTiles, setUpdatedTiles] = useState(false);
@@ -105,13 +78,6 @@ export default function TileGenerator({ size, grid, url, generateTile }) {
     }
 
     const latestTiles = Object.values(tiles.current);
-    const generateTiles = function (props) {
-        return <>
-            <TileFloor {...props} />
-            <TileElement {...props} />
-        </>;
-    }
-    console.log("LATESTTILES: ", latestTiles, latestTiles.length);
     return <>{latestTiles.map((props) => {
         return <group key={props.name}>
             {generateTile(props)}
