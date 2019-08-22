@@ -1,8 +1,8 @@
-import React, { Suspense, useRef, useMemo, useEffect, useReducer, useState } from 'react';
-import { extend, useThree, useResource, useRender, Canvas } from 'react-three-fiber';
+import React, { useEffect, useState } from 'react';
+import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 // TODO: Replace the current loadGLTF in ../../Utils/Loaders with this one...
 function loadGLTF(url, onSuccess) {
     return Promise.resolve(
@@ -56,7 +56,6 @@ function TileElement(props) {
 }
 
 function RedCube(props) {
-    // TODO why/how do i just pass props.pos?
     return <mesh position={[props.pos.x, props.pos.y, props.pos.z]} scale={[.1, .1, .1]}>
         <boxGeometry attach="geometry" />
         <meshBasicMaterial
@@ -89,7 +88,6 @@ function TileFloor(props) {
 }
 
 export const CityTile = function(props) {
-    // const [tileElementRef, ]
     // TODO TileFloor can probably be removed
     return <>
         <TileFloor {...props} />

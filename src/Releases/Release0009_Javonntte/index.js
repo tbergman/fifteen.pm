@@ -1,11 +1,11 @@
-import React, { Suspense, useRef, useMemo, useEffect, useReducer, useState } from 'react';
-import { extend, useThree, useResource, useRender, Canvas } from 'react-three-fiber';
+import React, { useEffect, useRef } from 'react';
+import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import TileGenerator, { Tile } from "../../Utils/TileGenerator";
+import TileGenerator from "../../Utils/TileGenerator";
 import "./index.css";
-import { assetPath9 } from "./utils";
 import { CityTile } from "./tiles";
+import { assetPath9 } from "./utils";
 
 extend({ OrbitControls });
 
@@ -26,12 +26,6 @@ function Controls() {
     );
 }
 
-function Street(props) {
-    return <></>;
-}
-
-
-// TODO maybe find equivalent of shouldComponentUpdate
 function Scene() {
     console.log('render2');
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -77,12 +71,9 @@ function Scene() {
             />
         </>
     );
-    return <></>;
 }
 
 export default function Release0009_Javonntte({ }) {
-    // TODO: the id for Canvas should be "canvas" and its css should live alongside a generic release canvas    
-    console.log('render1');
     return (
         <>
             <Canvas id="canvas"

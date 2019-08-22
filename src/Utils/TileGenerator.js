@@ -1,10 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { useThree, useResource, useRender } from 'react-three-fiber';
 
 export default function TileGenerator({ size, grid, url, generateTile }) {
     const { camera, scene } = useThree();
-    const [updatedTiles, setUpdatedTiles] = useState(false);
     const tiles = useRef({});
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const boundary = useRef({ x: 0, z: 0 });
