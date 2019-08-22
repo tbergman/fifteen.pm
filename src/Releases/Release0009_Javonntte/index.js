@@ -6,6 +6,8 @@ import TileGenerator from "../../Utils/TileGenerator";
 import { CityTile } from "./tiles";
 import { assetPath9 } from "./utils";
 import "./index.css";
+import {useModel} from "./models";
+import {BUILDINGS_URL} from "./constants";
 
 extend({ OrbitControls });
 
@@ -34,6 +36,7 @@ function Scene() {
        (For instance: a complicated geometry.)
      */
     const { camera } = useThree();
+    const [loading, buildings] = useModel(BUILDINGS_URL);
     useEffect(() => {
         camera.fov = 40;
     }, [])
@@ -52,7 +55,8 @@ function Scene() {
                 url={url}
                 size={1}
                 grid={10}
-                generateTile={CityTile}
+                tile={CityTile}
+                building={buildings}
             />
             <directionalLight intensity={3.5} position={[-25, 25, -25]} />
             <spotLight

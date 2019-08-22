@@ -1,19 +1,30 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import { useBuildings, loadBuildings } from "./models";
+import { useBuildings, loadBuildings, useModel } from "./models";
+import { BUILDINGS_URL } from "./constants";
+
+
+
+// class TileElement2 extends Component {
+//     state = {
+//       building
+//     }
+
+// }  
+
 
 
 function TileElement(props) {
-    const buildings = useBuildings();
-    console.log("IN TILE ELEMENT: ", buildings)
+
+    console.log("IN TILE ELEMENT: ", props.building);
     if (props.pos.z % 5 === 0 || props.pos.x % 5 === 0) {
         return TileStreet(props);
     } else {
         return <>
-            {buildings ? (
+            {props.building ? (
                 <mesh
-                    geometry={buildings["disco1"]} {...props}
+                    geometry={props.building["disco1"]} {...props}
                     position={props.pos}
                     rotation={new THREE.Euler(Math.PI / 2, 0, 0)}
                 >
@@ -34,26 +45,33 @@ function TileElement(props) {
 }
 
 function TileStreet(props) {
-    return <mesh position={[props.pos.x, props.pos.y, props.pos.z]} scale={[.1, .1, .1]}>
-        <boxGeometry attach="geometry" />
-        <meshBasicMaterial
-            attach="material"
-            color="red"
-        />
-    </mesh>;
+    const [materialRef, material] = useResource();
+    const [geometryRef, geometry] = useResource();
+    return <>
+        <boxGeometry ref={geometryRef} />
+        <meshBasicMaterial ref={materialRef} color={"red"} />
+        {material && geometry && (
+            <mesh
+                position={[props.pos.x, props.pos.y, props.pos.z]}
+                scale={[.1, .1, .1]}
+                material={material}
+                geometry={geometry}
+            />
+        )}
+    </>
 }
 
 function TileFloor(props) {
-    const [tileMaterialRef, tileMaterial] = useResource()
-    const [tileGeometryRef, tileGeometry] = useResource()
+    const [materialRef, material] = useResource()
+    const [geometryRef, geometry] = useResource()
     return (
         <>
-            <meshBasicMaterial ref={tileMaterialRef} color="white" />
-            <planeGeometry args={[props.size, props.size]} ref={tileGeometryRef} />
-            {tileMaterial && tileGeometry && (
+            <meshBasicMaterial ref={materialRef} color="white" />
+            <planeGeometry args={[props.size, props.size]} ref={geometryRef} />
+            {material && geometry && (
                 <mesh
-                    material={tileMaterial}
-                    geometry={tileGeometry}
+                    material={material}
+                    geometry={geometry}
                     position={props.pos}
                     rotation={new THREE.Euler(-Math.PI / 2, 0, 0)}
                 />
@@ -63,6 +81,7 @@ function TileFloor(props) {
 }
 
 export const CityTile = function (props) {
+    console.log("render CityTile", props.building);
     return <>
         <TileFloor {...props} />
         <TileElement {...props} />

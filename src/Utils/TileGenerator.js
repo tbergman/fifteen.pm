@@ -1,13 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
+import {CityTile} from "../Releases/Release0009_Javonntte/tiles";
 
-export default function TileGenerator({ size, grid, url, generateTile }) {
+export default function TileGenerator({ size, grid, url, tile, building }) {
     const { camera, scene } = useThree();
     const tiles = useRef({});
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const boundary = useRef({ x: 0, z: 0 });
 
+    console.log("render TileGenerator with building", building);
 
     useRender((state, time) => {
         if (shouldTriggerTileGeneration()) {
@@ -35,12 +37,14 @@ export default function TileGenerator({ size, grid, url, generateTile }) {
     function addTile(pos, time) {
         const tilename = nameTile(pos);
         if (!tiles.current.hasOwnProperty(tilename)) {
+
             tiles.current[tilename] = {
                 pos: pos,
                 updated: time,
                 url: url,
                 name: tilename,
-                size: size
+                size: size,
+                // building: building,
             };
         } else {
             tiles.current[tilename].updated = time;
@@ -76,10 +80,11 @@ export default function TileGenerator({ size, grid, url, generateTile }) {
         return "tile_" + pos.x + "_" + pos.z;
     }
 
+    console.log("(bottom) render TileGenerator with building", building);
     const latestTiles = Object.values(tiles.current);
     return <>{latestTiles.map((props) => {
         return <group key={props.name}>
-            {generateTile(props)}
+            {tile({building, ...props})}
         </group>;
     })}</>;
 }

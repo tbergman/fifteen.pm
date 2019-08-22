@@ -20,7 +20,7 @@ function loadBuildingsOrig() {
 }
 
 export const loadBuildings = () => {
-    const [buildings, setBuildings] = useState(false); 
+    const [buildings, setBuildings] = useState(false);
     const loader = useMemo(() => loadGLTF(BUILDINGS_URL, (gltf) => {
         const geometries = {}
         gltf.scene.traverse(child => {
@@ -35,7 +35,7 @@ export const loadBuildings = () => {
 }
 
 export const useBuildings = () => {
-    const [buildings, setBuildings] = useState(false); 
+    const [buildings, setBuildings] = useState(false);
     const loader = useMemo(() => loadGLTF(BUILDINGS_URL, (gltf) => {
         const geometries = {}
         gltf.scene.traverse(child => {
@@ -48,4 +48,29 @@ export const useBuildings = () => {
     }), [buildings]);
     useEffect(() => void loader, [buildings])
     return buildings;
+}
+
+export const useModel = (url) => {
+    const [loading, setLoading] = useState(false);
+    const [model, setModel] = useState(false);
+    const onSuccess = (gltf) => {
+        const geometries = {}
+        gltf.scene.traverse(child => {
+            if (child.isMesh) {
+                geometries[child.name] = child.geometry.clone();
+            }
+        })
+        return geometries;
+    }
+    useEffect(() => {
+        (async () => {
+            setLoading(true);
+            const model = await loadGLTF(url, onSuccess);
+            console.log("MODEL LOADED:", model);
+            setModel((...args) => console.log('setmodel',...args, model) || model);
+            setLoading(false);
+        })();
+    }, [url]);
+
+    return [loading, model]
 }
