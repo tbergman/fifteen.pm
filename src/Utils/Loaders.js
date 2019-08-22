@@ -1,14 +1,14 @@
 import * as THREE from "three";
 
-const rotateObject = (object, rotateX=0, rotateY=0, rotateZ=0) => {
+const rotateObject = (object, rotateX = 0, rotateY = 0, rotateZ = 0) => {
 
-   rotateX = (rotateX * Math.PI)/180;
-   rotateY = (rotateY * Math.PI)/180;
-   rotateZ = (rotateZ * Math.PI)/180;
+  rotateX = (rotateX * Math.PI) / 180;
+  rotateY = (rotateY * Math.PI) / 180;
+  rotateZ = (rotateZ * Math.PI) / 180;
 
-   object.rotateX(rotateX);
-   object.rotateY(rotateY);
-   object.rotateZ(rotateZ);
+  object.rotateX(rotateX);
+  object.rotateY(rotateY);
+  object.rotateZ(rotateZ);
 
 }
 
@@ -20,7 +20,7 @@ export const loadImage = ({ geometry, url, name, invert, position, rotateX, rota
   let texture = new THREE.TextureLoader().load(url);
   texture.minFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
-  let material = new THREE.MeshBasicMaterial({map: texture});
+  let material = new THREE.MeshBasicMaterial({ map: texture });
 
   // create mesh from material and geometry
   let imageMesh = new THREE.Mesh(geometry, material);
@@ -36,13 +36,13 @@ export const loadImage = ({ geometry, url, name, invert, position, rotateX, rota
 
 //  initialize an object of type 'video'
 export const loadVideo = ({
-    geometry, url, name, position, loop,
-    muted, mimetype, invert, volume, sources,
-    computeBoundingSphere, playbackRate,
-    rotateX, rotateY, rotateZ, repeat  }) => {
+  geometry, url, name, position, loop,
+  muted, mimetype, invert, volume, sources,
+  computeBoundingSphere, playbackRate,
+  rotateX, rotateY, rotateZ, repeat }) => {
   // initialize video element
   let videoElement = document.createElement('video');
-  videoElement.codecs="avc1.4D401E, mp4a.40.2";
+  videoElement.codecs = "avc1.4D401E, mp4a.40.2";
   videoElement.playsInline = true;
   videoElement.post = "https://dummyimage.com/320x240/ffffff/fff";
   videoElement.crossOrigin = 'anonymous';
@@ -62,7 +62,7 @@ export const loadVideo = ({
 
   // create material from video texture
   let texture = new THREE.VideoTexture(videoElement);
-  if (repeat){
+  if (repeat) {
     texture.repeat.x = repeat.x;
     texture.repeat.y = repeat.y;
     texture.wrapS = THREE.ClampToEdgeWrapping;
@@ -70,10 +70,10 @@ export const loadVideo = ({
     // texture.wrapS = THREE.RepeatWrapping;
     // texture.wrapT = THREE.RepeatWrapping;
   }
-  
+
   texture.minFilter = THREE.LinearFilter;
   texture.format = THREE.RGBFormat;
-  let material = new THREE.MeshBasicMaterial({map: texture});
+  let material = new THREE.MeshBasicMaterial({ map: texture });
   // create mesh from material and geometry
   let videoMesh = new THREE.Mesh(geometry, material);
   videoMesh.renderOrder = 1;
@@ -94,7 +94,7 @@ export const loadVideo = ({
 }
 
 // initialize an object of type 'gltf', with callbacks for success + errors
-export const loadGLTF = ({url, name, relativeScale, position, rotateX, rotateY, rotateZ, pivotPoint, loader, onSuccess, onError}) => {
+export const loadGLTF = ({ url, name, relativeScale, position, rotateX, rotateY, rotateZ, pivotPoint, loader, onSuccess, onError }) => {
   loader.load(url, object => {
     object.scene.scale.multiplyScalar(relativeScale);
     object.scene.position.set(...position);
@@ -105,5 +105,12 @@ export const loadGLTF = ({url, name, relativeScale, position, rotateX, rotateY, 
     object.name = name;
     rotateObject(object.scene, rotateX, rotateY, rotateZ);
     onSuccess(object);
+  }, onError);
+}
+
+// TODO - replace all uses of loadGLTF with loadGLTF2
+export const loadGLTF2 = ({ url, loader, onSuccess, onError }) => {
+  return loader.load(url, object => {
+    return onSuccess(object);
   }, onError);
 }
