@@ -168,11 +168,16 @@ export default function TileGenerator({ size, grid, url }) {
     }
 
     const latestTiles = Object.values(tiles.current);
+    const generateTiles = function (props) {
+        return <>
+            <DefaultTileFloor {...props} />
+            <TileElement {...props} />
+        </>;
+    }
     console.log("LATESTTILES: ", latestTiles, latestTiles.length);
     return <>{latestTiles.map((props) => {
         return <group key={props.name}>
-            <DefaultTileFloor {...props} />
-            <TileElement {...props} />
+            {generateTiles(props)}
         </group>;
     })}</>;
 }
