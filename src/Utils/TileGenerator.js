@@ -68,7 +68,7 @@ function CityTile(props) {
 }
 
 
-function DefaultTileFloor(props) {
+function TileFloor(props) {
     const [tileMaterialRef, tileMaterial] = useResource()
     const [tileGeometryRef, tileGeometry] = useResource()
     return (
@@ -92,7 +92,7 @@ function DefaultTileFloor(props) {
 //    );
 // }
 
-export default function TileGenerator({ size, grid, url }) {
+export default function TileGenerator({ size, grid, url, generateTile }) {
     const { camera, scene } = useThree();
     const [updatedTiles, setUpdatedTiles] = useState(false);
     const tiles = useRef({});
@@ -170,14 +170,14 @@ export default function TileGenerator({ size, grid, url }) {
     const latestTiles = Object.values(tiles.current);
     const generateTiles = function (props) {
         return <>
-            <DefaultTileFloor {...props} />
+            <TileFloor {...props} />
             <TileElement {...props} />
         </>;
     }
     console.log("LATESTTILES: ", latestTiles, latestTiles.length);
     return <>{latestTiles.map((props) => {
         return <group key={props.name}>
-            {generateTiles(props)}
+            {generateTile(props)}
         </group>;
     })}</>;
 }

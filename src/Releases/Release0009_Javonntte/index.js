@@ -5,7 +5,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import TileGenerator, { Tile } from "../../Utils/TileGenerator";
 import "./index.css";
 import { assetPath9 } from "./utils";
-
+import { CityTile } from "./tiles";
 
 extend({ OrbitControls });
 
@@ -53,7 +53,7 @@ function Scene() {
             fov: 75
             frustumCulled: true
         */
-       camera.fov = 40;
+        camera.fov = 40;
     }, [])
     useRender(() => {
         camera.position.y = 3.;
@@ -66,7 +66,7 @@ function Scene() {
     return (
         <>
             <Controls />
-            <TileGenerator url={url} size={1} grid={10} />
+            <TileGenerator url={url} size={1} grid={10} generateTile={CityTile} />
             <directionalLight intensity={3.5} position={[-25, 25, -25]} />
             <spotLight
                 castShadow
