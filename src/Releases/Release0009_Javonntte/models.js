@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { BUILDINGS_URL } from "./constants";
 
@@ -10,7 +10,7 @@ function loadGLTF(url, onSuccess) {
 }
 
 // When you make this loadbuildings logic global, it always works, without errors :/
-function loadBuildings() {
+function loadBuildingsOrig() {
     const buildingsLoader = new GLTFLoader();
     let buildings = {}
     buildingsLoader.load(BUILDINGS_URL, gltf => {
@@ -19,10 +19,9 @@ function loadBuildings() {
     return buildings;
 }
 
-export const useBuildings = () => {
-    const [buildings, setBuildings] = useState(false);
-    useEffect(() => void loadGLTF(BUILDINGS_URL, onSuccess).then(b => setBuildings(b)), [setBuildings])
-    const onSuccess = (gltf) => {
+export const loadBuildings = () => {
+    const [buildings, setBuildings] = useState(false); 
+    const loader = useMemo(() => loadGLTF(BUILDINGS_URL, (gltf) => {
         const geometries = {}
         gltf.scene.traverse(child => {
             if (child.isMesh) {
@@ -30,6 +29,23 @@ export const useBuildings = () => {
             }
         })
         return geometries;
-    }
-    return buildings
+    }), [buildings]);
+    useEffect(() => void loader.then(b => setBuildings(b)), [setBuildings])
+    return buildings;
+}
+
+export const useBuildings = () => {
+    const [buildings, setBuildings] = useState(false); 
+    const loader = useMemo(() => loadGLTF(BUILDINGS_URL, (gltf) => {
+        const geometries = {}
+        gltf.scene.traverse(child => {
+            if (child.isMesh) {
+                geometries[child.name] = child.geometry.clone();
+            }
+        })
+        setBuildings(geometries)
+        return geometries;
+    }), [buildings]);
+    useEffect(() => void loader, [buildings])
+    return buildings;
 }

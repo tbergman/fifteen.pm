@@ -1,7 +1,7 @@
 import React from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import { useBuildings } from "./models";
+import { useBuildings, loadBuildings } from "./models";
 
 
 function TileElement(props) {
