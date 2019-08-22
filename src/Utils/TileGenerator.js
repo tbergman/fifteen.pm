@@ -1,71 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useThree, useResource, useRender } from 'react-three-fiber';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-
-// TODO: Replace the current loadGLTF in ../../Utils/Loaders with this one...
-function loadGLTF(url, onSuccess) {
-    return Promise.resolve(
-        new Promise((resolve, reject) => {
-            new GLTFLoader().load(url, resolve, null, reject)
-        }).then(gltf => onSuccess(gltf)));
-}
-
-function TileElement(props) {
-    console.log('render TileElement');
-    const [building, setBuilding] = useState(false);
-
-    const onSuccess = (gltf) => {
-        const geometries = {}
-        gltf.scene.traverse(child => {
-            if (child.isMesh) {
-                geometries[child.name] = child.geometry.clone();
-            }
-        })
-        return geometries
-    }
-    useEffect(() => void loadGLTF(props.url, onSuccess).then(b => setBuilding(b)), [setBuilding])
-    if (props.pos.z % 5 === 0 || props.pos.x % 5 === 0) {
-        return RedCube(props);
-    } else {
-        return <>
-            {building ? (
-                <mesh
-                    geometry={building["disco1"]} {...props}
-                    position={props.pos}
-                    rotation={new THREE.Euler(Math.PI / 2, 0, 0)}
-                >
-                    <meshPhysicalMaterial
-                        attach="material"
-                        roughness={0.8}
-                        metalness={0.6}
-                        emissive="#a4f20d"
-                        // emissiveIntensity={active ? 0.1 : 0}
-                        color="#001000"
-                        fog={true}
-                        shininess={0.5}
-                    />
-                </mesh>
-            ) : null}
-        </>;
-    }
-}
-
-function RedCube(props) {
-    // TODO why/how do i just pass props.pos?
-    return <mesh position={[props.pos.x, props.pos.y, props.pos.z]} scale={[.1, .1, .1]}>
-        <boxGeometry attach="geometry" />
-        <meshBasicMaterial
-            attach="material"
-            color="red"
-        />
-    </mesh>;
-}
 
 
-function CityTile(props) {
-    return
-}
 
 
 function TileFloor(props) {
