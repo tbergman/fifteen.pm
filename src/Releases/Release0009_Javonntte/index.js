@@ -60,7 +60,7 @@ function Scene() {
     return (
         <>
             <Controls />
-            <TileGenerator url={url} size={1} grid={10} generateTile={CityTile} />
+            <TileGenerator url={url} size={.1} grid={10} generateTile={CityTile} />
             <directionalLight intensity={3.5} position={[-25, 25, -25]} />
             <spotLight
                 castShadow
