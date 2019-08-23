@@ -1,15 +1,13 @@
 import React, { useRef, useState } from 'react';
 import { useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import {CityTile} from "../Releases/Release0009_Javonntte/tiles";
+import { CityTile } from "../Releases/Release0009_Javonntte/tiles";
 
-export default function TileGenerator({ size, grid, url, tile, building }) {
+export default function TileGenerator({ size, grid, url, tileComponent, tileResources }) {
     const { camera, scene } = useThree();
     const tiles = useRef({});
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const boundary = useRef({ x: 0, z: 0 });
-
-    console.log("render TileGenerator with building", building);
 
     useRender((state, time) => {
         if (shouldTriggerTileGeneration()) {
@@ -80,11 +78,9 @@ export default function TileGenerator({ size, grid, url, tile, building }) {
         return "tile_" + pos.x + "_" + pos.z;
     }
 
-    console.log("(bottom) render TileGenerator with building", building);
-    const latestTiles = Object.values(tiles.current);
-    return <>{latestTiles.map((props) => {
+    return <>{Object.values(tiles.current).map((props) => {
         return <group key={props.name}>
-            {tile({building, ...props})}
+            {tileComponent({ tileResources, ...props })}
         </group>;
     })}</>;
 }

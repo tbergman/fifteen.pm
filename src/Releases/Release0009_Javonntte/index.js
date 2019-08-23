@@ -5,9 +5,9 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import TileGenerator from "../../Utils/TileGenerator";
 import { CityTile } from "./tiles";
 import { assetPath9 } from "./utils";
+import { useGLTF } from "../../Utils/hooks";
+import { BUILDINGS_URL } from "./constants";
 import "./index.css";
-import {useModel} from "./models";
-import {BUILDINGS_URL} from "./constants";
 
 extend({ OrbitControls });
 
@@ -27,7 +27,6 @@ function Controls() {
 }
 
 function Scene() {
-    console.log('render2');
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
        example: https://codesandbox.io/s/use-three-renders-thrice-i4k6c
@@ -36,7 +35,7 @@ function Scene() {
        (For instance: a complicated geometry.)
      */
     const { camera } = useThree();
-    const [loading, buildings] = useModel(BUILDINGS_URL);
+    const [loading, buildings] = useGLTF(BUILDINGS_URL);
     useEffect(() => {
         camera.fov = 40;
     }, [])
@@ -55,8 +54,8 @@ function Scene() {
                 url={url}
                 size={1}
                 grid={10}
-                tile={CityTile}
-                building={buildings}
+                tileComponent={CityTile}
+                tileResources={buildings}
             />
             <directionalLight intensity={3.5} position={[-25, 25, -25]} />
             <spotLight
