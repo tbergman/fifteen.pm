@@ -11,6 +11,7 @@ import "./index.css";
 
 extend({ OrbitControls });
 
+
 function Controls() {
     const controls = useRef();
     const { camera, canvas } = useThree();
@@ -34,16 +35,27 @@ function Scene() {
        Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
        (For instance: a complicated geometry.)
      */
-    const { camera } = useThree();
-    const [loading, buildings] = useGLTF(BUILDINGS_URL);
+    const { camera, size } = useThree();
+    const [tileGridSize, setTileGrideSize] = useState(10);
+    const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, (gltf) => {
+        const geometries = {}
+        gltf.scene.traverse(child => {
+            if (child.isMesh) {
+                child.geometry.center();
+                geometries[child.name] = child.geometry.clone();
+            }
+        })
+        return geometries;
+    }
+    );
     useEffect(() => {
         camera.fov = 40;
     }, [])
     useRender(() => {
-        camera.position.y = 3.;
         // let lookAtPos = camera.position.copy(); // TODO this is erroring on 'Cannot read property 'x' of undefined'
         let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
         lookAtPos.y = 0;
+        camera.position.y = 3.;
         camera.lookAt(lookAtPos);
     })
     const url = assetPath9("objects/structures/weirdos1.glb");
@@ -51,9 +63,8 @@ function Scene() {
         <>
             <Controls />
             <TileGenerator
-                url={url}
-                size={1}
-                grid={10}
+                tileSize={1}
+                grid={tileGridSize}
                 tileComponent={CityTile}
                 tileResources={buildings}
             />

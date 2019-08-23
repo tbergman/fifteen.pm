@@ -6,7 +6,7 @@ function TileBuilding(props) {
     return <>
         {props.tileResources ? (
             <mesh
-                geometry={props.tileResources["disco1"]} {...props}
+                geometry={props.tileResources["lightWire1"]}
                 position={props.pos}
                 rotation={new THREE.Euler(Math.PI / 2, 0, 0)}
             >
@@ -33,7 +33,7 @@ function TileStreet(props) {
         <meshBasicMaterial ref={materialRef} color={"red"} />
         {material && geometry && (
             <mesh
-                position={[props.pos.x, props.pos.y, props.pos.z]}
+                position={props.pos}
                 scale={[.1, .1, .1]}
                 material={material}
                 geometry={geometry}
@@ -48,7 +48,7 @@ function TileFloor(props) {
     return (
         <>
             <meshBasicMaterial ref={materialRef} color="white" />
-            <planeGeometry args={[props.size, props.size]} ref={geometryRef} />
+            <planeGeometry args={[props.size-.1, props.size-.1]} ref={geometryRef} />
             {material && geometry && (
                 <mesh
                     material={material}

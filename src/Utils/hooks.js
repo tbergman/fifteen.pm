@@ -8,18 +8,9 @@ function loadGLTF(url, onSuccess) {
         }).then(gltf => onSuccess(gltf)));
 }
 
-export const useGLTF = (url) => {
+export const useGLTF = (url, onSuccess) => {
     const [loading, setLoading] = useState(false);
     const [model, setModel] = useState(false);
-    const onSuccess = (gltf) => {
-        const geometries = {}
-        gltf.scene.traverse(child => {
-            if (child.isMesh) {
-                geometries[child.name] = child.geometry.clone();
-            }
-        })
-        return geometries;
-    }
     useEffect(() => {
         (async () => {
             setLoading(true);
