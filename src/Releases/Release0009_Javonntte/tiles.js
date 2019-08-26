@@ -1,5 +1,5 @@
 import React from 'react';
-import { useResource, useRender } from 'react-three-fiber';
+import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { TronBuildingShader } from '../../Shaders/TronBuildingShader';
 

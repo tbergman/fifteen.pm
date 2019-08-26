@@ -1,9 +1,8 @@
 
-import React, { useRef, useState, useCallback, useMemo } from 'react'
-import * as THREE from 'three'
-import { Canvas, useThree, useRender, useResource } from 'react-three-fiber'
-import tronFragmentShader from '!raw-loader!glslify-loader!./tronFragment.glsl';
 import simpleVertex from '!raw-loader!glslify-loader!./simpleVertex.glsl';
+import tronFragmentShader from '!raw-loader!glslify-loader!./tronFragment.glsl';
+import React, { useMemo } from 'react';
+import { useRender, useThree } from 'react-three-fiber';
 
 export function TronBuildingShader({ materialRef, pos, size }) {
   const { camera } = useThree();
@@ -11,7 +10,7 @@ export function TronBuildingShader({ materialRef, pos, size }) {
   useRender(
     () => {
       if (!materialRef.current) return; // avoid re-initialization async issues (e.g. if tiling)
-      materialRef.current.uniforms.uTime.value += .01;// = t = (t + 0.01) % 1
+      materialRef.current.uniforms.uTime.value += .01;
     });
   const uniforms = useMemo(() => {
     return {
