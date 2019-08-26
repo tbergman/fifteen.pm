@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
+import { apply as applyThree, Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import TileGenerator from "../../Utils/TileGenerator";
 import { CityTile } from "./tiles";
 import { assetPath9 } from "./utils";
 import { useGLTF } from "../../Utils/hooks";
+import { Effects } from "../../Utils/Effects";
 import { BUILDINGS_URL } from "./constants";
 import "./index.css";
+
+import {apply as applySpring, useSpring, a, interpolate } from 'react-spring/three'
 
 extend({ OrbitControls });
 
@@ -37,6 +40,7 @@ function Scene() {
      */
     const { camera, size } = useThree();
     // TODO: this value should be a factor of the size of the user's screen...?
+    const [{ top, mouse }, set] = useSpring(() => ({ top: 0, mouse: [0, 0] }))
     const [tileGridSize, setTileGrideSize] = useState(12);
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, (gltf) => {
         const geometries = {}
@@ -63,6 +67,7 @@ function Scene() {
     return (
         <>
             <Controls />
+            <Effects factor={top.interpolate([0, 10], [1, 0])} />
             <TileGenerator
                 tileSize={1}
                 grid={tileGridSize}
