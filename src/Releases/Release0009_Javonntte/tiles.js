@@ -1,6 +1,8 @@
 import React from 'react';
-import { useResource } from 'react-three-fiber';
+import { useResource, useRender } from 'react-three-fiber';
 import * as THREE from 'three';
+import { TronBuildingShader } from '../../Shaders/TronBuildingShader';
+
 
 function TileBuilding(props) {
     return <>
@@ -43,22 +45,41 @@ function TileStreet(props) {
 }
 
 function TileFloor(props) {
-    const [materialRef, material] = useResource()
-    const [geometryRef, geometry] = useResource()
+    const [materialRef, material] = useResource();
+    const [geometryRef, geometry] = useResource();
     return (
         <>
-            <meshBasicMaterial ref={materialRef} color="white" />
-            <planeGeometry args={[props.size-.1, props.size-.1]} ref={geometryRef} />
+            {/* <meshBasicMaterial ref={materialRef} color="white" /> */}
+            <TronBuildingShader materialRef={materialRef} {...props} />
+            <planeGeometry args={[props.size, props.size]} ref={geometryRef} />
             {material && geometry && (
                 <mesh
-                    material={material}
                     geometry={geometry}
+                    material={material}
                     position={props.pos}
                     rotation={new THREE.Euler(-Math.PI / 2, 0, 0)}
-                />
+                >
+                </mesh>
             )}
         </>
     );
+    // const [materialRef, material] = useResource()
+    // const [geometryRef, geometry] = useResource()
+    // return (
+
+    //     <mesh
+    //         // material={material}
+    //         // geometry={geometry}
+    //         position={props.pos}
+    //         rotation={new THREE.Euler(-Math.PI / 2, 0, 0)}
+    //     >
+    //         <planeGeometry attach="geometry" args={[props.size - .1, props.size - .1]} />
+    //         <TronBuildingShader {...props} />
+    //     </mesh>
+
+
+    // );
+    // // return TronBuildingShader(props);
 }
 
 function TileElement(props) {
