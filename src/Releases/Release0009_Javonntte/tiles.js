@@ -2,27 +2,20 @@ import React from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { TronBuildingShader } from '../../Shaders/TronBuildingShader';
-
+import { randVal } from "./utils";
 
 function TileBuilding(props) {
+    const [materialRef, material] = useResource();
     return <>
-        {props.tileResources ? (
+        <TronBuildingShader materialRef={materialRef} {...props} />
+        {material && props.tileResources ? (
             <mesh
-                geometry={props.tileResources["lightWire1"]}
+                geometry={randVal(props.tileResources)}
+                material={material}
                 position={props.pos}
                 rotation={new THREE.Euler(Math.PI / 2, 0, 0)}
-            >
-                <meshPhysicalMaterial
-                    attach="material"
-                    roughness={0.8}
-                    metalness={0.6}
-                    emissive="#a4f20d"
-                    // emissiveIntensity={active ? 0.1 : 0}
-                    color="#001000"
-                    fog={true}
-                    shininess={0.5}
-                />
-            </mesh>
+            />
+
         ) : null}
     </>;
 }
@@ -31,8 +24,9 @@ function TileStreet(props) {
     const [materialRef, material] = useResource();
     const [geometryRef, geometry] = useResource();
     return <>
-        <boxGeometry ref={geometryRef} />
-        <meshBasicMaterial ref={materialRef} color={"red"} />
+        <boxGeometry args={[3., .01]} ref={geometryRef} />
+        <TronBuildingShader materialRef={materialRef} {...props} />
+        {/* <meshBasicMaterial ref={materialRef} color={"red"} /> */}
         {material && geometry && (
             <mesh
                 position={props.pos}
@@ -63,23 +57,6 @@ function TileFloor(props) {
             )}
         </>
     );
-    // const [materialRef, material] = useResource()
-    // const [geometryRef, geometry] = useResource()
-    // return (
-
-    //     <mesh
-    //         // material={material}
-    //         // geometry={geometry}
-    //         position={props.pos}
-    //         rotation={new THREE.Euler(-Math.PI / 2, 0, 0)}
-    //     >
-    //         <planeGeometry attach="geometry" args={[props.size - .1, props.size - .1]} />
-    //         <TronBuildingShader {...props} />
-    //     </mesh>
-
-
-    // );
-    // // return TronBuildingShader(props);
 }
 
 function TileElement(props) {

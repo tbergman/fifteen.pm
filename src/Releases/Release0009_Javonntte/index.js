@@ -54,10 +54,10 @@ function Scene() {
     }, [])
     useRender(() => {
         // let lookAtPos = camera.position.copy(); // TODO this is erroring on 'Cannot read property 'x' of undefined'
-        let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
-        lookAtPos.y = 0;
-        camera.position.y = 3.;
-        camera.lookAt(lookAtPos);
+        // let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+        // lookAtPos.y = 0;
+        // camera.position.y = 3.;
+        // camera.lookAt(lookAtPos);
     })
     const url = assetPath9("objects/structures/weirdos1.glb");
     return (
