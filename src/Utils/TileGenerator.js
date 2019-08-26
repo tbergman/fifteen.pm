@@ -45,8 +45,8 @@ export default function TileGenerator({ tileSize, grid, tileComponent, tileResou
         const halfTilesY = halfTiles;
         // TODO want to get something like this working: https://discourse.threejs.org/t/functions-to-calculate-the-visible-width-height-at-a-given-z-depth-from-a-perspective-camera/269/19
         // so that the tiles intelligently fill the visible screen with a buffer
-        for (let x = -halfTilesX; x < halfTilesX; x++) {
-            for (let z = -halfTilesY; z < halfTilesY; z++) {
+        for (let x = -halfTilesX; x <= halfTilesX; x++) {
+            for (let z = -halfTilesY; z <= halfTilesY; z++) {
                 const pos = new THREE.Vector3((x * tileSize + cameraX), 0, (z * tileSize + cameraZ));
                 addTile(pos, time);
             }

@@ -10,12 +10,12 @@ export function TronBuildingShader({ materialRef, pos, size }) {
   useRender(
     () => {
       if (!materialRef.current) return; // avoid re-initialization async issues (e.g. if tiling)
-      materialRef.current.uniforms.uTime.value += .01;
+      materialRef.current.uniforms.uTime.value += .1;
     });
   const uniforms = useMemo(() => {
     return {
       uTime: { value: 0 },
-      uPosOffset: { value: pos },
+      uGlobalOffset: { value: pos },
       uCurCenter: { value: camera.position }
     }
   }, [materialRef]);

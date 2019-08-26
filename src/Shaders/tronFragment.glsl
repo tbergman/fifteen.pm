@@ -1,15 +1,18 @@
 varying vec2 vUv;
 uniform float uTime;
-uniform vec3 uPosOffset;
+uniform vec3 uGlobalOffset;
 uniform vec3 uCurCenter;
 
-void main()
-{    
-    // Time varying pixel color
-    vec3 col = vec3(0.);
-    // TODO - make this 'wrap' around the screen
-    if (vUv.y > .95){
-        col.x =sin(vUv.x + uPosOffset.x - uTime - uCurCenter.x);
-    }
-    gl_FragColor = vec4( col, 1.0 );
+float plot(vec2 st, float pct) {
+  return smoothstep(pct - 0.02, pct, st.y) - smoothstep(pct, pct + 0.02, st.y);
+}
+
+void main() {
+  vec3 col = vec3(0.);
+  float pct = plot(vUv, .50); // currently just setting a simple line down the middle...
+  float timeVariability = uTime * cos(uGlobalOffset.z);
+  float streak = sin(vUv.x + uGlobalOffset.x - timeVariability - uCurCenter.x) + cos(uGlobalOffset.z); // creates the motion and gaps
+  col += pct * streak;
+  
+  gl_FragColor = vec4(col, 1.0);
 }

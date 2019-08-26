@@ -36,7 +36,8 @@ function Scene() {
        (For instance: a complicated geometry.)
      */
     const { camera, size } = useThree();
-    const [tileGridSize, setTileGrideSize] = useState(10);
+    // TODO: this value should be a factor of the size of the user's screen...?
+    const [tileGridSize, setTileGrideSize] = useState(12);
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, (gltf) => {
         const geometries = {}
         gltf.scene.traverse(child => {
