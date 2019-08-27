@@ -1,19 +1,17 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { apply as applyThree, Canvas, extend, useRender, useThree } from 'react-three-fiber';
+import React, { useEffect, useRef, useState } from 'react';
+import { useSpring } from 'react-spring/three';
+import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import TileGenerator from "../../Utils/TileGenerator";
-import { CityTile } from "./tiles";
-import { assetPath9 } from "./utils";
+import { BloomEffect } from "../../Utils/Effects";
 import { useGLTF } from "../../Utils/hooks";
-import { Effects } from "../../Utils/Effects";
+import TileGenerator from "../../Utils/TileGenerator";
 import { BUILDINGS_URL } from "./constants";
 import "./index.css";
-
-import {apply as applySpring, useSpring, a, interpolate } from 'react-spring/three'
+import { CityTile } from "./tiles";
+import { assetPath9 } from "./utils";
 
 extend({ OrbitControls });
-
 
 function Controls() {
     const controls = useRef();
@@ -24,8 +22,8 @@ function Controls() {
             ref={controls}
             args={[camera, canvas]}
             enableDamping
-            dampingFactor={0.1}
-            rotateSpeed={0.1}
+            dampingFactor={0.9}
+            rotateSpeed={0.2}
         />
     );
 }
@@ -57,17 +55,17 @@ function Scene() {
         camera.fov = 40;
     }, [])
     useRender(() => {
+        camera.position.y = 3.;
         // let lookAtPos = camera.position.copy(); // TODO this is erroring on 'Cannot read property 'x' of undefined'
-        // let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
-        // lookAtPos.y = 0;
-        // camera.position.y = 3.;
-        // camera.lookAt(lookAtPos);
+        let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+        lookAtPos.y = 0;
+        camera.lookAt(lookAtPos);
     })
     const url = assetPath9("objects/structures/weirdos1.glb");
     return (
         <>
             <Controls />
-            <Effects factor={top.interpolate([0, 10], [1, 0])} />
+            <BloomEffect camera={camera} />
             <TileGenerator
                 tileSize={1}
                 grid={tileGridSize}
