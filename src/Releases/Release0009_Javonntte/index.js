@@ -73,13 +73,54 @@ function generateWorld({ sides, tiers, worldRadius }) {
     return rollingGroundSphere;
 }
 
+function faceCentroid(face, vertices) {
+    const v1 = vertices[face.a];
+    const v2 = vertices[face.b];
+    const v3 = vertices[face.c];
+    return new THREE.Vector3(
+        (v1.x + v2.x + v3.x) / 3,
+        (v1.y + v2.y + v3.y) / 3,
+        (v1.z + v2.z + v3.z) / 3,
+
+    );
+}
+
+
+
+function generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius }) {
+    // var numBuildings = 9936;
+    const faces = world.current.geometry.faces;
+    const vertices = world.current.geometry.vertices;
+    for (let i = 0; i < faces.length; i++) {
+        const face = faces[i];
+        const centroid = faceCentroid(face, vertices);
+        const newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)].clone();
+        newBuilding.position.x = centroid.x;
+        newBuilding.position.y = centroid.y;
+        newBuilding.position.z = centroid.z;
+        console.log('add ', newBuilding, 'at centroid', centroid, 'position:', newBuilding.position)
+        world.current.add(newBuilding);
+    }
+
+    // var numBuildings = 26;
+    // var gap = 6.28 / 36; // PI / ?
+    // for (var i = 0; i < numBuildings; i++) {
+    //     const row = i * gap;
+    //     // const row = 0;
+    //     generateBuilding(false, row, true, world.current, buildings, buildingsInPath, sphericalHelper, worldRadius);
+    //     generateBuilding(false, row, false, world.current, buildings, buildingsInPath, sphericalHelper, worldRadius);
+    // }
+}
+
+
 function generateBuilding(inPath, row, isLeft, world, buildings, buildingsInPath, sphericalHelper, worldRadius) {
+    const pathAngleValues = [1.52, 1.57, 1.62];
     let newBuilding;
     if (inPath) {
         if (buildings.length == 0) return;
         newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)];
         buildingsInPath.push(newBuilding);
-        sphericalHelper.set(worldRadius - 0.3, pathAngleValues[row], -rollingGroundSphere.rotation.x + 4);
+        sphericalHelper.set(worldRadius - 0.3, pathAngleValues[row], -world.rotation.x + 4);
     } else {
         newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)];
         // newBuilding = createBuilding();
@@ -90,18 +131,22 @@ function generateBuilding(inPath, row, isLeft, world, buildings, buildingsInPath
             areaAngle = 1.46 - Math.random() * 0.1;
         }
         sphericalHelper.set(worldRadius - 0.3, areaAngle, row);
+        // sphericalHelper.set(100, 1.52, -world.rotation.x+4);
     }
     newBuilding.visible = true;
+    console.log("--")
+    console.log("NEWBUILDING POS BEFORE", newBuilding.position);
     newBuilding.position.setFromSpherical(sphericalHelper);
-    var rollingGroundVector = world.position.clone().normalize();
+    console.log("NEWBUILDING POS AFTER", newBuilding.position);
+    var worldVector = world.position.clone().normalize();
     var buildingVector = newBuilding.position.clone().normalize();
-    newBuilding.quaternion.setFromUnitVectors(buildingVector, rollingGroundVector);
+    newBuilding.quaternion.setFromUnitVectors(buildingVector, worldVector);
     newBuilding.rotation.x += (Math.random() * (2 * Math.PI / 10)) + -Math.PI / 10;
     world.add(newBuilding);
 }
 
 
-function doBuildingLogic({buildingsInPath, camera}) {
+function doBuildingLogic({ buildingsInPath, camera }) {
     var oneBuilding;
     var buildingPos = new THREE.Vector3();
     var buildingsToRemove = [];
@@ -129,17 +174,6 @@ function doBuildingLogic({buildingsInPath, camera}) {
     });
 }
 
-
-function generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius }) {
-    var numBuildings = 9936;
-    // var numBuildings = 26;
-    var gap = 6.28 / 36;
-    for (var i = 0; i < numBuildings; i++) {
-        generateBuilding(false, i * gap, true, world.current, buildings, buildingsInPath, sphericalHelper, worldRadius);
-        generateBuilding(false, i * gap, false, world.current, buildings, buildingsInPath, sphericalHelper, worldRadius);
-    }
-}
-
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
@@ -164,7 +198,6 @@ function Scene() {
                 const mesh = new THREE.Mesh(child.geometry.clone(), material)
                 mesh.castShadow = true;
                 mesh.receiveShadow = false;
-                mesh.rotation.set(new THREE.Euler(Math.PI/2, 0, 0));
                 geometries.push(mesh);
             }
         })
@@ -192,6 +225,7 @@ function Scene() {
         const fogColor = new THREE.Color(0xffffff);
         scene.background = fogColor;
         scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
+        console.log(camera.position);
     }, [buildings])
     // let world;
     // if (!worldCreated){
@@ -199,8 +233,7 @@ function Scene() {
     // }
     useRender(() => {
         if (world.current) world.current.rotation.x += rollingSpeed;
-        doBuildingLogic({buildingsInPath, camera});
-        // console.log(camera.position);
+        // doBuildingLogic({buildingsInPath, camera});
         // camera.rotation.x -= cameraRollingSpeed;
         // if (cameraSphere.position.y <= cameraBaseY) {
         //     // 	jumping=false;
