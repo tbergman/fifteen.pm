@@ -37,7 +37,6 @@ function Scene() {
        (For instance: a complicated geometry.)
      */
     const { camera, scene, gl } = useThree();
-    console.log(gl);
     const [{ top, mouse }, set] = useSpring(() => ({ top: 0, mouse: [0, 0] }))
     // TODO: this value should be a factor of the size of the user's screen...?
     const [tileGridSize, setTileGrideSize] = useState(25);
@@ -59,11 +58,11 @@ function Scene() {
         scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
     }, [])
     useRender(() => {
-        camera.position.y = 3.;
+        // camera.position.y = 3.;
         // let lookAtPos = camera.position.copy(); // TODO this is erroring on 'Cannot read property 'x' of undefined'
-        let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
-        lookAtPos.y = 0;
-        camera.lookAt(lookAtPos);
+        // let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
+        // lookAtPos.y = 0;
+        // camera.lookAt(lookAtPos);
     })
     return (
         <>
