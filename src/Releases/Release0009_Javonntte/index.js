@@ -30,10 +30,7 @@ function Controls() {
 
 
 // https://jsfiddle.net/juwalbose/bk4u5wcn/embedded/
-function generateWorld() {
-    const worldRadius = 26;
-    var sides = 40;
-    var tiers = 40;
+function generateWorld({ sides, tiers, worldRadius }) {
     var sphereGeometry = new THREE.SphereGeometry(worldRadius, sides, tiers);
     var sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading })
     var vertexIndex;
@@ -72,8 +69,75 @@ function generateWorld() {
     rollingGroundSphere.rotation.z = -Math.PI / 2;
     rollingGroundSphere.position.y = -24;
     rollingGroundSphere.position.z = 2;
-    // addWorldTrees();
+    // addWorldBuildings();
     return rollingGroundSphere;
+}
+
+function generateBuilding(inPath, row, isLeft, world, buildings, buildingsInPath, sphericalHelper, worldRadius) {
+    let newBuilding;
+    if (inPath) {
+        if (buildings.length == 0) return;
+        newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)];
+        buildingsInPath.push(newBuilding);
+        sphericalHelper.set(worldRadius - 0.3, pathAngleValues[row], -rollingGroundSphere.rotation.x + 4);
+    } else {
+        newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)];
+        // newBuilding = createBuilding();
+        var areaAngle = 0;//[1.52,1.57,1.62];
+        if (isLeft) {
+            areaAngle = 1.68 + Math.random() * 0.1;
+        } else {
+            areaAngle = 1.46 - Math.random() * 0.1;
+        }
+        sphericalHelper.set(worldRadius - 0.3, areaAngle, row);
+    }
+    newBuilding.visible = true;
+    newBuilding.position.setFromSpherical(sphericalHelper);
+    var rollingGroundVector = world.position.clone().normalize();
+    var buildingVector = newBuilding.position.clone().normalize();
+    newBuilding.quaternion.setFromUnitVectors(buildingVector, rollingGroundVector);
+    newBuilding.rotation.x += (Math.random() * (2 * Math.PI / 10)) + -Math.PI / 10;
+    world.add(newBuilding);
+}
+
+
+function doBuildingLogic({buildingsInPath, camera}) {
+    var oneBuilding;
+    var buildingPos = new THREE.Vector3();
+    var buildingsToRemove = [];
+    buildingsInPath.forEach(function (element, index) {
+        oneBuilding = buildingsInPath[index];
+        buildingPos.setFromMatrixPosition(oneBuilding.matrixWorld);
+        if (buildingPos.z > 6 && oneBuilding.visible) {//gone out of our view zone
+            buildingsToRemove.push(oneBuilding);
+        } else {//check collision
+            if (buildingPos.distanceTo(camera.position) <= 0.6) {
+                console.log("hit");
+                hasCollided = true;
+                explode();
+            }
+        }
+    });
+    var fromWhere;
+    buildingsToRemove.forEach(function (element, index) {
+        oneBuilding = buildingsToRemove[index];
+        fromWhere = buildingsInPath.indexOf(oneBuilding);
+        buildingsInPath.splice(fromWhere, 1);
+        buildingsPool.push(oneBuilding);
+        oneBuilding.visible = false;
+        console.log("remove building");
+    });
+}
+
+
+function generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius }) {
+    var numBuildings = 9936;
+    // var numBuildings = 26;
+    var gap = 6.28 / 36;
+    for (var i = 0; i < numBuildings; i++) {
+        generateBuilding(false, i * gap, true, world.current, buildings, buildingsInPath, sphericalHelper, worldRadius);
+        generateBuilding(false, i * gap, false, world.current, buildings, buildingsInPath, sphericalHelper, worldRadius);
+    }
 }
 
 function Scene() {
@@ -90,18 +154,32 @@ function Scene() {
     // TODO: this value should be a factor of the size of the user's screen...?
     const [tileGridSize, setTileGrideSize] = useState(12);
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, (gltf) => {
-        const geometries = {}
+        // const geometries = {}
+        const geometries = []
         gltf.scene.traverse(child => {
             if (child.isMesh) {
                 child.geometry.center();
-                geometries[child.name] = child.geometry.clone();
+                // geometries[child.name] = child.geometry.clone();
+                const material = new THREE.MeshStandardMaterial({ color: 0x886633, flatShading: THREE.FlatShading });
+                const mesh = new THREE.Mesh(child.geometry.clone(), material)
+                mesh.castShadow = true;
+                mesh.receiveShadow = false;
+                mesh.rotation.set(new THREE.Euler(Math.PI/2, 0, 0));
+                geometries.push(mesh);
             }
         })
         return geometries;
     });
+    let buildingsInPath = []
     const world = useRef(0);
+    const sphericalHelper = new THREE.Spherical();
     useEffect(() => {
-        world.current = generateWorld();
+        const sides = 40;
+        const tiers = 40;
+        const worldRadius = 26;
+        world.current = generateWorld({ sides, tiers, worldRadius });
+        console.log("IN USE EFFECT:", buildings);
+        if (buildings) generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius });
         scene.add(world.current);
         camera.fov = 50;
         // camera.far = 30000; // TODO change me
@@ -114,14 +192,15 @@ function Scene() {
         const fogColor = new THREE.Color(0xffffff);
         scene.background = fogColor;
         scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
-    }, [])
+    }, [buildings])
     // let world;
     // if (!worldCreated){
     // setWorldCreated(true);
     // }
     useRender(() => {
         if (world.current) world.current.rotation.x += rollingSpeed;
-        console.log(camera.position);
+        doBuildingLogic({buildingsInPath, camera});
+        // console.log(camera.position);
         // camera.rotation.x -= cameraRollingSpeed;
         // if (cameraSphere.position.y <= cameraBaseY) {
         //     // 	jumping=false;
