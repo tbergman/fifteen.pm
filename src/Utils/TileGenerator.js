@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
+import {CityTile} from '../Releases/Release0009_Javonntte/tiles';
 
 export default function TileGenerator({ tileSize, grid, tileComponent, tileResources }) {
     const { camera, scene, size } = useThree();
@@ -42,9 +43,11 @@ export default function TileGenerator({ tileSize, grid, tileComponent, tileResou
                 updated: time,
                 name: tilename,
                 size: tileSize,
+                isInitialRender: true,
             };
         } else {
             tiles.current[tilename].updated = time;
+            tiles.current[tilename].isInitialRender = false;
         }
     }
 
@@ -79,7 +82,9 @@ export default function TileGenerator({ tileSize, grid, tileComponent, tileResou
 
     return <>{Object.values(tiles.current).map((props) => {
         return <group key={props.name}>
-            {tileComponent({ tileResources, ...props })}
+            {/* {tileComponent({tileResources: tileResources, ...props})} */}
+            {/* <tileComponent tileResources={tileResources} {...props} /> */}
+            <CityTile tileResources={tileResources} {...props} />
         </group>;
     })}</>;
 }

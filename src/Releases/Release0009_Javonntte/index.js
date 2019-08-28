@@ -3,7 +3,7 @@ import { useSpring } from 'react-spring/three';
 import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { BloomEffect } from "../../Utils/Effects";
+import { BloomEffect, Advanced2Effect } from "../../Utils/Effects";
 import { useGLTF } from "../../Utils/hooks";
 import TileGenerator from "../../Utils/TileGenerator";
 import { BUILDINGS_URL } from "./constants";
@@ -36,10 +36,11 @@ function Scene() {
        Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
        (For instance: a complicated geometry.)
      */
-    const { camera, size } = useThree();
-    // TODO: this value should be a factor of the size of the user's screen...?
+    const { camera, scene, gl } = useThree();
+    console.log(gl);
     const [{ top, mouse }, set] = useSpring(() => ({ top: 0, mouse: [0, 0] }))
-    const [tileGridSize, setTileGrideSize] = useState(12);
+    // TODO: this value should be a factor of the size of the user's screen...?
+    const [tileGridSize, setTileGrideSize] = useState(25);
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, (gltf) => {
         const geometries = {}
         gltf.scene.traverse(child => {
@@ -53,6 +54,9 @@ function Scene() {
     );
     useEffect(() => {
         camera.fov = 40;
+        const fogColor = new THREE.Color(0xffffff); 
+        scene.background = fogColor;
+        scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
     }, [])
     useRender(() => {
         camera.position.y = 3.;
@@ -61,18 +65,18 @@ function Scene() {
         lookAtPos.y = 0;
         camera.lookAt(lookAtPos);
     })
-    const url = assetPath9("objects/structures/weirdos1.glb");
     return (
         <>
             <Controls />
-            <BloomEffect camera={camera} />
+            {/* <BloomEffect camera={camera} /> */}
+            {/* <Advanced2Effect camera={camera} /> */}
             <TileGenerator
                 tileSize={1}
                 grid={tileGridSize}
                 tileComponent={CityTile}
                 tileResources={buildings}
             />
-            <directionalLight intensity={3.5} position={[-25, 25, -25]} />
+            {/* <directionalLight intensity={3.5} position={camera.position} /> */}
             <spotLight
                 castShadow
                 intensity={2}
@@ -94,7 +98,7 @@ export default function Release0009_Javonntte({ }) {
             <Canvas id="canvas"
                 onCreated={({ gl }) => {
                     gl.shadowMap.enabled = true
-                    gl.shadowMap.type = THREE.PCFSoftShadowMap
+                //     gl.shadowMap.type = THREE.PCFSoftShadowMap
                 }}>
                 <Scene />
             </Canvas>

@@ -4,9 +4,10 @@ import tronFragmentShader from '!raw-loader!glslify-loader!./tronFragment.glsl';
 import React, { useMemo } from 'react';
 import { useRender, useThree } from 'react-three-fiber';
 
+
+// TODO: Shadows http://jsfiddle.net/22jpzktk/
 export function TronBuildingShader({ materialRef, pos, size }) {
   const { camera } = useThree();
-  let t = 0;
   useRender(
     () => {
       if (!materialRef.current) return; // avoid re-initialization async issues (e.g. if tiling)
@@ -24,5 +25,6 @@ export function TronBuildingShader({ materialRef, pos, size }) {
     uniforms={uniforms}
     vertexShader={simpleVertex}
     fragmentShader={tronFragmentShader}
+    // lights={true}
   />;
 }
