@@ -76,7 +76,7 @@ function TileElement(props) {
     else return TileBuilding(props);
 }
 
-export const CityTile = React.memo(props => {
+export const CityTile = props => {
     console.log("render CityTile");
     // TODO the 'z' used here should be the current direction the camera is moving towards
     const offset = props.pos.z;
@@ -87,4 +87,4 @@ export const CityTile = React.memo(props => {
         <TileFloor {...props} />
         <TileElement {...props} />
     </group>
-}, (props) => !props.isInitialRender);
+}

@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import {CityTile} from '../Releases/Release0009_Javonntte/tiles';
 
 export default function TileGenerator({ tileSize, grid, tileComponent, tileResources }) {
     const { camera, scene, size } = useThree();
@@ -80,11 +79,24 @@ export default function TileGenerator({ tileSize, grid, tileComponent, tileResou
         return "tile_" + pos.x + "_" + pos.z;
     }
 
-    return <>{Object.values(tiles.current).map((props) => {
-        return <group key={props.name}>
-            {/* {tileComponent({tileResources: tileResources, ...props})} */}
-            {/* <tileComponent tileResources={tileResources} {...props} /> */}
-            <CityTile tileResources={tileResources} {...props} />
-        </group>;
-    })}</>;
+
+    const curTiles = Object.values(tiles.current);
+    return <>
+        {curTiles.map(props =>
+            <group key={props.name}>
+                <TileMemo
+                    tileComponent={tileComponent}
+                    tileResources={tileResources}
+                    {...props}
+                />
+            </group>
+        )}
+    </>;
 }
+
+// We don't want to constantly refresh tiles - 
+// that could potentially change what a tile looks like
+// while the user is still viewing it!
+export const TileMemo = React.memo(props => {
+    return <>{props.tileComponent(props)}</>;
+}, props => !props.isInitialRender);

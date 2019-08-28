@@ -75,6 +75,7 @@ function Scene() {
                 tileComponent={CityTile}
                 tileResources={buildings}
             />
+
             {/* <directionalLight intensity={3.5} position={camera.position} /> */}
             <spotLight
                 castShadow
