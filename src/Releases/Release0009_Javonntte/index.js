@@ -32,7 +32,7 @@ function Controls() {
 // https://jsfiddle.net/juwalbose/bk4u5wcn/embedded/
 function generateWorld({ sides, tiers, worldRadius }) {
     var sphereGeometry = new THREE.SphereGeometry(worldRadius, sides, tiers);
-    var sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading })
+    var sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading, vertexColors: THREE.FaceColors })
     var vertexIndex;
     var vertexVector = new THREE.Vector3();
     var nextVertexVector = new THREE.Vector3();
@@ -81,11 +81,20 @@ function faceCentroid(face, vertices) {
         (v1.x + v2.x + v3.x) / 3,
         (v1.y + v2.y + v3.y) / 3,
         (v1.z + v2.z + v3.z) / 3,
-
     );
 }
 
+function generateBuilding(tri, centroid, normal, buildings, offset) {
+    const newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)].clone();
+    let newPos = new THREE.Vector3();
+    tri.closestPointToPoint(centroid.addScalar(offset), newPos)
+    newBuilding.position.x = newPos.x;
+    newBuilding.position.y = newPos.y;
+    newBuilding.position.z = newPos.z;
+    newBuilding.lookAt(normal);
+    return newBuilding;
 
+}
 
 function generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius }) {
     // var numBuildings = 9936;
@@ -93,15 +102,23 @@ function generateBuildings({ world, buildings, buildingsInPath, sphericalHelper,
     const vertices = world.current.geometry.vertices;
     for (let i = 0; i < faces.length; i++) {
         const face = faces[i];
+        const tri = new THREE.Triangle(vertices[face.a], vertices[face.b], vertices[face.c]);
         const centroid = faceCentroid(face, vertices);
-        const newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)].clone();
-        newBuilding.position.x = centroid.x;
-        newBuilding.position.y = centroid.y;
-        newBuilding.position.z = centroid.z;
-        console.log('add ', newBuilding, 'at centroid', centroid, 'position:', newBuilding.position)
-        world.current.add(newBuilding);
+        const area = tri.getArea();
+        let numStructures = 1;
+        if (area < .5) numStructures = 2;
+        else if (area >= .5 && area < 1.) numStructures = 4;
+        else if (area >= .1 && area < 2.) numStructures = 6;
+        else numStructures = 8;
+        face.color.setRGB(0, numStructures/10, 0);
+        for (let i = -Math.floor(numStructures / 2); i < Math.floor(numStructures / 2); i++) {
+            world.current.add(generateBuilding(tri, centroid, face.normal, buildings, i));
+        }
     }
 
+
+    /*
+    */
     // var numBuildings = 26;
     // var gap = 6.28 / 36; // PI / ?
     // for (var i = 0; i < numBuildings; i++) {
@@ -113,37 +130,34 @@ function generateBuildings({ world, buildings, buildingsInPath, sphericalHelper,
 }
 
 
-function generateBuilding(inPath, row, isLeft, world, buildings, buildingsInPath, sphericalHelper, worldRadius) {
-    const pathAngleValues = [1.52, 1.57, 1.62];
-    let newBuilding;
-    if (inPath) {
-        if (buildings.length == 0) return;
-        newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)];
-        buildingsInPath.push(newBuilding);
-        sphericalHelper.set(worldRadius - 0.3, pathAngleValues[row], -world.rotation.x + 4);
-    } else {
-        newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)];
-        // newBuilding = createBuilding();
-        var areaAngle = 0;//[1.52,1.57,1.62];
-        if (isLeft) {
-            areaAngle = 1.68 + Math.random() * 0.1;
-        } else {
-            areaAngle = 1.46 - Math.random() * 0.1;
-        }
-        sphericalHelper.set(worldRadius - 0.3, areaAngle, row);
-        // sphericalHelper.set(100, 1.52, -world.rotation.x+4);
-    }
-    newBuilding.visible = true;
-    console.log("--")
-    console.log("NEWBUILDING POS BEFORE", newBuilding.position);
-    newBuilding.position.setFromSpherical(sphericalHelper);
-    console.log("NEWBUILDING POS AFTER", newBuilding.position);
-    var worldVector = world.position.clone().normalize();
-    var buildingVector = newBuilding.position.clone().normalize();
-    newBuilding.quaternion.setFromUnitVectors(buildingVector, worldVector);
-    newBuilding.rotation.x += (Math.random() * (2 * Math.PI / 10)) + -Math.PI / 10;
-    world.add(newBuilding);
-}
+// function generateBuilding(inPath, row, isLeft, world, buildings, buildingsInPath, sphericalHelper, worldRadius) {
+//     const pathAngleValues = [1.52, 1.57, 1.62];
+//     let newBuilding;
+//     if (inPath) {
+//         if (buildings.length == 0) return;
+//         newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)];
+//         buildingsInPath.push(newBuilding);
+//         sphericalHelper.set(worldRadius - 0.3, pathAngleValues[row], -world.rotation.x + 4);
+//     } else {
+//         newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)];
+//         // newBuilding = createBuilding();
+//         var areaAngle = 0;//[1.52,1.57,1.62];
+//         if (isLeft) {
+//             areaAngle = 1.68 + Math.random() * 0.1;
+//         } else {
+//             areaAngle = 1.46 - Math.random() * 0.1;
+//         }
+//         sphericalHelper.set(worldRadius - 0.3, areaAngle, row);
+//         // sphericalHelper.set(100, 1.52, -world.rotation.x+4);
+//     }
+//     newBuilding.visible = true;
+//     newBuilding.position.setFromSpherical(sphericalHelper);
+//     var worldVector = world.position.clone().normalize();
+//     var buildingVector = newBuilding.position.clone().normalize();
+//     newBuilding.quaternion.setFromUnitVectors(buildingVector, worldVector);
+//     newBuilding.rotation.x += (Math.random() * (2 * Math.PI / 10)) + -Math.PI / 10;
+//     world.add(newBuilding);
+// }
 
 
 function doBuildingLogic({ buildingsInPath, camera }) {
@@ -195,7 +209,9 @@ function Scene() {
                 child.geometry.center();
                 // geometries[child.name] = child.geometry.clone();
                 const material = new THREE.MeshStandardMaterial({ color: 0x886633, flatShading: THREE.FlatShading });
-                const mesh = new THREE.Mesh(child.geometry.clone(), material)
+                const mesh = new THREE.Mesh(child.geometry.clone(), material);
+                // mesh.rotation.x = Math.PI / 2;
+                mesh.name = child.name;
                 mesh.castShadow = true;
                 mesh.receiveShadow = false;
                 geometries.push(mesh);
@@ -211,7 +227,6 @@ function Scene() {
         const tiers = 40;
         const worldRadius = 26;
         world.current = generateWorld({ sides, tiers, worldRadius });
-        console.log("IN USE EFFECT:", buildings);
         if (buildings) generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius });
         scene.add(world.current);
         camera.fov = 50;
@@ -225,7 +240,6 @@ function Scene() {
         const fogColor = new THREE.Color(0xffffff);
         scene.background = fogColor;
         scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
-        console.log(camera.position);
     }, [buildings])
     // let world;
     // if (!worldCreated){
