@@ -28,17 +28,20 @@ function Scene() {
     const world = useRef(0);
     const sphericalHelper = new THREE.Spherical();
     useEffect(() => {
-        const sides = 40;
-        const tiers = 40;
-        const worldRadius = 26;
-        world.current = generateWorld({ sides, tiers, worldRadius });
+        const worldRadius = 26; // TODO this should justbe accessible from world.current rather than in scope like this
+        world.current = generateWorld({
+            sides: 40,
+            tiers: 40,
+            worldRadius: worldRadius,
+            maxHeight: 0.07,
+        });
         if (buildings) generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius });
         scene.add(world.current);
         camera.fov = 50;
         // camera.far = 30000; // TODO change me
         // camera.position.y = 0.2; // TODO remove
         camera.position.z = 6.5;
-        camera.position.y = 1.8;
+        camera.position.y = 3.8;
         // let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z); // TODO remove
         // lookAtPos.y = 0; // TODO remove
         // camera.lookAt(lookAtPos); // TODO remove
@@ -51,7 +54,7 @@ function Scene() {
     // setWorldCreated(true);
     // }
     useRender(() => {
-        if (world.current) world.current.rotation.x += rollingSpeed;
+        // if (world.current) world.current.rotation.x += rollingSpeed;
         // doBuildingLogic({buildingsInPath, camera});
         // camera.rotation.x -= cameraRollingSpeed;
         // if (cameraSphere.position.y <= cameraBaseY) {

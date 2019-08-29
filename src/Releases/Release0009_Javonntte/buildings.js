@@ -29,13 +29,19 @@ function getMiddle(pointA, pointB) {
     return middle.clone()
 }
 
+function triangleCentroid(triangle) {
+    const middle = getMiddle(triangle.a, triangle.b);
+    const opposite = triangle.c;
+    const centroid = getMiddle(middle, opposite);
+    return centroid.clone();
+}
 function subdivideTriangle(tri, centroid, formation) {
     const i1 = tri.a;
     const i2 = tri.b;
     const i3 = tri.c;
-    const a = (tri.a, tri.b);
-    const b = (tri.b, tri.c);
-    const c = (tri.a, tri.c);
+    const a = getMiddle(tri.a, tri.b);
+    const b = getMiddle(tri.b, tri.c);
+    const c = getMiddle(tri.a, tri.c);
     const triangles = [];
     // all same size
 
@@ -53,6 +59,7 @@ function subdivideTriangle(tri, centroid, formation) {
             triangles.push(new THREE.Triangle(i1, i2, c)); // big building // TODO probably can store all of this in maps
             triangles.push(new THREE.Triangle(i2, i3, centroid)); // medium building
             triangles.push(new THREE.Triangle(i3, c, centroid)); // narrow building
+            break;
         case "micro":
             const equalTriangles = subdivideTriangle(tri, centroid, "equal");
             for (let i = 0; i < equalTriangles.length; i++) {
@@ -61,86 +68,113 @@ function subdivideTriangle(tri, centroid, formation) {
                     triangles.push(halvedTriangles[j]);
                 }
             }
+            break;
     }
 
     return triangles;
 }
 
-function generateBuilding(buildingSubset, centroid, normal) {
-    const newBuilding = randomClone(buildingSubset);
+
+function random(seed) {
+    var x = Math.sin(seed) * 10000;
+    var r = x - Math.floor(x);
+    return r;
+}
+
+function getRandomColor(centroid) {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    var seed = random(centroid.x * centroid.y * centroid.z) * 10000;
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(random(seed++) * 16)];
+    }
+    return color;
+}
+
+function setupBuilding(newBuilding, centroid, normal, color) {
+    // TODO getting the buildings to sit on the curve properly will work with use of 'Spherical'
     newBuilding.position.x = centroid.x;
     newBuilding.position.y = centroid.y;
     newBuilding.position.z = centroid.z;
+    newBuilding.material.color.set(color);
+    // newBuilding.applyMatrix(new THREE.Matrix4().makeTranslation(x,y,z)
+    // newBuilding.position.addVectors(centroid, new THREE.Vector3(0, 0, 0).multiplyScalar(-1));
     newBuilding.lookAt(normal); // will share normals with the face (TODO will this work?)
     return newBuilding;
 }
 
-function triangleCentroid(triangle) {
-    const middle = getMiddle(triangle.a, triangle.b);
-    const opposite = triangle.c;
-    const centroid = getMiddle(middle, opposite);
-    return centroid;
-}
-
-function generatePrimaryFace(face, vertices, buildings) {
-    // const newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)].clone();
-    // const newBuilding = buildings[9].clone();//THREE.Math.randInt(0, buildings.length - 1)].clone();
+function generateBuildingsOnFace(face, vertices, buildings) {
     const triangle = new THREE.Triangle(vertices[face.a], vertices[face.b], vertices[face.c]);
     const centroid = faceCentroid(face, vertices);
     const area = triangle.getArea();
-    let formation;
-    if (area < 1.) {
-        formation = "micro";
-    } else if (area >= 1. && area < 3.) {
-        formation = "equal"; // TODO naming lol
-    } else {
-        formation = "bigLeft1";
-    }
+    let formation = "equal"
+    const newBuildings = [];
+    // if (area > 2.) return newBuildings;
+    // if (area < 1.) {
+    //     formation = "micro";
+    // } else if (area >= 1. && area < 3.) {
+    //     formation = "equal"; // TODO naming lol
+    // } else {
+    //     formation = "bigLeft1";
+    // }
     // formation = "equal";
     const subdivisions = subdivideTriangle(triangle, centroid, formation);
-    const newBuildings = [];
-    if (formation == "equal") {
-        for (let i = 0; i < subdivisions.length; i++) {
-            // TODO might want to just store centroids during calculation
-            const centroid = triangleCentroid(subdivisions[i]);
-            newBuildings.push(generateBuilding(buildings.mid, centroid, face.normal));
-        }
-    } else if (formation === "bigLeft1") {
-        const bigBuildingCentroid = triangleCentroid(subdivisions[0]);
-        newBuildings.push(generateBuilding(buildings.wide, bigBuildingCentroid, face.normal))
-        const midBuildingCentroid = triangleCentroid(subdivisions[1]);
-        newBuildings.push(generateBuilding(buildings.mid, midBuildingCentroid, face.normal))
-        const narrowBuildingCentroid = triangleCentroid(subdivisions[2]);
-        newBuildings.push(generateBuilding(buildings.narrow, narrowBuildingCentroid, face.normal))
-    } else if (formation == "micro") {
-        for (let i = 0; i < subdivisions.length; i++) {
-            // TODO might want to just store centroids during calculation
-            const centroid = triangleCentroid(subdivisions[i]);
-            newBuildings.push(generateBuilding(buildings.narrow, centroid, face.normal));
-        }
+    const color = getRandomColor(centroid); // TODO temporary color to help debug
+    // if (formation == "equal") {
+    //     for (let i = 0; i < 3; i++){//subdivisions.length; i++) {
+    //         // TODO might want to just store centroids during calculation
+    //         const centroid = triangleCentroid(subdivisions[i]);
+    //         newBuildings.push(generateBuilding(buildings.mid, centroid, face.normal, color));
+    //     }
+    // }
+    // } else 
+    // if (formation === "bigLeft1") {
+    //     const bigBuildingCentroid = triangleCentroid(subdivisions[0]);
+    //     newBuildings.push(generateBuilding(buildings.wide, bigBuildingCentroid, face.normal, color))
+    //     const midBuildingCentroid = triangleCentroid(subdivisions[1]);
+    //     newBuildings.push(generateBuilding(buildings.mid, midBuildingCentroid, face.normal, color))
+    //     const narrowBuildingCentroid = triangleCentroid(subdivisions[2]);
+    //     newBuildings.push(generateBuilding(buildings.narrow, narrowBuildingCentroid, face.normal, color))
+    // }
+    // } else 
+    if (Math.random() * 1000 < 700) return newBuildings;
+
+    // if (formation == "micro") {
+    const building = randomClone(buildings.narrow)
+    console.log("---")
+    for (let i = 0; i < subdivisions.length; i++) {
+        // TODO might want to just store centroids during calculation
+        const centroid = triangleCentroid(subdivisions[i]);
+        newBuildings.push(setupBuilding(building.clone(), centroid, face.normal, color));
     }
+    // }
     return newBuildings;
+}
+
+function lineSegmentFromVertices(vertices) {
+    var geometry = new THREE.BufferGeometry();
+    geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    var edges = new THREE.EdgesGeometry(geometry);
+    return new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xff0000 }))
 }
 
 export function generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius }) {
     const faces = world.current.geometry.faces;
     const vertices = world.current.geometry.vertices;
     for (let i = 0; i < faces.length; i++) {
-        const newBuildings = generatePrimaryFace(faces[i], vertices, buildings);
+        // TODO remove (what do the faces look like)
+        const a = vertices[faces[i].a];
+        const b = vertices[faces[i].b];
+        const c = vertices[faces[i].c];
+        const tmpVertices = new Float32Array(
+            [a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z]
+        );
+        const line = lineSegmentFromVertices(tmpVertices);
+        world.current.add(line);
+        const newBuildings = generateBuildingsOnFace(faces[i], vertices, buildings);
         for (let j = 0; j < newBuildings.length; j++) {
             world.current.add(newBuildings[j]);
         }
-        // const tri = new THREE.Triangle(vertices[face.a], vertices[face.b], vertices[face.c]);
-        // const area = tri.getArea();
-        // let numStructures = 2
-        // if (area < .5) numStructures = 2;
-        // else if (area >= .5 && area < 1.) numStructures = 4;
-        // else if (area >= .1 && area < 2.) numStructures = 6;
-        // else numStructures = 8;
-        // face.color.setRGB(0, numStructures / 20, 0);
-        // for (let i = -Math.floor(numStructures / 2); i < Math.floor(numStructures / 2); i++) {
-        // world.current.add(generateBuilding(tri, centroid, face.normal, buildings, i));
-        // }
     }
 }
 
@@ -152,15 +186,19 @@ export function loadBuildings(gltf) {
     }
     gltf.scene.traverse(child => {
         if (child.isMesh) {
+
             child.geometry.center();
             const material = new THREE.MeshStandardMaterial({ color: 0x886633, flatShading: THREE.FlatShading });
             const geometry = child.geometry.clone();
-            // this makes the 'lookAt(normal)' easier to use later on
+
+            // this makes the 'lookAt(normal)' easier to use later on by flipping the default blender output for expected placement on the sphere
+
             geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI));
             const mesh = new THREE.Mesh(geometry, material);
             mesh.name = child.name;
             mesh.castShadow = true;
             mesh.receiveShadow = false;
+            // mesh.position.set(0, 0, 0);
             if (child.name.startsWith("MID")) {
                 geometries.mid.push(mesh);
             } else if (child.name.startsWith("WIDE")) {
