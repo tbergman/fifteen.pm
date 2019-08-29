@@ -1,64 +1,135 @@
 import * as THREE from 'three';
 import { faceCentroid } from "../../Utils/geometry";
 
-
+// TODO ensure randomness is unique-ish within triangle face sets
 function randomClone(arr) {
     return arr[THREE.Math.randInt(0, arr.length - 1)].clone();
 }
 
+const buildingGroupings = [
 
+    // structures:[{}, {} {}]
+    // small: [
+    //     { numWide: 0, numMid: 5, numSmall: 0 },
+    // ],
+    // medium: [
+    //     { numWide: 2, numMid: 0, numSmall: 0 }
+    // ],
+    // large: [
+    //     { numWide: 4, numMid: 0, numSmall: 0 }
+    // ]
+]
 
-const buildingGroupings = {
-    small: [
-        { numWide: 0, numMid: 5, numSmall: 0 },
-    ],
-    medium: [
-        { numWide: 2, numMid: 0, numSmall: 0 }
-    ],
-    large: [
-        { numWide: 4, numMid: 0, numSmall: 0 }
-    ]
+// https://gist.github.com/kamend/2f825621825466e0d2bdaac72afd498e
+function getMiddle(pointA, pointB) {
+    let middle = new THREE.Vector3()
+    middle.subVectors(pointB.clone(), pointA.clone())
+    middle.multiplyScalar(0.5)
+    middle.subVectors(pointB.clone(), middle)
+    return middle.clone()
 }
 
+function subdivideTriangle(tri, centroid, formation) {
+    const i1 = tri.a;
+    const i2 = tri.b;
+    const i3 = tri.c;
+    const a = (tri.a, tri.b);
+    const b = (tri.b, tri.c);
+    const c = (tri.a, tri.c);
+    const triangles = [];
+    // all same size
 
-
-function generateFace(face, vertices, buildings) {
-    // const newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)].clone();
-    // const newBuilding = buildings[9].clone();//THREE.Math.randInt(0, buildings.length - 1)].clone();
-
-    const tri = new THREE.Triangle(vertices[face.a], vertices[face.b], vertices[face.c]);
-    const area = tri.getArea();
-
-    let newBuilding;
-    if (area < 3.) {
-        newBuilding = randomClone(buildings.narrow);
-    } else if (area >= 3 && area <= 4) {
-        newBuilding = randomClone(buildings.mid);
-    } else {
-        newBuilding = randomClone(buildings.wide);
+    switch (formation) {
+        case "equal":
+            triangles.push(new THREE.Triangle(i1, a, centroid));
+            triangles.push(new THREE.Triangle(a, i2, centroid));
+            triangles.push(new THREE.Triangle(i2, b, centroid));
+            triangles.push(new THREE.Triangle(b, i3, centroid));
+            triangles.push(new THREE.Triangle(i3, c, centroid));
+            triangles.push(new THREE.Triangle(c, i1, centroid));
+            break;
+        case "bigLeft1":
+            // big on left, medium on top, small on bottom right
+            triangles.push(new THREE.Triangle(i1, i2, c)); // big building // TODO probably can store all of this in maps
+            triangles.push(new THREE.Triangle(i2, i3, centroid)); // medium building
+            triangles.push(new THREE.Triangle(i3, c, centroid)); // narrow building
+        case "micro":
+            const equalTriangles = subdivideTriangle(tri, centroid, "equal");
+            for (let i = 0; i < equalTriangles.length; i++) {
+                const halvedTriangles = subdivideTriangle(equalTriangles[i], triangleCentroid(equalTriangles[i]), "equal");
+                for (let j = 0; j < halvedTriangles.length; j++) {
+                    triangles.push(halvedTriangles[j]);
+                }
+            }
     }
-    // console.log(tri.getArea());    
-    const centroid = faceCentroid(face, vertices);
 
-    // let newPos = new THREE.Vector3();
-    // const offset=1;
-    // tri.closestPointToPoint(centroid.addScalar(offset), newPos)
-    newBuilding.position.x = centroid.x;//newPos.x;
+    return triangles;
+}
+
+function generateBuilding(buildingSubset, centroid, normal) {
+    const newBuilding = randomClone(buildingSubset);
+    newBuilding.position.x = centroid.x;
     newBuilding.position.y = centroid.y;
     newBuilding.position.z = centroid.z;
-    newBuilding.lookAt(face.normal);
-    // console.log(newBuilding);
+    newBuilding.lookAt(normal); // will share normals with the face (TODO will this work?)
     return newBuilding;
 }
 
+function triangleCentroid(triangle) {
+    const middle = getMiddle(triangle.a, triangle.b);
+    const opposite = triangle.c;
+    const centroid = getMiddle(middle, opposite);
+    return centroid;
+}
+
+function generatePrimaryFace(face, vertices, buildings) {
+    // const newBuilding = buildings[THREE.Math.randInt(0, buildings.length - 1)].clone();
+    // const newBuilding = buildings[9].clone();//THREE.Math.randInt(0, buildings.length - 1)].clone();
+    const triangle = new THREE.Triangle(vertices[face.a], vertices[face.b], vertices[face.c]);
+    const centroid = faceCentroid(face, vertices);
+    const area = triangle.getArea();
+    let formation;
+    if (area < 1.) {
+        formation = "micro";
+    } else if (area >= 1. && area < 3.) {
+        formation = "equal"; // TODO naming lol
+    } else {
+        formation = "bigLeft1";
+    }
+    // formation = "equal";
+    const subdivisions = subdivideTriangle(triangle, centroid, formation);
+    const newBuildings = [];
+    if (formation == "equal") {
+        for (let i = 0; i < subdivisions.length; i++) {
+            // TODO might want to just store centroids during calculation
+            const centroid = triangleCentroid(subdivisions[i]);
+            newBuildings.push(generateBuilding(buildings.mid, centroid, face.normal));
+        }
+    } else if (formation === "bigLeft1") {
+        const bigBuildingCentroid = triangleCentroid(subdivisions[0]);
+        newBuildings.push(generateBuilding(buildings.wide, bigBuildingCentroid, face.normal))
+        const midBuildingCentroid = triangleCentroid(subdivisions[1]);
+        newBuildings.push(generateBuilding(buildings.mid, midBuildingCentroid, face.normal))
+        const narrowBuildingCentroid = triangleCentroid(subdivisions[2]);
+        newBuildings.push(generateBuilding(buildings.narrow, narrowBuildingCentroid, face.normal))
+    } else if (formation == "micro") {
+        for (let i = 0; i < subdivisions.length; i++) {
+            // TODO might want to just store centroids during calculation
+            const centroid = triangleCentroid(subdivisions[i]);
+            newBuildings.push(generateBuilding(buildings.narrow, centroid, face.normal));
+        }
+    }
+    return newBuildings;
+}
+
 export function generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius }) {
-    // var numBuildings = 9936;
-    console.log("BUILDINGS:", buildings);
     const faces = world.current.geometry.faces;
     const vertices = world.current.geometry.vertices;
     for (let i = 0; i < faces.length; i++) {
-        // const face = faces[i];
-        world.current.add(generateFace(faces[i], vertices, buildings));
+        const newBuildings = generatePrimaryFace(faces[i], vertices, buildings);
+        for (let j = 0; j < newBuildings.length; j++) {
+            world.current.add(newBuildings[j]);
+        }
         // const tri = new THREE.Triangle(vertices[face.a], vertices[face.b], vertices[face.c]);
         // const area = tri.getArea();
         // let numStructures = 2
