@@ -4,6 +4,7 @@ import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { useGLTF } from "../../Utils/hooks";
+import {BloomEffect} from "../../Utils/Effects";
 import { generateBuildings, loadBuildings } from "./buildings";
 import { BUILDINGS_URL } from "./constants";
 import { Controls } from "./controls";
@@ -72,7 +73,7 @@ function Scene() {
     })
     return (
         <>
-            <Controls />
+            <Controls target={world.current.position}/>
             {/* <BloomEffect camera={camera} /> */}
             {/* <Advanced2Effect camera={camera} /> */}
             {/* <TileGenerator
@@ -82,7 +83,7 @@ function Scene() {
                 tileResources={buildings}
             /> */}
 
-            {/* <directionalLight intensity={3.5} position={camera.position} /> */}
+            <directionalLight intensity={3.5} position={camera.position} />
             <spotLight
                 castShadow
                 intensity={2}
@@ -104,7 +105,7 @@ export default function Release0009_Javonntte({ }) {
             <Canvas id="canvas"
                 onCreated={({ gl }) => {
                     gl.shadowMap.enabled = true
-                    //     gl.shadowMap.type = THREE.PCFSoftShadowMap
+                    gl.shadowMap.type = THREE.PCFSoftShadowMap
                 }}>
                 <Scene />
             </Canvas>

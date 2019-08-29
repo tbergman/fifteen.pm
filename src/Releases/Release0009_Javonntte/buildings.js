@@ -141,7 +141,6 @@ function generateBuildingsOnFace(face, vertices, buildings) {
 
     // if (formation == "micro") {
     const building = randomClone(buildings.narrow)
-    console.log("---")
     for (let i = 0; i < subdivisions.length; i++) {
         // TODO might want to just store centroids during calculation
         const centroid = triangleCentroid(subdivisions[i]);

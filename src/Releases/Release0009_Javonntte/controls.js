@@ -1,9 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useRender, useThree } from 'react-three-fiber';
 
-export function Controls() {
+export function Controls({ target }) {
     const controls = useRef();
     const { camera, canvas } = useThree();
+    useEffect(() => {
+        if (target) {
+            console.log("TARGET", target);
+            controls.current.target.copy(target);
+        }
+    }, [target])
     useRender(() => { controls.current && controls.current.update() });
     return (
         <orbitControls
