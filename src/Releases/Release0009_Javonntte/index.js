@@ -3,17 +3,12 @@ import { useSpring } from 'react-spring/three';
 import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { BloomEffect, Advanced2Effect } from "../../Utils/Effects";
 import { useGLTF } from "../../Utils/hooks";
-import TileGenerator from "../../Utils/TileGenerator";
+import { generateBuildings, loadBuildings } from "./buildings";
 import { BUILDINGS_URL } from "./constants";
+import { Controls } from "./controls";
 import "./index.css";
-import {GeometryUtils} from "three-full";
-import { CityTile } from "./tiles";
-import { assetPath9 } from "./utils";
-import {generateWorld} from './world';
-import {generateBuildings} from "./buildings";
-import {Controls} from "./controls";
+import { generateWorld } from './world';
 extend({ OrbitControls });
 
 function Scene() {
@@ -28,25 +23,7 @@ function Scene() {
     const rollingSpeed = 0.0001;
     const [{ top, mouse }, set] = useSpring(() => ({ top: 0, mouse: [0, 0] }))
     // TODO: this value should be a factor of the size of the user's screen...?
-    const [tileGridSize, setTileGrideSize] = useState(12);
-    const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, (gltf) => {
-        // const geometries = {}
-        const geometries = []
-        gltf.scene.traverse(child => {
-            if (child.isMesh) {
-                child.geometry.center();
-                // geometries[child.name] = child.geometry.clone();
-                const material = new THREE.MeshStandardMaterial({ color: 0x886633, flatShading: THREE.FlatShading });
-                const mesh = new THREE.Mesh(child.geometry.clone(), material);
-                // mesh.rotation.x = Math.PI / 2;
-                mesh.name = child.name;
-                mesh.castShadow = true;
-                mesh.receiveShadow = false;
-                geometries.push(mesh);
-            }
-        })
-        return geometries;
-    });
+    const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, loadBuildings);
     let buildingsInPath = []
     const world = useRef(0);
     const sphericalHelper = new THREE.Spherical();
