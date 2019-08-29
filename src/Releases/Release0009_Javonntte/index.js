@@ -4,12 +4,12 @@ import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { useGLTF } from "../../Utils/hooks";
-import {BloomEffect} from "../../Utils/Effects";
+import { BloomEffect } from "../../Utils/Effects";
 import { generateBuildings, loadBuildings } from "./buildings";
 import { BUILDINGS_URL } from "./constants";
 import { Controls } from "./controls";
 import "./index.css";
-import { generateWorld } from './world';
+import { World } from './world';
 extend({ OrbitControls });
 
 function Scene() {
@@ -29,15 +29,15 @@ function Scene() {
     const world = useRef(0);
     const sphericalHelper = new THREE.Spherical();
     useEffect(() => {
-        const worldRadius = 26; // TODO this should justbe accessible from world.current rather than in scope like this
-        world.current = generateWorld({
-            sides: 40,
-            tiers: 40,
-            worldRadius: worldRadius,
-            maxHeight: 0.07,
-        });
-        if (buildings) generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius });
-        scene.add(world.current);
+        // const worldRadius = 26; // TODO this should justbe accessible from world.current rather than in scope like this
+        // world.current = generateWorld({
+        //     sides: 40,
+        //     tiers: 40,
+        //     worldRadius: worldRadius,
+        //     maxHeight: 0.07,
+        // });
+        // if (buildings) generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius });
+        // scene.add(world.current);
         camera.fov = 50;
         // camera.far = 30000; // TODO change me
         // camera.position.y = 0.2; // TODO remove
@@ -73,7 +73,13 @@ function Scene() {
     })
     return (
         <>
-            <Controls target={world.current.position}/>
+            <Controls />
+            <World
+                sides={40}
+                tiers={40}
+                worldRadius={26}
+                maxHeight={0.07} />
+            {/* target={world.current.position}/> */}
             {/* <BloomEffect camera={camera} /> */}
             {/* <Advanced2Effect camera={camera} /> */}
             {/* <TileGenerator

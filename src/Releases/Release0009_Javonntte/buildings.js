@@ -140,11 +140,18 @@ function generateBuildingsOnFace(face, vertices, buildings) {
     if (Math.random() * 1000 < 700) return newBuildings;
 
     // if (formation == "micro") {
-    const building = randomClone(buildings.narrow)
+    const buildingN = randomClone(buildings.narrow);
+    const buildingW = randomClone(buildings.wide);
+    const buildingM = randomClone(buildings.mid);
     for (let i = 0; i < subdivisions.length; i++) {
         // TODO might want to just store centroids during calculation
+        // const centroid = new THREE.Vector3;
+        // subdivisions[i].getMidpoint(centroid);
         const centroid = triangleCentroid(subdivisions[i]);
-        newBuildings.push(setupBuilding(building.clone(), centroid, face.normal, color));
+        let building = buildingN.clone();
+        // if (i === 3 || i===4) building = buildingM.clone();
+        // if (i === 5) building = buildingW.clone();
+        newBuildings.push(setupBuilding(building, centroid, face.normal, color));
     }
     // }
     return newBuildings;
@@ -185,11 +192,10 @@ export function loadBuildings(gltf) {
     }
     gltf.scene.traverse(child => {
         if (child.isMesh) {
-
             child.geometry.center();
+            // child.position.set(0, 0, 0);//new THREE.Vector3(0, 0, 0);
             const material = new THREE.MeshStandardMaterial({ color: 0x886633, flatShading: THREE.FlatShading });
             const geometry = child.geometry.clone();
-
             // this makes the 'lookAt(normal)' easier to use later on by flipping the default blender output for expected placement on the sphere
 
             geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI));
@@ -197,7 +203,7 @@ export function loadBuildings(gltf) {
             mesh.name = child.name;
             mesh.castShadow = true;
             mesh.receiveShadow = false;
-            // mesh.position.set(0, 0, 0);
+            // mesh.position.y += 20;// child.geometry.boundingBox.max.y;
             if (child.name.startsWith("MID")) {
                 geometries.mid.push(mesh);
             } else if (child.name.startsWith("WIDE")) {
