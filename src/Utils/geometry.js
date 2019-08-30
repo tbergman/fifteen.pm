@@ -10,3 +10,26 @@ export function faceCentroid(face, vertices) {
     (v1.z + v2.z + v3.z) / 3,
   );
 }
+
+export function lineSegmentFromVertices(vertices) {
+  var geometry = new THREE.BufferGeometry();
+  geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+  var edges = new THREE.EdgesGeometry(geometry);
+  return new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xff0000 }))
+}
+
+// https://gist.github.com/kamend/2f825621825466e0d2bdaac72afd498e
+export function getMiddle(pointA, pointB) {
+  let middle = new THREE.Vector3()
+  middle.subVectors(pointB.clone(), pointA.clone())
+  middle.multiplyScalar(0.5)
+  middle.subVectors(pointB.clone(), middle)
+  return middle.clone()
+}
+
+export function triangleCentroid(triangle) {
+  const middle = getMiddle(triangle.a, triangle.b);
+  const opposite = triangle.c;
+  const centroid = getMiddle(middle, opposite);
+  return centroid.clone();
+}

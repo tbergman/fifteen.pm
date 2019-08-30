@@ -11,3 +11,7 @@ export const randVal = (obj) => {
   const randIdx = THREE.Math.randInt(0, numKeys - 1);
   return obj[keys[randIdx]];
 }
+
+export function randomClone(arr) {
+  return arr[THREE.Math.randInt(0, arr.length - 1)].clone();
+}

@@ -46,9 +46,9 @@ function Scene() {
         // let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z); // TODO remove
         // lookAtPos.y = 0; // TODO remove
         // camera.lookAt(lookAtPos); // TODO remove
-        const fogColor = new THREE.Color(0xffffff);
-        scene.background = fogColor;
-        scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
+        // const fogColor = new THREE.Color(0xffffff);
+        // scene.background = fogColor;
+        // scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
     }, [buildings])
     // let world;
     // if (!worldCreated){
@@ -78,7 +78,10 @@ function Scene() {
                 sides={40}
                 tiers={40}
                 worldRadius={26}
-                maxHeight={0.07} />
+                worldPos={new THREE.Vector3(0, -24, 2)}
+                maxHeight={0.07}
+                buildingGeometries={buildings}
+                />
             {/* target={world.current.position}/> */}
             {/* <BloomEffect camera={camera} /> */}
             {/* <Advanced2Effect camera={camera} /> */}
@@ -88,9 +91,9 @@ function Scene() {
                 tileComponent={CityTile}
                 tileResources={buildings}
             /> */}
-
-            <directionalLight intensity={3.5} position={camera.position} />
-            <spotLight
+            <ambientLight />
+             <directionalLight intensity={3.5} position={camera.position} />
+            {/*<spotLight
                 castShadow
                 intensity={2}
                 position={
@@ -100,7 +103,7 @@ function Scene() {
                 }
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
-            />
+            /> */}
         </>
     );
 }

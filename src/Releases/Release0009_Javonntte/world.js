@@ -1,5 +1,10 @@
 import React from 'react';
 import * as THREE from 'three';
+import { useResource } from 'react-three-fiber';
+import { MemoizedTile } from '../../Utils/TileGenerator';
+import { Buildings, Building } from "./buildings";
+import { Face, faceName } from "./face";
+import { faceCentroid } from "../../Utils/geometry"
 
 function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
     var vertexIndex;
@@ -35,26 +40,54 @@ function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphere
 }
 
 
-// https://jsfiddle.net/juwalbose/bk4u5wcn/embedded/
+// https://codesandbox.io/s/react-three-fiber-suspense-gltf-loader-l900i
+// endless roller: https://jsfiddle.net/juwalbose/bk4u5wcn/embedded/
 // TODO generalize parameters
-export function World({ worldRadius, sides, tiers, maxHeight }) {
+export function World({ worldRadius, sides, tiers, buildingGeometries, worldPos, maxHeight }) {
+    // const [geometryRef, geometry] = useResource();
     let sphereGeometry = new THREE.SphereGeometry(worldRadius, sides, tiers);
     let sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading, vertexColors: THREE.FaceColors })
     // sphereGeometry = variateSphereFaceHeights({sphereGeometry, worldRadius, sides, tiers, maxHeight});
-    // const world = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    // world.receiveShadow = true;
-    // world.castShadow = false;
-    // world.rotation.z = -Math.PI / 2;
-    // world.position.y = -24;
-    // world.position.z = 2;
-    // return world;
-    return <mesh
-        geometry={sphereGeometry}
-        material={sphereMaterial}
-        castShadow
-        receiveShadow
-        rotation-z={-Math.PI / 2}
-        position-y={-24}
-        position-z={2}
-    />
+    console.log("RENDER WORLD");
+    return <group>
+        <mesh
+            geometry={sphereGeometry}
+            material={sphereMaterial}
+            castShadow
+            receiveShadow
+            rotation-z={-Math.PI / 2}
+            // position={worldPos}
+        />
+        {buildingGeometries && sphereGeometry.faces.map(face => {
+            const vertices = sphereGeometry.vertices;
+            // console.log("--")
+            const centroid = faceCentroid(face, vertices)
+            // console.log(centroid);
+            // centroid.subVectors(centroid, worldPos);
+            // console.log(centroid);
+            return <group key={faceName(face)}>
+                <Face
+                    buildingGeometries={buildingGeometries}
+                    centroid={centroid}
+                    normal={face.normal}
+                    triangle={new THREE.Triangle(
+                        vertices[face.a],
+                        vertices[face.b],
+                        vertices[face.c])}
+                />
+            </group>
+        })
+        }
+    </group>
 }
+
+
+/*        // TODO remove (what do the faces look like)
+        const a = vertices[faces[i].a];
+        const b = vertices[faces[i].b];
+        const c = vertices[faces[i].c];
+        const tmpVertices = new Float32Array(
+            [a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z]
+        );
+        const line = lineSegmentFromVertices(tmpVertices);
+ */
