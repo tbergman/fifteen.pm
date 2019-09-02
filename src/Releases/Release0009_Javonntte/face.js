@@ -4,7 +4,6 @@ import { Building, buildingName } from './buildings';
 import { randomClone } from './utils';
 import { getMiddle, triangleCentroid } from '../../Utils/geometry';
 
-
 function random(seed) {
     var x = Math.sin(seed) * 10000;
     var r = x - Math.floor(x);
@@ -58,15 +57,17 @@ function subdivideTriangle(tri, centroid, formation) {
     return triangles;
 }
 
-export function faceName(face) {
+export function faceId(face) {
     return [face.a, face.b, face.c].join("_");
 }
 
+
+// TODO use a face to position camera, and store a map of neighbors for rendering of buildings: https://stackoverflow.com/questions/33073136/given-a-mesh-face-find-its-neighboring-faces
 export function Face({ buildingGeometries, centroid, normal, triangle }) {
     const formation = "equal"; // TODO pick random face type here. for now just choosing narrow buildings
     const subdivisions = subdivideTriangle(triangle, centroid, formation);
     const color = getRandomColor(centroid); // TODO temporary color to help debug
-    return <>{subdivisions.slice(0, 1).map(triangleSubdivision => {
+    return <>{subdivisions.slice(0, 2).map(triangleSubdivision => {
         // TODO might want to just store centroids during calculation
         const subdivisionCentroid = triangleCentroid(triangleSubdivision);
         const geometry = randomClone(buildingGeometries.narrow); // TODO
