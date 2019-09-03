@@ -9,11 +9,14 @@ export function buildingName(building, position) {
     ].join("_")
 }
 
-export function Building({ geometry, centroid, normal, color }) {
+export function Building({ geometry, centroid, normal, color, visible }) {
     // TODO getting the buildings to sit on the curve properly will work with use of 'Spherical'
     return <>
         <mesh
-            onUpdate={self => self.lookAt(normal)}
+            onUpdate={self => {
+                self.lookAt(normal)
+                self.visible = visible
+            }}
             geometry={geometry}
             position={centroid}
         // lookAt={normal} // TODO dunno if this is working

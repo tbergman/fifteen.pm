@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { useThree, useResource, useRender } from 'react-three-fiber';
 import { MemoizedTile } from '../../Utils/TileGenerator';
 import { Buildings, Building } from "./buildings";
-import { Faces, faceId } from "./face";
+import { SphereFaces, faceId } from "./face";
 
 
 
@@ -66,7 +66,6 @@ function generateNeighborLookup(g) {
     // for (const vertId in vertexToFace){
     //     console.log(faceNeighbors)        
     // }
-    console.log(vertexToFace)
     return [vertexToFace, faceIdLookup];
 }
 
@@ -121,8 +120,9 @@ function onMouseMove( event ) {
         target.x = ( 1 - mouse.x ) * 0.002;
         target.y = (1 - mouse.y) * 0.002;
         group.current.rotation.x -= .0001;
-        camera.rotation.x -= (raycaster.ray.direction.y-.75) * .01 ;
+        // camera.rotation.x -= (raycaster.ray.direction.y-.75) * .01 ;
         group.current.rotation.z = raycaster.ray.direction.x * .6;
+
     })
 
     return <>
@@ -130,8 +130,6 @@ function onMouseMove( event ) {
             {group.current && (
                 <>
                     <mesh
-
-
                         geometry={sphereGeometry}
                         material={sphereMaterial}
                         castShadow
@@ -139,7 +137,7 @@ function onMouseMove( event ) {
                         // rotation-z={-Math.PI / 2}
                         position={worldPos}
                     />
-                    {buildingGeometries && <Faces
+                    {buildingGeometries && <SphereFaces
                         geometries={buildingGeometries}
                         sphereGeometry={sphereGeometry}
                         offset={worldPos}

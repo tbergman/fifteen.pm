@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Building, buildingName } from './buildings';
 import { randomClone } from './utils';
@@ -69,58 +69,97 @@ export function faceId(face) {
 
 let areaTotal = 0;
 let areaCount = 0;
-function pickFacePattern(area){
-   if (area<1.6){
-    return "small"; // TODO make these randomly picked from lists
-   } else {
-    return "medium"; // TODO make these randomly picked from lists
-    
-   }
-    
+function pickFacePattern(area) {
+    if (area < 1.6) {
+        return "small"; // TODO make these randomly picked from lists
+    } else {
+        return "medium"; // TODO make these randomly picked from lists
+
+    }
+
 }
 
 
 // TODO use a face to position camera, and store a map of neighbors for rendering of buildings: https://stackoverflow.com/questions/33073136/given-a-mesh-face-find-its-neighboring-faces
-function Face({ buildingGeometries, centroid, normal, triangle }) {
-    
+function SphereFace({ buildingGeometries, visible, centroid, normal, triangle }) {
+    const ref = useRef();
     const area = triangle.getArea();
-    // areaTotal += area;
-    // areaCount += 1;
-    // console.log("Avg:", areaTotal/areaCount);
     const formation = pickFacePattern(area);
     const subdivisions = subdivideTriangle(triangle, centroid, formation);
     const color = getRandomColor(centroid); // TODO temporary color to help debug
-    return <>{subdivisions.map(triangleSubdivision => {
+    return <>{visible && subdivisions.map(triangleSubdivision => {
         // TODO might want to just store centroids during calculation
         const subdivisionCentroid = triangleCentroid(triangleSubdivision);
         const geometry = randomClone(buildingGeometries.narrow); // TODO
-        return <group key={buildingName(geometry, subdivisionCentroid)}>
-            <Building geometry={geometry} centroid={subdivisionCentroid} normal={normal} color={color} />
+        return <group ref={ref} key={buildingName(geometry, subdivisionCentroid)}>
+            <Building visible={visible} geometry={geometry} centroid={subdivisionCentroid} normal={normal} color={color} />
         </group>
     })}</>;
 
 }
 
 
+function hardLimitYFaces(centroid, radius) {
+    // don't populate the tiny triangles on top of the sphere
+    return Math.abs(centroid.y) < radius * .98 + Math.random() * .1;
+}
 
-export function Faces({ offset, radius, geometries, sphereGeometry }) {
 
-    return <>{sphereGeometry.faces.map(face => {
+function generateFaceIdLookup(sphereGeometry) {
+    const faces = {}
+    sphereGeometry.faces.forEach(face => {
+
         const vertices = sphereGeometry.vertices;
         const centroid = faceCentroid(face, vertices)
-        return <group key={faceId(face)}>
-            {centroid.x < 3.5 && centroid.x > -3.5 &&
-                Math.abs(centroid.y) < radius * .99 && (//radius * 1.1 &&  (
-                <Face
-                    buildingGeometries={geometries}
-                    centroid={centroid}
-                    normal={face.normal}
-                    triangle={new THREE.Triangle(
-                        vertices[face.a],
-                        vertices[face.b],
-                        vertices[face.c])}
-                />)}
+
+        faces[faceId(face)] = {
+            visible: false, // TODO not hooked up to anything
+            centroid: centroid,
+            normal: face.normal,
+            triangle: new THREE.Triangle(
+                vertices[face.a],
+                vertices[face.b],
+                vertices[face.c],
+            ),
+            hasRendered: false,
+        }
+
+    });
+    return faces
+
+}
+
+function shouldFaceBeVisible(centroid, radius) {
+    // return false;
+    return centroid.x < 3.5 && centroid.x > -3.5 &&
+        hardLimitYFaces(centroid, radius);
+}
+
+export const MemoizedSphereFace = React.memo(props => {
+    return <SphereFace {...props} />;
+}, props => props.hasRendered);
+
+export function SphereFaces({ offset, radius, geometries, sphereGeometry, pointOnSphere }) {
+    const [facesBoundary, setFacesBoundary] = useState(0);
+    const faces = useRef({});
+    faces.current = generateFaceIdLookup(sphereGeometry); // TODO should be wrapped in useEffect
+    return <>{faces.current && Object.keys(faces.current).map(function (faceId, index) {
+        const faceProps = faces.current[faceId];
+        // <group key={face.idp{sphereGeometry.faces.map(face => {
+        // )
+
+        // const vertices = sphereGeometry.vertices;
+        // const centroid = faceCentroid(face, vertices)
+        // return <MemoizedSphereFace buildingGeometries={geometries} visible, centroid, normal, triangle }) { />
+        faceProps.visible = shouldFaceBeVisible(faceProps.centroid, radius);
+        return <group key={faceId}>
+            <SphereFace
+                buildingGeometries={geometries}
+                {...faceProps}
+            />
         </group>
     })
-    }</>
+    }
+    </>
 }
+
