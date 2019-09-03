@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
+import { useThree, useRender } from 'react-three-fiber';
 import { Building, buildingName } from './buildings';
 import { randomClone } from './utils';
-import { getMiddle, triangleCentroid } from '../../Utils/geometry';
+import { getMiddle, triangleCentroid, triangleFromFace } from '../../Utils/geometry';
 import { faceCentroid } from "../../Utils/geometry"
 
 function random(seed) {
@@ -87,6 +88,10 @@ function SphereFace({ buildingGeometries, visible, centroid, normal, triangle })
     const formation = pickFacePattern(area);
     const subdivisions = subdivideTriangle(triangle, centroid, formation);
     const color = getRandomColor(centroid); // TODO temporary color to help debug
+    const [hasRendered, setHasRendered] = useState(0)
+    useEffect(() => {
+
+    })
     return <>{visible && subdivisions.map(triangleSubdivision => {
         // TODO might want to just store centroids during calculation
         const subdivisionCentroid = triangleCentroid(triangleSubdivision);
@@ -105,61 +110,150 @@ function hardLimitYFaces(centroid, radius) {
 }
 
 
-function generateFaceIdLookup(sphereGeometry) {
-    const faces = {}
-    sphereGeometry.faces.forEach(face => {
-
-        const vertices = sphereGeometry.vertices;
-        const centroid = faceCentroid(face, vertices)
-
-        faces[faceId(face)] = {
-            visible: false, // TODO not hooked up to anything
-            centroid: centroid,
-            normal: face.normal,
-            triangle: new THREE.Triangle(
-                vertices[face.a],
-                vertices[face.b],
-                vertices[face.c],
-            ),
-            hasRendered: false,
-        }
-
-    });
-    return faces
-
+function withinInitialBoundary(boundary, centroid) {
+    return Math.abs(boundary.distanceTo(centroid) < 3);
 }
 
-function shouldFaceBeVisible(centroid, radius) {
-    // return false;
-    return centroid.x < 3.5 && centroid.x > -3.5 &&
-        hardLimitYFaces(centroid, radius);
+// function updateFaceIdLookup(faces, sphereGeometry, boundary) {
+//     sphereGeometry.faces.forEach(face => {
+//         const vertices = sphereGeometry.vertices;
+//         const centroid = faceCentroid(face, vertices)
+//         // if (frustum.containsPoint(centroid)) {
+//         const id = faceId(face);
+//         if (withinInitialBoundary(boundary, centroid)) {
+//             if (!faces.hasOwnProperty(id)) {
+//                 faces[id] = {
+//                     centroid: centroid,
+//                     normal: face.normal,
+//                     triangle: triangleFromFace(face, vertices),
+//                     isInitialRender: true,
+//                     visible: true,
+//                 }
+//             }
+//             else {
+//                 faces[id].visible = true;
+//                 faces[id].isInitialRender = false;
+//             }
+//         } else {
+//             if (faces.hasOwnProperty(id)) {
+//                 faces[id].visible = false;
+//                 faces[id].isInitialRender = false;
+//             }
+//         }
+//     });
+//     return faces
+// }
+
+function updateFaceTiles(faces, face, mesh, vertices) {
+    const id = faceId(face);
+    if (!faces.hasOwnProperty(id)) {
+        faces[id] = {
+            centroid: faceCentroid(face, vertices),
+            normal: face.normal,
+            triangle: triangleFromFace(face, vertices),
+            isInitialRender: true,
+            visible: true,
+            mesh: mesh,
+        }
+    } else {
+        faces[id].visible = true;
+        faces[id].isInitialRender = false;
+    }
+    return faces;
 }
 
 export const MemoizedSphereFace = React.memo(props => {
     return <SphereFace {...props} />;
-}, props => props.hasRendered);
+}, props => !props.hasRendered);
 
-export function SphereFaces({ offset, radius, geometries, sphereGeometry, pointOnSphere }) {
-    const [facesBoundary, setFacesBoundary] = useState(0);
+// view-source:https://rawgit.com/pailhead/three.js/instancing-part2-200k-instanced/examples/webgl_interactive_cubes.html
+// https://medium.com/@pailhead011/instancing-with-three-js-part-2-3be34ae83c57
+export function SphereFaces({ offset, radius, geometries, sphereGeometry, startPos }) {
+    const { camera, scene } = useThree();
+    const [needsUpdate, setNeedsUpdate] = useState(false);
     const faces = useRef({});
-    faces.current = generateFaceIdLookup(sphereGeometry); // TODO should be wrapped in useEffect
-    return <>{faces.current && Object.keys(faces.current).map(function (faceId, index) {
-        const faceProps = faces.current[faceId];
-        // <group key={face.idp{sphereGeometry.faces.map(face => {
-        // )
+    const boundary = useRef(new THREE.Vector3);
+    const raycasters = useRef([]);
+    const triangles = useRef([]);
+    const raycasterTriangleIdLookup = useRef({});
+    const vertices = sphereGeometry.vertices;
+    const triangleGroup = useRef(new THREE.Group());
+    useEffect(() => {
+        boundary.current = startPos;
+        // TODO make efficient...
+        const tmpNrml = new THREE.Vector3();
+        triangles.current = sphereGeometry.faces.map((face, index) => {
+            const triangle = triangleFromFace(face, vertices);
+            const geom = new THREE.Geometry();
+            geom.vertices.push(triangle.a);
+            geom.vertices.push(triangle.b);
+            geom.vertices.push(triangle.c);
+            triangle.getNormal(tmpNrml);
+            geom.faces.push(new THREE.Face3(0, 1, 2, tmpNrml));
+            // raycasterTriangleIdLookup.current[index] = faceId(face);
+            const material = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading })
+            const mesh = new THREE.Mesh(geom, material);
+            mesh.name = faceId(face);
+            mesh.userData = {face:face}
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            mesh.matrixWorldNeedsUpdate = true;
+            const centroid = faceCentroid(face, vertices);
+            // mesh.position.copy(centroid);
+            triangleGroup.current.add(mesh);
+            if (withinInitialBoundary(boundary.current, centroid)) {
+                faces.current = updateFaceTiles(faces.current, face, mesh, vertices);
+            }
+            return mesh;
+        })
+        scene.add(triangleGroup.current);
+        // faces.current = updateFaceIdLookup(faces.current, sphereGeometry, boundary.current);
+        const direction = new THREE.Vector3();
+        const far = new THREE.Vector3();
+        raycasters.current = Object.keys(faces.current).map((faceId, index) => {
+            const raycaster = new THREE.Raycaster();
+            const face = faces.current[faceId];
+            // sub dest, orig
+            // raycaster.set(camera.position, direction.subVectors(face.centroid, camera.position).normalize());
+            // raycaster.far = far.subVectors(face.centroid, camera.position).length();
+            raycaster.set(camera.position, direction.subVectors(face.mesh.position, camera.position).normalize());
+            raycaster.far = far.subVectors(face.mesh.position, camera.position).length();
+            return raycaster
+        });
+        // console.log(triangleGroup.current.children, triangles.current)
+    }, [])
+    const seenIds = [];
+    const curPos = new THREE.Vector3();
+    useRender((state, time) => {
+        triangleGroup.current.rotation.x -= .001;
+        if ((time % .0001).toFixed(3) == 0) {
+            for (let i = 0; i < raycasters.current.length; i++) {
+                const intersects = raycasters.current[i].intersectObjects(triangles.current);
+                for (let i = 0; i < intersects.length; i++) {
+                    const intersectedObj = intersects[i].object;
+                    if (seenIds.indexOf(intersectedObj.name) < 0) {
+                        console.log("NEW: ", intersectedObj.name);
+                        seenIds.push(intersectedObj.name);
+                        setNeedsUpdate(true);
+                        faces.current = updateFaceTiles(faces.current, intersectedObj.userData.face, intersectedObj, vertices)
+                        setNeedsUpdate(false);
+                        console.log(Object.keys(faces.current).length);
+                    }
+                }
+            }
+        }
+    });
 
-        // const vertices = sphereGeometry.vertices;
-        // const centroid = faceCentroid(face, vertices)
-        // return <MemoizedSphereFace buildingGeometries={geometries} visible, centroid, normal, triangle }) { />
-        faceProps.visible = shouldFaceBeVisible(faceProps.centroid, radius);
+    return <>{faces.current && Object.keys(faces.current).map((faceId, index) => {
+        console.log("RE_RENDERING FACES")
+        const props = faces.current[faceId];
         return <group key={faceId}>
-            <SphereFace
+            <MemoizedSphereFace
                 buildingGeometries={geometries}
-                {...faceProps}
+                {...props}
             />
         </group>
     })
     }
     </>
 }
-

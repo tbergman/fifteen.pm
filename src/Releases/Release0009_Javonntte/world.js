@@ -1,10 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { useThree, useResource, useRender } from 'react-three-fiber';
 import { MemoizedTile } from '../../Utils/TileGenerator';
 import { Buildings, Building } from "./buildings";
-import { SphereFaces, faceId } from "./face";
-
+import { MemoizedSphereFaces, SphereFaces, faceId } from "./face";
 
 
 function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
@@ -62,14 +61,12 @@ function generateNeighborLookup(g) {
         vertexToFace[vertBId].push(fId);
         vertexToFace[vertCId].push(fId);
     }
-    // const faceToNeighbors = {};
-    // for (const vertId in vertexToFace){
-    //     console.log(faceNeighbors)        
-    // }
     return [vertexToFace, faceIdLookup];
 }
 
+function shouldUpdateBoundary(prevBoundary, rotation) {
 
+}
 
 // https://sites.google.com/site/threejstuts/home/slerp
 // https://stackoverflow.com/questions/11030101/three-js-camera-flying-around-sphere ***
@@ -84,64 +81,52 @@ function generateNeighborLookup(g) {
 // https://codesandbox.io/s/react-three-fiber-suspense-gltf-loader-l900i
 // endless roller: https://jsfiddle.net/juwalbose/bk4u5wcn/embedded/
 // TODO generalize parameters
-export function World({ worldRadius, sides, tiers, buildingGeometries, worldPos, maxHeight }) {
+export function World({ startPos, worldRadius, sides, tiers, buildingGeometries, worldPos, maxHeight }) {
     // const [sphereGeometryRef, sphereGeometry] = useResource();
     const [sphereGeometryMeshRef, sphereGeometryMesh] = useResource();
+    const [sphereRotationXBucket, setSphereRotationXBucket] = useState(0.);
+    const [shouldResetRotationBucket, setShouldResetRotationBucket] = useState(true);
     const group = useRef();
-    const { camera, raycaster } = useThree();
+    const { camera, raycaster, size } = useThree();
     let sphereGeometry = new THREE.SphereGeometry(worldRadius, sides, tiers);
     let sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfaec82, flatShading: THREE.FlatShading, vertexColors: THREE.FaceColors })
-    // window.addEventListener("mousemove", onMouseMove, false);
-    // function onMouseMove(event) {
-    //     camera.position.setFromSphericalCoords(30, Math.PI * -event.clientY / window.innerHeight, 0);
-    //     camera.lookAt(worldPos);
-    // }
-    sphereGeometry = variateSphereFaceHeights({sphereGeometry, worldRadius, sides, tiers, maxHeight});
-    
+    const viewBoundary = useRef({ x: { min: -3.5, max: 0 }, z: 0 })
+    sphereGeometry = variateSphereFaceHeights({ sphereGeometry, worldRadius, sides, tiers, maxHeight });
     console.log("RENDER WORLD");
-    const mouse = new THREE.Vector2();
-    const target = new THREE.Vector2();
-    const windowHalf = new THREE.Vector2( window.innerWidth / 2, window.innerHeight / 2 );
-    document.addEventListener( 'mousemove', onMouseMove, false );
-  
-function onMouseMove( event ) {
-
-	mouse.x = ( event.clientX - windowHalf.x );
-	mouse.y = ( event.clientY - windowHalf.x );
-
-}
-    useEffect(() => {
-        camera.position.set(0, worldRadius * .05, -worldRadius * 1.01);
-        camera.lookAt(new THREE.Vector3(0, worldRadius * 1.5, 1));// 15, -1));
-
-    }, [])
+    // useEffect(() => {
+    //     if (shouldResetRotationBucket) {
+    //         setSphereRotationXBucket(group.current.rotation.x)
+    //         console.log("SET BUCKET TO ", sphereRotationXBucket);
+    //         setShouldResetRotationBucket(false)
+    //     }
+    // }, [shouldResetRotationBucket])
     useRender(() => {
-        // TODO this rotation sucks haha will need to fix weird jumps
-        target.x = ( 1 - mouse.x ) * 0.002;
-        target.y = (1 - mouse.y) * 0.002;
+        // TODO this rotation sucks haha
         group.current.rotation.x -= .0001;
-        // camera.rotation.x -= (raycaster.ray.direction.y-.75) * .01 ;
         group.current.rotation.z = raycaster.ray.direction.x * .6;
-
+        // TODO this is not smoothly bucketing rotation values
+        // if (Math.abs(group.current.rotation.x % .001).toFixed(5) == 0.0) {
+        // setShouldResetRotationBucket(true)
+        // }
     })
-
     return <>
         <group ref={group}>
             {group.current && (
                 <>
-                    <mesh
+                    {/* <mesh
                         geometry={sphereGeometry}
                         material={sphereMaterial}
                         castShadow
                         receiveShadow
-                        // rotation-z={-Math.PI / 2}
                         position={worldPos}
-                    />
+                    /> */}
                     {buildingGeometries && <SphereFaces
                         geometries={buildingGeometries}
                         sphereGeometry={sphereGeometry}
                         offset={worldPos}
                         radius={worldRadius}
+                        startPos={startPos}
+                    // sphereRotationX={sphereRotationXBucket}
                     />}
                 </>
             )}

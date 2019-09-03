@@ -33,3 +33,12 @@ export function triangleCentroid(triangle) {
   const centroid = getMiddle(middle, opposite);
   return centroid.clone();
 }
+
+export function triangleFromFace(face, vertices) {
+    return new THREE.Triangle(
+        vertices[face.a],
+        vertices[face.b],
+        vertices[face.c],
+    );
+}
+

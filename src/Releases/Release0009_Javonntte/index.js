@@ -28,10 +28,18 @@ function Scene() {
     let buildingsInPath = []
     const world = useRef(0);
     const sphericalHelper = new THREE.Spherical();
+    const worldRadius = 26;
+    const startPos = new THREE.Vector3(0, worldRadius *.05, -worldRadius *1.01);
     useEffect(() => {
         // const fogColor = new THREE.Color(0xffffff);
         // scene.background = fogColor;
+        // scene.background = new THREE.Color(0x00ff00);
+        scene.fog = new THREE.FogExp2( 0xf0fff0, 0.14 );
+        gl.setClearColor(0xfffafa, 1); 
         // scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
+        camera.position.copy(startPos);
+        camera.lookAt(new THREE.Vector3(0, worldRadius * 1.5, 1));// 15, -1));
+
     }, [buildings])
 
     useRender(() => {
@@ -40,23 +48,21 @@ function Scene() {
     return (
         <>
             {/* <Controls /> */}
-            <BloomEffect
+            {/* <BloomEffect
                 camera={camera}
                 radius={.1}
                 threshold={.1}
                 strength={0.5}
-                />
+            /> */}
             <World
                 sides={40}
                 tiers={40}
-                worldRadius={26}
-                
+                worldRadius={worldRadius}
                 worldPos={new THREE.Vector3(0, 0, 0)}
+                startPos={startPos}
                 maxHeight={0.07}
                 buildingGeometries={buildings}
-                />
-            
-            
+            />
             {/* <Advanced2Effect camera={camera} /> */}
             {/* <TileGenerator
                 tileSize={1}
@@ -65,18 +71,14 @@ function Scene() {
                 tileResources={buildings}
             /> */}
             <ambientLight />
-             <directionalLight intensity={1.5} position={camera.position} />
-            {/*<spotLight
+            <directionalLight intensity={1.5} position={camera.position} />
+             <spotLight
                 castShadow
                 intensity={2}
-                position={
-                    [camera.position.x,
-                    camera.position.y + 1,
-                    camera.position.z]
-                }
+                position={startPos}
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
-            /> */}
+            /> 
         </>
     );
 }
