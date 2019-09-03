@@ -3,8 +3,9 @@ import * as THREE from 'three';
 import { useThree, useResource, useRender } from 'react-three-fiber';
 import { MemoizedTile } from '../../Utils/TileGenerator';
 import { Buildings, Building } from "./buildings";
-import { Face, faceId } from "./face";
-import { faceCentroid } from "../../Utils/geometry"
+import { Faces, faceId } from "./face";
+
+
 
 function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
     var vertexIndex;
@@ -69,6 +70,8 @@ function generateNeighborLookup(g) {
     return [vertexToFace, faceIdLookup];
 }
 
+
+
 // https://sites.google.com/site/threejstuts/home/slerp
 // https://stackoverflow.com/questions/11030101/three-js-camera-flying-around-sphere ***
 // https://gamedev.stackexchange.com/questions/59298/walking-on-a-sphere ***
@@ -83,97 +86,85 @@ function generateNeighborLookup(g) {
 // endless roller: https://jsfiddle.net/juwalbose/bk4u5wcn/embedded/
 // TODO generalize parameters
 export function World({ worldRadius, sides, tiers, buildingGeometries, worldPos, maxHeight }) {
-    // const [geometryRef, geometry] = useResource();
-    const { camera, scene } = useThree();
+    // const [sphereGeometryRef, sphereGeometry] = useResource();
+    const [sphereGeometryMeshRef, sphereGeometryMesh] = useResource();
+    const group = useRef();
+    const { camera, raycaster } = useThree();
     let sphereGeometry = new THREE.SphereGeometry(worldRadius, sides, tiers);
-    let sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading, vertexColors: THREE.FaceColors })
-    const neighbors = useRef();
-    const faceIdLookup = useRef();
-    const sphericalHelper = new THREE.Spherical();
-    // sphereGeometry = variateSphereFaceHeights({sphereGeometry, worldRadius, sides, tiers, maxHeight});
+    let sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfaec82, flatShading: THREE.FlatShading, vertexColors: THREE.FaceColors })
+    // window.addEventListener("mousemove", onMouseMove, false);
+    // function onMouseMove(event) {
+    //     camera.position.setFromSphericalCoords(30, Math.PI * -event.clientY / window.innerHeight, 0);
+    //     camera.lookAt(worldPos);
+    // }
+    sphereGeometry = variateSphereFaceHeights({sphereGeometry, worldRadius, sides, tiers, maxHeight});
+    
     console.log("RENDER WORLD");
-    let direction = new THREE.Vector3(0, -1, 0);
+    const mouse = new THREE.Vector2();
+    const target = new THREE.Vector2();
+    const windowHalf = new THREE.Vector2( window.innerWidth / 2, window.innerHeight / 2 );
+    document.addEventListener( 'mousemove', onMouseMove, false );
+  
+function onMouseMove( event ) {
 
-    /*TODO
-    var halfWidth = window.innerWidth / 2, halfHeight = window.innerHeight / 2;
-    app.mouseX = event.pageX - halfWidth;
-    app.mouseY = event.pageY - halfHeight;
-    app.mouseXPercent = Math.ceil( (app.mouseX / halfWidth) * 100 );
-    app.mouseYPercent = Math.ceil( (app.mouseY / halfHeight) * 100 );*/
-    const camGroup = new THREE.Object3D();
+	mouse.x = ( event.clientX - windowHalf.x );
+	mouse.y = ( event.clientY - windowHalf.x );
+
+}
     useEffect(() => {
-        camera.position.set(0, 20, 0);
-        camera.lookAt(new THREE.Vector3(0, 15, -1));
-
-        // camGroup.add(camera);
-        // scene.add(camGroup);
-
-        // camera.lookAt(worldPos);
-        // camera.lookAt( new THREE.Vector3(0, 190, -50) );
-        // [neighbors.current, faceIdLookup.current] = generateNeighborLookup(sphereGeometry);
-        // const vertices = sphereGeometry.vertices;
-        // const middleFaceIdx = Math.floor(sphereGeometry.faces.length / 2);
-        // const startingFace = sphereGeometry.faces[middleFaceIdx];
-        // const startingCentroid = faceCentroid(startingFace, vertices);
-        // // const startingPos = startingCentroid.addVectors(startingCentroid, startingFace.normal);
-        // const startingPos = startingCentroid;
-        // camera.position.copy(startingPos);
-
-        // const startingFaceId = faceId(startingFace);
-        // const sharedVertexId = vertexId(vertices[startingFace.a]);
-        // const allFaces = neighbors.current[sharedVertexId] // Just picking random from neighbors for now..
-        // let lookAtFaceId;
-        // for (const idx in allFaces){
-        //     const faceId = allFaces[idx];
-        //     if (faceId !== startingFaceId){
-        //         lookAtFaceId = faceId;
-        //         break;
-        //     }
-        // }
-        // const lookAtFace =  faceIdLookup.current[lookAtFaceId]
-        // const lookAtFaceNormal = lookAtFace.normal.clone();
-        // const lookAtFaceCentroid = faceCentroid(lookAtFace, vertices);
-        // const lookAt = lookAtFaceNormal.cross(lookAtFaceCentroid);
-        // // console.log("start pos", startingPos, "lookAt", lookAt);
-        // camera.quaternion.setFromUnitVectors( lookAtFaceNormal, direction );
-        // // camera.lookAt(lookAtFaceNormal);
-
-
-
-        // const binormal = new THREE.Vector3();
-        // binormal.subVectors(lookAtFace.normal, startingFace.normal);
-        // binormal.multiplyScalar() // some offset 
-
+        camera.position.set(0, worldRadius * .05, -worldRadius * 1.01);
+        camera.lookAt(new THREE.Vector3(0, worldRadius * 1.5, 1));// 15, -1));
 
     }, [])
-
-    let phi = 2
-    let theta = Math.PI / 2;
-    const rollingSpeed = 0.008;
-    let temp = -.01;
     useRender(() => {
-        // camGroup.matrix.rotateY(-app.mouseXPercent * .00025);
-        // camGroup.matrix.makeRotationY(temp);
-        // camGroup.matrix.makeRotationX(-.0025);
-        // camGroup.matrix.makeRotationAxis(camGroup.matrix);
-        // temp-=1;
-        // requestAnimationFrame(animate);
-        // renderer.render(scene, camera);
-        // Face setFromVector3
-        // sphericalHelper.set( worldRadius, phi, theta);
-        // camera.position.setFromSpherical(sphericalHelper);
-        // theta+=.001;
+        // TODO this rotation sucks haha will need to fix weird jumps
+        target.x = ( 1 - mouse.x ) * 0.002;
+        target.y = (1 - mouse.y) * 0.002;
+        group.current.rotation.x -= .0001;
+        camera.rotation.x -= (raycaster.ray.direction.y-.75) * .01 ;
+        group.current.rotation.z = raycaster.ray.direction.x * .6;
     })
-    return <group>
-        <mesh
-            geometry={sphereGeometry}
-            material={sphereMaterial}
-            castShadow
-            receiveShadow
-            rotation-z={-Math.PI / 2}
-            position={worldPos}
-        />
-        {/* {buildingGeometries && sphereGeometry.faces.map(face => {
+
+    return <>
+        <group ref={group}>
+            {group.current && (
+                <>
+                    <mesh
+
+
+                        geometry={sphereGeometry}
+                        material={sphereMaterial}
+                        castShadow
+                        receiveShadow
+                        // rotation-z={-Math.PI / 2}
+                        position={worldPos}
+                    />
+                    {buildingGeometries && <Faces
+                        geometries={buildingGeometries}
+                        sphereGeometry={sphereGeometry}
+                        offset={worldPos}
+                        radius={worldRadius}
+                    />}
+                </>
+            )}
+        </group>) : null}
+
+    </>;
+
+
+    return <>
+        <sphereGeometry ref={sphereGeometryRef} args={[worldRadius, sides, tiers]} />
+        {sphereGeometry ? (
+            <group>
+                <mesh
+                    geometry={sphereGeometry}
+                    material={sphereMaterial}
+                    castShadow
+                    receiveShadow
+                    rotation-z={-Math.PI / 2}
+                    position={worldPos}
+                />
+                {/* {buildingGeometries && sphereGeometry.faces.map(face => {
             const vertices = sphereGeometry.vertices;
             const centroid = faceCentroid(face, vertices)
             return <group key={faceId(face)}>
@@ -189,16 +180,8 @@ export function World({ worldRadius, sides, tiers, buildingGeometries, worldPos,
             </group>
         })
         } */}
-    </group>
+            </group>) : null}
+    </>
 }
 
 
-/*        // TODO remove (what do the faces look like)
-        const a = vertices[faces[i].a];
-        const b = vertices[faces[i].b];
-        const c = vertices[faces[i].c];
-        const tmpVertices = new Float32Array(
-            [a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z]
-        );
-        const line = lineSegmentFromVertices(tmpVertices);
- */

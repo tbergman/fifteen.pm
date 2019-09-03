@@ -29,61 +29,34 @@ function Scene() {
     const world = useRef(0);
     const sphericalHelper = new THREE.Spherical();
     useEffect(() => {
-        // const worldRadius = 26; // TODO this should justbe accessible from world.current rather than in scope like this
-        // world.current = generateWorld({
-        //     sides: 40,
-        //     tiers: 40,
-        //     worldRadius: worldRadius,
-        //     maxHeight: 0.07,
-        // });
-        // if (buildings) generateBuildings({ world, buildings, buildingsInPath, sphericalHelper, worldRadius });
-        // scene.add(world.current);
-        camera.fov = 50;
-        // camera.far = 30000; // TODO change me
-        // camera.position.y = 0.2; // TODO remove
-        camera.position.z = 6.5;
-        camera.position.y = 3.8;
-        // let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z); // TODO remove
-        // lookAtPos.y = 0; // TODO remove
-        // camera.lookAt(lookAtPos); // TODO remove
         // const fogColor = new THREE.Color(0xffffff);
         // scene.background = fogColor;
         // scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
     }, [buildings])
-    // let world;
-    // if (!worldCreated){
-    // setWorldCreated(true);
-    // }
+
     useRender(() => {
-        // if (world.current) world.current.rotation.x += rollingSpeed;
-        // doBuildingLogic({buildingsInPath, camera});
-        // camera.rotation.x -= cameraRollingSpeed;
-        // if (cameraSphere.position.y <= cameraBaseY) {
-        //     // 	jumping=false;
-        //     bounceValue = (Math.random() * 0.04) + 0.005;
-        // }
-        // cameraSphere.position.y += bounceValue;
-        // cameraSphere.position.x = THREE.Math.lerp(cameraSphere.position.x, currentLane, 2 * clock.getDelta());//clock.getElapsedTime());
-        // bounceValue -= gravity;
-        // camera.position.y = .1;
-        // let lookAtPos = camera.position.copy(); // TODO this is erroring on 'Cannot read property 'x' of undefined'
-        // let lookAtPos = new THREE.Vector3(camera.position.x, camera.position.y, camera.position.z);
-        // lookAtPos.y = 0;
-        // camera.lookAt(lookAtPos);
+
     })
     return (
         <>
-            <Controls />
+            {/* <Controls /> */}
+            <BloomEffect
+                camera={camera}
+                radius={.1}
+                threshold={.1}
+                strength={0.5}
+                />
             <World
                 sides={40}
                 tiers={40}
                 worldRadius={26}
-                worldPos={new THREE.Vector3(0, -24, 2)}
+                
+                worldPos={new THREE.Vector3(0, 0, 0)}
                 maxHeight={0.07}
                 buildingGeometries={buildings}
                 />
-            {/* target={world.current.position}/> */}
-            {/* <BloomEffect camera={camera} /> */}
+            
+            
             {/* <Advanced2Effect camera={camera} /> */}
             {/* <TileGenerator
                 tileSize={1}
@@ -92,7 +65,7 @@ function Scene() {
                 tileResources={buildings}
             /> */}
             <ambientLight />
-             <directionalLight intensity={3.5} position={camera.position} />
+             <directionalLight intensity={1.5} position={camera.position} />
             {/*<spotLight
                 castShadow
                 intensity={2}

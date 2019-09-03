@@ -35,7 +35,7 @@ export const GlitchEffect = React.memo(({ factor }) => {
 })
 
 
-export const BloomEffect = React.memo(({ camera, factor }) => {
+export const BloomEffect = React.memo(({ camera, radius=.1, threshold=.01, strength=0.5, factor }) => {
     const { gl, scene, size } = useThree()
     const composer = useRef()
     useEffect(() => void composer.current.setSize(size.width, size.height), [size])
@@ -47,9 +47,9 @@ export const BloomEffect = React.memo(({ camera, factor }) => {
             <a.unrealBloomPass
                 attachArray="passes"
                 renderToScreen
-                radius={.5}
-                threshold={.01}
-                strength={1.5}
+                radius={radius}
+                threshold={threshold}
+                strength={strength}
             // resolution={new THREE.Vector2(window.innerWidth, window.innerHeight)}//{x: size.width, y: size.height}} />
             />
         </effectComposer>

@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { Building, buildingName } from './buildings';
 import { randomClone } from './utils';
 import { getMiddle, triangleCentroid } from '../../Utils/geometry';
+import { faceCentroid } from "../../Utils/geometry"
 
 function random(seed) {
     var x = Math.sin(seed) * 10000;
@@ -29,7 +30,10 @@ function subdivideTriangle(tri, centroid, formation) {
     const c = getMiddle(tri.a, tri.c);
     const triangles = [];
     switch (formation) {
-        case "equal":
+        case "small":
+            triangles.push(tri);
+            break;
+        case "medium":
             // all same size
             triangles.push(new THREE.Triangle(i1, a, centroid));
             triangles.push(new THREE.Triangle(a, i2, centroid));
@@ -44,15 +48,16 @@ function subdivideTriangle(tri, centroid, formation) {
             triangles.push(new THREE.Triangle(i2, i3, centroid)); // medium building
             triangles.push(new THREE.Triangle(i3, c, centroid)); // narrow building
             break;
-        case "micro":
-            const equalTriangles = subdivideTriangle(tri, centroid, "equal");
+        case "extraSubdivisions":
+            const equalTriangles = subdivideTriangle(tri, centroid, "medium");
             for (let i = 0; i < equalTriangles.length; i++) {
-                const halvedTriangles = subdivideTriangle(equalTriangles[i], triangleCentroid(equalTriangles[i]), "equal");
+                const halvedTriangles = subdivideTriangle(equalTriangles[i], triangleCentroid(equalTriangles[i]), "medium");
                 for (let j = 0; j < halvedTriangles.length; j++) {
                     triangles.push(halvedTriangles[j]);
                 }
             }
             break;
+        case "small":
     }
     return triangles;
 }
@@ -62,12 +67,30 @@ export function faceId(face) {
 }
 
 
+let areaTotal = 0;
+let areaCount = 0;
+function pickFacePattern(area){
+   if (area<1.6){
+    return "small"; // TODO make these randomly picked from lists
+   } else {
+    return "medium"; // TODO make these randomly picked from lists
+    
+   }
+    
+}
+
+
 // TODO use a face to position camera, and store a map of neighbors for rendering of buildings: https://stackoverflow.com/questions/33073136/given-a-mesh-face-find-its-neighboring-faces
-export function Face({ buildingGeometries, centroid, normal, triangle }) {
-    const formation = "equal"; // TODO pick random face type here. for now just choosing narrow buildings
+function Face({ buildingGeometries, centroid, normal, triangle }) {
+    
+    const area = triangle.getArea();
+    // areaTotal += area;
+    // areaCount += 1;
+    // console.log("Avg:", areaTotal/areaCount);
+    const formation = pickFacePattern(area);
     const subdivisions = subdivideTriangle(triangle, centroid, formation);
     const color = getRandomColor(centroid); // TODO temporary color to help debug
-    return <>{subdivisions.slice(0, 2).map(triangleSubdivision => {
+    return <>{subdivisions.map(triangleSubdivision => {
         // TODO might want to just store centroids during calculation
         const subdivisionCentroid = triangleCentroid(triangleSubdivision);
         const geometry = randomClone(buildingGeometries.narrow); // TODO
@@ -76,4 +99,28 @@ export function Face({ buildingGeometries, centroid, normal, triangle }) {
         </group>
     })}</>;
 
+}
+
+
+
+export function Faces({ offset, radius, geometries, sphereGeometry }) {
+
+    return <>{sphereGeometry.faces.map(face => {
+        const vertices = sphereGeometry.vertices;
+        const centroid = faceCentroid(face, vertices)
+        return <group key={faceId(face)}>
+            {centroid.x < 3.5 && centroid.x > -3.5 &&
+                Math.abs(centroid.y) < radius * .99 && (//radius * 1.1 &&  (
+                <Face
+                    buildingGeometries={geometries}
+                    centroid={centroid}
+                    normal={face.normal}
+                    triangle={new THREE.Triangle(
+                        vertices[face.a],
+                        vertices[face.b],
+                        vertices[face.c])}
+                />)}
+        </group>
+    })
+    }</>
 }
