@@ -1,13 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useSpring } from 'react-spring/three';
+import React, { useEffect } from 'react';
 import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { useGLTF } from "../../Utils/hooks";
 import { BloomEffect } from "../../Utils/Effects";
-import { generateBuildings, loadBuildings } from "./buildings";
+import { useGLTF } from "../../Utils/hooks";
+import { loadBuildings } from "./buildings";
 import { BUILDINGS_URL } from "./constants";
-import { Controls } from "./controls";
 import "./index.css";
 import { World } from './world';
 extend({ OrbitControls });
@@ -20,26 +18,18 @@ function Scene() {
        Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
        (For instance: a complicated geometry.)
      */
-    const { camera, scene, gl } = useThree();
-    const rollingSpeed = 0.0001;
-    const [{ top, mouse }, set] = useSpring(() => ({ top: 0, mouse: [0, 0] }))
+    const { camera, scene } = useThree();
     // TODO: this value should be a factor of the size of the user's screen...?
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, loadBuildings);
-    let buildingsInPath = []
-    const world = useRef(0);
-    const sphericalHelper = new THREE.Spherical();
     const worldRadius = 26;
     const startPos = new THREE.Vector3(0, worldRadius *.05, -worldRadius *1.01);
+    const lookAt = new THREE.Vector3(0, worldRadius*1.5, 1);
     useEffect(() => {
         const fogColor = new THREE.Color(0xffffff);
         scene.background = fogColor;
-        // scene.background = new THREE.Color(0x00ff00);
-        // scene.fog = new THREE.FogExp2( 0xf0fff0, 0.14 );
-        // gl.setClearColor(0xfffafa, 1); 
         scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
         camera.position.copy(startPos);
-        camera.lookAt(new THREE.Vector3(0, worldRadius * 1.5, 1));// 15, -1));
-
+        camera.lookAt(lookAt);
     }, [buildings])
 
     useRender(() => {
@@ -47,7 +37,10 @@ function Scene() {
     })
     return (
         <>
-            {/* <Controls /> */}
+            {/* <Controls
+                dampingFactor={.5}
+                rotateSpeed={.1}
+            />*/}
             <BloomEffect
                 camera={camera}
                 radius={1}
@@ -60,7 +53,7 @@ function Scene() {
                 worldRadius={worldRadius}
                 worldPos={new THREE.Vector3(0, 0, 0)}
                 startPos={startPos}
-                maxHeight={0.07}
+                maxHeight={0.1}
                 buildingGeometries={buildings}
             />
             {/* <Advanced2Effect camera={camera} /> */}

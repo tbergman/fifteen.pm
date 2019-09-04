@@ -1,10 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
+import { useRender, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { useThree, useResource, useRender } from 'react-three-fiber';
-import { MemoizedTile } from '../../Utils/TileGenerator';
-import { Buildings, Building } from "./buildings";
-import { MemoizedSphereFaces, SphereFaces, faceId } from "./face";
-import {CityTile} from "./tiles";
+import { faceId, SphereFaces } from "./face";
+import { CityTile } from "./tiles";
 
 function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
     var vertexIndex;
@@ -43,31 +41,6 @@ function vertexId(v) {
     return [v.x, v.y, v.z].join("_");
 }
 
-function generateNeighborLookup(g) {
-    const vertexToFace = {};
-    const faceIdLookup = {}
-    for (let fx = 0; fx < g.vertices.length; fx++) {
-        const vertId = vertexId(g.vertices[fx]);
-        vertexToFace[vertId] = [];
-    }
-    for (let fx = 0; fx < g.faces.length; fx++) {
-        const f = g.faces[fx];
-        const vertAId = vertexId(g.vertices[f.a]);
-        const vertBId = vertexId(g.vertices[f.b]);
-        const vertCId = vertexId(g.vertices[f.c]);
-        const fId = faceId(f)
-        faceIdLookup[fId] = f;
-        vertexToFace[vertAId].push(fId);
-        vertexToFace[vertBId].push(fId);
-        vertexToFace[vertCId].push(fId);
-    }
-    return [vertexToFace, faceIdLookup];
-}
-
-function shouldUpdateBoundary(prevBoundary, rotation) {
-
-}
-
 // https://sites.google.com/site/threejstuts/home/slerp
 // https://stackoverflow.com/questions/11030101/three-js-camera-flying-around-sphere ***
 // https://gamedev.stackexchange.com/questions/59298/walking-on-a-sphere ***
@@ -82,32 +55,16 @@ function shouldUpdateBoundary(prevBoundary, rotation) {
 // endless roller: https://jsfiddle.net/juwalbose/bk4u5wcn/embedded/
 // TODO generalize parameters
 export function World({ startPos, worldRadius, sides, tiers, buildingGeometries, worldPos, maxHeight }) {
-    // const [sphereGeometryRef, sphereGeometry] = useResource();
-    const [sphereGeometryMeshRef, sphereGeometryMesh] = useResource();
-    const [sphereRotationXBucket, setSphereRotationXBucket] = useState(0.);
-    const [shouldResetRotationBucket, setShouldResetRotationBucket] = useState(true);
-    const group = useRef();
-    const { camera, raycaster, size } = useThree();
-    let sphereGeometry = new THREE.SphereGeometry(worldRadius, sides, tiers);
-    let sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfaec82, flatShading: THREE.FlatShading, vertexColors: THREE.FaceColors })
-    const viewBoundary = useRef({ x: { min: -3.5, max: 0 }, z: 0 })
-    sphereGeometry = variateSphereFaceHeights({ sphereGeometry, worldRadius, sides, tiers, maxHeight });
     console.log("RENDER WORLD");
-    // useEffect(() => {
-    //     if (shouldResetRotationBucket) {
-    //         setSphereRotationXBucket(group.current.rotation.x)
-    //         console.log("SET BUCKET TO ", sphereRotationXBucket);
-    //         setShouldResetRotationBucket(false)
-    //     }
-    // }, [shouldResetRotationBucket])
+    const group = useRef();
+    const { raycaster } = useThree();
+    let sphereGeometry = new THREE.SphereGeometry(worldRadius, sides, tiers);
+    // let sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfaec82, flatShading: THREE.FlatShading, vertexColors: THREE.FaceColors })
+    sphereGeometry = variateSphereFaceHeights({ sphereGeometry, worldRadius, sides, tiers, maxHeight });
     useRender(() => {
         // TODO this rotation sucks haha
         group.current.rotation.x -= .0001;
         group.current.rotation.z = raycaster.ray.direction.x * .6;
-        // TODO this is not smoothly bucketing rotation values
-        // if (Math.abs(group.current.rotation.x % .001).toFixed(5) == 0.0) {
-        // setShouldResetRotationBucket(true)
-        // }
     })
     return <>
         <group ref={group}>
@@ -127,46 +84,12 @@ export function World({ startPos, worldRadius, sides, tiers, buildingGeometries,
                         radius={worldRadius}
                         startPos={startPos}
                         // TODO
-                        tileComponent={CityTile}        
-                    // sphereRotationX={sphereRotationXBucket}
+                        tileComponent={CityTile}
                     />}
                 </>
             )}
         </group>) : null}
-
     </>;
-
-
-    return <>
-        <sphereGeometry ref={sphereGeometryRef} args={[worldRadius, sides, tiers]} />
-        {sphereGeometry ? (
-            <group>
-                <mesh
-                    geometry={sphereGeometry}
-                    material={sphereMaterial}
-                    castShadow
-                    receiveShadow
-                    rotation-z={-Math.PI / 2}
-                    position={worldPos}
-                />
-                {/* {buildingGeometries && sphereGeometry.faces.map(face => {
-            const vertices = sphereGeometry.vertices;
-            const centroid = faceCentroid(face, vertices)
-            return <group key={faceId(face)}>
-                <Face
-                    buildingGeometries={buildingGeometries}
-                    centroid={centroid}
-                    normal={face.normal}
-                    triangle={new THREE.Triangle(
-                        vertices[face.a],
-                        vertices[face.b],
-                        vertices[face.c])}
-                />
-            </group>
-        })
-        } */}
-            </group>) : null}
-    </>
 }
 
 

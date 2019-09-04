@@ -8,7 +8,7 @@ import { FirstPersonControls } from "three-full";
 extend({ OrbitControls, TrackballControls, FirstPersonControls });
 
 
-export function Controls({ target }) {
+export function Controls({ dampingFactor = 0.5, rotateSpeed = 0.2, target }) {
     const controls = useRef();
     const { canvas, camera } = useThree();
     useEffect(() => {
@@ -24,30 +24,9 @@ export function Controls({ target }) {
             ref={controls}
             args={[camera, canvas]}
             enableDamping
-            dampingFactor={0.5}
-            // autoRotate={true}
-            rotateSpeed={0.2}
-        // minAzimuthAngle={-Math.PI}
-        // maxAzimuthAngle={Math.PI}
+            dampingFactor={dampingFactor}
+            rotateSpeed={rotateSpeed}
         />
-        // <trackballControls
-        //     ref={controls}
-        //     arg={[camera, canvas]}
-        //     rotateSpeed={1.0}
-        //     zoomSpeed={1.2}
-        //     panSpeed={0.8}
-        //     noZoom={false}
-        //     noPan={false}
-        //     staticMoving={true}
-        //     dynamicDampingFactor={0.3}
-        //     keys={[65, 83, 68]}
-
-
-        // />
-        // <firstPersonControls
-        //     onUpdate={f => { return console.log("update") }}
-        //     ref={controls}
-        //     arg={[camera, canvas]} />
     );
 }
 
@@ -56,7 +35,6 @@ export function Controls2({ target, radius }) {
     const [updated, setUpdated] = useState(false);
     const quaternion = new THREE.Quaternion();
     document.addEventListener('keydown', handleKeyPress);
-
     useEffect(() => {
         var qx = quaternion.x;
         var qy = quaternion.y;
@@ -67,7 +45,6 @@ export function Controls2({ target, radius }) {
         target.position.z = ((qz * qz + qw * qw) - (qx * qx + qy * qy)) * radius;
         console.log("UPDATED TARGET")
     }, [updated]);
-
     function handleKeyPress(f) {
         setUpdated(false);
         // console.log('press:', f);
