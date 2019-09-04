@@ -38,12 +38,12 @@ function Scene() {
                 dampingFactor={.5}
                 rotateSpeed={.1}
             />*/}
-            <BloomEffect
+            {/* <BloomEffect
                 camera={camera}
                 radius={1}
                 threshold={.8}
                 strength={0.4}
-            />
+            /> */}
             {buildings && <TileGenerator
                 geometries={buildings}
                 // sphereGeometry={sphereGeometry}
