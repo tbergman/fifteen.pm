@@ -6,12 +6,8 @@ import { Building, buildingName } from './buildings';
 import { randomClone } from './utils';
 
 
+const tileId = (face) => [face.a, face.b, face.c].join("_");
 
-
-
-export function tileId(face) {
-    return [face.a, face.b, face.c].join("_");
-}
 
 function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
     var vertexIndex;
@@ -54,7 +50,7 @@ function hardLimitYFaces(centroid, radius) {
 }
 
 function withinBoundary(boundary, centroid, boundaryLimit) {
-    return Math.abs(boundary.distanceTo(centroid) < boundaryLimit);
+    return Math.abs(boundary.distanceTo(centroid) < 3);//boundaryLimit);
 }
 
 function initFaceTile(face, centroid, triangle) {
@@ -63,48 +59,76 @@ function initFaceTile(face, centroid, triangle) {
         centroid: centroid,
         normal: face.normal,
         triangle: triangle,
-        isInitialRender: true,
+        hasRendered: false,
         visible: false,
+        timestamp: 0,
         // mesh: mesh,
     }
 }
 
-function updateFaceTile(faceObj) {
-    faceObj.visible = true;
-    faceObj.isInitialRender = false;
-    return faceObj;
-}
-
 function generateTiles(sphereGeometry, triangleGroup, boundary) {
     const vertices = sphereGeometry.vertices;
-    const normal = new THREE.Vector3();
-    const geom0 = new THREE.Geometry();
-    const boundaryLimit = sphereGeometry.parameters.radius / 3; // TODO this is too big unless we do instancing
+    // const boundaryLimit = sphereGeometry.parameters.radius / 3; // TODO this is too big unless we do instancing
     const tiles = {}
     sphereGeometry.faces.forEach((face, index) => {
         const triangle = triangleFromFace(face, vertices);
-        // const geom = geom0.clone();
-        // geom.vertices.push(triangle.a);
-        // geom.vertices.push(triangle.b);
-        // geom.vertices.push(triangle.c);
-        // triangle.getNormal(normal);
-        // geom.faces.push(new THREE.Face3(0, 1, 2, normal));
-        // const material = new THREE.MeshStandardMaterial({ color: 0x0000ff, transparent: true, opacity: 0.9, flatShading: THREE.FlatShading });
-        // // const material = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading })
-        // const mesh = new THREE.Mesh(geom, material);
-        // mesh.name = tileId(face);
-        // mesh.userData = { face: face }
-        // mesh.castShadow = true;
-        // mesh.receiveShadow = true;
-        // mesh.matrixWorldNeedsUpdate = true;
         const centroid = faceCentroid(face, vertices);
-        // triangleGroup.current.add(mesh); // TODO optimiziation/instancing here?
         const tile = initFaceTile(face, centroid, triangle);
-        if (withinBoundary(boundary.current, centroid, boundaryLimit)) tile.visible = true;
+        if (withinBoundary(boundary.current, centroid)) tile.visible = true;
         const tId = tileId(face);
         tiles[tId] = tile;
     })
     return tiles;
+}
+
+function generateRaycastMeshes(sphereGeometry, startPos) {
+    const subdivisionCount = 8;
+    const subdivisions = {}
+    const faceLookup = {};
+    const tmpCount = {}; // TODO rm
+    for (let i = 0; i < subdivisionCount; i++) {
+        subdivisions[i] = new THREE.Geometry();
+        faceLookup[i] = [];
+        tmpCount[i] = 0;
+    }
+    const radius = sphereGeometry.parameters.radius;
+    const vertices = sphereGeometry.vertices;
+    const normal = new THREE.Vector3();
+    sphereGeometry.faces.forEach(face => {
+        const centroid = faceCentroid(face, vertices);
+        const triangle = triangleFromFace(face, vertices)
+        const geom = new THREE.Geometry();
+        geom.vertices.push(triangle.a);
+        geom.vertices.push(triangle.b);
+        geom.vertices.push(triangle.c);
+        triangle.getNormal(normal);
+        geom.faces.push(new THREE.Face3(0, 1, 2, normal));
+        // TODO cleanly divide these values?
+        const dist = centroid.distanceTo(startPos);
+        let key;
+        // TODO make this dynamic....
+        // TODO right now we are only hitting about 26 faces out of 3k :(
+        if (dist < radius * .05) key = 0;
+        else if (dist < radius * .1) key = 1;
+        else if (dist < radius * .15) key = 2;
+        else if (dist < radius * .2) key = 3;
+        else if (dist < radius * .25) key = 4;
+        else if (dist < radius * .33) key = 5;
+        else if (dist < radius * 1.66) key = 6;
+        else key = 7;
+        tmpCount[key]++
+        subdivisions[key].merge(geom);
+        faceLookup[key].push(tileId(face));
+    })
+    console.log('tmpcount', tmpCount);
+    const rayGroup = new THREE.Group()
+    const rayMeshes = Object.keys(subdivisions).map(key => {
+        const mesh = new THREE.Mesh(subdivisions[key]);
+        mesh.name = key;
+        rayGroup.add(mesh);
+        return mesh;
+    });
+    return [rayMeshes, rayGroup, faceLookup]
 }
 
 function setupRaycasters(lookAts, camera) {
@@ -112,8 +136,8 @@ function setupRaycasters(lookAts, camera) {
     const far = new THREE.Vector3();
     return lookAts.map(lookAt => {
         const raycaster = new THREE.Raycaster();
-        raycaster.set(camera.position, direction.subVectors(lookAt.mesh.position, camera.position).normalize());
-        raycaster.far = far.subVectors(lookAt.mesh.position, camera.position).length() + 3; // TODO added this random int currently this is FIFTY EIGHT raycasters this is not gonna work.
+        raycaster.set(camera.position, direction.subVectors(lookAt.centroid, camera.position).normalize());
+        raycaster.far = far.subVectors(lookAt.centroid, camera.position).length() + 3; // TODO added this random int currently this is FIFTY EIGHT raycasters this is not gonna work.
         return raycaster
     });
 }
@@ -124,12 +148,14 @@ function setupRaycasters(lookAts, camera) {
 export function TileGenerator({ radius, sides, tiers, tileComponent, geometries, startPos, maxHeight }) {
     const { camera, scene, raycaster } = useThree();
     const [needsUpdate, setNeedsUpdate] = useState(false);
-    // const faces = useRef({});
+    const [lastRaycastFaceIdx, setLastRaycastFaceIdx] = useState();
     const boundary = useRef(new THREE.Vector3);
     const raycasters = useRef([]);
     const tilesGroup = useRef(new THREE.Group());
     const allTiles = useRef([]);
-    const allMeshes = useRef([]);
+    const raycastMeshes = useRef([]);
+    const raycastMeshesGroup = useRef([]);
+    const faceLookup = useRef([]);
     const visibleTiles = useRef([]);
     let sphereGeometry = new THREE.SphereGeometry(radius, sides, tiers);
     sphereGeometry = variateSphereFaceHeights({ sphereGeometry, radius, sides, tiers, maxHeight });
@@ -141,52 +167,55 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
         allTiles.current = generateTiles(sphereGeometry, tilesGroup, boundary);
         // allMeshes.current = Object.values(allTiles.current).map(tile => tile.mesh);
         // scene.add(tilesGroup.current); // TODO point of optimization
-        visibleTiles.current = Object.values(allTiles.current).filter(tile => tile.visible);
-        // raycasters.current = setupRaycasters(visibleTiles.current, camera);
+        [raycastMeshes.current, raycastMeshesGroup.current, faceLookup.current] = generateRaycastMeshes(sphereGeometry, startPos);
+        console.log("raycast meshes", raycastMeshes, "raycastmeshes group", raycastMeshesGroup.current);
+        visibleTiles.current = Object.values(allTiles.current).filter(tile => {
+            if (tile.visible) {
+                tile.hasRendered = true; 
+                return tile
+            }
+        });
+        raycasters.current = setupRaycasters(visibleTiles.current, camera);
     }, [])
 
     useRender((state, time) => {
-        tilesGroup.current.rotation.x -= .001; // TODO these are just mimicking rotation in world, no bueno
+        const rotXDelta = -.001;
+        tilesGroup.current.rotation.x += rotXDelta; // TODO these are just mimicking rotation in world, no bueno
+        tilesGroup.current.rotation.x = tilesGroup.current.rotation.x % (2 * Math.PI);
         tilesGroup.current.rotation.z = raycaster.ray.direction.x * .6; // TODO these are just mimicking rotation in world, no bueno
-        // boundary.current += .1;
-        // if (boundary.current % 1000){
-        //     faces.current = updateFaceTiles(face.current)
-        // }
+        raycastMeshesGroup.current.rotation.x -= rotXDelta;
+        raycastMeshesGroup.current.rotation.x = raycastMeshesGroup.current.rotation.x % (2 * Math.PI);
         //  TODO is there a better way to bucket? Event detection?
-        // if ((time % .001).toFixed(3) == 0) {
-        // visibleTiles.current = Object.values(allTiles.current).filter(tile => tile.visible);
-        // for (let i = 0; i < raycasters.current.length; i++) {
-        // const intersects = raycasters.current[i].intersectObjects(allMeshes.current); // TODO should we be looking at other things to interesect? Using layers?
-        // for (let i = 0; i < intersects.length; i++) {
-        // const intersectedObj = intersects[i].object;
-        // if (seenIds.indexOf(intersectedObj.name) < 0) {
-        //     seenIds.push(intersectedObj.name);
-        //     boundary.current = intersectedObj.position;
-        //     // TODO state control for this component -- is this a usecase for useCallback? (so that faces is set by state?)
-        //     setNeedsUpdate(true);
-        //     const face = intersectedObj.userData.face;
-        //     const tId = tileId(face);
-        //     if (!allTiles.current.hasOwnProperty(tId)) {
-        //         allTiles.current[tId] = updateFaceTile(allTiles.current[tId])
-        //     } else {
-        //         allTiles.current[tId] = initFaceTile(face, intersectedObj, vertices);
-        //     }
-        //     // faces.current = updateFaceTiles(faces.current, intersectedObj.userData.face, intersectedObj, vertices)
-        //     setNeedsUpdate(false);
-        // }
-        // }
-        // }
-        // }
+        if ((time % .001).toFixed(3) == 0) {
+            for (let i = 0; i < raycasters.current.length; i++) {
+                const intersects = raycasters.current[i].intersectObjects(raycastMeshes.current); // TODO should we be looking at other things to interesect? Using layers?
+                for (let i = 0; i < intersects.length; i++) {
+                    const intersectedObj = intersects[i].object;
+                    const raycastIdx = intersectedObj.name;
+                    if (lastRaycastFaceIdx !== raycastIdx) {
+                        console.log("UDPATE BY RAYCASTING...")
+                        visibleTiles.current = faceLookup.current[raycastIdx].map(faceId => {
+                            const tile = allTiles.current[faceId];
+                            tile.visible = true;
+                            tile.hasRendered = true;
+                            return tile;
+                        });
+                        setLastRaycastFaceIdx(raycastIdx);
+                    }
+                }
+            }
+        }
     });
 
     return <group ref={tilesGroup}>
         {visibleTiles.current && visibleTiles.current.map(props => {
+            console.log(props.id, props.hasRendered)
             return <group key={props.id}>
                 <MemoizedSphereTile
+                    {...props}
                     buildingGeometries={geometries}
                     tileComponent={tileComponent}
                     tileId={props.id}
-                    {...props}
                 />
             </group>
         })}
@@ -197,5 +226,5 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
 export const MemoizedSphereTile = React.memo(props => {
     if (!props.visible) return null;
     return <>{props.tileComponent(props)}</>;
-}, props => !props.hasRendered);
+}, props => props.hasRendered);
 
