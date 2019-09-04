@@ -168,6 +168,7 @@ export const MemoizedSphereFace = React.memo(props => {
     return <SphereFace {...props} />;
 }, props => !props.hasRendered);
 
+// TODO first thing tm refactor :P
 // view-source:https://rawgit.com/pailhead/three.js/instancing-part2-200k-instanced/examples/webgl_interactive_cubes.html
 // https://medium.com/@pailhead011/instancing-with-three-js-part-2-3be34ae83c57
 export function SphereFaces({ tileComponent, offset, radius, geometries, sphereGeometry, startPos }) {

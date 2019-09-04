@@ -1,0 +1,203 @@
+    //----------
+    let intersectsScene, matrixArray, instanceColorArray, matrixAttributeArray, instanceColorAttribute
+    const red = [255, 0, 0]
+    const COUNT = 1 << 16
+    const instanceEmissiveArray = new Uint8Array(COUNT * 3)
+    const emissiveAttribute = new THREE.InstancedBufferAttribute(instanceEmissiveArray, 3, true)
+    emissiveAttribute.dynamic = true
+    function setEmissiveAtIndex(index, colorArray) {
+        for (let i = 0; i < 3; i++) {
+            instanceEmissiveArray[index * 3 + i] = colorArray[i]
+        }
+        emissiveAttribute.needsUpdate = true
+    }
+    function getEmissiveAtIndex(index) {
+        const res = []
+        for (let i = 0; i < 3; i++) {
+            res.push(instanceEmissiveArray[index * 3 + i])
+        }
+        return res
+    }
+    var geometry = new THREE.BoxBufferGeometry(2, 2, 2);
+    var instancedGeometry = new THREE.InstancedBufferGeometry() //this is going to wrap both geometry and a bit of the scene graph
+    window.instancedGeometry = instancedGeometry //expose it
+
+    //we have to copy the meat - geometry into this wrapper
+    Object.keys(geometry.attributes).forEach(attributeName => {
+        instancedGeometry.attributes[attributeName] = geometry.attributes[attributeName]
+    })
+
+    //along with the index
+    instancedGeometry.index = geometry.index
+
+    //we define the size of the buffer
+    instancedGeometry.maxInstancedCount = COUNT
+
+    //store this in a structure for easier access
+    const matArraySize = COUNT * 4
+    matrixArray = [
+        new Float32Array(matArraySize),
+        new Float32Array(matArraySize),
+        new Float32Array(matArraySize),
+        new Float32Array(matArraySize),
+    ]
+    matrixAttributeArray = [] //same for later access
+
+    //add attributes to geometry
+    for (let i = 0; i < matrixArray.length; i++) {
+        const attribute = new THREE.InstancedBufferAttribute(matrixArray[i], 4)
+        attribute.dynamic = true
+
+        matrixAttributeArray.push(attribute)
+
+        instancedGeometry.addAttribute(
+            `aInstanceMatrix${i}`,
+            attribute
+        )
+    }
+
+    instanceColorArray = new Uint8Array(COUNT * 3)
+    instanceColorAttribute = new THREE.InstancedBufferAttribute(instanceColorArray, 3, true)
+    instancedGeometry.addAttribute(
+        'aInstanceColor',
+        instanceColorAttribute
+    )
+
+    instancedGeometry.addAttribute(
+        'aInstanceEmissive',
+        emissiveAttribute
+    )
+
+    //dummy scene
+    intersectsScene = new THREE.Scene()
+
+    //populate entire set
+    for (var i = 0; i < COUNT; i++) {
+
+        var object = new THREE.Mesh(geometry)
+
+        object.userData.index = i //keep for mapping to attribute
+
+        const color = new THREE.Color(Math.random() * 0xffffff)
+
+        //------------------------------------------------------------------
+        object.position.x = Math.random() * 800 - 400;
+        object.position.y = Math.random() * 800 - 400;
+        object.position.z = Math.random() * 800 - 400;
+
+        object.rotation.x = Math.random() * 2 * Math.PI;
+        object.rotation.y = Math.random() * 2 * Math.PI;
+        object.rotation.z = Math.random() * 2 * Math.PI;
+
+        object.scale.x = Math.random() + 0.5;
+        object.scale.y = Math.random() + 0.5;
+        object.scale.z = Math.random() + 0.5;
+
+        //------------------------------------------------------------------
+        intersectsScene.add(object);
+
+        object.updateMatrixWorld()
+
+        //refactor this
+        for (let r = 0; r < 4; r++)
+            for (let c = 0; c < 4; c++)
+                matrixArray[r][i * 4 + c] = object.matrixWorld.elements[r * 4 + c] //fetch matrix value
+
+        const colorArray = color.toArray().map(c => Math.floor(c * 255)) //remap color once
+
+        object.userData.color = colorArray //store on graph
+
+        for (let c = 0; c < 3; c++) {
+            instanceColorArray[i * 3 + c] = colorArray[c]
+        }
+    }
+
+    intersectsScene.updateMatrixWorld(true) //without render, needed to compute matrices
+
+    const instanceMaterial = new THREE.MeshLambertMaterial()
+
+    //gnarly shader modification:
+    instanceMaterial.onBeforeCompile = shader => {
+
+        shader.vertexShader = `
+
+					attribute vec4 aInstanceMatrix0;
+					attribute vec4 aInstanceMatrix1;
+					attribute vec4 aInstanceMatrix2;
+					attribute vec4 aInstanceMatrix3;
+
+					attribute vec3 aInstanceColor;
+					attribute vec3 aInstanceEmissive;
+
+					${
+            shader.vertexShader.replace(
+                '#include <begin_vertex>',
+                `
+							mat4 aInstanceMatrix = mat4(
+								aInstanceMatrix0,
+								aInstanceMatrix1,
+								aInstanceMatrix2,
+								aInstanceMatrix3
+							);
+
+							vec3 transformed = (aInstanceMatrix * vec4( position , 1. )).xyz;
+							`
+            )
+            }
+					`
+
+        shader.vertexShader = `
+					varying vec3 vInstanceColor;
+					varying vec3 vInstanceEmissive;
+					${
+            shader.vertexShader.replace(
+                `#include <color_vertex>`,
+                `#include <color_vertex>
+					   vInstanceColor = aInstanceColor;
+					   vInstanceEmissive = aInstanceEmissive;
+					  `
+            )}
+					`
+
+        shader.fragmentShader = `
+					varying vec3 vInstanceColor;
+					${
+            shader.fragmentShader.replace(
+                'vec4 diffuseColor = vec4( diffuse, opacity );',
+                'vec4 diffuseColor = vec4( vInstanceColor, opacity );'
+            )}
+					`
+
+        shader.fragmentShader = `
+					varying vec3 vInstanceEmissive;
+					${
+            shader.fragmentShader.replace(
+                'vec3 totalEmissiveRadiance = emissive;',
+                'vec3 totalEmissiveRadiance = vInstanceEmissive;'
+            )}
+					`
+
+        shader.vertexShader = shader.vertexShader.replace(
+            `#include <beginnormal_vertex>`,
+            `
+					  mat4 _aInstanceMatrix = mat4(
+						aInstanceMatrix0,
+						aInstanceMatrix1,
+						aInstanceMatrix2,
+						aInstanceMatrix3
+					  );
+					  vec3 objectNormal = (_aInstanceMatrix * vec4( normal, 0. ) ).xyz;
+					  `
+        )
+
+    }
+
+    //we have to add another node (Mesh), because thats how the API works, 
+    scene.add(new THREE.Mesh(
+        instancedGeometry,
+        instanceMaterial
+    ))
+    //------------------------------------------------------------------
+
+    //------------
+// https://medium.com/@pailhead011/instancing-with-three-js-part-2-3be34ae83c57
