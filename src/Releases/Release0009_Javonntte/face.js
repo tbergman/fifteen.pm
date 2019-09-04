@@ -5,78 +5,14 @@ import { faceCentroid, getMiddle, triangleCentroid, triangleFromFace } from '../
 import { Building, buildingName } from './buildings';
 import { randomClone } from './utils';
 
-// TODO rm me
-function random(seed) {
-    var x = Math.sin(seed) * 10000;
-    var r = x - Math.floor(x);
-    return r;
-}
 
-// TODO rm me
-function getRandomColor(centroid) {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    var seed = random(centroid.x * centroid.y * centroid.z) * 10000;
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(random(seed++) * 16)];
-    }
-    return color;
-}
 
-// TODO refactor
-function subdivideTriangle(tri, centroid, formation) {
-    const i1 = tri.a;
-    const i2 = tri.b;
-    const i3 = tri.c;
-    const a = getMiddle(tri.a, tri.b);
-    const b = getMiddle(tri.b, tri.c);
-    const c = getMiddle(tri.a, tri.c);
-    const triangles = [];
-    switch (formation) {
-        case "small":
-            triangles.push(tri);
-            break;
-        case "medium":
-            // all same size
-            triangles.push(new THREE.Triangle(i1, a, centroid));
-            triangles.push(new THREE.Triangle(a, i2, centroid));
-            triangles.push(new THREE.Triangle(i2, b, centroid));
-            triangles.push(new THREE.Triangle(b, i3, centroid));
-            triangles.push(new THREE.Triangle(i3, c, centroid));
-            triangles.push(new THREE.Triangle(c, i1, centroid));
-            break;
-        case "bigLeft1":
-            // big on left, medium on top, small on bottom right
-            triangles.push(new THREE.Triangle(i1, i2, c)); // big building // TODO probably can store all of this in maps
-            triangles.push(new THREE.Triangle(i2, i3, centroid)); // medium building
-            triangles.push(new THREE.Triangle(i3, c, centroid)); // narrow building
-            break;
-        case "extraSubdivisions":
-            const equalTriangles = subdivideTriangle(tri, centroid, "medium");
-            for (let i = 0; i < equalTriangles.length; i++) {
-                const halvedTriangles = subdivideTriangle(equalTriangles[i], triangleCentroid(equalTriangles[i]), "medium");
-                for (let j = 0; j < halvedTriangles.length; j++) {
-                    triangles.push(halvedTriangles[j]);
-                }
-            }
-            break;
-        case "small":
-    }
-    return triangles;
-}
+
 
 export function tileId(face) {
     return [face.a, face.b, face.c].join("_");
 }
 
-function pickFacePattern(area) {
-    // TODO calculate area buckets given data
-    if (area < 1.6) {
-        return "small"; // TODO make these randomly picked from lists
-    } else {
-        return "medium"; // TODO make these randomly picked from lists
-    }
-}
 function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
     var vertexIndex;
     var vertexVector = new THREE.Vector3();
@@ -111,35 +47,6 @@ function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphere
 }
 
 
-let areaTotal = 0;
-let areaCount = 0;
-function SphereFace({ tileComponent, buildingGeometries, centroid, normal, triangle, tileId }) {
-    console.log("Rendering:", tileId)
-    const buildingGroupRef = useRef();
-    const area = triangle.getArea();
-    const formation = pickFacePattern(area);
-    const subdivisions = subdivideTriangle(triangle, centroid, formation);
-    const color = getRandomColor(centroid); // TODO temporary color to help debug
-    const [hasRendered, setHasRendered] = useState(0)
-    return <group>
-        {subdivisions.map(triangleSubdivision => {
-            // TODO might want to just store centroids during calculation
-            const subdivisionCentroid = triangleCentroid(triangleSubdivision);
-            const geometry = randomClone(buildingGeometries.narrow); // TODO
-            console.log("ADD BUILDING")
-            return <group ref={buildingGroupRef} key={buildingName(geometry, subdivisionCentroid)}>
-                <Building geometry={geometry} centroid={subdivisionCentroid} normal={normal} color={color} />
-            </group>
-        })}
-    </group>;
-}
-
-export const MemoizedSphereFace = React.memo(props => {
-    // TODO
-    // return <>{props.tileComponent(props)}</>;
-    return <SphereFace {...props} />;
-}, props => !props.hasRendered);
-
 // TODO add back in
 function hardLimitYFaces(centroid, radius) {
     // don't populate the tiny triangles on top of the sphere
@@ -150,20 +57,20 @@ function withinBoundary(boundary, centroid, boundaryLimit) {
     return Math.abs(boundary.distanceTo(centroid) < boundaryLimit);
 }
 
-function initFaceTile(face, mesh, centroid, triangle) {
+function initFaceTile(face, centroid, triangle) {
     return {
         id: tileId(face),
         centroid: centroid,
         normal: face.normal,
         triangle: triangle,
         isInitialRender: true,
-        // visible: true,
-        mesh: mesh,
+        visible: false,
+        // mesh: mesh,
     }
 }
 
 function updateFaceTile(faceObj) {
-    // faceObj.visible = true;
+    faceObj.visible = true;
     faceObj.isInitialRender = false;
     return faceObj;
 }
@@ -176,28 +83,24 @@ function generateTiles(sphereGeometry, triangleGroup, boundary) {
     const tiles = {}
     sphereGeometry.faces.forEach((face, index) => {
         const triangle = triangleFromFace(face, vertices);
-        const geom = geom0.clone();
-        geom.vertices.push(triangle.a);
-        geom.vertices.push(triangle.b);
-        geom.vertices.push(triangle.c);
-        triangle.getNormal(normal);
-        geom.faces.push(new THREE.Face3(0, 1, 2, normal));
-        const material = new THREE.MeshStandardMaterial({ color: 0x0000ff, transparent: true, opacity: 0.9, flatShading: THREE.FlatShading });
-        // const material = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading })
-        const mesh = new THREE.Mesh(geom, material);
-        mesh.name = tileId(face);
-        mesh.userData = { face: face }
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        // const geom = geom0.clone();
+        // geom.vertices.push(triangle.a);
+        // geom.vertices.push(triangle.b);
+        // geom.vertices.push(triangle.c);
+        // triangle.getNormal(normal);
+        // geom.faces.push(new THREE.Face3(0, 1, 2, normal));
+        // const material = new THREE.MeshStandardMaterial({ color: 0x0000ff, transparent: true, opacity: 0.9, flatShading: THREE.FlatShading });
+        // // const material = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading })
+        // const mesh = new THREE.Mesh(geom, material);
+        // mesh.name = tileId(face);
+        // mesh.userData = { face: face }
+        // mesh.castShadow = true;
+        // mesh.receiveShadow = true;
         // mesh.matrixWorldNeedsUpdate = true;
         const centroid = faceCentroid(face, vertices);
-        triangleGroup.current.add(mesh); // TODO optimiziation/instancing here?
-        const tile = initFaceTile(face, mesh, centroid, triangle);
-        if (withinBoundary(boundary.current, centroid, boundaryLimit)) {
-            tile.mesh.visible = true;
-        } else {
-            tile.mesh.visible = false;
-        }
+        // triangleGroup.current.add(mesh); // TODO optimiziation/instancing here?
+        const tile = initFaceTile(face, centroid, triangle);
+        if (withinBoundary(boundary.current, centroid, boundaryLimit)) tile.visible = true;
         const tId = tileId(face);
         tiles[tId] = tile;
     })
@@ -236,11 +139,10 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
     useEffect(() => {
         boundary.current = startPos;
         allTiles.current = generateTiles(sphereGeometry, tilesGroup, boundary);
-        allMeshes.current = Object.values(allTiles.current).map(tile => tile.mesh);
-        console.log("ALL MESHES", allMeshes);
-        scene.add(tilesGroup.current); // TODO point of optimization
-        visibleTiles.current = Object.values(allTiles.current).filter(tile => tile.mesh.visible);
-        raycasters.current = setupRaycasters(visibleTiles.current, camera);
+        // allMeshes.current = Object.values(allTiles.current).map(tile => tile.mesh);
+        // scene.add(tilesGroup.current); // TODO point of optimization
+        visibleTiles.current = Object.values(allTiles.current).filter(tile => tile.visible);
+        // raycasters.current = setupRaycasters(visibleTiles.current, camera);
     }, [])
 
     useRender((state, time) => {
@@ -251,39 +153,36 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
         //     faces.current = updateFaceTiles(face.current)
         // }
         //  TODO is there a better way to bucket? Event detection?
-        if ((time % .001).toFixed(3) == 0) {
-            visibleTiles.current = Object.values(allTiles.current).filter(tile => tile.mesh.visible);
-            console.log("Num visible tiles:", visibleTiles.current.length);
-            for (let i = 0; i < raycasters.current.length; i++) {
-                const intersects = raycasters.current[i].intersectObjects(allMeshes.current); // TODO should we be looking at other things to interesect? Using layers?
-                for (let i = 0; i < intersects.length; i++) {
-                    const intersectedObj = intersects[i].object;
-                    if (seenIds.indexOf(intersectedObj.name) < 0) {
-                        seenIds.push(intersectedObj.name);
-                        intersectedObj.visible = true;
-                        console.log('Newly noted tile: ', intersectedObj.name);
-                        boundary.current = intersectedObj.position;
-                        // TODO state control for this component -- is this a usecase for useCallback? (so that faces is set by state?)
-                        setNeedsUpdate(true);
-                        const face = intersectedObj.userData.face;
-                        const tId = tileId(face);
-                        if (!allTiles.current.hasOwnProperty(tId)) {
-                            allTiles.current[tId] = updateFaceTile(allTiles.current[tId])
-                        } else {
-                            allTiles.current[tId] = initFaceTile(face, intersectedObj, vertices);
-                        }
-                        // faces.current = updateFaceTiles(faces.current, intersectedObj.userData.face, intersectedObj, vertices)
-                        setNeedsUpdate(false);
-                    }
-                }
-            }
-        }
+        // if ((time % .001).toFixed(3) == 0) {
+        // visibleTiles.current = Object.values(allTiles.current).filter(tile => tile.visible);
+        // for (let i = 0; i < raycasters.current.length; i++) {
+        // const intersects = raycasters.current[i].intersectObjects(allMeshes.current); // TODO should we be looking at other things to interesect? Using layers?
+        // for (let i = 0; i < intersects.length; i++) {
+        // const intersectedObj = intersects[i].object;
+        // if (seenIds.indexOf(intersectedObj.name) < 0) {
+        //     seenIds.push(intersectedObj.name);
+        //     boundary.current = intersectedObj.position;
+        //     // TODO state control for this component -- is this a usecase for useCallback? (so that faces is set by state?)
+        //     setNeedsUpdate(true);
+        //     const face = intersectedObj.userData.face;
+        //     const tId = tileId(face);
+        //     if (!allTiles.current.hasOwnProperty(tId)) {
+        //         allTiles.current[tId] = updateFaceTile(allTiles.current[tId])
+        //     } else {
+        //         allTiles.current[tId] = initFaceTile(face, intersectedObj, vertices);
+        //     }
+        //     // faces.current = updateFaceTiles(faces.current, intersectedObj.userData.face, intersectedObj, vertices)
+        //     setNeedsUpdate(false);
+        // }
+        // }
+        // }
+        // }
     });
 
     return <group ref={tilesGroup}>
         {visibleTiles.current && visibleTiles.current.map(props => {
             return <group key={props.id}>
-                <MemoizedSphereFace
+                <MemoizedSphereTile
                     buildingGeometries={geometries}
                     tileComponent={tileComponent}
                     tileId={props.id}
@@ -293,3 +192,10 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
         })}
     </group>
 }
+
+
+export const MemoizedSphereTile = React.memo(props => {
+    if (!props.visible) return null;
+    return <>{props.tileComponent(props)}</>;
+}, props => !props.hasRendered);
+

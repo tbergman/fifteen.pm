@@ -8,7 +8,8 @@ import { loadBuildings } from "./buildings";
 import { BUILDINGS_URL } from "./constants";
 import { TileGenerator } from './face';
 import "./index.css";
-import { CityTile } from "./tiles";
+import { CityTile2 } from "./tiles";
+import { Controls } from "./controls";
 extend({ OrbitControls });
 
 function Scene() {
@@ -37,7 +38,7 @@ function Scene() {
             {/* <Controls
                 dampingFactor={.5}
                 rotateSpeed={.1}
-            />*/}
+            /> */}
             {/* <BloomEffect
                 camera={camera}
                 radius={1}
@@ -54,7 +55,7 @@ function Scene() {
                 startPos={startPos}
                 maxHeight={0.1}
                 // TODO
-                tileComponent={CityTile}
+                tileComponent={CityTile2}
             />}
             {/* <Advanced2Effect camera={camera} />
                  <TileGenerator
