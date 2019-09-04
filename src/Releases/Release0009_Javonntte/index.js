@@ -31,12 +31,12 @@ function Scene() {
     const worldRadius = 26;
     const startPos = new THREE.Vector3(0, worldRadius *.05, -worldRadius *1.01);
     useEffect(() => {
-        // const fogColor = new THREE.Color(0xffffff);
-        // scene.background = fogColor;
+        const fogColor = new THREE.Color(0xffffff);
+        scene.background = fogColor;
         // scene.background = new THREE.Color(0x00ff00);
-        scene.fog = new THREE.FogExp2( 0xf0fff0, 0.14 );
-        gl.setClearColor(0xfffafa, 1); 
-        // scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
+        // scene.fog = new THREE.FogExp2( 0xf0fff0, 0.14 );
+        // gl.setClearColor(0xfffafa, 1); 
+        scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
         camera.position.copy(startPos);
         camera.lookAt(new THREE.Vector3(0, worldRadius * 1.5, 1));// 15, -1));
 
@@ -48,12 +48,12 @@ function Scene() {
     return (
         <>
             {/* <Controls /> */}
-            {/* <BloomEffect
+            <BloomEffect
                 camera={camera}
-                radius={.1}
-                threshold={.1}
-                strength={0.5}
-            /> */}
+                radius={1}
+                threshold={.8}
+                strength={0.4}
+            />
             <World
                 sides={40}
                 tiers={40}

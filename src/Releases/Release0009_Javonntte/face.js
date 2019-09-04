@@ -168,7 +168,9 @@ export const MemoizedSphereFace = React.memo(props => {
     return <SphereFace {...props} />;
 }, props => !props.hasRendered);
 
+
 // TODO first thing tm refactor :P
+// https://discourse.threejs.org/t/raycast-objects-that-arent-in-scene/6704/4 
 // view-source:https://rawgit.com/pailhead/three.js/instancing-part2-200k-instanced/examples/webgl_interactive_cubes.html
 // https://medium.com/@pailhead011/instancing-with-three-js-part-2-3be34ae83c57
 export function SphereFaces({ tileComponent, offset, radius, geometries, sphereGeometry, startPos }) {
@@ -193,7 +195,8 @@ export function SphereFaces({ tileComponent, offset, radius, geometries, sphereG
             geom.vertices.push(triangle.c);
             triangle.getNormal(tmpNrml);
             geom.faces.push(new THREE.Face3(0, 1, 2, tmpNrml));
-            const material = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading })
+            const material = new THREE.MeshStandardMaterial({ color: 0x0000ff, transparent: true, opacity: 0.9, flatShading: THREE.FlatShading});
+            // const material = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading })
             const mesh = new THREE.Mesh(geom, material);
             mesh.name = faceId(face);
             mesh.userData = { face: face }
@@ -207,7 +210,7 @@ export function SphereFaces({ tileComponent, offset, radius, geometries, sphereG
             }
             return mesh;
         })
-        // scene.add(triangleGroup.current);
+        scene.add(triangleGroup.current);
         // faces.current = updateFaceIdLookup(faces.current, sphereGeometry, boundary.current);
         const direction = new THREE.Vector3();
         const far = new THREE.Vector3();
@@ -218,7 +221,7 @@ export function SphereFaces({ tileComponent, offset, radius, geometries, sphereG
             // raycaster.set(camera.position, direction.subVectors(face.centroid, camera.position).normalize());
             // raycaster.far = far.subVectors(face.centroid, camera.position).length();
             raycaster.set(camera.position, direction.subVectors(face.mesh.position, camera.position).normalize());
-            raycaster.far = far.subVectors(face.mesh.position, camera.position).length();
+            raycaster.far = far.subVectors(face.mesh.position, camera.position).multiplyScalar(2).length();
             return raycaster
         });
         // console.log(triangleGroup.current.children, triangles.current)
