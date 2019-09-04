@@ -4,7 +4,7 @@ import { useThree, useResource, useRender } from 'react-three-fiber';
 import { MemoizedTile } from '../../Utils/TileGenerator';
 import { Buildings, Building } from "./buildings";
 import { MemoizedSphereFaces, SphereFaces, faceId } from "./face";
-
+import {CityTile} from "./tiles";
 
 function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
     var vertexIndex;
@@ -126,6 +126,8 @@ export function World({ startPos, worldRadius, sides, tiers, buildingGeometries,
                         offset={worldPos}
                         radius={worldRadius}
                         startPos={startPos}
+                        // TODO
+                        tileComponent={CityTile}        
                     // sphereRotationX={sphereRotationXBucket}
                     />}
                 </>

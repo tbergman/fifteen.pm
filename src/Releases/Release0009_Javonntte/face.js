@@ -82,7 +82,7 @@ function pickFacePattern(area) {
 
 
 // TODO use a face to position camera, and store a map of neighbors for rendering of buildings: https://stackoverflow.com/questions/33073136/given-a-mesh-face-find-its-neighboring-faces
-function SphereFace({ buildingGeometries, visible, centroid, normal, triangle }) {
+function SphereFace({ tileComponent, buildingGeometries, visible, centroid, normal, triangle }) {
     const ref = useRef();
     const area = triangle.getArea();
     const formation = pickFacePattern(area);
@@ -163,13 +163,15 @@ function updateFaceTiles(faces, face, mesh, vertices) {
 }
 
 export const MemoizedSphereFace = React.memo(props => {
+    // TODO
+    // return <>{props.tileComponent(props)}</>;
     return <SphereFace {...props} />;
 }, props => !props.hasRendered);
 
 // view-source:https://rawgit.com/pailhead/three.js/instancing-part2-200k-instanced/examples/webgl_interactive_cubes.html
 // https://medium.com/@pailhead011/instancing-with-three-js-part-2-3be34ae83c57
-export function SphereFaces({ offset, radius, geometries, sphereGeometry, startPos }) {
-    const { camera, scene } = useThree();
+export function SphereFaces({ tileComponent, offset, radius, geometries, sphereGeometry, startPos }) {
+    const { camera, scene, raycaster } = useThree();
     const [needsUpdate, setNeedsUpdate] = useState(false);
     const faces = useRef({});
     const boundary = useRef(new THREE.Vector3);
@@ -190,23 +192,21 @@ export function SphereFaces({ offset, radius, geometries, sphereGeometry, startP
             geom.vertices.push(triangle.c);
             triangle.getNormal(tmpNrml);
             geom.faces.push(new THREE.Face3(0, 1, 2, tmpNrml));
-            // raycasterTriangleIdLookup.current[index] = faceId(face);
             const material = new THREE.MeshStandardMaterial({ color: 0xfffafa, flatShading: THREE.FlatShading })
             const mesh = new THREE.Mesh(geom, material);
             mesh.name = faceId(face);
-            mesh.userData = {face:face}
+            mesh.userData = { face: face }
             mesh.castShadow = true;
             mesh.receiveShadow = true;
             mesh.matrixWorldNeedsUpdate = true;
             const centroid = faceCentroid(face, vertices);
-            // mesh.position.copy(centroid);
             triangleGroup.current.add(mesh);
             if (withinInitialBoundary(boundary.current, centroid)) {
                 faces.current = updateFaceTiles(faces.current, face, mesh, vertices);
             }
             return mesh;
         })
-        scene.add(triangleGroup.current);
+        // scene.add(triangleGroup.current);
         // faces.current = updateFaceIdLookup(faces.current, sphereGeometry, boundary.current);
         const direction = new THREE.Vector3();
         const far = new THREE.Vector3();
@@ -226,6 +226,7 @@ export function SphereFaces({ offset, radius, geometries, sphereGeometry, startP
     const curPos = new THREE.Vector3();
     useRender((state, time) => {
         triangleGroup.current.rotation.x -= .001;
+        triangleGroup.current.rotation.z = raycaster.ray.direction.x * 1.2;
         if ((time % .0001).toFixed(3) == 0) {
             for (let i = 0; i < raycasters.current.length; i++) {
                 const intersects = raycasters.current[i].intersectObjects(triangles.current);
@@ -234,6 +235,7 @@ export function SphereFaces({ offset, radius, geometries, sphereGeometry, startP
                     if (seenIds.indexOf(intersectedObj.name) < 0) {
                         console.log("NEW: ", intersectedObj.name);
                         seenIds.push(intersectedObj.name);
+                        // TODO state control for this component
                         setNeedsUpdate(true);
                         faces.current = updateFaceTiles(faces.current, intersectedObj.userData.face, intersectedObj, vertices)
                         setNeedsUpdate(false);
@@ -250,6 +252,7 @@ export function SphereFaces({ offset, radius, geometries, sphereGeometry, startP
         return <group key={faceId}>
             <MemoizedSphereFace
                 buildingGeometries={geometries}
+                tileComponent={tileComponent}
                 {...props}
             />
         </group>
