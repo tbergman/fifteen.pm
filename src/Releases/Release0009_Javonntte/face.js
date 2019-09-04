@@ -77,6 +77,39 @@ function pickFacePattern(area) {
         return "medium"; // TODO make these randomly picked from lists
     }
 }
+function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
+    var vertexIndex;
+    var vertexVector = new THREE.Vector3();
+    var nextVertexVector = new THREE.Vector3();
+    var firstVertexVector = new THREE.Vector3();
+    var offset = new THREE.Vector3();
+    var currentTier = 1;
+    var lerpValue = 0.5;
+    var heightValue;
+    for (var j = 1; j < tiers - 2; j++) {
+        currentTier = j;
+        for (var i = 0; i < sides; i++) {
+            vertexIndex = (currentTier * sides) + 1;
+            vertexVector = sphereGeometry.vertices[i + vertexIndex].clone();
+            if (j % 2 !== 0) {
+                if (i == 0) {
+                    firstVertexVector = vertexVector.clone();
+                }
+                nextVertexVector = sphereGeometry.vertices[i + vertexIndex + 1].clone();
+                if (i == sides - 1) {
+                    nextVertexVector = firstVertexVector;
+                }
+                lerpValue = (Math.random() * (0.75 - 0.25)) + 0.25;
+                vertexVector.lerp(nextVertexVector, lerpValue);
+            }
+            heightValue = (Math.random() * maxHeight) - (maxHeight / 2);
+            offset = vertexVector.clone().normalize().multiplyScalar(heightValue);
+            sphereGeometry.vertices[i + vertexIndex] = (vertexVector.add(offset));
+        }
+    }
+    return sphereGeometry;
+}
+
 
 let areaTotal = 0;
 let areaCount = 0;
@@ -181,54 +214,61 @@ function checkIntersections(raycasters, triangles, faces) {
 // https://discourse.threejs.org/t/raycast-objects-that-arent-in-scene/6704/4 
 // view-source:https://rawgit.com/pailhead/three.js/instancing-part2-200k-instanced/examples/webgl_interactive_cubes.html
 // https://medium.com/@pailhead011/instancing-with-three-js-part-2-3be34ae83c57
-export function SphereFaces({ tileComponent, geometries, sphereGeometry, startPos }) {
+export function TileGenerator({ radius, sides, tiers, tileComponent, geometries, startPos }) {
     const { camera, scene, raycaster } = useThree();
     const [needsUpdate, setNeedsUpdate] = useState(false);
+    const tileGeneratorGroup = useRef();
     const faces = useRef({});
     const boundary = useRef(new THREE.Vector3);
     const raycasters = useRef([]);
     const triangles = useRef([]);
+    let sphereGeometry = new THREE.SphereGeometry(radius, sides, tiers);
+    // sphereGeometry = variateSphereFaceHeights({ sphereGeometry, worldRadius, sides, tiers, maxHeight });
     const vertices = sphereGeometry.vertices;
     const triangleGroup = useRef(new THREE.Group());
+    const seenIds = []; // TODO optimize or rethink?
+
     useEffect(() => {
         boundary.current = startPos;
         triangles.current = generateRaycastFaces(sphereGeometry, triangleGroup, boundary, faces);
         scene.add(triangleGroup.current); // TODO point of optimization
         raycasters.current = setupRaycasters(faces, camera);
     }, [])
-    const seenIds = []; // TODO optimize or rethink 
+    
     useRender((state, time) => {
         triangleGroup.current.rotation.x -= .001; // TODO these are just mimicking rotation in world, no bueno
         triangleGroup.current.rotation.z = raycaster.ray.direction.x * 1.2; // TODO these are just mimicking rotation in world, no bueno
-        // TODO is there a better way to bucket? Event detection?
+        tileGeneratorGroup.current.rotation.x -= .0001;
+        tileGeneratorGroup.current.rotation.z = raycaster.ray.direction.x * .6;
+        //  TODO is there a better way to bucket? Event detection?
         if ((time % .0001).toFixed(3) == 0) {
             for (let i = 0; i < raycasters.current.length; i++) {
                 const intersects = raycasters.current[i].intersectObjects(triangles.current); // TODO should we be looking at other things to interesect? Using layers?
                 for (let i = 0; i < intersects.length; i++) {
                     const intersectedObj = intersects[i].object;
                     if (seenIds.indexOf(intersectedObj.name) < 0) {
-                        console.log("NEW: ", intersectedObj.name);
                         seenIds.push(intersectedObj.name);
-                        // TODO state control for this component
+                        // TODO state control for this component -- is this a usecase for useCallback? (so that faces is set by state?)
                         setNeedsUpdate(true);
                         faces.current = updateFaceTiles(faces.current, intersectedObj.userData.face, intersectedObj, vertices)
                         setNeedsUpdate(false);
-                        console.log(Object.keys(faces.current).length);
                     }
                 }
             }
         }
     });
 
-    return <>{faces.current && Object.keys(faces.current).map((faceId, index) => {
-        const props = faces.current[faceId];
-        return <group key={faceId}>
-            <MemoizedSphereFace
-                buildingGeometries={geometries}
-                tileComponent={tileComponent}
-                faceId={faceId}
-                {...props}
-            />
-        </group>
-    })}</>
+    return <group ref={tileGeneratorGroup}>
+        {faces.current && Object.keys(faces.current).map((faceId, index) => {
+            const props = faces.current[faceId];
+            return <group key={faceId}>
+                <MemoizedSphereFace
+                    buildingGeometries={geometries}
+                    tileComponent={tileComponent}
+                    faceId={faceId}
+                    {...props}
+                />
+            </group>
+        })}
+    </group>
 }

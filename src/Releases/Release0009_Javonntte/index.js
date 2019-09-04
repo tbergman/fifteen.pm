@@ -6,8 +6,9 @@ import { BloomEffect } from "../../Utils/Effects";
 import { useGLTF } from "../../Utils/hooks";
 import { loadBuildings } from "./buildings";
 import { BUILDINGS_URL } from "./constants";
+import { TileGenerator } from './face';
 import "./index.css";
-import { World } from './world';
+import { CityTile } from "./tiles";
 extend({ OrbitControls });
 
 function Scene() {
@@ -22,8 +23,8 @@ function Scene() {
     // TODO: this value should be a factor of the size of the user's screen...?
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, loadBuildings);
     const worldRadius = 26;
-    const startPos = new THREE.Vector3(0, worldRadius *.05, -worldRadius *1.01);
-    const lookAt = new THREE.Vector3(0, worldRadius*1.5, 1);
+    const startPos = new THREE.Vector3(0, worldRadius * .05, -worldRadius * 1.01);
+    const lookAt = new THREE.Vector3(0, worldRadius * 1.5, 1);
     useEffect(() => {
         const fogColor = new THREE.Color(0xffffff);
         scene.background = fogColor;
@@ -31,10 +32,6 @@ function Scene() {
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
     }, [buildings])
-
-    useRender(() => {
-
-    })
     return (
         <>
             {/* <Controls
@@ -47,31 +44,34 @@ function Scene() {
                 threshold={.8}
                 strength={0.4}
             />
-            <World
+            {buildings && <TileGenerator
+                geometries={buildings}
+                // sphereGeometry={sphereGeometry}
+                offset={new THREE.Vector3} // TODO i dont get how to do this
+                radius={worldRadius}
                 sides={40}
                 tiers={40}
-                worldRadius={worldRadius}
-                worldPos={new THREE.Vector3(0, 0, 0)}
                 startPos={startPos}
                 maxHeight={0.1}
-                buildingGeometries={buildings}
-            />
-            {/* <Advanced2Effect camera={camera} /> */}
-            {/* <TileGenerator
-                tileSize={1}
-                grid={tileGridSize}
+                // TODO
                 tileComponent={CityTile}
-                tileResources={buildings}
-            /> */}
+            />}
+            {/* <Advanced2Effect camera={camera} />
+                 <TileGenerator
+            //     tileSize={1}
+            //     grid={tileGridSize}
+            //     tileComponent={CityTile}
+            //     tileResources={buildings}
+            // /> */}
             <ambientLight />
             <directionalLight intensity={1.5} position={camera.position} />
-             <spotLight
+            <spotLight
                 castShadow
                 intensity={2}
                 position={startPos}
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
-            /> 
+            />
         </>
     );
 }
