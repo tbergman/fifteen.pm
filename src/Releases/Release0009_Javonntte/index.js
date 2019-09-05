@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { BloomEffect } from "../../Utils/Effects";
+import { BloomEffect, Advanced2Effect } from "../../Utils/Effects";
 import { useGLTF } from "../../Utils/hooks";
 import { loadBuildings } from "./buildings";
 import { BUILDINGS_URL } from "./constants";
@@ -37,8 +37,8 @@ function Scene() {
     return (
         <>
             <Controls
-                dampingFactor={.5}
-                rotateSpeed={.01}
+                dampingFactor={.05}
+                autoRotateSpeed={.1}
                 enableZoom={false}
                 autoRotate={true}
                 enableKeys={false}
@@ -47,6 +47,7 @@ function Scene() {
                 maxPolarAngle={Math.PI / 5}
                 minPolarAngle={Math.PI / 6}
             />
+            <Advanced2Effect camera={camera} />
             {/* <BloomEffect
                 camera={camera}
                 radius={1}
@@ -69,7 +70,7 @@ function Scene() {
                 // TODO
                 tileComponent={CityTile2}
             />}
-            {/* <Advanced2Effect camera={camera} />
+            {/* 
                  <TileGenerator
             //     tileSize={1}
             //     grid={tileGridSize}
@@ -94,8 +95,10 @@ export default function Release0009_Javonntte({ }) {
         <>
             <Canvas id="canvas"
                 onCreated={({ gl }) => {
-                    gl.shadowMap.enabled = true
-                    gl.shadowMap.type = THREE.PCFSoftShadowMap
+                    gl.shadowMap.enabled = true;
+                    gl.shadowMap.type = THREE.PCFSoftShadowMap;
+                    gl.gammaInput = true;
+                    gl.gammaOutput = true;
                 }}>
                 <Scene />
             </Canvas>

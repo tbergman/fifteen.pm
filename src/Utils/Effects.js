@@ -14,9 +14,10 @@ import { ShaderPass } from 'three-full';
 import { ColorifyShader } from 'three-full';
 import { ClearMaskPass } from 'three-full';
 import { VignetteShader } from 'three-full';
-
-applySpring({ EffectComposer, RenderPass, GlitchPass, UnrealBloomPass, DotScreenPass, MaskPass, ShaderPass, ClearMaskPass })
-extend({ EffectComposer, RenderPass, GlitchPass, UnrealBloomPass, DotScreenPass, MaskPass, ShaderPass, ClearMaskPass })
+import { HorizontalBlurShader } from 'three-full';
+import { VerticalBlurShader } from 'three-full';
+applySpring({ EffectComposer, RenderPass, GlitchPass, UnrealBloomPass, DotScreenPass, MaskPass, ShaderPass, ClearMaskPass, VerticalBlurShader, HorizontalBlurShader })
+extend({ EffectComposer, RenderPass, GlitchPass, UnrealBloomPass, DotScreenPass, MaskPass, ShaderPass, ClearMaskPass, VerticalBlurShader, HorizontalBlurShader })
 
 
 /** This component creates a glitch effect */
@@ -35,7 +36,7 @@ export const GlitchEffect = React.memo(({ factor }) => {
 })
 
 
-export const BloomEffect = React.memo(({ camera, radius=.1, threshold=.01, strength=0.5, factor }) => {
+export const BloomEffect = React.memo(({ camera, radius = .1, threshold = .01, strength = 0.5, factor }) => {
     const { gl, scene, size } = useThree()
     const composer = useRef()
     useEffect(() => void composer.current.setSize(size.width, size.height), [size])
@@ -56,22 +57,29 @@ export const BloomEffect = React.memo(({ camera, radius=.1, threshold=.01, stren
     )
 });
 
-
+// https://github.com/mrdoob/three.js/blob/master/examples/webgl_postprocessing_advanced.html
 export const Advanced2Effect = React.memo(({ camera }) => {
     const { gl, scene, size } = useThree()
-    const composer = useRef()
-    useEffect(() => void composer.current.setSize(size.width, size.height), [size])
-    useRender(() => { return composer.current.render() }, true)
+    const composer = useRef();
+    const delta = useRef(0.01);
+    useEffect(() => void composer.current.setSize(size.width, size.height), [size]);
+    useRender(() => { return composer.current.render(delta.current) }, true);
+
     return (
         <effectComposer ref={composer} args={[gl]}>
-            {/* AT THIS POINT THE ENTIRE FIRST PART OF RENDERER <renderPass
-            attachArray="passes"
-
-            /> */}
-            
             <renderPass
                 attachArray="passes"
                 args={[scene, camera]} />
+            <shaderPass
+                attachArray="passes"
+                args={[HorizontalBlurShader]}
+                uniforms-h-value={2 / (size.width / 2)}
+            />
+            <shaderPass
+                attachArray="passes"
+                args={[VerticalBlurShader]}
+                uniforms-v-value={2 / (size.height / 2)}
+            />
             <dotScreenPass
                 attachArray="passes"
                 renderToScreen
@@ -79,15 +87,23 @@ export const Advanced2Effect = React.memo(({ camera }) => {
             />
             <maskPass
                 attachArray="passes"
-                renderToScreen
+                // renderToScreen
                 args={[scene, camera]}
             />
             <shaderPass
                 attachArray="passes"
-                renderToScreen
-                uniforms-color={new THREE.Uniform(new THREE.Color(1, 0.8, 0.8))}
+                // renderToScreen
+                uniforms-color-value={new THREE.Uniform(new THREE.Color(1, 0.0, 0.0))}
                 args={[ColorifyShader]}
             />
+            <shaderPass
+                attachArray="passes"
+                // renderToScreen
+                uniforms-offset-value={0.95}
+                uniforms-darkness-value={1.6}
+                args={[VignetteShader]}
+            />
+
             <clearMaskPass
                 attachArray="passes"
                 renderToScreen
@@ -98,31 +114,28 @@ export const Advanced2Effect = React.memo(({ camera }) => {
                 inverse
                 args={[scene, camera]}
             /> */}
-            {/* <a.shaderPass
+
+            {/* <shaderPass
                 attachArray="passes"
                 renderToScreen
                 uniforms-color={new THREE.Uniform(new THREE.Color(1, 0.75, 0.5))}
                 args={[ColorifyShader]}
             /> */}
-            {/* <a.clearMaskPass
+
+            {/* <shaderPass
                 attachArray="passes"
                 renderToScreen
-            /> */}
-            {/* <a.shaderPass
-                attachArray="passes"
-                renderToScreen
+                uniforms-offset-value={0.95}
+                uniforms-darkness-value={1.6} 
                 args={[VignetteShader]}
             /> */}
 
+            {/* <clearMaskPass
+                attachArray="passes"
+                renderToScreen
+            /> */}
 
 
-
-            {/* 
-				composer2.addPass( renderMaskInverse );
-				composer2.addPass( effectColorify2 );
-				composer2.addPass( clearMask );
-				composer2.addPass( effectVignette );  */}
         </effectComposer>
-    )
-    ////	renderScene.uniforms[ "tDiffuse" ].value = composerScene.renderTarget2.texture;
+    );
 });
