@@ -126,15 +126,10 @@ function displayNearest(camera, position, kdTree, maxDistance, tileLookup) {
 export function TileGenerator({ radius, sides, tiers, tileComponent, geometries, startPos, maxHeight }) {
     const { camera } = useThree();
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
-    const section = useRef(0);
-    const bucketedTiles = useRef({});
-    const sections = useRef([]);
     const boundary = useRef(new THREE.Vector3().copy(startPos));
     const prevBoundary = useRef(boundary.current.clone());
     const tilesGroup = useRef(new THREE.Group());
     const allTiles = useRef([]);
-    const visibleTiles = useRef([]);
-    const boundaryMax = 10;
     const maxDistance = Math.pow(120, 2); // for kdTree
     let sphereGeometry = new THREE.SphereGeometry(radius, sides, tiers);
     sphereGeometry = variateSphereFaceHeights({ sphereGeometry, radius, sides, tiers, maxHeight });
@@ -143,23 +138,12 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
     const closestTiles = useRef([]);
     useEffect(() => {
         allTiles.current = generateTiles(sphereGeometry, startPos);
-        console.log("ALL TILES", allTiles.current);
-        visibleTiles.current = Object.values(allTiles.current).filter(tile => {
-            if (withinBoundary(startPos, tile.centroid, radius, boundaryMax)) {
-                tile.visible = true;
-                return tile;
-            }
-        });
-        [bucketedTiles.current, sections.current] = bucketTiles(radius, allTiles.current);
-        section.current = 0;
         [kdTree.current, positions.current] = loadKDTree(allTiles.current);
     }, [])
-
 
     useRender((state, time) => {
         const rotXDelta = .0001;
         tilesGroup.current.rotation.x += rotXDelta;
-        const xRadiansRot = tilesGroup.current.rotation.x;
         boundary.current.copy(camera.position);
         if (prevBoundary.current.distanceTo(boundary.current) > .5) {
             setLastUpdateTime(time);
