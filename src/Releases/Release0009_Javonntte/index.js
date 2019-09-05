@@ -30,7 +30,6 @@ function Scene() {
         const fogColor = new THREE.Color(0xffffff);
         scene.background = fogColor;
         scene.fog = new THREE.FogExp2(0xf0fff0, 0.24);
-
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
         camera.up.set(0, -1, 0); // TODO not sure why there's an inversion in placement of tiles in TileGenerator
@@ -44,8 +43,8 @@ function Scene() {
                 enableKeys={false}
                 target={lookAt}
                 maxDistance={96}
-                maxPolarAngle={Math.PI/5}
-                minPolarAngle={Math.PI/6}
+                maxPolarAngle={Math.PI / 5}
+                minPolarAngle={Math.PI / 6}
             />
             {/* <BloomEffect
                 camera={camera}
