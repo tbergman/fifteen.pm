@@ -35,7 +35,7 @@ function Scene() {
     }, [buildings])
     return (
         <>
-            {/* <Controls
+           {/* <Controls
                 dampingFactor={.5}
                 rotateSpeed={.1}
             /> */}
@@ -45,7 +45,11 @@ function Scene() {
                 threshold={.8}
                 strength={0.4}
             /> */}
-            {buildings && <TileGenerator
+            <mesh position={new THREE.Vector3().copy(startPos)}>
+                <boxGeometry args={[10]} />
+                <meshBasicMaterial color="red" />
+            </mesh>
+             {buildings && <TileGenerator
                 geometries={buildings}
                 // sphereGeometry={sphereGeometry}
                 offset={new THREE.Vector3} // TODO i dont get how to do this

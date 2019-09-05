@@ -35,10 +35,9 @@ export function triangleCentroid(triangle) {
 }
 
 export function triangleFromFace(face, vertices) {
-    return new THREE.Triangle(
-        vertices[face.a],
-        vertices[face.b],
-        vertices[face.c],
-    );
+  return new THREE.Triangle(
+    vertices[face.a],
+    vertices[face.b],
+    vertices[face.c],
+  );
 }
-

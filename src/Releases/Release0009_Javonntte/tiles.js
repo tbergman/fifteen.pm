@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from 'react';
-import { useResource } from 'react-three-fiber';
+import { useResource, useRender } from 'react-three-fiber';
 import * as THREE from 'three';
 import { TronBuildingShader } from '../../Shaders/TronBuildingShader';
 import { faceCentroid, getMiddle, triangleCentroid, triangleFromFace } from '../../Utils/geometry';
@@ -144,7 +144,7 @@ export const CityTile = props => {
 
 
 function Tile2Surface({ face, triangle, normal, centroid, ...props }) {
-    const [materialRef, material] = useResource();
+   const [materialRef, material] = useResource();
     const [geometryRef, geometry] = useResource();
     const vertices = new Float32Array([
         triangle.a.x, triangle.a.y, triangle.a.z,
@@ -161,6 +161,7 @@ function Tile2Surface({ face, triangle, normal, centroid, ...props }) {
     triangle.getNormal(normal);
     geom.faces.push(new THREE.Face3(0, 1, 2, normal));
 
+
     return <>
         <boxGeometry ref={geometryRef} />
         {/* <primitive
@@ -169,7 +170,8 @@ function Tile2Surface({ face, triangle, normal, centroid, ...props }) {
         />*/}
         <meshBasicMaterial ref={materialRef} color="red" />
         {geometry && material ?
-            <mesh
+
+            <mesh 
                 geometry={geometry}
                 material={material}
                 position={centroid}
@@ -185,6 +187,7 @@ function Tile2Building({ formation, triangle, centroid, normal, buildingGeometri
     const subdivisions = subdivideTriangle(triangle, centroid, formation);
     const color = getRandomColor(centroid); // TODO temporary color to help debug
     // const [hasRendered, setHasRendered] = useState(0)
+
     return <group>
         {subdivisions.map(triangleSubdivision => {
             // TODO might want to just store centroids during calculation
@@ -232,9 +235,9 @@ function Tile2Elements(props) {
 
 
 export const CityTile2 = props => {
-    console.log("Rendering SphereTile", props.id)
+    console.log("Rendering SphereTile", props.centroid)
     return <group>
-        <Tile2Surface {...props} />
+        {/* <Tile2Surface {...props} /> */}
         <Tile2Elements {...props} />
     </group>
 }

@@ -4,10 +4,9 @@ import * as THREE from 'three';
 import { faceCentroid, getMiddle, triangleCentroid, triangleFromFace } from '../../Utils/geometry';
 import { Building, buildingName } from './buildings';
 import { randomClone } from './utils';
-
+import { lawOfSines } from "../../Utils/geometry";
 
 const tileId = (face) => [face.a, face.b, face.c].join("_");
-
 
 function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
     var vertexIndex;
@@ -49,8 +48,8 @@ function hardLimitYFaces(centroid, radius) {
     return Math.abs(centroid.y) < radius * .98 + Math.random() * .1;
 }
 
-function withinBoundary(boundary, centroid, boundaryLimit) {
-    return Math.abs(boundary.distanceTo(centroid) < 3);//boundaryLimit);
+function withinBoundary(boundary, centroid, radius, maxDistance=4) {
+    return Math.abs(boundary.distanceTo(centroid) < maxDistance) && hardLimitYFaces(centroid, radius);
 }
 
 function initFaceTile(face, centroid, triangle) {
@@ -66,7 +65,7 @@ function initFaceTile(face, centroid, triangle) {
     }
 }
 
-function generateTiles(sphereGeometry, triangleGroup, boundary) {
+function generateTiles(sphereGeometry, boundary) {
     const vertices = sphereGeometry.vertices;
     // const boundaryLimit = sphereGeometry.parameters.radius / 3; // TODO this is too big unless we do instancing
     const tiles = {}
@@ -74,7 +73,7 @@ function generateTiles(sphereGeometry, triangleGroup, boundary) {
         const triangle = triangleFromFace(face, vertices);
         const centroid = faceCentroid(face, vertices);
         const tile = initFaceTile(face, centroid, triangle);
-        if (withinBoundary(boundary.current, centroid)) tile.visible = true;
+        if (withinBoundary(boundary, centroid)) tile.visible = true;
         const tId = tileId(face);
         tiles[tId] = tile;
     })
@@ -119,8 +118,9 @@ function generateRaycastMeshes(sphereGeometry, startPos) {
         tmpCount[key]++
         subdivisions[key].merge(geom);
         faceLookup[key].push(tileId(face));
+        const s = new THREE.Spherical()
+        console.log('centroid:', centroid);
     })
-    console.log('tmpcount', tmpCount);
     const rayGroup = new THREE.Group()
     const rayMeshes = Object.keys(subdivisions).map(key => {
         const mesh = new THREE.Mesh(subdivisions[key]);
@@ -147,69 +147,85 @@ function setupRaycasters(lookAts, camera) {
 // https://medium.com/@pailhead011/instancing-with-three-js-part-2-3be34ae83c57
 export function TileGenerator({ radius, sides, tiers, tileComponent, geometries, startPos, maxHeight }) {
     const { camera, scene, raycaster } = useThree();
-    const [needsUpdate, setNeedsUpdate] = useState(false);
+    const [needsUpdate, setUpdated] = useState(false);
     const [lastRaycastFaceIdx, setLastRaycastFaceIdx] = useState();
-    const boundary = useRef(new THREE.Vector3);
+    const [lastUpdateTime, setLastUpdateTime] = useState(0);
+    // const [prevBoundary, setPrevBoundary] = useState(new THREE.Vector3().copy(startPos));
+    const boundary = useRef(new THREE.Vector3().copy(startPos));//useRef(new THREE.Vector3);
+    const prevBoundary = useRef(boundary.current.clone());
     const raycasters = useRef([]);
     const tilesGroup = useRef(new THREE.Group());
     const allTiles = useRef([]);
+    const visibleTiles = useRef([]);
     const raycastMeshes = useRef([]);
     const raycastMeshesGroup = useRef([]);
     const faceLookup = useRef([]);
-    const visibleTiles = useRef([]);
+    // const visibleTiles = useRef([]);
     let sphereGeometry = new THREE.SphereGeometry(radius, sides, tiers);
     sphereGeometry = variateSphereFaceHeights({ sphereGeometry, radius, sides, tiers, maxHeight });
     const vertices = sphereGeometry.vertices;
     const seenIds = []; // TODO optimize or rethink?
-
+    const spherical = new THREE.Spherical().setFromVector3(startPos);
     useEffect(() => {
-        boundary.current = startPos;
-        allTiles.current = generateTiles(sphereGeometry, tilesGroup, boundary);
+        // boundary.current = startPos;
+        allTiles.current = generateTiles(sphereGeometry, startPos);
         // allMeshes.current = Object.values(allTiles.current).map(tile => tile.mesh);
         // scene.add(tilesGroup.current); // TODO point of optimization
-        [raycastMeshes.current, raycastMeshesGroup.current, faceLookup.current] = generateRaycastMeshes(sphereGeometry, startPos);
-        console.log("raycast meshes", raycastMeshes, "raycastmeshes group", raycastMeshesGroup.current);
+        // [raycastMeshes.current, raycastMeshesGroup.current, faceLookup.current] = generateRaycastMeshes(sphereGeometry, startPos);
         visibleTiles.current = Object.values(allTiles.current).filter(tile => {
-            if (tile.visible) {
-                tile.hasRendered = true; 
-                return tile
+            if (withinBoundary(startPos, tile.centroid, radius)) {
+                tile.visible = true;
+                return tile;
             }
+            // else tile.visible = false;
         });
-        raycasters.current = setupRaycasters(visibleTiles.current, camera);
+        // raycasters.current = setupRaycasters(visibleTiles.current, camera);
     }, [])
 
+    // useEffect(() => {
+    //     if (prevBoundary.distanceTo(boundary.current) > 5){
+    //         setPrevBoundary(boundary.current)
+    //         console.log("SET", prevBoundary, 'to', boundary)
+    //     }        
+    // }, [boundary])
+
     useRender((state, time) => {
-        const rotXDelta = -.001;
+        const rotXDelta = -.0001;
         tilesGroup.current.rotation.x += rotXDelta; // TODO these are just mimicking rotation in world, no bueno
         tilesGroup.current.rotation.x = tilesGroup.current.rotation.x % (2 * Math.PI);
         tilesGroup.current.rotation.z = raycaster.ray.direction.x * .6; // TODO these are just mimicking rotation in world, no bueno
-        raycastMeshesGroup.current.rotation.x -= rotXDelta;
-        raycastMeshesGroup.current.rotation.x = raycastMeshesGroup.current.rotation.x % (2 * Math.PI);
-        //  TODO is there a better way to bucket? Event detection?
-        if ((time % .001).toFixed(3) == 0) {
-            for (let i = 0; i < raycasters.current.length; i++) {
-                const intersects = raycasters.current[i].intersectObjects(raycastMeshes.current); // TODO should we be looking at other things to interesect? Using layers?
-                for (let i = 0; i < intersects.length; i++) {
-                    const intersectedObj = intersects[i].object;
-                    const raycastIdx = intersectedObj.name;
-                    if (lastRaycastFaceIdx !== raycastIdx) {
-                        console.log("UDPATE BY RAYCASTING...")
-                        visibleTiles.current = faceLookup.current[raycastIdx].map(faceId => {
-                            const tile = allTiles.current[faceId];
-                            tile.visible = true;
-                            tile.hasRendered = true;
-                            return tile;
-                        });
-                        setLastRaycastFaceIdx(raycastIdx);
+        tilesGroup.current.rotation.z = tilesGroup.current.rotation.z % (2 * Math.PI);
+        const xRadiansRot = tilesGroup.current.rotation.x;
+        const zRadiansRot = tilesGroup.current.rotation.z;
+        const xDegrees = xRadiansRot * 180 / Math.PI;
+        const zDegrees = zRadiansRot * 180 / Math.PI;
+        const curZOffset = Math.cos(xRadiansRot) * radius;
+        const curYOffset = Math.sin(xRadiansRot) * radius;
+        boundary.current.z = -curZOffset;
+        boundary.current.y = -curYOffset;
+        if (prevBoundary.current.distanceTo(boundary.current) > 1) {
+            setLastUpdateTime(time);
+            visibleTiles.current = Object.values(allTiles.current).filter(tile => {
+                if (withinBoundary(boundary.current, tile.centroid, radius, 10)) {
+                    console.log('current', boundary.current, 'xDegrees', xDegrees)
+                    if (!seenIds.includes(tile.id)) {
+                        seenIds.push(tile.id);
                     }
+                    if (tile.visible === true) tile.hasRendered = true;
+                    else tile.visible = true;
+                    return tile;
+                } else {
+                    // TODO these are not going to get passed thru this is placeholder 
+                    allTiles.current[tile.id].visible = false;
                 }
-            }
+            })
+            prevBoundary.current.copy(boundary.current);
         }
     });
 
+    console.log("RenderTiles", visibleTiles.current.length);
     return <group ref={tilesGroup}>
         {visibleTiles.current && visibleTiles.current.map(props => {
-            console.log(props.id, props.hasRendered)
             return <group key={props.id}>
                 <MemoizedSphereTile
                     {...props}
@@ -226,5 +242,5 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
 export const MemoizedSphereTile = React.memo(props => {
     if (!props.visible) return null;
     return <>{props.tileComponent(props)}</>;
-}, props => props.hasRendered);
+}, props => !props.hasRendered);
 
