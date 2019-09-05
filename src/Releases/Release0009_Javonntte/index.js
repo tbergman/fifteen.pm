@@ -29,7 +29,7 @@ function Scene() {
     useEffect(() => {
         const fogColor = new THREE.Color(0xffffff);
         scene.background = fogColor;
-        scene.fog = new THREE.FogExp2( 0xf0fff0, 0.24 );
+        scene.fog = new THREE.FogExp2(0xf0fff0, 0.24);
 
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
@@ -37,21 +37,27 @@ function Scene() {
     }, [buildings])
     return (
         <>
-           {/* <Controls
+            <Controls
                 dampingFactor={.5}
-                rotateSpeed={.1}
-            /> */}
-            <BloomEffect
+                rotateSpeed={.01}
+                enableZoom={false}
+                enableKeys={false}
+                target={lookAt}
+                maxDistance={96}
+                maxPolarAngle={Math.PI/5}
+                minPolarAngle={Math.PI/6}
+            />
+            {/* <BloomEffect
                 camera={camera}
                 radius={1}
                 threshold={.9}
                 strength={0.2}
-            />
-            <mesh position={new THREE.Vector3().copy(startPos)}>
+            /> */}
+            {/* <mesh position={new THREE.Vector3().copy(startPos)}>
                 <boxGeometry attach="geometry" args={[1]} />
                 <meshBasicMaterial attach="material" color="red" />
-            </mesh>
-             {buildings && <TileGenerator
+            </mesh> */}
+            {buildings && <TileGenerator
                 geometries={buildings}
                 // sphereGeometry={sphereGeometry}
                 offset={new THREE.Vector3} // TODO i dont get how to do this
