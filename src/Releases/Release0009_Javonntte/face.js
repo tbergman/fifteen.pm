@@ -86,13 +86,13 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
     const tilesGroup = useRef(new THREE.Group());
     const allTiles = useRef([]);
     const visibleTiles = useRef([]);
+    const boundaryMax = 10;
     let sphereGeometry = new THREE.SphereGeometry(radius, sides, tiers);
     sphereGeometry = variateSphereFaceHeights({ sphereGeometry, radius, sides, tiers, maxHeight });
-    const seenIds = []; // TODO optimize or rethink?
     useEffect(() => {
         allTiles.current = generateTiles(sphereGeometry, startPos);
         visibleTiles.current = Object.values(allTiles.current).filter(tile => {
-            if (withinBoundary(startPos, tile.centroid, radius)) {
+            if (withinBoundary(startPos, tile.centroid, radius, boundaryMax)) {
                 tile.visible = true;
                 return tile;
             }
@@ -103,7 +103,7 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
         const rotXDelta = .001;
         tilesGroup.current.rotation.x += rotXDelta; // TODO these are just mimicking rotation in world, no bueno
         tilesGroup.current.rotation.x = tilesGroup.current.rotation.x % (2 * Math.PI);
-        tilesGroup.current.rotation.z = raycaster.ray.direction.x * .6; // TODO these are just mimicking rotation in world, no bueno
+        tilesGroup.current.rotation.z = -raycaster.ray.direction.x * .6; // TODO these are just mimicking rotation in world, no bueno
         tilesGroup.current.rotation.z = tilesGroup.current.rotation.z % (2 * Math.PI);
         const xRadiansRot = tilesGroup.current.rotation.x;
         const zRadiansRot = tilesGroup.current.rotation.z;
@@ -111,33 +111,35 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
         // const zDegrees = zRadiansRot * 180 / Math.PI;
         const curZOffset = Math.cos(xRadiansRot) * radius;
         const curYOffset = Math.sin(xRadiansRot) * radius;
+        const curXOffset = Math.sin(zRadiansRot) * radius;
+        boundary.current.x = -curXOffset;
         boundary.current.z = -curZOffset;
         boundary.current.y = -curYOffset;
-            let maxY, maxZ, minY, minZ;
-        if (prevBoundary.current.distanceTo(boundary.current) > 1) {
+            // let maxY, maxZ, minY, minZ;
+        if (prevBoundary.current.distanceTo(boundary.current) > 5) {
             setLastUpdateTime(time);
             visibleTiles.current = Object.values(allTiles.current).filter(tile => {
                 // TODO this could all be calculated once rather than interated thru once it's working...
                 // (just calculate different tile groups for each boundary in a map)
-                if (withinBoundary(boundary.current, tile.centroid, radius, 10)) {
+                if (withinBoundary(boundary.current, tile.centroid, radius, boundaryMax)) {
                     if (tile.visible === true) tile.hasRendered = true;
                     else tile.visible = true;
-                    if (!maxZ || tile.centroid.z > maxZ) maxZ = tile.centroid.z;
-                    if (!maxY || tile.centroid.y > maxY) maxY = tile.centroid.y;
-                    if (!minZ || tile.centroid.z < minZ) minZ = tile.centroid.z;
-                    if (!minY || tile.centroid.y < minY) minY = tile.centroid.y;
+                    // if (!maxZ || tile.centroid.z > maxZ) maxZ = tile.centroid.z;
+                    // if (!maxY || tile.centroid.y > maxY) maxY = tile.centroid.y;
+                    // if (!minZ || tile.centroid.z < minZ) minZ = tile.centroid.z;
+                    // if (!minY || tile.centroid.y < minY) minY = tile.centroid.y;
                     return tile;
                 } else {
                     // TODO these are not going to get passed thru this is placeholder 
                     allTiles.current[tile.id].visible = false;
                 }
             })
-            console.log('maxy', maxY, 'miny', minY, 'maxz', maxZ, 'minz', minZ);
+            // console.log('maxy', maxY, 'miny', minY, 'maxz', maxZ, 'minz', minZ);
             prevBoundary.current.copy(boundary.current);
         }
     });
 
-    console.log("RenderTiles", visibleTiles.current.length);
+    // console.log("RenderTiles", visibleTiles.current.length);
     return <group ref={tilesGroup}>
         {visibleTiles.current && visibleTiles.current.map(props => {
             return <group key={props.id}>
