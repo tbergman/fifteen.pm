@@ -40,6 +40,7 @@ function Scene() {
                 dampingFactor={.5}
                 rotateSpeed={.01}
                 enableZoom={false}
+                autoRotate={true}
                 enableKeys={false}
                 target={lookAt}
                 maxDistance={96}

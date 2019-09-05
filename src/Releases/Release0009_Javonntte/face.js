@@ -142,13 +142,15 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
     }, [])
 
     useRender((state, time) => {
-        const rotXDelta = .0001;
-        tilesGroup.current.rotation.x += rotXDelta;
+        // const rotXDelta = .0001;
+        // tilesGroup.current.rotation.x += rotXDelta;
         boundary.current.copy(camera.position);
         if (prevBoundary.current.distanceTo(boundary.current) > .5) {
             setLastUpdateTime(time);
             // TODO organize these args
-            closestTiles.current = displayNearest(camera, boundary.current, kdTree.current, maxDistance, allTiles.current);
+            const allClosestTiles = displayNearest(camera, boundary.current, kdTree.current, maxDistance, allTiles.current);
+            // set some of these to not rerender here?
+            closestTiles.current = allClosestTiles;
             prevBoundary.current.copy(boundary.current);
         }
     });
