@@ -23,13 +23,13 @@ function Scene() {
     const { camera, scene } = useThree();
     // TODO: this value should be a factor of the size of the user's screen...?
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, loadBuildings);
-    const worldRadius = 26;
+    const worldRadius = 24;
     const startPos = new THREE.Vector3(0, worldRadius * .25, -worldRadius * 1.01);
     const lookAt = new THREE.Vector3(0, -worldRadius * 1.5, 1); // TODO not sure why there's an inversion in placement of tiles in TileGenerator
     useEffect(() => {
         const fogColor = new THREE.Color(0xffffff);
         scene.background = fogColor;
-        scene.fog = new THREE.Fog(fogColor, 0.0025, 20);
+        scene.fog = new THREE.FogExp2( 0xf0fff0, 0.24 );
 
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
@@ -41,12 +41,12 @@ function Scene() {
                 dampingFactor={.5}
                 rotateSpeed={.1}
             /> */}
-            {/* <BloomEffect
+            <BloomEffect
                 camera={camera}
                 radius={1}
-                threshold={.8}
-                strength={0.4}
-            /> */}
+                threshold={.9}
+                strength={0.2}
+            />
             <mesh position={new THREE.Vector3().copy(startPos)}>
                 <boxGeometry attach="geometry" args={[1]} />
                 <meshBasicMaterial attach="material" color="red" />
