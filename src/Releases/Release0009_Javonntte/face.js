@@ -146,12 +146,20 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
         // tilesGroup.current.rotation.x += rotXDelta;
         boundary.current.copy(camera.position);
         if (prevBoundary.current.distanceTo(boundary.current) > .5) {
-            setLastUpdateTime(time);
+            
             // TODO organize these args
             const allClosestTiles = displayNearest(camera, boundary.current, kdTree.current, maxDistance, allTiles.current);
             // set some of these to not rerender here?
+            console.log('last update time', lastUpdateTime);
+            for(let i=0; i < allClosestTiles.length; i++){
+                const tile = allClosestTiles[i];
+                
+                if (tile.timestamp === lastUpdateTime) tile.isRendered = true;
+                else tile.isRendered = false;
+            }
             closestTiles.current = allClosestTiles;
             prevBoundary.current.copy(boundary.current);
+            setLastUpdateTime(time);
         }
     });
 
@@ -173,5 +181,5 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
 export const MemoizedSphereTile = React.memo(props => {
     if (!props.visible) return null; // TODO remove?
     return <>{props.tileComponent(props)}</>;
-}, props => !props.hasRendered);
+}, props => !props.isRendered);
 

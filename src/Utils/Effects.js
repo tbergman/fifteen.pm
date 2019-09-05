@@ -13,11 +13,13 @@ import { MaskPass } from 'three-full';
 import { ShaderPass } from 'three-full';
 import { ColorifyShader } from 'three-full';
 import { ClearMaskPass } from 'three-full';
+import { FilmPass } from 'three-full';
 import { VignetteShader } from 'three-full';
 import { HorizontalBlurShader } from 'three-full';
 import { VerticalBlurShader } from 'three-full';
-applySpring({ EffectComposer, RenderPass, GlitchPass, UnrealBloomPass, DotScreenPass, MaskPass, ShaderPass, ClearMaskPass, VerticalBlurShader, HorizontalBlurShader })
-extend({ EffectComposer, RenderPass, GlitchPass, UnrealBloomPass, DotScreenPass, MaskPass, ShaderPass, ClearMaskPass, VerticalBlurShader, HorizontalBlurShader })
+
+applySpring({ EffectComposer, RenderPass, GlitchPass, UnrealBloomPass, DotScreenPass, MaskPass, ShaderPass, ClearMaskPass, VerticalBlurShader, HorizontalBlurShader, FilmPass })
+extend({ EffectComposer, RenderPass, GlitchPass, UnrealBloomPass, DotScreenPass, MaskPass, ShaderPass, ClearMaskPass, VerticalBlurShader, HorizontalBlurShader, FilmPass })
 
 
 /** This component creates a glitch effect */
@@ -70,7 +72,8 @@ export const Advanced2Effect = React.memo(({ camera }) => {
             <renderPass
                 attachArray="passes"
                 args={[scene, camera]} />
-            <shaderPass
+
+            {/*    <shaderPass
                 attachArray="passes"
                 args={[HorizontalBlurShader]}
                 uniforms-h-value={2 / (size.width / 2)}
@@ -89,25 +92,35 @@ export const Advanced2Effect = React.memo(({ camera }) => {
                 attachArray="passes"
                 // renderToScreen
                 args={[scene, camera]}
-            />
-            <shaderPass
+            /> */}
+            {/* <shaderPass
+                attachArray="passes"
+                renderToScreen
+                uniforms-color={new THREE.Uniform(new THREE.Color(1.0, 0.0, 0.0))}
+                args={[ColorifyShader]}
+            /> */}
+            <dotScreenPass
                 attachArray="passes"
                 // renderToScreen
-                uniforms-color-value={new THREE.Uniform(new THREE.Color(1, 0.0, 0.0))}
-                args={[ColorifyShader]}
+                args={[new THREE.Vector2(0, 0), 0.5, 1.]} // center angle scale
+            /> 
+            <filmPass
+                attachArray="passes"
+                renderToScreen
+                args={[0.35, 0.025, 648, false]}
             />
-            <shaderPass
+            {/* <shaderPass
                 attachArray="passes"
                 // renderToScreen
                 uniforms-offset-value={0.95}
                 uniforms-darkness-value={1.6}
                 args={[VignetteShader]}
-            />
+            /> */}
 
-            <clearMaskPass
+            {/* <clearMaskPass
                 attachArray="passes"
                 renderToScreen
-            />
+            /> */}
             {/* <maskPass
                 attachArray="passes"
                 renderToScreen
