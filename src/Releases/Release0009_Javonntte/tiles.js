@@ -235,7 +235,7 @@ function Tile2Elements(props) {
 
 
 export const CityTile2 = props => {
-    console.log("Rendering SphereTile", props.centroid)
+    // console.log("Rendering SphereTile", props.centroid)
     return <group>
         {/* <Tile2Surface {...props} /> */}
         <Tile2Elements {...props} />
