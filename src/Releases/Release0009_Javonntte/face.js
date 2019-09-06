@@ -92,7 +92,6 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
     const prevBoundary = useRef(new THREE.Vector3());
     const tilesGroup = useRef(new THREE.Group());
     const allTiles = useRef([]);
-    console.log(sphereGeometry);
     const maxDistance = Math.pow(sphereGeometry.parameters.radius/4, 2);
     const numMatches = 100; // TODO a prop (for kdTree) but > 100 might be too much for most comps
     const kdTree = useRef();
@@ -105,7 +104,6 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
     }, [])
 
     useRender((state, time) => {
-        console.log(camera);
         // const rotXDelta = .0001;
         // tilesGroup.current.rotation.x += rotXDelta;
         boundary.current.copy(camera.position);
