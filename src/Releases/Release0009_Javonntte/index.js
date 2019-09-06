@@ -67,7 +67,7 @@ function Scene() {
                 radius={worldRadius}
                 // target={lookAt}
                 // flyer settings
-                movementSpeed={20}
+                movementSpeed={30}
                 domElement={canvas}
                 rollSpeed={Math.PI/2}
                 autoForward={false}
