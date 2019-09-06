@@ -20,7 +20,7 @@ function initFaceTile(face, centroid, triangle) {
         normal: face.normal,
         triangle: triangle,
         hasRendered: false,
-        visible: true,//false,
+        visible: true,//false, // TODO
     }
 }
 

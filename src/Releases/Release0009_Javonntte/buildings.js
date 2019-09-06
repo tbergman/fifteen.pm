@@ -10,6 +10,12 @@ export function buildingName(building, position) {
     ].join("_")
 }
 
+
+// TODO
+import {initPinkRockMaterial} from '../../Utils/materials';
+import * as THREE from 'three';
+const pinkRockMat = initPinkRockMaterial(new THREE.TextureLoader());
+
 export function Building({ geometry, centroid, normal, color, visible }) {
     // TODO getting the buildings to sit on the curve properly will work with use of 'Spherical'
     const { camera } = useThree();
@@ -20,16 +26,18 @@ export function Building({ geometry, centroid, normal, color, visible }) {
         }}
         geometry={geometry}
         position={centroid}
+        material={pinkRockMat}
     >
-        <meshBasicMaterial attach="material" color={color} />
+        {/* <meshBasicMaterial attach="material" color={color} /> */}
     </mesh>
 }
 
 export function onBuildingsLoaded(gltf) {
+    // size as measured by footprint
     const geometries = {
-        mid: [],
-        wide: [],
-        narrow: []
+        small: [],
+        medium: [],
+        large: []
     }
     gltf.scene.traverse(child => {
         if (child.isMesh) {
@@ -38,12 +46,12 @@ export function onBuildingsLoaded(gltf) {
             const geometry = child.geometry.clone();
             // this makes the 'lookAt(normal)' easier to use later on by flipping the default blender output for expected placement on the sphere
             // geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI));
-            if (child.name.startsWith("MID")) {
-                geometries.mid.push(geometry);
+            if (child.name.startsWith("MID")) { // TODO these were names i made in blender so would need to update them there to match small, medium, large
+                geometries.medium.push(geometry);
             } else if (child.name.startsWith("WIDE")) {
-                geometries.wide.push(geometry);
+                geometries.large.push(geometry);
             } else if (child.name.startsWith("NARROW")) {
-                geometries.narrow.push(geometry);
+                geometries.small.push(geometry);
             }
         }
     })

@@ -39,18 +39,18 @@ function subdivideTriangle(tri, centroid, formation) {
             break;
         case "medium":
             // all same size
-            triangles.push(new THREE.Triangle(i1, a, centroid));
-            triangles.push(new THREE.Triangle(a, i2, centroid));
-            triangles.push(new THREE.Triangle(i2, b, centroid));
-            triangles.push(new THREE.Triangle(b, i3, centroid));
-            triangles.push(new THREE.Triangle(i3, c, centroid));
-            triangles.push(new THREE.Triangle(c, i1, centroid));
+            triangles.push({size: "small", centroid: triangleCentroid(new THREE.Triangle(i1, a, centroid))});
+            triangles.push({size: "small", centroid: triangleCentroid(new THREE.Triangle(a, i2, centroid))});
+            triangles.push({size: "small", centroid: triangleCentroid(new THREE.Triangle(i2, b, centroid))});
+            triangles.push({size: "small", centroid: triangleCentroid(new THREE.Triangle(b, i3, centroid))});
+            triangles.push({size: "small", centroid: triangleCentroid(new THREE.Triangle(i3, c, centroid))});
+            triangles.push({size: "small", centroid: triangleCentroid(new THREE.Triangle(c, i1, centroid))});
             break;
         case "bigLeft1":
             // big on left, medium on top, small on bottom right
-            triangles.push(new THREE.Triangle(i1, i2, c)); // big building // TODO probably can store all of this in maps
-            triangles.push(new THREE.Triangle(i2, i3, centroid)); // medium building
-            triangles.push(new THREE.Triangle(i3, c, centroid)); // narrow building
+            triangles.push({size: "large", centroid: triangleCentroid(new THREE.Triangle(i1, i2, c))});
+            triangles.push({size: "medium", centroid: triangleCentroid(new THREE.Triangle(i2, i3, centroid))}); // medium building
+            triangles.push({size: "small", centroid: triangleCentroid(new THREE.Triangle(i3, c, centroid))}); // narrow building
             break;
         case "extraSubdivisions":
             const equalTriangles = subdivideTriangle(tri, centroid, "medium");
@@ -182,17 +182,16 @@ function Tile2Building({ formation, triangle, centroid, normal, buildingGeometri
     const [materialRef, material] = useResource();
     const [geometryRef, geometry] = useResource();
     const buildingGroupRef = useRef();
+    // get centroids based on formation type
     const subdivisions = subdivideTriangle(triangle, centroid, formation);
     const color = getRandomColor(centroid); // TODO temporary color to help debug
     // const [hasRendered, setHasRendered] = useState(0)
-
     return <group>
-        {subdivisions.map(triangleSubdivision => {
-            // TODO might want to just store centroids during calculation
-            const subdivisionCentroid = triangleCentroid(triangleSubdivision);
-            const geometry = randomClone(buildingGeometries.narrow); // TODO
-            return <group ref={buildingGroupRef} key={buildingName(geometry, subdivisionCentroid)}>
-                <Building geometry={geometry} centroid={subdivisionCentroid} normal={normal} color={color} />
+        {subdivisions.map(subdivision => {
+            console.log(subdivision.size, buildingGeometries[subdivision.size])
+            const geometry = randomClone(buildingGeometries[subdivision.size]);
+            return <group ref={buildingGroupRef} key={buildingName(geometry, subdivision.centroid)}>
+                <Building geometry={geometry} centroid={subdivision.centroid} normal={normal} color={color} />
             </group>
         })}
     </group>;
@@ -216,9 +215,14 @@ function pickFacePattern(triangle) {
     const area = triangle.getArea();
     // TODO calculate area buckets given data
     if (area < 1.6) {
+        console.log("PICK SMALL")
         return "small"; // TODO make these randomly picked from lists
-    } else {
+    } else if (area >= 1.6 && area < 3) {
+        console.log("PICK MEDIUM")
         return "medium"; // TODO make these randomly picked from lists
+    } else if (area >= 3){
+        console.log("PICK BIG LEFT1")
+        return "bigLeft1"
     }
 }
 
