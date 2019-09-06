@@ -11,17 +11,16 @@ export function buildingName(building, position) {
 }
 
 
-// TODO
+// TODO material updates/dynamic not just sitting here in the wrong place
 import {initPinkRockMaterial} from '../../Utils/materials';
 import * as THREE from 'three';
 const pinkRockMat = initPinkRockMaterial(new THREE.TextureLoader());
 
 export function Building({ geometry, centroid, normal, color, visible }) {
-    // TODO getting the buildings to sit on the curve properly will work with use of 'Spherical'
     const { camera } = useThree();
     return <mesh
         onUpdate={self => {
-            self.lookAt(normal)
+            self.lookAt(normal);
             self.visible = visible
         }}
         geometry={geometry}
@@ -41,11 +40,10 @@ export function onBuildingsLoaded(gltf) {
     }
     gltf.scene.traverse(child => {
         if (child.isMesh) {
-            child.geometry.center();
-            // child.position.set(0, 0, 0);//new THREE.Vector3(0, 0, 0);
+            child.position.set(0, 0, 0);
             const geometry = child.geometry.clone();
-            // this makes the 'lookAt(normal)' easier to use later on by flipping the default blender output for expected placement on the sphere
-            // geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI));
+            // this makes the 'lookAt(normal)' function as expected on the sphere by flipping the default blender output
+            geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI));
             if (child.name.startsWith("MID")) { // TODO these were names i made in blender so would need to update them there to match small, medium, large
                 geometries.medium.push(geometry);
             } else if (child.name.startsWith("WIDE")) {
