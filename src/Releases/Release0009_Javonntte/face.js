@@ -83,36 +83,42 @@ function displayNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
     return matchingTiles;
 }
 
+
+
 export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeometries, startPos }) {
     const { camera } = useThree();
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
-    const boundary = useRef(new THREE.Vector3());
-    const prevBoundary = useRef(new THREE.Vector3());
+    const searchPosition = useRef(new THREE.Vector3());
+    const prevSearchPosition = useRef(new THREE.Vector3());
     const tilesGroup = useRef(new THREE.Group());
     const allTiles = useRef([]);
-    const maxDistance = Math.pow(sphereGeometry.parameters.radius / 4, 2);
-    const numMatches = 100; // TODO a prop (for kdTree) but > 100 might be too much for most comps
     const kdTree = useRef();
     const closestTiles = useRef([]);
-    const cameraRaycaster = useRef(new THREE.Raycaster);
-    const inFrontOfCamera = useRef(new THREE.Vector3());
+    const cameraRaycaster = new THREE.Raycaster;
+    const inFrontOfCamera = new THREE.Vector3();
+    const radius = sphereGeometry.parameters.radius;
+    const maxDistance = Math.pow(radius / 4, 2);
+    const numMatches = 100; // TODO a prop (for kdTree) but > 100 might be too much for most comps...
+    
+    const getSearchPosition = () => {
+        cameraRaycaster.setFromCamera(new THREE.Vector2(), camera);
+        return cameraRaycaster.ray.at(radius / 5, inFrontOfCamera);
+    }
+    
     useEffect(() => {
         allTiles.current = generateTiles(sphereGeometry);
         kdTree.current = loadKDTree(allTiles.current);
-        boundary.current.copy(startPos);
-        prevBoundary.current.copy(startPos);
-        
     }, [])
 
     useRender((state, time) => {
         // const rotXDelta = .0001;
         // tilesGroup.current.rotation.x += rotXDelta;
-        boundary.current.copy(camera.position);
+        // boundary.current.copy(camera.position);
         if ((time % .001).toFixed(3) == 0) {
-            // if (prevBoundary.current.distanceTo(boundary.current) > .5) {
-            cameraRaycaster.current.setFromCamera(new THREE.Vector2(), camera);
-            const searchPosition = cameraRaycaster.current.ray.at(sphereGeometry.parameters.radius/4, inFrontOfCamera.current);
-            const allClosestTiles = displayNearest(searchPosition, kdTree.current, numMatches, maxDistance, allTiles.current);
+            searchPosition.current = getSearchPosition();
+        }
+        if (prevSearchPosition.current.distanceTo(searchPosition.current) > radius/(2* Math.PI)) {
+            const allClosestTiles = displayNearest(searchPosition.current, kdTree.current, numMatches, maxDistance, allTiles.current);
             // set some of these to not rerender here?
             // TODO setLastUpdateTime (below) seems to trigger an update but dont have access to changes to var
             // console.log('last update time', lastUpdateTime);
@@ -123,7 +129,7 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
             //     else tile.isRendered = false;
             // }
             closestTiles.current = allClosestTiles;
-            prevBoundary.current.copy(boundary.current);
+            prevSearchPosition.current.copy(searchPosition.current);
             setLastUpdateTime(time);
         }
     });
