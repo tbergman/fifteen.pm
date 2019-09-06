@@ -68,24 +68,19 @@ function loadKDTree(tiles) {
     return kdTree;
 }
 
-function displayNearest(camera, position, kdTree, maxDistance, tileLookup) {
+function displayNearest(camera, kdTree, maxDistance, tileLookup) {
     const matchingTiles = [];
     // take the nearest 200 around them. distance^2 'cause we use the manhattan distance and no square is applied in the distance function
-    var positionsInRange = kdTree.nearest([position.x, position.y, position.z], 100, maxDistance);
-    // We combine the nearest neighbour with a view frustum. Doesn't make sense if we change the sprites not in our view.
-    var _frustum = new THREE.Frustum();
-    var _projScreenMatrix = new THREE.Matrix4();
-    _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
-    _frustum.setFromMatrix(_projScreenMatrix);
+    const position = [camera.position.x, camera.position.y, camera.position.z];
+    var positionsInRange = kdTree.nearest(position, 100, maxDistance);
     for (var i = 0, il = positionsInRange.length; i < il; i++) {
         var kdNode = positionsInRange[i];
         var objectPoint = new THREE.Vector3().fromArray(kdNode[0].obj);
-        if (_frustum.containsPoint(objectPoint)) {
-            const tId = tileId(objectPoint);
-            const tile = tileLookup[tId];
-            // Sometimes tile is undefined because of floating point differences between kdTree results and original vals
-            if (tile) matchingTiles.push(tile);
-        }
+        const tId = tileId(objectPoint);
+        const tile = tileLookup[tId];
+        // Sometimes tile is undefined because of floating point differences between kdTree results and original vals
+        if (tile) matchingTiles.push(tile);
+
     }
     return matchingTiles;
 }
@@ -114,8 +109,7 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
         if ((time % .001).toFixed(3) == 0) {
             // if (prevBoundary.current.distanceTo(boundary.current) > .5) {
             // TODO organize these args
-            const allClosestTiles = displayNearest(camera, boundary.current, kdTree.current, maxDistance, allTiles.current);
-            // if (allClosestTiles.length) console.log("MATCHES", allClosestTiles);
+            const allClosestTiles = displayNearest(camera, kdTree.current, maxDistance, allTiles.current);
             // set some of these to not rerender here?
             // TODO setLastUpdateTime (below) seems to trigger an update but dont have access to changes to var
             // console.log('last update time', lastUpdateTime);
