@@ -5,10 +5,11 @@ import { BloomEffect, Advanced2Effect } from "../../Utils/Effects";
 import { useGLTF } from "../../Utils/hooks";
 import { onBuildingsLoaded } from "./buildings";
 import { BUILDINGS_URL } from "./constants";
-import { SphereFileGenerator } from './face';
+import { SphereFileGenerator as SphereTileGenerator } from './face';
 import "./index.css";
 import { CityTile2 } from "./tiles";
 import { Controls } from "./controls";
+import { makeWorld, makeStars } from './world';
 
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -18,51 +19,62 @@ function Scene() {
        Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
        (For instance: a complicated geometry.)
      */
-    const { camera, scene } = useThree();
+    const { camera, scene, canvas } = useThree();
     // TODO: this value should be a factor of the size of the user's screen...?
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, onBuildingsLoaded);
-    const worldRadius = 24;
-    const worldSphereGeometry = new THREE.SphereGeometry();
+    const worldRadius = 48;
+    var rotationSpeed = 0.02;
+    // TODO tilt ?
+    const worldSphereGeometry = makeWorld({
+        radius:worldRadius,
+        rotationSpeed,
+        sides: 80,
+        tiers: 40,
+        maxHeight:0.1,
+        
+    });
+    /* TODO TEMP !!! */
+    // TODO different materials for 'under'/'over' world? http://jsfiddle.net/j8k7yhLp/1/
+    const meshPlanet = new THREE.Mesh( worldSphereGeometry,  new THREE.MeshStandardMaterial( { color: 0xe5f2f2 ,flatShading:THREE.FlatShading} ) );
+    meshPlanet.material.side = THREE.DoubleSide;
+    meshPlanet.rotation.y = 0;
+    meshPlanet.rotation.z = 0.41; //tilt
+    scene.add( meshPlanet ); 
+    /* END TEMP!! */
+    
+    // TODO make this a jsx component!
+    makeStars({radius: worldRadius, scene}) 
 
-    const startPos = new THREE.Vector3(0, worldRadius, 0)
-    // const startPos = new THREE.Vector3(0, worldRadius * .25, -worldRadius * 1.01);
-    // const lookAt = new THREE.Vector3(0, -worldRadius * 1.5, 1); // TODO not sure why there's an inversion in placement of tiles in TileGenerator
-
-
+    const startPos = new THREE.Vector3(0, 0, worldRadius*1.05);    
+    const lookAt = new THREE.Vector3(0, worldRadius - worldRadius * .5, worldRadius - worldRadius * .1);
     useRender(() => {
         // console.log(camera.position);
-        // controls.update( .001 );
     })
     useEffect(() => {
-        const fogColor = new THREE.Color(0xffffff);
-        scene.background = fogColor;
+        // const fogColor = new THREE.Color(0xffffff);
+        // scene.background = fogColor;
         // scene.fog = new THREE.FogExp2(0xf0fff0, 0.24);
+        scene.fog = new THREE.FogExp2( 0x000000, 0.00000025 );
+        camera.fov = 25;
+        camera.near = 1;
+        camera.far = 1e7;
         camera.position.copy(startPos);
-
-        // camera.lookAt(lookAt);
-        // camera.up.set(0, -1, 0); // TODO not sure why there's an inversion in placement of tiles in TileGenerator
+        camera.lookAt(lookAt);
     }, [buildings])
     return (
         <>
             <Controls
-                boundingRadius={worldRadius + 1}
+                radius={worldRadius}
                 // target={lookAt}
-                // fpc settings
-                lookSpeed={.5}
-                // heightMax={.5}
-                verticalMax={2}
-                movementSpeed={100}
-            // lookSpeed={0.1}
-            // lookAt={new THREE.Vector3(0, 0, 0)}
-            // orbital controls settings
-            // dampingFactor={.5}
-            // autoRotateSpeed={.1}
-            // enableZoom={false}
-            // autoRotate={true}
-            // enableKeys={false}
-            // maxDistance={96}
-            // maxPolarAngle={Math.PI / 5}
-            // minPolarAngle={Math.PI / 6}
+                // flyer settings
+                movementSpeed={20}
+                domElement={canvas}
+                rollSpeed={Math.PI/2}
+                autoForward={false}
+                dragToLook={false}
+            // fpc settings
+            // lookSpeed={.5}
+            // movementSpeed={100}
             />
             {/* <Advanced2Effect camera={camera} /> */}
             {/* <BloomEffect
@@ -75,15 +87,10 @@ function Scene() {
                 <boxGeometry attach="geometry" args={[1]} />
                 <meshBasicMaterial attach="material" color="red" />
             </mesh> */}
-            {buildings && <SphereFileGenerator
-                geometries={buildings}
-                // sphereGeometry={sphereGeometry}
-                offset={new THREE.Vector3} // TODO i dont get how to do this
-                radius={worldRadius}
-                sides={40}
-                tiers={40}
+            {buildings && <SphereTileGenerator
+                surfaceGeometries={buildings}
+                sphereGeometry={worldSphereGeometry}
                 startPos={startPos}
-                maxHeight={0.1}
                 // TODO
                 tileComponent={CityTile2}
             />}
@@ -99,7 +106,7 @@ function Scene() {
             <spotLight
                 castShadow
                 intensity={2}
-                position={startPos}
+                position={camera.position}
                 shadow-mapSize-width={2048}
                 shadow-mapSize-height={2048}
             />

@@ -7,39 +7,6 @@ import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
 // we cut off the floating point length here to insure 99% match with the kdTree model (since the model can change the exact value a bit)
 const tileId = (centroid) => [centroid.x.toFixed(3), centroid.y.toFixed(3), centroid.z.toFixed(3)].join("_");
 
-function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
-    var vertexIndex;
-    var vertexVector = new THREE.Vector3();
-    var nextVertexVector = new THREE.Vector3();
-    var firstVertexVector = new THREE.Vector3();
-    var offset = new THREE.Vector3();
-    var currentTier = 1;
-    var lerpValue = 0.5;
-    var heightValue;
-    for (var j = 1; j < tiers - 2; j++) {
-        currentTier = j;
-        for (var i = 0; i < sides; i++) {
-            vertexIndex = (currentTier * sides) + 1;
-            vertexVector = sphereGeometry.vertices[i + vertexIndex].clone();
-            if (j % 2 !== 0) {
-                if (i == 0) {
-                    firstVertexVector = vertexVector.clone();
-                }
-                nextVertexVector = sphereGeometry.vertices[i + vertexIndex + 1].clone();
-                if (i == sides - 1) {
-                    nextVertexVector = firstVertexVector;
-                }
-                lerpValue = (Math.random() * (0.75 - 0.25)) + 0.25;
-                vertexVector.lerp(nextVertexVector, lerpValue);
-            }
-            heightValue = (Math.random() * maxHeight) - (maxHeight / 2);
-            offset = vertexVector.clone().normalize().multiplyScalar(heightValue);
-            sphereGeometry.vertices[i + vertexIndex] = (vertexVector.add(offset));
-        }
-    }
-    return sphereGeometry;
-}
-
 
 // TODO add back in
 function hardLimitYFaces(centroid, radius) {
@@ -62,7 +29,7 @@ function initFaceTile(face, centroid, triangle) {
     }
 }
 
-function generateTiles(sphereGeometry, boundary) {
+function generateTiles(sphereGeometry) {
     const vertices = sphereGeometry.vertices;
     // const boundaryLimit = sphereGeometry.parameters.radius / 3; // TODO this is too big unless we do instancing
     const tiles = {}
@@ -70,7 +37,7 @@ function generateTiles(sphereGeometry, boundary) {
         const triangle = triangleFromFace(face, vertices);
         const centroid = faceCentroid(face, vertices);
         const tile = initFaceTile(face, centroid, triangle);
-        if (withinBoundary(boundary, centroid)) tile.visible = true; // TODO use tree!
+        // if (withinBoundary(boundary, centroid)) tile.visible = true; // TODO use tree!
         // const tId = tileId(face);
         const tId = tileId(centroid);
         tiles[tId] = tile;
@@ -98,7 +65,7 @@ function loadKDTree(tiles) {
     })
     // creating the kdtree takes a lot of time to execute, in turn the nearest neighbour search will be much faster
     const kdTree = new TypedArrayUtils.Kdtree(positions, distanceFunction, 3);
-    return [kdTree, alphas, positions];
+    return kdTree;
 }
 
 function displayNearest(camera, position, kdTree, maxDistance, tileLookup) {
@@ -123,31 +90,32 @@ function displayNearest(camera, position, kdTree, maxDistance, tileLookup) {
     return matchingTiles;
 }
 
-export function SphereFileGenerator({ radius, sides, tiers, tileComponent, geometries, startPos, maxHeight }) {
+export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeometries, startPos }) {
     const { camera } = useThree();
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
-    const boundary = useRef(new THREE.Vector3().copy(startPos));
-    const prevBoundary = useRef(boundary.current.clone());
+    const boundary = useRef(new THREE.Vector3());
+    const prevBoundary = useRef(new THREE.Vector3());
     const tilesGroup = useRef(new THREE.Group());
     const allTiles = useRef([]);
-    const maxDistance = Math.pow(120, 2); // for kdTree
-    let sphereGeometry = new THREE.SphereGeometry(radius, sides, tiers);
-    // sphereGeometry = variateSphereFaceHeights({ sphereGeometry, radius, sides, tiers, maxHeight });
+    const maxDistance = Math.pow(1200, 2); // for kdTree
     const kdTree = useRef();
-    const positions = useRef();
     const closestTiles = useRef([]);
     useEffect(() => {
-        allTiles.current = generateTiles(sphereGeometry, startPos);
-        [kdTree.current, positions.current] = loadKDTree(allTiles.current);
+        allTiles.current = generateTiles(sphereGeometry);
+        kdTree.current = loadKDTree(allTiles.current);
+        boundary.current.copy(startPos);
+        prevBoundary.current.copy(startPos);
     }, [])
-    
+
     useRender((state, time) => {
         // const rotXDelta = .0001;
         // tilesGroup.current.rotation.x += rotXDelta;
         boundary.current.copy(camera.position);
-        if (prevBoundary.current.distanceTo(boundary.current) > .5) {
+        if ((time % .001).toFixed(3) == 0) {
+            // if (prevBoundary.current.distanceTo(boundary.current) > .5) {
             // TODO organize these args
             const allClosestTiles = displayNearest(camera, boundary.current, kdTree.current, maxDistance, allTiles.current);
+            // if (allClosestTiles.length) console.log("MATCHES", allClosestTiles);
             // set some of these to not rerender here?
             // TODO setLastUpdateTime (below) seems to trigger an update but dont have access to changes to var
             // console.log('last update time', lastUpdateTime);
@@ -168,7 +136,7 @@ export function SphereFileGenerator({ radius, sides, tiers, tileComponent, geome
             return <group key={props.id}>
                 <MemoizedSphereTile
                     {...props}
-                    buildingGeometries={geometries}
+                    buildingGeometries={surfaceGeometries}
                     tileComponent={tileComponent}
                     tileId={props.id}
                 />

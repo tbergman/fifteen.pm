@@ -1,65 +1,81 @@
-// import React, { useRef, useState } from 'react';
-// import { useRender, useResource, useThree } from 'react-three-fiber';
-// import * as THREE from 'three';
-// import { faceId, SphereFaces } from "./face";
-// import { CityTile } from "./tiles";
+import * as THREE from 'three';
 
-// function vertexId(v) {
-//     return [v.x, v.y, v.z].join("_");
-// }
+// TODO convert to jsx
+// from https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_fly.html
+export function makeStars({radius, scene}) {
+    var i, r = radius, starsGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry()];
+    var vertices1 = [];
+    var vertices2 = [];
+    var vertex = new THREE.Vector3();
+    for (i = 0; i < 250; i++) {
+        vertex.x = Math.random() * 2 - 1;
+        vertex.y = Math.random() * 2 - 1;
+        vertex.z = Math.random() * 2 - 1;
+        vertex.multiplyScalar(r);
+        vertices1.push(vertex.x, vertex.y, vertex.z);
+    }
+    for (i = 0; i < 1500; i++) {
+        vertex.x = Math.random() * 2 - 1;
+        vertex.y = Math.random() * 2 - 1;
+        vertex.z = Math.random() * 2 - 1;
+        vertex.multiplyScalar(r);
+        vertices2.push(vertex.x, vertex.y, vertex.z);
+    }
+    starsGeometry[0].addAttribute('position', new THREE.Float32BufferAttribute(vertices1, 3));
+    starsGeometry[1].addAttribute('position', new THREE.Float32BufferAttribute(vertices2, 3));
+    var stars;
+    var starsMaterials = [
+        new THREE.PointsMaterial({ color: 0x555555, size: 2, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: 0x555555, size: 1, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: 0x333333, size: 2, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: 0x3a3a3a, size: 1, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: 0x1a1a1a, size: 2, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: 0x1a1a1a, size: 1, sizeAttenuation: false })
+    ];
+    for (i = 10; i < 30; i++) {
+        stars = new THREE.Points(starsGeometry[i % 2], starsMaterials[i % 6]);
+        stars.rotation.x = Math.random() * 6;
+        stars.rotation.y = Math.random() * 6;
+        stars.rotation.z = Math.random() * 6;
+        stars.scale.setScalar(i * 10);
+        stars.matrixAutoUpdate = false;
+        stars.updateMatrix();
+        scene.add(stars);
+    }
 
-// // https://sites.google.com/site/threejstuts/home/slerp
-// // https://stackoverflow.com/questions/11030101/three-js-camera-flying-around-sphere ***
-// // https://gamedev.stackexchange.com/questions/59298/walking-on-a-sphere ***
-// // https://stackoverflow.com/questions/42087478/create-a-planet-orbit
-// // https://github.com/mrdoob/three.js/blob/34dc2478c684066257e4e39351731a93c6107ef5/src/math/interpolants/QuaternionLinearInterpolant.js
-// // https://threejs.org/examples/?q=webgl_math_orientation_transform#webgl_math_orientation_transform
-// // https://stackoverflow.com/questions/18401213/how-to-animate-the-camera-in-three-js-to-look-at-an-object/24151942
-// // https://math.oregonstate.edu/home/programs/undergrad/CalculusQuestStudyGuides/vcalc/coord/coord.html
-// // https://stackoverflow.com/questions/13039589/rotate-the-camera-around-an-object-using-the-arrow-keys-in-three-js
-// // https://stackoverflow.com/questions/36700452/how-to-rotate-camera-so-it-faces-above-point-on-sphere-three-js
-// // https://codesandbox.io/s/react-three-fiber-suspense-gltf-loader-l900i
-// // endless roller: https://jsfiddle.net/juwalbose/bk4u5wcn/embedded/
-// // TODO generalize parameters
-// // TODO World and SphereFaces can probably be combined (Like TilesGenerator)
-// export function World({ startPos, worldRadius, sides, tiers, buildingGeometries, worldPos, maxHeight }) {
-//     console.log("RENDER WORLD");
-//     const group = useRef();
-//     const { raycaster } = useThree();
-//     // let sphereGeometry = new THREE.SphereGeometry(worldRadius, sides, tiers);
-//     // let sphereMaterial = new THREE.MeshStandardMaterial({ color: 0xfaec82, flatShading: THREE.FlatShading, vertexColors: THREE.FaceColors })
-//     // sphereGeometry = variateSphereFaceHeights({ sphereGeometry, worldRadius, sides, tiers, maxHeight });
-//     useRender(() => {
-//         // TODO this rotation sucks haha
-//         // group.current.rotation.x -= .0001;
-//         // group.current.rotation.z = raycaster.ray.direction.x * .6;
-//     })
-//     return <>
-//         <group ref={group}>
-//             {group.current && (
-//                 <>
-//                     {/* <mesh
-//                         geometry={sphereGeometry}
-//                         material={sphereMaterial}
-//                         castShadow
-//                         receiveShadow
-//                         position={worldPos}
-//                     /> */}
-//                     {buildingGeometries && <SphereFaces
-//                         geometries={buildingGeometries}
-//                         // sphereGeometry={sphereGeometry}
-//                         offset={worldPos}
-//                         radius={worldRadius}
-//                         sides={sides}
-//                         tiers={tiers}
-//                         startPos={startPos}
-//                         // TODO
-//                         tileComponent={CityTile}
-//                     />}
-//                 </>
-//             )}
-//         </group>) : null}
-//     </>;
-// }
+}
 
-
+export function makeWorld({ radius, sides, tiers, maxHeight }) {
+    const sphereGeometry = new THREE.SphereGeometry(radius, sides, tiers);
+    // variate sphere heights
+    var vertexIndex;
+    var vertexVector = new THREE.Vector3();
+    var nextVertexVector = new THREE.Vector3();
+    var firstVertexVector = new THREE.Vector3();
+    var offset = new THREE.Vector3();
+    var currentTier = 1;
+    var lerpValue = 0.5;
+    var heightValue;
+    for (var j = 1; j < tiers - 2; j++) {
+        currentTier = j;
+        for (var i = 0; i < sides; i++) {
+            vertexIndex = (currentTier * sides) + 1;
+            vertexVector = sphereGeometry.vertices[i + vertexIndex].clone();
+            if (j % 2 !== 0) {
+                if (i == 0) {
+                    firstVertexVector = vertexVector.clone();
+                }
+                nextVertexVector = sphereGeometry.vertices[i + vertexIndex + 1].clone();
+                if (i == sides - 1) {
+                    nextVertexVector = firstVertexVector;
+                }
+                lerpValue = (Math.random() * (0.75 - 0.25)) + 0.25;
+                vertexVector.lerp(nextVertexVector, lerpValue);
+            }
+            heightValue = (Math.random() * maxHeight) - (maxHeight / 2);
+            offset = vertexVector.clone().normalize().multiplyScalar(heightValue);
+            sphereGeometry.vertices[i + vertexIndex] = (vertexVector.add(offset));
+        }
+    }
+    return sphereGeometry;
+}
