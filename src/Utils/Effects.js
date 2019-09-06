@@ -102,7 +102,7 @@ export const Advanced2Effect = React.memo(({ camera }) => {
             <dotScreenPass
                 attachArray="passes"
                 // renderToScreen
-                args={[new THREE.Vector2(0, 0), 0.5, 1.]} // center angle scale
+                args={[new THREE.Vector2(0.8, 0), 0.5, 1.]} // center angle scale
             /> 
             <filmPass
                 attachArray="passes"

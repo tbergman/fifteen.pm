@@ -29,7 +29,7 @@ function Scene() {
     useEffect(() => {
         const fogColor = new THREE.Color(0xffffff);
         scene.background = fogColor;
-        scene.fog = new THREE.FogExp2(0xf0fff0, 0.24);
+        // scene.fog = new THREE.FogExp2(0xf0fff0, 0.24);
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
         camera.up.set(0, -1, 0); // TODO not sure why there's an inversion in placement of tiles in TileGenerator
@@ -37,17 +37,17 @@ function Scene() {
     return (
         <>
             <Controls
-                dampingFactor={.05}
-                autoRotateSpeed={.1}
-                enableZoom={false}
+                // dampingFactor={.05}
+                // autoRotateSpeed={.1}
+                // enableZoom={false}
                 autoRotate={true}
-                enableKeys={false}
-                target={lookAt}
-                maxDistance={96}
-                maxPolarAngle={Math.PI / 5}
-                minPolarAngle={Math.PI / 6}
+                // enableKeys={false}
+                // target={lookAt}
+                // maxDistance={96}
+                // maxPolarAngle={Math.PI / 5}
+                // minPolarAngle={Math.PI / 6}
             />
-            <Advanced2Effect camera={camera} />
+            {/* <Advanced2Effect camera={camera} /> */}
             {/* <BloomEffect
                 camera={camera}
                 radius={1}

@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { TypedArrayUtils } from 'three-full';
 import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
 
-// we cut off the floating point to match with the kdTree model, which changes the exact value a bit
+// we cut off the floating point length here to insure 99% match with the kdTree model (since the model can change the exact value a bit)
 const tileId = (centroid) => [centroid.x.toFixed(3), centroid.y.toFixed(3), centroid.z.toFixed(3)].join("_");
 
 function variateSphereFaceHeights({ sides, tiers, maxHeight, worldRadius, sphereGeometry }) {
@@ -146,14 +146,12 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
         // tilesGroup.current.rotation.x += rotXDelta;
         boundary.current.copy(camera.position);
         if (prevBoundary.current.distanceTo(boundary.current) > .5) {
-            
             // TODO organize these args
             const allClosestTiles = displayNearest(camera, boundary.current, kdTree.current, maxDistance, allTiles.current);
             // set some of these to not rerender here?
             console.log('last update time', lastUpdateTime);
             for(let i=0; i < allClosestTiles.length; i++){
                 const tile = allClosestTiles[i];
-                
                 if (tile.timestamp === lastUpdateTime) tile.isRendered = true;
                 else tile.isRendered = false;
             }
