@@ -68,11 +68,11 @@ function loadKDTree(tiles) {
     return kdTree;
 }
 
-function displayNearest(camera, kdTree, maxDistance, tileLookup) {
+function displayNearest(camera, kdTree, numMatches, maxDistance, tileLookup) {
     const matchingTiles = [];
     // take the nearest 200 around them. distance^2 'cause we use the manhattan distance and no square is applied in the distance function
     const position = [camera.position.x, camera.position.y, camera.position.z];
-    var positionsInRange = kdTree.nearest(position, 100, maxDistance);
+    var positionsInRange = kdTree.nearest(position, numMatches, maxDistance);
     for (var i = 0, il = positionsInRange.length; i < il; i++) {
         var kdNode = positionsInRange[i];
         var objectPoint = new THREE.Vector3().fromArray(kdNode[0].obj);
@@ -92,7 +92,9 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
     const prevBoundary = useRef(new THREE.Vector3());
     const tilesGroup = useRef(new THREE.Group());
     const allTiles = useRef([]);
-    const maxDistance = Math.pow(1200, 2); // for kdTree
+    console.log(sphereGeometry);
+    const maxDistance = Math.pow(sphereGeometry.parameters.radius/4, 2);
+    const numMatches = 100; // TODO a prop (for kdTree) but > 100 might be too much for most comps
     const kdTree = useRef();
     const closestTiles = useRef([]);
     useEffect(() => {
@@ -103,13 +105,14 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
     }, [])
 
     useRender((state, time) => {
+        console.log(camera);
         // const rotXDelta = .0001;
         // tilesGroup.current.rotation.x += rotXDelta;
         boundary.current.copy(camera.position);
         if ((time % .001).toFixed(3) == 0) {
             // if (prevBoundary.current.distanceTo(boundary.current) > .5) {
             // TODO organize these args
-            const allClosestTiles = displayNearest(camera, kdTree.current, maxDistance, allTiles.current);
+            const allClosestTiles = displayNearest(camera, kdTree.current, numMatches, maxDistance, allTiles.current);
             // set some of these to not rerender here?
             // TODO setLastUpdateTime (below) seems to trigger an update but dont have access to changes to var
             // console.log('last update time', lastUpdateTime);
