@@ -70,7 +70,7 @@ function generateTiles(sphereGeometry, boundary) {
         const triangle = triangleFromFace(face, vertices);
         const centroid = faceCentroid(face, vertices);
         const tile = initFaceTile(face, centroid, triangle);
-        if (withinBoundary(boundary, centroid)) tile.visible = true;
+        if (withinBoundary(boundary, centroid)) tile.visible = true; // TODO use tree!
         // const tId = tileId(face);
         const tId = tileId(centroid);
         tiles[tId] = tile;
@@ -123,7 +123,7 @@ function displayNearest(camera, position, kdTree, maxDistance, tileLookup) {
     return matchingTiles;
 }
 
-export function TileGenerator({ radius, sides, tiers, tileComponent, geometries, startPos, maxHeight }) {
+export function SphereFileGenerator({ radius, sides, tiers, tileComponent, geometries, startPos, maxHeight }) {
     const { camera } = useThree();
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const boundary = useRef(new THREE.Vector3().copy(startPos));
@@ -132,7 +132,7 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
     const allTiles = useRef([]);
     const maxDistance = Math.pow(120, 2); // for kdTree
     let sphereGeometry = new THREE.SphereGeometry(radius, sides, tiers);
-    sphereGeometry = variateSphereFaceHeights({ sphereGeometry, radius, sides, tiers, maxHeight });
+    // sphereGeometry = variateSphereFaceHeights({ sphereGeometry, radius, sides, tiers, maxHeight });
     const kdTree = useRef();
     const positions = useRef();
     const closestTiles = useRef([]);
@@ -140,7 +140,7 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
         allTiles.current = generateTiles(sphereGeometry, startPos);
         [kdTree.current, positions.current] = loadKDTree(allTiles.current);
     }, [])
-
+    
     useRender((state, time) => {
         // const rotXDelta = .0001;
         // tilesGroup.current.rotation.x += rotXDelta;
@@ -150,7 +150,7 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
             const allClosestTiles = displayNearest(camera, boundary.current, kdTree.current, maxDistance, allTiles.current);
             // set some of these to not rerender here?
             // TODO setLastUpdateTime (below) seems to trigger an update but dont have access to changes to var
-            console.log('last update time', lastUpdateTime);
+            // console.log('last update time', lastUpdateTime);
             // TODO turning renders on and off (cpu)
             // for (let i = 0; i < allClosestTiles.length; i++) {
             //     const tile = allClosestTiles[i];

@@ -161,7 +161,6 @@ function Tile2Surface({ face, triangle, normal, centroid, ...props }) {
     triangle.getNormal(normal);
     geom.faces.push(new THREE.Face3(0, 1, 2, normal));
 
-
     return <>
         <boxGeometry ref={geometryRef} />
         {/* <primitive
@@ -170,7 +169,6 @@ function Tile2Surface({ face, triangle, normal, centroid, ...props }) {
         />*/}
         <meshBasicMaterial ref={materialRef} color="red" />
         {geometry && material ?
-
             <mesh 
                 geometry={geometry}
                 material={material}
