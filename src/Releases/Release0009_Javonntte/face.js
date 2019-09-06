@@ -97,14 +97,14 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
     const cameraRaycaster = new THREE.Raycaster;
     const inFrontOfCamera = new THREE.Vector3();
     const radius = sphereGeometry.parameters.radius;
-    const maxDistance = Math.pow(radius / 4, 2);
-    const numMatches = 100; // TODO a prop (for kdTree) but > 100 might be too much for most comps...
-    
+    const maxDistance = Math.pow(radius / 2 * Math.PI, 2);
+    const numMatches = 33; // TODO a prop (for kdTree) but > 100 might be too much for most comps...
+
     const getSearchPosition = () => {
         cameraRaycaster.setFromCamera(new THREE.Vector2(), camera);
         return cameraRaycaster.ray.at(radius / 5, inFrontOfCamera);
     }
-    
+
     useEffect(() => {
         allTiles.current = generateTiles(sphereGeometry);
         kdTree.current = loadKDTree(allTiles.current);
@@ -117,7 +117,7 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
         if ((time % .001).toFixed(3) == 0) {
             searchPosition.current = getSearchPosition();
         }
-        if (prevSearchPosition.current.distanceTo(searchPosition.current) > radius/(2* Math.PI)) {
+        if (prevSearchPosition.current.distanceTo(searchPosition.current) > radius / (2 * Math.PI)) {
             const allClosestTiles = displayNearest(searchPosition.current, kdTree.current, numMatches, maxDistance, allTiles.current);
             // set some of these to not rerender here?
             // TODO setLastUpdateTime (below) seems to trigger an update but dont have access to changes to var
