@@ -9,7 +9,8 @@ import { SphereFileGenerator as SphereTileGenerator } from './face';
 import "./index.css";
 import { CityTile2 } from "./tiles";
 import { Controls } from "./controls";
-import { makeWorld, makeStars } from './world';
+import { makeWorld } from './world';
+import {Stars} from './stars';
 
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -42,19 +43,13 @@ function Scene() {
     scene.add( meshPlanet ); 
     /* END TEMP!! */
     
-    // TODO make this a jsx component!
-    makeStars({radius: worldRadius, scene}) 
-
     const startPos = new THREE.Vector3(0, 0, worldRadius*1.05);    
     const lookAt = new THREE.Vector3(0, worldRadius - worldRadius * .5, worldRadius - worldRadius * .1);
     useRender(() => {
         // console.log(camera.position);
     })
     useEffect(() => {
-        // const fogColor = new THREE.Color(0xffffff);
-        // scene.background = fogColor;
-        // scene.fog = new THREE.FogExp2(0xf0fff0, 0.24);
-        scene.fog = new THREE.FogExp2( 0x000000, 0.00000025 );
+        // scene.fog = new THREE.FogExp2( 0x000000, 0.00000025 );
         camera.fov = 25;
         camera.near = 1;
         camera.far = 1e7;
@@ -87,6 +82,9 @@ function Scene() {
                 <boxGeometry attach="geometry" args={[1]} />
                 <meshBasicMaterial attach="material" color="red" />
             </mesh> */}
+            <Stars
+                radius={worldRadius}
+            />
             {buildings && <SphereTileGenerator
                 surfaceGeometries={buildings}
                 sphereGeometry={worldSphereGeometry}
