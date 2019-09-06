@@ -114,7 +114,7 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
         // const rotXDelta = .0001;
         // tilesGroup.current.rotation.x += rotXDelta;
         // boundary.current.copy(camera.position);
-        if ((time % .001).toFixed(3) == 0) {
+        if ((time % .5).toFixed(1) == 0) {
             searchPosition.current = getSearchPosition();
         }
         if (prevSearchPosition.current.distanceTo(searchPosition.current) > radius / (2 * Math.PI)) {
