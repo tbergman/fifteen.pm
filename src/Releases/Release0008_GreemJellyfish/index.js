@@ -21,7 +21,7 @@ import {
     CONSTANTS,
 } from "./constants.js";
 import { assetPath8 } from "./utils.js";
-import { initFoamGripMaterial, initRockMaterial, initPinkRockMaterial, initTransluscentMaterial, initPinkShinyMaterial } from "./materials.js";
+import { initFoamGripMaterial, initRockMaterial, initPinkRockMaterial, initTransluscentMaterial, initPinkShinyMaterial } from "../../Utils/materials.js";
 
 /* eslint import/no-webpack-loader-syntax: off */
 import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';

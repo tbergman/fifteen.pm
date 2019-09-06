@@ -7,7 +7,7 @@ import { loadGLTF } from '../Utils/Loaders';
 import { assetPath } from "../Utils/assets";
 import Menu from "../UI/Menu/Menu";
 import { OrbitControls } from 'three-full';
-import { initRockMaterial } from '../Releases/Release0008_GreemJellyfish/materials.js';
+import { initRockMaterial } from '../Utils/materials.js';
 import { Water2 } from "../Utils/Water2"
 
 class HomeDefault extends PureComponent {

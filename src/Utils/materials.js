@@ -1,14 +1,14 @@
 import * as THREE from 'three';
-import { assetPath8 } from "./utils.js";
+import { assetPathShared } from "./assets.js";
 
 /* eslint import/no-webpack-loader-syntax: off */
-import skinningVertexShader from '!raw-loader!glslify-loader!../../Shaders/skinningVertex.glsl';
+import skinningVertexShader from '!raw-loader!glslify-loader!../Shaders/skinningVertex.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
-import riverFragmentShader from '!raw-loader!glslify-loader!../../Shaders/riverFragment.glsl';
+import riverFragmentShader from '!raw-loader!glslify-loader!../Shaders/riverFragment.glsl';
 
 export function initFoamGripMaterial(textureLoader) {
 	var envMapCube = new THREE.CubeTextureLoader()
-		.setPath(assetPath8('textures/env-maps/barc-rooftop/'))
+		.setPath(assetPathShared('textures/env-maps/barc-rooftop/'))
 		.load([
 			'px.png',
 			'nx.png',
@@ -24,11 +24,11 @@ export function initFoamGripMaterial(textureLoader) {
 		specular: 0xC0C0C0,// 0x4c4c4c,
 		shininess: 100,
 		skinning: true,
-		normalMap: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-normal.png")),
-		aoMap: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-ao.png")),
+		normalMap: textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-normal.png")),
+		aoMap: textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-ao.png")),
 
-		specularMap: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-albedo.png")),
-		// map: textureLoader.load(assetPath8("textures/foam-grip/foam-grip-albedo.png")),
+		specularMap: textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-albedo.png")),
+		// map: textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-albedo.png")),
 		envMap: envMapCube,
 		refractionRatio: 1.0,
 		combine: THREE.AddOperation	
@@ -39,21 +39,21 @@ export function initFoamGripMaterial(textureLoader) {
 
 export function initPinkRockMaterial(textureLoader) {
 	const mat = initRockMaterial(textureLoader, 0xFF0FFF);
-	const albedoMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-alb-pink.png"));
+	const albedoMap = textureLoader.load(assetPathShared("textures/copper-rock/copper-rock1-alb-pink.png"));
 	mat.map = albedoMap;
 	return mat;
 }
 
 export function initRockMaterial(textureLoader, color) {
 	const loader = new THREE.CubeTextureLoader();
-	loader.setPath(assetPath8('textures/env-maps/'));
+	loader.setPath(assetPathShared('textures/env-maps/'));
 	const textureCube = loader.load(Array(6).fill('office-space1.jpg'));
-	const normalMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-normal.png"));
-	const roughnessMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-rough.png"));
-	const metalnessMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-metal.png"));
-	const aoMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-ao.png"));
-	const displacementMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-height"));
-	const albedoMap = textureLoader.load(assetPath8("textures/copper-rock/copper-rock1-alb.png"))
+	const normalMap = textureLoader.load(assetPathShared("textures/copper-rock/copper-rock1-normal.png"));
+	const roughnessMap = textureLoader.load(assetPathShared("textures/copper-rock/copper-rock1-rough.png"));
+	const metalnessMap = textureLoader.load(assetPathShared("textures/copper-rock/copper-rock1-metal.png"));
+	const aoMap = textureLoader.load(assetPathShared("textures/copper-rock/copper-rock1-ao.png"));
+	const displacementMap = textureLoader.load(assetPathShared("textures/copper-rock/copper-rock1-height"));
+	const albedoMap = textureLoader.load(assetPathShared("textures/copper-rock/copper-rock1-alb.png"))
 	albedoMap.repeat.set(3, 3);
 	albedoMap.wrapS = THREE.RepeatWrapping;
 	albedoMap.wrapT = THREE.RepeatWrapping;
@@ -82,8 +82,8 @@ export function initRockMaterial(textureLoader, color) {
 export function initWaterMaterial(textureLoader, width, height, side) {
 	const waterY = 103.;
 	const alpha = 1.;
-	// const rockTexture1 = textureLoader.load(assetPath8("images/tiny3.png"))
-	const rockTileTexture2 = textureLoader.load(assetPath8("images/tiny2.png"));
+	// const rockTexture1 = textureLoader.load(assetPathShared("images/tiny3.png"))
+	const rockTileTexture2 = textureLoader.load(assetPathShared("images/tiny2.png"));
 	let waterMaterial = new THREE.ShaderMaterial({
 		fragmentShader: riverFragmentShader,
 		vertexShader: skinningVertexShader,
