@@ -149,12 +149,14 @@ export function TileGenerator({ radius, sides, tiers, tileComponent, geometries,
             // TODO organize these args
             const allClosestTiles = displayNearest(camera, boundary.current, kdTree.current, maxDistance, allTiles.current);
             // set some of these to not rerender here?
+            // TODO setLastUpdateTime (below) seems to trigger an update but dont have access to changes to var
             console.log('last update time', lastUpdateTime);
-            for(let i=0; i < allClosestTiles.length; i++){
-                const tile = allClosestTiles[i];
-                if (tile.timestamp === lastUpdateTime) tile.isRendered = true;
-                else tile.isRendered = false;
-            }
+            // TODO turning renders on and off (cpu)
+            // for (let i = 0; i < allClosestTiles.length; i++) {
+            //     const tile = allClosestTiles[i];
+            //     if (tile.timestamp === lastUpdateTime) tile.isRendered = true;
+            //     else tile.isRendered = false;
+            // }
             closestTiles.current = allClosestTiles;
             prevBoundary.current.copy(boundary.current);
             setLastUpdateTime(time);

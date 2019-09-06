@@ -199,19 +199,19 @@ function Tile2Building({ formation, triangle, centroid, normal, buildingGeometri
         })}
     </group>;
 
-    return <>
-        <TronBuildingShader materialRef={materialRef} {...props} />
-        {/* <Building geometryRef={geometryRef} {...props} /> */}
-        {/* {geometry && material && props.tileResources ? ( */}
-        {material && props.tileResources ? (
-            <mesh
-                geometry={randVal(props.tileResources)}
-                material={material}
-                position={props.pos}
-                rotation={new THREE.Euler(Math.PI / 2, 0, 0)}
-            />
-        ) : null}
-    </>;
+    // return <>
+    //     <TronBuildingShader materialRef={materialRef} {...props} />
+    //     {/* <Building geometryRef={geometryRef} {...props} /> */}
+    //     {/* {geometry && material && props.tileResources ? ( */}
+    //     {material && props.tileResources ? (
+    //         <mesh
+    //             geometry={randVal(props.tileResources)}
+    //             material={material}
+    //             position={props.pos}
+    //             rotation={new THREE.Euler(Math.PI / 2, 0, 0)}
+    //         />
+    //     ) : null}
+    // </>;
 }
 
 function pickFacePattern(triangle) {

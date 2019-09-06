@@ -24,28 +24,45 @@ function Scene() {
     // TODO: this value should be a factor of the size of the user's screen...?
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, loadBuildings);
     const worldRadius = 24;
-    const startPos = new THREE.Vector3(0, worldRadius * .25, -worldRadius * 1.01);
-    const lookAt = new THREE.Vector3(0, -worldRadius * 1.5, 1); // TODO not sure why there's an inversion in placement of tiles in TileGenerator
+    const startPos = new THREE.Vector3()
+    // const startPos = new THREE.Vector3(0, worldRadius * .25, -worldRadius * 1.01);
+    // const lookAt = new THREE.Vector3(0, -worldRadius * 1.5, 1); // TODO not sure why there's an inversion in placement of tiles in TileGenerator
+    // TODO this hack doesn't handle resize for controls
+    
+				// controls = new FirstPersonControls( camera );
+				// controls.movementSpeed = 100;
+				// controls.lookSpeed = 0.1;
+
+				// controls.lookAt( 500, 500, 500 );
+    
+    useRender(() => {
+        console.log(camera.position);
+        // controls.update( .001 );
+    })
     useEffect(() => {
         const fogColor = new THREE.Color(0xffffff);
         scene.background = fogColor;
         // scene.fog = new THREE.FogExp2(0xf0fff0, 0.24);
-        camera.position.copy(startPos);
-        camera.lookAt(lookAt);
-        camera.up.set(0, -1, 0); // TODO not sure why there's an inversion in placement of tiles in TileGenerator
+        // camera.position.copy(startPos);
+        // camera.lookAt(lookAt);
+        // camera.up.set(0, -1, 0); // TODO not sure why there's an inversion in placement of tiles in TileGenerator
     }, [buildings])
     return (
         <>
             <Controls
-                // dampingFactor={.05}
-                // autoRotateSpeed={.1}
-                // enableZoom={false}
-                autoRotate={true}
-                // enableKeys={false}
                 // target={lookAt}
-                // maxDistance={96}
-                // maxPolarAngle={Math.PI / 5}
-                // minPolarAngle={Math.PI / 6}
+                // fpc settings
+                // movementSpeed={100}
+                // lookSpeed={0.1}
+            // orbital controls settings
+            // dampingFactor={.5}
+            // autoRotateSpeed={.1}
+            // enableZoom={false}
+            // autoRotate={true}
+            // enableKeys={false}
+            // maxDistance={96}
+            // maxPolarAngle={Math.PI / 5}
+            // minPolarAngle={Math.PI / 6}
             />
             {/* <Advanced2Effect camera={camera} /> */}
             {/* <BloomEffect
