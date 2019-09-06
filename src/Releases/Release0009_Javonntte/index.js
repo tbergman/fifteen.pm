@@ -78,10 +78,6 @@ function Scene() {
                 threshold={.9}
                 strength={0.2}
             /> */}
-            {/* <mesh position={new THREE.Vector3().copy(startPos)}>
-                <boxGeometry attach="geometry" args={[1]} />
-                <meshBasicMaterial attach="material" color="red" />
-            </mesh> */}
             <Stars
                 radius={worldRadius}
             />

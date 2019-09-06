@@ -7,15 +7,10 @@ import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
 // we cut off the floating point length here to insure 99% match with the kdTree model (since the model can change the exact value a bit)
 const tileId = (centroid) => [centroid.x.toFixed(3), centroid.y.toFixed(3), centroid.z.toFixed(3)].join("_");
 
-
 // TODO add back in
 function hardLimitYFaces(centroid, radius) {
     // don't populate the tiny triangles on top of the sphere
     return Math.abs(centroid.y) < radius * .98 + Math.random() * .1;
-}
-
-function withinBoundary(boundary, centroid, radius, maxDistance = 4) {
-    return boundary.distanceTo(centroid) < maxDistance && hardLimitYFaces(centroid, radius);
 }
 
 function initFaceTile(face, centroid, triangle) {
@@ -31,14 +26,11 @@ function initFaceTile(face, centroid, triangle) {
 
 function generateTiles(sphereGeometry) {
     const vertices = sphereGeometry.vertices;
-    // const boundaryLimit = sphereGeometry.parameters.radius / 3; // TODO this is too big unless we do instancing
     const tiles = {}
     sphereGeometry.faces.forEach((face, index) => {
         const triangle = triangleFromFace(face, vertices);
         const centroid = faceCentroid(face, vertices);
         const tile = initFaceTile(face, centroid, triangle);
-        // if (withinBoundary(boundary, centroid)) tile.visible = true; // TODO use tree!
-        // const tId = tileId(face);
         const tId = tileId(centroid);
         tiles[tId] = tile;
     })
@@ -82,8 +74,6 @@ function displayNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
     }
     return matchingTiles;
 }
-
-
 
 export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeometries, startPos }) {
     const { camera } = useThree();
@@ -130,7 +120,7 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
             // }
             closestTiles.current = allClosestTiles;
             prevSearchPosition.current.copy(searchPosition.current);
-            setLastUpdateTime(time);
+            setLastUpdateTime(time); // TODO better way to set state??
         }
     });
 
@@ -147,7 +137,6 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
         })}
     </group>
 }
-
 
 export const MemoizedSphereTile = React.memo(props => {
     if (!props.visible) return null; // TODO remove?
