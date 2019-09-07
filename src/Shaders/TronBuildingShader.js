@@ -1,11 +1,12 @@
-
+import React, { useMemo } from 'react';
+import * as THREE from 'three';
+import { useRender, useThree } from 'react-three-fiber';
 import simpleVertex from '!raw-loader!glslify-loader!./simpleVertex.glsl';
 import tronFragmentShader from '!raw-loader!glslify-loader!./tronFragment.glsl';
-import React, { useMemo } from 'react';
-import { useRender, useThree } from 'react-three-fiber';
 
 
 // TODO: Shadows http://jsfiddle.net/22jpzktk/
+// TODO: Light: https://jsfiddle.net/zhkvcajs/3/
 export function TronBuildingShader({ materialRef, pos }) {
   const { camera } = useThree();
   useRender(
@@ -14,17 +15,22 @@ export function TronBuildingShader({ materialRef, pos }) {
       materialRef.current.uniforms.uTime.value += .1;
     });
   const uniforms = useMemo(() => {
-    return {
-      uTime: { value: 0 },
-      uGlobalOffset: { value: pos },
-      uCurCenter: { value: camera.position }
-    }
+    return THREE.UniformsUtils.merge([
+      THREE.UniformsLib["ambient"],
+      THREE.UniformsLib["lights"],
+      {
+        uTime: { value: 0 },
+        uGlobalOffset: { value: pos },
+        uCurCenter: { value: camera.position }
+      },
+    ]);
+    
   }, [materialRef]);
   return <shaderMaterial
     ref={materialRef}
+    lights
     uniforms={uniforms}
     vertexShader={simpleVertex}
     fragmentShader={tronFragmentShader}
-    // lights={true}
   />;
 }
