@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { BloomEffect, Advanced2Effect } from "../../Utils/Effects";
@@ -9,9 +9,9 @@ import { SphereFileGenerator as SphereTileGenerator } from './face';
 import "./index.css";
 import { CityTile2 } from "./tiles";
 import { Controls } from "./controls";
-import { makeWorld } from './world';
+import { generateWorldGeometry } from './world';
 import {Stars} from './stars';
-
+import {Lights} from './lights';
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
@@ -24,30 +24,12 @@ function Scene() {
     // TODO: this value should be a factor of the size of the user's screen...?
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, onBuildingsLoaded);
     const worldRadius = 48;
-    var rotationSpeed = 0.02;
-    // TODO tilt ?
-    const worldSphereGeometry = makeWorld({
-        radius:worldRadius,
-        rotationSpeed,
-        sides: 80,
-        tiers: 40,
-        maxHeight:0.1,
-        
-    });
-    /* TODO TEMP !!! */
-    // TODO different materials for 'under'/'over' world? http://jsfiddle.net/j8k7yhLp/1/
-    const meshPlanet = new THREE.Mesh( worldSphereGeometry,  new THREE.MeshStandardMaterial( { color: 0xe5f2f2 ,flatShading:THREE.FlatShading} ) );
-    meshPlanet.material.side = THREE.DoubleSide;
-    meshPlanet.rotation.y = 0;
-    meshPlanet.rotation.z = 0.41; //tilt
-    scene.add( meshPlanet ); 
-    /* END TEMP!! */
-    
+    const sides = 80;
+    const tiers = 40;
+    const maxHeight = 0.1;
+    const worldSphereGeometry = useMemo(() => generateWorldGeometry(worldRadius, sides, tiers, maxHeight), [worldRadius, sides, tiers, maxHeight]);
     const startPos = new THREE.Vector3(0, 0, worldRadius*1.05);    
     const lookAt = new THREE.Vector3(0, worldRadius - worldRadius * .5, worldRadius - worldRadius * .1);
-    useRender(() => {
-        // console.log(camera.position);
-    })
     useEffect(() => {
         // scene.fog = new THREE.FogExp2( 0x000000, 0.00000025 );
         camera.fov = 25;
@@ -56,20 +38,15 @@ function Scene() {
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
     }, [buildings])
-    return (
+   return (
         <>
             <Controls
                 radius={worldRadius}
-                // target={lookAt}
-                // flyer settings
                 movementSpeed={30}
                 domElement={canvas}
                 rollSpeed={Math.PI/2}
                 autoForward={false}
                 dragToLook={false}
-            // fpc settings
-            // lookSpeed={.5}
-            // movementSpeed={100}
             />
             {/* <Advanced2Effect camera={camera} /> */}
             {/* <BloomEffect
@@ -78,6 +55,8 @@ function Scene() {
                 threshold={.9}
                 strength={0.2}
             /> */}
+           
+            <Lights />
             <Stars
                 radius={worldRadius}
             />
@@ -95,15 +74,6 @@ function Scene() {
             //     tileComponent={CityTile}
             //     tileResources={buildings}
             // /> */}
-            <ambientLight />
-            <directionalLight intensity={1.5} position={camera.position} />
-            <spotLight
-                castShadow
-                intensity={2}
-                position={camera.position}
-                shadow-mapSize-width={2048}
-                shadow-mapSize-height={2048}
-            />
         </>
     );
 }

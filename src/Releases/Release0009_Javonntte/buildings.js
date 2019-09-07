@@ -1,6 +1,6 @@
 import React from 'react';
-import { useThree } from 'react-three-fiber';
-
+import { useThree, useResource } from 'react-three-fiber';
+import { TronBuildingShader } from "../../Shaders/TronBuildingShader";
 
 export function buildingName(building, position) {
     return [building.name,
@@ -12,23 +12,27 @@ export function buildingName(building, position) {
 
 
 // TODO material updates/dynamic not just sitting here in the wrong place
-import {initPinkRockMaterial} from '../../Utils/materials';
+import { initPinkRockMaterial } from '../../Utils/materials';
 import * as THREE from 'three';
 const pinkRockMat = initPinkRockMaterial(new THREE.TextureLoader());
-
+// pinkRockMat.side = THREE.DoubleSide;
 export function Building({ geometry, centroid, normal, color, visible }) {
     const { camera } = useThree();
-    return <mesh
-        onUpdate={self => {
-            self.lookAt(normal);
-            self.visible = visible
-        }}
-        geometry={geometry}
-        position={centroid}
-        material={pinkRockMat}
-    >
-        {/* <meshBasicMaterial attach="material" color={color} /> */}
-    </mesh>
+    const [materialRef, material] = useResource();
+    return <>
+        <TronBuildingShader materialRef={materialRef} pos={centroid}/>
+        {material && <mesh
+            onUpdate={self => {
+                self.lookAt(normal);
+                self.visible = visible
+            }}
+            geometry={geometry}
+            position={centroid}
+            material={material}
+        >
+            {/* <meshBasicMaterial attach="material" color={color} /> */}
+        </mesh>}
+    </>
 }
 
 export function onBuildingsLoaded(gltf) {

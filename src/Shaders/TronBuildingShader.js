@@ -6,7 +6,7 @@ import { useRender, useThree } from 'react-three-fiber';
 
 
 // TODO: Shadows http://jsfiddle.net/22jpzktk/
-export function TronBuildingShader({ materialRef, pos, size }) {
+export function TronBuildingShader({ materialRef, pos }) {
   const { camera } = useThree();
   useRender(
     () => {
