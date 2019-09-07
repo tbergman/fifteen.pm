@@ -11,7 +11,7 @@ float plot(vec2 st, float pct) {
 // TODO maybe can implement a map function ? https://gist.github.com/companje/29408948f1e8be54dd5733a74ca49bb9
 void main() {
   // vec3 col = vec3(0.00, 0.05, 0.05);
-  vec3 col = vec3(sin(uTime), 0.05, 0.05);
+  vec3 col = vec3(sin(uTime)/2.0, 0.05, 0.05);
 
   float line1 = plot(vUv, .25); // currently just setting a simple line down the middle...
   float line2 = plot(vUv, .50); // currently just setting a simple line down the middle...

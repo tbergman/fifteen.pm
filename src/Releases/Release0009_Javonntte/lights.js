@@ -6,7 +6,6 @@ export function Lights() {
     const [spotLightRef, spotlight] = useResource();
     const { camera } = useThree();
     useRender(() => {
-        console.log(camera);
     });
     return <>
         <ambientLight />
