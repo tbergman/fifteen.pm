@@ -7,6 +7,8 @@ import tronFragmentShader from '!raw-loader!glslify-loader!./tronFragment.glsl';
 
 // TODO: Shadows http://jsfiddle.net/22jpzktk/
 // TODO: Light: https://jsfiddle.net/zhkvcajs/3/
+// More details: https://github.com/mrdoob/three.js/issues/8016 x
+// https://discourse.threejs.org/t/custom-vertex-shader-with-lambert-lights/2798/4
 export function TronBuildingShader({ materialRef, pos }) {
   const { camera } = useThree();
   useRender(
@@ -24,7 +26,6 @@ export function TronBuildingShader({ materialRef, pos }) {
         uCurCenter: { value: camera.position }
       },
     ]);
-    
   }, [materialRef]);
   return <shaderMaterial
     ref={materialRef}

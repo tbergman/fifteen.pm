@@ -10,8 +10,8 @@ import "./index.css";
 import { CityTile2 } from "./tiles";
 import { Controls } from "./controls";
 import { generateWorldGeometry } from './world';
-import {Stars} from './stars';
-import {Lights} from './lights';
+import { Stars } from './stars';
+import { Lights } from './lights';
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
@@ -28,7 +28,9 @@ function Scene() {
     const tiers = 40;
     const maxHeight = 0.1;
     const worldSphereGeometry = useMemo(() => generateWorldGeometry(worldRadius, sides, tiers, maxHeight), [worldRadius, sides, tiers, maxHeight]);
-    const startPos = new THREE.Vector3(0, 0, worldRadius*1.05);    
+    const startPos = new THREE.Vector3(0, 0, worldRadius * 1.05);
+    const tmpBoxRefPos = new THREE.Vector3(0, 2.5, worldRadius * 1.05 - .2);
+    const tmpBoxRefPos2 = new THREE.Vector3(-.2, 1.1, worldRadius * 1.05 - 1.);
     const lookAt = new THREE.Vector3(0, worldRadius - worldRadius * .5, worldRadius - worldRadius * .1);
     useEffect(() => {
         // scene.fog = new THREE.FogExp2( 0x000000, 0.00000025 );
@@ -38,28 +40,51 @@ function Scene() {
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
     }, [buildings])
-   return (
+    return (
         <>
             <Controls
                 radius={worldRadius}
                 movementSpeed={30}
                 domElement={canvas}
-                rollSpeed={Math.PI/2}
+                rollSpeed={Math.PI / 2}
                 autoForward={false}
                 dragToLook={false}
             />
             {/* <Advanced2Effect camera={camera} /> */}
             {/* <BloomEffect
                 camera={camera}
-                radius={1}
-                threshold={.9}
-                strength={0.2}
+                radius={.4}
+                // exposure 
+                threshold={.85}
+                strength={1.5}
             /> */}
-           
             <Lights />
             <Stars
                 radius={worldRadius}
             />
+            <mesh
+                position={tmpBoxRefPos}
+                castShadow
+                receiveShadow
+            >
+                <boxGeometry attach="geometry" args={[.5]} />
+                <meshPhongMaterial
+                    attach="material"
+                    color="red"
+                    />
+            </mesh>
+            <mesh
+                position={tmpBoxRefPos2}
+                castShadow
+                receiveShadow
+            >
+                <boxGeometry attach="geometry" args={[.75]} />
+                <meshPhongMaterial
+                    color={0x808080}
+                    // dithering
+                    attach="material"
+                />
+            </mesh>
             {buildings && <SphereTileGenerator
                 surfaceGeometries={buildings}
                 sphereGeometry={worldSphereGeometry}
