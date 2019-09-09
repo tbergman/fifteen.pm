@@ -1,5 +1,4 @@
 import React from 'react';
-import { useThree, useResource } from 'react-three-fiber';
 import { TronShader } from "../../Shaders/TronShader";
 
 export function buildingName(building, position) {
@@ -16,10 +15,7 @@ import * as THREE from 'three';
 const pinkRockMat = initPinkRockMaterial(new THREE.TextureLoader());
 // pinkRockMat.side = THREE.DoubleSide;
 export function Building({ geometry, centroid, normal, color, visible }) {
-    // const { camera } = useThree();
-    // const [materialRef, material] = useResource();
     return <>
-        {/* <TronShader materialRef={materialRef} pos={centroid}/> */}
         <mesh
             onUpdate={self => {
                 self.lookAt(normal);
@@ -27,10 +23,8 @@ export function Building({ geometry, centroid, normal, color, visible }) {
             }}
             geometry={geometry}
             position={centroid}
-        // material={material}
         >
             <TronShader attach="material" pos={centroid} />
-            {/* <meshBasicMaterial attach="material" color={color} /> */}
         </mesh>}
     </>
 }

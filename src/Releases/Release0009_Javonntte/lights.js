@@ -22,29 +22,35 @@ export function Lights() {
     const tmpSpotLightPos = new THREE.Vector3(1., -.4, 55.4);
     useEffect(() => {
         if (spotLight.current || pointLight.current) {
-            console.log("ADDING SPOTLIGHT HELPER TO SCENE")
-            const shadowCameraHelper = new THREE.CameraHelper(spotLight.current.shadow.camera);
+            // const shadowCameraHelper = new THREE.CameraHelper(spotLight.current.shadow.camera);
             const pointLightHelper = new THREE.PointLightHelper(pointLight.current, 1);
-            scene.add(shadowCameraHelper);
+            // scene.add(shadowCameraHelper);
             scene.add(pointLightHelper);
-
+            camera.add(pointLight);
+            // lookAt of camera https://stackoverflow.com/questions/27957645/three-js-find-the-current-lookat-of-a-camera
+            // const emptyObj = new THREE.Object3D();
+            // const inFrontOfCamera = new THREE.Vector3(0, 0, -3).applyQuaternion(camera.quaternion).add(camera.position);
+            // emptyObj.position.copy(inFrontOfCamera);
+            // scene.add(emptyObj);
+            // camera.add(emptyObj);
+            // console.log("LOOKAT:", inFrontOfCamera, "SPOT:", spotLight.current);
+            // spotLight.current.target = emptyObj;
         }
-
-    }, [spotLight, pointLight])
+    }, [pointLight])
     return <>
         {/* <ambientLight /> */}
         {/* <directionalLight
             intensity={1.5}
             position={camera.position}
         /> */}
-        <pointLight
+        {/* <pointLight
             ref={pointLight}
-            position={tmpPointLightPos}
+            // position={tmpPointLightPos}
             intensity={1}
-        />
-        <spotLight
+        /> */}
+        {/* <spotLight
             ref={spotLight}
-            position={tmpSpotLightPos}
+            position={camera.position}
             castShadow
             intensity={5}
             penumbra={0.01}
@@ -53,6 +59,6 @@ export function Lights() {
             shadow-camera-far={200}
             shadow-mapSize-width={2048}
             shadow-mapSize-height={2048}
-        />
+        /> */}
     </>;
 }
