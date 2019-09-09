@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { Canvas, extend, useRender, useThree } from 'react-three-fiber';
+import React, { useRef, useEffect, useMemo } from 'react';
+import { Canvas, extend, useRender, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { BloomEffect, Advanced2Effect } from "../../Utils/Effects";
 import { useGLTF } from "../../Utils/hooks";
@@ -7,11 +7,12 @@ import { onBuildingsLoaded } from "./buildings";
 import { BUILDINGS_URL } from "./constants";
 import { SphereFileGenerator as SphereTileGenerator } from './face';
 import "./index.css";
-import { CityTile2 } from "./tiles";
+import { CityTile } from "./tiles";
 import { Controls } from "./controls";
 import { generateWorldGeometry } from './world';
 import { Stars } from './stars';
 import { Lights } from './lights';
+import { TronShader } from '../../Shaders/TronShader';
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
@@ -32,6 +33,9 @@ function Scene() {
     const tmpBoxRefPos = new THREE.Vector3(0, 2.5, worldRadius * 1.05 - .2);
     const tmpBoxRefPos2 = new THREE.Vector3(-.2, 1.1, worldRadius * 1.05 - 1.);
     const lookAt = new THREE.Vector3(0, worldRadius - worldRadius * .5, worldRadius - worldRadius * .1);
+    // TODO TMP
+    const [tronMaterialRef, tronMaterial] = useResource();
+    const [redMaterialRef, redMaterial] = useResource();
     useEffect(() => {
         // scene.fog = new THREE.FogExp2( 0x000000, 0.00000025 );
         camera.fov = 25;
@@ -39,9 +43,28 @@ function Scene() {
         camera.far = 1e7;
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
-    }, [buildings])
+        // TODO rm me
+        if (redMaterial) {
+            redMaterial.onBeforeCompile = shader => {
+                console.log('shader on before compile', shader);
+                shader.fragmentShader = shader.fragmentShader.replace(
+                    `gl_FragColor = vec4( outgoingLight, diffuseColor.a );`,
+                    `gl_FragColor = vec4( 0., 0., 1., diffuseColor.a );`
+                )
+            }
+            redMaterial.needsUpdate = true;
+        }
+
+    }, [buildings, redMaterial])
+
     return (
         <>
+            <meshPhongMaterial
+                ref={redMaterialRef}
+                receiveShadow
+                color="red"
+            />
+
             <Controls
                 radius={worldRadius}
                 movementSpeed={30}
@@ -62,17 +85,14 @@ function Scene() {
             <Stars
                 radius={worldRadius}
             />
-            <mesh
+            {redMaterial && <mesh
                 position={tmpBoxRefPos}
                 castShadow
                 receiveShadow
+                material={redMaterial}
             >
                 <boxGeometry attach="geometry" args={[.5]} />
-                <meshPhongMaterial
-                    attach="material"
-                    color="red"
-                    />
-            </mesh>
+            </mesh>}
             <mesh
                 position={tmpBoxRefPos2}
                 castShadow
@@ -90,7 +110,7 @@ function Scene() {
                 sphereGeometry={worldSphereGeometry}
                 startPos={startPos}
                 // TODO
-                tileComponent={CityTile2}
+                tileComponent={CityTile}
             />}
             {/* 
                  <TileGenerator

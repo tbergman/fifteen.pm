@@ -1,6 +1,6 @@
 import React from 'react';
 import { useThree, useResource } from 'react-three-fiber';
-import { TronBuildingShader } from "../../Shaders/TronBuildingShader";
+import { TronShader } from "../../Shaders/TronShader";
 
 export function buildingName(building, position) {
     return [building.name,
@@ -10,26 +10,26 @@ export function buildingName(building, position) {
     ].join("_")
 }
 
-
 // TODO material updates/dynamic not just sitting here in the wrong place
 import { initPinkRockMaterial } from '../../Utils/materials';
 import * as THREE from 'three';
 const pinkRockMat = initPinkRockMaterial(new THREE.TextureLoader());
 // pinkRockMat.side = THREE.DoubleSide;
 export function Building({ geometry, centroid, normal, color, visible }) {
-    const { camera } = useThree();
-    const [materialRef, material] = useResource();
+    // const { camera } = useThree();
+    // const [materialRef, material] = useResource();
     return <>
-        <TronBuildingShader materialRef={materialRef} pos={centroid}/>
-        {material && <mesh
+        {/* <TronShader materialRef={materialRef} pos={centroid}/> */}
+        <mesh
             onUpdate={self => {
                 self.lookAt(normal);
                 self.visible = visible
             }}
             geometry={geometry}
             position={centroid}
-            material={material}
+        // material={material}
         >
+            <TronShader attach="material" pos={centroid} />
             {/* <meshBasicMaterial attach="material" color={color} /> */}
         </mesh>}
     </>
