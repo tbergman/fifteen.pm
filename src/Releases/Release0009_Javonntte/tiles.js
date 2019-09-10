@@ -105,7 +105,7 @@ function TileSurface({ face, triangle, normal, centroid, ...props }) {
     </>
 }
 
-function BuildingsOnTile({ formation, triangle, centroid, normal, buildingGeometries, ...props }) {
+function BuildingsOnTile({ formation, triangle, centroid, normal, geometries, material, ...props }) {
     const buildingGroupRef = useRef();
     // get centroids based on formation type
     const subdivisions = subdivideTriangle(triangle, centroid, formation);
@@ -113,10 +113,10 @@ function BuildingsOnTile({ formation, triangle, centroid, normal, buildingGeomet
     // const [hasRendered, setHasRendered] = useState(0)
     return <group>
         {subdivisions.map(subdivision => {
-            const geometry = randomClone(buildingGeometries[subdivision.size]);
-            // const geometry = buildingGeometries.medium[0];
+            const geometry = randomClone(geometries[subdivision.size]);
+            // const geometry = geometries.medium[0];
             return <group ref={buildingGroupRef} key={buildingName(geometry, subdivision.centroid)}>
-                <Building geometry={geometry} centroid={subdivision.centroid} normal={normal} color={color} />
+                <Building geometry={geometry} material={material} centroid={subdivision.centroid} normal={normal} color={color} />
             </group>
         })}
     </group>;
@@ -124,6 +124,11 @@ function BuildingsOnTile({ formation, triangle, centroid, normal, buildingGeomet
 
 export const CityTile = props => {
     return <group>
-        <BuildingsOnTile formation={pickTilePattern(props.triangle)} {...props} />
+        <BuildingsOnTile
+            formation={pickTilePattern(props.triangle)}
+            geometries={props.tileElements.buildings.geometries}
+            material={props.tileElements.buildings.material}
+            {...props}
+        />
     </group>
 }

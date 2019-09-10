@@ -1,19 +1,21 @@
 // This is a small chunk that gets pulled into a phong material to make a "TronShader" component.
 vec3 col = vec3(0.00, 0.05, 0.3);
 
+float randVal = cos(rand(vViewPosition.xy));
+
 float line1 = plot(vViewPosition, .25); // currently just setting a simple line down the middle...
 float line2 = plot(vViewPosition, .50); // currently just setting a simple line down the middle...
 float line3 = plot(vViewPosition, .75);
 float line4 = plot(vViewPosition, .85);
 float line5 = plot(vViewPosition, .95);
-float timeVariability = uTime * cos(uGlobalOffset.z);
+float timeVariability = uTime * randVal;
 
 // TODO right now there are all just slight variations without much forthought about how t make those variations interesting
-float streak1 = sin(vViewPosition.x + uGlobalOffset.x - timeVariability - uCurCenter.x) + cos(uGlobalOffset.z); // creates the motion and gaps
-float streak2 = sin(vViewPosition.y + uGlobalOffset.x - timeVariability - uCurCenter.x) + cos(uGlobalOffset.z); // creates the motion and gaps
-float streak3 = sin(vViewPosition.y + uGlobalOffset.z - timeVariability - uCurCenter.x) + cos(uGlobalOffset.z); // creates the motion and gaps
-float streak4 = sin(vViewPosition.y + uGlobalOffset.z - timeVariability - uCurCenter.z) + cos(uGlobalOffset.z); // creates the motion and gaps
-float streak5 = sin(vViewPosition.y + uGlobalOffset.z - timeVariability - uCurCenter.z) + cos(uGlobalOffset.z); // creates the motion and gaps
+float streak1 = sin(vViewPosition.x - timeVariability - uCurCenter.x) + cos(randVal); // creates the motion and gaps
+float streak2 = sin(vViewPosition.y - timeVariability - uCurCenter.x) + cos(randVal); // creates the motion and gaps
+float streak3 = sin(vViewPosition.y - timeVariability - uCurCenter.x) + cos(randVal); // creates the motion and gaps
+float streak4 = sin(vViewPosition.y - timeVariability - uCurCenter.z) + cos(randVal); // creates the motion and gaps
+float streak5 = sin(vViewPosition.y - timeVariability - uCurCenter.z) + cos(randVal); // creates the motion and gaps
 
 col += line1 * streak1;
 col += line2 * streak2;

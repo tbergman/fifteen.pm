@@ -13,6 +13,7 @@ import { Controls } from "./controls";
 import { generateWorldGeometry } from './world';
 import { FixedLights } from './lights';
 import { Stars } from './stars';
+import {TronMaterial} from '../../Shaders/TronShader';
 
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -24,6 +25,7 @@ function Scene() {
      */
     const { camera, scene, canvas, setDefaultCamera } = useThree();
     // TODO: this value should be a factor of the size of the user's screen...?
+    const [tronMaterialRef, tronMaterial] = useResource();
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, onBuildingsLoaded);
     const worldRadius = 48;
     const sides = 80;
@@ -42,6 +44,8 @@ function Scene() {
 
     return (
         <>
+            {/* use one material for all buildings  */}
+            <TronMaterial materialRef={tronMaterialRef} />
             <Camera
                 fov={25}
                 near={1}
@@ -76,12 +80,19 @@ function Scene() {
             <Stars
                 radius={worldRadius}
             />
-            {buildings && <SphereTileGenerator
-                surfaceGeometries={buildings}
-                sphereGeometry={worldSphereGeometry}
-                startPos={startPos}
-                tileComponent={CityTile}
-            />}
+            {tronMaterial && buildings &&
+                <SphereTileGenerator
+                    sphereGeometry={worldSphereGeometry}
+                    startPos={startPos}
+                    tileElements={{
+                        buildings: {
+                            geometries: buildings,
+                            material: tronMaterial
+                        }
+                    }}
+                    tileComponent={CityTile}
+                />
+            }
         </>
     );
 }

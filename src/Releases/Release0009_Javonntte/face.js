@@ -75,7 +75,7 @@ function displayNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
     return matchingTiles;
 }
 
-export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeometries, startPos }) {
+export function SphereFileGenerator({ sphereGeometry, tileComponent, tileElements, startPos }) {
     const { camera } = useThree();
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const searchPosition = useRef(new THREE.Vector3());
@@ -129,7 +129,7 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, surfaceGeom
             return <group key={props.id}>
                 <MemoizedSphereTile
                     {...props}
-                    buildingGeometries={surfaceGeometries}
+                    tileElements={tileElements}
                     tileComponent={tileComponent}
                     tileId={props.id}
                 />

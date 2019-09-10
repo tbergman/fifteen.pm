@@ -7,35 +7,39 @@ import tronFragmentChunk from '!raw-loader!glslify-loader!./tronFragmentChunk.gl
 import plotChunk from '!raw-loader!glslify-loader!./plotChunk.glsl';
 
 // Shader built in the style of: https://medium.com/@pailhead011/extending-three-js-materials-with-glsl-78ea7bbb9270
-export function TronShader({ pointLight, pos, ...props }) {
+export function TronMaterial({ materialRef, pointLight, pos, ...props }) {
   const { camera } = useThree();
-  const [materialRef, material] = useResource();
-  // const envMap = useMemo(() => {
-  //   return new THREE.CubeTextureLoader()
-  //     .setPath(assetPathShared('textures/env-maps/barc-rooftop/'))
-  //     .load([
-  //       'px.png',
-  //       'nx.png',
-  //       'py.png',
-  //       'ny.png',
-  //       'pz.png',
-  //       'nz.png',
-  //     ]);
-  // });
+  if (!materialRef) {
+    const [ref, material] = useResource();
+    materialRef = ref;
+  }
+  const envMap = useMemo(() => {
+    const mapping = new THREE.CubeTextureLoader()
+      .setPath(assetPathShared('textures/env-maps/barc-rooftop/'))
+      .load([
+        'px.png',
+        'nx.png',
+        'py.png',
+        'ny.png',
+        'pz.png',
+        'nz.png',
+      ]);
+    return mapping;
+  });
   useEffect(() => {
     if (materialRef.current) {
       materialRef.current.userData.uTime = { value: 0 };
-      materialRef.current.userData.uGlobalOffset = { value: pos };
+      // materialRef.current.userData.uGlobalOffset = { value: pos };
       materialRef.current.userData.uCurCenter = { value: camera.position };
       materialRef.current.onBeforeCompile = shader => {
         shader.uniforms.uTime = materialRef.current.userData.uTime;
-        shader.uniforms.uGlobalOffset = materialRef.current.userData.uGlobalOffset;
+        // shader.uniforms.uGlobalOffset = materialRef.current.userData.uGlobalOffset;
         shader.uniforms.uCurCenter = materialRef.current.userData.uCurCenter;
 
         // add in custom uniforms and funcs
         shader.fragmentShader = `
         uniform float uTime;
-        uniform vec3 uGlobalOffset;
+        //uniform vec3 uGlobalOffset;
         uniform vec3 uCurCenter;
         ` +
           plotChunk +
@@ -54,11 +58,11 @@ export function TronShader({ pointLight, pos, ...props }) {
     if (!materialRef.current) return;
     materialRef.current.userData.uTime.value += .1;
   });
-  return <meshStandardMaterial
+  return <meshBasicMaterial
     {...props}
     ref={materialRef}
     // receiveShadow
     // castShadow
-    // envMap={envMap}
+    envMap={envMap}
   />
 }

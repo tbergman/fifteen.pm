@@ -1,5 +1,5 @@
 import React from 'react';
-import { TronMaterial } from "../../Shaders/TronShader";
+import * as THREE from 'three';
 
 export function buildingName(building, position) {
     return [building.name,
@@ -9,25 +9,17 @@ export function buildingName(building, position) {
     ].join("_")
 }
 
-// TODO material updates/dynamic not just sitting here in the wrong place
-import { initPinkRockMaterial } from '../../Utils/materials';
-import * as THREE from 'three';
-const pinkRockMat = initPinkRockMaterial(new THREE.TextureLoader());
-// pinkRockMat.side = THREE.DoubleSide;
-export function Building({ geometry, centroid, normal, color, visible }) {
-    return <>
-        <mesh
-            onUpdate={self => {
-                self.lookAt(normal);
-                self.visible = visible
-            }}
-            geometry={geometry}
-            position={centroid}
-        // TODO random rotations
-        >
-            <TronMaterial attach="material" pos={centroid} />
-        </mesh>}
-    </>
+export function Building({ geometry, material, centroid, normal, color, visible }) {
+    return <mesh
+        onUpdate={self => {
+            self.lookAt(normal);
+            self.visible = visible
+        }}
+        geometry={geometry}
+        position={centroid}
+        material={material}
+    // TODO random rotations
+    />
 }
 
 export function onBuildingsLoaded(gltf) {
