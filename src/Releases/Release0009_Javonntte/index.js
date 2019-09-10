@@ -12,7 +12,6 @@ import { CityTile } from "./tiles";
 import { Controls } from "./controls";
 import { generateWorldGeometry } from './world';
 import { Stars } from './stars';
-import { Lights } from './lights';
 
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -61,7 +60,6 @@ function Scene() {
                 threshold={.85}
                 strength={1.5}
             /> */}
-            {/* <Lights /> */}
             <Stars
                 radius={worldRadius}
             />

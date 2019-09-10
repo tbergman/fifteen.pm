@@ -59,6 +59,6 @@ export function TronShader({ pointLight, pos, ...props }) {
     ref={materialRef}
     // receiveShadow
     // castShadow
-    // envMap={envMap}
+    envMap={envMap}
   />
 }

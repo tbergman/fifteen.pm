@@ -113,8 +113,8 @@ function BuildingsOnTile({ formation, triangle, centroid, normal, buildingGeomet
     // const [hasRendered, setHasRendered] = useState(0)
     return <group>
         {subdivisions.map(subdivision => {
-            const geometry = randomClone(buildingGeometries[subdivision.size]);
-            // const geometry = buildingGeometries.medium[3];
+            // const geometry = randomClone(buildingGeometries[subdivision.size]);
+            const geometry = buildingGeometries.medium[0];
             return <group ref={buildingGroupRef} key={buildingName(geometry, subdivision.centroid)}>
                 <Building geometry={geometry} centroid={subdivision.centroid} normal={normal} color={color} />
             </group>

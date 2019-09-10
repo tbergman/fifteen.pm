@@ -13,7 +13,6 @@ export function Camera() {
     
     useEffect(() => {
         if (spotLight.current) {
-            console.log("SET SPOTTARG")
             // spotLight.current.target = new THREE.Vector3(0, 0, 3);
             const shadowCameraHelper = new THREE.CameraHelper(spotLight.current.shadow.camera);
             // const pointLightHelper = new THREE.PointLightHelper(pointLight.current, 1);
@@ -27,7 +26,7 @@ export function Camera() {
         <spotLight
             ref={spotLight}
             castShadow
-            intensity={5}
+            intensity={.5}
             penumbra={0.01}
             distance={60}
             shadow-camera-near={10}
