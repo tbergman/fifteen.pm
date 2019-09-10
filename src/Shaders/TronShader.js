@@ -10,18 +10,18 @@ import plotChunk from '!raw-loader!glslify-loader!./plotChunk.glsl';
 export function TronShader({ pointLight, pos, ...props }) {
   const { camera } = useThree();
   const [materialRef, material] = useResource();
-  const envMap = useMemo(() => {
-    return new THREE.CubeTextureLoader()
-      .setPath(assetPathShared('textures/env-maps/barc-rooftop/'))
-      .load([
-        'px.png',
-        'nx.png',
-        'py.png',
-        'ny.png',
-        'pz.png',
-        'nz.png',
-      ]);
-  });
+  // const envMap = useMemo(() => {
+  //   return new THREE.CubeTextureLoader()
+  //     .setPath(assetPathShared('textures/env-maps/barc-rooftop/'))
+  //     .load([
+  //       'px.png',
+  //       'nx.png',
+  //       'py.png',
+  //       'ny.png',
+  //       'pz.png',
+  //       'nz.png',
+  //     ]);
+  // });
   useEffect(() => {
     if (materialRef.current) {
       materialRef.current.userData.uTime = { value: 0 };
@@ -59,6 +59,6 @@ export function TronShader({ pointLight, pos, ...props }) {
     ref={materialRef}
     // receiveShadow
     // castShadow
-    envMap={envMap}
+    // envMap={envMap}
   />
 }

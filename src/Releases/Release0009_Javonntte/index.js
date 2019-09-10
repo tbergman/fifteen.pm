@@ -11,6 +11,7 @@ import "./index.css";
 import { CityTile } from "./tiles";
 import { Controls } from "./controls";
 import { generateWorldGeometry } from './world';
+import {FixedLights} from './lights';
 import { Stars } from './stars';
 
 function Scene() {
@@ -43,7 +44,7 @@ function Scene() {
 
     return (
         <>
-            <Camera />
+            {/* <Camera /> */}
             <Controls
                 radius={worldRadius}
                 movementSpeed={30}
@@ -60,6 +61,7 @@ function Scene() {
                 threshold={.85}
                 strength={1.5}
             /> */}
+            <FixedLights />
             <Stars
                 radius={worldRadius}
             />
