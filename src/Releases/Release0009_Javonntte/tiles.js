@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { useResource, useRender } from 'react-three-fiber';
 import * as THREE from 'three';
-import { TronShader } from '../../Shaders/TronShader';
+import { TronMaterial } from '../../Shaders/TronShader';
 import { faceCentroid, getMiddle, triangleCentroid, triangleFromFace } from '../../Utils/geometry';
 import { randVal, randomClone } from "./utils";
 import { Building, buildingName } from "./buildings";
@@ -113,8 +113,8 @@ function BuildingsOnTile({ formation, triangle, centroid, normal, buildingGeomet
     // const [hasRendered, setHasRendered] = useState(0)
     return <group>
         {subdivisions.map(subdivision => {
-            // const geometry = randomClone(buildingGeometries[subdivision.size]);
-            const geometry = buildingGeometries.medium[0];
+            const geometry = randomClone(buildingGeometries[subdivision.size]);
+            // const geometry = buildingGeometries.medium[0];
             return <group ref={buildingGroupRef} key={buildingName(geometry, subdivision.centroid)}>
                 <Building geometry={geometry} centroid={subdivision.centroid} normal={normal} color={color} />
             </group>

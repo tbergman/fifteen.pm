@@ -11,7 +11,7 @@ import "./index.css";
 import { CityTile } from "./tiles";
 import { Controls } from "./controls";
 import { generateWorldGeometry } from './world';
-import {FixedLights} from './lights';
+import { FixedLights } from './lights';
 import { Stars } from './stars';
 
 function Scene() {
@@ -35,16 +35,27 @@ function Scene() {
 
     useEffect(() => {
         // scene.fog = new THREE.FogExp2( 0x000000, 0.00000025 );
-        camera.fov = 25;
-        camera.near = 1;
-        camera.far = 1e7;
+        // These actions must occur after buildings load.
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
     }, [buildings])
 
     return (
         <>
-            {/* <Camera /> */}
+            <Camera
+                fov={25}
+                near={1}
+                far={1e7}
+                lightProps={{
+                    intensity: 1,
+                    penumbra: 0.01,
+                    distance: 60,
+                    shadowCameraNear: 10,
+                    shadowCameraFar: 200,
+                    shadowMapSizeWidth: 2048,
+                    shadowMapSizeHeight: 2048,
+                }}
+            />
             <Controls
                 radius={worldRadius}
                 movementSpeed={30}

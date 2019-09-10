@@ -2,15 +2,15 @@ import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { useThree } from 'react-three-fiber';
 
-export function Camera() {
+export function Camera({ fov, near, far, lightProps }) {
     const spotLight = useRef();
     const cameraRef = useRef();
     const { scene, setDefaultCamera } = useThree();
-    
+
     useEffect(() => {
         if (cameraRef.current) setDefaultCamera(cameraRef.current);
-    },[cameraRef])
-    
+    }, [cameraRef])
+
     useEffect(() => {
         if (spotLight.current) {
             // spotLight.current.target = new THREE.Vector3(0, 0, 3);
@@ -22,17 +22,22 @@ export function Camera() {
         }
     }, [spotLight])
 
-    return <perspectiveCamera ref={cameraRef}>
+    return <perspectiveCamera
+        ref={cameraRef}
+        fov={fov}
+        near={near}
+        far={far}
+    >
         <spotLight
             ref={spotLight}
             castShadow
-            intensity={.5}
-            penumbra={0.01}
-            distance={60}
-            shadow-camera-near={10}
-            shadow-camera-far={200}
-            shadow-mapSize-width={2048}
-            shadow-mapSize-height={2048}
+            intensity={lightProps.intensity}
+            penumbra={lightProps.penumbra}
+            distance={lightProps.distance}
+            shadow-camera-near={lightProps.shadowCameraNear}
+            shadow-camera-far={lightProps.shadowCameraFar}
+            shadow-mapSize-width={lightProps.shadowMapSizeWidth}
+            shadow-mapSize-height={lightProps.shadowMapSizeHeight}
         />
     </perspectiveCamera>
 }
