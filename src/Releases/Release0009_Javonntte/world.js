@@ -4,7 +4,7 @@ import { useThree, useRender, useResource } from 'react-three-fiber';
 import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
 import { SphereTileGenerator, tileId } from '../../Utils/SphereTileGenerator';
 import "./index.css";
-import {CloudMaterial} from '../../Utils/materials';
+import { CloudMaterial } from '../../Utils/materials';
 import { tileFormationRatios, pickTileFormation } from './tiles';
 
 
@@ -67,10 +67,21 @@ export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
 }
 
 function AtmosphereGlow({ radius }) {
-    const geometry = useMemo(() => new THREE.SphereGeometry(radius, radius / 4, radius / 4))
+    const geometry = useMemo(() => new THREE.SphereGeometry(radius, radius / 3, radius / 3))
     const [materialRef, material] = useResource();
     return <>
-        <CloudMaterial materialRef={materialRef} opacity={0.1} reflectivity={.1} />
+        <CloudMaterial materialRef={materialRef} />
+        {material && <mesh
+            geometry={geometry}
+            material={material}
+        />}
+    </>
+}
+
+export function WorldSurface({ geometry }) {
+    const [materialRef, material] = useResource();
+    return <>
+        <CloudMaterial materialRef={materialRef} opacity={0.1} reflectivity={.1} side={THREE.DoubleSide} />
         {material && <mesh
             geometry={geometry}
             material={material}
@@ -78,13 +89,6 @@ function AtmosphereGlow({ radius }) {
             material-reflectivity={.1}
         />}
     </>
-}
-
-export function WorldSurface({ geometry, material }) {
-    return <mesh
-        geometry={geometry}
-        material={material}
-    />
 }
 
 export function World({ sphereGeometry, surfaceMaterial, ...props }) {
@@ -101,7 +105,6 @@ export function World({ sphereGeometry, surfaceMaterial, ...props }) {
     return <group>
         <WorldSurface
             geometry={sphereGeometry}
-            material={surfaceMaterial}
         />
         {renderTiles ?
             <SphereTileGenerator

@@ -208,7 +208,8 @@ export function CloudMaterial({ materialRef, pointLight, pos, ...props }) {
 	opacity={props.opacity || 1.0}
     reflectivity={props.reflectivity || 0.8} // env map uses this
     envMap={envMap}
-    // refractionRatio={.1}
+	// refractionRatio={.1}
+	side={props.side || THREE.FrontSide}
     normalMap={normalMap}
     metalnessMap={metalnessMap}
   />

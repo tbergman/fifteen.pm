@@ -86,7 +86,6 @@ function Scene() {
             {tronMaterial && buildings &&
                 <World
                     sphereGeometry={worldSphereGeometry}
-                    surfaceMaterial={tronMaterial}
                     startPos={startPos}
                     tileComponent={SkyCityTile}
                     tileElements={{
