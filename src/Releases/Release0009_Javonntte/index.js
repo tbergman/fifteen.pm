@@ -92,7 +92,7 @@ function Scene() {
                             geometries: buildings,
                             material: tronMaterial
                         },
-                        tileLookup={worldTilePatterns}
+                        tileLookup: worldTilePatterns,
                     }}
                     tileComponent={CityTile}
                 />
