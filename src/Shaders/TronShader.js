@@ -8,23 +8,43 @@ import plotChunk from '!raw-loader!glslify-loader!./plotChunk.glsl';
 
 // Shader built in the style of: https://medium.com/@pailhead011/extending-three-js-materials-with-glsl-78ea7bbb9270
 export function TronMaterial({ materialRef, pointLight, pos, ...props }) {
-  const { camera } = useThree();
-  if (!materialRef) {
-    const [ref, material] = useResource();
-    materialRef = ref;
-  }
-  const envMap = useMemo(() => {
-    const mapping = new THREE.CubeTextureLoader()
-      .setPath(assetPathShared('textures/env-maps/barc-rooftop/'))
+  const { camera, canvas } = useThree();
+  const [colorMap, normalMap, metalnessMap, envMap] = useMemo(() => {
+    const textureLoader = new THREE.TextureLoader();
+    const colorMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_basecolor.png"));
+    const normalMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_normal.png"));
+    const metalnessMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_metallic.png"));
+    // const hdrTexture = textureLoader.load(assetPathShared("hdris/atmosphere.png"))
+    // const envMap = THREE.EquirectangularToCubeGenerator.convert(hdrTexture);
+    const envMap = new THREE.CubeTextureLoader()
+      // .setPath(assetPathShared('textures/env-maps/barc-rooftop/'))
+      // .load([
+      //   'px.png',
+      //   'nx.png',
+      //   'py.png',
+      //   'ny.png',
+      //   'pz.png',
+      //   'nz.png',
+      // ]);
+//       graycloud_bk.jpg
+// graycloud_dn.jpg
+// graycloud_ft.jpg
+// graycloud_lf.jpg
+// graycloud_rt.jpg
+// graycloud_up.jpg
+      .setPath(assetPathShared('textures/env-maps/graycloud/'))
       .load([
-        'px.png',
-        'nx.png',
-        'py.png',
-        'ny.png',
-        'pz.png',
-        'nz.png',
+        'graycloud_lf.jpg',
+        'graycloud_rt.jpg',
+        'graycloud_up.jpg',
+        'graycloud_dn.jpg',
+        'graycloud_ft.jpg',
+        'graycloud_bk.jpg',
       ]);
-    return mapping;
+ 
+      // envMap.repeat = THREE.RepeatWrapping;
+      // envMap.repeat.set(10000, 10000);//meshWidth / textureWidth, meshHeight / textureHeight);
+    return [colorMap, normalMap, metalnessMap, envMap]
   });
   useEffect(() => {
     if (materialRef.current) {
@@ -47,7 +67,7 @@ export function TronMaterial({ materialRef, pointLight, pos, ...props }) {
 
         // add custom code before the last line
         // shader.fragmentShader = shader.fragmentShader.replace(
-        //   `gl_FragColor = vec4( outgoingLight, diffuseColor.a );`,
+        //   `vec4 diffuseColor = vec4( diffuse, opacity );`,
         //   tronFragmentChunk
         // )
       }
@@ -58,11 +78,19 @@ export function TronMaterial({ materialRef, pointLight, pos, ...props }) {
     if (!materialRef.current) return;
     materialRef.current.userData.uTime.value += .1;
   });
-  return <meshBasicMaterial
+  return <meshPhongMaterial
     {...props}
     ref={materialRef}
-    // receiveShadow
-    // castShadow
+    // emissive={new THREE.Color("red")}
+    lights
+    receiveShadow
+    castShadow
+    map={colorMap}
+    envMapIntensity = {0.3}
+    reflectivity={0.8} // env map uses this
     envMap={envMap}
+    // refractionRatio={.1}
+    normalMap={normalMap}
+    metalnessMap={metalnessMap}
   />
 }
