@@ -1,28 +1,9 @@
-import React, { useMemo, useRef } from 'react';
-import { useResource, useRender } from 'react-three-fiber';
+import React from 'react';
+import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import { TronMaterial } from '../../Shaders/TronShader';
-import { faceCentroid, getMiddle, triangleCentroid, triangleFromFace } from '../../Utils/geometry';
-import { randVal, randomClone } from "./utils";
-import { Building, buildingName } from "./buildings";
+import { Buildings } from "./buildings";
 
-// TODO rm me
-function random(seed) {
-    var x = Math.sin(seed) * 10000;
-    var r = x - Math.floor(x);
-    return r;
-}
 
-// TODO rm me
-function getRandomColor(centroid) {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    var seed = random(centroid.x * centroid.y * centroid.z) * 10000;
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(random(seed++) * 16)];
-    }
-    return color;
-}
 function pickTilePattern(triangle) {
 
     const area = triangle.getArea();
@@ -35,49 +16,6 @@ function pickTilePattern(triangle) {
         return "large"
     }
 }
-
-// TODO refactor
-function subdivideTriangle(tri, centroid, formation) {
-    const i1 = tri.a;
-    const i2 = tri.b;
-    const i3 = tri.c;
-    const a = getMiddle(tri.a, tri.b);
-    const b = getMiddle(tri.b, tri.c);
-    const c = getMiddle(tri.a, tri.c);
-    const triangles = [];
-    switch (formation) {
-        case "small":
-            triangles.push(tri);
-            break;
-        case "large":
-            // all same size
-            triangles.push({ size: "small", centroid: triangleCentroid(new THREE.Triangle(i1, a, centroid)) });
-            triangles.push({ size: "medium", centroid: triangleCentroid(new THREE.Triangle(a, i2, centroid)) });
-            triangles.push({ size: "small", centroid: triangleCentroid(new THREE.Triangle(i2, b, centroid)) });
-            triangles.push({ size: "small", centroid: triangleCentroid(new THREE.Triangle(b, i3, centroid)) });
-            triangles.push({ size: "small", centroid: triangleCentroid(new THREE.Triangle(i3, c, centroid)) });
-            triangles.push({ size: "small", centroid: triangleCentroid(new THREE.Triangle(c, i1, centroid)) });
-            break;
-        case "bigLeft1":
-            // big on left, medium on top, small on bottom right
-            triangles.push({ size: "large", centroid: triangleCentroid(new THREE.Triangle(i1, i2, c)) });
-            triangles.push({ size: "medium", centroid: triangleCentroid(new THREE.Triangle(i2, i3, centroid)) }); // medium building
-            triangles.push({ size: "small", centroid: triangleCentroid(new THREE.Triangle(i3, c, centroid)) }); // narrow building
-            break;
-        case "extraSmall":
-            const equalTriangles = subdivideTriangle(tri, centroid, "medium");
-            for (let i = 0; i < equalTriangles.length; i++) {
-                const halvedTriangles = subdivideTriangle(equalTriangles[i], triangleCentroid(equalTriangles[i]), "medium");
-                for (let j = 0; j < halvedTriangles.length; j++) {
-                    triangles.push(halvedTriangles[j]);
-                }
-            }
-            break;
-        case "small":
-    }
-    return triangles;
-}
-
 function TileSurface({ face, triangle, normal, centroid, ...props }) {
     const [materialRef, material] = useResource();
     const [geometryRef, geometry] = useResource();
@@ -105,26 +43,11 @@ function TileSurface({ face, triangle, normal, centroid, ...props }) {
     </>
 }
 
-function BuildingsOnTile({ formation, triangle, centroid, normal, geometries, material, ...props }) {
-    const buildingGroupRef = useRef();
-    // get centroids based on formation type
-    const subdivisions = subdivideTriangle(triangle, centroid, formation);
-    const color = getRandomColor(centroid); // TODO temporary color to help debug
-    // const [hasRendered, setHasRendered] = useState(0)
-    return <group>
-        {subdivisions.map(subdivision => {
-            const geometry = randomClone(geometries[subdivision.size]);
-            // const geometry = geometries.medium[0];
-            return <group ref={buildingGroupRef} key={buildingName(geometry, subdivision.centroid)}>
-                <Building geometry={geometry} material={material} centroid={subdivision.centroid} normal={normal} color={color} />
-            </group>
-        })}
-    </group>;
-}
+
 
 export const CityTile = props => {
     return <group>
-        <BuildingsOnTile
+        <Buildings
             formation={pickTilePattern(props.triangle)}
             geometries={props.tileElements.buildings.geometries}
             material={props.tileElements.buildings.material}

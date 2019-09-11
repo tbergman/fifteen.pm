@@ -13,7 +13,7 @@ import { Controls } from "./controls";
 import { generateWorldGeometry } from './world';
 import { FixedLights } from './lights';
 import { Stars } from './stars';
-import {TronMaterial} from '../../Shaders/TronShader';
+import {TronMaterial} from '../../Utils/materials';
 
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
