@@ -5,7 +5,7 @@ import { BloomEffect, Advanced2Effect } from "../../Utils/Effects";
 import { useGLTF } from "../../Utils/hooks";
 import { onBuildingsLoaded } from "./buildings";
 import { BUILDINGS_URL } from "./constants";
-import { SphereFileGenerator as SphereTileGenerator } from './face';
+import { SphereTileGenerator } from '../../Utils/SphereTileGenerator';
 import { Camera } from './camera';
 import "./index.css";
 import { CityTile } from "./tiles";
@@ -37,7 +37,7 @@ function Scene() {
 
     useEffect(() => {
         // scene.fog = new THREE.FogExp2( 0x000000, 0.00000025 );
-        // These actions must occur after buildings load.
+        // These camera actions must occur after buildings load.
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
     }, [buildings])
@@ -48,7 +48,7 @@ function Scene() {
             <TronMaterial materialRef={tronMaterialRef} />
             <Camera
                 fov={25}
-                near={1}
+                near={.1}
                 far={1e7}
                 lightProps={{
                     intensity: 1,
@@ -71,10 +71,9 @@ function Scene() {
             {/* <Advanced2Effect camera={camera} /> */}
             {/* <BloomEffect
                 camera={camera}
-                radius={.4}
-                // exposure 
-                threshold={.85}
-                strength={1.5}
+                strength={.5}
+                radius={1.}
+                threshold={.75}
             /> */}
             <FixedLights />
             <Stars
@@ -103,9 +102,11 @@ export default function Release0009_Javonntte({ }) {
             <Canvas id="canvas"
                 onCreated={({ gl }) => {
                     gl.shadowMap.enabled = true;
-                    gl.shadowMap.type = THREE.PCFSoftShadowMap;
-                    gl.gammaInput = true;
-                    gl.gammaOutput = true;
+                    // gl.shadowMap.type = THREE.PCFSoftShadowMap;
+                    // gl.antialias = true;
+                    // gl.gammaInput = true;
+                    // gl.gammaOutput = true;
+                    console.log(gl)
                 }}>
                 <Scene />
             </Canvas>

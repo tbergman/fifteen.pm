@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { TypedArrayUtils } from 'three-full';
-import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
+import { faceCentroid, triangleFromFace } from './geometry';
 
 // we cut off the floating point length here to insure 99% match with the kdTree model (since the model can change the exact value a bit)
 const tileId = (centroid) => [centroid.x.toFixed(3), centroid.y.toFixed(3), centroid.z.toFixed(3)].join("_");
@@ -75,7 +75,7 @@ function displayNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
     return matchingTiles;
 }
 
-export function SphereFileGenerator({ sphereGeometry, tileComponent, tileElements, startPos }) {
+export function SphereTileGenerator({ sphereGeometry, tileComponent, tileElements, startPos }) {
     const { camera } = useThree();
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const searchPosition = useRef(new THREE.Vector3());
@@ -101,23 +101,11 @@ export function SphereFileGenerator({ sphereGeometry, tileComponent, tileElement
     }, [])
 
     useRender((state, time) => {
-        // const rotXDelta = .0001;
-        // tilesGroup.current.rotation.x += rotXDelta;
-        // boundary.current.copy(camera.position);
         if ((time % .5).toFixed(1) == 0) {
             searchPosition.current = getSearchPosition();
         }
         if (prevSearchPosition.current.distanceTo(searchPosition.current) > radius / (2 * Math.PI)) {
             const allClosestTiles = displayNearest(searchPosition.current, kdTree.current, numMatches, maxDistance, allTiles.current);
-            // set some of these to not rerender here?
-            // TODO setLastUpdateTime (below) seems to trigger an update but dont have access to changes to var
-            // console.log('last update time', lastUpdateTime);
-            // TODO turning renders on and off (cpu)
-            // for (let i = 0; i < allClosestTiles.length; i++) {
-            //     const tile = allClosestTiles[i];
-            //     if (tile.timestamp === lastUpdateTime) tile.isRendered = true;
-            //     else tile.isRendered = false;
-            // }
             closestTiles.current = allClosestTiles;
             prevSearchPosition.current.copy(searchPosition.current);
             setLastUpdateTime(time); // TODO better way to set state??
