@@ -75,7 +75,7 @@ function displayNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
     return matchingTiles;
 }
 
-export function SphereTileGenerator({ sphereGeometry, tileComponent, tileElements, startPos }) {
+export function SphereTileGenerator({ sphereGeometry, tileComponent, tileElements }) {
     const { camera } = useThree();
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const searchPosition = useRef(new THREE.Vector3());

@@ -10,10 +10,10 @@ import { Camera } from './camera';
 import "./index.css";
 import { CityTile } from "./tiles";
 import { Controls } from "./controls";
-import { generateWorldGeometry } from './world';
+import { generateWorldGeometry, generateWorldTilePatterns } from './world';
 import { FixedLights } from './lights';
 import { Stars } from './stars';
-import {TronMaterial} from '../../Utils/materials';
+import { TronMaterial } from '../../Utils/materials';
 
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -23,20 +23,24 @@ function Scene() {
        Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
        (For instance: a complicated geometry.)
      */
-    const { camera, scene, canvas, setDefaultCamera } = useThree();
+    const { camera, canvas } = useThree();
     // TODO: this value should be a factor of the size of the user's screen...?
     const [tronMaterialRef, tronMaterial] = useResource();
+    // TODO check state loadingBuildings for loading a waiting screen (also need this for sphereTileGenerator)
     const [loadingBuildings, buildings] = useGLTF(BUILDINGS_URL, onBuildingsLoaded);
     const worldRadius = 48;
     const sides = 80;
     const tiers = 40;
     const maxHeight = 0.1;
-    const worldSphereGeometry = useMemo(() => generateWorldGeometry(worldRadius, sides, tiers, maxHeight), [worldRadius, sides, tiers, maxHeight]);
+    const [worldSphereGeometry, worldTilePatterns] = useMemo(() => {
+        const sphereGeometry = generateWorldGeometry(worldRadius, sides, tiers, maxHeight);
+        const tilePatterns = generateWorldTilePatterns(sphereGeometry);
+        return [sphereGeometry, tilePatterns];
+    }, [worldRadius, sides, tiers, maxHeight]);
     const startPos = new THREE.Vector3(0, 0, worldRadius * 1.05);
     const lookAt = new THREE.Vector3(0, worldRadius - worldRadius * .5, worldRadius - worldRadius * .1);
 
     useEffect(() => {
-        // scene.fog = new THREE.FogExp2( 0x000000, 0.00000025 );
         // These camera actions must occur after buildings load.
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
@@ -87,7 +91,8 @@ function Scene() {
                         buildings: {
                             geometries: buildings,
                             material: tronMaterial
-                        }
+                        },
+                        tileLookup={worldTilePatterns}
                     }}
                     tileComponent={CityTile}
                 />

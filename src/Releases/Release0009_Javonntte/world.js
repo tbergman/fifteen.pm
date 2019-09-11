@@ -35,3 +35,8 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
     }
     return geometry;
 }
+
+
+export function generateWorldTilePatterns(sphereGeometry){
+    console.log(sphereGeometry)
+}

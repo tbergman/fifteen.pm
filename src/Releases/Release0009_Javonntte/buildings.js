@@ -51,14 +51,15 @@ export function Buildings({ formation, triangle, centroid, normal, geometries, m
     const buildingGroupRef = useRef();
     // get centroids based on formation type
     const subdivisions = subdivideTriangle(triangle, centroid, formation);
-    const color = getRandomColor(centroid); // TODO temporary color to help debug
+    // const color = getRandomColor(centroid); // TODO temporary color to help debug
     // const [hasRendered, setHasRendered] = useState(0)
     return <group>
         {subdivisions.map(subdivision => {
             const geometry = randomClone(geometries[subdivision.size]);
             // const geometry = geometries.medium[0];
             return <group ref={buildingGroupRef} key={buildingName(geometry, subdivision.centroid)}>
-                <Building geometry={geometry} material={material} centroid={subdivision.centroid} normal={normal} color={color} />
+                <Building geometry={geometry} material={material} centroid={subdivision.centroid} normal={normal} />
+                {/* color={color} /> */}
             </group>
         })}
     </group>;
