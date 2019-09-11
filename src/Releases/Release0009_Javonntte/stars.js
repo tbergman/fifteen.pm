@@ -25,12 +25,12 @@ export function Stars({ radius }) {
     starsGeometry[1].addAttribute('position', new THREE.Float32BufferAttribute(vertices2, 3));
 
     const starsMaterials = [
+        new THREE.PointsMaterial({ color: 0x555555, size: 3, sizeAttenuation: false }),
         new THREE.PointsMaterial({ color: 0x555555, size: 2, sizeAttenuation: false }),
-        new THREE.PointsMaterial({ color: 0x555555, size: 1, sizeAttenuation: false }),
-        new THREE.PointsMaterial({ color: 0x333333, size: 2, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: 0x333333, size: 3, sizeAttenuation: false }),
         new THREE.PointsMaterial({ color: 0x3a3a3a, size: 1, sizeAttenuation: false }),
-        new THREE.PointsMaterial({ color: 0x1a1a1a, size: 2, sizeAttenuation: false }),
-        new THREE.PointsMaterial({ color: 0x1a1a1a, size: 1, sizeAttenuation: false })
+        new THREE.PointsMaterial({ color: 0x1a1a1a, size: 3, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: 0x1a1a1a, size: 2, sizeAttenuation: false })
     ];
     const stars = [];
     for (i = 10; i < 30; i++) {

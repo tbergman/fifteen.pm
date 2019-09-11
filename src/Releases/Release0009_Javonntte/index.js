@@ -10,7 +10,7 @@ import { Camera } from './camera';
 import "./index.css";
 import { SkyCityTile } from "./tiles";
 import { Controls } from "./controls";
-import { generateWorldGeometry, generateWorldTilePatterns } from './world';
+import { generateWorldGeometry, generateWorldTilePatterns, World } from './world';
 import { FixedLights } from './lights';
 import { Stars } from './stars';
 import { TronMaterial } from '../../Utils/materials';
@@ -84,8 +84,9 @@ function Scene() {
                 radius={worldRadius}
             />
             {tronMaterial && buildings &&
-                <SphereTileGenerator
+                <World
                     sphereGeometry={worldSphereGeometry}
+                    surfaceMaterial={tronMaterial}
                     startPos={startPos}
                     tileElements={{
                         buildings: {

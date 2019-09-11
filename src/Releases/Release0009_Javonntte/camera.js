@@ -11,16 +11,15 @@ export function Camera({ fov, near, far, lightProps }) {
         if (cameraRef.current) setDefaultCamera(cameraRef.current);
     }, [cameraRef])
 
-    useEffect(() => {
-        if (spotLight.current) {
-            // spotLight.current.target = new THREE.Vector3(0, 0, 3);
-            const shadowCameraHelper = new THREE.CameraHelper(spotLight.current.shadow.camera);
-            // const pointLightHelper = new THREE.PointLightHelper(pointLight.current, 1);
-            scene.add(shadowCameraHelper);
-            // scene.add(pointLightHelper);
-            console.log(spotLight.current.position);
-        }
-    }, [spotLight])
+    // useEffect(() => {
+    //     if (spotLight.current) {
+    //         // spotLight.current.target = new THREE.Vector3(0, 0, 3);
+    //         // const shadowCameraHelper = new THREE.CameraHelper(spotLight.current.shadow.camera);
+    //         // const pointLightHelper = new THREE.PointLightHelper(pointLight.current, 1);
+    //         // scene.add(shadowCameraHelper);
+    //         // scene.add(pointLightHelper);
+    //     }
+    // }, [spotLight])
 
     return <perspectiveCamera
         ref={cameraRef}

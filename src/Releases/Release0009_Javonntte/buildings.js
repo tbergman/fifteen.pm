@@ -42,9 +42,9 @@ function Building({ geometry, material, centroid, normal, color, visible }) {
 }
 
 export function getRandomBuilding(geometries) {
-    const array = new Uint32Array(1);
+    const array = new Uint32Array(geometries.length);
     window.crypto.getRandomValues(array);
-    const idx = array[0] % geometries.length;
+    const idx = array[THREE.Math.randInt(0, geometries.length - 1)] % geometries.length;
     return geometries[idx];
 }
 

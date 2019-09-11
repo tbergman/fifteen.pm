@@ -1,11 +1,16 @@
+import React, { useState, useEffect } from 'react';
 import * as THREE from 'three';
-import { triangleFromFace, faceCentroid } from '../../Utils/geometry';
-import { tileId } from '../../Utils/SphereTileGenerator';
+import { useThree, useRender } from 'react-three-fiber';
+import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
+import { SphereTileGenerator, tileId } from '../../Utils/SphereTileGenerator';
+import "./index.css";
 import { pickTileFormation } from "./tiles";
+
 
 // TODO tilt and rotationSpeed
 export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
+    geometry.computeBoundingSphere();
     // variate sphere heights
     var vertexIndex;
     var vertexVector = new THREE.Vector3();
@@ -53,4 +58,36 @@ export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
         lookup[tId] = pickTileFormation({ triangle, centroid, geometries: surfaceGeometries })
     })
     return lookup;
+}
+
+
+export function WorldSurface({ geometry, material }) {
+    return <mesh
+        geometry={geometry}
+        material={material}
+    />
+}
+
+export function World({ sphereGeometry, surfaceMaterial, ...props }) {
+    const { camera } = useThree();
+    const [renderTiles, setRenderTiles] = useState(true);
+    const distThreshold = sphereGeometry.parameters.radius + sphereGeometry.parameters.radius * .1;
+    // TODO what should be rendered if we're far from the sphere?
+    useRender((state, time) => {
+        if ((time % .05).toFixed(2) == 0) {
+            const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);
+            const tooFarAway = distToCenter > distThreshold;
+            setRenderTiles(!tooFarAway);
+        }
+    })
+    return <group>
+        <WorldSurface
+            geometry={sphereGeometry}
+            material={surfaceMaterial}
+        />
+        {renderTiles && <SphereTileGenerator
+            sphereGeometry={sphereGeometry}
+            {...props}
+        />}
+    </group>
 }

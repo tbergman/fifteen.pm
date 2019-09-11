@@ -27,19 +27,19 @@ function formation1({ centroid, triangleComponents, geometries }) {
             centroid: getCentroid(triangleComponents.a, triangleComponents.i2, centroid)
         },
         {
-            geometry: getRandomBuilding(geometries[SMALL]),
+            geometry: getRandomBuilding(geometries[MEDIUM]),
             centroid: getCentroid(triangleComponents.i2, triangleComponents.b, centroid)
         },
         {
-            geometry: getRandomBuilding(geometries[SMALL]),
+            geometry: getRandomBuilding(geometries[MEDIUM]),
             centroid: getCentroid(triangleComponents.b, triangleComponents.i3, centroid)
         },
         {
-            geometry: getRandomBuilding(geometries[SMALL]),
+            geometry: getRandomBuilding(geometries[MEDIUM]),
             centroid: getCentroid(triangleComponents.i3, triangleComponents.c, centroid)
         },
         {
-            geometry: getRandomBuilding(geometries[SMALL]),
+            geometry: getRandomBuilding(geometries[MEDIUM]),
             centroid: getCentroid(triangleComponents.c, triangleComponents.i1, centroid)
         },
     ]

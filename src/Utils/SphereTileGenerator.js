@@ -101,10 +101,10 @@ export function SphereTileGenerator({ sphereGeometry, tileComponent, tileElement
     }, [])
 
     useRender((state, time) => {
-        if ((time % .5).toFixed(1) == 0) {
+        if ((time % .05).toFixed(2) == 0) {
             searchPosition.current = getSearchPosition();
         }
-        if (prevSearchPosition.current.distanceTo(searchPosition.current) > radius / (2 * Math.PI)) {
+        if (prevSearchPosition.current.distanceTo(searchPosition.current) > 2 * Math.PI / radius) {
             const allClosestTiles = displayNearest(searchPosition.current, kdTree.current, numMatches, maxDistance, allTiles.current);
             closestTiles.current = allClosestTiles;
             prevSearchPosition.current.copy(searchPosition.current);
