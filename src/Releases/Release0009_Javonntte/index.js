@@ -13,7 +13,7 @@ import { Controls } from "./controls";
 import { generateWorldGeometry, generateWorldTilePatterns, World } from './world';
 import { FixedLights } from './lights';
 import { Stars } from './stars';
-import { TronMaterial } from '../../Utils/materials';
+import { CloudMaterial } from '../../Utils/materials';
 
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -49,7 +49,7 @@ function Scene() {
     return (
         <>
             {/* use one material for all buildings  */}
-            <TronMaterial materialRef={tronMaterialRef} />
+            <CloudMaterial materialRef={tronMaterialRef} />
             <Camera
                 fov={25}
                 near={.1}
@@ -88,6 +88,7 @@ function Scene() {
                     sphereGeometry={worldSphereGeometry}
                     surfaceMaterial={tronMaterial}
                     startPos={startPos}
+                    tileComponent={SkyCityTile}
                     tileElements={{
                         buildings: {
                             geometries: buildings,
@@ -95,7 +96,6 @@ function Scene() {
                         },
                         lookup: worldTilePatterns.current,
                     }}
-                    tileComponent={SkyCityTile}
                 />
             }
         </>

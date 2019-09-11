@@ -146,7 +146,7 @@ export function initPinkShinyMaterial() {
 
 
 // Shader built in the style of: https://medium.com/@pailhead011/extending-three-js-materials-with-glsl-78ea7bbb9270
-export function TronMaterial({ materialRef, pointLight, pos, ...props }) {
+export function CloudMaterial({ materialRef, pointLight, pos, ...props }) {
   const { camera, canvas } = useThree();
   const [colorMap, normalMap, metalnessMap, envMap] = useMemo(() => {
     const textureLoader = new THREE.TextureLoader();
@@ -156,8 +156,8 @@ export function TronMaterial({ materialRef, pointLight, pos, ...props }) {
     const envMap = new THREE.CubeTextureLoader()
       .setPath(assetPathShared('textures/env-maps/graycloud/'))
       .load([
-        'graycloud_lf.jpg',
         'graycloud_rt.jpg',
+        'graycloud_lf.jpg',
         'graycloud_up.jpg',
         'graycloud_dn.jpg',
         'graycloud_ft.jpg',
@@ -204,8 +204,9 @@ export function TronMaterial({ materialRef, pointLight, pos, ...props }) {
     receiveShadow
     castShadow
     map={colorMap}
-    envMapIntensity = {0.3}
-    reflectivity={0.8} // env map uses this
+	envMapIntensity = {0.3}
+	opacity={props.opacity || 1.0}
+    reflectivity={props.reflectivity || 0.8} // env map uses this
     envMap={envMap}
     // refractionRatio={.1}
     normalMap={normalMap}

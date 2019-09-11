@@ -35,14 +35,18 @@ export function triangleCentroid(triangle) {
 }
 
 export function triangleFromFace(face, vertices) {
-  return new THREE.Triangle(
+  return triangleFromVertices(
     vertices[face.a],
     vertices[face.b],
-    vertices[face.c],
+    vertices[face.c]
   );
 }
 
-export function triangleCentroidFromVertices(a, b, c) {
-  const tri = new THREE.Triangle(a, b, c);
-  return triangleCentroid(tri);
+export function triangleFromVertices(v1, v2, v3) {
+  return new THREE.Triangle(v1, v2, v3);
+}
+
+export function triangleCentroidFromVertices(v1, v2, v3) {
+  const triangle = triangleFromVertices(v1, v2, v3);
+  return triangleCentroid(triangle);
 }

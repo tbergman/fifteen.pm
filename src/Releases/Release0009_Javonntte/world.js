@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import * as THREE from 'three';
-import { useThree, useRender } from 'react-three-fiber';
+import { useThree, useRender, useResource } from 'react-three-fiber';
 import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
 import { SphereTileGenerator, tileId } from '../../Utils/SphereTileGenerator';
 import "./index.css";
-import { pickTileFormation } from "./tiles";
+import {CloudMaterial} from '../../Utils/materials';
+import { tileFormationRatios, pickTileFormation } from './tiles';
 
 
 // TODO tilt and rotationSpeed
@@ -49,6 +50,11 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
 export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
     const vertices = sphereGeometry.vertices;
     const lookup = {};
+    const ratios = tileFormationRatios();
+    const totalFaces = sphereGeometry.faces.length;
+    // Object.keys(ratios).forEach((formation, idx) => {
+    //     console.log(ratios[idx])
+    // })
     sphereGeometry.faces.forEach(face => {
         // TODO one way to pass this logic into SphereTileGenerator is to just use this part
         // but need to decide if knowledge of neighbor patterns matters (for now, no...)
@@ -60,6 +66,19 @@ export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
     return lookup;
 }
 
+function AtmosphereGlow({ radius }) {
+    const geometry = useMemo(() => new THREE.SphereGeometry(radius, radius / 4, radius / 4))
+    const [materialRef, material] = useResource();
+    return <>
+        <CloudMaterial materialRef={materialRef} opacity={0.1} reflectivity={.1} />
+        {material && <mesh
+            geometry={geometry}
+            material={material}
+            material-opacity={0.1}
+            material-reflectivity={.1}
+        />}
+    </>
+}
 
 export function WorldSurface({ geometry, material }) {
     return <mesh
@@ -72,7 +91,6 @@ export function World({ sphereGeometry, surfaceMaterial, ...props }) {
     const { camera } = useThree();
     const [renderTiles, setRenderTiles] = useState(true);
     const distThreshold = sphereGeometry.parameters.radius + sphereGeometry.parameters.radius * .1;
-    // TODO what should be rendered if we're far from the sphere?
     useRender((state, time) => {
         if ((time % .05).toFixed(2) == 0) {
             const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);
@@ -85,9 +103,16 @@ export function World({ sphereGeometry, surfaceMaterial, ...props }) {
             geometry={sphereGeometry}
             material={surfaceMaterial}
         />
-        {renderTiles && <SphereTileGenerator
-            sphereGeometry={sphereGeometry}
-            {...props}
-        />}
+        {renderTiles ?
+            <SphereTileGenerator
+                sphereGeometry={sphereGeometry}
+                {...props}
+            />
+            :
+            <AtmosphereGlow
+                radius={distThreshold - .2}
+                material={surfaceMaterial}
+            />
+        }
     </group>
 }
