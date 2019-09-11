@@ -8,7 +8,7 @@ import { BUILDINGS_URL } from "./constants";
 import { SphereTileGenerator } from '../../Utils/SphereTileGenerator';
 import { Camera } from './camera';
 import "./index.css";
-import { CityTile } from "./tiles";
+import { SkyCityTile } from "./tiles";
 import { Controls } from "./controls";
 import { generateWorldGeometry, generateWorldTilePatterns } from './world';
 import { FixedLights } from './lights';
@@ -32,18 +32,18 @@ function Scene() {
     const sides = 80;
     const tiers = 40;
     const maxHeight = 0.1;
-    const [worldSphereGeometry, worldTilePatterns] = useMemo(() => {
-        const sphereGeometry = generateWorldGeometry(worldRadius, sides, tiers, maxHeight);
-        const tilePatterns = generateWorldTilePatterns(sphereGeometry);
-        return [sphereGeometry, tilePatterns];
+    const worldSphereGeometry = useMemo(() => {
+        return generateWorldGeometry(worldRadius, sides, tiers, maxHeight);
     }, [worldRadius, sides, tiers, maxHeight]);
     const startPos = new THREE.Vector3(0, 0, worldRadius * 1.05);
     const lookAt = new THREE.Vector3(0, worldRadius - worldRadius * .5, worldRadius - worldRadius * .1);
+    const worldTilePatterns = useRef();
 
     useEffect(() => {
-        // These camera actions must occur after buildings load.
+        // These actions must occur after buildings load.
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
+        if (buildings) worldTilePatterns.current = generateWorldTilePatterns(worldSphereGeometry, buildings);
     }, [buildings])
 
     return (
@@ -92,9 +92,9 @@ function Scene() {
                             geometries: buildings,
                             material: tronMaterial
                         },
-                        tileLookup: worldTilePatterns,
+                        lookup: worldTilePatterns.current,
                     }}
-                    tileComponent={CityTile}
+                    tileComponent={SkyCityTile}
                 />
             }
         </>

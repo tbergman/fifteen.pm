@@ -5,7 +5,7 @@ import { TypedArrayUtils } from 'three-full';
 import { faceCentroid, triangleFromFace } from './geometry';
 
 // we cut off the floating point length here to insure 99% match with the kdTree model (since the model can change the exact value a bit)
-const tileId = (centroid) => [centroid.x.toFixed(3), centroid.y.toFixed(3), centroid.z.toFixed(3)].join("_");
+export const tileId = (centroid) => [centroid.x.toFixed(3), centroid.y.toFixed(3), centroid.z.toFixed(3)].join("_");
 
 // TODO add back in
 function hardLimitYFaces(centroid, radius) {

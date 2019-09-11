@@ -41,3 +41,8 @@ export function triangleFromFace(face, vertices) {
     vertices[face.c],
   );
 }
+
+export function triangleCentroidFromVertices(a, b, c) {
+  const tri = new THREE.Triangle(a, b, c);
+  return triangleCentroid(tri);
+}

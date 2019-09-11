@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import { triangleFromFace, faceCentroid } from '../../Utils/geometry';
+import { tileId } from '../../Utils/SphereTileGenerator';
+import { pickTileFormation } from "./tiles";
 
 // TODO tilt and rotationSpeed
 export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
@@ -36,7 +39,18 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
     return geometry;
 }
 
-
-export function generateWorldTilePatterns(sphereGeometry){
-    console.log(sphereGeometry)
+// TODO this function needs to be passed to the SphereTileGenerator and folded into its logic somehow so that 
+// we aren't creating tileIds in two locations and leaving room for errors
+export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
+    const vertices = sphereGeometry.vertices;
+    const lookup = {};
+    sphereGeometry.faces.forEach(face => {
+        // TODO one way to pass this logic into SphereTileGenerator is to just use this part
+        // but need to decide if knowledge of neighbor patterns matters (for now, no...)
+        const triangle = triangleFromFace(face, vertices);
+        const centroid = faceCentroid(face, vertices);
+        const tId = tileId(centroid);
+        lookup[tId] = pickTileFormation({ triangle, centroid, geometries: surfaceGeometries })
+    })
+    return lookup;
 }
