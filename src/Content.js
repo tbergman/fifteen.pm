@@ -345,35 +345,29 @@ export const CONTENT = {
       {
         title: "This Dream",
         type: "soundcloud",
-        id: "610976673",
-        secretToken: "s-7EwJv"
+        id: "679771253",
+        secretToken: "s-XeIko",
       },
       {
         title: "City Life",
         type: "soundcloud",
-        id: "610976673",
-        secretToken: "s-7EwJv"
+        id: "679771262",
+        secretToken: "s-pqcS4",
       },
       {
         title: "Natural",
         type: "soundcloud",
-        id: "610976673",
-        secretToken: "s-7EwJv"
+        id: "679771259",
+        secretToken: "s-W6P06",
       },
-      {
-        title: "House Organ",
-        type: "soundcloud",
-        id: "610976673",
-        secretToken: "s-7EwJv"
-      }
     ],
     theme: {
-      message: "The Jazz Experience...",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
-      iconColor: '#fff',
-      fillColor: 'rgba(255, 0, 0, 0.5)',
-      textColor: '#fff',
-      navColor: '#fff',
+      message: "In the year 4182 all of Detroit Cloud City went crazy for City Lights, an early 21st century EP by Javonnttee, pulled off some bricked drives in the archives.",
+      purchaseLink: "TODO",
+      iconColor: '#007c7c',
+      fillColor: 'rgba(0, 124, 124, 0.5)',
+      textColor: '#007c7c',
+      navColor: '#007c7c',
       controls: []
     }
   }

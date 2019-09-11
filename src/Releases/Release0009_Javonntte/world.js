@@ -94,7 +94,8 @@ export function WorldSurface({ geometry }) {
 export function World({ sphereGeometry, surfaceMaterial, ...props }) {
     const { camera } = useThree();
     const [renderTiles, setRenderTiles] = useState(true);
-    const distThreshold = sphereGeometry.parameters.radius + sphereGeometry.parameters.radius * .1;
+    const radius = sphereGeometry.parameters.radius
+    const distThreshold = radius + radius * .15;
     useRender((state, time) => {
         if ((time % .05).toFixed(2) == 0) {
             const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);

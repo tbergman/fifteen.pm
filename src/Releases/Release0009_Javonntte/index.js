@@ -1,19 +1,20 @@
-import React, { useRef, useEffect, useMemo } from 'react';
-import { Canvas, extend, useRender, useResource, useThree } from 'react-three-fiber';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { Canvas, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { BloomEffect, Advanced2Effect } from "../../Utils/Effects";
+import { CONTENT } from '../../Content';
+// TODO refactor this to Menu/index?
+import Menu from '../../UI/Menu/Menu';
 import { useGLTF } from "../../Utils/hooks";
+import { CloudMaterial } from '../../Utils/materials';
 import { onBuildingsLoaded } from "./buildings";
-import { BUILDINGS_URL } from "./constants";
-import { SphereTileGenerator } from '../../Utils/SphereTileGenerator';
 import { Camera } from './camera';
-import "./index.css";
-import { SkyCityTile } from "./tiles";
+import { BUILDINGS_URL } from "./constants";
 import { Controls } from "./controls";
-import { generateWorldGeometry, generateWorldTilePatterns, World } from './world';
+import "./index.css";
 import { FixedLights } from './lights';
 import { Stars } from './stars';
-import { CloudMaterial } from '../../Utils/materials';
+import { SkyCityTile } from "./tiles";
+import { generateWorldGeometry, generateWorldTilePatterns, World } from './world';
 
 function Scene() {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -35,7 +36,7 @@ function Scene() {
     const worldSphereGeometry = useMemo(() => {
         return generateWorldGeometry(worldRadius, sides, tiers, maxHeight);
     }, [worldRadius, sides, tiers, maxHeight]);
-    const startPos = new THREE.Vector3(0, 0, worldRadius * 1.05);
+    const startPos = new THREE.Vector3(0, 0, worldRadius * 1.13);
     const lookAt = new THREE.Vector3(0, worldRadius - worldRadius * .5, worldRadius - worldRadius * .1);
     const worldTilePatterns = useRef();
 
@@ -104,15 +105,18 @@ function Scene() {
 export default function Release0009_Javonntte({ }) {
     return (
         <>
-            <Canvas id="canvas"
-                onCreated={({ gl }) => {
-                    gl.shadowMap.enabled = true;
-                    // gl.shadowMap.type = THREE.PCFSoftShadowMap;
-                    // gl.antialias = true;
-                    // gl.gammaInput = true;
-                    // gl.gammaOutput = true;
-                    console.log(gl)
-                }}>
+            <Menu
+                content={CONTENT[window.location.pathname]}
+                menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
+            />
+            <Canvas id="canvas" onCreated={({ gl }) => {
+                gl.shadowMap.enabled = true;
+                // gl.shadowMap.type = THREE.PCFSoftShadowMap;
+                // gl.antialias = true;
+                // gl.gammaInput = true;
+                // gl.gammaOutput = true;
+                console.log(gl)
+            }}>
                 <Scene />
             </Canvas>
         </>
