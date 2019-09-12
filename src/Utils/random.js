@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 
 
-function cryptoRandom(arrayLength){
+export function cryptoRandom(arrayLength){
     const pickFromArray = new Uint32Array(arrayLength);
     return window.crypto.getRandomValues(pickFromArray);
 }
+
 
 // TODO this would suck for huge arrays
 export function randomArrayVal(array) {

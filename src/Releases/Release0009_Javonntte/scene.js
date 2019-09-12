@@ -27,8 +27,7 @@ export function Scene({ mediaRef }) {
     const { camera, canvas } = useThree();
     const [loadingBuildings, buildings] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
-    const worldTilePatterns = useRef();
-    
+    const worldTilePatterns = useRef(); // TODO rm me
     // TODO having trouble figuring out mediaRef state handling
     const [track, setTrack] = useState();
     // const [bpm, setBPM] = useState(C.BPM_LOOKUP[curTrackId]); <-- maybe something like ...
@@ -39,11 +38,12 @@ export function Scene({ mediaRef }) {
 
     const startPos = new THREE.Vector3(0, 0, C.WORLD_RADIUS * 1.13);
     const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS - C.WORLD_RADIUS * .5, C.WORLD_RADIUS - C.WORLD_RADIUS * .1);
-   
+
     useEffect(() => {
         // These actions must occur after buildings load.
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
+        // TODO rm me
         if (buildings) worldTilePatterns.current = generateWorldTilePatterns(worldSphereGeometry, buildings);
     }, [buildings])
 
@@ -82,26 +82,20 @@ export function Scene({ mediaRef }) {
                 autoForward={false}
                 dragToLook={false}
             />
-            {/* <Advanced2Effect camera={camera} /> */}
-            {/* <BloomEffect
-                camera={camera}
-                strength={.5}
-                radius={1.}
-                threshold={.75}
-            /> */}
             <FixedLights />
             {cloudMaterial && buildings &&
                 <World
                     track={track}
                     sphereGeometry={worldSphereGeometry}
+                    geometries={buildings} // TODO currently passing buildings in to two places here so reimagine data structure...
                     startPos={startPos}
                     tileComponent={SkyCityTile}
                     tileElements={{
                         buildings: {
-                            geometries: buildings,
+                            geometries: buildings, // TODO buildings passed in two places
                             material: cloudMaterial
                         },
-                        lookup: worldTilePatterns.current,
+                        lookup: worldTilePatterns.current, // This is not longer passed in now e
                     }}
                 />
             }

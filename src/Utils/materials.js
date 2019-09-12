@@ -12,6 +12,11 @@ import simpleVertex from '!raw-loader!glslify-loader!../Shaders/simpleVertex.gls
 /* eslint import/no-webpack-loader-syntax: off */
 import tronFragmentShader from '!raw-loader!glslify-loader!../Shaders/tronFragment.glsl';
 
+/* eslint import/no-webpack-loader-syntax: off */
+import vsDepthVertex from'!raw-loader!glslify-loader!../Shaders/vsDepthVertex.glsl'; 
+/* eslint import/no-webpack-loader-syntax: off */
+import simpleWithDepthVertex from'!raw-loader!glslify-loader!../Shaders/simpleWithDepthVertex.glsl'; 
+
 
 export function initFoamGripMaterial(textureLoader) {
 	var envMapCube = new THREE.CubeTextureLoader()
@@ -189,6 +194,7 @@ export function TronMaterial({ materialRef, bpm }) {
 	const BPM = 120; // TODO not passing down
 	const { camera } = useThree();
 	let t = 0;
+
 	useRender(
 		(state, time) => {
 			if (!materialRef.current) return; // avoid re-initialization async issues (e.g. if tiling)
@@ -198,13 +204,26 @@ export function TronMaterial({ materialRef, bpm }) {
 		return {
 			uTime: { value: 0 },
 			uCurCenter: { value: camera.position },
+			uLightPosition: {valuje: camera.children[0].position},
 			uBPM: { value: BPM },// TODO bpm },
 		}
 	}, [materialRef, bpm]);
 	return <shaderMaterial
 		ref={materialRef}
 		uniforms={uniforms}
+		// lights={true}
+		// vertexShader={simpleWithDepthVertex}
 		vertexShader={simpleVertex}
 		fragmentShader={tronFragmentShader}
 	/>;
+}
+
+
+export function customDepthMaterial(material){
+	return new THREE.ShaderMaterial( {
+		vertexShader: vsDepthVertex,
+		fragmentShader: THREE.ShaderLib.basic.fragmentShader,
+		uniforms: material.uniforms
+	} );
+
 }

@@ -4,9 +4,10 @@ import { useThree, useRender, useResource } from 'react-three-fiber';
 import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
 import { SphereTiles, tileId } from '../../Utils/SphereTiles';
 import "./index.css";
-import { CloudMaterial, TronMaterial } from '../../Utils/materials';
+import { CloudMaterial, TronMaterial, customDepthMaterial } from '../../Utils/materials';
 import { Stars } from './stars';
 import { tileFormationRatios, pickTileFormation } from './tiles';
+import { cryptoRandom } from '../../Utils/random';
 
 
 // TODO tilt and rotationSpeed
@@ -50,21 +51,44 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
 // we aren't creating tileIds in two locations and leaving room for errors
 export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
     const vertices = sphereGeometry.vertices;
-    const lookup = {};
     // const ratios = tileFormationRatios();
     // const totalFaces = sphereGeometry.faces.length;
     // Object.keys(ratios).forEach((formation, idx) => {
     //     console.log(ratios[idx])
     // })
-    sphereGeometry.faces.forEach(face => {
-        // TODO one way to pass this logic into SphereTileGenerator is to just use this part
-        // but need to decide if knowledge of neighbor patterns matters (for now, no...)
-        const triangle = triangleFromFace(face, vertices);
+    const faces = sphereGeometry.faces;
+    const numDowntowns = 10;
+    const numFaces = faces.length;
+    const downtownIndices = [];
+    // TODO why doesn't map work here?
+    cryptoRandom(numDowntowns).forEach(randNum => {
+        const randIdx = randNum % numFaces;
+        const centroid = faceCentroid(faces[randIdx], vertices);
+        downtownIndices.push(centroid);
+    });
+    const lookup = {};
+    faces.forEach((face, idx) => {
         const centroid = faceCentroid(face, vertices);
         const tId = tileId(centroid);
-        lookup[tId] = pickTileFormation({ triangle, centroid, geometries: surfaceGeometries })
+        lookup[tId] = [];
+    })
+    faces.forEach((face, index) => {
+        // TODO one way to pass this logic into SphereTileGenerator is to just use this part
+        // but need to decide if knowledge of neighbor patterns matters (for now, no...)
+        const centroid = faceCentroid(face, vertices);
+        const tId = tileId(centroid);
+        downtownIndices.forEach(downtownCentroid => {
+            if (centroid.distanceTo(downtownCentroid) < sphereGeometry.parameters.radius/2) {
+                const centroid = faceCentroid(face, vertices);
+                const triangle = triangleFromFace(face, vertices);
+                if (!lookup[tId].length) {
+                    lookup[tId] = pickTileFormation({ triangle, centroid, geometries: surfaceGeometries })
+                }
+            }
+        })
     })
     return lookup;
+
 }
 
 function AtmosphereGlow({ radius }) {
@@ -81,6 +105,7 @@ function AtmosphereGlow({ radius }) {
 
 export function WorldSurface({ geometry, bpm }) {
     const [materialRef, material] = useResource();
+    
     return <>
         <TronMaterial
             materialRef={materialRef}
@@ -90,26 +115,39 @@ export function WorldSurface({ geometry, bpm }) {
         {material && <mesh
             geometry={geometry}
             material={material}
+            // material-customDepthMaterial={customDepthMaterial(material)}
+            receiveShadow
             material-opacity={0.1}
             material-reflectivity={.1}
         />}
     </>
 }
 
-export function World({ sphereGeometry, track, ...props }) {
+export function World({ sphereGeometry, track, geometries, ...props }) {
     const { camera, scene } = useThree();
     const [worldRef, world] = useResource();
+    const [tilePatternsLoaded, setTilePatternsLoaded] = useState(false);
     const [renderTiles, setRenderTiles] = useState(true);
     const radius = sphereGeometry.parameters.radius
     const distThreshold = radius + radius * .15;
+
+
+    // useEffect(() => {
+    //     // TODO the tileElement data structure needs to be generated at this level rather than in scene
+    //     if (renderTiles) {
+    //         props.tileElements.lookup = generateWorldTilePatterns(sphereGeometry, geometries);
+    //         console.log("SETIT UP", props.tileElements.lookup)
+    //         setTilePatternsLoaded(true);
+    //     }
+    // }, [tilePatternsLoaded]);
     useEffect(() => {
         if (renderTiles && track) {
-            // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.01) : null;
+            scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.01) : null;
             scene.background = new THREE.Color(track.theme.backgroundColor);
         }
     }, [track])
     useRender((state, time) => {
-        if ((time % .05).toFixed(2) == 0) {
+        if ((time % .5).toFixed(1) == 0) {
             const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);
             const tooFarAway = distToCenter > distThreshold;
             setRenderTiles(!tooFarAway);

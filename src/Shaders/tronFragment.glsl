@@ -1,5 +1,10 @@
 
 varying vec2 vUv;
+// varying vec3 vNormal;
+// varying vec3 vWorldPosition;
+
+uniform vec3 lightPosition;
+
 uniform float uTime;
 uniform float uBPM;
 uniform vec3 uCurCenter;
@@ -18,10 +23,19 @@ float plotY(vec2 st, float pct) {
 // TODO maybe can implement a map function ?
 // https://gist.github.com/companje/29408948f1e8be54dd5733a74ca49bb9
 void main() {
+
+
+    // vec3 lightDirection = normalize(lightPosition - vWorldPosition);
+
+    // float c = 0.35 + max(0.0, dot(vNormal, lightDirection)) * 0.4;
+
+    // vec3 col = vec3(c, c, c);
+
   float bps = uBPM / 60.;
   vec3 col = vec3(cos(vUv.x * uTime/bps), sin(vUv.y), sin(vUv.x));
-//   vec3 col = vec3(.0, 1., 0);
+  // vec3 col = vec3(.0, 1., 0);
   float numBeats = floor(uTime / 60. / bps);
+  // vec2 vUv = vWorldPosition.xy;
 
   for (int i = 0; i < NUM_LINES; i++) {
     float pos = float(i) / float(NUM_LINES);
@@ -43,7 +57,14 @@ void main() {
   gl_FragColor = vec4(col, 1.0);
 }
 
-//   float line2 = plot(vUv, .50); // currently just setting a simple line down
+
+// originally from http://blog.edankwan.com/post/three-js-advanced-tips-shadow
+// removed anything but depth-shadow
+
+
+
+
+//   float line2 = plot(vWorldPosition, .50); // currently just setting a simple line down
 //   the middle... float line3 = plot(vUv, .75); float line4 = plot(vUv, .85);
 //   float line5 = plot(vUv, .95);
 // TODO right now there are all just slight variations without much forthought
