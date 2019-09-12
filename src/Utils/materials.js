@@ -151,7 +151,7 @@ export function initPinkShinyMaterial() {
 
 
 // Shader built in the style of: https://medium.com/@pailhead011/extending-three-js-materials-with-glsl-78ea7bbb9270
-export function CloudMaterial({ materialRef, pointLight, pos, ...props }) {
+export function CloudMaterial({ materialRef, ...props }) {
 	materialRef = materialRef ? materialRef : useRef().current;
 	const { camera, canvas } = useThree();
 	const [colorMap, normalMap, metalnessMap, envMap] = useMemo(() => {
@@ -179,6 +179,7 @@ export function CloudMaterial({ materialRef, pointLight, pos, ...props }) {
 		castShadow
 		map={colorMap}
 		envMapIntensity={0.3}
+		color={0x0000c0}
 		opacity={props.opacity || 1.0}
 		reflectivity={props.reflectivity || 0.8} // env map uses this
 		envMap={envMap}
@@ -204,7 +205,7 @@ export function TronMaterial({ materialRef, bpm }) {
 		return {
 			uTime: { value: 0 },
 			uCurCenter: { value: camera.position },
-			uLightPosition: {valuje: camera.children[0].position},
+			// uLightPosition: {value: camera.children[0].position},
 			uBPM: { value: BPM },// TODO bpm },
 		}
 	}, [materialRef, bpm]);
