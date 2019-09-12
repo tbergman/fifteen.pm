@@ -69,6 +69,12 @@ class Player extends PureComponent {
     }
   }
 
+  getCurrentTrack() {
+    const { trackList } = this.props;
+    const { curTrackIdx } = this.state;
+    return trackList[curTrackIdx];
+  }
+
   setCurrentTrack(trackIdx, { id, secretToken }) {
     this.setState({
       curTrackIdx: trackIdx,
@@ -92,7 +98,7 @@ class Player extends PureComponent {
       mediaObj.mesh = loadVideo({ ...mediaObj.meta });
       mediaObj.media = mediaObj.mesh.userData.media;
       mediaObj.media.visible = false;
-      
+
       mediaObj.media.addEventListener("canplay", () => {
         mediaObj.media.playsinline = true;
         mediaObj.media.play();
@@ -133,9 +139,9 @@ class Player extends PureComponent {
 
 
   handlePlay() {
-    const {useAuxMediaOnly} = this.props;
+    const { useAuxMediaOnly } = this.props;
     this.setState({ paused: false }, () => {
-      if (!useAuxMediaOnly){
+      if (!useAuxMediaOnly) {
         this.state.audioElement.play();
       }
       this.handleAuxPlay();
@@ -143,11 +149,11 @@ class Player extends PureComponent {
   }
 
   handlePause() {
-    const {useAuxMediaOnly} = this.props;
+    const { useAuxMediaOnly } = this.props;
     this.setState({ paused: true }, () => {
-      if (!useAuxMediaOnly){
+      if (!useAuxMediaOnly) {
         this.state.audioElement.pause();
-      }      
+      }
       this.handleAuxPause();
     });
   }
@@ -168,10 +174,8 @@ class Player extends PureComponent {
   }
 
   renderPlaylist() {
-    const { trackList, fillColor, selectedColor } = this.props;
-    const { curTrackIdx } = this.state;
-    const curTrack = trackList[curTrackIdx];
-
+    const { trackList, selectedColor, fillColor } = this.props;
+    const curTrack = this.getCurrentTrack();
     if (trackList.length > 1) {
       const playList = trackList.map((track, idx) =>
         <li
@@ -241,7 +245,7 @@ class Player extends PureComponent {
       </audio>
     );
   }
-  
+
   renderMediaTag() {
     const { type } = this.props;
     if (type === "audio/mpeg") {

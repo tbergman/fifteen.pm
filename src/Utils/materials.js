@@ -147,6 +147,7 @@ export function initPinkShinyMaterial() {
 
 // Shader built in the style of: https://medium.com/@pailhead011/extending-three-js-materials-with-glsl-78ea7bbb9270
 export function CloudMaterial({ materialRef, pointLight, pos, ...props }) {
+	materialRef = materialRef ? materialRef : useRef().current;
 	const { camera, canvas } = useThree();
 	const [colorMap, normalMap, metalnessMap, envMap] = useMemo(() => {
 		const textureLoader = new THREE.TextureLoader();
@@ -183,25 +184,27 @@ export function CloudMaterial({ materialRef, pointLight, pos, ...props }) {
 	/>
 }
 
-export function TronMaterial({ materialRef, pos }) {
+export function TronMaterial({ materialRef, bpm }) {
+	materialRef = materialRef ? materialRef : useRef().current;
+	const BPM = 120; // TODO not passing down
 	const { camera } = useThree();
 	let t = 0;
 	useRender(
-	  () => {
-		if (!materialRef.current) return; // avoid re-initialization async issues (e.g. if tiling)
-		materialRef.current.uniforms.uTime.value += .1;
-	  });
+		(state, time) => {
+			if (!materialRef.current) return; // avoid re-initialization async issues (e.g. if tiling)
+			materialRef.current.uniforms.uTime.value = time;
+		});
 	const uniforms = useMemo(() => {
-	  return {
-		uTime: { value: 0 },
-		uGlobalOffset: { value: pos || new THREE.Vector3() },
-		uCurCenter: { value: camera.position }
-	  }
-	}, [materialRef]);
+		return {
+			uTime: { value: 0 },
+			uCurCenter: { value: camera.position },
+			uBPM: { value: BPM },// TODO bpm },
+		}
+	}, [materialRef, bpm]);
 	return <shaderMaterial
-	  ref={materialRef}
-	  uniforms={uniforms}
-	  vertexShader={simpleVertex}
-	  fragmentShader={tronFragmentShader}
+		ref={materialRef}
+		uniforms={uniforms}
+		vertexShader={simpleVertex}
+		fragmentShader={tronFragmentShader}
 	/>;
-  }
+}

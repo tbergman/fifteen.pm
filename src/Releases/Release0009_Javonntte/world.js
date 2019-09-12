@@ -78,10 +78,14 @@ function AtmosphereGlow({ radius }) {
     </>
 }
 
-export function WorldSurface({ geometry }) {
+export function WorldSurface({ geometry, bpm }) {
     const [materialRef, material] = useResource();
     return <>
-        <TronMaterial materialRef={materialRef} opacity={0.1} reflectivity={.1} side={THREE.DoubleSide} />
+        <TronMaterial
+            materialRef={materialRef}
+            bpm={bpm}
+            side={THREE.DoubleSide}
+        />
         {material && <mesh
             geometry={geometry}
             material={material}
@@ -91,7 +95,7 @@ export function WorldSurface({ geometry }) {
     </>
 }
 
-export function World({ sphereGeometry, surfaceMaterial, ...props }) {
+export function World({ sphereGeometry, bpm, ...props }) {
     const { camera, scene } = useThree();
     const [renderTiles, setRenderTiles] = useState(true);
     const radius = sphereGeometry.parameters.radius
@@ -109,6 +113,7 @@ export function World({ sphereGeometry, surfaceMaterial, ...props }) {
     return <group>
         <WorldSurface
             geometry={sphereGeometry}
+            bpm={bpm}
         />
         {renderTiles ?
             <SphereTileGenerator
@@ -118,7 +123,6 @@ export function World({ sphereGeometry, surfaceMaterial, ...props }) {
             :
             <AtmosphereGlow
                 radius={distThreshold - .2}
-                material={surfaceMaterial}
             />
         }
     </group>
