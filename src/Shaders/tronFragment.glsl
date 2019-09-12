@@ -19,7 +19,8 @@ float plotY(vec2 st, float pct) {
 // https://gist.github.com/companje/29408948f1e8be54dd5733a74ca49bb9
 void main() {
   float bps = uBPM / 60.;
-  vec3 col = vec3(.1, sin(vUv.x), .3);
+  vec3 col = vec3(cos(vUv.x * uTime/bps), sin(vUv.y), sin(vUv.x));
+//   vec3 col = vec3(.0, 1., 0);
   float numBeats = floor(uTime / 60. / bps);
 
   for (int i = 0; i < NUM_LINES; i++) {

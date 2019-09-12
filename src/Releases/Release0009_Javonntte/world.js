@@ -2,9 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { useThree, useRender, useResource } from 'react-three-fiber';
 import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
-import { SphereTileGenerator, tileId } from '../../Utils/SphereTileGenerator';
+import { SphereTiles, tileId } from '../../Utils/SphereTiles';
 import "./index.css";
 import { CloudMaterial, TronMaterial } from '../../Utils/materials';
+import { Stars } from './stars';
 import { tileFormationRatios, pickTileFormation } from './tiles';
 
 
@@ -95,14 +96,18 @@ export function WorldSurface({ geometry, bpm }) {
     </>
 }
 
-export function World({ sphereGeometry, bpm, ...props }) {
+export function World({ sphereGeometry, track, ...props }) {
     const { camera, scene } = useThree();
+    const [worldRef, world] = useResource();
     const [renderTiles, setRenderTiles] = useState(true);
     const radius = sphereGeometry.parameters.radius
     const distThreshold = radius + radius * .15;
     useEffect(() => {
-        renderTiles ? scene.fog = new THREE.FogExp2(0x000000, 0.1) : scene.fog = null;
-    }, [renderTiles])
+        if (renderTiles && track) {
+            // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.01) : null;
+            scene.background = new THREE.Color(track.theme.backgroundColor);
+        }
+    }, [track])
     useRender((state, time) => {
         if ((time % .05).toFixed(2) == 0) {
             const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);
@@ -110,20 +115,33 @@ export function World({ sphereGeometry, bpm, ...props }) {
             setRenderTiles(!tooFarAway);
         }
     })
-    return <group>
-        <WorldSurface
-            geometry={sphereGeometry}
-            bpm={bpm}
-        />
-        {renderTiles ?
-            <SphereTileGenerator
-                sphereGeometry={sphereGeometry}
-                {...props}
+    useRender(() => {
+        // if (worldRef.current) {
+        //     worldRef.current.rotation.x += .001;
+        // } 
+    })
+    return <group ref={worldRef}>
+        {world && <>
+            <Stars
+                radius={radius}
+                colors={track.theme.starColors}
             />
-            :
-            <AtmosphereGlow
-                radius={distThreshold - .2}
+            <WorldSurface
+                geometry={sphereGeometry}
+                bpm={track && track.bpm}
             />
+            {renderTiles ?
+                <SphereTiles
+                    rotation={worldRef.current.rotation}
+                    sphereGeometry={sphereGeometry}
+                    {...props}
+                />
+                :
+                <AtmosphereGlow
+                    radius={distThreshold - .2}
+                />
+            }
+        </>
         }
     </group>
 }

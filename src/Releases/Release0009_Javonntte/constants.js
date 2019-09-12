@@ -8,11 +8,33 @@ export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
 export const LARGE = "large";
 export const MEDIUM = "medium";
 export const SMALL = "small";
-export const BPM_LOOKUP = () => {
+const THEMES = [
+    // index matches track list order
+    {
+        fogColor: 0x00ff00,
+        backgroundColor: 0x00ff00,
+        starColors: [0x0000ff, 0x0000fa, 0x0000af],
+    },
+    {
+        // fogColor: 0xff0000, i.e. turn off fog
+        backgroundColor: 0xff0000,
+        starColors: [0x00ff00, 0x00fa00, 0x00af00],
+    },
+    {
+        fogColor: 0x0000ff,
+        backgroundColor: 0x0000ff,
+        starColors: [0xff0000, 0xfa0000, 0xaf0000],
+    }
+]
+export const TRACK_LOOKUP = (() => {
     const lookup = {};
-    CONTENT["/9"].tracks.forEach(track => lookup[track.id] = track.bpm);
+    CONTENT["/9"].tracks.forEach((track, index) => lookup[track.id] = {
+        bpm: track.bpm,
+        name: track.title,
+        theme: THEMES[index],
+    });
     return lookup;
-}
+})();
 export const WORLD_RADIUS = 48;
 export const SIDES = 80;
 export const TIERS = 40;

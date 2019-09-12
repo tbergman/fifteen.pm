@@ -60,7 +60,7 @@ function loadKDTree(tiles) {
     return kdTree;
 }
 
-function displayNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
+function findNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
     const matchingTiles = [];
     // take the nearest 200 around them. distance^2 'cause we use the manhattan distance and no square is applied in the distance function
     var positionsInRange = kdTree.nearest([position.x, position.y, position.z], numMatches, maxDistance);
@@ -75,7 +75,8 @@ function displayNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
     return matchingTiles;
 }
 
-export function SphereTileGenerator({ sphereGeometry, tileComponent, tileElements }) {
+
+export function SphereTiles({ rotation, sphereGeometry, tileComponent, tileElements }) {
     const { camera } = useThree();
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const searchPosition = useRef(new THREE.Vector3());
@@ -92,7 +93,18 @@ export function SphereTileGenerator({ sphereGeometry, tileComponent, tileElement
 
     const getSearchPosition = () => {
         cameraRaycaster.setFromCamera(new THREE.Vector2(), camera);
-        return cameraRaycaster.ray.at(radius / 5, inFrontOfCamera);
+        const worldPos = cameraRaycaster.ray.at(radius / 5, inFrontOfCamera);
+        // const sphereRelativePos = new THREE.Vector3(
+            //  worldPos.x - Math.sin(rotation.z) * radius,
+            //  worldPos.y - Math.sin(rotation.x) * radius,
+            //  worldPos.z - Math.cos(rotation.x) * radius,
+            // worldPos.x * Math.cos(rotation.x) - worldPos.y * Math.sin(rotation.x),
+            // worldPos.y * Math.cos(rotation.x) - worldPos.x * Math.sin(rotation.x),
+            // worldPos.z,
+        // )
+        // console.log(rotation, sphereRelativePos);
+        // return sphereRelativePos;
+        return worldPos;
     }
 
     useEffect(() => {
@@ -105,7 +117,7 @@ export function SphereTileGenerator({ sphereGeometry, tileComponent, tileElement
             searchPosition.current = getSearchPosition();
         }
         if (prevSearchPosition.current.distanceTo(searchPosition.current) > 2 * Math.PI / radius) {
-            const allClosestTiles = displayNearest(searchPosition.current, kdTree.current, numMatches, maxDistance, allTiles.current);
+            const allClosestTiles = findNearest(searchPosition.current, kdTree.current, numMatches, maxDistance, allTiles.current);
             closestTiles.current = allClosestTiles;
             prevSearchPosition.current.copy(searchPosition.current);
             setLastUpdateTime(time); // TODO better way to set state??

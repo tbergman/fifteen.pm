@@ -131,7 +131,7 @@ function subdivideTriangle(triangle) {
 
 export function pickTileFormation({ triangle, centroid, geometries }) {
     // TODO some heuristic for which formations work best where
-    const formation = THREE.Math.randInt(0, 2);
+    const formation = THREE.Math.randInt(2, 2);
     const triangleComponents = subdivideTriangle(triangle);
     switch (formation) {
         case 0: return formation0({ centroid, triangleComponents, geometries });

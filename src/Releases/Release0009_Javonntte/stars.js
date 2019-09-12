@@ -2,7 +2,7 @@ import React from 'react';
 import * as THREE from 'three';
 
 // from https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_fly.html
-export function Stars({ radius }) {
+export function Stars({ radius, colors }) {
     let i, r = radius, starsGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry()];
     const vertices1 = [];
     const vertices2 = [];
@@ -25,12 +25,12 @@ export function Stars({ radius }) {
     starsGeometry[1].addAttribute('position', new THREE.Float32BufferAttribute(vertices2, 3));
 
     const starsMaterials = [
-        new THREE.PointsMaterial({ color: 0x555555, size: 3, sizeAttenuation: false }),
-        new THREE.PointsMaterial({ color: 0x555555, size: 2, sizeAttenuation: false }),
-        new THREE.PointsMaterial({ color: 0x333333, size: 3, sizeAttenuation: false }),
-        new THREE.PointsMaterial({ color: 0x3a3a3a, size: 1, sizeAttenuation: false }),
-        new THREE.PointsMaterial({ color: 0x1a1a1a, size: 3, sizeAttenuation: false }),
-        new THREE.PointsMaterial({ color: 0x1a1a1a, size: 2, sizeAttenuation: false })
+        new THREE.PointsMaterial({ color: colors[0], size: 3, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: colors[0], size: 2, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: colors[1], size: 3, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: colors[1], size: 1, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: colors[2], size: 3, sizeAttenuation: false }),
+        new THREE.PointsMaterial({ color: colors[2], size: 2, sizeAttenuation: false })
     ];
     const stars = [];
     for (i = 10; i < 30; i++) {

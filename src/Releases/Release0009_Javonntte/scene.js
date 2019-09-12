@@ -1,9 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Canvas, useResource, useThree } from 'react-three-fiber';
+import { useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { CONTENT } from '../../Content';
-// TODO refactor this to Menu/index?
-import Menu from '../../UI/Menu/Menu';
+import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import { useGLTF } from "../../Utils/hooks";
 import { CloudMaterial } from '../../Utils/materials';
 import { onBuildingsLoaded } from "./buildings";
@@ -12,10 +10,10 @@ import * as C from "./constants";
 import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
-import { Stars } from './stars';
 import { SkyCityTile } from "./tiles";
-import { World, generateWorldGeometry, generateWorldTilePatterns } from './world';
-import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
+import { generateWorldGeometry, generateWorldTilePatterns, World } from './world';
+
+console.log(C.TRACK_LOOKUP);
 
 // TODO think about how to encapsulate these initial declarations
 export function Scene({ mediaRef }) {
@@ -32,9 +30,7 @@ export function Scene({ mediaRef }) {
     const worldTilePatterns = useRef();
     
     // TODO having trouble figuring out mediaRef state handling
-    const [trackId, setTrackId] = useState();
-    const [curTrackId, setCurTrackId] = useState(mediaRef.current.currentSrc); // 
-    const [bpm, setBPM] = useState(120);
+    const [track, setTrack] = useState();
     // const [bpm, setBPM] = useState(C.BPM_LOOKUP[curTrackId]); <-- maybe something like ...
 
     const worldSphereGeometry = useMemo(() => {
@@ -53,11 +49,12 @@ export function Scene({ mediaRef }) {
 
     // TODO having trouble figuring out mediaRef state handling
     useEffect(() => {
-        const curTrackId = soundcloudTrackIdFromSrc(mediaRef.current.currentSrc);
-        setTrackId(curTrackId);
-        setBPM(C.BPM_LOOKUP[trackId]);
-        // console.log("BPM", bpm)
-    }, [curTrackId]);
+        const trackId = soundcloudTrackIdFromSrc(mediaRef.current.currentSrc);
+        console.log("TRACK ID", trackId)
+        console.log('track', C.TRACK_LOOKUP[trackId])
+        setTrack(C.TRACK_LOOKUP[trackId]);
+        console.log("TRACK", track)
+    }, [track]);
 
     return (
         <>
@@ -65,7 +62,7 @@ export function Scene({ mediaRef }) {
             <CloudMaterial materialRef={cloudMaterialRef} />
             <Camera
                 fov={25}
-                near={.1}
+                near={.01}
                 far={1e7}
                 lightProps={{
                     intensity: 1,
@@ -93,12 +90,9 @@ export function Scene({ mediaRef }) {
                 threshold={.75}
             /> */}
             <FixedLights />
-            <Stars
-                radius={C.WORLD_RADIUS}
-            />
             {cloudMaterial && buildings &&
                 <World
-                    bpm={bpm}
+                    track={track}
                     sphereGeometry={worldSphereGeometry}
                     startPos={startPos}
                     tileComponent={SkyCityTile}
