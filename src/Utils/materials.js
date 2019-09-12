@@ -180,6 +180,7 @@ export function CloudMaterial({ materialRef, ...props }) {
 		map={colorMap}
 		envMapIntensity={0.3}
 		color={0x0000c0}
+		emissive={0xfffb00}
 		opacity={props.opacity || 1.0}
 		reflectivity={props.reflectivity || 0.8} // env map uses this
 		envMap={envMap}

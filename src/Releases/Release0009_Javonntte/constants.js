@@ -2,17 +2,14 @@ import { CONTENT } from '../../Content';
 import { assetPath9 } from './utils';
 
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
-// export const LARGE = "medium";
-// export const MEDIUM = "medium";
-// export const SMALL = "medium";
 export const LARGE = "large";
 export const MEDIUM = "medium";
 export const SMALL = "small";
 const THEMES = [
     // index matches track list order
     {
-        fogColor: 0x0000ff,
-        backgroundColor: 0x0000ff,
+        fogColor: 0x0000aa,
+        backgroundColor: 0x0000aa,
         starColors: [0xfff, 0xfa0000, 0xaf0000],
     },
     {

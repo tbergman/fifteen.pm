@@ -15,7 +15,6 @@ import { generateWorldGeometry, generateWorldTilePatterns, World } from './world
 
 console.log(C.TRACK_LOOKUP);
 
-// TODO think about how to encapsulate these initial declarations
 export function Scene({ mediaRef }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
@@ -28,10 +27,9 @@ export function Scene({ mediaRef }) {
     const [loadingBuildings, buildings] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const worldTilePatterns = useRef(); // TODO rm me
-    // TODO having trouble figuring out mediaRef state handling
     const [track, setTrack] = useState();
-    // const [bpm, setBPM] = useState(C.BPM_LOOKUP[curTrackId]); <-- maybe something like ...
 
+    // TODO this can move into World when moving worldTilePatterns
     const worldSphereGeometry = useMemo(() => {
         return generateWorldGeometry(C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT);
     }, [C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT]);
@@ -43,17 +41,14 @@ export function Scene({ mediaRef }) {
         // These actions must occur after buildings load.
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
-        // TODO rm me
+        // TODO mv me into scene
         if (buildings) worldTilePatterns.current = generateWorldTilePatterns(worldSphereGeometry, buildings);
     }, [buildings])
 
     // TODO having trouble figuring out mediaRef state handling
     useEffect(() => {
         const trackId = soundcloudTrackIdFromSrc(mediaRef.current.currentSrc);
-        console.log("TRACK ID", trackId)
-        console.log('track', C.TRACK_LOOKUP[trackId])
         setTrack(C.TRACK_LOOKUP[trackId]);
-        console.log("TRACK", track)
     }, [track]);
 
     return (
@@ -87,15 +82,14 @@ export function Scene({ mediaRef }) {
                 <World
                     track={track}
                     sphereGeometry={worldSphereGeometry}
-                    geometries={buildings} // TODO currently passing buildings in to two places here so reimagine data structure...
                     startPos={startPos}
                     tileComponent={SkyCityTile}
                     tileElements={{
                         buildings: {
-                            geometries: buildings, // TODO buildings passed in two places
+                            geometries: buildings,
                             material: cloudMaterial
                         },
-                        lookup: worldTilePatterns.current, // This is not longer passed in now e
+                        lookup: worldTilePatterns.current,
                     }}
                 />
             }

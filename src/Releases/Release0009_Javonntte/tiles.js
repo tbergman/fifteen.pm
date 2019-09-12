@@ -16,7 +16,6 @@ export const SkyCityTile = props => {
         <Buildings
             material={props.tileElements.buildings.material}
             subdivisions={props.tileElements.lookup[props.tileId]}
-            // geometry={props.tileElements.lookup[props.tileId]}
             normal={props.normal}
         />
     </group>
@@ -142,33 +141,6 @@ export function pickTileFormation({ triangle, centroid, geometries }) {
     }
 }
 
-//https://github.com/mrdoob/three.js/issues/13506
+//TODO https://github.com/mrdoob/three.js/issues/13506
 function merge(triangles) {
-    // const b = new THREE.BufferGeometry();
-    // const totalNumIndices = triangles.reduce((total, cur) => {
-    //     return total + cur.geometry.attributes.position.count
-    // }, 0);
-    // // console.log('total indices', totalNumIndices)
-    // b.addAttribute('position', new THREE.BufferAttribute( new Float32Array(totalNumIndices), 3));
-    // let curOffset = 0;
-    // const geomsToMerge = triangles.map((triangle, idx) => {
-    //     // const  = new THREE.Mesh(triangle.geometry)
-    //     // t.position.copy(triangle.centroid);
-    //     let t = triangle.geometry.clone();
-    //     // t = t.toNonIndexed();
-    //     // t.translate(triangle.centroid);
-    //     t.applyMatrix(new THREE.Matrix4().makeTranslation(triangle.centroid));
-    //     // t.updateMatrix();
-    //     // b.merge(t, curOffset)
-
-    //     // curOffset += t.attributes.position.count;
-    //     // console.log("RETURN", t.geometry)
-    //     return t;
-    // })
-    // const m = BufferGeometryUtils.mergeBufferGeometries(geomsToMerge);
-    // console.log('tomerge,', geomsToMerge, "MERGED:", m);
-    // return m;
-    // return b;
-    // triangles[0].geometry.applyMatrix(new THREE.Matrix4().makeTranslation(triangles[0].centroid))
-    // return triangles[0].geomtry;
 }

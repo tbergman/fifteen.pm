@@ -23,18 +23,9 @@ function Building({ geometry, material, centroid, normal, color, visible }) {
         material={material}
     />
 }
+
 export function Buildings({ material, subdivisions, normal }) {
     const buildingGroupRef = useRef();
-    // return <>{geometry && <mesh
-    //     onUpdate={self => {
-    //         self.lookAt(normal);
-    //         self.rotation.z = THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI);
-    //         self.visible = true
-    //     }}
-    //     geometry={geometry}
-    //     // position={centroid}
-    //     material={material}
-    // />}</>
     return <group>
         {subdivisions.map(subdivision => {
             return <group
