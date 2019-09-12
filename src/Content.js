@@ -342,17 +342,18 @@ export const CONTENT = {
   "/9": {
     artist: "JAVONNTTE",
     tracks: [
-      {
-        title: "This Dream",
-        type: "soundcloud",
-        id: "679771253",
-        secretToken: "s-XeIko",
-      },
+     
       {
         title: "City Life",
         type: "soundcloud",
         id: "679771262",
         secretToken: "s-pqcS4",
+      },
+      {
+        title: "This Dream",
+        type: "soundcloud",
+        id: "679771253",
+        secretToken: "s-XeIko",
       },
       {
         title: "Natural",
@@ -364,10 +365,10 @@ export const CONTENT = {
     theme: {
       message: "In the year 4182 all of Detroit Cloud City went crazy for City Lights, an early 21st century EP by Javonnttee, pulled off some bricked drives in the archives.",
       purchaseLink: "TODO",
-      iconColor: '#007c7c',
-      fillColor: 'rgba(0, 124, 124, 0.5)',
-      textColor: '#007c7c',
-      navColor: '#007c7c',
+      iconColor: '#1b03a3',
+      fillColor: 'rgba(211, 211, 211, 0.5)',
+      textColor: '#fff',
+      navColor: '#1b03a3',
       controls: []
     }
   }

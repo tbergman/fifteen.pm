@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import * as THREE from 'three';
 import { SMALL, MEDIUM, LARGE } from "./constants";
-
+import { randFloat } from '../../Utils/random';
 
 function buildingName(building, position) {
     return [building.name,
@@ -15,12 +15,12 @@ function Building({ geometry, material, centroid, normal, color, visible }) {
     return <mesh
         onUpdate={self => {
             self.lookAt(normal);
+            self.rotation.z = THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI);
             self.visible = visible
         }}
         geometry={geometry}
         position={centroid}
         material={material}
-    // TODO random rotations
     />
 }
 
@@ -54,7 +54,7 @@ export function onBuildingsLoaded(gltf) {
     gltf.scene.traverse(child => {
         if (child.isMesh) {
             // For devving minimal number of faces
-            // if (child.name === "MEDIUM_penobscot") {
+            // if (child.name === "large_disco_geo001") {
             //     console.log("GOT THE GEOMETRY")
             //     child.position.set(0, 0, 0);
             //     const geometry = child.geometry.clone();
@@ -65,6 +65,7 @@ export function onBuildingsLoaded(gltf) {
             const geometry = child.geometry.clone();
             // this makes the 'lookAt(normal)' function as expected on the sphere by flipping the default blender output
             geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI));
+            // give the buildings more organic positioning by rotating on z (UP)
             if (child.name.startsWith(MEDIUM)) {
                 geometries.medium.push(geometry);
             } else if (child.name.startsWith(LARGE)) {

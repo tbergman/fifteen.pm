@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { useThree, useRender, useResource } from 'react-three-fiber';
 import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
 import { SphereTileGenerator, tileId } from '../../Utils/SphereTileGenerator';
 import "./index.css";
-import { CloudMaterial } from '../../Utils/materials';
+import { CloudMaterial, TronMaterial } from '../../Utils/materials';
 import { tileFormationRatios, pickTileFormation } from './tiles';
 
 
@@ -50,8 +50,8 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
 export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
     const vertices = sphereGeometry.vertices;
     const lookup = {};
-    const ratios = tileFormationRatios();
-    const totalFaces = sphereGeometry.faces.length;
+    // const ratios = tileFormationRatios();
+    // const totalFaces = sphereGeometry.faces.length;
     // Object.keys(ratios).forEach((formation, idx) => {
     //     console.log(ratios[idx])
     // })
@@ -81,7 +81,7 @@ function AtmosphereGlow({ radius }) {
 export function WorldSurface({ geometry }) {
     const [materialRef, material] = useResource();
     return <>
-        <CloudMaterial materialRef={materialRef} opacity={0.1} reflectivity={.1} side={THREE.DoubleSide} />
+        <TronMaterial materialRef={materialRef} opacity={0.1} reflectivity={.1} side={THREE.DoubleSide} />
         {material && <mesh
             geometry={geometry}
             material={material}
@@ -92,10 +92,13 @@ export function WorldSurface({ geometry }) {
 }
 
 export function World({ sphereGeometry, surfaceMaterial, ...props }) {
-    const { camera } = useThree();
+    const { camera, scene } = useThree();
     const [renderTiles, setRenderTiles] = useState(true);
     const radius = sphereGeometry.parameters.radius
     const distThreshold = radius + radius * .15;
+    useEffect(() => {
+        renderTiles ? scene.fog = new THREE.FogExp2(0x000000, 0.1) : scene.fog = null;
+    }, [renderTiles])
     useRender((state, time) => {
         if ((time % .05).toFixed(2) == 0) {
             const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);
