@@ -1,5 +1,6 @@
 import React from 'react';
 import * as THREE from 'three';
+import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {
     getMiddle,
     triangleCentroidFromVertices as centroidFromPoints,
@@ -15,6 +16,7 @@ export const SkyCityTile = props => {
         <Buildings
             material={props.tileElements.buildings.material}
             subdivisions={props.tileElements.lookup[props.tileId]}
+            // geometry={props.tileElements.lookup[props.tileId]}
             normal={props.normal}
         />
     </group>
@@ -87,32 +89,32 @@ function formation2({ centroid, triangleComponents, geometries }) {
     const triangles = [];
     tinyTriangles.forEach(tiny => {
         triangles.push(
-            
-                {
-                    geometry: randomArrayVal(geometries[SMALL]),
-                    centroid: centroidFromPoints(tiny.components.i1, tiny.components.a, tiny.centroid),
-                },
-                {
-                    geometry: randomArrayVal(geometries[SMALL]),
-                    centroid: centroidFromPoints(tiny.components.a, tiny.components.i2, tiny.centroid),
-                },
-                {
-                    geometry: randomArrayVal(geometries[SMALL]),
-                    centroid: centroidFromPoints(tiny.components.i2, tiny.components.b, tiny.centroid),
-                },
-                {
-                    geometry: randomArrayVal(geometries[SMALL]),
-                    centroid: centroidFromPoints(tiny.components.b, tiny.components.i3, tiny.centroid),
-                },
-                {
-                    geometry: randomArrayVal(geometries[SMALL]),
-                    centroid: centroidFromPoints(tiny.components.i3, tiny.components.c, tiny.centroid),
-                },
-                {
-                    geometry: randomArrayVal(geometries[SMALL]),
-                    centroid: centroidFromPoints(tiny.components.c, tiny.components.i1, tiny.centroid),
-                }
-            
+
+            {
+                geometry: randomArrayVal(geometries[SMALL]),
+                centroid: centroidFromPoints(tiny.components.i1, tiny.components.a, tiny.centroid),
+            },
+            {
+                geometry: randomArrayVal(geometries[SMALL]),
+                centroid: centroidFromPoints(tiny.components.a, tiny.components.i2, tiny.centroid),
+            },
+            {
+                geometry: randomArrayVal(geometries[SMALL]),
+                centroid: centroidFromPoints(tiny.components.i2, tiny.components.b, tiny.centroid),
+            },
+            {
+                geometry: randomArrayVal(geometries[SMALL]),
+                centroid: centroidFromPoints(tiny.components.b, tiny.components.i3, tiny.centroid),
+            },
+            {
+                geometry: randomArrayVal(geometries[SMALL]),
+                centroid: centroidFromPoints(tiny.components.i3, tiny.components.c, tiny.centroid),
+            },
+            {
+                geometry: randomArrayVal(geometries[SMALL]),
+                centroid: centroidFromPoints(tiny.components.c, tiny.components.i1, tiny.centroid),
+            }
+
         );
     });
     return triangles;
@@ -138,4 +140,35 @@ export function pickTileFormation({ triangle, centroid, geometries }) {
         case 1: return formation1({ centroid, triangleComponents, geometries });
         case 2: return formation2({ centroid, triangleComponents, geometries });
     }
+}
+
+//https://github.com/mrdoob/three.js/issues/13506
+function merge(triangles) {
+    // const b = new THREE.BufferGeometry();
+    // const totalNumIndices = triangles.reduce((total, cur) => {
+    //     return total + cur.geometry.attributes.position.count
+    // }, 0);
+    // // console.log('total indices', totalNumIndices)
+    // b.addAttribute('position', new THREE.BufferAttribute( new Float32Array(totalNumIndices), 3));
+    // let curOffset = 0;
+    // const geomsToMerge = triangles.map((triangle, idx) => {
+    //     // const  = new THREE.Mesh(triangle.geometry)
+    //     // t.position.copy(triangle.centroid);
+    //     let t = triangle.geometry.clone();
+    //     // t = t.toNonIndexed();
+    //     // t.translate(triangle.centroid);
+    //     t.applyMatrix(new THREE.Matrix4().makeTranslation(triangle.centroid));
+    //     // t.updateMatrix();
+    //     // b.merge(t, curOffset)
+
+    //     // curOffset += t.attributes.position.count;
+    //     // console.log("RETURN", t.geometry)
+    //     return t;
+    // })
+    // const m = BufferGeometryUtils.mergeBufferGeometries(geomsToMerge);
+    // console.log('tomerge,', geomsToMerge, "MERGED:", m);
+    // return m;
+    // return b;
+    // triangles[0].geometry.applyMatrix(new THREE.Matrix4().makeTranslation(triangles[0].centroid))
+    // return triangles[0].geomtry;
 }

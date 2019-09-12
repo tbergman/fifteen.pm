@@ -57,15 +57,15 @@ export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
     //     console.log(ratios[idx])
     // })
     const faces = sphereGeometry.faces;
-    const numDowntowns = 10;
-    const numFaces = faces.length;
-    const downtownIndices = [];
-    // TODO why doesn't map work here?
-    cryptoRandom(numDowntowns).forEach(randNum => {
-        const randIdx = randNum % numFaces;
-        const centroid = faceCentroid(faces[randIdx], vertices);
-        downtownIndices.push(centroid);
-    });
+    // const numDowntowns = 10;
+    // const numFaces = faces.length;
+    // const downtownIndices = [];
+    // // TODO why doesn't map work here?
+    // cryptoRandom(numDowntowns).forEach(randNum => {
+    //     const randIdx = randNum % numFaces;
+    //     const centroid = faceCentroid(faces[randIdx], vertices);
+    //     downtownIndices.push(centroid);
+    // });
     const lookup = {};
     // faces.forEach((face, idx) => {
     //     const centroid = faceCentroid(face, vertices);
@@ -78,13 +78,13 @@ export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
         const centroid = faceCentroid(face, vertices);
         const tId = tileId(centroid);
         // downtownIndices.forEach(downtownCentroid => {
-            // if (centroid.distanceTo(downtownCentroid) < sphereGeometry.parameters.radius/2) {
-                // const centroid = faceCentroid(face, vertices);
-                const triangle = triangleFromFace(face, vertices);
-                // if (!lookup[tId].length) {
-                    lookup[tId] = pickTileFormation({ triangle, centroid, geometries: surfaceGeometries })
-                // }
-            // }
+        // if (centroid.distanceTo(downtownCentroid) < sphereGeometry.parameters.radius/2) {
+        // const centroid = faceCentroid(face, vertices);
+        const triangle = triangleFromFace(face, vertices);
+        // if (!lookup[tId].length) {
+        lookup[tId] = pickTileFormation({ triangle, centroid, geometries: surfaceGeometries })
+        // }
+        // }
         // })
     })
     return lookup;
@@ -105,7 +105,7 @@ function AtmosphereGlow({ radius }) {
 
 export function WorldSurface({ geometry, bpm }) {
     const [materialRef, material] = useResource();
-    
+
     return <>
         <TronMaterial
             materialRef={materialRef}

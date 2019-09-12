@@ -11,9 +11,9 @@ export const SMALL = "small";
 const THEMES = [
     // index matches track list order
     {
-        fogColor: 0x00ff00,
-        backgroundColor: 0x00ff00,
-        starColors: [0x0000ff, 0x0000fa, 0x0000af],
+        fogColor: 0x0000ff,
+        backgroundColor: 0x0000ff,
+        starColors: [0xfff, 0xfa0000, 0xaf0000],
     },
     {
         // fogColor: 0xff0000, i.e. turn off fog
