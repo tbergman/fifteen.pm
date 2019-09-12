@@ -67,25 +67,25 @@ export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
         downtownIndices.push(centroid);
     });
     const lookup = {};
-    faces.forEach((face, idx) => {
-        const centroid = faceCentroid(face, vertices);
-        const tId = tileId(centroid);
-        lookup[tId] = [];
-    })
+    // faces.forEach((face, idx) => {
+    //     const centroid = faceCentroid(face, vertices);
+    //     const tId = tileId(centroid);
+    //     lookup[tId] = [];
+    // })
     faces.forEach((face, index) => {
         // TODO one way to pass this logic into SphereTileGenerator is to just use this part
         // but need to decide if knowledge of neighbor patterns matters (for now, no...)
         const centroid = faceCentroid(face, vertices);
         const tId = tileId(centroid);
-        downtownIndices.forEach(downtownCentroid => {
-            if (centroid.distanceTo(downtownCentroid) < sphereGeometry.parameters.radius/2) {
-                const centroid = faceCentroid(face, vertices);
+        // downtownIndices.forEach(downtownCentroid => {
+            // if (centroid.distanceTo(downtownCentroid) < sphereGeometry.parameters.radius/2) {
+                // const centroid = faceCentroid(face, vertices);
                 const triangle = triangleFromFace(face, vertices);
-                if (!lookup[tId].length) {
+                // if (!lookup[tId].length) {
                     lookup[tId] = pickTileFormation({ triangle, centroid, geometries: surfaceGeometries })
-                }
-            }
-        })
+                // }
+            // }
+        // })
     })
     return lookup;
 
@@ -142,7 +142,7 @@ export function World({ sphereGeometry, track, geometries, ...props }) {
     // }, [tilePatternsLoaded]);
     useEffect(() => {
         if (renderTiles && track) {
-            scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.01) : null;
+            scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
             scene.background = new THREE.Color(track.theme.backgroundColor);
         }
     }, [track])

@@ -92,26 +92,26 @@ function formation2({ centroid, triangleComponents, geometries }) {
                     geometry: randomArrayVal(geometries[SMALL]),
                     centroid: centroidFromPoints(tiny.components.i1, tiny.components.a, tiny.centroid),
                 },
-                // {
-                //     geometry: randomArrayVal(geometries[SMALL]),
-                //     centroid: centroidFromPoints(tiny.components.a, tiny.components.i2, tiny.centroid),
-                // },
+                {
+                    geometry: randomArrayVal(geometries[SMALL]),
+                    centroid: centroidFromPoints(tiny.components.a, tiny.components.i2, tiny.centroid),
+                },
                 {
                     geometry: randomArrayVal(geometries[SMALL]),
                     centroid: centroidFromPoints(tiny.components.i2, tiny.components.b, tiny.centroid),
                 },
-                // {
-                //     geometry: randomArrayVal(geometries[SMALL]),
-                //     centroid: centroidFromPoints(tiny.components.b, tiny.components.i3, tiny.centroid),
-                // },
+                {
+                    geometry: randomArrayVal(geometries[SMALL]),
+                    centroid: centroidFromPoints(tiny.components.b, tiny.components.i3, tiny.centroid),
+                },
                 {
                     geometry: randomArrayVal(geometries[SMALL]),
                     centroid: centroidFromPoints(tiny.components.i3, tiny.components.c, tiny.centroid),
                 },
-                // {
-                //     geometry: randomArrayVal(geometries[SMALL]),
-                //     centroid: centroidFromPoints(tiny.components.c, tiny.components.i1, tiny.centroid),
-                // }
+                {
+                    geometry: randomArrayVal(geometries[SMALL]),
+                    centroid: centroidFromPoints(tiny.components.c, tiny.components.i1, tiny.centroid),
+                }
             
         );
     });
