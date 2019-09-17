@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import { useGLTF } from "../../Utils/hooks";
 import { CloudMaterial } from '../../Utils/materials';
 import { onBuildingsLoaded } from "./buildings";
@@ -15,7 +14,7 @@ import { generateWorldGeometry, generateWorldTilePatterns, World } from './world
 
 console.log(C.TRACK_LOOKUP);
 
-export function Scene({ mediaRef }) {
+export function Scene({ track }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
        example: https://codesandbox.io/s/use-three-renders-thrice-i4k6c
@@ -27,7 +26,7 @@ export function Scene({ mediaRef }) {
     const [loadingBuildings, buildings] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const worldTilePatterns = useRef(); // TODO rm me
-    const [track, setTrack] = useState();
+    
 
     // TODO this can move into World when moving worldTilePatterns
     const worldSphereGeometry = useMemo(() => {
@@ -45,11 +44,7 @@ export function Scene({ mediaRef }) {
         if (buildings) worldTilePatterns.current = generateWorldTilePatterns(worldSphereGeometry, buildings);
     }, [buildings])
 
-    // TODO having trouble figuring out mediaRef state handling
-    useEffect(() => {
-        const trackId = soundcloudTrackIdFromSrc(mediaRef.current.currentSrc);
-        setTrack(C.TRACK_LOOKUP[trackId]);
-    }, [track]);
+   
 
     return (
         <>
@@ -78,7 +73,7 @@ export function Scene({ mediaRef }) {
                 dragToLook={false}
             />
             <FixedLights />
-            {cloudMaterial && buildings &&
+            {cloudMaterial && buildings && track &&
                 <World
                     track={track}
                     sphereGeometry={worldSphereGeometry}

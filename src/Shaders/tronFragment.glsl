@@ -31,7 +31,7 @@ void main() {
   // vec3 col = vec3(c, c, c);
 
   float bps = uBPM / 60.;
-  vec3 col = vec3(0., 0., 0.);//sin(vUv.x * uTime / bps));
+  vec3 col = vec3(0., 0., sin(vUv.x * uTime / bps * .1));
   // vec3 col = vec3(.0, 1., 0);
   float numBeats = floor(uTime / 60. / bps);
   // vec2 vUv = vWorldPosition.xy;
