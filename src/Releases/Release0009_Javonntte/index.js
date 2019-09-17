@@ -32,7 +32,6 @@ export default function Release0009_Javonntte({ }) {
     //    setCurSrc(mediaRef.current.currentSrc); 
     // });
 
-
     return (
         <>
             <Menu
@@ -40,9 +39,15 @@ export default function Release0009_Javonntte({ }) {
                 menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
                 mediaRef={el => mediaRef.current = el}
             />
-            <Canvas id="canvas" onCreated={({ gl }) => {
-                gl.shadowMap.enabled = true;
-            }}>
+            <Canvas
+                id="canvas"
+                antialias="false"
+                onCreated={({ gl }) => {
+                    gl.shadowMap.enabled = true;
+                    console.log(gl)
+                    console.log('canvas', canvas);
+                }}
+            >
                 <Scene track={track} />
             </Canvas>
         </>

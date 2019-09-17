@@ -37,7 +37,6 @@ function generateTiles(sphereGeometry) {
     return tiles;
 }
 
-//create particles with buffer geometry
 var distanceFunction = function (a, b) {
     return Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2) + Math.pow(a[2] - b[2], 2);
 };
@@ -60,21 +59,37 @@ function loadKDTree(tiles) {
     return kdTree;
 }
 
+function triangleInFrustum(frustum, triangle){
+    if (frustum.containsPoint(triangle.a)) return true;
+    if (frustum.containsPoint(triangle.b)) return true;
+    if (frustum.containsPoint(triangle.c)) return true;
+    return false;
+}
+
+// function findNearest(camera, position, kdTree, numMatches, maxDistance, tileLookup) {
 function findNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
     const matchingTiles = [];
     // take the nearest 200 around them. distance^2 'cause we use the manhattan distance and no square is applied in the distance function
-    var positionsInRange = kdTree.nearest([position.x, position.y, position.z], numMatches, maxDistance);
+    const positionsInRange = kdTree.nearest([position.x, position.y, position.z], numMatches, maxDistance);
+    // var positionsInRange = kdTree.nearest([position.x, position.y, position.z], numMatches, maxDistance);
+    // const frustum = new THREE.Frustum();
+    // const projScreenMatrix = new THREE.Matrix4();
+// console.log(frustum, camera.projectionMatrix, camera.matrixWorldInverse);
+    // projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    // frustum.setFromMatrix(projScreenMatrix);
     for (var i = 0, il = positionsInRange.length; i < il; i++) {
-        var kdNode = positionsInRange[i];
-        var objectPoint = new THREE.Vector3().fromArray(kdNode[0].obj);
+        const kdNode = positionsInRange[i];
+        const objectPoint = new THREE.Vector3().fromArray(kdNode[0].obj);
         const tId = tileId(objectPoint);
         const tile = tileLookup[tId];
+
         // Sometimes tile is undefined because of floating point differences between kdTree results and original vals
-        if (tile) matchingTiles.push(tile);
+        if (tile){//} && triangleInFrustum(frustum, tile.triangle)){
+            matchingTiles.push(tile);
+        }
     }
     return matchingTiles;
 }
-
 
 export function SphereTiles({ rotation, sphereGeometry, tileComponent, tileElements }) {
     const { camera } = useThree();
@@ -95,12 +110,12 @@ export function SphereTiles({ rotation, sphereGeometry, tileComponent, tileEleme
         cameraRaycaster.setFromCamera(new THREE.Vector2(), camera);
         const worldPos = cameraRaycaster.ray.at(radius / 5, inFrontOfCamera);
         // const sphereRelativePos = new THREE.Vector3(
-            //  worldPos.x - Math.sin(rotation.z) * radius,
-            //  worldPos.y - Math.sin(rotation.x) * radius,
-            //  worldPos.z - Math.cos(rotation.x) * radius,
-            // worldPos.x * Math.cos(rotation.x) - worldPos.y * Math.sin(rotation.x),
-            // worldPos.y * Math.cos(rotation.x) - worldPos.x * Math.sin(rotation.x),
-            // worldPos.z,
+        //  worldPos.x - Math.sin(rotation.z) * radius,
+        //  worldPos.y - Math.sin(rotation.x) * radius,
+        //  worldPos.z - Math.cos(rotation.x) * radius,
+        // worldPos.x * Math.cos(rotation.x) - worldPos.y * Math.sin(rotation.x),
+        // worldPos.y * Math.cos(rotation.x) - worldPos.x * Math.sin(rotation.x),
+        // worldPos.z,
         // )
         // console.log(rotation, sphereRelativePos);
         // return sphereRelativePos;

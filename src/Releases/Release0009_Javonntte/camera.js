@@ -5,10 +5,13 @@ import { useThree } from 'react-three-fiber';
 export function Camera({ fov, near, far, lightProps }) {
     const spotLight = useRef();
     const cameraRef = useRef();
-    const { scene, setDefaultCamera } = useThree();
+    const { setDefaultCamera, size } = useThree();
 
     useEffect(() => {
-        if (cameraRef.current) setDefaultCamera(cameraRef.current);
+        if (cameraRef.current) {
+            setDefaultCamera(cameraRef.current);
+            cameraRef.current.setViewOffset(size.width + 5, size.height + 5, 0, 0, size.width + 5, size.height + 5)
+        }
     }, [cameraRef])
 
     // useEffect(() => {

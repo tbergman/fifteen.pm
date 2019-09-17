@@ -24,10 +24,10 @@ function Building({ geometry, material, centroid, normal, color, visible }) {
     />
 }
 
-export function Buildings({ material, subdivisions, normal }) {
+export function Buildings({ material, formation, normal }) {
     const buildingGroupRef = useRef();
     return <group>
-        {subdivisions.map(subdivision => {
+        {formation.subdivisions.map(subdivision => {
             return <group
                 ref={buildingGroupRef}
                 key={buildingName(subdivision.geometry, subdivision.centroid)}

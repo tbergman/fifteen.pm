@@ -15,7 +15,7 @@ export const SkyCityTile = props => {
     return <group>
         <Buildings
             material={props.tileElements.buildings.material}
-            subdivisions={props.tileElements.lookup[props.tileId]}
+            formation={props.tileElements.formations[props.tileId]}
             normal={props.normal}
         />
     </group>
@@ -24,9 +24,9 @@ export const SkyCityTile = props => {
 
 export const tileFormationRatios = () => {
     const ratios = {
-        0: .6,
-        1: .1,
-        2: .3,
+        0: .2,
+        1: .7,
+        2: .1,
     }
     const sum = Object.values(ratios).reduce((a, b) => a + b, 0);
     console.assert(sum == 1., { sum: sum, errorMsg: "formationRatios sum must add up to 1." });
@@ -88,7 +88,6 @@ function formation2({ centroid, triangleComponents, geometries }) {
     const triangles = [];
     tinyTriangles.forEach(tiny => {
         triangles.push(
-
             {
                 geometry: randomArrayVal(geometries[SMALL]),
                 centroid: centroidFromPoints(tiny.components.i1, tiny.components.a, tiny.centroid),
@@ -113,7 +112,6 @@ function formation2({ centroid, triangleComponents, geometries }) {
                 geometry: randomArrayVal(geometries[SMALL]),
                 centroid: centroidFromPoints(tiny.components.c, tiny.components.i1, tiny.centroid),
             }
-
         );
     });
     return triangles;
@@ -130,15 +128,28 @@ function subdivideTriangle(triangle) {
     }
 }
 
-export function pickTileFormation({ triangle, centroid, geometries }) {
-    // TODO some heuristic for which formations work best where
-    const formation = THREE.Math.randInt(0, 2);
-    const triangleComponents = subdivideTriangle(triangle);
-    switch (formation) {
-        case 0: return formation0({ centroid, triangleComponents, geometries });
-        case 1: return formation1({ centroid, triangleComponents, geometries });
-        case 2: return formation2({ centroid, triangleComponents, geometries });
+function pickTileFormationId(prevId){
+    switch(prevId){
+        case 0: return THREE.Math.randInt(0,5) < 1 ? 0 : 1;
+        case 1: return THREE.Math.randInt(0,10) > 1 ? 1 : 0;
+        case 2: return THREE.Math.randInt(0,10) < 1 ? 2 : 1; 
     }
+}
+
+export function pickTileFormation({ triangle, centroid, geometries, prevFormationId }) {
+    // TODO some heuristic for which formations work best where
+    const formation = {};
+    // TODO hack to sketch what this looks like...
+    formation.id = pickTileFormationId(prevFormationId);//THREE.Math.randInt(0, 2);
+    formation.subdivisions = (() => {
+        const triangleComponents = subdivideTriangle(triangle);
+        switch (formation.id) {
+            case 0: return formation0({ centroid, triangleComponents, geometries });
+            case 1: return formation1({ centroid, triangleComponents, geometries });
+            case 2: return formation2({ centroid, triangleComponents, geometries });
+        }
+    })()
+    return formation;
 }
 
 //TODO https://github.com/mrdoob/three.js/issues/13506

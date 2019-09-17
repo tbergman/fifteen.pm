@@ -47,17 +47,20 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
 }
 
 // TODO this function needs to be passed to the SphereTileGenerator and folded into its logic somehow
-export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
+export function generateWorldTilePatterns(sphereGeometry, geometries) {
     const vertices = sphereGeometry.vertices;
     const faces = sphereGeometry.faces;
-    const lookup = {};
+    const formations = {};
+    let prevFormationId = 0;
+    // TODO here is a hacky version of allocating tiles by type.
     faces.forEach((face, index) => {
         const centroid = faceCentroid(face, vertices);
         const tId = tileId(centroid);
         const triangle = triangleFromFace(face, vertices);
-        lookup[tId] = pickTileFormation({ triangle, centroid, geometries: surfaceGeometries })
+        formations[tId] = pickTileFormation({ triangle, centroid, geometries, prevFormationId })
+        prevFormationId = formations[tId].id;
     })
-    return lookup;
+    return formations;
 }
 
 function AtmosphereGlow({ radius }) {
@@ -94,7 +97,7 @@ export function WorldSurface({ geometry, bpm }) {
 export function World({ track, buildings, ...props }) {
     const { camera, scene } = useThree();
     const [worldRef, world] = useResource();
-    const worldTilePatterns = useRef();
+    const tileFormations = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
     const sphereGeometry = useMemo(() => {
         return generateWorldGeometry(C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT);
@@ -104,7 +107,7 @@ export function World({ track, buildings, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded) {
-            worldTilePatterns.current = generateWorldTilePatterns(sphereGeometry, buildings.geometries);
+            tileFormations.current = generateWorldTilePatterns(sphereGeometry, buildings.geometries);
         }
     }, [])
 
@@ -146,7 +149,7 @@ export function World({ track, buildings, ...props }) {
                     tileComponent={SkyCityTile}
                     tileElements={{
                         buildings: buildings,
-                        lookup: worldTilePatterns.current,
+                        formations: tileFormations.current,
                     }}
                     {...props}
                 />

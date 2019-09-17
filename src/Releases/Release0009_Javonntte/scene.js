@@ -53,7 +53,7 @@ export function Scene({ track }) {
                 radius={C.WORLD_RADIUS}
                 movementSpeed={30}
                 domElement={canvas}
-                rollSpeed={Math.PI}// / 2}
+                rollSpeed={Math.PI}
                 autoForward={false}
                 dragToLook={false}
             />
