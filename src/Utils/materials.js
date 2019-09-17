@@ -194,7 +194,7 @@ export function CloudMaterial({ materialRef, ...props }) {
 export function TronMaterial({ materialRef, bpm }) {
 	materialRef = materialRef ? materialRef : useRef().current;
 	const BPM = 120; // TODO not passing down
-	const { camera } = useThree();
+	const { camera, size } = useThree();
 	let t = 0;
 
 	useRender(
@@ -206,6 +206,7 @@ export function TronMaterial({ materialRef, bpm }) {
 		return {
 			uTime: { value: 0 },
 			uCurCenter: { value: camera.position },
+			uResolution: {value: new THREE.Vector2(size.width, size.length)},
 			// uLightPosition: {value: camera.children[0].position},
 			uBPM: { value: BPM },// TODO bpm },
 		}
