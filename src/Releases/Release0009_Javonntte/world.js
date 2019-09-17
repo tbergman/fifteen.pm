@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useRender, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { useThree, useRender, useResource } from 'react-three-fiber';
 import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
+import { CloudMaterial, TronMaterial } from '../../Utils/materials';
 import { SphereTiles, tileId } from '../../Utils/SphereTiles';
+import * as C from './constants';
 import "./index.css";
-import { CloudMaterial, TronMaterial, customDepthMaterial } from '../../Utils/materials';
 import { Stars } from './stars';
-import { tileFormationRatios, pickTileFormation } from './tiles';
-
+import { pickTileFormation, SkyCityTile } from "./tiles";
 
 // TODO tilt and rotationSpeed
 export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
@@ -46,7 +46,7 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
     return geometry;
 }
 
-// TODO this function needs to be passed to the SphereTileGenerator and folded into its logic somehow so that 
+// TODO this function needs to be passed to the SphereTileGenerator and folded into its logic somehow
 export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
     const vertices = sphereGeometry.vertices;
     const faces = sphereGeometry.faces;
@@ -58,7 +58,6 @@ export function generateWorldTilePatterns(sphereGeometry, surfaceGeometries) {
         lookup[tId] = pickTileFormation({ triangle, centroid, geometries: surfaceGeometries })
     })
     return lookup;
-
 }
 
 function AtmosphereGlow({ radius }) {
@@ -92,19 +91,30 @@ export function WorldSurface({ geometry, bpm }) {
     </>
 }
 
-export function World({ sphereGeometry, track, geometries, ...props }) {
+export function World({ track, buildings, ...props }) {
     const { camera, scene } = useThree();
     const [worldRef, world] = useResource();
-    const [tilePatternsLoaded, setTilePatternsLoaded] = useState(false);
+    const worldTilePatterns = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
+    const sphereGeometry = useMemo(() => {
+        return generateWorldGeometry(C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT);
+    }, [C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT]);
     const radius = sphereGeometry.parameters.radius
     const distThreshold = radius + radius * .15;
-   useEffect(() => {
+
+    useEffect(() => {
+        if (buildings.loaded) {
+            worldTilePatterns.current = generateWorldTilePatterns(sphereGeometry, buildings.geometries);
+        }
+    }, [])
+
+    useEffect(() => {
         if (renderTiles && track) {
             scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
             scene.background = new THREE.Color(track.theme.backgroundColor);
         }
     }, [track])
+
     useRender((state, time) => {
         if ((time % .5).toFixed(1) == 0) {
             const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);
@@ -112,11 +122,13 @@ export function World({ sphereGeometry, track, geometries, ...props }) {
             setRenderTiles(!tooFarAway);
         }
     })
+
     useRender(() => {
         // if (worldRef.current) {
         //     worldRef.current.rotation.x += .001;
         // } 
     })
+
     return <group ref={worldRef}>
         {world && <>
             <Stars
@@ -131,6 +143,11 @@ export function World({ sphereGeometry, track, geometries, ...props }) {
                 <SphereTiles
                     rotation={worldRef.current.rotation}
                     sphereGeometry={sphereGeometry}
+                    tileComponent={SkyCityTile}
+                    tileElements={{
+                        buildings: buildings,
+                        lookup: worldTilePatterns.current,
+                    }}
                     {...props}
                 />
                 :

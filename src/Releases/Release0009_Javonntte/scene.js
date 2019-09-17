@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { useGLTF } from "../../Utils/hooks";
@@ -9,10 +9,7 @@ import * as C from "./constants";
 import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
-import { SkyCityTile } from "./tiles";
-import { generateWorldGeometry, generateWorldTilePatterns, World } from './world';
-
-console.log(C.TRACK_LOOKUP);
+import { World } from './world';
 
 export function Scene({ track }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -25,14 +22,6 @@ export function Scene({ track }) {
     const { camera, canvas } = useThree();
     const [loadingBuildings, buildings] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
-    const worldTilePatterns = useRef(); // TODO rm me
-    
-
-    // TODO this can move into World when moving worldTilePatterns
-    const worldSphereGeometry = useMemo(() => {
-        return generateWorldGeometry(C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT);
-    }, [C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT]);
-
     const startPos = new THREE.Vector3(0, 0, C.WORLD_RADIUS * 1.13);
     const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS - C.WORLD_RADIUS * .5, C.WORLD_RADIUS - C.WORLD_RADIUS * .1);
 
@@ -40,11 +29,7 @@ export function Scene({ track }) {
         // These actions must occur after buildings load.
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
-        // TODO mv me into scene
-        if (buildings) worldTilePatterns.current = generateWorldTilePatterns(worldSphereGeometry, buildings);
     }, [buildings])
-
-   
 
     return (
         <>
@@ -73,18 +58,14 @@ export function Scene({ track }) {
                 dragToLook={false}
             />
             <FixedLights />
-            {cloudMaterial && buildings && track &&
+            {cloudMaterial && !loadingBuildings && track &&
                 <World
                     track={track}
-                    sphereGeometry={worldSphereGeometry}
                     startPos={startPos}
-                    tileComponent={SkyCityTile}
-                    tileElements={{
-                        buildings: {
-                            geometries: buildings,
-                            material: cloudMaterial
-                        },
-                        lookup: worldTilePatterns.current,
+                    buildings={{
+                        geometries: buildings,
+                        material: cloudMaterial,
+                        loaded: !loadingBuildings,
                     }}
                 />
             }
