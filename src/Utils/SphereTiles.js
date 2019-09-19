@@ -66,6 +66,7 @@ function triangleInFrustum(frustum, triangle){
     return false;
 }
 
+// frustum culling widen buffer --> https://stackoverflow.com/questions/54826600/expand-scale-camera-frustum
 // function findNearest(camera, position, kdTree, numMatches, maxDistance, tileLookup) {
 function findNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
     const matchingTiles = [];
