@@ -8,7 +8,7 @@ import {
     triangleFromVertices
 } from '../../Utils/geometry';
 import { randomArrayVal } from '../../Utils/random';
-import { SMALL, MEDIUM, LARGE } from './constants';
+import * as C from './constants';
 import { Buildings } from './buildings';
 
 export const SkyCityTile = props => {
@@ -36,27 +36,27 @@ export const tileFormationRatios = () => {
 function formation0({ centroid, triangleComponents, geometries }) {
     return [
         {
-            geometry: randomArrayVal(geometries[SMALL]),
+            geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.i1, triangleComponents.a, centroid)
         },
         {
-            geometry: randomArrayVal(geometries[SMALL]),
+            geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.a, triangleComponents.i2, centroid)
         },
         {
-            geometry: randomArrayVal(geometries[MEDIUM]),
+            geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.i2, triangleComponents.b, centroid)
         },
         {
-            geometry: randomArrayVal(geometries[MEDIUM]),
+            geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.b, triangleComponents.i3, centroid)
         },
         {
-            geometry: randomArrayVal(geometries[MEDIUM]),
+            geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.i3, triangleComponents.c, centroid)
         },
         {
-            geometry: randomArrayVal(geometries[MEDIUM]),
+            geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid)
         },
     ]
@@ -65,7 +65,7 @@ function formation0({ centroid, triangleComponents, geometries }) {
 function formation1({ centroid, triangleComponents, geometries }) {
     return [
         {
-            geometry: randomArrayVal(geometries[LARGE]),
+            geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.PRESENT]),
             centroid: centroid
         }
     ]
@@ -89,27 +89,27 @@ function formation2({ centroid, triangleComponents, geometries }) {
     tinyTriangles.forEach(tiny => {
         triangles.push(
             {
-                geometry: randomArrayVal(geometries[SMALL]),
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.i1, tiny.components.a, tiny.centroid),
             },
             {
-                geometry: randomArrayVal(geometries[SMALL]),
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.a, tiny.components.i2, tiny.centroid),
             },
             {
-                geometry: randomArrayVal(geometries[SMALL]),
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.i2, tiny.components.b, tiny.centroid),
             },
             {
-                geometry: randomArrayVal(geometries[SMALL]),
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.b, tiny.components.i3, tiny.centroid),
             },
             {
-                geometry: randomArrayVal(geometries[SMALL]),
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.i3, tiny.components.c, tiny.centroid),
             },
             {
-                geometry: randomArrayVal(geometries[SMALL]),
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.c, tiny.components.i1, tiny.centroid),
             }
         );
@@ -140,7 +140,8 @@ export function pickTileFormation({ triangle, centroid, geometries, prevFormatio
     // TODO some heuristic for which formations work best where
     const formation = {};
     // TODO hack to sketch what this looks like...
-    formation.id = pickTileFormationId(prevFormationId);//THREE.Math.randInt(0, 2);
+    // formation.id = pickTileFormationId(prevFormationId);
+    formation.id = THREE.Math.randInt(0, 2);
     formation.subdivisions = (() => {
         const triangleComponents = subdivideTriangle(triangle);
         switch (formation.id) {

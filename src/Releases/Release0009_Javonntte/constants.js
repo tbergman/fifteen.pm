@@ -2,9 +2,15 @@ import { CONTENT } from '../../Content';
 import { assetPath9 } from './utils';
 
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
+export const EXTRA_LARGE = "extra_large";
 export const LARGE = "large";
 export const MEDIUM = "medium";
 export const SMALL = "small";
+export const TALL = "tall";
+export const SHORT = "short";
+export const ARCH = "arch";
+export const FUTURE = "future";
+export const PRESENT = "present";
 const THEMES = [
     // index matches track list order
     {

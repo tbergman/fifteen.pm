@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import * as THREE from 'three';
-import { SMALL, MEDIUM, LARGE } from "./constants";
+import * as C from './constants';
 import { randFloat } from '../../Utils/random';
 
 function buildingName(building, position) {
@@ -45,11 +45,20 @@ export function Buildings({ material, formation, normal }) {
 
 export function onBuildingsLoaded(gltf) {
     // size as measured by footprint
-
+    const period = {
+        future: [],
+        present: [],
+    }
+    const heights = {
+        tall: Object.assign({}, period),
+        short: Object.assign({}, period),
+    }
     const geometries = {
-        small: [],
-        medium: [],
-        large: []
+        small: Object.assign({}, heights),
+        medium: Object.assign({}, heights),
+        large: Object.assign({}, heights),
+        xlarge: Object.assign({}, heights),
+        arch: [],
     }
     gltf.scene.traverse(child => {
         if (child.isMesh) {
@@ -66,13 +75,42 @@ export function onBuildingsLoaded(gltf) {
             // this makes the 'lookAt(normal)' function as expected on the sphere by flipping the default blender output
             geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI));
             // give the buildings more organic positioning by rotating on z (UP)
-            if (child.name.startsWith(MEDIUM)) {
-                geometries.medium.push(geometry);
-            } else if (child.name.startsWith(LARGE)) {
-                geometries.large.push(geometry);
-            } else if (child.name.startsWith(SMALL)) {
-                geometries.small.push(geometry);
+            if (child.name.startsWith(C.ARCH)) {
+                geometries.arch.push(geometry);           
+            } else if (child.name.startsWith(C.MEDIUM) && child.name.includes(C.TALL) && child.name.includes(C.PRESENT)) {
+                geometries.medium.tall.present.push(geometry);
+            } else if (child.name.startsWith(C.MEDIUM) && child.name.includes(C.TALL) && child.name.includes(C.FUTURE)) {
+                geometries.medium.tall.future.push(geometry);
+            } else if (child.name.startsWith(C.MEDIUM) && child.name.includes(C.SHORT) && child.name.includes(C.PRESENT)) {
+                geometries.medium.short.present.push(geometry);
+            } else if (child.name.startsWith(C.MEDIUM) && child.name.includes(C.SHORT) && child.name.includes(C.FUTURE)) {
+                geometries.medium.short.future.push(geometry);
+            } else if (child.name.startsWith(C.SMALL) && child.name.includes(C.TALL) && child.name.includes(C.PRESENT)) {
+                geometries.small.tall.present.push(geometry);
+            } else if (child.name.startsWith(C.SMALL) && child.name.includes(C.TALL) && child.name.includes(C.FUTURE)) {
+                geometries.small.tall.future.push(geometry);
+            } else if (child.name.startsWith(C.SMALL) && child.name.includes(C.SHORT) && child.name.includes(C.PRESENT)) {
+                geometries.small.short.present.push(geometry);
+            } else if (child.name.startsWith(C.SMALL) && child.name.includes(C.SHORT) && child.name.includes(C.FUTURE)) {
+                geometries.small.short.future.push(geometry);
+            } else if (child.name.startsWith(C.LARGE) && child.name.includes(C.TALL) && child.name.includes(C.PRESENT)) {
+                geometries.large.tall.present.push(geometry);
+            } else if (child.name.startsWith(C.LARGE) && child.name.includes(C.TALL) && child.name.includes(C.FUTURE)) {
+                geometries.large.tall.future.push(geometry);
+            } else if (child.name.startsWith(C.LARGE) && child.name.includes(C.SHORT) && child.name.includes(C.PRESENT)) {
+                geometries.large.short.present.push(geometry);
+            } else if (child.name.startsWith(C.LARGE) && child.name.includes(C.SHORT) && child.name.includes(C.FUTURE)) {
+                geometries.large.short.future.push(geometry);
+            } else if (child.name.startsWith(C.EXTRA_LARGE) && child.name.includes(C.TALL) && child.name.includes(C.PRESENT)) {
+                geometries.xlarge.tall.present.push(geometry);
+            } else if (child.name.startsWith(C.EXTRA_LARGE) && child.name.includes(C.TALL) && child.name.includes(C.FUTURE)) {
+                geometries.xlarge.tall.future.push(geometry);
+            } else if (child.name.startsWith(C.EXTRA_LARGE) && child.name.includes(C.SHORT) && child.name.includes(C.PRESENT)) {
+                geometries.xlarge.short.present.push(geometry);
+            } else if (child.name.startsWith(C.EXTRA_LARGE) && child.name.includes(C.SHORT) && child.name.includes(C.FUTURE)) {
+                geometries.xlarge.short.future.push(geometry);
             }
+ 
         }
     })
     return geometries;
