@@ -73,6 +73,7 @@
     "cannon": "^0.6.2",
     "glslify-loader": "^2.0.0",
     "jest-cli": "^24.7.0",
+    "lodash": "^4.17.15",
     "raw-loader": "^2.0.0",
     "react": "^16.8.6",
     "react-app-polyfill": "^1.0.0",

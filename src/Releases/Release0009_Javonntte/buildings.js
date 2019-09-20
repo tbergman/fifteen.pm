@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import * as THREE from 'three';
 import * as C from './constants';
 import { randFloat } from '../../Utils/random';
+import { cloneDeep } from 'lodash';
 
 function buildingName(building, position) {
     return [building.name,
@@ -50,16 +51,17 @@ export function onBuildingsLoaded(gltf) {
         present: [],
     }
     const heights = {
-        tall: Object.assign({}, period),
-        short: Object.assign({}, period),
+        short: cloneDeep(period),
+        tall: cloneDeep(period),
     }
     const geometries = {
-        small: Object.assign({}, heights),
-        medium: Object.assign({}, heights),
-        large: Object.assign({}, heights),
-        xlarge: Object.assign({}, heights),
+        small: cloneDeep(heights),
+        medium:  cloneDeep(heights),
+        large: cloneDeep(heights),
+        xlarge: cloneDeep(heights),
         arch: [],
     }
+
     gltf.scene.traverse(child => {
         if (child.isMesh) {
             // For devving minimal number of faces
@@ -74,9 +76,12 @@ export function onBuildingsLoaded(gltf) {
             const geometry = child.geometry.clone();
             // this makes the 'lookAt(normal)' function as expected on the sphere by flipping the default blender output
             geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI));
-            // give the buildings more organic positioning by rotating on z (UP)
+            // This is where the sausage gets made :P
+
+        
+            console.log(child.name);
             if (child.name.startsWith(C.ARCH)) {
-                geometries.arch.push(geometry);           
+                geometries.arch.push(geometry);
             } else if (child.name.startsWith(C.MEDIUM) && child.name.includes(C.TALL) && child.name.includes(C.PRESENT)) {
                 geometries.medium.tall.present.push(geometry);
             } else if (child.name.startsWith(C.MEDIUM) && child.name.includes(C.TALL) && child.name.includes(C.FUTURE)) {
@@ -110,8 +115,12 @@ export function onBuildingsLoaded(gltf) {
             } else if (child.name.startsWith(C.EXTRA_LARGE) && child.name.includes(C.SHORT) && child.name.includes(C.FUTURE)) {
                 geometries.xlarge.short.future.push(geometry);
             }
- 
         }
     })
+
+    console.log(
+        geometries[C.MEDIUM][C.SHORT][C.FUTURE].length,
+        geometries[C.SMALL][C.SHORT][C.FUTURE].length,
+        geometries[C.SMALL][C.SHORT][C.PRESENT].length)
     return geometries;
 }

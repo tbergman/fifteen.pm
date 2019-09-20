@@ -21,7 +21,7 @@ export const SkyCityTile = props => {
     </group>
 }
 
-
+// TODO not using this atm
 export const tileFormationRatios = () => {
     const ratios = {
         0: .2,
@@ -33,7 +33,7 @@ export const tileFormationRatios = () => {
     return ratios;
 }
 
-function formation0({ centroid, triangleComponents, geometries }) {
+function formationSmallMediumTallPresent6({ centroid, triangleComponents, geometries }) {
     return [
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
@@ -62,7 +62,7 @@ function formation0({ centroid, triangleComponents, geometries }) {
     ]
 }
 
-function formation1({ centroid, triangleComponents, geometries }) {
+function formationLargeTallPresent1({ centroid, triangleComponents, geometries }) {
     return [
         {
             geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.PRESENT]),
@@ -71,7 +71,40 @@ function formation1({ centroid, triangleComponents, geometries }) {
     ]
 }
 
-function formation2({ centroid, triangleComponents, geometries }) {
+function formationArchAndSmallShortFuture3({ centroid, triangleComponents, geometries }) {
+    return [
+        {
+            geometry: randomArrayVal(geometries[C.ARCH]),
+            centroid: centroid,
+        },
+        {
+            geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.i1, triangleComponents.a, centroid)
+        },
+        {
+            geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.a, triangleComponents.i2, centroid)
+        },
+        {
+            geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.i2, triangleComponents.b, centroid)
+        },
+        {
+            geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.b, triangleComponents.i3, centroid)
+        },
+        {
+            geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.i3, triangleComponents.c, centroid)
+        },
+        {
+            geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid)
+        },
+    ]
+}
+
+function formationSmallTallPresent36({ centroid, triangleComponents, geometries }) {
     const tinyTriangles = [
         triangleFromVertices(triangleComponents.i1, triangleComponents.a, centroid),
         triangleFromVertices(triangleComponents.a, triangleComponents.i2, centroid),
@@ -128,26 +161,32 @@ function subdivideTriangle(triangle) {
     }
 }
 
-function pickTileFormationId(prevId){
-    switch(prevId){
-        case 0: return THREE.Math.randInt(0,5) < 1 ? 0 : 1;
-        case 1: return THREE.Math.randInt(0,10) > 1 ? 1 : 0;
-        case 2: return THREE.Math.randInt(0,10) < 1 ? 2 : 1; 
+function pickTileFormationId(prevId) {
+    switch (prevId) {
+        case 0: return THREE.Math.randInt(0, 5) < 1 ? 0 : 1;
+        case 1: return THREE.Math.randInt(0, 10) > 1 ? 1 : 0;
+        case 2: return THREE.Math.randInt(0, 10) < 1 ? 2 : 1;
     }
 }
 
 export function pickTileFormation({ triangle, centroid, geometries, prevFormationId }) {
     // TODO some heuristic for which formations work best where
     const formation = {};
+    const formationProps = {
+        centroid: centroid,
+        triangleComponents: subdivideTriangle(triangle),
+        geometries: geometries,
+    }
     // TODO hack to sketch what this looks like...
     // formation.id = pickTileFormationId(prevFormationId);
-    formation.id = THREE.Math.randInt(0, 2);
+    formation.id = THREE.Math.randInt(0, 3);
+    // formation.id = 3;
     formation.subdivisions = (() => {
-        const triangleComponents = subdivideTriangle(triangle);
         switch (formation.id) {
-            case 0: return formation0({ centroid, triangleComponents, geometries });
-            case 1: return formation1({ centroid, triangleComponents, geometries });
-            case 2: return formation2({ centroid, triangleComponents, geometries });
+            case 0: return formationSmallMediumTallPresent6(formationProps);
+            case 1: return formationLargeTallPresent1(formationProps);
+            case 2: return formationSmallTallPresent36(formationProps);
+            case 3: return formationArchAndSmallShortFuture3(formationProps);
         }
     })()
     return formation;
