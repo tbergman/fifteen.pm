@@ -74,7 +74,7 @@ function formationLargeTallPresent1({ centroid, triangleComponents, geometries }
 function formationArchAndSmallShortFuture3({ centroid, triangleComponents, geometries }) {
     return [
         {
-            geometry: randomArrayVal(geometries[C.ARCH]),
+            geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.ARCH]),
             centroid: centroid,
         },
         {
@@ -193,5 +193,42 @@ export function pickTileFormation({ triangle, centroid, geometries, prevFormatio
 }
 
 //TODO https://github.com/mrdoob/three.js/issues/13506
-function merge(triangles) {
+//TODO https://github.com/mrdoob/three.js/issues/13506
+// TODO https://codepen.io/nicoptere/pen/gGemyV?editors=1010
+// TODO https://stackoverflow.com/questions/41880864/how-to-use-three-js-instancedbuffergeometry-instancedbufferattribute
+// TODO https://stackoverflow.com/questions/45669968/gltf-create-instances
+/* 
+
+After some time of investigation I discovered why using instancedbuffergeometries were not working with the buffergeometries found in my GLTF files.
+
+The problem is that GLTF format uses indexedbuffergeometries and the workaround is very simple, just convert them with toNonIndexed() method.
+
+*/
+function merge(tiles) {
+    // const geometry = new THREE.Geometry();
+    // for (let i = 0; i < tiles.length; i++) {
+    //     const tileComponentGeometry = tiles[i].geometry;
+    //     const tmpMesh = new THREE.Mesh(tileComponentGeometry);
+    //     tmpMesh.position.copy(tiles[i].centroid);
+    //     THREE.GeometryUtils.merge(geometry, tmpMesh);
+    // }
+    const geoms = tiles.map(t => t.geometry);
+    const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geoms);
+    return mergedGeometry;
+    // return geometry;
+    // const instancedGeometry = new THREE.InstancedBufferGeometry();
+    // for (let i = 0; i < tiles.length; i++) {
+    //     Object.keys(tiles[i].geometry).forEach(attributeName => {
+    //         instancedGeometry.attributes[attributeName] = tiles[i].geometry.attribute[attributeName]
+    //     })
+    //     instancedGeometry.index = tiles[i].geometry.index;
+    //     instancedGeometry.maxInstancedCount = 2000; // TODO tiles.length...
+    //     const matArraySize = 2000 * 4; // TODO tiles.length...
+    //     const matrixArray = [
+    //         new Float32Array(matArraySize),
+    //         new Float32Array(matArraySize),
+    //         new Float32Array(matArraySize),
+    //         new Float32Array(matArraySize),
+    //     ]
+    // }
 }
