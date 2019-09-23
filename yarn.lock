@@ -8538,6 +8538,11 @@ three-gltf-loader@^1.103.0:
   resolved "https://registry.yarnpkg.com/three-gltf-loader/-/three-gltf-loader-1.107.0.tgz#c570330bff3f1662f40e99c835910cf623d272d5"
   integrity sha512-I49O3VTzFkEgv1syTYwpc3IQWVcY2Sfw3RdCQUakl0nU/p0axABqCvhOojzJOQ8c1uHZNtRUp7KgCSsZBh05mA==
 
+three-instanced-mesh@^0.96.2:
+  version "0.96.2"
+  resolved "https://registry.yarnpkg.com/three-instanced-mesh/-/three-instanced-mesh-0.96.2.tgz#a8af5d678cf670ddfe1e63b9e1e8bc7dca6a01d4"
+  integrity sha512-cnpvYpBbwv4LdbuQjgzFtlA70lZy6+p78YI+vaQLJYBEMhd0qNOf3VMC+YVLD0JzHZCPbnPvjvzeF7lvcU5D+Q==
+
 three-tween@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/three-tween/-/three-tween-1.0.0.tgz#da69bbbcccf321bfb8356358c594ceb1f0a7fd66"

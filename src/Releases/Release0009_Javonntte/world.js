@@ -9,6 +9,7 @@ import "./index.css";
 import { Stars } from './stars';
 import { pickTileFormation, SkyCityTile } from "./tiles";
 
+
 /* eslint import/no-webpack-loader-syntax: off */
 import fragInstanced from '!raw-loader!glslify-loader!../../Shaders/fragInstanced.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
@@ -100,17 +101,77 @@ export function generateWorldTileGeometries(sphereGeometry, geometries, scene) {
         prevTileId = tId;
     })
     // TODO hacking
-    // const geo = formations[prevTileId].geometry.geometry; // just need one geometry
-    const geo = new THREE.PlaneBufferGeometry();
-    // const geoMesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial());
-    // geoMesh.position.copy(new THREE.Vector3(Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20))
-    // scene.add(geoMesh);
-    var igeo = new THREE.InstancedBufferGeometry();
-    var posVertices = geo.attributes.position.clone();
-    igeo.addAttribute('position', posVertices);
+    const geo = formations[prevTileId].geometry.geometry; // just need one geometry
+    // const geo = new THREE.PlaneBufferGeometry();
 
-    // TODO testing cwhat it looks like here
-    // const instanceCount = 1;
+
+    var InstancedMesh = require('three-instanced-mesh')(THREE);
+    //geometry to be instanced
+    // var boxGeometry = new THREE.BoxBufferGeometry(2, 2, 2, 1, 1, 1);
+
+    //material that the geometry will use
+    var material = new THREE.MeshPhongMaterial();
+    const totalInstances = 2500;
+    //the instance group
+    var cluster = new THREE.InstancedMesh(
+        geo,                 //this is the same 
+        material,
+        totalInstances,                       //instance count
+        false,                       //is it dynamic
+        true,                        //does it have color
+        true,                        //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
+    );
+
+    var _v3 = new THREE.Vector3();
+    var _q = new THREE.Quaternion();
+var randCol = function () {
+        return Math.random();
+    };
+    for (var i = 0; i < totalInstances; i++) {
+
+        cluster.setQuaternionAt(i, _q);
+        cluster.setPositionAt(i, _v3.set(Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20));
+        cluster.setScaleAt(i, _v3.set(1, 1, 1));
+        cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()) )
+    }
+
+    // scene.add(cluster);
+    return cluster;
+
+    // const geometrySize = new THREE.Vector3()
+    // geo.toNonIndexed();
+    // geo.computeBoundingBox();
+    // geo.boundingBox.getSize(geometrySize);
+    // console.log('initially', geo.attributes);
+    // var igeo = new THREE.InstancedBufferGeometry();
+    // var posVertices = geo.attributes.position.clone();
+    // igeo.addAttribute('position', posVertices);
+    // const instanceCount = 200;//obvLocations.length;
+    // var mcol0 = new THREE.InstancedBufferAttribute(
+    //     new Float32Array(instanceCount * 3), 3
+    // );
+    // var mcol1 = new THREE.InstancedBufferAttribute(
+    //     new Float32Array(instanceCount * 3), 3
+    // );
+    // var mcol2 = new THREE.InstancedBufferAttribute(
+    //     new Float32Array(instanceCount * 3), 3
+    // );
+    // var mcol3 = new THREE.InstancedBufferAttribute(
+    //     new Float32Array(instanceCount * 3), 3
+    // );
+    // var matrix = new THREE.Matrix4();
+    // var me = matrix.elements;
+    // for (var i = 0, ul = mcol0.count; i < ul; i++) {
+    //     randomizeMatrix(matrix);
+    //     mcol0.setXYZ(i, me[0], me[1], me[2]);
+    //     mcol1.setXYZ(i, me[4], me[5], me[6]);
+    //     mcol2.setXYZ(i, me[8], me[9], me[10]);
+    //     mcol3.setXYZ(i, me[12], me[13], me[14]);
+    // }
+    // igeo.addAttribute('mcol0', mcol0);
+    // igeo.addAttribute('mcol1', mcol1);
+    // igeo.addAttribute('mcol2', mcol2);
+    // igeo.addAttribute('mcol3', mcol3);
     // var randCol = function () {
     //     return Math.random();
     // };
@@ -125,75 +186,10 @@ export function generateWorldTileGeometries(sphereGeometry, geometries, scene) {
     //     vertexShader: vertInstanced,
     //     fragmentShader: fragInstanced,
     // });
-    // var igeoMesh = new THREE.Mesh(igeo, material);
-    // igeoMesh.position.copy(new THREE.Vector3(Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20))
-    // scene.add(igeoMesh);
 
-    const radius = sphereGeometry.parameters.radius;
-    const instanceCount = 200;//obvLocations.length;
-    var mcol0 = new THREE.InstancedBufferAttribute(
-        new Float32Array(instanceCount * 3), 3
-    );
-    var mcol1 = new THREE.InstancedBufferAttribute(
-        new Float32Array(instanceCount * 3), 3
-    );
-    var mcol2 = new THREE.InstancedBufferAttribute(
-        new Float32Array(instanceCount * 3), 3
-    );
-    var mcol3 = new THREE.InstancedBufferAttribute(
-        new Float32Array(instanceCount * 3), 3
-    );
-    var matrix = new THREE.Matrix4();
-    var me = matrix.elements;
-
-    // Object.keys(formations).forEach((tId, idx) => {
-    // for (let idx = 0; i < instanceCount; i++) {
-    // const centroid = formations[tId].centroid;
-    // updateMatrix(matrix, obvLocations[idx]);
-    for (var i = 0, ul = mcol0.count; i < ul; i++) {
-        randomizeMatrix(matrix);
-        // for (let j = 0; j < 2; j++) {
-        // let i = idx * 3 + j;
-        var object = new THREE.Object3D();
-        object.applyMatrix(matrix);
-        mcol0.setXYZ(i, me[0], me[1], me[2]);
-        mcol1.setXYZ(i, me[4], me[5], me[6]);
-        mcol2.setXYZ(i, me[8], me[9], me[10]);
-        mcol3.setXYZ(i, me[12], me[13], me[14]);
-
-    }
-    igeo.addAttribute('mcol0', mcol0);
-    igeo.addAttribute('mcol1', mcol1);
-    igeo.addAttribute('mcol2', mcol2);
-    igeo.addAttribute('mcol3', mcol3);
-    var randCol = function () {
-        return Math.random();
-    };
-    var colors = new THREE.InstancedBufferAttribute(
-        new Float32Array(instanceCount * 3), 3
-    );
-    for (var i = 0, ul = colors.count; i < ul; i++) {
-        colors.setXYZ(i, randCol(), randCol(), randCol());
-    }
-    igeo.addAttribute('color', colors);
-    // var col = new THREE.Color();
-    // var pickingColors = new THREE.InstancedBufferAttribute(
-    //     new Float32Array(instanceCount * 3), 3
-    // );
-    // for (var i = 0, ul = pickingColors.count; i < ul; i++) {
-    //     col.setHex(i + 1);
-    //     pickingColors.setXYZ(i, col.r, col.g, col.b);
-    // }
-    // igeo.addAttribute('pickingColor', pickingColors);
-    var material = new THREE.RawShaderMaterial({
-        vertexShader: vertInstanced,
-        fragmentShader: fragInstanced,
-    });
-    var mesh = new THREE.Mesh(igeo, material);
-    // return formations;
-
-    return mesh;
-    // return igeo;
+    // console.log('updated', igeo.attributes);
+    // var mesh = new THREE.Mesh(igeo, material);
+    // return mesh;
 }
 
 
