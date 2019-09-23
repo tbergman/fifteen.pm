@@ -63,6 +63,7 @@ function formationSmallMediumTallPresent6({ centroid, triangleComponents, geomet
 }
 
 function formationLargeTallPresent1({ centroid, triangleComponents, geometries }) {
+    return [randomArrayVal(geometries[C.LARGE][C.TALL][C.PRESENT])];
     return [
         {
             geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.PRESENT]),
@@ -104,6 +105,28 @@ function formationArchAndSmallShortFuture3({ centroid, triangleComponents, geome
     ]
 }
 
+// TODO v3 is always centroid
+function localMatrix(v1, v2, v3, worldTriangleCentroid) {
+    const worldSubdivisionCentroid = centroidFromPoints(v1, v2, v3);
+    const position = worldSubdivisionCentroid.subVectors(worldSubdivisionCentroid, worldTriangleCentroid);
+    const scale = new THREE.Vector3(1., 1., 1.);
+    const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
+    const quaternion = new THREE.Quaternion().setFromEuler(rotation);
+    const matrix = new THREE.Matrix4();
+    matrix.compose(position, quaternion, scale);
+    return matrix;
+}
+
+function localGeometry(geometry, v1, v2, v3, worldCentroid) {
+    const requiredAttributes = ["normal", "position"];
+    Object.keys(geometry.attributes).forEach(attributeName => {
+        if (!requiredAttributes.includes(attributeName)) geometry.removeAttribute(attributeName);
+    })
+    const matrix = localMatrix(v1, v2, v3, worldCentroid)
+    geometry.applyMatrix(matrix);
+    return geometry;
+}
+
 function formationSmallTallPresent36({ centroid, triangleComponents, geometries }) {
     const tinyTriangles = [
         triangleFromVertices(triangleComponents.i1, triangleComponents.a, centroid),
@@ -118,36 +141,58 @@ function formationSmallTallPresent36({ centroid, triangleComponents, geometries 
             centroid: centroidFromTriangle(triangle)
         }
     })
-    const triangles = [];
+    const formationGeometries = [];
     tinyTriangles.forEach(tiny => {
-        triangles.push(
-            {
-                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                centroid: centroidFromPoints(tiny.components.i1, tiny.components.a, tiny.centroid),
-            },
-            {
-                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                centroid: centroidFromPoints(tiny.components.a, tiny.components.i2, tiny.centroid),
-            },
-            {
-                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                centroid: centroidFromPoints(tiny.components.i2, tiny.components.b, tiny.centroid),
-            },
-            {
-                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                centroid: centroidFromPoints(tiny.components.b, tiny.components.i3, tiny.centroid),
-            },
-            {
-                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                centroid: centroidFromPoints(tiny.components.i3, tiny.components.c, tiny.centroid),
-            },
-            {
-                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                centroid: centroidFromPoints(tiny.components.c, tiny.components.i1, tiny.centroid),
-            }
+        formationGeometries.push(
+            localGeometry(
+                randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                tiny.components.i1,
+                tiny.components.a,
+                tiny.centroid,
+                centroid,
+            ),
+            localGeometry(
+                randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                tiny.components.a,
+                tiny.components.i2,
+                tiny.centroid,
+                centroid,
+            ),
+            localGeometry(randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                tiny.components.i2,
+                tiny.components.b,
+                tiny.centroid,
+                centroid,
+            ),
+            localGeometry(randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                tiny.components.b,
+                tiny.components.i3,
+                tiny.centroid,
+                centroid,
+            ),
+            localGeometry(randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                tiny.components.i3,
+                tiny.components.c,
+                tiny.centroid,
+                centroid,
+            ),
+            localGeometry(randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                tiny.components.c,
+                tiny.components.i1,
+                tiny.centroid,
+                centroid
+            ),
         );
     });
-    return triangles;
+
+    // const mergedGeom =BufferGeometryUtils.mergeBufferGeometries(formationGeometries); 
+    // if (!mergedGeom){
+    //     console.log("NULL", Array.from(new Set(Object.keys(formationGeometries.map(f=>f.attributes)))).sort());
+    // } else {
+    //     console.log("GOOD", formationGeometries.map(f=>f.attributes));
+    // }
+
+    return formationGeometries;
 }
 
 function subdivideTriangle(triangle) {
@@ -179,16 +224,17 @@ export function pickTileFormation({ triangle, centroid, geometries, prevFormatio
     }
     // TODO hack to sketch what this looks like...
     // formation.id = pickTileFormationId(prevFormationId);
-    formation.id = THREE.Math.randInt(0, 3);
-    // formation.id = 3;
-    formation.subdivisions = (() => {
+    // formation.id = THREE.Math.randInt(0, 3);
+    formation.id = 1;
+    formation.centroid = centroid;
+    formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
         switch (formation.id) {
             case 0: return formationSmallMediumTallPresent6(formationProps);
             case 1: return formationLargeTallPresent1(formationProps);
             case 2: return formationSmallTallPresent36(formationProps);
             case 3: return formationArchAndSmallShortFuture3(formationProps);
         }
-    })()
+    })())
     return formation;
 }
 
@@ -198,23 +244,26 @@ export function pickTileFormation({ triangle, centroid, geometries, prevFormatio
 // TODO https://stackoverflow.com/questions/41880864/how-to-use-three-js-instancedbuffergeometry-instancedbufferattribute
 // TODO https://stackoverflow.com/questions/45669968/gltf-create-instances
 /* 
-
 After some time of investigation I discovered why using instancedbuffergeometries were not working with the buffergeometries found in my GLTF files.
-
 The problem is that GLTF format uses indexedbuffergeometries and the workaround is very simple, just convert them with toNonIndexed() method.
-
 */
-function merge(tiles) {
-    // const geometry = new THREE.Geometry();
+function merge(geometries) {
+
+    // return geometries);
+    // 
+    // copy geom attributes position and normal - update position to centroid stored in tiles obj
+    // subtract the geometry's specific centroid for each tile from the worldspace centroid of the tile to get the relative position of the geom 
+    // const matrix = new THREE.Matrix4();
+    // const geometries = [];
+    // const scale = new THREE.Vector3();
     // for (let i = 0; i < tiles.length; i++) {
-    //     const tileComponentGeometry = tiles[i].geometry;
-    //     const tmpMesh = new THREE.Mesh(tileComponentGeometry);
-    //     tmpMesh.position.copy(tiles[i].centroid);
-    //     THREE.GeometryUtils.merge(geometry, tmpMesh);
+    // geometries.push(geometry);
     // }
-    const geoms = tiles.map(t => t.geometry);
-    const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geoms);
-    return mergedGeometry;
+
+    // const geoms = tiles.map(t => t.geometry);
+    // console.log(geoms[0]);
+    // const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometries);
+    // return mergedGeometry;
     // return geometry;
     // const instancedGeometry = new THREE.InstancedBufferGeometry();
     // for (let i = 0; i < tiles.length; i++) {
