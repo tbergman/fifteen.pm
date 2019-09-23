@@ -64,7 +64,10 @@ function formationSmallMediumTallPresent6({ centroid, triangleComponents, geomet
 }
 
 function formationLargeTallPresent1({ centroid, triangleComponents, geometries }) {
-    return [randomArrayVal(geometries[C.LARGE][C.TALL][C.PRESENT])];
+    return {
+        geometry: geometries[C.LARGE][C.TALL][C.PRESENT][0],
+        centroid: centroid,
+    };
     return [
         {
             geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.PRESENT]),
@@ -226,21 +229,22 @@ export function pickTileFormation({ triangle, centroid, geometries, prevFormatio
     // TODO hack to sketch what this looks like...
     // formation.id = pickTileFormationId(prevFormationId);
     // formation.id = THREE.Math.randInt(0, 3);
-    formation.id = 2;
+    formation.id = 1;
     formation.centroid = centroid;
-    formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
+    formation.geometry = (() => {
+    // formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
         switch (formation.id) {
             case 0: return formationSmallMediumTallPresent6(formationProps);
             case 1: return formationLargeTallPresent1(formationProps);
             case 2: return formationSmallTallPresent36(formationProps);
             case 3: return formationArchAndSmallShortFuture3(formationProps);
         }
-    })())
+    })()
     return formation;
 }
 
-//TODO https://github.com/mrdoob/three.js/issues/13506
-//TODO https://github.com/mrdoob/three.js/issues/13506
+// TODO https://github.com/mrdoob/three.js/issues/13506
+// TODO https://github.com/mrdoob/three.js/issues/13506
 // TODO https://codepen.io/nicoptere/pen/gGemyV?editors=1010
 // TODO https://stackoverflow.com/questions/41880864/how-to-use-three-js-instancedbuffergeometry-instancedbufferattribute
 // TODO https://stackoverflow.com/questions/45669968/gltf-create-instances
@@ -249,6 +253,8 @@ After some time of investigation I discovered why using instancedbuffergeometrie
 The problem is that GLTF format uses indexedbuffergeometries and the workaround is very simple, just convert them with toNonIndexed() method.
 */
 function merge(geometries) {
+
+
 
     // return geometries);
     // 

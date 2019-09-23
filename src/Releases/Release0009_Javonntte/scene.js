@@ -38,7 +38,7 @@ export function Scene({ track }) {
             <Camera
                 fov={25}
                 near={.01}
-                far={1e7}
+                far={1e10}
                 lightProps={{
                     intensity: 1,
                     penumbra: 0.01,
