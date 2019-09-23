@@ -65,7 +65,7 @@ function formationSmallMediumTallPresent6({ centroid, triangleComponents, geomet
 
 function formationLargeTallPresent1({ centroid, triangleComponents, geometries }) {
     return {
-        geometry: geometries[C.LARGE][C.TALL][C.PRESENT][0],
+        geometry: geometries[C.LARGE][C.TALL][C.PRESENT][1],
         centroid: centroid,
     };
     return [

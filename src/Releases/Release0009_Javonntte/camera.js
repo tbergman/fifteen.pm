@@ -5,7 +5,7 @@ import { useThree } from 'react-three-fiber';
 export function Camera({ fov, near, far, lightProps }) {
     const spotLight = useRef();
     const cameraRef = useRef();
-    const { setDefaultCamera, size } = useThree();
+    const { setDefaultCamera, size, scene } = useThree();
 
     useEffect(() => {
         if (cameraRef.current) {
@@ -23,6 +23,10 @@ export function Camera({ fov, near, far, lightProps }) {
     // }, [spotLight])
 
     return <perspectiveCamera
+        onUpdate={self => {
+            var helper = new THREE.CameraHelper(self);
+            scene.add(helper);
+        }}
         ref={cameraRef}
         fov={fov}
         near={near}

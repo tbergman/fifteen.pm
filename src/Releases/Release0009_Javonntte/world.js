@@ -64,8 +64,26 @@ var updateMatrix = function () {
     };
 }();
 
+var randomizeMatrix = function () {
+    var position = new THREE.Vector3();
+    var rotation = new THREE.Euler();
+    var quaternion = new THREE.Quaternion();
+    var scale = new THREE.Vector3();
+    return function (matrix) {
+        position.x = Math.random() * 40 - 20;
+        position.y = Math.random() * 40 - 20;
+        position.z = Math.random() * 40 - 20;
+        rotation.x = Math.random() * 2 * Math.PI;
+        rotation.y = Math.random() * 2 * Math.PI;
+        rotation.z = Math.random() * 2 * Math.PI;
+        quaternion.setFromEuler(rotation);
+        scale.x = scale.y = scale.z = Math.random() * 1;
+        matrix.compose(position, quaternion, scale);
+    };
+}();
+
 // TODO this function needs to be passed to the SphereTileGenerator and folded into its logic somehow
-export function generateWorldTileGeometries(sphereGeometry, geometries) {
+export function generateWorldTileGeometries(sphereGeometry, geometries, scene) {
     const vertices = sphereGeometry.vertices;
     const faces = sphereGeometry.faces;
     const formations = {};
@@ -82,12 +100,37 @@ export function generateWorldTileGeometries(sphereGeometry, geometries) {
         prevTileId = tId;
     })
     // TODO hacking
-    console.log(prevTileId);
-    const geo = formations[prevTileId].geometry.geometry; // just need one geometry
+    // const geo = formations[prevTileId].geometry.geometry; // just need one geometry
+    const geo = new THREE.PlaneBufferGeometry();
+    // const geoMesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial());
+    // geoMesh.position.copy(new THREE.Vector3(Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20))
+    // scene.add(geoMesh);
     var igeo = new THREE.InstancedBufferGeometry();
     var posVertices = geo.attributes.position.clone();
     igeo.addAttribute('position', posVertices);
-    const instanceCount = faces.length;
+
+    // TODO testing cwhat it looks like here
+    // const instanceCount = 1;
+    // var randCol = function () {
+    //     return Math.random();
+    // };
+    // var colors = new THREE.InstancedBufferAttribute(
+    //     new Float32Array(instanceCount * 3), 3
+    // );
+    // for (var i = 0, ul = colors.count; i < ul; i++) {
+    //     colors.setXYZ(i, randCol(), randCol(), randCol());
+    // }
+    // igeo.addAttribute('color', colors);
+    // var material = new THREE.RawShaderMaterial({
+    //     vertexShader: vertInstanced,
+    //     fragmentShader: fragInstanced,
+    // });
+    // var igeoMesh = new THREE.Mesh(igeo, material);
+    // igeoMesh.position.copy(new THREE.Vector3(Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20))
+    // scene.add(igeoMesh);
+
+    const radius = sphereGeometry.parameters.radius;
+    const instanceCount = 200;//obvLocations.length;
     var mcol0 = new THREE.InstancedBufferAttribute(
         new Float32Array(instanceCount * 3), 3
     );
@@ -102,23 +145,23 @@ export function generateWorldTileGeometries(sphereGeometry, geometries) {
     );
     var matrix = new THREE.Matrix4();
     var me = matrix.elements;
-    Object.keys(formations).forEach((tId, idx) => {
-        const centroid = formations[tId].centroid;
-        updateMatrix(matrix, centroid);
-        // for (var i = 0, ul = mcol0.count; i < ul; i++) {
-        for (let j = 0; j < 2; j++) {
-            let i = idx * 3 + j;
-            var object = new THREE.Object3D();
-            // objectCount++;
-            object.applyMatrix(matrix);
-            // pickingData[i + 1] = object;
-            // matrices.set( matrix.elements, i * 16 );
-            mcol0.setXYZ(i, me[0], me[1], me[2]);
-            mcol1.setXYZ(i, me[4], me[5], me[6]);
-            mcol2.setXYZ(i, me[8], me[9], me[10]);
-            mcol3.setXYZ(i, me[12], me[13], me[14]);
-        }
-    })
+
+    // Object.keys(formations).forEach((tId, idx) => {
+    // for (let idx = 0; i < instanceCount; i++) {
+    // const centroid = formations[tId].centroid;
+    // updateMatrix(matrix, obvLocations[idx]);
+    for (var i = 0, ul = mcol0.count; i < ul; i++) {
+        randomizeMatrix(matrix);
+        // for (let j = 0; j < 2; j++) {
+        // let i = idx * 3 + j;
+        var object = new THREE.Object3D();
+        object.applyMatrix(matrix);
+        mcol0.setXYZ(i, me[0], me[1], me[2]);
+        mcol1.setXYZ(i, me[4], me[5], me[6]);
+        mcol2.setXYZ(i, me[8], me[9], me[10]);
+        mcol3.setXYZ(i, me[12], me[13], me[14]);
+
+    }
     igeo.addAttribute('mcol0', mcol0);
     igeo.addAttribute('mcol1', mcol1);
     igeo.addAttribute('mcol2', mcol2);
@@ -133,25 +176,25 @@ export function generateWorldTileGeometries(sphereGeometry, geometries) {
         colors.setXYZ(i, randCol(), randCol(), randCol());
     }
     igeo.addAttribute('color', colors);
-    var col = new THREE.Color();
-    var pickingColors = new THREE.InstancedBufferAttribute(
-        new Float32Array(instanceCount * 3), 3
-    );
-    for (var i = 0, ul = pickingColors.count; i < ul; i++) {
-        col.setHex(i + 1);
-        pickingColors.setXYZ(i, col.r, col.g, col.b);
-    }
-    igeo.addAttribute('pickingColor', pickingColors);
-    var material = new THREE.RawShaderMaterial( {
+    // var col = new THREE.Color();
+    // var pickingColors = new THREE.InstancedBufferAttribute(
+    //     new Float32Array(instanceCount * 3), 3
+    // );
+    // for (var i = 0, ul = pickingColors.count; i < ul; i++) {
+    //     col.setHex(i + 1);
+    //     pickingColors.setXYZ(i, col.r, col.g, col.b);
+    // }
+    // igeo.addAttribute('pickingColor', pickingColors);
+    var material = new THREE.RawShaderMaterial({
         vertexShader: vertInstanced,
         fragmentShader: fragInstanced,
-    } );
-    // mesh
+    });
     var mesh = new THREE.Mesh(igeo, material);
     // return formations;
-    return mesh;
-}
 
+    return mesh;
+    // return igeo;
+}
 
 
 function AtmosphereGlow({ radius }) {
@@ -198,7 +241,7 @@ export function World({ track, buildings, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded) {
-            tileFormations.current = generateWorldTileGeometries(sphereGeometry, buildings.geometries);
+            tileFormations.current = generateWorldTileGeometries(sphereGeometry, buildings.geometries, scene);
         }
     }, [])
 
@@ -223,7 +266,7 @@ export function World({ track, buildings, ...props }) {
         // } 
     })
 
-    console.log(tileFormations.current);
+    console.log('tileFormations.current', tileFormations.current);
     return <group ref={worldRef}>
         {world && <>
             {/* <Stars
@@ -235,7 +278,9 @@ export function World({ track, buildings, ...props }) {
                 bpm={track && track.bpm}
             /> */}
             {tileFormations.current &&
-                <primitive object={tileFormations.current} />
+                <primitive
+                    object={tileFormations.current}
+                />
             }
             {/* {renderTiles ?
                 <SphereTiles

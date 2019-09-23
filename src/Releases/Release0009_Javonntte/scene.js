@@ -19,16 +19,21 @@ export function Scene({ track }) {
        Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
        (For instance: a complicated geometry.)
      */
-    const { camera, canvas } = useThree();
+    const { camera, canvas, gl } = useThree();
     const [loadingBuildings, buildings] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
-    const startPos = new THREE.Vector3(0, 0, C.WORLD_RADIUS * 1.13);
-    const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS - C.WORLD_RADIUS * .5, C.WORLD_RADIUS - C.WORLD_RADIUS * .1);
+    // const startPos = new THREE.Vector3(0, 40,C.WORLD_RADIUS + .1, 0);
+    // const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS, 20);
+    // const startPos = new THREE.Vector3(0, 0, C.WORLD_RADIUS * 1.13);
+    // const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS - C.WORLD_RADIUS * .5, C.WORLD_RADIUS - C.WORLD_RADIUS * .1);
 
     useEffect(() => {
         // These actions must occur after buildings load.
-        camera.position.copy(startPos);
-        camera.lookAt(lookAt);
+        // camera.position.copy(startPos);
+        // camera.lookAt(lookAt);
+        camera.position.z = 40;
+       
+
     }, [buildings])
 
     return (
@@ -36,9 +41,9 @@ export function Scene({ track }) {
             {/* use one material for all buildings  */}
             <CloudMaterial materialRef={cloudMaterialRef} />
             <Camera
-                fov={25}
-                near={.01}
-                far={1e10}
+                fov={70}
+                near={1}
+                far={100}
                 lightProps={{
                     intensity: 1,
                     penumbra: 0.01,
@@ -51,9 +56,9 @@ export function Scene({ track }) {
             />
             <Controls
                 radius={C.WORLD_RADIUS}
-                movementSpeed={30}
+                movementSpeed={300}
                 domElement={canvas}
-                rollSpeed={Math.PI}
+                rollSpeed={Math.PI * 2}
                 autoForward={false}
                 dragToLook={false}
             />
@@ -61,7 +66,7 @@ export function Scene({ track }) {
             {cloudMaterial && !loadingBuildings && track &&
                 <World
                     track={track}
-                    startPos={startPos}
+                    // startPos={startPos}
                     buildings={{
                         geometries: buildings,
                         material: cloudMaterial,

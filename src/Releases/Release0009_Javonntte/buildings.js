@@ -78,7 +78,7 @@ export function onBuildingsLoaded(gltf) {
         large: cloneDeep(maxHeightBucket),
         xlarge: cloneDeep(maxHeightBucket),
     }
-    // const geometrySize = new THREE.Vector3();
+    const geometrySize = new THREE.Vector3();
     gltf.scene.traverse(child => {
         if (child.isMesh) {
             // For devving minimal number of faces
@@ -92,8 +92,8 @@ export function onBuildingsLoaded(gltf) {
             child.position.set(0, 0, 0);
             const geometry = child.geometry.clone();
             geometry.toNonIndexed();
-            // geometry.computeBoundingBox();
-            // geometry.boundingBox.getSize(geometrySize);
+            geometry.computeBoundingBox();
+            geometry.boundingBox.getSize(geometrySize);
             // this makes the 'lookAt(normal)' function as expected on the sphere by flipping the default blender output
             // geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI));
             const [maxWidthBucket, maxHeightBucket, category] = child.name.split("_");
