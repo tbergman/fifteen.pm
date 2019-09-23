@@ -47,7 +47,7 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
 }
 
 // TODO this function needs to be passed to the SphereTileGenerator and folded into its logic somehow
-export function generateWorldTilePatterns(sphereGeometry, geometries) {
+export function generateWorldTileGeometries(sphereGeometry, geometries) {
     const vertices = sphereGeometry.vertices;
     const faces = sphereGeometry.faces;
     const formations = {};
@@ -107,7 +107,7 @@ export function World({ track, buildings, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded) {
-            tileFormations.current = generateWorldTilePatterns(sphereGeometry, buildings.geometries);
+            tileFormations.current = generateWorldTileGeometries(sphereGeometry, buildings.geometries);
         }
     }, [])
 

@@ -12,6 +12,7 @@ import * as C from './constants';
 import { Buildings } from './buildings';
 
 export const SkyCityTile = props => {
+    console.log("RENDER TILE!", props.tileId);
     return <group>
         <Buildings
             material={props.tileElements.buildings.material}
@@ -225,7 +226,7 @@ export function pickTileFormation({ triangle, centroid, geometries, prevFormatio
     // TODO hack to sketch what this looks like...
     // formation.id = pickTileFormationId(prevFormationId);
     // formation.id = THREE.Math.randInt(0, 3);
-    formation.id = 1;
+    formation.id = 2;
     formation.centroid = centroid;
     formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
         switch (formation.id) {

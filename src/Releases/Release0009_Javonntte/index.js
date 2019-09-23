@@ -44,8 +44,6 @@ export default function Release0009_Javonntte({ }) {
                 antialias="false"
                 onCreated={({ gl }) => {
                     gl.shadowMap.enabled = true;
-                    console.log(gl)
-                    console.log('canvas', canvas);
                 }}
             >
                 <Scene track={track} />
