@@ -306,13 +306,17 @@ function generateBuildingsByCategory(geometries) {
 export function generateWorldInstanceGeometries(sphereGeometry, buildings) {
     const elementsByName = {};
     const instancesByName = {};
+    // build up a lookup of each geometry by name
     buildings.geometries.forEach((geometry) => elementsByName[geometry.name] = []);
+    // generate formations for all tiles
     const formations = generateTileFormations(sphereGeometry, buildings.geometries);
+    // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach((tId) => {
         formations[tId].elements.forEach((element) => {
             elementsByName[element.geometry.name].push(element);
         })
     });
+    // create an instance geometry for each geometry type that includes all locations on each formation for that geometry
     Object.keys(elementsByName).forEach((name) => {
         if (elementsByName[name].length) {
             instancesByName[name] = createInstance(elementsByName[name], buildings.material);
