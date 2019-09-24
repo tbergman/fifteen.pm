@@ -216,6 +216,7 @@ export function TronMaterial({ materialRef, bpm }) {
 		uniforms={uniforms}
 		// lights={true}
 		// vertexShader={simpleWithDepthVertex}
+		side={THREE.DoubleSide}
 		vertexShader={simpleVertex}
 		fragmentShader={tronFragmentShader}
 	/>;
