@@ -1,13 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRender, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
 import { CloudMaterial, TronMaterial } from '../../Utils/materials';
-import { SphereTiles, tileId } from '../../Utils/SphereTiles';
+import { SphereTiles } from '../../Utils/SphereTiles';
 import * as C from './constants';
 import "./index.css";
 import { Stars } from './stars';
-import { pickTileFormation, SkyCityTile } from "./tiles";
+import { generateTileGeometries, SkyCityTile } from "./tiles";
 
 
 /* eslint import/no-webpack-loader-syntax: off */
@@ -83,114 +82,7 @@ var randomizeMatrix = function () {
     };
 }();
 
-// TODO this function needs to be passed to the SphereTileGenerator and folded into its logic somehow
-export function generateWorldTileGeometries(sphereGeometry, geometries, scene) {
-    const vertices = sphereGeometry.vertices;
-    const faces = sphereGeometry.faces;
-    const formations = {};
-    let prevFormationId = 0;
-    // TODO here is a hacky version of allocating tiles by type.
-    let prevTileId;
-    faces.forEach((face, index) => {
-        const centroid = faceCentroid(face, vertices);
-        const tId = tileId(centroid);
 
-        const triangle = triangleFromFace(face, vertices);
-        formations[tId] = pickTileFormation({ triangle, centroid, geometries, prevFormationId })
-        prevFormationId = formations[tId].id;
-        prevTileId = tId;
-    })
-    // TODO hacking
-    const geo = formations[prevTileId].geometry.geometry; // just need one geometry
-    // const geo = new THREE.PlaneBufferGeometry();
-
-
-    var InstancedMesh = require('three-instanced-mesh')(THREE);
-    //geometry to be instanced
-    // var boxGeometry = new THREE.BoxBufferGeometry(2, 2, 2, 1, 1, 1);
-
-    //material that the geometry will use
-    var material = new THREE.MeshPhongMaterial();
-    const totalInstances = 2500;
-    //the instance group
-    var cluster = new THREE.InstancedMesh(
-        geo,                 //this is the same 
-        material,
-        totalInstances,                       //instance count
-        false,                       //is it dynamic
-        true,                        //does it have color
-        true,                        //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
-    );
-
-    var _v3 = new THREE.Vector3();
-    var _q = new THREE.Quaternion();
-var randCol = function () {
-        return Math.random();
-    };
-    for (var i = 0; i < totalInstances; i++) {
-
-        cluster.setQuaternionAt(i, _q);
-        cluster.setPositionAt(i, _v3.set(Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20));
-        cluster.setScaleAt(i, _v3.set(1, 1, 1));
-        cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()) )
-    }
-
-    // scene.add(cluster);
-    return cluster;
-
-    // const geometrySize = new THREE.Vector3()
-    // geo.toNonIndexed();
-    // geo.computeBoundingBox();
-    // geo.boundingBox.getSize(geometrySize);
-    // console.log('initially', geo.attributes);
-    // var igeo = new THREE.InstancedBufferGeometry();
-    // var posVertices = geo.attributes.position.clone();
-    // igeo.addAttribute('position', posVertices);
-    // const instanceCount = 200;//obvLocations.length;
-    // var mcol0 = new THREE.InstancedBufferAttribute(
-    //     new Float32Array(instanceCount * 3), 3
-    // );
-    // var mcol1 = new THREE.InstancedBufferAttribute(
-    //     new Float32Array(instanceCount * 3), 3
-    // );
-    // var mcol2 = new THREE.InstancedBufferAttribute(
-    //     new Float32Array(instanceCount * 3), 3
-    // );
-    // var mcol3 = new THREE.InstancedBufferAttribute(
-    //     new Float32Array(instanceCount * 3), 3
-    // );
-    // var matrix = new THREE.Matrix4();
-    // var me = matrix.elements;
-    // for (var i = 0, ul = mcol0.count; i < ul; i++) {
-    //     randomizeMatrix(matrix);
-    //     mcol0.setXYZ(i, me[0], me[1], me[2]);
-    //     mcol1.setXYZ(i, me[4], me[5], me[6]);
-    //     mcol2.setXYZ(i, me[8], me[9], me[10]);
-    //     mcol3.setXYZ(i, me[12], me[13], me[14]);
-    // }
-    // igeo.addAttribute('mcol0', mcol0);
-    // igeo.addAttribute('mcol1', mcol1);
-    // igeo.addAttribute('mcol2', mcol2);
-    // igeo.addAttribute('mcol3', mcol3);
-    // var randCol = function () {
-    //     return Math.random();
-    // };
-    // var colors = new THREE.InstancedBufferAttribute(
-    //     new Float32Array(instanceCount * 3), 3
-    // );
-    // for (var i = 0, ul = colors.count; i < ul; i++) {
-    //     colors.setXYZ(i, randCol(), randCol(), randCol());
-    // }
-    // igeo.addAttribute('color', colors);
-    // var material = new THREE.RawShaderMaterial({
-    //     vertexShader: vertInstanced,
-    //     fragmentShader: fragInstanced,
-    // });
-
-    // console.log('updated', igeo.attributes);
-    // var mesh = new THREE.Mesh(igeo, material);
-    // return mesh;
-}
 
 
 function AtmosphereGlow({ radius }) {
@@ -237,7 +129,7 @@ export function World({ track, buildings, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded) {
-            tileFormations.current = generateWorldTileGeometries(sphereGeometry, buildings.geometries, scene);
+            tileFormations.current = generateTileGeometries(sphereGeometry, buildings.geometries);
         }
     }, [])
 

@@ -1,38 +1,17 @@
 import React from 'react';
 import * as THREE from 'three';
-import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils';
 import {
     getMiddle,
     triangleCentroidFromVertices as centroidFromPoints,
     triangleCentroid as centroidFromTriangle,
     triangleFromVertices
 } from '../../Utils/geometry';
+import { faceCentroid, triangleFromFace } from '../../Utils/geometry';
 import { randomArrayVal } from '../../Utils/random';
 import * as C from './constants';
 import { Buildings } from './buildings';
-
-export const SkyCityTile = props => {
-    console.log("RENDER TILE!", props.tileId);
-    return <group>
-        <Buildings
-            material={props.tileElements.buildings.material}
-            formation={props.tileElements.formations[props.tileId]}
-            normal={props.normal}
-        />
-    </group>
-}
-
-// TODO not using this atm
-export const tileFormationRatios = () => {
-    const ratios = {
-        0: .2,
-        1: .7,
-        2: .1,
-    }
-    const sum = Object.values(ratios).reduce((a, b) => a + b, 0);
-    console.assert(sum == 1., { sum: sum, errorMsg: "formationRatios sum must add up to 1." });
-    return ratios;
-}
+import { tileId } from '../../Utils/SphereTiles';
+require('three-instanced-mesh')(THREE);
 
 function formationSmallMediumTallPresent6({ centroid, triangleComponents, geometries }) {
     return [
@@ -108,6 +87,8 @@ function formationArchAndSmallShortFuture3({ centroid, triangleComponents, geome
         },
     ]
 }
+
+
 
 // TODO v3 is always centroid
 function localMatrix(v1, v2, v3, worldTriangleCentroid) {
@@ -218,7 +199,7 @@ function pickTileFormationId(prevId) {
     }
 }
 
-export function pickTileFormation({ triangle, centroid, geometries, prevFormationId }) {
+function pickTileFormation({ triangle, centroid, geometries, prevFormationId }) {
     // TODO some heuristic for which formations work best where
     const formation = {};
     const formationProps = {
@@ -232,7 +213,7 @@ export function pickTileFormation({ triangle, centroid, geometries, prevFormatio
     formation.id = 1;
     formation.centroid = centroid;
     formation.geometry = (() => {
-    // formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
+        // formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
         switch (formation.id) {
             case 0: return formationSmallMediumTallPresent6(formationProps);
             case 1: return formationLargeTallPresent1(formationProps);
@@ -243,48 +224,71 @@ export function pickTileFormation({ triangle, centroid, geometries, prevFormatio
     return formation;
 }
 
-// TODO https://github.com/mrdoob/three.js/issues/13506
-// TODO https://github.com/mrdoob/three.js/issues/13506
-// TODO https://codepen.io/nicoptere/pen/gGemyV?editors=1010
-// TODO https://stackoverflow.com/questions/41880864/how-to-use-three-js-instancedbuffergeometry-instancedbufferattribute
-// TODO https://stackoverflow.com/questions/45669968/gltf-create-instances
-/* 
-After some time of investigation I discovered why using instancedbuffergeometries were not working with the buffergeometries found in my GLTF files.
-The problem is that GLTF format uses indexedbuffergeometries and the workaround is very simple, just convert them with toNonIndexed() method.
-*/
-function merge(geometries) {
+
+// TODO not using this atm
+const tileFormationRatios = () => {
+    const ratios = {
+        0: .2,
+        1: .7,
+        2: .1,
+    }
+    const sum = Object.values(ratios).reduce((a, b) => a + b, 0);
+    console.assert(sum == 1., { sum: sum, errorMsg: "formationRatios sum must add up to 1." });
+    return ratios;
+}
 
 
 
-    // return geometries);
-    // 
-    // copy geom attributes position and normal - update position to centroid stored in tiles obj
-    // subtract the geometry's specific centroid for each tile from the worldspace centroid of the tile to get the relative position of the geom 
-    // const matrix = new THREE.Matrix4();
-    // const geometries = [];
-    // const scale = new THREE.Vector3();
-    // for (let i = 0; i < tiles.length; i++) {
-    // geometries.push(geometry);
-    // }
+export const SkyCityTile = props => {
+    return <group>
+        <Buildings
+            material={props.tileElements.buildings.material}
+            formation={props.tileElements.formations[props.tileId]}
+            normal={props.normal}
+        />
+    </group>
+}
 
-    // const geoms = tiles.map(t => t.geometry);
-    // console.log(geoms[0]);
-    // const mergedGeometry = BufferGeometryUtils.mergeBufferGeometries(geometries);
-    // return mergedGeometry;
-    // return geometry;
-    // const instancedGeometry = new THREE.InstancedBufferGeometry();
-    // for (let i = 0; i < tiles.length; i++) {
-    //     Object.keys(tiles[i].geometry).forEach(attributeName => {
-    //         instancedGeometry.attributes[attributeName] = tiles[i].geometry.attribute[attributeName]
-    //     })
-    //     instancedGeometry.index = tiles[i].geometry.index;
-    //     instancedGeometry.maxInstancedCount = 2000; // TODO tiles.length...
-    //     const matArraySize = 2000 * 4; // TODO tiles.length...
-    //     const matrixArray = [
-    //         new Float32Array(matArraySize),
-    //         new Float32Array(matArraySize),
-    //         new Float32Array(matArraySize),
-    //         new Float32Array(matArraySize),
-    //     ]
-    // }
+// TODO this function needs to be passed to the SphereTileGenerator and folded into its logic somehow
+export function generateTileGeometries(sphereGeometry, geometries) {
+    const vertices = sphereGeometry.vertices;
+    const faces = sphereGeometry.faces;
+    const formations = {};
+    let prevFormationId = 0;
+    // TODO here is a hacky version of allocating tiles by type.
+    let prevTileId;
+    faces.forEach((face, index) => {
+        const centroid = faceCentroid(face, vertices);
+        const tId = tileId(centroid);
+        const triangle = triangleFromFace(face, vertices);
+        formations[tId] = pickTileFormation({ triangle, centroid, geometries, prevFormationId })
+        prevFormationId = formations[tId].id;
+        prevTileId = tId;
+    })
+    //geometry to be instanced
+    const geo = formations[prevTileId].geometry.geometry; // just need one geometry
+    //material that the geometry will use
+    var material = new THREE.MeshPhongMaterial();
+    const totalInstances = 250;
+    //the instance group
+    var cluster = new THREE.InstancedMesh(
+        geo,                 //this is the same 
+        material,
+        totalInstances,                       //instance count
+        false,                       //is it dynamic
+        true,                        //does it have color
+        true,                        //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
+    );
+    var _v3 = new THREE.Vector3();
+    var _q = new THREE.Quaternion();
+    var randCol = function () {
+        return Math.random();
+    };
+    for (var i = 0; i < totalInstances; i++) {
+        cluster.setQuaternionAt(i, _q);
+        cluster.setPositionAt(i, _v3.set(Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20));
+        cluster.setScaleAt(i, _v3.set(1, 1, 1));
+        cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()))
+    }
+    return cluster;
 }

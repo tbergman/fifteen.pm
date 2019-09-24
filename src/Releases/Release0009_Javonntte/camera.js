@@ -10,17 +10,8 @@ export function Camera({ fov, near, far, lightProps }) {
     useEffect(() => {
         if (cameraRef.current) {
             setDefaultCamera(cameraRef.current);
-            cameraRef.current.setViewOffset(size.width + 5, size.height + 5, 0, 0, size.width + 5, size.height + 5)
         }
     }, [cameraRef])
-
-    // useEffect(() => {
-    //     if (spotLight.current) {
-    //         // spotLight.current.target = new THREE.Vector3(0, 0, 3);
-    //         // const shadowCameraHelper = new THREE.CameraHelper(spotLight.current.shadow.camera);
-    //         // scene.add(shadowCameraHelper);
-    //     }
-    // }, [spotLight])
 
     return <perspectiveCamera
         onUpdate={self => {
