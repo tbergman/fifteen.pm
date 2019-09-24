@@ -226,7 +226,7 @@ function localGeometry(geometry, v1, v2, v3, worldCentroid) {
 }
 
 function createInstance(elements, material) {
-    const totalInstances = 200; //elements.length;
+    const totalInstances = 400; //elements.length;
     const geometry = elements[0].geometry;
     const cluster = new THREE.InstancedMesh(
         geometry,
@@ -241,7 +241,7 @@ function createInstance(elements, material) {
         return Math.random();
     };
     for (let i = 0; i < totalInstances; i++) {
-        const tmpOffset = i*20;
+        const tmpOffset = i*15;
         var obj = new THREE.Object3D();
         obj.lookAt(elements[tmpOffset].normal);
         obj.updateMatrix();
