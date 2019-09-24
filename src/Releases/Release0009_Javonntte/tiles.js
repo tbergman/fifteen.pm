@@ -240,19 +240,17 @@ function createInstance(elements, material) {
     var randCol = function () {
         return Math.random();
     };
+    const direction = new THREE.Vector3(0, 1, 0);
     for (let i = 0; i < totalInstances; i++) {
-        // TODO use the geometry.normal to update the rotation here and include random z rotation
-        // var obj = new THREE.Object3D();
-        // obj.lookAt(elements[i].normal);
-        // obj.updateMatrix();
-        // const quaternion = new THREE.Quaternion().setFromRotationMatrix(obj.matrix);
-        const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
-        const quaternion = new THREE.Quaternion().setFromEuler(rotation);
-        cluster.setQuaternionAt(i, quaternion);
-        // cluster.setPositionAt(i, elements[i].centroid.x, elements[i].centroid.y, elements[i].centroid.z);
-        // TODO HACK!
         const tmpOffset = i*20;
-        console.log(elements[tmpOffset].centroid.z);
+        var obj = new THREE.Object3D();
+        obj.lookAt(elements[tmpOffset].normal);
+        obj.updateMatrix();
+        const quaternion = new THREE.Quaternion().setFromRotationMatrix(obj.matrix);
+        // TODO include random z rotation
+        // const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
+        // const quaternion = new THREE.Quaternion().setFromEuler(rotation);
+        cluster.setQuaternionAt(i, quaternion);
         const centroid = elements[tmpOffset].centroid;
         cluster.setPositionAt(i, _v3.set(centroid.x, centroid.y, centroid.z));
         console.log(_v3);

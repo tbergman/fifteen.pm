@@ -120,10 +120,10 @@ export function World({ track, buildings, ...props }) {
                 radius={radius}
                 colors={track.theme.starColors}
             /> */}
-            {/* <WorldSurface
+            <WorldSurface
                 geometry={sphereGeometry}
                 bpm={track && track.bpm}
-            /> */}
+            />
             
             {tileFormations.current &&
                 Object.keys(tileFormations.current).map(tId => {
