@@ -226,7 +226,7 @@ function localGeometry(geometry, v1, v2, v3, worldCentroid) {
 }
 
 function createInstance(elements, material) {
-    const totalInstances = elements.length;
+    const totalInstances = 200; //elements.length;
     const geometry = elements[0].geometry;
     const cluster = new THREE.InstancedMesh(
         geometry,
@@ -246,16 +246,18 @@ function createInstance(elements, material) {
         // obj.lookAt(elements[i].normal);
         // obj.updateMatrix();
         // const quaternion = new THREE.Quaternion().setFromRotationMatrix(obj.matrix);
-
         const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
         const quaternion = new THREE.Quaternion().setFromEuler(rotation);
-
         cluster.setQuaternionAt(i, quaternion);
         // cluster.setPositionAt(i, elements[i].centroid.x, elements[i].centroid.y, elements[i].centroid.z);
-        cluster.setPositionAt(i, _v3.set(Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20));
+        // TODO HACK!
+        const tmpOffset = i*20;
+        console.log(elements[tmpOffset].centroid.z);
+        const centroid = elements[tmpOffset].centroid;
+        cluster.setPositionAt(i, _v3.set(centroid.x, centroid.y, centroid.z);
+        console.log(_v3);
         cluster.setScaleAt(i, _v3.set(1, 1, 1));
-        cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()))
-
+        cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()));
     }
     return cluster;
 }
@@ -309,28 +311,20 @@ function generateBuildingsByCategory(geometries) {
 
 // TODO maybe the material ref should be assigned to the incoming geometries array of objects
 export function generateWorldInstanceGeometries(sphereGeometry, buildings) {
-    const elementsByName = {}
-    const instancesByName = {}
-
-    buildings.geometries.forEach((geometry) => {
-        elementsByName[geometry.name] = [];
-    });
-
+    const elementsByName = {};
+    const instancesByName = {};
+    buildings.geometries.forEach((geometry) => elementsByName[geometry.name] = []);
     const formations = generateTileFormations(sphereGeometry, buildings.geometries);
-
     Object.keys(formations).forEach((tId) => {
         formations[tId].elements.forEach((element) => {
-            const geometry = element.geometry;
-            elementsByName[geometry.name].push(element);
+            elementsByName[element.geometry.name].push(element);
         })
     });
-
     Object.keys(elementsByName).forEach((name) => {
         if (elementsByName[name].length) {
             instancesByName[name] = createInstance(elementsByName[name], buildings.material);
         }
     });
-
     return instancesByName;
 }
 
