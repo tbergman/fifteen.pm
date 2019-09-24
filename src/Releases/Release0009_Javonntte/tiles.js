@@ -240,7 +240,6 @@ function createInstance(elements, material) {
     var randCol = function () {
         return Math.random();
     };
-    const direction = new THREE.Vector3(0, 1, 0);
     for (let i = 0; i < totalInstances; i++) {
         const tmpOffset = i*20;
         var obj = new THREE.Object3D();
@@ -252,8 +251,8 @@ function createInstance(elements, material) {
         // const quaternion = new THREE.Quaternion().setFromEuler(rotation);
         cluster.setQuaternionAt(i, quaternion);
         const centroid = elements[tmpOffset].centroid;
+        console.log("pos:", centroid);
         cluster.setPositionAt(i, _v3.set(centroid.x, centroid.y, centroid.z));
-        console.log(_v3);
         cluster.setScaleAt(i, _v3.set(1, 1, 1));
         cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()));
     }
