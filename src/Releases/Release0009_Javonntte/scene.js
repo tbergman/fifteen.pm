@@ -43,7 +43,7 @@ export function Scene({ track }) {
             <CloudMaterial materialRef={cloudMaterialRef} />
             <Camera
                 fov={70}
-                near={.000001}
+                near={1}
                 far={100}
                 lightProps={{
                     intensity: 1,

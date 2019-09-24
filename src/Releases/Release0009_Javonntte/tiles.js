@@ -20,43 +20,43 @@ function formationSmallMediumTallPresent6({ centroid, triangleComponents, geomet
     return [
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-            centroid: centroidFromPoints(triangleComponents.i1, triangleComponents.a, centroid)
+            centroid: centroidFromPoints(triangleComponents.i1, triangleComponents.a, centroid),
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-            centroid: centroidFromPoints(triangleComponents.a, triangleComponents.i2, centroid)
+            centroid: centroidFromPoints(triangleComponents.a, triangleComponents.i2, centroid),
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
-            centroid: centroidFromPoints(triangleComponents.i2, triangleComponents.b, centroid)
+            centroid: centroidFromPoints(triangleComponents.i2, triangleComponents.b, centroid),
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
-            centroid: centroidFromPoints(triangleComponents.b, triangleComponents.i3, centroid)
+            centroid: centroidFromPoints(triangleComponents.b, triangleComponents.i3, centroid),
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
-            centroid: centroidFromPoints(triangleComponents.i3, triangleComponents.c, centroid)
+            centroid: centroidFromPoints(triangleComponents.i3, triangleComponents.c, centroid),
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
-            centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid)
+            centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid),
+            normal: triangleComponents.normal,
         },
     ]
 }
 
 function formationLargeTallPresent1({ centroid, triangleComponents, geometries }) {
     return [{
-        geometry: geometries[C.LARGE][C.TALL][C.PRESENT][1],
+        geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.PRESENT]),
         centroid: centroid,
         normal: triangleComponents.normal,
     }]
-    return [
-        {
-            geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.PRESENT]),
-            centroid: centroid
-        }
-    ]
 }
 
 function formationArchAndSmallShortFuture3({ centroid, triangleComponents, geometries }) {
@@ -64,31 +64,37 @@ function formationArchAndSmallShortFuture3({ centroid, triangleComponents, geome
         {
             geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.ARCH]),
             centroid: centroid,
-
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
-            centroid: centroidFromPoints(triangleComponents.i1, triangleComponents.a, centroid)
+            centroid: centroidFromPoints(triangleComponents.i1, triangleComponents.a, centroid),
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
-            centroid: centroidFromPoints(triangleComponents.a, triangleComponents.i2, centroid)
+            centroid: centroidFromPoints(triangleComponents.a, triangleComponents.i2, centroid),
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
-            centroid: centroidFromPoints(triangleComponents.i2, triangleComponents.b, centroid)
+            centroid: centroidFromPoints(triangleComponents.i2, triangleComponents.b, centroid),
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
-            centroid: centroidFromPoints(triangleComponents.b, triangleComponents.i3, centroid)
+            centroid: centroidFromPoints(triangleComponents.b, triangleComponents.i3, centroid),
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
-            centroid: centroidFromPoints(triangleComponents.i3, triangleComponents.c, centroid)
+            centroid: centroidFromPoints(triangleComponents.i3, triangleComponents.c, centroid),
+            normal: triangleComponents.normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
-            centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid)
+            centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid),
+            normal: triangleComponents.normal,
         },
     ]
 }
@@ -109,50 +115,42 @@ function formationSmallTallPresent36({ centroid, triangleComponents, geometries 
             centroid: centroidFromTriangle(triangle)
         }
     })
-    const formationGeometries = [];
+    const formations = [];
     tinyTriangles.forEach(tiny => {
-        formationGeometries.push(
-            localGeometry(
-                randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                tiny.components.i1,
-                tiny.components.a,
-                tiny.centroid,
-                centroid,
-            ),
-            localGeometry(
-                randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                tiny.components.a,
-                tiny.components.i2,
-                tiny.centroid,
-                centroid,
-            ),
-            localGeometry(randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                tiny.components.i2,
-                tiny.components.b,
-                tiny.centroid,
-                centroid,
-            ),
-            localGeometry(randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                tiny.components.b,
-                tiny.components.i3,
-                tiny.centroid,
-                centroid,
-            ),
-            localGeometry(randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                tiny.components.i3,
-                tiny.components.c,
-                tiny.centroid,
-                centroid,
-            ),
-            localGeometry(randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
-                tiny.components.c,
-                tiny.components.i1,
-                tiny.centroid,
-                centroid
-            ),
+        formations.push(
+            {
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                centroid: centroidFromPoints(tiny.components.i1, tiny.components.a, tiny.centroid),
+                normal: triangleComponents.normal,
+            },
+            {
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                centroid: centroidFromPoints(tiny.components.a, tiny.components.i2, tiny.centroid),
+                normal: triangleComponents.normal,
+            },
+            {
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                centroid: centroidFromPoints(tiny.components.i2, tiny.components.b, tiny.centroid),
+                normal: triangleComponents.normal,
+            },
+            {
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                centroid: centroidFromPoints(tiny.components.b, tiny.components.i3, tiny.centroid),
+                normal: triangleComponents.normal,
+            },
+            {
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                centroid: centroidFromPoints(tiny.components.i3, tiny.components.c, tiny.centroid),
+                normal: triangleComponents.normal,
+            },
+            {
+                geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
+                centroid: centroidFromPoints(tiny.components.c, tiny.components.i1, tiny.centroid),
+                normal: triangleComponents.normal,
+            }
         );
     });
-    return formationGeometries;
+    return formations;
 }
 
 function subdivideTriangle(triangle) {
@@ -172,7 +170,8 @@ function pickTileFormationId(prevId) {
     switch (prevId) {
         case 0: return THREE.Math.randInt(0, 5) < 1 ? 0 : 1;
         case 1: return THREE.Math.randInt(0, 10) > 1 ? 1 : 0;
-        case 2: return THREE.Math.randInt(0, 10) < 1 ? 2 : 1;
+        case 2: return THREE.Math.randInt(0, 10) < 1 ? 2 : 0;
+        case 3: return THREE.Math.randInt(0, 10) < 1 ? 3 : 0
     }
 }
 
@@ -186,8 +185,8 @@ function pickTileFormation({ triangle, centroid, geometriesByCategory, prevForma
     }
     // TODO hack to sketch what this looks like...
     // formation.id = pickTileFormationId(prevFormationId);
-    // formation.id = THREE.Math.randInt(0, 3);
-    formation.id = 1;
+    formation.id = THREE.Math.randInt(0, 3);
+    // formation.id = 1;
     formation.centroid = centroid;
     formation.elements = (() => {
         // formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
@@ -200,8 +199,6 @@ function pickTileFormation({ triangle, centroid, geometriesByCategory, prevForma
     })()
     return formation;
 }
-
-
 
 // // TODO v3 is always centroid
 function localMatrix(v1, v2, v3, worldTriangleCentroid) {
@@ -226,7 +223,7 @@ function localGeometry(geometry, v1, v2, v3, worldCentroid) {
 }
 
 function createInstance(elements, material) {
-    const totalInstances = 400; //elements.length;
+    const totalInstances = elements.length;
     const geometry = elements[0].geometry;
     const cluster = new THREE.InstancedMesh(
         geometry,
@@ -241,7 +238,7 @@ function createInstance(elements, material) {
         return Math.random();
     };
     for (let i = 0; i < totalInstances; i++) {
-        const tmpOffset = i*15;
+        const tmpOffset = i;// * 15;
         var obj = new THREE.Object3D();
         obj.lookAt(elements[tmpOffset].normal);
         obj.updateMatrix();
@@ -251,7 +248,6 @@ function createInstance(elements, material) {
         // const quaternion = new THREE.Quaternion().setFromEuler(rotation);
         cluster.setQuaternionAt(i, quaternion);
         const centroid = elements[tmpOffset].centroid;
-        console.log("pos:", centroid);
         cluster.setPositionAt(i, _v3.set(centroid.x, centroid.y, centroid.z));
         cluster.setScaleAt(i, _v3.set(1, 1, 1));
         cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()));
