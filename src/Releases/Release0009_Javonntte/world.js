@@ -8,12 +8,6 @@ import "./index.css";
 import { Stars } from './stars';
 import { generateWorldInstanceGeometries, SkyCityTile } from "./tiles";
 
-
-/* eslint import/no-webpack-loader-syntax: off */
-import fragInstanced from '!raw-loader!glslify-loader!../../Shaders/fragInstanced.glsl';
-/* eslint import/no-webpack-loader-syntax: off */
-import vertInstanced from '!raw-loader!glslify-loader!../../Shaders/vertInstanced.glsl';
-
 // TODO tilt and rotationSpeed
 export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
@@ -50,40 +44,6 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
     }
     return geometry;
 }
-
-// var updateMatrix = function () {
-//     var position = new THREE.Vector3();
-//     const scale = new THREE.Vector3(1., 1., 1.);
-//     const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
-//     const quaternion = new THREE.Quaternion().setFromEuler(rotation);
-//     return function (matrix, centroid) {
-//         position.x = centroid.x;
-//         position.y = centroid.y;
-//         position.z = centroid.z;
-//         matrix.compose(position, quaternion, scale);
-//     };
-// }();
-
-// var randomizeMatrix = function () {
-//     var position = new THREE.Vector3();
-//     var rotation = new THREE.Euler();
-//     var quaternion = new THREE.Quaternion();
-//     var scale = new THREE.Vector3();
-//     return function (matrix) {
-//         position.x = Math.random() * 40 - 20;
-//         position.y = Math.random() * 40 - 20;
-//         position.z = Math.random() * 40 - 20;
-//         rotation.x = Math.random() * 2 * Math.PI;
-//         rotation.y = Math.random() * 2 * Math.PI;
-//         rotation.z = Math.random() * 2 * Math.PI;
-//         quaternion.setFromEuler(rotation);
-//         scale.x = scale.y = scale.z = Math.random() * 1;
-//         matrix.compose(position, quaternion, scale);
-//     };
-// }();
-
-
-
 
 function AtmosphereGlow({ radius }) {
     const geometry = useMemo(() => new THREE.SphereGeometry(radius, radius / 3, radius / 3))

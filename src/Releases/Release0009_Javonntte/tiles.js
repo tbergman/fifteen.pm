@@ -49,6 +49,7 @@ function formationLargeTallPresent1({ centroid, triangleComponents, geometries }
     return [{
         geometry: geometries[C.LARGE][C.TALL][C.PRESENT][1],
         centroid: centroid,
+        normal: triangleComponents.normal,
     }]
     return [
         {
@@ -63,6 +64,7 @@ function formationArchAndSmallShortFuture3({ centroid, triangleComponents, geome
         {
             geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.ARCH]),
             centroid: centroid,
+
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
@@ -92,28 +94,6 @@ function formationArchAndSmallShortFuture3({ centroid, triangleComponents, geome
 }
 
 
-
-// // TODO v3 is always centroid
-function localMatrix(v1, v2, v3, worldTriangleCentroid) {
-    const worldSubdivisionCentroid = centroidFromPoints(v1, v2, v3);
-    const position = worldSubdivisionCentroid.subVectors(worldSubdivisionCentroid, worldTriangleCentroid);
-    const scale = new THREE.Vector3(1., 1., 1.);
-    const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
-    const quaternion = new THREE.Quaternion().setFromEuler(rotation);
-    const matrix = new THREE.Matrix4();
-    matrix.compose(position, quaternion, scale);
-    return matrix;
-}
-
-function localGeometry(geometry, v1, v2, v3, worldCentroid) {
-    const requiredAttributes = ["normal", "position"];
-    Object.keys(geometry.attributes).forEach(attributeName => {
-        if (!requiredAttributes.includes(attributeName)) geometry.removeAttribute(attributeName);
-    })
-    const matrix = localMatrix(v1, v2, v3, worldCentroid)
-    geometry.applyMatrix(matrix);
-    return geometry;
-}
 
 function formationSmallTallPresent36({ centroid, triangleComponents, geometries }) {
     const tinyTriangles = [
@@ -176,6 +156,7 @@ function formationSmallTallPresent36({ centroid, triangleComponents, geometries 
 }
 
 function subdivideTriangle(triangle) {
+    const normal = new THREE.Vector3();
     return {
         i1: triangle.a,
         i2: triangle.b,
@@ -183,6 +164,7 @@ function subdivideTriangle(triangle) {
         a: getMiddle(triangle.a, triangle.b),
         b: getMiddle(triangle.b, triangle.c),
         c: getMiddle(triangle.a, triangle.c),
+        normal: triangle.getNormal(normal), // TODO this is not strictly all the normals, but generally it's close
     }
 }
 
@@ -219,10 +201,35 @@ function pickTileFormation({ triangle, centroid, geometriesByCategory, prevForma
     return formation;
 }
 
-function createInstance(geometries, material) {
-    const totalInstances = geometries.length;
-    var cluster = new THREE.InstancedMesh(
-        geometries[0],
+
+
+// // TODO v3 is always centroid
+function localMatrix(v1, v2, v3, worldTriangleCentroid) {
+    const worldSubdivisionCentroid = centroidFromPoints(v1, v2, v3);
+    const position = worldSubdivisionCentroid.subVectors(worldSubdivisionCentroid, worldTriangleCentroid);
+    const scale = new THREE.Vector3(1., 1., 1.);
+    const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
+    const quaternion = new THREE.Quaternion().setFromEuler(rotation);
+    const matrix = new THREE.Matrix4();
+    matrix.compose(position, quaternion, scale);
+    return matrix;
+}
+
+function localGeometry(geometry, v1, v2, v3, worldCentroid) {
+    const requiredAttributes = ["normal", "position"];
+    Object.keys(geometry.attributes).forEach(attributeName => {
+        if (!requiredAttributes.includes(attributeName)) geometry.removeAttribute(attributeName);
+    })
+    const matrix = localMatrix(v1, v2, v3, worldCentroid)
+    geometry.applyMatrix(matrix);
+    return geometry;
+}
+
+function createInstance(elements, material) {
+    const totalInstances = elements.length;
+    const geometry = elements[0].geometry;
+    const cluster = new THREE.InstancedMesh(
+        geometry,
         material,
         totalInstances,              // instance count
         false,                       //is it dynamic
@@ -230,15 +237,25 @@ function createInstance(geometries, material) {
         true,                        //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
     );
     var _v3 = new THREE.Vector3();
-    var _q = new THREE.Quaternion();
     var randCol = function () {
         return Math.random();
     };
-    for (var i = 0; i < totalInstances; i++) {
-        cluster.setQuaternionAt(i, _q);
+    for (let i = 0; i < totalInstances; i++) {
+        // TODO use the geometry.normal to update the rotation here and include random z rotation
+        // var obj = new THREE.Object3D();
+        // obj.lookAt(elements[i].normal);
+        // obj.updateMatrix();
+        // const quaternion = new THREE.Quaternion().setFromRotationMatrix(obj.matrix);
+
+        const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
+        const quaternion = new THREE.Quaternion().setFromEuler(rotation);
+
+        cluster.setQuaternionAt(i, quaternion);
+        // cluster.setPositionAt(i, elements[i].centroid.x, elements[i].centroid.y, elements[i].centroid.z);
         cluster.setPositionAt(i, _v3.set(Math.random() * 40 - 20, Math.random() * 40 - 20, Math.random() * 40 - 20));
         cluster.setScaleAt(i, _v3.set(1, 1, 1));
         cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()))
+
     }
     return cluster;
 }
@@ -292,25 +309,25 @@ function generateBuildingsByCategory(geometries) {
 
 // TODO maybe the material ref should be assigned to the incoming geometries array of objects
 export function generateWorldInstanceGeometries(sphereGeometry, buildings) {
-    const geometriesByName = {}
+    const elementsByName = {}
     const instancesByName = {}
 
     buildings.geometries.forEach((geometry) => {
-        geometriesByName[geometry.name] = [];
+        elementsByName[geometry.name] = [];
     });
-    
+
     const formations = generateTileFormations(sphereGeometry, buildings.geometries);
 
     Object.keys(formations).forEach((tId) => {
         formations[tId].elements.forEach((element) => {
             const geometry = element.geometry;
-            geometriesByName[geometry.name].push(geometry);
+            elementsByName[geometry.name].push(element);
         })
     });
 
-    Object.keys(geometriesByName).forEach((name) => {
-        if (geometriesByName[name].length) {
-            instancesByName[name] = createInstance(geometriesByName[name], buildings.material);
+    Object.keys(elementsByName).forEach((name) => {
+        if (elementsByName[name].length) {
+            instancesByName[name] = createInstance(elementsByName[name], buildings.material);
         }
     });
 
