@@ -11,6 +11,9 @@ import { randomArrayVal } from '../../Utils/random';
 import * as C from './constants';
 import { Buildings } from './buildings';
 import { tileId } from '../../Utils/SphereTiles';
+import { randFloat } from '../../Utils/random';
+import { cloneDeep } from 'lodash';
+
 require('three-instanced-mesh')(THREE);
 
 function formationSmallMediumTallPresent6({ centroid, triangleComponents, geometries }) {
@@ -43,10 +46,10 @@ function formationSmallMediumTallPresent6({ centroid, triangleComponents, geomet
 }
 
 function formationLargeTallPresent1({ centroid, triangleComponents, geometries }) {
-    return {
+    return [{
         geometry: geometries[C.LARGE][C.TALL][C.PRESENT][1],
         centroid: centroid,
-    };
+    }]
     return [
         {
             geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.PRESENT]),
@@ -90,7 +93,7 @@ function formationArchAndSmallShortFuture3({ centroid, triangleComponents, geome
 
 
 
-// TODO v3 is always centroid
+// // TODO v3 is always centroid
 function localMatrix(v1, v2, v3, worldTriangleCentroid) {
     const worldSubdivisionCentroid = centroidFromPoints(v1, v2, v3);
     const position = worldSubdivisionCentroid.subVectors(worldSubdivisionCentroid, worldTriangleCentroid);
@@ -169,14 +172,6 @@ function formationSmallTallPresent36({ centroid, triangleComponents, geometries 
             ),
         );
     });
-
-    // const mergedGeom =BufferGeometryUtils.mergeBufferGeometries(formationGeometries); 
-    // if (!mergedGeom){
-    //     console.log("NULL", Array.from(new Set(Object.keys(formationGeometries.map(f=>f.attributes)))).sort());
-    // } else {
-    //     console.log("GOOD", formationGeometries.map(f=>f.attributes));
-    // }
-
     return formationGeometries;
 }
 
@@ -199,20 +194,20 @@ function pickTileFormationId(prevId) {
     }
 }
 
-function pickTileFormation({ triangle, centroid, geometries, prevFormationId }) {
+function pickTileFormation({ triangle, centroid, geometriesByCategory, prevFormationId }) {
     // TODO some heuristic for which formations work best where
     const formation = {};
     const formationProps = {
         centroid: centroid,
         triangleComponents: subdivideTriangle(triangle),
-        geometries: geometries,
+        geometries: geometriesByCategory,
     }
     // TODO hack to sketch what this looks like...
     // formation.id = pickTileFormationId(prevFormationId);
     // formation.id = THREE.Math.randInt(0, 3);
     formation.id = 1;
     formation.centroid = centroid;
-    formation.geometry = (() => {
+    formation.elements = (() => {
         // formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
         switch (formation.id) {
             case 0: return formationSmallMediumTallPresent6(formationProps);
@@ -224,57 +219,12 @@ function pickTileFormation({ triangle, centroid, geometries, prevFormationId }) 
     return formation;
 }
 
-
-// TODO not using this atm
-const tileFormationRatios = () => {
-    const ratios = {
-        0: .2,
-        1: .7,
-        2: .1,
-    }
-    const sum = Object.values(ratios).reduce((a, b) => a + b, 0);
-    console.assert(sum == 1., { sum: sum, errorMsg: "formationRatios sum must add up to 1." });
-    return ratios;
-}
-
-
-
-export const SkyCityTile = props => {
-    return <group>
-        <Buildings
-            material={props.tileElements.buildings.material}
-            formation={props.tileElements.formations[props.tileId]}
-            normal={props.normal}
-        />
-    </group>
-}
-
-// TODO this function needs to be passed to the SphereTileGenerator and folded into its logic somehow
-export function generateTileGeometries(sphereGeometry, geometries) {
-    const vertices = sphereGeometry.vertices;
-    const faces = sphereGeometry.faces;
-    const formations = {};
-    let prevFormationId = 0;
-    // TODO here is a hacky version of allocating tiles by type.
-    let prevTileId;
-    faces.forEach((face, index) => {
-        const centroid = faceCentroid(face, vertices);
-        const tId = tileId(centroid);
-        const triangle = triangleFromFace(face, vertices);
-        formations[tId] = pickTileFormation({ triangle, centroid, geometries, prevFormationId })
-        prevFormationId = formations[tId].id;
-        prevTileId = tId;
-    })
-    //geometry to be instanced
-    const geo = formations[prevTileId].geometry.geometry; // just need one geometry
-    //material that the geometry will use
-    var material = new THREE.MeshPhongMaterial();
-    const totalInstances = 250;
-    //the instance group
+function createInstance(geometries, material) {
+    const totalInstances = geometries.length;
     var cluster = new THREE.InstancedMesh(
-        geo,                 //this is the same 
+        geometries[0],
         material,
-        totalInstances,                       //instance count
+        totalInstances,              // instance count
         false,                       //is it dynamic
         true,                        //does it have color
         true,                        //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
@@ -291,4 +241,88 @@ export function generateTileGeometries(sphereGeometry, geometries) {
         cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()))
     }
     return cluster;
+}
+
+function generateTileFormations(sphereGeometry, geometries) {
+    const geometriesByCategory = generateBuildingsByCategory(geometries);
+    const vertices = sphereGeometry.vertices;
+    const faces = sphereGeometry.faces;
+    const formations = {};
+    let prevFormationId = 0;
+    faces.forEach((face, index) => {
+        const centroid = faceCentroid(face, vertices);
+        const tId = tileId(centroid);
+        const triangle = triangleFromFace(face, vertices);
+        formations[tId] = pickTileFormation({ triangle, centroid, geometriesByCategory, prevFormationId })
+        prevFormationId = formations[tId].id;
+    })
+    return formations;
+}
+
+// TODO rename
+function generateBuildingsByCategory(geometries) {
+    const category = {
+        // TODO this is where more playfulness and specificity can be added (e.g. the tilt brush types -- disco, petal etc.)
+        future: [],
+        present: [],
+        arch: [],
+    }
+    const maxHeightBucket = {
+        short: cloneDeep(category),
+        average: cloneDeep(category),
+        tall: cloneDeep(category),
+    }
+    /**
+     * geometries are a nested key structure with each leaf an array: geometries.{maxWidthBucket}.{maxHeightBucket}.{category}
+     */
+    const maxWidthBucket = {
+        // these are bucketed by approximate max widths
+        small: cloneDeep(maxHeightBucket),
+        medium: cloneDeep(maxHeightBucket),
+        large: cloneDeep(maxHeightBucket),
+        xlarge: cloneDeep(maxHeightBucket),
+    }
+    const categorized = maxWidthBucket;
+    geometries.forEach(geometry => {
+        const [maxWidthBucket, maxHeightBucket, category] = geometry.name.split("_");
+        categorized[maxWidthBucket][maxHeightBucket][category].push(geometry);
+    })
+    return categorized;
+}
+
+// TODO maybe the material ref should be assigned to the incoming geometries array of objects
+export function generateWorldInstanceGeometries(sphereGeometry, buildings) {
+    const geometriesByName = {}
+    const instancesByName = {}
+
+    buildings.geometries.forEach((geometry) => {
+        geometriesByName[geometry.name] = [];
+    });
+    
+    const formations = generateTileFormations(sphereGeometry, buildings.geometries);
+
+    Object.keys(formations).forEach((tId) => {
+        formations[tId].elements.forEach((element) => {
+            const geometry = element.geometry;
+            geometriesByName[geometry.name].push(geometry);
+        })
+    });
+
+    Object.keys(geometriesByName).forEach((name) => {
+        if (geometriesByName[name].length) {
+            instancesByName[name] = createInstance(geometriesByName[name], buildings.material);
+        }
+    });
+
+    return instancesByName;
+}
+
+export const SkyCityTile = props => {
+    return <group>
+        <Buildings
+            material={props.tileElements.buildings.material}
+            formation={props.tileElements.formations[props.tileId]}
+            normal={props.normal}
+        />
+    </group>
 }

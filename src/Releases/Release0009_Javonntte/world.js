@@ -6,7 +6,7 @@ import { SphereTiles } from '../../Utils/SphereTiles';
 import * as C from './constants';
 import "./index.css";
 import { Stars } from './stars';
-import { generateTileGeometries, SkyCityTile } from "./tiles";
+import { generateWorldInstanceGeometries, SkyCityTile } from "./tiles";
 
 
 /* eslint import/no-webpack-loader-syntax: off */
@@ -51,36 +51,36 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
     return geometry;
 }
 
-var updateMatrix = function () {
-    var position = new THREE.Vector3();
-    const scale = new THREE.Vector3(1., 1., 1.);
-    const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
-    const quaternion = new THREE.Quaternion().setFromEuler(rotation);
-    return function (matrix, centroid) {
-        position.x = centroid.x;
-        position.y = centroid.y;
-        position.z = centroid.z;
-        matrix.compose(position, quaternion, scale);
-    };
-}();
+// var updateMatrix = function () {
+//     var position = new THREE.Vector3();
+//     const scale = new THREE.Vector3(1., 1., 1.);
+//     const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
+//     const quaternion = new THREE.Quaternion().setFromEuler(rotation);
+//     return function (matrix, centroid) {
+//         position.x = centroid.x;
+//         position.y = centroid.y;
+//         position.z = centroid.z;
+//         matrix.compose(position, quaternion, scale);
+//     };
+// }();
 
-var randomizeMatrix = function () {
-    var position = new THREE.Vector3();
-    var rotation = new THREE.Euler();
-    var quaternion = new THREE.Quaternion();
-    var scale = new THREE.Vector3();
-    return function (matrix) {
-        position.x = Math.random() * 40 - 20;
-        position.y = Math.random() * 40 - 20;
-        position.z = Math.random() * 40 - 20;
-        rotation.x = Math.random() * 2 * Math.PI;
-        rotation.y = Math.random() * 2 * Math.PI;
-        rotation.z = Math.random() * 2 * Math.PI;
-        quaternion.setFromEuler(rotation);
-        scale.x = scale.y = scale.z = Math.random() * 1;
-        matrix.compose(position, quaternion, scale);
-    };
-}();
+// var randomizeMatrix = function () {
+//     var position = new THREE.Vector3();
+//     var rotation = new THREE.Euler();
+//     var quaternion = new THREE.Quaternion();
+//     var scale = new THREE.Vector3();
+//     return function (matrix) {
+//         position.x = Math.random() * 40 - 20;
+//         position.y = Math.random() * 40 - 20;
+//         position.z = Math.random() * 40 - 20;
+//         rotation.x = Math.random() * 2 * Math.PI;
+//         rotation.y = Math.random() * 2 * Math.PI;
+//         rotation.z = Math.random() * 2 * Math.PI;
+//         quaternion.setFromEuler(rotation);
+//         scale.x = scale.y = scale.z = Math.random() * 1;
+//         matrix.compose(position, quaternion, scale);
+//     };
+// }();
 
 
 
@@ -129,7 +129,7 @@ export function World({ track, buildings, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded) {
-            tileFormations.current = generateTileGeometries(sphereGeometry, buildings.geometries);
+            tileFormations.current = generateWorldInstanceGeometries(sphereGeometry, buildings);
         }
     }, [])
 
@@ -139,7 +139,6 @@ export function World({ track, buildings, ...props }) {
             scene.background = new THREE.Color(track.theme.backgroundColor);
         }
     }, [track])
-
     useRender((state, time) => {
         if ((time % .5).toFixed(1) == 0) {
             const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);
@@ -165,10 +164,13 @@ export function World({ track, buildings, ...props }) {
                 geometry={sphereGeometry}
                 bpm={track && track.bpm}
             /> */}
+            
             {tileFormations.current &&
-                <primitive
-                    object={tileFormations.current}
-                />
+                Object.keys(tileFormations.current).map(tId => {
+                    return <primitive key={tId}
+                        object={tileFormations.current[tId]}
+                    />
+                })
             }
             {/* {renderTiles ?
                 <SphereTiles
@@ -176,7 +178,7 @@ export function World({ track, buildings, ...props }) {
                     sphereGeometry={sphereGeometry}
                     tileComponent={SkyCityTile}
                     tileElements={{
-                        buildings: buildings,
+                       // buildings: buildings // TODO
                         formations: tileFormations.current,
                     }}
                     {...props}

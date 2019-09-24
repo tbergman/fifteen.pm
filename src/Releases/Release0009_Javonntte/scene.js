@@ -20,7 +20,7 @@ export function Scene({ track }) {
        (For instance: a complicated geometry.)
      */
     const { camera, canvas, gl } = useThree();
-    const [loadingBuildings, buildings] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
+    const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
     // const startPos = new THREE.Vector3(0, 40,C.WORLD_RADIUS + .1, 0);
     // const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS, 20);
@@ -34,7 +34,7 @@ export function Scene({ track }) {
         camera.position.z = 40;
        
 
-    }, [buildings])
+    }, [buildingGeometries])
 
     return (
         <>
@@ -68,7 +68,7 @@ export function Scene({ track }) {
                     track={track}
                     // startPos={startPos}
                     buildings={{
-                        geometries: buildings,
+                        geometries: buildingGeometries,
                         material: cloudMaterial,
                         loaded: !loadingBuildings,
                     }}
