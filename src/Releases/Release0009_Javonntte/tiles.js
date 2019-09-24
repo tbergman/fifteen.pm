@@ -254,7 +254,7 @@ function createInstance(elements, material) {
         const tmpOffset = i*20;
         console.log(elements[tmpOffset].centroid.z);
         const centroid = elements[tmpOffset].centroid;
-        cluster.setPositionAt(i, _v3.set(centroid.x, centroid.y, centroid.z);
+        cluster.setPositionAt(i, _v3.set(centroid.x, centroid.y, centroid.z));
         console.log(_v3);
         cluster.setScaleAt(i, _v3.set(1, 1, 1));
         cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()));
