@@ -169,9 +169,10 @@ function subdivideTriangle(triangle) {
 function pickTileFormationId(prevId) {
     switch (prevId) {
         case 0: return THREE.Math.randInt(0, 5) < 1 ? 0 : 1;
-        case 1: return THREE.Math.randInt(0, 10) > 1 ? 1 : 0;
+        case 1: return THREE.Math.randInt(0, 2) < 1 ? 1 : 0;
         case 2: return THREE.Math.randInt(0, 10) < 1 ? 2 : 0;
-        case 3: return THREE.Math.randInt(0, 10) < 1 ? 3 : 0
+        case 3: return THREE.Math.randInt(0, 10) < 1 ? 3 : 0;
+        case 4: return THREE.Math.randInt(0, 1) < 1 ? 4 : 0;
     }
 }
 
@@ -184,9 +185,9 @@ function pickTileFormation({ triangle, centroid, geometriesByCategory, prevForma
         geometries: geometriesByCategory,
     }
     // TODO hack to sketch what this looks like...
-    // formation.id = pickTileFormationId(prevFormationId);
-    formation.id = THREE.Math.randInt(0, 3);
-    // formation.id = 1;
+    formation.id = pickTileFormationId(prevFormationId);
+    // formation.id = THREE.Math.randInt(0, 3);
+    // formation.id = 4;
     formation.centroid = centroid;
     formation.elements = (() => {
         // formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
@@ -195,6 +196,7 @@ function pickTileFormation({ triangle, centroid, geometriesByCategory, prevForma
             case 1: return formationLargeTallPresent1(formationProps);
             case 2: return formationSmallTallPresent36(formationProps);
             case 3: return formationArchAndSmallShortFuture3(formationProps);
+            case 4: return [];
         }
     })()
     return formation;
