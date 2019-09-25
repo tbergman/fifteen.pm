@@ -85,7 +85,7 @@
     "react-three-fiber": "^2.2.15",
     "react-unity-webgl": "^7.0.9",
     "recompose": "^0.30.0",
-    "three": "^0.103.0",
+    "three": "^0.108.0",
     "three-full": "^17.1.0",
     "three-gltf-loader": "^1.103.0",
     "three-instanced-mesh": "^0.96.2",
