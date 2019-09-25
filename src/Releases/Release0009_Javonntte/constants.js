@@ -11,6 +11,21 @@ export const SHORT = "short";
 export const ARCH = "arch";
 export const FUTURE = "future";
 export const PRESENT = "present";
+export const WIDTH_BUCKETS = [
+    SMALL,
+    MEDIUM,
+    LARGE,
+    EXTRA_LARGE
+]
+export const HEIGHT_BUCKETS = [
+    SHORT,
+    TALL,
+]
+export const CATEGORIES = [
+    FUTURE,
+    PRESENT,
+    ARCH,
+]
 const THEMES = [
     // index matches track list order
     {
