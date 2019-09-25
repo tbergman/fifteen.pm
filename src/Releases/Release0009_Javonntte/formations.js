@@ -1,9 +1,12 @@
 import * as THREE from 'three';
-import { faceCentroid, subdivideTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromFace, triangleFromVertices } from '../../Utils/geometry';
+import { faceCentroid, subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromFace, triangleFromVertices } from '../../Utils/geometry';
 import { randomArrayVal } from '../../Utils/random';
 import { tileId } from '../../Utils/SphereTiles';
 import { generateBuildingsByCategory } from './buildings';
 import * as C from './constants';
+
+// TODO namespacing for all of the formations
+// TODO can we be more dynamic/expressive with picking geometries rather than declarative?
 
 function formationSmallMediumTallPresent6({ centroid, triangleComponents, geometries }) {
     return [
@@ -34,6 +37,41 @@ function formationSmallMediumTallPresent6({ centroid, triangleComponents, geomet
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
+            centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid),
+            normal: triangleComponents.normal,
+        },
+    ]
+}
+
+function formationSmallMediumTallFuture6({ centroid, triangleComponents, geometries }) {
+    return [
+        {
+            geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.i1, triangleComponents.a, centroid),
+            normal: triangleComponents.normal,
+        },
+        {
+            geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.a, triangleComponents.i2, centroid),
+            normal: triangleComponents.normal,
+        },
+        {
+            geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.i2, triangleComponents.b, centroid),
+            normal: triangleComponents.normal,
+        },
+        {
+            geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.b, triangleComponents.i3, centroid),
+            normal: triangleComponents.normal,
+        },
+        {
+            geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.FUTURE]),
+            centroid: centroidFromPoints(triangleComponents.i3, triangleComponents.c, centroid),
+            normal: triangleComponents.normal,
+        },
+        {
+            geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid),
             normal: triangleComponents.normal,
         },
@@ -147,8 +185,9 @@ function pickFormationId(prevId) {
         case 0: return THREE.Math.randInt(0, 5) < 1 ? 0 : 1;
         case 1: return THREE.Math.randInt(0, 2) < 1 ? 1 : 0;
         case 2: return THREE.Math.randInt(0, 10) < 1 ? 2 : 0;
-        case 3: return THREE.Math.randInt(0, 10) < 1 ? 3 : 0;
-        case 4: return THREE.Math.randInt(0, 1) < 1 ? 4 : 0;
+        case 3: return THREE.Math.randInt(0, 10) < 1 ? 3 : 5;
+        case 4: return THREE.Math.randInto(0, 1) < 1 ? 4 : 5;
+        case 5: return THREE.Math.randInt(0, 1) < 1 ? 5 : 0;
     }
 }
 
@@ -161,8 +200,8 @@ function pickFormation({ triangle, centroid, geometriesByCategory, prevFormation
         geometries: geometriesByCategory,
     }
     // TODO hack to sketch what this looks like...
-    formation.id = pickFormationId(prevFormationId);
-    // formation.id = THREE.Math.randInt(0, 3);
+    // formation.id = pickFormationId(prevFormationId);
+    formation.id = THREE.Math.randInt(0, 5);
     // formation.id = 4;
     formation.centroid = centroid;
     formation.elements = (() => {
@@ -172,7 +211,8 @@ function pickFormation({ triangle, centroid, geometriesByCategory, prevFormation
             case 1: return formationLargeTallPresent1(formationProps);
             case 2: return formationSmallTallPresent36(formationProps);
             case 3: return formationArchAndSmallShortFuture3(formationProps);
-            case 4: return [];
+            case 4: return formationSmallMediumTallFuture6(formationProps);
+            case 5: return [];
         }
     })()
     return formation;
