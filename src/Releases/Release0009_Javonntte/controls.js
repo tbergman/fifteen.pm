@@ -1,11 +1,7 @@
-import React, { useRef, useEffect, useState } from 'react';
-import * as THREE from 'three';
+import React, { useRef } from 'react';
 import { extend, useRender, useThree } from 'react-three-fiber';
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { TrackballControls } from 'three-full';
-import { FirstPersonControls } from "../../Utils/FirstPersonControls"
-import { FlyControls } from 'three-full';
-extend({ OrbitControls, TrackballControls, FirstPersonControls, FlyControls });
+import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
+extend({ FlyControls });
 
 export function Controls({ radius, ...props }) {
     const controls = useRef();
