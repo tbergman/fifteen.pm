@@ -1,6 +1,8 @@
 import * as THREE from 'three';
+import { faceCentroid, subdivideTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromFace, triangleFromVertices } from '../../Utils/geometry';
 import { randomArrayVal } from '../../Utils/random';
-import { subdivideTriangle, triangleFromVertices, triangleCentroidFromVertices as centroidFromPoints } from '../../Utils/geometry';
+import { tileId } from '../../Utils/SphereTiles';
+import { generateBuildingsByCategory } from './buildings';
 import * as C from './constants';
 
 function formationSmallMediumTallPresent6({ centroid, triangleComponents, geometries }) {
@@ -150,7 +152,7 @@ function pickFormationId(prevId) {
     }
 }
 
-export function pickFormation({ triangle, centroid, geometriesByCategory, prevFormationId }) {
+function pickFormation({ triangle, centroid, geometriesByCategory, prevFormationId }) {
     // TODO some heuristic for which formations work best where
     const formation = {};
     const formationProps = {
@@ -174,4 +176,20 @@ export function pickFormation({ triangle, centroid, geometriesByCategory, prevFo
         }
     })()
     return formation;
+}
+
+export function generateFormations(surfaceGeometry, geometries) {
+    const geometriesByCategory = generateBuildingsByCategory(geometries);
+    const vertices = surfaceGeometry.vertices;
+    const faces = surfaceGeometry.faces;
+    const formations = {};
+    let prevFormationId = 0;
+    faces.forEach((face, index) => {
+        const centroid = faceCentroid(face, vertices);
+        const tId = tileId(centroid);
+        const triangle = triangleFromFace(face, vertices);
+        formations[tId] = pickFormation({ triangle, centroid, geometriesByCategory, prevFormationId })
+        prevFormationId = formations[tId].id;
+    })
+    return formations;
 }

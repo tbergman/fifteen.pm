@@ -6,7 +6,7 @@ import { SphereTiles } from '../../Utils/SphereTiles';
 import * as C from './constants';
 import "./index.css";
 import { Stars } from './stars';
-import { generateWorldInstanceGeometries, SkyCityTile } from "./tiles";
+import { generateWorldInstanceGeometries } from "./instances";
 
 // TODO tilt and rotationSpeed
 export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
@@ -113,7 +113,6 @@ export function World({ track, buildings, ...props }) {
         // } 
     })
 
-    console.log('tileFormations.current', tileFormations.current);
     return <group ref={worldRef}>
         {world && <>
             {/* <Stars

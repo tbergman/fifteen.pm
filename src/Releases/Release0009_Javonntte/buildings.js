@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import * as THREE from 'three';
+import { cloneDeep } from 'lodash';
 
 // function buildingName(building, position) {
 //     return [building.name,
@@ -22,6 +23,38 @@ import * as THREE from 'three';
 //         material={material}
 //     />
 // }
+
+
+// TODO rename
+export function generateBuildingsByCategory(geometries) {
+    const category = {
+        // TODO this is where more playfulness and specificity can be added (e.g. the tilt brush types -- disco, petal etc.)
+        future: [],
+        present: [],
+        arch: [],
+    }
+    const maxHeightBucket = {
+        short: cloneDeep(category),
+        average: cloneDeep(category),
+        tall: cloneDeep(category),
+    }
+    /**
+     * geometries are a nested key structure with each leaf an array: geometries.{maxWidthBucket}.{maxHeightBucket}.{category}
+     */
+    const maxWidthBucket = {
+        // these are bucketed by approximate max widths
+        small: cloneDeep(maxHeightBucket),
+        medium: cloneDeep(maxHeightBucket),
+        large: cloneDeep(maxHeightBucket),
+        xlarge: cloneDeep(maxHeightBucket),
+    }
+    const categorized = maxWidthBucket;
+    geometries.forEach(geometry => {
+        const [maxWidthBucket, maxHeightBucket, category] = geometry.name.split("_");
+        categorized[maxWidthBucket][maxHeightBucket][category].push(geometry);
+    })
+    return categorized;
+}
 
 export function Buildings({ material, formation, normal }) {
     // const buildingGroupRef = useRef();
