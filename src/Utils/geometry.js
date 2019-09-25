@@ -1,5 +1,18 @@
 import * as THREE from 'three';
 
+export function subdivideTriangle(triangle) {
+  const normal = new THREE.Vector3();
+  return {
+      i1: triangle.a,
+      i2: triangle.b,
+      i3: triangle.c,
+      a: getMiddle(triangle.a, triangle.b),
+      b: getMiddle(triangle.b, triangle.c),
+      c: getMiddle(triangle.a, triangle.c),
+      normal: triangle.getNormal(normal), // TODO this is not strictly all the normals, but generally it's close
+  }
+}
+
 export function faceCentroid(face, vertices) {
   const v1 = vertices[face.a];
   const v2 = vertices[face.b];

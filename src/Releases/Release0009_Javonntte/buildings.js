@@ -1,27 +1,27 @@
 import React, { useRef } from 'react';
 import * as THREE from 'three';
 
-function buildingName(building, position) {
-    return [building.name,
-    position.x,
-    position.y,
-    position.z,
-    ].join("_")
-}
+// function buildingName(building, position) {
+//     return [building.name,
+//     position.x,
+//     position.y,
+//     position.z,
+//     ].join("_")
+// }
 
-function Building({ geometry, material, centroid, normal, color, visible }) {
-    // if (!geometry) return null;
-    return <mesh
-        onUpdate={self => {
-            self.lookAt(normal);
-            self.rotation.z = THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI);
-            self.visible = visible
-        }}
-        geometry={geometry}
-        position={centroid}
-        material={material}
-    />
-}
+// function Building({ geometry, material, centroid, normal, color, visible }) {
+//     // if (!geometry) return null;
+//     return <mesh
+//         onUpdate={self => {
+//             self.lookAt(normal);
+//             self.rotation.z = THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI);
+//             self.visible = visible
+//         }}
+//         geometry={geometry}
+//         position={centroid}
+//         material={material}
+//     />
+// }
 
 export function Buildings({ material, formation, normal }) {
     // const buildingGroupRef = useRef();
