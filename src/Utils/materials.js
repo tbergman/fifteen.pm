@@ -151,6 +151,7 @@ export function initPinkShinyMaterial() {
 
 
 // Shader built in the style of: https://medium.com/@pailhead011/extending-three-js-materials-with-glsl-78ea7bbb9270
+// seems fun: https://www.clicktorelease.com/blog/creating-spherical-environment-mapping-shader/
 export function CloudMaterial({ materialRef, ...props }) {
 	materialRef = materialRef ? materialRef : useRef().current;
 	const { camera, canvas } = useThree();
@@ -160,14 +161,14 @@ export function CloudMaterial({ materialRef, ...props }) {
 		const normalMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_normal.png"));
 		const metalnessMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_metallic.png"));
 		const envMap = new THREE.CubeTextureLoader()
-			.setPath(assetPathShared('textures/env-maps/graycloud/'))
+			.setPath(assetPathShared('textures/env-maps/bluecloud/'))
 			.load([
-				'graycloud_rt.jpg',
-				'graycloud_lf.jpg',
-				'graycloud_up.jpg',
-				'graycloud_dn.jpg',
-				'graycloud_ft.jpg',
-				'graycloud_bk.jpg',
+				'bluecloud_bk.jpg',
+				'bluecloud_dn.jpg',
+				'bluecloud_ft.jpg',
+				'bluecloud_lf.jpg',
+				'bluecloud_rt.jpg',
+				'bluecloud_up.jpg',
 			]);
 		return [colorMap, normalMap, metalnessMap, envMap]
 	});
@@ -179,19 +180,18 @@ export function CloudMaterial({ materialRef, ...props }) {
 		castShadow
 		map={colorMap}
 		envMapIntensity={0.3}
-		color={0x0000c0}
-		emissive={0xfffb00}
+		color={props.color || 0x0000c0}
+		emissive={props.emissive || 0xfffb00}
 		opacity={props.opacity || 1.0}
 		reflectivity={props.reflectivity || 0.8} // env map uses this
 		envMap={envMap}
-		// refractionRatio={.1}
 		side={props.side || THREE.FrontSide}
 		normalMap={normalMap}
 		metalnessMap={metalnessMap}
 	/>
 }
 
-export function TronMaterial({ materialRef, bpm }) {
+export function TronMaterial({ materialRef, bpm, side }) {
 	materialRef = materialRef ? materialRef : useRef().current;
 	const BPM = 120; // TODO not passing down
 	const { camera, size } = useThree();
@@ -216,7 +216,7 @@ export function TronMaterial({ materialRef, bpm }) {
 		uniforms={uniforms}
 		// lights={true}
 		// vertexShader={simpleWithDepthVertex}
-		side={THREE.DoubleSide}
+		side={side}
 		vertexShader={simpleVertex}
 		fragmentShader={tronFragmentShader}
 	/>;

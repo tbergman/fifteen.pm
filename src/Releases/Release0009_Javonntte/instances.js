@@ -38,13 +38,13 @@ function createInstance(elements, material) {
 }
 
 // TODO maybe the material ref should be assigned to the incoming geometries array of objects
-export function generateWorldInstanceGeometries(sphereGeometry, buildings) {
+export function generateWorldInstanceGeometries(sphereGeometry, faceNormals, buildings) {
     const elementsByName = {};
     const instancesByName = {};
     // build up a lookup of each geometry by name
     buildings.geometries.forEach((geometry) => elementsByName[geometry.name] = []);
     // generate formations for all tiles
-    const formations = generateFormations(sphereGeometry, buildings.geometries);
+    const formations = generateFormations(sphereGeometry, faceNormals, buildings.geometries);
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach((tId) => {
         formations[tId].elements.forEach((element) => {

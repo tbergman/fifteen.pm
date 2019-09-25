@@ -33,8 +33,6 @@ export function Scene({ track }) {
         camera.position.copy(startPos);
         camera.lookAt(lookAt);
         // camera.position.z = 40;
-       
-
     }, [buildingGeometries])
 
     return (

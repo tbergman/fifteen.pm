@@ -11,6 +11,8 @@ import { generateWorldInstanceGeometries } from "./instances";
 // TODO tilt and rotationSpeed
 export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
+    // get the original normals!
+    const faceNormals = geometry.faces.map(f => f.normal);
     geometry.computeBoundingSphere();
     // variate sphere heights
     var vertexIndex;
@@ -42,7 +44,7 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
             geometry.vertices[i + vertexIndex] = (vertexVector.add(offset));
         }
     }
-    return geometry;
+    return [faceNormals, geometry];
 }
 
 function AtmosphereGlow({ radius }) {
@@ -58,21 +60,38 @@ function AtmosphereGlow({ radius }) {
 }
 
 export function WorldSurface({ geometry, bpm }) {
-    const [materialRef, material] = useResource();
-
+    const [tronMaterialRef, tronMaterial] = useResource();
+    const [cloudMaterialRef, cloudMaterial] = useResource();
     return <>
         <TronMaterial
-            materialRef={materialRef}
+            materialRef={tronMaterialRef}
             bpm={bpm}
-            side={THREE.DoubleSide}
+            side={THREE.BackSide}
         />
-        {material && <mesh
-            geometry={geometry}
-            material={material}
-            receiveShadow
-            material-opacity={0.1}
-            material-reflectivity={.1}
-        />}
+        <CloudMaterial
+            materialRef={cloudMaterialRef}
+            // color={0xfff0f0}
+            side={THREE.FrontSide}
+            // emissive={0x000000}
+            // opacity={.1}
+        />
+        {tronMaterial && cloudMaterial &&
+            <group>
+                <mesh
+                    geometry={geometry}
+                    material={tronMaterial}
+                    // material-opacity={0.1}
+                    // material-reflectivity={.1}
+                />
+                <mesh
+                    geometry={geometry}
+                    material={cloudMaterial}
+                    // receiveShadow
+                    // material-opacity={0.1}
+                    // material-reflectivity={.1}
+                />
+            </group>
+        }
     </>
 }
 
@@ -81,7 +100,7 @@ export function World({ track, buildings, ...props }) {
     const [worldRef, world] = useResource();
     const tileFormations = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
-    const sphereGeometry = useMemo(() => {
+    const [faceNormals, sphereGeometry] = useMemo(() => {
         return generateWorldGeometry(C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT);
     }, [C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT]);
     const radius = sphereGeometry.parameters.radius
@@ -89,7 +108,7 @@ export function World({ track, buildings, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded) {
-            tileFormations.current = generateWorldInstanceGeometries(sphereGeometry, buildings);
+            tileFormations.current = generateWorldInstanceGeometries(sphereGeometry, faceNormals, buildings);
         }
     }, [])
 
@@ -123,7 +142,7 @@ export function World({ track, buildings, ...props }) {
                 geometry={sphereGeometry}
                 bpm={track && track.bpm}
             />
-            
+
             {tileFormations.current &&
                 Object.keys(tileFormations.current).map(tId => {
                     return <primitive key={tId}

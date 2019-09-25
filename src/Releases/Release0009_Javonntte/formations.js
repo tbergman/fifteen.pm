@@ -8,127 +8,127 @@ import * as C from './constants';
 // TODO namespacing for all of the formations
 // TODO can we be more dynamic/expressive with picking geometries rather than declarative?
 
-function formationSmallMediumTallPresent6({ centroid, triangleComponents, geometries }) {
+function formationSmallMediumTallPresent6({ centroid, triangleComponents, normal, geometries }) {
     return [
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.i1, triangleComponents.a, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.a, triangleComponents.i2, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.i2, triangleComponents.b, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.b, triangleComponents.i3, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.i3, triangleComponents.c, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.PRESENT]),
             centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
     ]
 }
 
-function formationSmallMediumTallFuture6({ centroid, triangleComponents, geometries }) {
+function formationSmallMediumTallFuture6({ centroid, triangleComponents, normal, geometries }) {
     return [
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.i1, triangleComponents.a, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.a, triangleComponents.i2, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.i2, triangleComponents.b, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.b, triangleComponents.i3, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.i3, triangleComponents.c, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.MEDIUM][C.TALL][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
     ]
 }
 
-function formationLargeTallPresent1({ centroid, triangleComponents, geometries }) {
+function formationLargeTallPresent1({ centroid, triangleComponents, normal, geometries }) {
     return [{
         geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.PRESENT]),
         centroid: centroid,
-        normal: triangleComponents.normal,
+        normal: normal,
     }]
 }
 
-function formationArchAndSmallShortFuture3({ centroid, triangleComponents, geometries }) {
+function formationArchAndSmallShortFuture3({ centroid, triangleComponents, normal, geometries }) {
     return [
         {
             geometry: randomArrayVal(geometries[C.LARGE][C.TALL][C.ARCH]),
             centroid: centroid,
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.i1, triangleComponents.a, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.a, triangleComponents.i2, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.i2, triangleComponents.b, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.b, triangleComponents.i3, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.i3, triangleComponents.c, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
         {
             geometry: randomArrayVal(geometries[C.SMALL][C.SHORT][C.FUTURE]),
             centroid: centroidFromPoints(triangleComponents.c, triangleComponents.i1, centroid),
-            normal: triangleComponents.normal,
+            normal: normal,
         },
     ]
 }
 
 
 
-function formationSmallTallPresent36({ centroid, triangleComponents, geometries }) {
+function formationSmallTallPresent36({ centroid, triangleComponents, normal, geometries }) {
     const tinyTriangles = [
         triangleFromVertices(triangleComponents.i1, triangleComponents.a, centroid),
         triangleFromVertices(triangleComponents.a, triangleComponents.i2, centroid),
@@ -148,32 +148,32 @@ function formationSmallTallPresent36({ centroid, triangleComponents, geometries 
             {
                 geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.i1, tiny.components.a, tiny.centroid),
-                normal: triangleComponents.normal,
+                normal: normal,
             },
             {
                 geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.a, tiny.components.i2, tiny.centroid),
-                normal: triangleComponents.normal,
+                normal: normal,
             },
             {
                 geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.i2, tiny.components.b, tiny.centroid),
-                normal: triangleComponents.normal,
+                normal: normal,
             },
             {
                 geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.b, tiny.components.i3, tiny.centroid),
-                normal: triangleComponents.normal,
+                normal: normal,
             },
             {
                 geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.i3, tiny.components.c, tiny.centroid),
-                normal: triangleComponents.normal,
+                normal: normal,
             },
             {
                 geometry: randomArrayVal(geometries[C.SMALL][C.TALL][C.PRESENT]),
                 centroid: centroidFromPoints(tiny.components.c, tiny.components.i1, tiny.centroid),
-                normal: triangleComponents.normal,
+                normal: normal,
             }
         );
     });
@@ -191,44 +191,49 @@ function pickFormationId(prevId) {
     }
 }
 
-function pickFormation({ triangle, centroid, geometriesByCategory, prevFormationId }) {
+function pickFormation({ faceIndex, triangle, normal, centroid, geometriesByCategory, prevFormationId }) {
     // TODO some heuristic for which formations work best where
     const formation = {};
     const formationProps = {
         centroid: centroid,
+        normal: normal,
         triangleComponents: subdivideTriangle(triangle),
         geometries: geometriesByCategory,
     }
     // TODO hack to sketch what this looks like...
     // formation.id = pickFormationId(prevFormationId);
     formation.id = THREE.Math.randInt(0, 5);
-    // formation.id = 4;
+    formation.id = 2;
     formation.centroid = centroid;
-    formation.elements = (() => {
-        // formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
-        switch (formation.id) {
-            case 0: return formationSmallMediumTallPresent6(formationProps);
-            case 1: return formationLargeTallPresent1(formationProps);
-            case 2: return formationSmallTallPresent36(formationProps);
-            case 3: return formationArchAndSmallShortFuture3(formationProps);
-            case 4: return formationSmallMediumTallFuture6(formationProps);
-            case 5: return [];
-        }
-    })()
+    if (faceIndex % 13 != 0) formation.elements = [];
+    else {
+        formation.elements = (() => {
+            // formation.geometry = BufferGeometryUtils.mergeBufferGeometries((() => {
+            switch (formation.id) {
+                case 0: return formationSmallMediumTallPresent6(formationProps);
+                case 1: return formationLargeTallPresent1(formationProps);
+                case 2: return formationSmallTallPresent36(formationProps);
+                case 3: return formationArchAndSmallShortFuture3(formationProps);
+                case 4: return formationSmallMediumTallFuture6(formationProps);
+                case 5: return [];
+            }
+        })()
+    }
     return formation;
 }
 
-export function generateFormations(surfaceGeometry, geometries) {
+export function generateFormations(surfaceGeometry, faceNormals, geometries) {
     const geometriesByCategory = generateBuildingsByCategory(geometries);
     const vertices = surfaceGeometry.vertices;
     const faces = surfaceGeometry.faces;
     const formations = {};
     let prevFormationId = 0;
-    faces.forEach((face, index) => {
+    faces.forEach((face, faceIndex) => {
         const centroid = faceCentroid(face, vertices);
         const tId = tileId(centroid);
         const triangle = triangleFromFace(face, vertices);
-        formations[tId] = pickFormation({ triangle, centroid, geometriesByCategory, prevFormationId })
+        const normal = faceNormals[faceIndex];
+        formations[tId] = pickFormation({ faceIndex, triangle, normal, centroid, geometriesByCategory, prevFormationId })
         prevFormationId = formations[tId].id;
     })
     return formations;
