@@ -34,18 +34,18 @@ const THEMES = [
     // index matches track list order
     {
         fogColor: 0x0000aa,
-        backgroundColor: 0x0000aa,
-        starColors: [0xfff, 0xfa0000, 0xaf0000],
+        backgroundColor: 0x000000,
+        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
     {
         // fogColor: 0xff0000, i.e. turn off fog
-        backgroundColor: 0xff0000,
-        starColors: [0x00ff00, 0x00fa00, 0x00af00],
+        backgroundColor: 0x000000,
+        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
     {
         fogColor: 0x0000ff,
-        backgroundColor: 0x0000ff,
-        starColors: [0xff0000, 0xfa0000, 0xaf0000],
+        backgroundColor: 0x000000,
+        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     }
 ]
 export const TRACK_LOOKUP = (() => {

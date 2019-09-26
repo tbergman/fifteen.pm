@@ -115,7 +115,8 @@ export function generateFormations(surfaceGeometry, faceNormals, geometries, nei
         formations[tileId] = []
     });
     if (!surfaceGeometry.boundingBox) surfaceGeometry.computeBoundingBox();
-    const sphereCenter = surfaceGeometry.boundingBox.getCenter();
+    const sphereCenter = new THREE.Vector3();
+    surfaceGeometry.boundingBox.getCenter(sphereCenter);
     const geometriesByCategory = generateBuildingsByCategory(geometries);
     randomPointsOnSphere(sphereCenter, neighborhoodProps.count).forEach(neighborhoodCentroid => {
         const superCategory = pickSuperCategory(neighborhoodCentroid);

@@ -72,23 +72,23 @@ export function WorldSurface({ geometry, bpm }) {
             materialRef={cloudMaterialRef}
             // color={0xfff0f0}
             side={THREE.FrontSide}
-            // emissive={0x000000}
-            // opacity={.1}
+        // emissive={0x000000}
+        // opacity={.1}
         />
         {tronMaterial && cloudMaterial &&
             <group>
                 <mesh
                     geometry={geometry}
                     material={tronMaterial}
-                    // material-opacity={0.1}
-                    // material-reflectivity={.1}
+                // material-opacity={0.1}
+                // material-reflectivity={.1}
                 />
                 <mesh
                     geometry={geometry}
                     material={cloudMaterial}
-                    // receiveShadow
-                    // material-opacity={0.1}
-                    // material-reflectivity={.1}
+                // receiveShadow
+                // material-opacity={0.1}
+                // material-reflectivity={.1}
                 />
             </group>
         }
@@ -107,10 +107,9 @@ export function World({ track, buildings, ...props }) {
             C.SIDES,
             C.TIERS,
             C.MAX_WORLD_FACE_HEIGHT,
-    );
+        );
     });
-    const radius = sphereGeometry.parameters.radius
-    const distThreshold = radius + radius * .15;
+    const distThreshold = C.WORLD_RADIUS + C.WORLD_RADIUS * .15;
 
     useEffect(() => {
         if (buildings.loaded) {
@@ -121,7 +120,7 @@ export function World({ track, buildings, ...props }) {
     useEffect(() => {
         if (renderTiles && track) {
             // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
-            scene.background = new THREE.Color(track.theme.backgroundColor);
+            // scene.background = new THREE.Color(track.theme.backgroundColor);
         }
     }, [track])
 
@@ -141,15 +140,11 @@ export function World({ track, buildings, ...props }) {
 
     return <group ref={worldRef}>
         {world && <>
-            {/* <Stars
-                radius={radius}
-                colors={track.theme.starColors}
-            /> */}
+
             <WorldSurface
                 geometry={sphereGeometry}
                 bpm={track && track.bpm}
             />
-
             {tileFormations.current &&
                 Object.keys(tileFormations.current).map(tId => {
                     return <primitive key={tId}
@@ -157,6 +152,7 @@ export function World({ track, buildings, ...props }) {
                     />
                 })
             }
+   
             {/* {renderTiles ?
                 <SphereTiles
                     rotation={worldRef.current.rotation}

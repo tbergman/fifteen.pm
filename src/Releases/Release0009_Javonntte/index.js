@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import * as THREE from 'three';
 import { Canvas } from 'react-three-fiber';
 import { CONTENT } from '../../Content';
 import Menu from '../../UI/Menu/Menu'; // TODO code stutter :/
@@ -44,6 +45,9 @@ export default function Release0009_Javonntte({ }) {
                 antialias="false"
                 onCreated={({ gl }) => {
                     gl.shadowMap.enabled = true;
+                    gl.shadowMap.type = THREE.PCFSoftShadowMap;
+                    gl.gammaInput = true;
+                    gl.gammaOutput = true;
                 }}
             >
                 <Scene track={track} />

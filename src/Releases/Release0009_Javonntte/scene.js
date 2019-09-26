@@ -10,7 +10,7 @@ import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
 import { World } from './world';
-
+import { Stars } from './stars';
 export function Scene({ track }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
@@ -39,7 +39,7 @@ export function Scene({ track }) {
             <Camera
                 fov={70}
                 near={1}
-                far={100}
+                far={5000}
                 lightProps={{
                     intensity: 1,
                     penumbra: 0.01,
@@ -59,6 +59,10 @@ export function Scene({ track }) {
                 dragToLook={false}
             />
             <FixedLights />
+            <Stars
+                radius={C.WORLD_RADIUS}
+            // colors={track.theme.starColors}
+            />
             {cloudMaterial && !loadingBuildings && track &&
                 <World
                     track={track}
