@@ -67,6 +67,6 @@ export const TIERS = 40;
 export const MAX_WORLD_FACE_HEIGHT = 2.;
 export const NEIGHBORHOOD_PROPS = {
     count: 50,
-    maxSize: 10,
+    maxSize: 20,
     maxRadius: 300, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
 }

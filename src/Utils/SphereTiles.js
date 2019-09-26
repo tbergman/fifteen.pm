@@ -3,7 +3,7 @@ import { useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { faceCentroid, triangleFromFace } from './geometry';
 import { findNearest, loadKDTree } from './KdTree';
-import {tileId} from './tiles';
+import { tileId } from './tiles';
 
 function initFaceTile(face, centroid, triangle) {
     return {
@@ -11,16 +11,7 @@ function initFaceTile(face, centroid, triangle) {
         centroid: centroid,
         normal: face.normal,
         triangle: triangle,
-        hasRendered: false,
-        visible: true,//false, // TODO
     }
-}
-
-function triangleInFrustum(frustum, triangle) {
-    if (frustum.containsPoint(triangle.a)) return true;
-    if (frustum.containsPoint(triangle.b)) return true;
-    if (frustum.containsPoint(triangle.c)) return true;
-    return false;
 }
 
 export function SphereTiles({ rotation, sphereGeometry, tileComponent, tileElements }) {

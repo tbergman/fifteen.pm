@@ -11,9 +11,6 @@ import { generateWorldInstanceGeometries } from "./instances";
 // TODO tilt and rotationSpeed
 export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
-    // get the original normals!
-    const faceNormals = geometry.faces.map(f => f.normal);
-    geometry.computeBoundingSphere();
     // variate sphere heights
     var vertexIndex;
     var vertexVector = new THREE.Vector3();
@@ -44,7 +41,9 @@ export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
             geometry.vertices[i + vertexIndex] = (vertexVector.add(offset));
         }
     }
-    return [faceNormals, geometry];
+    geometry.verticesNeedUpdate = true;
+    geometry.computeBoundingSphere();
+    return geometry;
 }
 
 function AtmosphereGlow({ radius }) {
@@ -100,7 +99,7 @@ export function World({ track, buildings, ...props }) {
     const [worldRef, world] = useResource();
     const tileFormations = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
-    const [faceNormals, sphereGeometry] = useMemo(() => {
+    const sphereGeometry = useMemo(() => {
         //numStartingPoints, neighborhoodSize, neighborhoodRadius;
         return generateWorldGeometry(
             C.WORLD_RADIUS,
@@ -113,7 +112,7 @@ export function World({ track, buildings, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded) {
-            tileFormations.current = generateWorldInstanceGeometries(sphereGeometry, faceNormals, buildings, C.NEIGHBORHOOD_PROPS);
+            tileFormations.current = generateWorldInstanceGeometries(sphereGeometry, buildings, C.NEIGHBORHOOD_PROPS);
         }
     }, [])
 

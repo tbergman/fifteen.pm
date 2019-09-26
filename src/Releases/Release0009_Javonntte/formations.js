@@ -69,7 +69,6 @@ function pickFootprint(tile) {
 
 function pickHeight(tile, neighborhoodCentroid, neighborhoodRadius) {
     const relativeDistFromNeighborhoodCenter = neighborhoodCentroid.distanceTo(tile.centroid) / neighborhoodRadius;
-    console.log('rel dist from center', relativeDistFromNeighborhoodCenter, 'neighbrad', neighborhoodRadius, 'dist from tile to centr', neighborhoodCentroid.distanceTo(tile.centroid))
     return relativeDistFromNeighborhoodCenter > .5 ? C.SHORT : C.TALL;
 }
 
@@ -102,7 +101,7 @@ function randomPointsOnSphere(sphereCenter, numPoints) {
     return pointsOnSphere;
 }
 
-export function generateFormations(surfaceGeometry, faceNormals, geometries, neighborhoodProps) {
+export function generateFormations(surfaceGeometry, geometries, neighborhoodProps) {
     const tiles = generateTiles(surfaceGeometry);
     const kdTree = loadKDTree(tiles);
     const formations = {}
