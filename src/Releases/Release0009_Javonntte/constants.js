@@ -2,15 +2,15 @@ import { CONTENT } from '../../Content';
 import { assetPath9 } from './utils';
 
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
-export const EXTRA_LARGE = "extra_large";
+export const EXTRA_LARGE = "xlarge";
 export const LARGE = "large";
 export const MEDIUM = "medium";
 export const SMALL = "small";
 export const TALL = "tall";
 export const SHORT = "short";
-export const ARCH = "arch";
-export const FUTURE = "future";
-export const PRESENT = "present";
+// export const ARCH = "arch";
+// export const FUTURE = "future";
+// export const PRESENT = "present";
 export const WIDTH_BUCKETS = [
     SMALL,
     MEDIUM,
@@ -22,14 +22,18 @@ export const HEIGHT_BUCKETS = [
     TALL,
 ]
 // New
-export const TOWERING = "towering";
-export const FLORAL = "floral"
-export const LOW = "low"
+export const TOWER = "tower";
+export const RIBBONY = "ribbony";
+export const TWIRLY = "twirly";
+export const DIAMOND = "diamond";
+export const LOW = "low";
 export const TILE_CATEGORIES = [
-    TOWERING,
-    FLORAL,
+    TOWER,
+    RIBBONY,
+    TWIRLY,
+    DIAMOND,
     LOW,
-]
+];
 const THEMES = [
     // index matches track list order
     {

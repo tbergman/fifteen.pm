@@ -64,7 +64,7 @@ export function SphereTiles({ rotation, sphereGeometry, tileComponent, tileEleme
             searchPosition.current = getSearchPosition();
         }
         if (prevSearchPosition.current.distanceTo(searchPosition.current) > 2 * Math.PI / radius) {
-            const allClosestTiles = findNearest(searchPosition.current, kdTree.current, numMatches, maxDistance, allTiles.current);
+            const [neighborhoodRadius, allClosestTiles] = findNearest(searchPosition.current, kdTree.current, numMatches, maxDistance, allTiles.current);
             closestTiles.current = allClosestTiles;
             prevSearchPosition.current.copy(searchPosition.current);
             setLastUpdateTime(time); // TODO better way to set state??

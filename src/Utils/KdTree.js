@@ -45,15 +45,19 @@ export function findNearest(position, kdTree, numMatches, maxDistance, tileLooku
     const matchingTiles = [];
     // take the nearest n around them. distance^2 'cause we use the manhattan distance and no square is applied in the distance function
     const positionsInRange = kdTree.nearest([position.x, position.y, position.z], numMatches, maxDistance);
+    let farthestMatch = 0;
     for (var i = 0, il = positionsInRange.length; i < il; i++) {
         const kdNode = positionsInRange[i];
         const objectPoint = new THREE.Vector3().fromArray(kdNode[0].obj);
         const tId = tileId(objectPoint);
         const tile = tileLookup[tId];
+        const dist = objectPoint.distanceTo(position);
+        if (dist > farthestMatch) farthestMatch = dist;
         // Sometimes tile is undefined because of floating point differences between kdTree results and original vals
         if (tile) {
             matchingTiles.push(tile);
         }
     }
-    return matchingTiles;
+    const neighborhoodRadius = farthestMatch;
+    return [neighborhoodRadius, matchingTiles];
 }

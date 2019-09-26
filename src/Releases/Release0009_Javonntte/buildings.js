@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import * as THREE from 'three';
 import { cloneDeep } from 'lodash';
-
+import * as C from './constants';
 // function buildingName(building, position) {
 //     return [building.name,
 //     position.x,
@@ -27,16 +27,12 @@ import { cloneDeep } from 'lodash';
 
 // TODO rename
 export function generateBuildingsByCategory(geometries) {
-    const category = {
-        // TODO this is where more playfulness and specificity can be added (e.g. the tilt brush types -- disco, petal etc.)
-        future: [],
-        present: [],
-        arch: [],
-    }
+    const categories = {}
+    C.TILE_CATEGORIES.forEach(category => categories[category] = []);
     const maxHeightBucket = {
-        short: cloneDeep(category),
-        average: cloneDeep(category),
-        tall: cloneDeep(category),
+        short: cloneDeep(categories),
+        average: cloneDeep(categories),
+        tall: cloneDeep(categories),
     }
     /**
      * geometries are a nested key structure with each leaf an array: geometries.{maxWidthBucket}.{maxHeightBucket}.{category}
