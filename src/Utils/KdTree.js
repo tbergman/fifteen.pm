@@ -1,7 +1,7 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import * as THREE from 'three';
 import { TypedArrayUtils } from 'three-full';
-import {tileId} from './tiles';
+import { tileId } from './tiles';
 
 const distanceFunction = function (a, b) {
     return Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2) + Math.pow(a[2] - b[2], 2);
@@ -26,7 +26,7 @@ export function loadKDTree(tiles) {
 export const useKDTree = (tiles) => {
     const [loading, setLoading] = useState(false);
     const [kdTree, setKDTree] = useState(false);
-    
+
     // const [loading, setLoading] = useState(false);
     // const [model, setModel] = useState(false);
     useEffect(() => {
