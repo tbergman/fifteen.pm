@@ -101,7 +101,7 @@ export function World({ track, buildings, ...props }) {
     const tileFormations = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
     const [faceNormals, sphereGeometry] = useMemo(() => {
-        return generateWorldGeometry(C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT);
+        return generateWorldGeometry(C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_WORLD_FACE_HEIGHT);
     }, [C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT]);
     const radius = sphereGeometry.parameters.radius
     const distThreshold = radius + radius * .15;
@@ -118,6 +118,7 @@ export function World({ track, buildings, ...props }) {
             scene.background = new THREE.Color(track.theme.backgroundColor);
         }
     }, [track])
+
     useRender((state, time) => {
         if ((time % .5).toFixed(1) == 0) {
             const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);

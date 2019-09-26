@@ -56,4 +56,4 @@ export const TRACK_LOOKUP = (() => {
 export const WORLD_RADIUS = 48;
 export const SIDES = 80;
 export const TIERS = 40;
-export const MAX_FACE_HEIGHT = 2.;
+export const MAX_WORLD_FACE_HEIGHT = 2.;
