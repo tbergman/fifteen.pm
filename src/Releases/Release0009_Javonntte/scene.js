@@ -22,9 +22,6 @@ export function Scene({ track }) {
     const { camera, canvas, gl } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
-    // const startPos = new THREE.Vector3(C.WORLD_RADIUS, 0, 0);
-    // const lookAt = new THREE.Vector3(0, 0, 0);
-
     const startPos = new THREE.Vector3(0, 0, C.WORLD_RADIUS * 1.13);
     const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS - C.WORLD_RADIUS * .5, C.WORLD_RADIUS - C.WORLD_RADIUS * .1);
 

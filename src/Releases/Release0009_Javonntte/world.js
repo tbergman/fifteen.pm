@@ -101,14 +101,20 @@ export function World({ track, buildings, ...props }) {
     const tileFormations = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
     const [faceNormals, sphereGeometry] = useMemo(() => {
-        return generateWorldGeometry(C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_WORLD_FACE_HEIGHT);
-    }, [C.WORLD_RADIUS, C.SIDES, C.TIERS, C.MAX_FACE_HEIGHT]);
+        //numStartingPoints, neighborhoodSize, neighborhoodRadius;
+        return generateWorldGeometry(
+            C.WORLD_RADIUS,
+            C.SIDES,
+            C.TIERS,
+            C.MAX_WORLD_FACE_HEIGHT,
+    );
+    });
     const radius = sphereGeometry.parameters.radius
     const distThreshold = radius + radius * .15;
 
     useEffect(() => {
         if (buildings.loaded) {
-            tileFormations.current = generateWorldInstanceGeometries(sphereGeometry, faceNormals, buildings);
+            tileFormations.current = generateWorldInstanceGeometries(sphereGeometry, faceNormals, buildings, C.NEIGHBORHOOD_PROPS);
         }
     }, [])
 

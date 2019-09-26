@@ -20,16 +20,15 @@ function createInstance(elements, material) {
         return Math.random();
     };
     for (let i = 0; i < totalInstances; i++) {
-        const tmpOffset = i;// * 15;
         var obj = new THREE.Object3D();
-        obj.lookAt(elements[tmpOffset].normal);
+        obj.lookAt(elements[i].normal);
         obj.updateMatrix();
         const quaternion = new THREE.Quaternion().setFromRotationMatrix(obj.matrix);
         // TODO include random z rotation
         // const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
         // const quaternion = new THREE.Quaternion().setFromEuler(rotation);
         cluster.setQuaternionAt(i, quaternion);
-        const centroid = elements[tmpOffset].centroid;
+        const centroid = elements[i].centroid;
         cluster.setPositionAt(i, _v3.set(centroid.x, centroid.y, centroid.z));
         cluster.setScaleAt(i, _v3.set(1, 1, 1));
         cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()));
@@ -38,16 +37,18 @@ function createInstance(elements, material) {
 }
 
 // TODO maybe the material ref should be assigned to the incoming geometries array of objects
-export function generateWorldInstanceGeometries(sphereGeometry, faceNormals, buildings) {
+// TODO combine formation-generating props together
+export function generateWorldInstanceGeometries(sphereGeometry, faceNormals, buildings, neighborhoodProps) {
     const elementsByName = {};
     const instancesByName = {};
     // build up a lookup of each geometry by name
     buildings.geometries.forEach((geometry) => elementsByName[geometry.name] = []);
     // generate formations for all tiles
-    const formations = generateFormations(sphereGeometry, faceNormals, buildings.geometries);
+    const formations = generateFormations(sphereGeometry, faceNormals, buildings.geometries, neighborhoodProps);
+    console.log("RESULTNG FORMATIONS", formations);
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach((tId) => {
-        formations[tId].elements.forEach((element) => {
+        formations[tId].forEach((element) => {
             elementsByName[element.geometry.name].push(element);
         })
     });

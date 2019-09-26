@@ -21,10 +21,14 @@ export const HEIGHT_BUCKETS = [
     SHORT,
     TALL,
 ]
-export const CATEGORIES = [
-    FUTURE,
-    PRESENT,
-    ARCH,
+// New
+export const TOWERING = "towering";
+export const FLORAL = "floral"
+export const LOW = "low"
+export const TILE_CATEGORIES = [
+    TOWERING,
+    FLORAL,
+    LOW,
 ]
 const THEMES = [
     // index matches track list order
@@ -57,3 +61,8 @@ export const WORLD_RADIUS = 48;
 export const SIDES = 80;
 export const TIERS = 40;
 export const MAX_WORLD_FACE_HEIGHT = 2.;
+export const NEIGHBORHOOD_PROPS = {
+    count: 50,
+    maxSize: 10,
+    maxRadius: 300, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
+}
