@@ -7,38 +7,33 @@ import { Scene } from './scene';
 import * as C from './constants';
 import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import './index.css';
+import { cloneDeep } from 'lodash';
 
 export default function Release0009_Javonntte({ }) {
-    const mediaRef = useRef()
+    const mediaRef = useRef();
+    const [mediaUpdated, setMediaUpdated] = useState(false);//useRef()
     const [track, setTrack] = useState(C.TRACK_LOOKUP[679771259]); // TODO rm hardcoded track assignment
     const [curSrc, setCurSrc] = useState();
     const [curTime, setCurTime] = useState(0);
+    const [hasEntered, setHasEntered] = useState(false);
 
-    // TODO having trouble figuring out mediaRef state handling
     useEffect(() => {
-        if (mediaRef) {
-            console.log('mediaRef:', mediaRef.current);
-            console.log('mediaRef.current:', mediaRef.current);
-            // console.log("mediaRef.current.audio:", mediaRef.current.);
-            console.log("mediaRef.current.currentSrc:", mediaRef.current.currentSrc);
-            // console.log("mediaRef.current.src:", mediaRef.current.src)
-            // if (mediaRef.currentSrc) {
-            //     const trackId = soundcloudTrackIdFromSrc(mediaRef.currentSrc);
-            //     setTrack(C.TRACK_LOOKUP[trackId]);
-            // }
-        }
+        if (mediaRef.current && !mediaUpdated) setMediaUpdated(true);
     });
 
-    // useEffect(() => {
-    //    setCurSrc(mediaRef.current.currentSrc); 
-    // });
+    useEffect(() => {
+        if (mediaUpdated && hasEntered) {
+            console.log('mediaRef:', mediaRef.current.currentSrc);
+        }
+    }, [mediaUpdated, hasEntered]);
 
     return (
         <>
             <Menu
                 content={CONTENT[window.location.pathname]}
                 menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
-                mediaRef={el => mediaRef.current = el}
+                mediaRef={mediaRef}
+                didEnterWorld={() => { setHasEntered(true) }}
             />
             <Canvas
                 id="canvas"
