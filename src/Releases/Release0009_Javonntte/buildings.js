@@ -1,38 +1,11 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import * as THREE from 'three';
 import { cloneDeep } from 'lodash';
-import * as C from './constants';
-// function buildingName(building, position) {
-//     return [building.name,
-//     position.x,
-//     position.y,
-//     position.z,
-//     ].join("_")
-// }
 
-// function Building({ geometry, material, centroid, normal, color, visible }) {
-//     // if (!geometry) return null;
-//     return <mesh
-//         onUpdate={self => {
-//             self.lookAt(normal);
-//             self.rotation.z = THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI);
-//             self.visible = visible
-//         }}
-//         geometry={geometry}
-//         position={centroid}
-//         material={material}
-//     />
-// }
-
-
-// TODO rename
-export function generateBuildingsByCategory(geometries) {
-    const categories = {}
-    C.TILE_CATEGORIES.forEach(category => categories[category] = []);
+export function groupBuildingGeometries(geometries) {
     const maxHeightBucket = {
-        short: cloneDeep(categories),
-        average: cloneDeep(categories),
-        tall: cloneDeep(categories),
+        short: [],
+        tall: [],
     }
     /**
      * geometries are a nested key structure with each leaf an array: geometries.{maxWidthBucket}.{maxHeightBucket}.{category}
@@ -44,42 +17,21 @@ export function generateBuildingsByCategory(geometries) {
         large: cloneDeep(maxHeightBucket),
         xlarge: cloneDeep(maxHeightBucket),
     }
-    const categorized = maxWidthBucket;
+    const grouped = maxWidthBucket;
     geometries.forEach(geometry => {
+        // Not using categories
         const [maxWidthBucket, maxHeightBucket, category] = geometry.name.split("_");
-        categorized[maxWidthBucket][maxHeightBucket][category].push(geometry);
+        grouped[maxWidthBucket][maxHeightBucket].push(geometry);
     })
-    return categorized;
+    return grouped;
 }
 
 export function Buildings({ material, formation, normal }) {
-    // const buildingGroupRef = useRef();
-    // console.log("----")
-    // console.log(formation.geometry);
-    // console.log(formation.centroid);
     return <mesh
-        // onUpdate={self => {
-        //     self.lookAt(normal);
-        // }}
         geometry={formation.geometry}
         material={material}
         position={formation.centroid}
     />
-    // return <group>
-    //     {formation.subdivisions.map(subdivision => {
-    //         return <group
-    //             ref={buildingGroupRef}
-    //             key={buildingName(subdivision.geometry, subdivision.centroid)}
-    //         >
-    //             <Building
-    //                 material={material}
-    //                 normal={normal}
-    //                 geometry={subdivision.geometry}
-    //                 centroid={subdivision.centroid}
-    //             />
-    //         </group>
-    //     })}
-    // </group>;
 }
 
 export function onBuildingsLoaded(gltf) {

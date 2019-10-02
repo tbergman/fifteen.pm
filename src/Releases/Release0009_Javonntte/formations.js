@@ -3,7 +3,7 @@ import { randomSpherePoint, faceCentroid, subdivideTriangle, triangleCentroid as
 import { randomArrayVal } from '../../Utils/random';
 import { generateTiles } from '../../Utils/SphereTiles';
 import { loadKDTree, findNearest } from '../../Utils/KdTree';
-import { generateBuildingsByCategory } from './buildings';
+import { groupBuildingGeometries } from './buildings';
 import * as C from './constants';
 
 
@@ -51,10 +51,6 @@ function format1({ geometries, normal, centroid }) {
     return [formatElement({ normal, centroid, geometries })]
 }
 
-function pickCategory() {
-    return C.TILE_CATEGORIES[THREE.Math.randInt(0, C.TILE_CATEGORIES.length - 1)];
-}
-
 function pickSubdivisionBucket(triangle) {
     const area = triangle.getArea();
     // TODO choose subdivision size based on size of triangle?
@@ -63,7 +59,9 @@ function pickSubdivisionBucket(triangle) {
 
 function pickFootprint(tile) {
     // TODO don't populate if it's this close to pole
-    const closeToPole = Math.abs(tile.centroid.y) < C.WORLD_RADIUS * .98 + Math.random() * .1;
+    const poleLimit = C.WORLD_RADIUS - C.WORLD_RADIUS * .99 + Math.random() * .1;
+    const distToPole = C.WORLD_RADIUS - Math.abs(tile.centroid.y);
+    const closeToPole = distToPole < poleLimit;
     return closeToPole ? C.SMALL : C.WIDTH_BUCKETS[THREE.Math.randInt(0, C.WIDTH_BUCKETS.length - 1)];
 }
 
@@ -72,14 +70,14 @@ function pickHeight(tile, neighborhoodCentroid, neighborhoodRadius) {
     return relativeDistFromNeighborhoodCenter > .5 ? C.SHORT : C.TALL;
 }
 
-function filterGeometries(category, tile, neighborhoodCentroid, neighborhoodRadius, geometries) {
+function filterGeometries(tile, neighborhoodCentroid, neighborhoodRadius, geometries) {
     const footprint = pickFootprint(tile);
     const height = pickHeight(tile, neighborhoodCentroid, neighborhoodRadius);
-    return geometries[footprint][height][category];
+    return geometries[footprint][height];
 }
 
-function formatTile(category, tile, neighborhoodCentroid, neighborhoodRadius, geometries) {
-    const allowedGeometries = filterGeometries(category, tile, neighborhoodCentroid, neighborhoodRadius, geometries);
+function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, geometries) {
+    const allowedGeometries = filterGeometries(tile, neighborhoodCentroid, neighborhoodRadius, geometries);
     const subdivisionBucket = pickSubdivisionBucket(tile.triangle);
     const formationProps = { geometries: allowedGeometries, ...tile };
     const formation = (() => {
@@ -105,15 +103,12 @@ export function generateFormations(surfaceGeometry, geometries, neighborhoodProp
     const tiles = generateTiles(surfaceGeometry);
     const kdTree = loadKDTree(tiles);
     const formations = {}
-    Object.keys(tiles).forEach(tileId => {
-        formations[tileId] = []
-    });
+    Object.keys(tiles).forEach(tileId => formations[tileId] = []);
+    const geometriesByCategory = groupBuildingGeometries(geometries);
     if (!surfaceGeometry.boundingBox) surfaceGeometry.computeBoundingBox();
     const sphereCenter = new THREE.Vector3();
     surfaceGeometry.boundingBox.getCenter(sphereCenter);
-    const geometriesByCategory = generateBuildingsByCategory(geometries);
     randomPointsOnSphere(sphereCenter, neighborhoodProps.count).forEach(neighborhoodCentroid => {
-        const category = pickCategory(neighborhoodCentroid);
         // TODO oof need to refactor so you can do kdTree.findNearest here
         const [neighborhoodRadius, neighbors] = findNearest(neighborhoodCentroid, kdTree, neighborhoodProps.maxSize, neighborhoodProps.maxRadius, tiles);
         Object.values(neighbors).forEach(neighbor => {
@@ -121,7 +116,7 @@ export function generateFormations(surfaceGeometry, geometries, neighborhoodProp
             const id = neighbor.id;
             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
             if (replace) {
-                formations[id] = formatTile(category, neighbor, neighborhoodCentroid, neighborhoodRadius, geometriesByCategory);
+                formations[id] = formatTile(neighbor, neighborhoodCentroid, neighborhoodRadius, geometriesByCategory);
             }
         });
     });

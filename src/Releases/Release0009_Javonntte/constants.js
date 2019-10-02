@@ -20,19 +20,6 @@ export const HEIGHT_BUCKETS = [
     SHORT,
     TALL,
 ]
-// New
-export const TOWER = "tower";
-export const RIBBONY = "ribbony";
-export const TWIRLY = "twirly";
-export const DIAMOND = "diamond";
-export const LOW = "low";
-export const TILE_CATEGORIES = [
-    TOWER,
-    RIBBONY,
-    TWIRLY,
-    DIAMOND,
-    LOW,
-];
 const THEMES = [
     // index matches track list order
     {
@@ -66,7 +53,7 @@ export const SIDES = Math.floor(WORLD_RADIUS * 1.6);
 export const TIERS = Math.floor(WORLD_RADIUS * .8);
 export const MAX_WORLD_FACE_HEIGHT = 2.;
 export const NEIGHBORHOOD_PROPS = {
-    count: WORLD_RADIUS,
+    count: WORLD_RADIUS * 1.5,
     maxSize: Math.floor(WORLD_RADIUS / 2),
     maxRadius: WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
 }
