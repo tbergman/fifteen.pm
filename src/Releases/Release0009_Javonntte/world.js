@@ -97,6 +97,7 @@ export function WorldSurface({ geometry, bpm }) {
 export function World({ track, buildings, ...props }) {
     const { camera, scene } = useThree();
     const [worldRef, world] = useResource();
+    const [curTrackName, setCurTrackName] = useState();
     const tileFormations = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
     const sphereGeometry = useMemo(() => {
@@ -117,11 +118,18 @@ export function World({ track, buildings, ...props }) {
     }, [])
 
     useEffect(() => {
-        if (renderTiles && track) {
-            // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
-            // scene.background = new THREE.Color(track.theme.backgroundColor);
+        if (track.current) {
+            track.current && setCurTrackName(track.current.name)
         }
-    }, [track])
+    })
+
+    // TODO use state for cur track here
+    useEffect(() => {
+        if (renderTiles && track.current) {
+            // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
+            scene.background = new THREE.Color(track.current.theme.backgroundColor);
+        }
+    }, [curTrackName])
 
     useRender((state, time) => {
         if ((time % .5).toFixed(1) == 0) {
@@ -151,7 +159,7 @@ export function World({ track, buildings, ...props }) {
                     />
                 })
             }
-   
+
             {/* {renderTiles ?
                 <SphereTiles
                     rotation={worldRef.current.rotation}

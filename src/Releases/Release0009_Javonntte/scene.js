@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useResource, useThree } from 'react-three-fiber';
+import { useResource, useThree, useRender } from 'react-three-fiber';
 import * as THREE from 'three';
 import { useGLTF } from "../../Utils/hooks";
 import { CloudMaterial } from '../../Utils/materials';

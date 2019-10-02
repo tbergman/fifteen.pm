@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
-import { Canvas } from 'react-three-fiber';
+import { Canvas, useRender } from 'react-three-fiber';
 import { CONTENT } from '../../Content';
 import Menu from '../../UI/Menu/Menu'; // TODO code stutter :/
 import { Scene } from './scene';
@@ -11,21 +11,23 @@ import { cloneDeep } from 'lodash';
 
 export default function Release0009_Javonntte({ }) {
     const mediaRef = useRef();
-    const [mediaUpdated, setMediaUpdated] = useState(false);//useRef()
-    const [track, setTrack] = useState(C.TRACK_LOOKUP[679771259]); // TODO rm hardcoded track assignment
-    const [curSrc, setCurSrc] = useState();
-    const [curTime, setCurTime] = useState(0);
+    const [newTrackSelected, setNewTrackSelected] = useState(false);
+    const track = useRef();
     const [hasEntered, setHasEntered] = useState(false);
 
     useEffect(() => {
-        if (mediaRef.current && !mediaUpdated) setMediaUpdated(true);
+        if (hasEntered) {
+            // console.log('media.currentSrc:', mediaRef.current.currentSrc);
+            // const curId = soundcloudTrackIdFromSrc(mediaRef.current.currentSrc);
+            // track.current = C.TRACK_LOOKUP[curId];
+            // setNewTrackSelected(true);
+        }
     });
 
     useEffect(() => {
-        if (mediaUpdated && hasEntered) {
-            console.log('mediaRef:', mediaRef.current.currentSrc);
-        }
-    }, [mediaUpdated, hasEntered]);
+        // console.log("NEW TRACK SELECTED!, now setting to false; currentsrc:", mediaRef.current.currentSrc, 'mediaRef.current', mediaRef.current)
+        setNewTrackSelected(false);
+    }, [newTrackSelected])
 
     return (
         <>
@@ -33,6 +35,10 @@ export default function Release0009_Javonntte({ }) {
                 content={CONTENT[window.location.pathname]}
                 menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
                 mediaRef={mediaRef}
+                // mediaRef={el => {
+                //     mediaRef.current = el;
+                //     setNewTrackSelected(true);
+                // }}
                 didEnterWorld={() => { setHasEntered(true) }}
             />
             <Canvas
@@ -45,7 +51,9 @@ export default function Release0009_Javonntte({ }) {
                     gl.gammaOutput = true;
                 }}
             >
-                <Scene track={track} />
+                <Scene
+                    track={track}
+                />
             </Canvas>
         </>
     );
