@@ -62,11 +62,11 @@ export const TRACK_LOOKUP = (() => {
     return lookup;
 })();
 export const WORLD_RADIUS = 48;
-export const SIDES = 80;
-export const TIERS = 40;
+export const SIDES = Math.floor(WORLD_RADIUS * 1.6);
+export const TIERS = Math.floor(WORLD_RADIUS * .8);
 export const MAX_WORLD_FACE_HEIGHT = 2.;
 export const NEIGHBORHOOD_PROPS = {
-    count: 50,
-    maxSize: 20,
-    maxRadius: 300, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
+    count: WORLD_RADIUS,
+    maxSize: Math.floor(WORLD_RADIUS / 2),
+    maxRadius: WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
 }
