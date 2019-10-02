@@ -1,6 +1,7 @@
 import React from 'react';
 import * as THREE from 'three';
 import { cloneDeep } from 'lodash';
+import * as C from './constants';
 
 export function groupBuildingGeometries(geometries) {
     const maxHeightBucket = {
@@ -45,6 +46,7 @@ export function onBuildingsLoaded(gltf) {
             geometry.computeBoundingBox();
             geometry.boundingBox.getSize(geometrySize);
             geometry.name = child.name;
+            geometry.scale(C.BASE_SCALE, C.BASE_SCALE, C.BASE_SCALE);
             geometries.push(geometry);
         }
     })

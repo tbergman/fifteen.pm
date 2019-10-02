@@ -60,3 +60,4 @@ export const NEIGHBORHOOD_PROPS = {
 export const START_POS = isMobile ?
     new THREE.Vector3(0, 0, WORLD_RADIUS * 5.13) :
     new THREE.Vector3(0, 0, WORLD_RADIUS * 1.13);
+export const BASE_SCALE = isMobile ? .2 : 1;
