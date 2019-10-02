@@ -1,5 +1,6 @@
+import * as THREE from 'three';
 import { CONTENT } from '../../Content';
-import {isMobile} from '../../Utils/BrowserDetection'
+import { isMobile } from '../../Utils/BrowserDetection'
 import { assetPath9 } from './utils';
 
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
@@ -9,9 +10,6 @@ export const MEDIUM = "medium";
 export const SMALL = "small";
 export const TALL = "tall";
 export const SHORT = "short";
-// export const ARCH = "arch";
-// export const FUTURE = "future";
-// export const PRESENT = "present";
 export const WIDTH_BUCKETS = [
     SMALL,
     MEDIUM,
@@ -62,7 +60,8 @@ export const TRACK_LOOKUP = (() => {
     });
     return lookup;
 })();
-export const WORLD_RADIUS = isMobile ? 6 : 48;
+const RADIUS_DIVISOR = isMobile ? 60 : 40;
+export const WORLD_RADIUS = Math.floor(window.innerWidth / RADIUS_DIVISOR);
 export const SIDES = Math.floor(WORLD_RADIUS * 1.6);
 export const TIERS = Math.floor(WORLD_RADIUS * .8);
 export const MAX_WORLD_FACE_HEIGHT = 2.;
@@ -71,3 +70,6 @@ export const NEIGHBORHOOD_PROPS = {
     maxSize: Math.floor(WORLD_RADIUS / 2),
     maxRadius: WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
 }
+export const START_POS = isMobile ?
+    new THREE.Vector3(0, 0, WORLD_RADIUS * 5.13) :
+    new THREE.Vector3(0, 0, WORLD_RADIUS * 1.13);
