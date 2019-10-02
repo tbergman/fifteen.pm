@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useContext, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { Canvas, useRender } from 'react-three-fiber';
 import { CONTENT } from '../../Content';
@@ -7,13 +7,14 @@ import { Scene } from './scene';
 import * as C from './constants';
 import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import './index.css';
-import { cloneDeep } from 'lodash';
+import { MusicPlayerProvider, MusicPlayerContext } from '../../UI/Player/ActiveSongContext';
 
 export default function Release0009_Javonntte({ }) {
     const mediaRef = useRef();
     const [newTrackSelected, setNewTrackSelected] = useState(false);
     const track = useRef();
     const [hasEntered, setHasEntered] = useState(false);
+    const [activeSong, updateActiveSong] = useState("1");
 
     useEffect(() => {
         if (hasEntered) {
@@ -25,16 +26,17 @@ export default function Release0009_Javonntte({ }) {
     });
 
     useEffect(() => {
-        // console.log("NEW TRACK SELECTED!, now setting to false; currentsrc:", mediaRef.current.currentSrc, 'mediaRef.current', mediaRef.current)
-        setNewTrackSelected(false);
-    }, [newTrackSelected])
+        console.log("activeSong!", activeSong);
+    }, [activeSong])
+
 
     return (
-        <>
+        <MusicPlayerProvider>
             <Menu
                 content={CONTENT[window.location.pathname]}
                 menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
                 mediaRef={mediaRef}
+                updateSongFn={updateActiveSong}
                 // mediaRef={el => {
                 //     mediaRef.current = el;
                 //     setNewTrackSelected(true);
@@ -55,6 +57,6 @@ export default function Release0009_Javonntte({ }) {
                     track={track}
                 />
             </Canvas>
-        </>
+        </MusicPlayerProvider>
     );
 }

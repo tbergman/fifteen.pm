@@ -251,6 +251,7 @@ class Menu extends PureComponent {
           initialized={hasEnteredWorld}
           auxMedia={auxMedia}
           useAuxOnly={useAuxMediaOnly}
+          updateSongFn={this.props.updateSongFn}
         />
       );
     }

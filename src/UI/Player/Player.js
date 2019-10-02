@@ -1,7 +1,8 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { useContext, Fragment, PureComponent } from 'react';
 import './Player.css'
 import { formatSoundcloudSrc } from "../../Utils/Audio/SoundcloudUtils";
 import { loadVideo } from '../../Utils/Loaders';
+import {MusicPlayerContext, MusicPlayerProvider} from './ActiveSongContext';
 
 class Player extends PureComponent {
   state = {
@@ -76,11 +77,18 @@ class Player extends PureComponent {
   }
 
   setCurrentTrack(trackIdx, { id, secretToken }) {
+    const {mediaRef} = this.props;
+    mediaRef.current.pause();
     this.setState({
       curTrackIdx: trackIdx,
       src: formatSoundcloudSrc(id, secretToken),
       paused: false
     });
+    mediaRef.current.load();
+    this.props.updateSongFn(trackIdx);
+    // this.context = trackIdx;
+    console.log('this context', this.context);
+    console.log("set context:", this.setContext);
   }
 
   advanceTrack = (e) => {
@@ -236,7 +244,7 @@ class Player extends PureComponent {
     const { src } = this.state;
     return (
       <audio
-        key={src}
+        key="audio-player"
         id="audio-player"
         crossOrigin="anonymous"
         ref={mediaRef}
@@ -258,12 +266,14 @@ class Player extends PureComponent {
 
   render() {
     return (
-      <Fragment>
+      <MusicPlayerProvider value={this.state}>
         {this.renderPlayerElements()}
         {this.renderMediaTag()}
-      </Fragment>
+      </MusicPlayerProvider>
     );
   }
 }
+
+Player.contextType = MusicPlayerContext;
 
 export default Player;
