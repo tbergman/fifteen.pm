@@ -1,4 +1,5 @@
 import { CONTENT } from '../../Content';
+import {isMobile} from '../../Utils/BrowserDetection'
 import { assetPath9 } from './utils';
 
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
@@ -61,7 +62,7 @@ export const TRACK_LOOKUP = (() => {
     });
     return lookup;
 })();
-export const WORLD_RADIUS = 48;
+export const WORLD_RADIUS = isMobile ? 6 : 48;
 export const SIDES = Math.floor(WORLD_RADIUS * 1.6);
 export const TIERS = Math.floor(WORLD_RADIUS * .8);
 export const MAX_WORLD_FACE_HEIGHT = 2.;
