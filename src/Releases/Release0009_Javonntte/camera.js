@@ -5,7 +5,7 @@ import { useThree } from 'react-three-fiber';
 export function Camera({ fov, near, far, lightProps }) {
     const spotLight = useRef();
     const cameraRef = useRef();
-    const { setDefaultCamera, size, scene } = useThree();
+    const { setDefaultCamera, scene } = useThree();
 
     useEffect(() => {
         if (cameraRef.current) {
