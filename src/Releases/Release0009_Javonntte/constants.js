@@ -43,12 +43,12 @@ const THEMES = [
     },
     {
         // fogColor: 0xff0000, i.e. turn off fog
-        backgroundColor: 0x000000,
+        backgroundColor: 0xff0000,
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
     {
         fogColor: 0x0000ff,
-        backgroundColor: 0x000000,
+        backgroundColor: 0x00ff00,
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     }
 ]
