@@ -3,7 +3,7 @@ import '../Release.css';
 import * as THREE from "three";
 import { OrbitControls } from "../../Utils/OrbitControls";
 import { CONSTANTS } from "./constants";
-import { Reflector } from "three-full";
+import { Reflector } from 'three/examples/jsm/objects/Reflector';
 import { Water2 } from "../../Utils/Water2";
 import GLTFLoader from "three-gltf-loader";
 import { loadGLTF } from "../../Utils/Loaders";
