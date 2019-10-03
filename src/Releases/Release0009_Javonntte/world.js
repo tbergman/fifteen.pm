@@ -140,9 +140,9 @@ export function World({ track, buildings, ...props }) {
     })
 
     useRender(() => {
-        // if (worldRef.current) {
-        //     worldRef.current.rotation.x += .001;
-        // } 
+        if (worldRef.current) {
+            worldRef.current.rotation.x += .001;
+        } 
     })
 
     return <group ref={worldRef}>
