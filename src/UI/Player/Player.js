@@ -86,9 +86,6 @@ class Player extends PureComponent {
     });
     mediaRef.current.load();
     this.props.updateSongFn(trackIdx);
-    // this.context = trackIdx;
-    console.log('this context', this.context);
-    console.log("set context:", this.setContext);
   }
 
   advanceTrack = (e) => {
