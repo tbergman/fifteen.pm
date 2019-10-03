@@ -109,7 +109,7 @@ export function World({ track, buildings, ...props }) {
             C.MAX_WORLD_FACE_HEIGHT,
         );
     });
-    const distThreshold = C.WORLD_RADIUS + C.WORLD_RADIUS * .15;
+    
 
     useEffect(() => {
         if (buildings.loaded) {
@@ -125,17 +125,18 @@ export function World({ track, buildings, ...props }) {
 
     // TODO use state for cur track here
     useEffect(() => {
-        if (renderTiles && track.current) {
+        // if (track.current) {
             // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
-            scene.background = new THREE.Color(track.current.theme.backgroundColor);
-        }
+            // scene.background = new THREE.Color(track.current.theme.backgroundColor);
+
+        // }
     }, [curTrackName])
 
     useRender((state, time) => {
         if ((time % .5).toFixed(1) == 0) {
             const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);
-            const tooFarAway = distToCenter > distThreshold;
-            setRenderTiles(!tooFarAway);
+            const tooFarAway = distToCenter > C.CAMERA_DISTANCE_THRESHOLD;
+            // setRenderTiles(!tooFarAway);
         }
     })
 
@@ -147,7 +148,6 @@ export function World({ track, buildings, ...props }) {
 
     return <group ref={worldRef}>
         {world && <>
-
             <WorldSurface
                 geometry={sphereGeometry}
                 bpm={track && track.bpm}
@@ -159,7 +159,6 @@ export function World({ track, buildings, ...props }) {
                     />
                 })
             }
-
             {/* {renderTiles ?
                 <SphereTiles
                     rotation={worldRef.current.rotation}

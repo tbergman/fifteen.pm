@@ -61,3 +61,4 @@ export const START_POS = isMobile ?
     new THREE.Vector3(0, 0, WORLD_RADIUS * 5.13) :
     new THREE.Vector3(0, 0, WORLD_RADIUS * 1.13);
 export const BASE_SCALE = isMobile ? .2 : 1;
+export const CAMERA_DISTANCE_THRESHOLD = isMobile ? START_POS.z * 1.1 : WORLD_RADIUS + WORLD_RADIUS * .15;
