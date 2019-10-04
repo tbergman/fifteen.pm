@@ -49,7 +49,7 @@ const RADIUS_DIVISOR = isMobile ? 60 : 40;
 export const WORLD_RADIUS = Math.floor(window.innerWidth / RADIUS_DIVISOR);
 export const SIDES = Math.floor(WORLD_RADIUS * 1.6);
 export const TIERS = Math.floor(WORLD_RADIUS * .8);
-export const MAX_WORLD_FACE_HEIGHT = 2.;
+export const MAX_WORLD_FACE_HEIGHT = 1.;
 export const NEIGHBORHOOD_PROPS = {
     count: WORLD_RADIUS * 1.5,
     maxSize: Math.floor(WORLD_RADIUS / 2),

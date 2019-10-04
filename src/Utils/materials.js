@@ -203,7 +203,13 @@ export function CloudMaterial({ materialRef, ...props }) {
 		const normalMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_normal.png"));
 		const metalnessMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_metallic.png"));
 		const envMap = cloudEnvMap();
-		return [colorMap, normalMap, metalnessMap, envMap]
+		const textureMaps = [colorMap, normalMap, metalnessMap, envMap];
+		return textureMaps.map(textureMap => {
+			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+			textureMap.offset.set(0, 0);
+			textureMap.repeat.set(3, 3);
+			return textureMap;
+		})
 	});
 	return <meshPhongMaterial
 		{...props}
@@ -212,6 +218,7 @@ export function CloudMaterial({ materialRef, ...props }) {
 		receiveShadow
 		castShadow
 		map={colorMap}
+		shininess={props.shininess || 100}
 		envMapIntensity={0.3}
 		color={props.color || 0x0000c0}
 		emissive={props.emissive || 0xfffb00}
@@ -221,6 +228,40 @@ export function CloudMaterial({ materialRef, ...props }) {
 		side={props.side || THREE.FrontSide}
 		normalMap={normalMap}
 		metalnessMap={metalnessMap}
+	/>
+}
+
+
+export function Metal03Material({ materialRef, ...props }) {
+	// https://www.cc0textures.com/view.php?tex=Metal03
+	const [colorMap, normalMap, metalMap, roughnessMap, displacementMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const colorMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_col.jpg"))
+		const normalMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_nrm.jpg"))
+		const metalMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_met.jpg"))
+		const roughnessMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_rgh.jpg"))
+		const displacementMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_disp.jpg"))
+		const textureMaps = [colorMap, normalMap, metalMap, roughnessMap, displacementMap]
+		return textureMaps.map(textureMap => {
+			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+			textureMap.offset.set(0, 0);
+			textureMap.repeat.set(2, 2);
+			return textureMap;
+		})
+	});
+	return <meshStandardMaterial
+		{...props}
+		ref={materialRef}
+		lights
+		receiveShadow
+		castShadow
+		map={colorMap}
+		normalMap={normalMap}
+		metalMap={metalMap}
+		roughnessMap={roughnessMap}
+		displacementScale={props.displaceScale || .1} // TODO play around
+		displacementBias={props.displacementBias || -.01}
+		displacementMap={displacementMap}
 	/>
 }
 
@@ -234,12 +275,13 @@ export function Ground29Material({ materialRef, ...props }) {
 		const roughnessMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_rgh.jpg"))
 		const displacementMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_disp.jpg"))
 		const textureMaps = [colorMap, normalMap, aoMap, roughnessMap, displacementMap]
-		return textureMaps.map(textureMap => {
-			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
-			textureMap.offset.set(0, 0);
-			textureMap.repeat.set(3, 3);
-			return textureMap;
-		})
+		return textureMaps;
+		// return textureMaps.map(textureMap => {
+		// 	textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+		// 	textureMap.offset.set(0, 0);
+		// 	textureMap.repeat.set(8, 8);
+		// 	return textureMap;
+		// })
 	});
 	return <meshStandardMaterial
 		{...props}
@@ -306,6 +348,7 @@ export function Windows1Material({ materialRef, ...props }) {
 		lights
 		receiveShadow
 		castShadow
+		shininess={100}
 		map={colorMap}
 		envMap={envMap}
 	// color={0xff0000}

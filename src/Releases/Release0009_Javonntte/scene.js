@@ -3,8 +3,8 @@ import { useResource, useThree, useRender } from 'react-three-fiber';
 import * as THREE from 'three';
 import { useGLTF } from "../../Utils/hooks";
 import {
-    Facade12Material, 
-    CloudMaterial, FoamGripMaterial, Windows1Material
+    Facade12Material,
+    CloudMaterial, FoamGripMaterial, Windows1Material, Metal03Material
 } from '../../Utils/materials';
 import { onBuildingsLoaded } from "./buildings";
 import { Camera } from './camera';
@@ -28,7 +28,7 @@ export function Scene({ track }) {
     const [foamGripMaterialRef, foamGripMaterial] = useResource();
     const [windows1MaterialRef, windows1Material] = useResource();
     const [facade12MaterialRef, facade12Material] = useResource();
-    const [ground29MaterialRef, ground29Material] = useResource();
+    const [metal03MaterialRef, metal03Material] = useResource();
     const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS - C.WORLD_RADIUS * .5, C.WORLD_RADIUS - C.WORLD_RADIUS * .1);
 
     useEffect(() => {
@@ -42,9 +42,10 @@ export function Scene({ track }) {
         <>
             {/* use one material for all buildings  */}
             <FoamGripMaterial materialRef={foamGripMaterialRef} />
-            <CloudMaterial materialRef={cloudMaterialRef} />
+            <CloudMaterial materialRef={cloudMaterialRef} emissive={0xd4af37} />
             <Windows1Material materialRef={windows1MaterialRef} />
             <Facade12Material materialRef={facade12MaterialRef} />
+            <Metal03Material materialRef={metal03MaterialRef} />
             {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
             <Camera
                 fov={70}
@@ -73,13 +74,13 @@ export function Scene({ track }) {
                 radius={C.WORLD_RADIUS}
             // colors={track.theme.starColors}
             />
-            {facade12Material && windows1Material && foamGripMaterial && cloudMaterial && !loadingBuildings ?
+            {facade12Material && windows1Material && foamGripMaterial && metal03Material && !loadingBuildings ?
                 <World
                     track={track}
                     // startPos={startPos}
                     buildings={{
                         geometries: buildingGeometries,
-                        materials: [facade12Material, windows1Material, foamGripMaterial, cloudMaterial],
+                        materials: [metal03Material, facade12Material, windows1Material, foamGripMaterial, cloudMaterial],
                         loaded: !loadingBuildings,
                     }}
                 /> : null

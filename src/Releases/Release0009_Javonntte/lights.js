@@ -39,6 +39,10 @@ export function FixedLights() {
     // }, [pointLight])
     return <>
         <ambientLight />
+        <hemisphereLight
+            skyColor={0xd4af37}
+            groundColor={0xd4af37}
+        />
         {/* <directionalLight
             intensity={1.5}
             position={camera.position}
