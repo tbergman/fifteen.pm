@@ -129,13 +129,6 @@ export function World({ track, buildings, ...props }) {
         // }
     }, [curTrackName])
 
-    useRender((state, time) => {
-        if ((time % .5).toFixed(1) == 0) {
-            const distToCenter = camera.position.distanceTo(sphereGeometry.boundingSphere.center);
-            const tooFarAway = distToCenter > C.CAMERA_DISTANCE_THRESHOLD;
-            // setRenderTiles(!tooFarAway);
-        }
-    })
 
     useRender(() => {
         if (worldRef.current) {

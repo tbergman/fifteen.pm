@@ -3,10 +3,10 @@ import * as THREE from 'three';
 import { useResource, useRender, useThree } from 'react-three-fiber';
 
 export function FixedLights() {
-    // const { camera, scene } = useThree();
+    const { camera, scene } = useThree();
     // const [spotLightRef, spotLight] = useResource();
     // const spotLight = useRef();
-    // const pointLight = useRef();
+    const pointLight = useRef();
     // useRender(() => {
     //     if (spotLight.current && camera) {
     //         // spotLight.current.position.copy(camera.position)
@@ -43,15 +43,15 @@ export function FixedLights() {
             skyColor={0xd4af37}
             groundColor={0xd4af37}
         />
-        {/* <directionalLight
+        <directionalLight
             intensity={1.5}
             position={camera.position}
-        /> */}
-        {/* <pointLight
+        />
+        <pointLight
             ref={pointLight}
             // position={tmpPointLightPos}
             intensity={1}
-        /> */}
+        /> 
         {/* <spotLight
             ref={spotLight}
             position={camera.position}

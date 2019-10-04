@@ -14,6 +14,7 @@ import "./index.css";
 import { FixedLights } from './lights';
 import { World } from './world';
 import { Stars } from './stars';
+import { SphereGeometry } from 'three-full';
 export function Scene({ track }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
@@ -48,9 +49,12 @@ export function Scene({ track }) {
             <Metal03Material materialRef={metal03MaterialRef} />
             {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
             <Camera
+                maxDist={C.MAX_CAMERA_DIST}
+                minDist={C.MIN_CAMERA_DIST}
                 fov={70}
                 near={1}
                 far={5000}
+                center={C.WORLD_CENTER}
                 lightProps={{
                     intensity: 1.1,
                     // penumbra: 0.1,
@@ -80,7 +84,7 @@ export function Scene({ track }) {
                     // startPos={startPos}
                     buildings={{
                         geometries: buildingGeometries,
-                        materials: [metal03Material, facade12Material, foamGripMaterial],
+                        materials: [facade12Material],//[metal03Material, facade12Material, foamGripMaterial],
                         loaded: !loadingBuildings,
                     }}
                 /> : null
