@@ -28,10 +28,10 @@ function subdivide36(triangleComponents, centroid) {
     return thirtySix;
 }
 
-function formatElement({ triangle, normal, centroid, geometries }) {
+function formatElement({ triangle, normal, centroid, geometry }) {
     if (triangle) centroid = centroidFromPoints(triangle.a, triangle.b, triangle.c);
     return {
-        geometry: randomArrayVal(geometries),
+        geometry: geometry,
         centroid: centroid,
         normal: normal,
     }
@@ -39,16 +39,16 @@ function formatElement({ triangle, normal, centroid, geometries }) {
 
 function format36({ geometries, normal, centroid, triangle }) {
     const subdividedTriangle = subdivideTriangle(triangle);
-    return subdivide36(subdividedTriangle, centroid).map(triangle => formatElement({ triangle, normal, geometries }));
+    return subdivide36(subdividedTriangle, centroid).map(triangle => formatElement({ triangle, normal, geometry: randomArrayVal(geometries) }));
 }
 
 function format6({ geometries, normal, centroid, triangle }) {
     const subdividedTriangle = subdivideTriangle(triangle);
-    return subdivide6(subdividedTriangle, centroid).map(triangle => formatElement({ triangle, normal, geometries }));
+    return subdivide6(subdividedTriangle, centroid).map(triangle => formatElement({ triangle, normal, geometry: randomArrayVal(geometries) }));
 }
 
 function format1({ geometries, normal, centroid }) {
-    return [formatElement({ normal, centroid, geometries })]
+    return [formatElement({ normal, centroid, geometry: randomArrayVal(geometries) })]
 }
 
 function pickSubdivisionBucket(triangle) {
