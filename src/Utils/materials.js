@@ -275,13 +275,13 @@ export function Ground29Material({ materialRef, ...props }) {
 		const roughnessMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_rgh.jpg"))
 		const displacementMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_disp.jpg"))
 		const textureMaps = [colorMap, normalMap, aoMap, roughnessMap, displacementMap]
-		return textureMaps;
-		// return textureMaps.map(textureMap => {
-		// 	textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
-		// 	textureMap.offset.set(0, 0);
-		// 	textureMap.repeat.set(8, 8);
-		// 	return textureMap;
-		// })
+		// return textureMaps;
+		return textureMaps.map(textureMap => {
+			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+			textureMap.offset.set(0, 0);
+			textureMap.repeat.set(128, 128);
+			return textureMap;
+		})
 	});
 	return <meshStandardMaterial
 		{...props}
@@ -293,8 +293,8 @@ export function Ground29Material({ materialRef, ...props }) {
 		normalMap={normalMap}
 		aoMap={aoMap}
 		roughnessMap={roughnessMap}
-		displacementScale={props.displaceScale || .1} // TODO play around
-		displacementBias={props.displacementBias || -.01}
+		displacementScale={props.displacementScale || .01} // TODO play around
+		displacementBias={props.displacementBias || 0}//-.01}
 		displacementMap={displacementMap}
 	/>
 }

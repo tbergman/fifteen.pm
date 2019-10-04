@@ -47,9 +47,9 @@ export const TRACK_LOOKUP = (() => {
 })();
 const RADIUS_DIVISOR = isMobile ? 60 : 40;
 export const WORLD_RADIUS = Math.floor(window.innerWidth / RADIUS_DIVISOR);
-export const SIDES = Math.floor(WORLD_RADIUS * 1.6);
-export const TIERS = Math.floor(WORLD_RADIUS * .8);
-export const MAX_WORLD_FACE_HEIGHT = 1.;
+export const SIDES = Math.floor(WORLD_RADIUS * (isMobile ? 1.6 : 1.67));
+export const TIERS = Math.floor(WORLD_RADIUS * (isMobile ? .8 : .8));
+export const MAX_WORLD_FACE_HEIGHT = .5;
 export const NEIGHBORHOOD_PROPS = {
     count: WORLD_RADIUS * 1.5,
     maxSize: Math.floor(WORLD_RADIUS / 2),
@@ -58,5 +58,5 @@ export const NEIGHBORHOOD_PROPS = {
 export const START_POS = isMobile ?
     new THREE.Vector3(0, 0, WORLD_RADIUS * 5.13) :
     new THREE.Vector3(0, 0, WORLD_RADIUS * 1.13);
-export const BASE_SCALE = isMobile ? .2 : 1;
+export const BASE_SCALE = isMobile ? .2 : 1.;
 export const CAMERA_DISTANCE_THRESHOLD = isMobile ? START_POS.z * 1.1 : WORLD_RADIUS + WORLD_RADIUS * .15;

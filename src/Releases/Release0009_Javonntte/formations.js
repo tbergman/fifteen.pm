@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { randomSpherePoint, faceCentroid, subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromFace, triangleFromVertices } from '../../Utils/geometry';
-import { randomArrayVal } from '../../Utils/random';
+import { faceCentroid, subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromFace, triangleFromVertices } from '../../Utils/geometry';
+import { randomArrayVal, selectNRandomFromArray, randomPointsOnSphere } from '../../Utils/random';
 import { generateTiles } from '../../Utils/SphereTiles';
 import { loadKDTree, findNearest } from '../../Utils/KdTree';
 import { groupBuildingGeometries } from './buildings';
@@ -37,14 +37,18 @@ function formatElement({ triangle, normal, centroid, geometry }) {
     }
 }
 
+
+
 function format36({ geometries, normal, centroid, triangle }) {
     const subdividedTriangle = subdivideTriangle(triangle);
-    return subdivide36(subdividedTriangle, centroid).map(triangle => formatElement({ triangle, normal, geometry: randomArrayVal(geometries) }));
+    const randGeoms = selectNRandomFromArray(geometries, '36')
+    return subdivide36(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, geometry: randGeoms[idx] }));
 }
 
 function format6({ geometries, normal, centroid, triangle }) {
     const subdividedTriangle = subdivideTriangle(triangle);
-    return subdivide6(subdividedTriangle, centroid).map(triangle => formatElement({ triangle, normal, geometry: randomArrayVal(geometries) }));
+    const randGeoms = selectNRandomFromArray(geometries, '6')
+    return subdivide6(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, geometry: randGeoms[idx] }));
 }
 
 function format1({ geometries, normal, centroid }) {
@@ -90,14 +94,7 @@ function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, geometries) 
     return formation;
 }
 
-function randomPointsOnSphere(sphereCenter, numPoints) {
-    const pointsOnSphere = [];
-    for (let i = 0; i < numPoints; i++) {
-        const point = randomSpherePoint(sphereCenter, C.WORLD_RADIUS);
-        pointsOnSphere.push(point);
-    }
-    return pointsOnSphere;
-}
+
 
 export function generateFormations(surfaceGeometry, geometries, neighborhoodProps) {
     const tiles = generateTiles(surfaceGeometry);
@@ -108,7 +105,7 @@ export function generateFormations(surfaceGeometry, geometries, neighborhoodProp
     if (!surfaceGeometry.boundingBox) surfaceGeometry.computeBoundingBox();
     const sphereCenter = new THREE.Vector3();
     surfaceGeometry.boundingBox.getCenter(sphereCenter);
-    randomPointsOnSphere(sphereCenter, neighborhoodProps.count).forEach(neighborhoodCentroid => {
+    randomPointsOnSphere(C.WORLD_RADIUS, sphereCenter, neighborhoodProps.count).forEach(neighborhoodCentroid => {
         // TODO oof need to refactor so you can do kdTree.findNearest here
         const [neighborhoodRadius, neighbors] = findNearest(neighborhoodCentroid, kdTree, neighborhoodProps.maxSize, neighborhoodProps.maxRadius, tiles);
         Object.values(neighbors).forEach(neighbor => {

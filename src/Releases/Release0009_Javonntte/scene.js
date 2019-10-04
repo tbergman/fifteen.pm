@@ -80,7 +80,7 @@ export function Scene({ track }) {
                     // startPos={startPos}
                     buildings={{
                         geometries: buildingGeometries,
-                        materials: [metal03Material, facade12Material, windows1Material, foamGripMaterial, cloudMaterial],
+                        materials: [metal03Material, facade12Material, foamGripMaterial],
                         loaded: !loadingBuildings,
                     }}
                 /> : null
