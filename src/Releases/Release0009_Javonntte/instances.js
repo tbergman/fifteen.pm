@@ -33,6 +33,7 @@ function createInstance(elements, material) {
         cluster.setScaleAt(i, _v3.set(1, 1, 1));
         // cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()));
     }
+    cluster.castShadow = true;
     return cluster;
 }
 

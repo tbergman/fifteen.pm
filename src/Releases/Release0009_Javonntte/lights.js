@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { useResource, useRender, useThree } from 'react-three-fiber';
+import * as C from './constants';
 
 export function FixedLights() {
     const { camera, scene } = useThree();
@@ -43,15 +44,15 @@ export function FixedLights() {
             skyColor={0xd4af37}
             groundColor={0xd4af37}
         />
-        <directionalLight
-            intensity={1.5}
-            position={camera.position}
+        {/* <directionalLight
+            intensity={2.5}
+            position={C.START_POS}
         />
         <pointLight
             ref={pointLight}
             // position={tmpPointLightPos}
             intensity={1}
-        /> 
+        />  */}
         {/* <spotLight
             ref={spotLight}
             position={camera.position}

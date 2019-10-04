@@ -82,7 +82,7 @@ export function WorldSurface({ geometry, bpm }) {
                 <mesh
                     geometry={geometry}
                     material={ground29Material}
-                // receiveShadow
+                    receiveShadow
                 // material-opacity={0.1}
                 // material-reflectivity={.1}
                 />
@@ -106,7 +106,7 @@ export function World({ track, buildings, ...props }) {
             C.MAX_WORLD_FACE_HEIGHT,
         );
     });
-    
+
 
     useEffect(() => {
         if (buildings.loaded) {
@@ -123,8 +123,8 @@ export function World({ track, buildings, ...props }) {
     // TODO use state for cur track here
     useEffect(() => {
         // if (track.current) {
-            // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
-            // scene.background = new THREE.Color(track.current.theme.backgroundColor);
+        // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
+        // scene.background = new THREE.Color(track.current.theme.backgroundColor);
 
         // }
     }, [curTrackName])
@@ -133,7 +133,7 @@ export function World({ track, buildings, ...props }) {
     useRender(() => {
         if (worldRef.current) {
             // worldRef.current.rotation.x += .001;
-        } 
+        }
     })
 
     return <group ref={worldRef}>

@@ -58,7 +58,7 @@ export const NEIGHBORHOOD_PROPS = {
 
 const STARTING_Z = isMobile ? WORLD_RADIUS * 5.13 : WORLD_RADIUS * 1.1;
 export const START_POS = new THREE.Vector3(0, 0,STARTING_Z);
-export const BASE_SCALE = isMobile ? .2 : 1.;
+export const BASE_SCALE = isMobile ? 1.3 : 1.;
 export const CAMERA_DISTANCE_THRESHOLD = isMobile ? START_POS.z * 1.1 : WORLD_RADIUS + WORLD_RADIUS * .15;
 // max camera distance from center
 export const MAX_CAMERA_DIST = WORLD_RADIUS - 1.5;// * 1.001;

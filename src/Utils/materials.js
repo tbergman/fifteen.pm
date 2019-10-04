@@ -286,7 +286,7 @@ export function Ground29Material({ materialRef, ...props }) {
 	return <meshStandardMaterial
 		{...props}
 		ref={materialRef}
-		lights
+		// lights
 		receiveShadow
 		// castShadow
 		map={colorMap}
@@ -313,7 +313,7 @@ export function Facade12Material({ materialRef, ...props }) {
 		return textureMaps.map(textureMap => {
 			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
 			textureMap.offset.set(0, 0);
-			textureMap.repeat.set(3, 3);
+			textureMap.repeat.set(4, 4);
 			return textureMap;
 		})
 	})
@@ -327,6 +327,79 @@ export function Facade12Material({ materialRef, ...props }) {
 		map={colorMap}
 		normalMap={normalMap}
 		emissiveMap={emissiveMap}
+		roughnessMap={roughnessMap}
+	// displacementMap={displacementMap}
+	/>
+}
+
+
+export function Facade04Material({ materialRef, ...props }) {
+	// https://www.cc0textures.com/view.php?tex=Facade12
+
+	const [colorMap, normalMap, emissiveMap, roughnessMap, metalnessMap, maskMap, displacementMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const colorMap = textureLoader.load(assetPathShared("textures/facade04/Facade04_col.jpg"))
+		const normalMap = textureLoader.load(assetPathShared("textures/facade04/Facade04_nrm.jpg"))
+		const emissiveMap = textureLoader.load(assetPathShared("textures/facade04/Facade04_emi.jpg"))
+		const roughnessMap = textureLoader.load(assetPathShared("textures/facade04/Facade04_rgh.jpg"))
+		const metalnessMap = textureLoader.load(assetPathShared("textures/facade04/Facade04_met.jpg"))
+		const maskMap = textureLoader.load(assetPathShared("textures/facade04/Facade04_mask.jpg"))
+		const displacementMap = textureLoader.load(assetPathShared("textures/facade04/Facade04_disp.jpg"))
+		const textureMaps = [colorMap, normalMap, emissiveMap, roughnessMap, metalnessMap, maskMap, displacementMap]
+		return textureMaps.map(textureMap => {
+			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+			textureMap.offset.set(0, 0);
+			textureMap.repeat.set(16, 16);
+			return textureMap;
+		})
+	})
+
+	return <meshStandardMaterial
+		{...props}
+		ref={materialRef}
+		lights
+		receiveShadow
+		castShadow
+		map={colorMap}
+		maskMap={maskMap}
+		normalMap={normalMap}
+		emissiveMap={emissiveMap}
+		metalnessMap={metalnessMap}
+		roughnessMap={roughnessMap}
+	// displacementMap={displacementMap}
+	/>
+}
+
+export function Facade10Material({ materialRef, ...props }) {
+	// https://www.cc0textures.com/view.php?tex=Facade12
+
+	const [colorMap, normalMap, emissiveMap, roughnessMap, metalnessMap, displacementMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const colorMap = textureLoader.load(assetPathShared("textures/facade10/Facade10_col.jpg"))
+		const normalMap = textureLoader.load(assetPathShared("textures/facade10/Facade10_nrm.jpg"))
+		const emissiveMap = textureLoader.load(assetPathShared("textures/facade10/Facade10_emi.jpg"))
+		const roughnessMap = textureLoader.load(assetPathShared("textures/facade10/Facade10_rgh.jpg"))
+		const metalnessMap = textureLoader.load(assetPathShared("textures/facade10/Facade10_met.jpg"))
+		const displacementMap = textureLoader.load(assetPathShared("textures/facade10/Facade10_disp.jpg"))
+		const textureMaps = [colorMap, normalMap, emissiveMap, roughnessMap, metalnessMap, displacementMap]
+		return textureMaps.map(textureMap => {
+			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+			textureMap.offset.set(0, 0);
+			textureMap.repeat.set(16, 16);
+			return textureMap;
+		})
+	})
+
+	return <meshStandardMaterial
+		{...props}
+		ref={materialRef}
+		lights
+		receiveShadow
+		castShadow
+		map={colorMap}
+		normalMap={normalMap}
+		emissiveMap={emissiveMap}
+		metalnessMap={metalnessMap}
 		roughnessMap={roughnessMap}
 	// displacementMap={displacementMap}
 	/>
