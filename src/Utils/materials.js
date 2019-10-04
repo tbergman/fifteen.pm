@@ -13,10 +13,22 @@ import simpleVertex from '!raw-loader!glslify-loader!../Shaders/simpleVertex.gls
 import tronFragmentShader from '!raw-loader!glslify-loader!../Shaders/tronFragment.glsl';
 
 /* eslint import/no-webpack-loader-syntax: off */
-import vsDepthVertex from'!raw-loader!glslify-loader!../Shaders/vsDepthVertex.glsl'; 
+import vsDepthVertex from '!raw-loader!glslify-loader!../Shaders/vsDepthVertex.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
-import simpleWithDepthVertex from'!raw-loader!glslify-loader!../Shaders/simpleWithDepthVertex.glsl'; 
+import simpleWithDepthVertex from '!raw-loader!glslify-loader!../Shaders/simpleWithDepthVertex.glsl';
 
+function cloudEnvMap() {
+	return new THREE.CubeTextureLoader()
+		.setPath(assetPathShared('textures/env-maps/bluecloud/'))
+		.load([
+			'bluecloud_bk.jpg',
+			'bluecloud_dn.jpg',
+			'bluecloud_ft.jpg',
+			'bluecloud_lf.jpg',
+			'bluecloud_rt.jpg',
+			'bluecloud_up.jpg',
+		]);
+}
 
 export function initFoamGripMaterial(textureLoader) {
 	var envMapCube = new THREE.CubeTextureLoader()
@@ -38,13 +50,10 @@ export function initFoamGripMaterial(textureLoader) {
 		skinning: true,
 		normalMap: textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-normal.png")),
 		aoMap: textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-ao.png")),
-
 		specularMap: textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-albedo.png")),
-		// map: textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-albedo.png")),
 		envMap: envMapCube,
 		refractionRatio: 1.0,
 		combine: THREE.AddOperation
-
 	})
 }
 
@@ -149,6 +158,39 @@ export function initPinkShinyMaterial() {
 	});
 }
 
+export function FoamGripMaterial({ materialRef, ...props }) {
+	materialRef = materialRef ? materialRef : useRef().current;
+	const [colorMap, envMapCube, normalMap, aoMap, specularMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const envMapCube = cloudEnvMap();
+		const colorMap = textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-albedo.png"));
+		const normalMap = textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-normal.png"))
+		const aoMap = textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-ao.png"))
+		const specularMap = textureLoader.load(assetPathShared("textures/foam-grip/foam-grip-albedo.png"))
+		return [colorMap, envMapCube, normalMap, aoMap, specularMap]
+	});
+
+	// const textureCube = loader.load(Array(6).fill('Barce_Rooftop.png'));
+	return <meshPhongMaterial
+		{...props}
+		ref={materialRef}
+		lights
+		receiveShadow
+		castShadow
+		map={colorMap}
+		color={0xffffff}
+		specular={0xf0f000}
+		shininess={100}
+		skinning={true}
+		normalMap={normalMap}
+		aoMap={aoMap}
+		specularMap={specularMap}
+		envMap={envMapCube}
+		refractionRatio={1.0}
+		combine={THREE.AddOperation}
+
+	/>
+}
 
 // Shader built in the style of: https://medium.com/@pailhead011/extending-three-js-materials-with-glsl-78ea7bbb9270
 // seems fun: https://www.clicktorelease.com/blog/creating-spherical-environment-mapping-shader/
@@ -160,16 +202,7 @@ export function CloudMaterial({ materialRef, ...props }) {
 		const colorMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_basecolor.png"));
 		const normalMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_normal.png"));
 		const metalnessMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_metallic.png"));
-		const envMap = new THREE.CubeTextureLoader()
-			.setPath(assetPathShared('textures/env-maps/bluecloud/'))
-			.load([
-				'bluecloud_bk.jpg',
-				'bluecloud_dn.jpg',
-				'bluecloud_ft.jpg',
-				'bluecloud_lf.jpg',
-				'bluecloud_rt.jpg',
-				'bluecloud_up.jpg',
-			]);
+		const envMap = cloudEnvMap();
 		return [colorMap, normalMap, metalnessMap, envMap]
 	});
 	return <meshPhongMaterial
@@ -191,6 +224,94 @@ export function CloudMaterial({ materialRef, ...props }) {
 	/>
 }
 
+export function Ground29Material({ materialRef, ...props }) {
+	// https://www.cc0textures.com/view.php?tex=Ground29
+	const [colorMap, normalMap, aoMap, roughnessMap, displacementMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const colorMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_col.jpg"))
+		const normalMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_nrm.jpg"))
+		const aoMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_ao.jpg"))
+		const roughnessMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_rgh.jpg"))
+		const displacementMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_disp.jpg"))
+		const textureMaps = [colorMap, normalMap, aoMap, roughnessMap, displacementMap]
+		return textureMaps.map(textureMap => {
+			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+			textureMap.offset.set(0, 0);
+			textureMap.repeat.set(3, 3);
+			return textureMap;
+		})
+	});
+	return <meshStandardMaterial
+		{...props}
+		ref={materialRef}
+		lights
+		receiveShadow
+		// castShadow
+		map={colorMap}
+		normalMap={normalMap}
+		aoMap={aoMap}
+		roughnessMap={roughnessMap}
+		displacementScale={props.displaceScale || .1} // TODO play around
+		displacementBias={props.displacementBias || -.01}
+		displacementMap={displacementMap}
+	/>
+}
+
+export function Facade12Material({ materialRef, ...props }) {
+	// https://www.cc0textures.com/view.php?tex=Facade12
+
+	const [colorMap, normalMap, emissiveMap, roughnessMap, displacementMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const colorMap = textureLoader.load(assetPathShared("textures/facade12/Facade12_col.jpg"))
+		const normalMap = textureLoader.load(assetPathShared("textures/facade12/Facade12_nrm.jpg"))
+		const emissiveMap = textureLoader.load(assetPathShared("textures/facade12/Facade12_emi.jpg"))
+		const roughnessMap = textureLoader.load(assetPathShared("textures/facade12/Facade12_rgh.jpg"))
+		const displacementMap = textureLoader.load(assetPathShared("textures/facade12/Facade12_disp.jpg"))
+		const textureMaps = [colorMap, normalMap, emissiveMap, roughnessMap, displacementMap]
+		return textureMaps.map(textureMap => {
+			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+			textureMap.offset.set(0, 0);
+			textureMap.repeat.set(3, 3);
+			return textureMap;
+		})
+	})
+
+	return <meshStandardMaterial
+		{...props}
+		ref={materialRef}
+		lights
+		receiveShadow
+		castShadow
+		map={colorMap}
+		normalMap={normalMap}
+		emissiveMap={emissiveMap}
+		roughnessMap={roughnessMap}
+	// displacementMap={displacementMap}
+	/>
+}
+
+export function Windows1Material({ materialRef, ...props }) {
+	const [colorMap, envMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const colorMap = textureLoader.load(assetPathShared("textures/windows/windows1.png"))
+		colorMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
+		colorMap.offset.set(0, 0);
+		colorMap.repeat.set(16, 16);
+		const envMap = cloudEnvMap();
+		return [colorMap, envMap];
+	});
+	return <meshStandardMaterial
+		{...props}
+		ref={materialRef}
+		lights
+		receiveShadow
+		castShadow
+		map={colorMap}
+		envMap={envMap}
+	// color={0xff0000}
+	/>
+}
+
 export function TronMaterial({ materialRef, bpm, side }) {
 	materialRef = materialRef ? materialRef : useRef().current;
 	const BPM = 120; // TODO not passing down
@@ -206,7 +327,7 @@ export function TronMaterial({ materialRef, bpm, side }) {
 		return {
 			uTime: { value: 0 },
 			uCurCenter: { value: camera.position },
-			uResolution: {value: new THREE.Vector2(size.width, size.length)},
+			uResolution: { value: new THREE.Vector2(size.width, size.length) },
 			// uLightPosition: {value: camera.children[0].position},
 			uBPM: { value: BPM },// TODO bpm },
 		}
@@ -223,11 +344,11 @@ export function TronMaterial({ materialRef, bpm, side }) {
 }
 
 
-export function customDepthMaterial(material){
-	return new THREE.ShaderMaterial( {
+export function customDepthMaterial(material) {
+	return new THREE.ShaderMaterial({
 		vertexShader: vsDepthVertex,
 		fragmentShader: THREE.ShaderLib.basic.fragmentShader,
 		uniforms: material.uniforms
-	} );
+	});
 
 }

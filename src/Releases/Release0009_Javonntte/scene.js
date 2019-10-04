@@ -2,7 +2,10 @@ import React, { useEffect } from 'react';
 import { useResource, useThree, useRender } from 'react-three-fiber';
 import * as THREE from 'three';
 import { useGLTF } from "../../Utils/hooks";
-import { CloudMaterial } from '../../Utils/materials';
+import {
+    Facade12Material, 
+    CloudMaterial, FoamGripMaterial, Windows1Material
+} from '../../Utils/materials';
 import { onBuildingsLoaded } from "./buildings";
 import { Camera } from './camera';
 import * as C from "./constants";
@@ -22,6 +25,10 @@ export function Scene({ track }) {
     const { camera, canvas, gl } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
+    const [foamGripMaterialRef, foamGripMaterial] = useResource();
+    const [windows1MaterialRef, windows1Material] = useResource();
+    const [facade12MaterialRef, facade12Material] = useResource();
+    const [ground29MaterialRef, ground29Material] = useResource();
     const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS - C.WORLD_RADIUS * .5, C.WORLD_RADIUS - C.WORLD_RADIUS * .1);
 
     useEffect(() => {
@@ -30,22 +37,27 @@ export function Scene({ track }) {
         camera.lookAt(lookAt);
     }, [buildingGeometries])
 
+
     return (
         <>
             {/* use one material for all buildings  */}
+            <FoamGripMaterial materialRef={foamGripMaterialRef} />
             <CloudMaterial materialRef={cloudMaterialRef} />
+            <Windows1Material materialRef={windows1MaterialRef} />
+            <Facade12Material materialRef={facade12MaterialRef} />
+            {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
             <Camera
                 fov={70}
                 near={1}
                 far={5000}
                 lightProps={{
-                    intensity: 1,
-                    penumbra: 0.01,
-                    distance: 60,
-                    shadowCameraNear: 10,
+                    intensity: 1.1,
+                    // penumbra: 0.1,
+                    distance: 100,
+                    shadowCameraNear: 1,
                     shadowCameraFar: 200,
-                    shadowMapSizeWidth: 2048,
-                    shadowMapSizeHeight: 2048,
+                    shadowMapSizeWidth: 512,
+                    shadowMapSizeHeight: 512,
                 }}
             />
             <Controls
@@ -61,16 +73,16 @@ export function Scene({ track }) {
                 radius={C.WORLD_RADIUS}
             // colors={track.theme.starColors}
             />
-            {cloudMaterial && !loadingBuildings && track &&
+            {facade12Material && windows1Material && foamGripMaterial && cloudMaterial && !loadingBuildings ?
                 <World
                     track={track}
                     // startPos={startPos}
                     buildings={{
                         geometries: buildingGeometries,
-                        material: cloudMaterial,
+                        materials: [facade12Material, windows1Material, foamGripMaterial, cloudMaterial],
                         loaded: !loadingBuildings,
                     }}
-                />
+                /> : null
             }
         </>
     );

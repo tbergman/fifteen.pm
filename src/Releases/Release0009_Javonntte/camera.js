@@ -23,11 +23,13 @@ export function Camera({ fov, near, far, lightProps }) {
         near={near}
         far={far}
     >
-        <spotLight
+        <pointLight
+        onUpdate={self => self.lookAt(new THREE.Vector3(0, 0, 1))}
             ref={spotLight}
             castShadow
+            position={new THREE.Vector3(0, 0, 0)}
             intensity={lightProps.intensity}
-            penumbra={lightProps.penumbra}
+            // penumbra={lightProps.penumbra}
             distance={lightProps.distance}
             shadow-camera-near={lightProps.shadowCameraNear}
             shadow-camera-far={lightProps.shadowCameraFar}

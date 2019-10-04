@@ -12,8 +12,8 @@ function createInstance(elements, material) {
         material,
         totalInstances,              // instance count
         false,                       //is it dynamic
-        true,                        //does it have color
-        true,                        //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
+        // true,                        //does it have color
+        // true,                        //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
     );
     var _v3 = new THREE.Vector3();
     var randCol = function () {
@@ -31,14 +31,14 @@ function createInstance(elements, material) {
         const centroid = elements[i].centroid;
         cluster.setPositionAt(i, _v3.set(centroid.x, centroid.y, centroid.z));
         cluster.setScaleAt(i, _v3.set(1, 1, 1));
-        cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()));
+        // cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()));
     }
     return cluster;
 }
 
 // TODO maybe the material ref should be assigned to the incoming geometries array of objects
 // TODO combine formation-generating props together
-export function generateWorldInstanceGeometries(sphereGeometry, buildings, neighborhoodProps) {
+export function generateInstanceGeometries(sphereGeometry, buildings, neighborhoodProps) {
     const elementsByName = {};
     const instancesByName = {};
     // build up a lookup of each geometry by name
@@ -54,7 +54,7 @@ export function generateWorldInstanceGeometries(sphereGeometry, buildings, neigh
     // create an instance geometry for each geometry type that includes all locations on each formation for that geometry
     Object.keys(elementsByName).forEach((name) => {
         if (elementsByName[name].length) {
-            instancesByName[name] = createInstance(elementsByName[name], buildings.material);
+            instancesByName[name] = createInstance(elementsByName[name], buildings.materials[THREE.Math.randInt(0, buildings.materials.length - 1)]);
         }
     });
     return instancesByName;

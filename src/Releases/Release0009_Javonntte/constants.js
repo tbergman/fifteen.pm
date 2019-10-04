@@ -4,7 +4,6 @@ import { isMobile } from '../../Utils/BrowserDetection'
 import { assetPath9 } from './utils';
 
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
-export const EXTRA_LARGE = "xlarge";
 export const LARGE = "large";
 export const MEDIUM = "medium";
 export const SMALL = "small";
@@ -14,7 +13,6 @@ export const WIDTH_BUCKETS = [
     SMALL,
     MEDIUM,
     LARGE,
-    EXTRA_LARGE
 ]
 export const HEIGHT_BUCKETS = [
     SHORT,

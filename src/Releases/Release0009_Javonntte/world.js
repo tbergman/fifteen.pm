@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRender, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { CloudMaterial, TronMaterial } from '../../Utils/materials';
+import { CloudMaterial, Ground29Material, TronMaterial } from '../../Utils/materials';
 import { SphereTiles } from '../../Utils/SphereTiles';
 import * as C from './constants';
 import "./index.css";
 import { Stars } from './stars';
-import { generateWorldInstanceGeometries } from "./instances";
+import { generateInstanceGeometries as generateInstanceGeometries } from "./instances";
 
 // TODO tilt and rotationSpeed
 export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
@@ -60,21 +60,18 @@ function AtmosphereGlow({ radius }) {
 
 export function WorldSurface({ geometry, bpm }) {
     const [tronMaterialRef, tronMaterial] = useResource();
-    const [cloudMaterialRef, cloudMaterial] = useResource();
+    const [ground29MaterialRef, ground29Material] = useResource();
     return <>
         <TronMaterial
             materialRef={tronMaterialRef}
             bpm={bpm}
             side={THREE.BackSide}
         />
-        <CloudMaterial
-            materialRef={cloudMaterialRef}
-            // color={0xfff0f0}
+        <Ground29Material
+            materialRef={ground29MaterialRef}
             side={THREE.FrontSide}
-        // emissive={0x000000}
-        // opacity={.1}
         />
-        {tronMaterial && cloudMaterial &&
+        {tronMaterial && ground29Material &&
             <group>
                 <mesh
                     geometry={geometry}
@@ -84,7 +81,7 @@ export function WorldSurface({ geometry, bpm }) {
                 />
                 <mesh
                     geometry={geometry}
-                    material={cloudMaterial}
+                    material={ground29Material}
                 // receiveShadow
                 // material-opacity={0.1}
                 // material-reflectivity={.1}
@@ -113,7 +110,7 @@ export function World({ track, buildings, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded) {
-            tileFormations.current = generateWorldInstanceGeometries(sphereGeometry, buildings, C.NEIGHBORHOOD_PROPS);
+            tileFormations.current = generateInstanceGeometries(sphereGeometry, buildings, C.NEIGHBORHOOD_PROPS);
         }
     }, [])
 
@@ -142,7 +139,7 @@ export function World({ track, buildings, ...props }) {
 
     useRender(() => {
         if (worldRef.current) {
-            worldRef.current.rotation.x += .001;
+            // worldRef.current.rotation.x += .001;
         } 
     })
 

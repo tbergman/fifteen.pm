@@ -16,12 +16,11 @@ export function groupBuildingGeometries(geometries) {
         small: cloneDeep(maxHeightBucket),
         medium: cloneDeep(maxHeightBucket),
         large: cloneDeep(maxHeightBucket),
-        xlarge: cloneDeep(maxHeightBucket),
     }
     const grouped = maxWidthBucket;
     geometries.forEach(geometry => {
         // Not using categories
-        const [maxWidthBucket, maxHeightBucket, category] = geometry.name.split("_");
+        const [maxWidthBucket, maxHeightBucket, category, name] = geometry.name.split("_");
         grouped[maxWidthBucket][maxHeightBucket].push(geometry);
     })
     return grouped;
