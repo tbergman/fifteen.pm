@@ -178,7 +178,7 @@ export function FoamGripMaterial({ materialRef, ...props }) {
 		receiveShadow
 		castShadow
 		map={colorMap}
-		color={0xffffff}
+		color={props.color || 0xffffff}
 		specular={0xf0f000}
 		shininess={100}
 		skinning={true}
@@ -283,19 +283,36 @@ export function Ground29Material({ materialRef, ...props }) {
 			return textureMap;
 		})
 	});
+
+	// return <meshLambertMaterial({
+	// 	color: 0xaa2929,
+	// 	// specular: 0x030303,
+	// 	wireframeLinewidth: 10,
+	// 	alphaTest: 0.5,
+	// 	transparent: true,
+	// 	wireframe: true,
+	//   });
+	// />
+	
+	// return <meshStandardMaterial
 	return <meshStandardMaterial
 		{...props}
 		ref={materialRef}
 		// lights
+		wireframeLineWidth={10}
+		alphaTest={0.5}
+		transparent
+		wireframe
 		receiveShadow
 		// castShadow
-		map={colorMap}
-		normalMap={normalMap}
-		aoMap={aoMap}
-		roughnessMap={roughnessMap}
-		displacementScale={props.displacementScale || .01} // TODO play around
-		displacementBias={props.displacementBias || 0}//-.01}
-		displacementMap={displacementMap}
+		// color={props.color || 0xf0f0f0}
+		// map={colorMap}
+		// normalMap={normalMap}
+		// aoMap={aoMap}
+		// roughnessMap={roughnessMap}
+		// displacementScale={props.displacementScale || .01} // TODO play around
+		// displacementBias={props.displacementBias || 0}//-.01}
+		// displacementMap={displacementMap}
 	/>
 }
 

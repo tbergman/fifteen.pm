@@ -27,6 +27,13 @@ export function shuffleArray(a) {
 }
 
 export function selectNRandomFromArray(arr, numElts) {
+    let newArr = [];
+    if (arr.length < numElts) {
+        for (let i = 0; i < numElts - arr.length; i++) {
+            newArr.push(arr[THREE.Math.randInt(0, arr.length - 1)])
+        }
+    }
+    arr.push(...newArr);
     const shuffledGeometries = shuffleArray(arr);
     const randArr = []
     for (let i = 0; i < numElts; i++) {
@@ -34,6 +41,7 @@ export function selectNRandomFromArray(arr, numElts) {
     }
     return randArr;
 }
+
 /*
 Returns a random point of a sphere, evenly distributed over the sphere.
 The sphere is centered at (x0,y0,z0) with the passed in radius.

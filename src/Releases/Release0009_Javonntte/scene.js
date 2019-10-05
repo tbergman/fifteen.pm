@@ -25,7 +25,7 @@ export function Scene({ track }) {
        Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
        (For instance: a complicated geometry.)
      */
-    const { camera, canvas, gl } = useThree();
+    const { camera, canvas, scene } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const [foamGripMaterialRef, foamGripMaterial] = useResource();
@@ -36,6 +36,7 @@ export function Scene({ track }) {
     const [metal03MaterialRef, metal03Material] = useResource();
     const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS - C.WORLD_RADIUS * .5, C.WORLD_RADIUS - C.WORLD_RADIUS * .1);
 
+    useEffect(() => {scene.background = new THREE.Color("white")});
     useEffect(() => {
         // These actions must occur after buildings load.
         camera.position.copy(C.START_POS);
@@ -46,7 +47,7 @@ export function Scene({ track }) {
     return (
         <>
             {/* use one material for all buildings  */}
-            <FoamGripMaterial materialRef={foamGripMaterialRef} />
+            <FoamGripMaterial materialRef={foamGripMaterialRef} color={0x0000af} />
             <CloudMaterial materialRef={cloudMaterialRef} emissive={0xd4af37} />
             <Windows1Material materialRef={windows1MaterialRef} />
             <Facade10Material materialRef={facade10MaterialRef} />
@@ -80,17 +81,16 @@ export function Scene({ track }) {
                 dragToLook={false}
             />
             <FixedLights />
-            <Stars
+            {/* <Stars
                 radius={C.WORLD_RADIUS}
-            // colors={track.theme.starColors}
-            />
-            {facade04Material && facade12Material && facade10Material && !loadingBuildings ?
+            /> */}
+            {foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
                 <World
                     track={track}
                     // startPos={startPos}
                     buildings={{
                         geometries: buildingGeometries,
-                        materials: [facade04Material, facade10Material, facade12Material],//[metal03Material, facade12Material, foamGripMaterial],
+                        materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
                         loaded: !loadingBuildings,
                     }}
                 /> : null

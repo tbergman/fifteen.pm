@@ -40,6 +40,8 @@ export const useKDTree = (tiles) => {
     return [loading, kdTree]
 }
 
+
+// TODO This belongs as a method of a SphereTiles object that is refactored from ./tiles/generateTiles
 // frustum culling widen buffer --> https://stackoverflow.com/questions/54826600/expand-scale-camera-frustum
 export function findNearest(position, kdTree, numMatches, maxDistance, tileLookup) {
     const matchingTiles = [];
@@ -51,7 +53,8 @@ export function findNearest(position, kdTree, numMatches, maxDistance, tileLooku
         const objectPoint = new THREE.Vector3().fromArray(kdNode[0].obj);
         const tId = tileId(objectPoint);
         const tile = tileLookup[tId];
-        const dist = objectPoint.distanceTo(position);
+        // the distance is not the same as dist = objectPoint.distanceTo(position); i think it's normalized from 0-100
+        const dist = kdNode[1];
         if (dist > farthestMatch) farthestMatch = dist;
         // Sometimes tile is undefined because of floating point differences between kdTree results and original vals
         if (tile) {

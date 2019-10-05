@@ -11,8 +11,8 @@ export const TALL = "tall";
 export const SHORT = "short";
 export const WIDTH_BUCKETS = [
     SMALL,
-    MEDIUM,
-    LARGE,
+    // MEDIUM,
+    // LARGE,
 ]
 export const HEIGHT_BUCKETS = [
     SHORT,
@@ -46,19 +46,20 @@ export const TRACK_LOOKUP = (() => {
     return lookup;
 })();
 const RADIUS_DIVISOR = isMobile ? 60 : 120;
-export const WORLD_RADIUS = Math.floor(window.innerWidth / RADIUS_DIVISOR);
-export const SIDES = Math.floor(WORLD_RADIUS * (isMobile ? 1.6 : 2.6));
-export const TIERS = Math.floor(WORLD_RADIUS * (isMobile ? .8 : .8));
-export const MAX_WORLD_FACE_HEIGHT = .5;
+export const WORLD_RADIUS = 48; //Math.floor(window.innerWidth / RADIUS_DIVISOR);
+export const SIDES = Math.floor(WORLD_RADIUS * (isMobile ? 1.6 : 1));
+export const TIERS = Math.floor(WORLD_RADIUS * (isMobile ? .8 : 1));
+export const MAX_WORLD_FACE_HEIGHT = .1;
+console.log("WORLD RADIUS", WORLD_RADIUS);
 export const NEIGHBORHOOD_PROPS = {
-    count: WORLD_RADIUS * (isMobile ? 2. : 4.),
-    maxSize: isMobile ? Math.floor(WORLD_RADIUS / 2) : Math.floor(WORLD_RADIUS * 2),
+    count: 2100,//WORLD_RADIUS * WORLD_RADIUS, //WORLD_RADIUS * (isMobile ? 2. : 2.),
+    maxSize: isMobile ? Math.floor(WORLD_RADIUS / 2) : Math.floor(WORLD_RADIUS * 20),
     maxRadius: WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
 }
 
 const STARTING_Z = isMobile ? WORLD_RADIUS * 5.13 : WORLD_RADIUS * 1.1;
 export const START_POS = new THREE.Vector3(0, 0,STARTING_Z);
-export const BASE_SCALE = isMobile ? 1.3 : 1.;
+export const BASE_SCALE = isMobile ? 1.3 : .6;
 export const CAMERA_DISTANCE_THRESHOLD = isMobile ? START_POS.z * 1.1 : WORLD_RADIUS + WORLD_RADIUS * .15;
 // max camera distance from center
 export const MAX_CAMERA_DIST = WORLD_RADIUS - 1.5;// * 1.001;
