@@ -1,8 +1,24 @@
 import * as THREE from 'three';
 import { generateFormations } from './formations';
+import { cloneDeep } from 'lodash';
 
+import instancedMesh from 'three-instanced-mesh';
+instancedMesh(THREE);
 
-require('three-instanced-mesh')(THREE);
+function updateCluster(cluster, normal, centroid, index, vector3) {
+    var obj = new THREE.Object3D();
+    obj.lookAt(normal);
+    obj.updateMatrix();
+    const quaternion = new THREE.Quaternion().setFromRotationMatrix(obj.matrix);
+    // TODO include random z rotation
+    // const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
+    // const quaternion = new THREE.Quaternion().setFromEuler(rotation);
+    cluster.setQuaternionAt(index, quaternion);
+    cluster.setPositionAt(index, vector3.set(centroid.x, centroid.y, centroid.z));
+    cluster.setScaleAt(index, vector3.set(1, 1, 1));
+    // cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()));
+
+}
 
 function createInstance(elements, material) {
     const totalInstances = elements.length;
@@ -12,26 +28,16 @@ function createInstance(elements, material) {
         material,
         totalInstances,              // instance count
         false,                       //is it dynamic
-        // true,                        //does it have color
-        // true,                        //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
+        // true,                     //does it have color
+        // true,                     //uniform scale, if you know that the placement function will not do a non-uniform scale, this will optimize the shader
     );
     var _v3 = new THREE.Vector3();
     var randCol = function () {
         return Math.random();
     };
     for (let i = 0; i < totalInstances; i++) {
-        var obj = new THREE.Object3D();
-        obj.lookAt(elements[i].normal);
-        obj.updateMatrix();
-        const quaternion = new THREE.Quaternion().setFromRotationMatrix(obj.matrix);
-        // TODO include random z rotation
-        // const rotation = new THREE.Euler(0, 0, THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI));
-        // const quaternion = new THREE.Quaternion().setFromEuler(rotation);
-        cluster.setQuaternionAt(i, quaternion);
-        const centroid = elements[i].centroid;
-        cluster.setPositionAt(i, _v3.set(centroid.x, centroid.y, centroid.z));
-        cluster.setScaleAt(i, _v3.set(1, 1, 1));
-        // cluster.setColorAt(i, new THREE.Color(randCol(), randCol(), randCol()));
+        updateCluster(cluster, elements[i].normal, elements[i].centroid, i, _v3)
+        // updateCluster(cluster, elements[i].normal.multiplyScalar(-1), elements[i].centroid, i, _v3)
     }
     cluster.castShadow = true;
     return cluster;

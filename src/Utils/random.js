@@ -34,12 +34,7 @@ export function selectNRandomFromArray(arr, numElts) {
         }
     }
     arr.push(...newArr);
-    const shuffledGeometries = shuffleArray(arr);
-    const randArr = []
-    for (let i = 0; i < numElts; i++) {
-        randArr.push(shuffledGeometries[i])
-    }
-    return randArr;
+    return shuffleArray(arr);
 }
 
 /*

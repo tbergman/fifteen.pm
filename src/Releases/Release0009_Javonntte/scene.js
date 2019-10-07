@@ -14,9 +14,9 @@ import * as C from "./constants";
 import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
-import { World } from './world';
+import { SphereWorld } from './world';
 import { Stars } from './stars';
-import { SphereGeometry } from 'three-full';
+
 export function Scene({ track }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
@@ -36,13 +36,14 @@ export function Scene({ track }) {
     const [metal03MaterialRef, metal03Material] = useResource();
     const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS - C.WORLD_RADIUS * .5, C.WORLD_RADIUS - C.WORLD_RADIUS * .1);
 
-    useEffect(() => {scene.background = new THREE.Color("white")});
+    useEffect(() => { scene.background = new THREE.Color("white") });
     useEffect(() => {
         // These actions must occur after buildings load.
         camera.position.copy(C.START_POS);
         camera.lookAt(lookAt);
-    }, [buildingGeometries])
+        // scene.fog = new THREE.FogExp2(0x0000ff, 0.1);
 
+    }, [buildingGeometries])
 
     return (
         <>
@@ -85,15 +86,25 @@ export function Scene({ track }) {
                 radius={C.WORLD_RADIUS}
             /> */}
             {foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
-                <World
-                    track={track}
-                    // startPos={startPos}
-                    buildings={{
-                        geometries: buildingGeometries,
-                        materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
-                        loaded: !loadingBuildings,
-                    }}
-                /> : null
+                <>
+                    <SphereWorld
+                        track={track}
+                        // startPos={startPos}
+                        buildings={{
+                            geometries: buildingGeometries,
+                            materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
+                            loaded: !loadingBuildings,
+                        }}
+                    />
+                    {/* <FlatWorld
+                        buildings={{
+                            geometries: buildingGeometries,
+                            materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
+                            loaded: !loadingBuildings,
+                        }}
+                    /> */}
+                </> : null
+
             }
         </>
     );

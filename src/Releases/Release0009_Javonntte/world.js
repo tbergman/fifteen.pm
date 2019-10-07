@@ -10,38 +10,38 @@ import { generateInstanceGeometries as generateInstanceGeometries } from "./inst
 
 // TODO tilt and rotationSpeed
 export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
-    const geometry = new THREE.SphereGeometry(radius);//, sides, tiers);
+    const geometry = new THREE.SphereGeometry(radius, sides, tiers);
     // variate sphere heights
-    // var vertexIndex;
-    // var vertexVector = new THREE.Vector3();
-    // var nextVertexVector = new THREE.Vector3();
-    // var firstVertexVector = new THREE.Vector3();
-    // var offset = new THREE.Vector3();
-    // var currentTier = 1;
-    // var lerpValue = 0.5;
-    // var heightValue;
-    // for (var j = 1; j < tiers - 2; j++) {
-    //     currentTier = j;
-    //     for (var i = 0; i < sides; i++) {
-    //         vertexIndex = (currentTier * sides) + 1;
-    //         vertexVector = geometry.vertices[i + vertexIndex].clone();
-    //         if (j % 2 !== 0) {
-    //             if (i == 0) {
-    //                 firstVertexVector = vertexVector.clone();
-    //             }
-    //             nextVertexVector = geometry.vertices[i + vertexIndex + 1].clone();
-    //             if (i == sides - 1) {
-    //                 nextVertexVector = firstVertexVector;
-    //             }
-    //             lerpValue = (Math.random() * (0.75 - 0.25)) + 0.25;
-    //             vertexVector.lerp(nextVertexVector, lerpValue);
-    //         }
-    //         heightValue = (Math.random() * maxHeight) - (maxHeight / 2);
-    //         offset = vertexVector.clone().normalize().multiplyScalar(heightValue);
-    //         geometry.vertices[i + vertexIndex] = (vertexVector.add(offset));
-    //     }
-    // }
-    // geometry.verticesNeedUpdate = true;
+    var vertexIndex;
+    var vertexVector = new THREE.Vector3();
+    var nextVertexVector = new THREE.Vector3();
+    var firstVertexVector = new THREE.Vector3();
+    var offset = new THREE.Vector3();
+    var currentTier = 1;
+    var lerpValue = 0.5;
+    var heightValue;
+    for (var j = 1; j < tiers - 2; j++) {
+        currentTier = j;
+        for (var i = 0; i < sides; i++) {
+            vertexIndex = (currentTier * sides) + 1;
+            vertexVector = geometry.vertices[i + vertexIndex].clone();
+            if (j % 2 !== 0) {
+                if (i == 0) {
+                    firstVertexVector = vertexVector.clone();
+                }
+                nextVertexVector = geometry.vertices[i + vertexIndex + 1].clone();
+                if (i == sides - 1) {
+                    nextVertexVector = firstVertexVector;
+                }
+                lerpValue = (Math.random() * (0.75 - 0.25)) + 0.25;
+                vertexVector.lerp(nextVertexVector, lerpValue);
+            }
+            heightValue = (Math.random() * maxHeight) - (maxHeight / 2);
+            offset = vertexVector.clone().normalize().multiplyScalar(heightValue);
+            geometry.vertices[i + vertexIndex] = (vertexVector.add(offset));
+        }
+    }
+    geometry.verticesNeedUpdate = true;
     geometry.computeBoundingSphere();
     return geometry;
 }
@@ -82,22 +82,20 @@ export function WorldSurface({ geometry, bpm }) {
                     geometry={geometry}
                     material={ground29Material}
                     receiveShadow
-                // material-opacity={0.1}
-                // material-reflectivity={.1}
                 />
             </group>
         }
     </>
 }
 
-export function World({ track, buildings, ...props }) {
+export function SphereWorld({ track, buildings, ...props }) {
     const { camera, scene } = useThree();
     const [worldRef, world] = useResource();
     const [curTrackName, setCurTrackName] = useState();
-    const tileFormations = useRef();
+    const outerTileFormations = useRef();
+    const innerTileFormations = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
-    const sphereGeometry = useMemo(() => {
-        //numStartingPoints, neighborhoodSize, neighborhoodRadius;
+    const outerSphereGeometry = useMemo(() => {
         return generateWorldGeometry(
             C.WORLD_RADIUS,
             C.SIDES,
@@ -106,10 +104,21 @@ export function World({ track, buildings, ...props }) {
         );
     });
 
+    const innerSphereGeometry = useMemo(() => {
+        return generateWorldGeometry(
+            Math.floor(C.WORLD_RADIUS / 2),
+            Math.floor(C.SIDES / 2),
+            Math.floor(C.TIERS / 2),
+            C.MAX_WORLD_FACE_HEIGHT / 2,
+        );
+    })
+
 
     useEffect(() => {
         if (buildings.loaded) {
-            tileFormations.current = generateInstanceGeometries(sphereGeometry, buildings, C.NEIGHBORHOOD_PROPS);
+            // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
+            outerTileFormations.current = generateInstanceGeometries(outerSphereGeometry, buildings, C.NEIGHBORHOOD_PROPS);
+            innerTileFormations.current = generateInstanceGeometries(innerSphereGeometry, buildings, C.NEIGHBORHOOD_PROPS)
         }
     }, [])
 
@@ -136,33 +145,32 @@ export function World({ track, buildings, ...props }) {
 
     return <group ref={worldRef}>
         {world && <>
+            {/* <WorldSurface
+                geometry={innerSphereGeometry}
+                bpm={track && track.bpm}
+            /> */}
             <WorldSurface
-                geometry={sphereGeometry}
+                geometry={outerSphereGeometry}
                 bpm={track && track.bpm}
             />
-            {tileFormations.current &&
-                Object.keys(tileFormations.current).map(tId => {
+
+            {outerTileFormations.current &&
+                Object.keys(outerTileFormations.current).map(tId => {
                     return <primitive key={tId}
-                        object={tileFormations.current[tId]}
+                        object={outerTileFormations.current[tId]}
                     />
                 })
             }
-            {/* {renderTiles ?
-                <SphereTiles
-                    rotation={worldRef.current.rotation}
-                    sphereGeometry={sphereGeometry}
-                    tileComponent={SkyCityTile}
-                    tileElements={{
-                       // buildings: buildings // TODO
-                        formations: tileFormations.current,
-                    }}
-                    {...props}
-                />
-                :
-                <AtmosphereGlow
-                    radius={distThreshold - .2}
-                />
+            {/* {innerTileFormations.current &&
+                Object.keys(innerTileFormations.current).map(tId => {
+                    return <primitive key={tId}
+                        object={innerTileFormations.current[tId]}
+                    />
+                })
             } */}
+            {/* <AtmosphereGlow
+                    // radius={distThreshold - .2}
+                /> */}
         </>
         }
     </group>
