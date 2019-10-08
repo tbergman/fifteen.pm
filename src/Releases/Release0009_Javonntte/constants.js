@@ -45,24 +45,25 @@ export const TRACK_LOOKUP = (() => {
     });
     return lookup;
 })();
-const RADIUS_DIVISOR = isMobile ? 60 : 120;
-export const WORLD_RADIUS = Math.floor(window.innerWidth / RADIUS_DIVISOR);
-console.log("radius", WORLD_RADIUS);
-export const SIDES = Math.floor(WORLD_RADIUS * (isMobile ? 1.6 : 1.6));
-export const TIERS = Math.floor(WORLD_RADIUS * (isMobile ? .8 : 1.6));
-export const MAX_WORLD_FACE_HEIGHT = .1;
+const RADIUS_DIVISOR = isMobile ? 60 : 140;
+export const ASTEROID_MAX_RADIUS = Math.floor(window.innerWidth / RADIUS_DIVISOR);
+console.log("radius", ASTEROID_MAX_RADIUS);
+export const ASTEROID_MAX_SIDES = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? 1.6 : 1.6));
+export const ASTEROID_MAX_TIERS = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? .8 : 1.6));
+export const ASTEROID_MAX_FACE_HEIGHT = .1;
 export const NEIGHBORHOOD_PROPS = {
     count: 40,//WORLD_RADIUS * WORLD_RADIUS, //WORLD_RADIUS * (isMobile ? 2. : 2.),
-    maxSize: isMobile ? Math.floor(WORLD_RADIUS / 2) : Math.floor(WORLD_RADIUS * 20),
-    maxRadius: WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
+    maxSize: isMobile ? Math.floor(ASTEROID_MAX_RADIUS / 2) : Math.floor(ASTEROID_MAX_RADIUS * 20),
+    maxRadius: ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
 }
 
-const STARTING_Z = isMobile ? WORLD_RADIUS * 5.13 : WORLD_RADIUS * 1.1;
+const STARTING_Z = isMobile ? ASTEROID_MAX_RADIUS * 5.13 : ASTEROID_MAX_RADIUS * 1.1;
 export const START_POS = new THREE.Vector3(0, 0, 0);
 // export const START_POS = new THREE.Vector3(0, 0,STARTING_Z);
 export const BASE_SCALE = isMobile ? 1.3 : .6;
-export const CAMERA_DISTANCE_THRESHOLD = isMobile ? START_POS.z * 1.1 : WORLD_RADIUS + WORLD_RADIUS * .15;
+export const CAMERA_DISTANCE_THRESHOLD = isMobile ? START_POS.z * 1.1 : ASTEROID_MAX_RADIUS + ASTEROID_MAX_RADIUS * .15;
 // max camera distance from center
-export const MAX_CAMERA_DIST = WORLD_RADIUS - 1.5;// * 1.001;
+export const MAX_CAMERA_DIST = ASTEROID_MAX_RADIUS - 1.5;// * 1.001;
 // export const MIN_CAMERA_DIST = WORLD_RADIUS * .88;
 export const WORLD_CENTER = new THREE.Vector3();
+export const NUM_ASTEROIDS = 2;

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useResource, useThree, useRender } from 'react-three-fiber';
 import * as THREE from 'three';
 import { useGLTF } from "../../Utils/hooks";
@@ -14,7 +14,8 @@ import * as C from "./constants";
 import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
-import { SphereWorld } from './world';
+import { AsteroidBelt } from './AsteroidBelt';
+import { generateAstroid } from './asteroids';
 import { Stars } from './stars';
 
 export function Scene({ track }) {
@@ -34,8 +35,23 @@ export function Scene({ track }) {
     const [facade10MaterialRef, facade10Material] = useResource();
     const [facade12MaterialRef, facade12Material] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
-    const lookAt = new THREE.Vector3(0, C.WORLD_RADIUS - C.WORLD_RADIUS * .5, C.WORLD_RADIUS - C.WORLD_RADIUS * .1);
-
+    const lookAt = new THREE.Vector3(0, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .5, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .1);
+    const asteroids = useRef();
+    useEffect(() => {
+        asteroids.current = [];
+        for (let i = 0; i < C.NUM_ASTEROIDS; i++) {
+            asteroids.current.push(
+                generateAstroid(
+                    // TODO parameterize
+                    C.ASTEROID_MAX_RADIUS,
+                    C.ASTEROID_MAX_SIDES,
+                    C.ASTEROID_MAX_TIERS,
+                    C.ASTEROID_MAX_FACE_HEIGHT,
+                    { offset: i * C.ASTEROID_MAX_RADIUS * 4 }
+                )
+            )
+        }
+    }, [])
     useEffect(() => { scene.background = new THREE.Color("white") });
     useEffect(() => {
         // These actions must occur after buildings load.
@@ -74,7 +90,7 @@ export function Scene({ track }) {
                 }}
             />
             <Controls
-                radius={C.WORLD_RADIUS}
+                radius={C.ASTEROID_MAX_RADIUS}
                 movementSpeed={300}
                 domElement={canvas}
                 rollSpeed={Math.PI * 2}
@@ -85,10 +101,11 @@ export function Scene({ track }) {
             {/* <Stars
                 radius={C.WORLD_RADIUS}
             /> */}
-            {foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
+            {asteroids.current && asteroids.current.length == C.NUM_ASTEROIDS && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
                 <>
-                    <SphereWorld
+                    <AsteroidBelt
                         track={track}
+                        asteroids={asteroids.current}
                         // startPos={startPos}
                         buildings={{
                             geometries: buildingGeometries,

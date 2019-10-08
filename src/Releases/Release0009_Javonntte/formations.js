@@ -56,7 +56,7 @@ function format1({ geometries, normal, centroid }) {
 function pickSubdivisionBucket(triangle) {
     const area = triangle.getArea();
     // TODO choose subdivision size based on size of triangle?
-    const ratio = area / C.WORLD_RADIUS;
+    const ratio = area / C.ASTEROID_MAX_RADIUS;
     console.log("RATIO", ratio);
     // if (ratio > .25) return 36;
     // if (ratio > .2) return [6, 36][THREE.Math.randInt(0, 1)];
@@ -65,8 +65,8 @@ function pickSubdivisionBucket(triangle) {
 
 function pickFootprint(tile) {
     // TODO don't populate if it's this close to pole
-    const poleLimit = C.WORLD_RADIUS - C.WORLD_RADIUS * .99 + Math.random() * .1;
-    const distToPole = C.WORLD_RADIUS - Math.abs(tile.centroid.y);
+    const poleLimit = C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .99 + Math.random() * .1;
+    const distToPole = C.ASTEROID_MAX_RADIUS - Math.abs(tile.centroid.y);
     const closeToPole = distToPole < poleLimit;
     return closeToPole ? C.SMALL : C.WIDTH_BUCKETS[THREE.Math.randInt(0, C.WIDTH_BUCKETS.length - 1)];
 }
@@ -102,10 +102,9 @@ export function generateFormations(surfaceGeometry, geometries, neighborhoodProp
     const formations = {}
     Object.keys(tiles).forEach(tileId => formations[tileId] = []);
     const geometriesByCategory = groupBuildingGeometries(geometries);
-    if (!surfaceGeometry.boundingBox) surfaceGeometry.computeBoundingBox();
     const sphereCenter = new THREE.Vector3();
     surfaceGeometry.boundingBox.getCenter(sphereCenter);
-    randomPointsOnSphere(C.WORLD_RADIUS, sphereCenter, neighborhoodProps.count).forEach(neighborhoodCentroid => {
+    randomPointsOnSphere(C.ASTEROID_MAX_RADIUS, sphereCenter, neighborhoodProps.count).forEach(neighborhoodCentroid => {
         // TODO oof need to refactor so you can do kdTree.findNearest here
         const [neighborhoodRadius, neighbors] = findNearest(neighborhoodCentroid, kdTree, neighborhoodProps.maxSize, neighborhoodProps.maxRadius, tiles);
         Object.values(neighbors).forEach(neighbor => {

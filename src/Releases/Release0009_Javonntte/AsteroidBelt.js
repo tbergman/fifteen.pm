@@ -7,44 +7,10 @@ import * as C from './constants';
 import "./index.css";
 import { Stars } from './stars';
 import { generateInstanceGeometries as generateInstanceGeometries } from "./instances";
+import NoiseSphereGeometry from '../../Utils/NoiseSphere';
 
-// TODO tilt and rotationSpeed
-export function generateWorldGeometry(radius, sides, tiers, maxHeight) {
-    const geometry = new THREE.SphereGeometry(radius, sides, tiers);
-    // variate sphere heights
-    var vertexIndex;
-    var vertexVector = new THREE.Vector3();
-    var nextVertexVector = new THREE.Vector3();
-    var firstVertexVector = new THREE.Vector3();
-    var offset = new THREE.Vector3();
-    var currentTier = 1;
-    var lerpValue = 0.5;
-    var heightValue;
-    for (var j = 1; j < tiers - 2; j++) {
-        currentTier = j;
-        for (var i = 0; i < sides; i++) {
-            vertexIndex = (currentTier * sides) + 1;
-            vertexVector = geometry.vertices[i + vertexIndex].clone();
-            if (j % 2 !== 0) {
-                if (i == 0) {
-                    firstVertexVector = vertexVector.clone();
-                }
-                nextVertexVector = geometry.vertices[i + vertexIndex + 1].clone();
-                if (i == sides - 1) {
-                    nextVertexVector = firstVertexVector;
-                }
-                lerpValue = (Math.random() * (0.75 - 0.25)) + 0.25;
-                vertexVector.lerp(nextVertexVector, lerpValue);
-            }
-            heightValue = (Math.random() * maxHeight) - (maxHeight / 2);
-            offset = vertexVector.clone().normalize().multiplyScalar(heightValue);
-            geometry.vertices[i + vertexIndex] = (vertexVector.add(offset));
-        }
-    }
-    geometry.verticesNeedUpdate = true;
-    geometry.computeBoundingSphere();
-    return geometry;
-}
+
+
 
 function AtmosphereGlow({ radius }) {
     const geometry = useMemo(() => new THREE.SphereGeometry(radius, radius / 3, radius / 3))
@@ -58,7 +24,8 @@ function AtmosphereGlow({ radius }) {
     </>
 }
 
-export function WorldSurface({ geometry, bpm }) {
+export function AsteroidSurface({ geometry, bpm }) {
+    console.log("SHOW SURFACE WITH", geometry.vertices[54])
     const [tronMaterialRef, tronMaterial] = useResource();
     const [ground29MaterialRef, ground29Material] = useResource();
     return <>
@@ -88,39 +55,25 @@ export function WorldSurface({ geometry, bpm }) {
     </>
 }
 
-export function SphereWorld({ track, buildings, ...props }) {
+export function AsteroidBelt({ track, asteroids, buildings, ...props }) {
     const { camera, scene } = useThree();
-    const [worldRef, world] = useResource();
+    const [astroidBeltRef, astroidBelt] = useResource();
     const [curTrackName, setCurTrackName] = useState();
-    const outerTileFormations = useRef();
+    const [surfaceRendered, setSurfaceRendered] = useState(false);
+    const tileFormations = useRef();
     const innerTileFormations = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
-    const outerSphereGeometry = useMemo(() => {
-        return generateWorldGeometry(
-            C.WORLD_RADIUS,
-            C.SIDES,
-            C.TIERS,
-            C.MAX_WORLD_FACE_HEIGHT,
-        );
-    });
-
-    const innerSphereGeometry = useMemo(() => {
-        return generateWorldGeometry(
-            Math.floor(C.WORLD_RADIUS / 2),
-            Math.floor(C.SIDES / 2),
-            Math.floor(C.TIERS / 2),
-            C.MAX_WORLD_FACE_HEIGHT / 2,
-        );
-    })
-
 
     useEffect(() => {
-        if (buildings.loaded) {
+        if (buildings.loaded && asteroids.length == C.NUM_ASTEROIDS) {
+
+            tileFormations.current = generateInstanceGeometries(asteroids[0], buildings, C.NEIGHBORHOOD_PROPS); 
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
-            outerTileFormations.current = generateInstanceGeometries(outerSphereGeometry, buildings, C.NEIGHBORHOOD_PROPS);
-            innerTileFormations.current = generateInstanceGeometries(innerSphereGeometry, buildings, C.NEIGHBORHOOD_PROPS)
+            // console.log("GENERATE TILES FORMATIONS WITH:", outerSphereGeometry.vertices[54])
+            // outerTileFormations.current = generateInstanceGeometries(outerSphereGeometry, buildings, C.NEIGHBORHOOD_PROPS);
+            // innerTileFormations.current = generateInstanceGeometries(innerSphereGeometry, buildings, C.NEIGHBORHOOD_PROPS)
         }
-    }, [])
+    })
 
     useEffect(() => {
         if (track.current) {
@@ -138,26 +91,29 @@ export function SphereWorld({ track, buildings, ...props }) {
 
 
     useRender(() => {
-        if (worldRef.current) {
+        if (astroidBeltRef.current) {
             // worldRef.current.rotation.x += .001;
         }
     })
 
-    return <group ref={worldRef}>
-        {world && <>
-            {/* <WorldSurface
-                geometry={innerSphereGeometry}
-                bpm={track && track.bpm}
-            /> */}
-            <WorldSurface
-                geometry={outerSphereGeometry}
-                bpm={track && track.bpm}
-            />
+    return <group ref={astroidBeltRef}>
+        {astroidBelt && <>
 
-            {outerTileFormations.current &&
-                Object.keys(outerTileFormations.current).map(tId => {
+            {asteroids &&
+                asteroids.map((asteroid, idx) => {
+                    return <AsteroidSurface 
+                        key={idx}
+                        geometry={asteroid}
+                        bpm={track && track.bpm}
+                    />
+                })
+            }
+
+            {tileFormations.current &&
+                Object.keys(tileFormations.current).map(tId => {
+                    console.log("MAP:", tId)
                     return <primitive key={tId}
-                        object={outerTileFormations.current[tId]}
+                        object={tileFormations.current[tId]}
                     />
                 })
             }
