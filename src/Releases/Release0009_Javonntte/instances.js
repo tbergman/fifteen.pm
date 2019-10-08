@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { generateFormations } from './formations';
+import { generateFormations, generateFormationsFromFaces } from './formations';
 import { cloneDeep } from 'lodash';
 
 import instancedMesh from 'three-instanced-mesh';
@@ -45,13 +45,13 @@ function createInstance(elements, material) {
 
 // TODO maybe the material ref should be assigned to the incoming geometries array of objects
 // TODO combine formation-generating props together
-export function generateInstanceGeometries(sphereGeometry, buildings, neighborhoodProps) {
+export function generateInstanceGeometriesByName(surfaceGeometry, buildings, neighborhoodProps) {
     const elementsByName = {};
     const instancesByName = {};
     // build up a lookup of each geometry by name
     buildings.geometries.forEach((geometry) => elementsByName[geometry.name] = []);
     // generate formations for all tiles
-    const formations = generateFormations(sphereGeometry, buildings.geometries, neighborhoodProps);
+    const formations = generateFormations(surfaceGeometry, buildings.geometries, neighborhoodProps);
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach((tId) => {
         formations[tId].forEach((element) => {
@@ -65,4 +65,27 @@ export function generateInstanceGeometries(sphereGeometry, buildings, neighborho
         }
     });
     return instancesByName;
+}
+
+// TODO just copying piecemail from the above function; this can all get cleaned up and/or combined
+export function generateInstanceGeometriesFromFaces(faceGroups, vertexGroups, buildings, neighborhoodProps){
+    const elementsByName = {};
+    const instancesByName = {};
+    // build up a lookup of each geometry by name
+    buildings.geometries.forEach((geometry) => elementsByName[geometry.name] = []);
+    // generate formations for all tiles
+    const formations = generateFormationsFromFaces(faceGroups, vertexGroups, buildings.geometries, neighborhoodProps);
+    // add each geometry instance from each tile formation to the elements by name look up
+    Object.keys(formations).forEach((tId) => {
+        formations[tId].forEach((element) => {
+            elementsByName[element.geometry.name].push(element);
+        })
+    });
+    // create an instance geometry for each geometry type that includes all locations on each formation for that geometry
+    Object.keys(elementsByName).forEach((name) => {
+        if (elementsByName[name].length) {
+            instancesByName[name] = createInstance(elementsByName[name], buildings.materials[THREE.Math.randInt(0, buildings.materials.length - 1)]);
+        }
+    });
+    return instancesByName; 
 }

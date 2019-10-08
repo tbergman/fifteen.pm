@@ -93,3 +93,18 @@ export function generateTiles(sphereGeometry) {
     })
     return tiles;
 }
+
+// TODO just copying piecemail from the above function; this can all get cleaned up and/or combined
+export function generateTilesFromFacesAndVertices(faceGroups, vertexGroups) {
+    const tiles = {}
+    faceGroups.forEach((faces, i) => {
+        faces.forEach(face => {
+            const triangle = triangleFromFace(face, vertexGroups[i]);
+            const centroid = faceCentroid(face, vertexGroups[i]);
+            const tile = initFaceTile(face, centroid, triangle);
+            const tId = tileId(centroid);
+            tiles[tId] = tile;
+        })
+    })
+    return tiles;
+}

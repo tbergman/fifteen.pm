@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { faceCentroid, subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromFace, triangleFromVertices } from '../../Utils/geometry';
 import { randomArrayVal, selectNRandomFromArray, randomPointsOnSphere } from '../../Utils/random';
-import { generateTiles } from '../../Utils/SphereTiles';
+import { generateTiles, generateTilesFromFacesAndVertices } from '../../Utils/SphereTiles';
 import { loadKDTree, findNearest } from '../../Utils/KdTree';
 import { groupBuildingGeometries } from './buildings';
 import * as C from './constants';
@@ -29,7 +29,7 @@ function subdivide36(triangleComponents, centroid) {
 }
 
 function formatElement({ triangle, normal, centroid, geometry }) {
-    if (triangle) centroid = centroidFromPoints(triangle.a, triangle.b, triangle.c);    
+    if (triangle) centroid = centroidFromPoints(triangle.a, triangle.b, triangle.c);
     return {
         geometry: geometry,
         centroid: centroid,
@@ -57,7 +57,7 @@ function pickSubdivisionBucket(triangle) {
     const area = triangle.getArea();
     // TODO choose subdivision size based on size of triangle?
     const ratio = area / C.ASTEROID_MAX_RADIUS;
-    console.log("RATIO", ratio);
+    // console.log("RATIO", ratio);
     // if (ratio > .25) return 36;
     // if (ratio > .2) return [6, 36][THREE.Math.randInt(0, 1)];
     return [1, 6, 36][THREE.Math.randInt(0, 2)]
@@ -65,10 +65,11 @@ function pickSubdivisionBucket(triangle) {
 
 function pickFootprint(tile) {
     // TODO don't populate if it's this close to pole
-    const poleLimit = C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .99 + Math.random() * .1;
-    const distToPole = C.ASTEROID_MAX_RADIUS - Math.abs(tile.centroid.y);
-    const closeToPole = distToPole < poleLimit;
-    return closeToPole ? C.SMALL : C.WIDTH_BUCKETS[THREE.Math.randInt(0, C.WIDTH_BUCKETS.length - 1)];
+    // const poleLimit = C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .99 + Math.random() * .1;
+    // const distToPole = C.ASTEROID_MAX_RADIUS - Math.abs(tile.centroid.y);
+    // const closeToPole = distToPole < poleLimit;
+    // return closeToPole ? C.SMALL : C.WIDTH_BUCKETS[THREE.Math.randInt(0, C.WIDTH_BUCKETS.length - 1)];
+    return C.WIDTH_BUCKETS[THREE.Math.randInt(0, C.WIDTH_BUCKETS.length - 1)];
 }
 
 function pickHeight(tile, neighborhoodCentroid, neighborhoodRadius) {
@@ -84,7 +85,7 @@ function filterGeometries(tile, neighborhoodCentroid, neighborhoodRadius, geomet
 
 function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, geometries) {
     const allowedGeometries = filterGeometries(tile, neighborhoodCentroid, neighborhoodRadius, geometries);
-    const subdivisionBucket = 6;//pickSubdivisionBucket(tile.triangle);
+    const subdivisionBucket = pickSubdivisionBucket(tile.triangle);
     const formationProps = { geometries: allowedGeometries, ...tile };
     const formation = (() => {
         switch (subdivisionBucket) {
@@ -114,6 +115,29 @@ export function generateFormations(surfaceGeometry, geometries, neighborhoodProp
             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
             if (replace) {
                 formations[id] = formatTile(neighbor, neighborhoodCentroid, neighborhoodRadius, geometriesByCategory);
+            }
+        });
+    });
+    return formations;
+}
+
+// TODO just copying piecemail from the above function; this can all get cleaned up and/or combined
+export function generateFormationsFromFaces(faceGroups, vertexGroups, geometries, neighborhoodProps) {
+    const tiles = generateTilesFromFacesAndVertices(faceGroups, vertexGroups);
+    const kdTree = loadKDTree(tiles);
+    const formations = {}
+    Object.keys(tiles).forEach(tileId => formations[tileId] = []);
+    const geometriesByCategory = groupBuildingGeometries(geometries);
+    const randomTiles = selectNRandomFromArray(Object.values(tiles).map(v => v), neighborhoodProps.count)
+    randomTiles.forEach(tile => {
+        // TODO oof need to refactor so you can do kdTree.findNearest here
+        const [neighborhoodRadius, neighbors] = findNearest(tile.centroid, kdTree, neighborhoodProps.maxSize, neighborhoodProps.maxRadius, tiles);
+        Object.values(neighbors).forEach(neighbor => {
+            // if already assigned, 50% chance of replacement
+            const id = neighbor.id;
+            const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
+            if (replace) {
+                formations[id] = formatTile(neighbor, tile.centroid, neighborhoodRadius, geometriesByCategory);
             }
         });
     });

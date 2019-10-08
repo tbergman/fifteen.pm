@@ -32,9 +32,14 @@ export function selectNRandomFromArray(arr, numElts) {
         for (let i = 0; i < numElts - arr.length; i++) {
             newArr.push(arr[THREE.Math.randInt(0, arr.length - 1)])
         }
+        arr.push(...newArr);
     }
-    arr.push(...newArr);
-    return shuffleArray(arr);
+    const shuffled = shuffleArray(arr);
+    if (shuffled.length > numElts) {
+        return shuffled.slice(0, numElts);
+    } else {
+        return shuffled;
+    }
 }
 
 /*
@@ -60,4 +65,24 @@ export function randomPointsOnSphere(radius, center, numPoints) {
         pointsOnSphere.push(point);
     }
     return pointsOnSphere;
+}
+
+// source: https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
+export function randomPointInSphere(radius, center) {
+    var theta = Math.random() * 2.0 * Math.PI;
+    var phi = Math.random() * Math.PI;
+    var sinTheta = Math.sin(theta); var cosTheta = Math.cos(theta);
+    var sinPhi = Math.sin(phi); var cosPhi = Math.cos(phi);
+    var x = center.x + radius * sinPhi * cosTheta;
+    var y = center.y + radius * sinPhi * sinTheta;
+    var z = center.z + radius * cosPhi;
+    return new THREE.Vector3(x, y, z);
+}
+export function randomPointsInSphere(radius, center, numPoints) {
+    const pointsInSphere = [];
+    for (let i = 0; i < numPoints; i++) {
+        const point = randomPointOnSphere(radius, center);
+        pointsInSphere.push(point);
+    }
+    return pointsInSphere;
 }

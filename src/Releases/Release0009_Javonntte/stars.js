@@ -7,14 +7,14 @@ export function Stars({ radius }) {
     const vertices1 = [];
     const vertices2 = [];
     const vertex = new THREE.Vector3();
-    for (i = 0; i < 250; i++) {
+    for (i = 0; i < 1250; i++) {
         vertex.x = Math.random() * 2 - 1;
         vertex.y = Math.random() * 2 - 1;
         vertex.z = Math.random() * 2 - 1;
         vertex.multiplyScalar(r);
         vertices1.push(vertex.x, vertex.y, vertex.z);
     }
-    for (i = 0; i < 1500; i++) {
+    for (i = 0; i < 2500; i++) {
         vertex.x = Math.random() * 2 - 1;
         vertex.y = Math.random() * 2 - 1;
         vertex.z = Math.random() * 2 - 1;

@@ -15,7 +15,7 @@ import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
 import { AsteroidBelt } from './AsteroidBelt';
-import { generateAstroid } from './asteroids';
+import { generateAsteroids } from './asteroids';
 import { Stars } from './stars';
 
 export function Scene({ track }) {
@@ -36,27 +36,26 @@ export function Scene({ track }) {
     const [facade12MaterialRef, facade12Material] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
     const lookAt = new THREE.Vector3(0, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .5, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .1);
-    const asteroids = useRef();
+    const asteroidFaceGroups = useRef();
+    const asteroidsGeom = useRef();
+    const asteroidVertexGroups = useRef();
     useEffect(() => {
-        asteroids.current = [];
-        for (let i = 0; i < C.NUM_ASTEROIDS; i++) {
-            asteroids.current.push(
-                generateAstroid(
-                    // TODO parameterize
-                    C.ASTEROID_MAX_RADIUS,
-                    C.ASTEROID_MAX_SIDES,
-                    C.ASTEROID_MAX_TIERS,
-                    C.ASTEROID_MAX_FACE_HEIGHT,
-                    { offset: i * C.ASTEROID_MAX_RADIUS * 4 }
-                )
-            )
-        }
+        [asteroidsGeom.current, asteroidFaceGroups.current, asteroidVertexGroups.current] = generateAsteroids(
+            C.ASTEROID_BELT_RADIUS,
+            C.ASTEROID_BELT_CENTER,
+            C.NUM_ASTEROIDS,
+            C.ASTEROID_MAX_RADIUS,
+            C.ASTEROID_MAX_SIDES,
+            C.ASTEROID_MAX_TIERS,
+            C.ASTEROID_MAX_FACE_HEIGHT,
+        )
     }, [])
-    useEffect(() => { scene.background = new THREE.Color("white") });
+    useEffect(() => { scene.background = new THREE.Color("black") });
     useEffect(() => {
         // These actions must occur after buildings load.
         camera.position.copy(C.START_POS);
         camera.lookAt(lookAt);
+
         // scene.fog = new THREE.FogExp2(0x0000ff, 0.1);
 
     }, [buildingGeometries])
@@ -77,12 +76,12 @@ export function Scene({ track }) {
                 minDist={C.MIN_CAMERA_DIST}
                 fov={70}
                 near={1}
-                far={5000}
+                far={10000}
                 center={C.WORLD_CENTER}
                 lightProps={{
                     intensity: 1.1,
                     // penumbra: 0.1,
-                    distance: 100,
+                    distance: 10000,
                     shadowCameraNear: 1,
                     shadowCameraFar: 200,
                     shadowMapSizeWidth: 512,
@@ -91,21 +90,24 @@ export function Scene({ track }) {
             />
             <Controls
                 radius={C.ASTEROID_MAX_RADIUS}
-                movementSpeed={300}
+                movementSpeed={5000}
                 domElement={canvas}
                 rollSpeed={Math.PI * 2}
                 autoForward={false}
                 dragToLook={false}
             />
             <FixedLights />
-            {/* <Stars
-                radius={C.WORLD_RADIUS}
-            /> */}
-            {asteroids.current && asteroids.current.length == C.NUM_ASTEROIDS && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
+            <Stars
+                radius={C.ASTEROID_BELT_RADIUS/4}
+            />
+            {asteroidsGeom.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
                 <>
                     <AsteroidBelt
                         track={track}
-                        asteroids={asteroids.current}
+                        // TODO can combine this all into a n object or refernece directly the buffergeom
+                        asteroidsGeometry={asteroidsGeom.current}
+                        asteroidFaceGroups={asteroidFaceGroups.current}
+                        asteroidVertexGroups={asteroidVertexGroups.current}
                         // startPos={startPos}
                         buildings={{
                             geometries: buildingGeometries,

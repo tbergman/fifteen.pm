@@ -6,7 +6,7 @@ import { SphereTiles } from '../../Utils/SphereTiles';
 import * as C from './constants';
 import "./index.css";
 import { Stars } from './stars';
-import { generateInstanceGeometries as generateInstanceGeometries } from "./instances";
+import { generateInstanceGeometriesFromFaces } from "./instances";
 import NoiseSphereGeometry from '../../Utils/NoiseSphere';
 
 
@@ -24,8 +24,7 @@ function AtmosphereGlow({ radius }) {
     </>
 }
 
-export function AsteroidSurface({ geometry, bpm }) {
-    console.log("SHOW SURFACE WITH", geometry.vertices[54])
+export function AsteroidsSurface({ geometry, bpm }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [ground29MaterialRef, ground29Material] = useResource();
     return <>
@@ -37,14 +36,14 @@ export function AsteroidSurface({ geometry, bpm }) {
         <Ground29Material
             materialRef={ground29MaterialRef}
             side={THREE.FrontSide}
-            color={0x0000af}
+            // color={0x0000af}
         />
         {tronMaterial && ground29Material &&
             <group>
-                {/* <mesh
+                <mesh
                     geometry={geometry}
                     material={tronMaterial}
-                /> */}
+                />
                 <mesh
                     geometry={geometry}
                     material={ground29Material}
@@ -55,7 +54,7 @@ export function AsteroidSurface({ geometry, bpm }) {
     </>
 }
 
-export function AsteroidBelt({ track, asteroids, buildings, ...props }) {
+export function AsteroidBelt({ track, asteroidsGeometry, asteroidFaceGroups, asteroidVertexGroups, buildings, ...props }) {
     const { camera, scene } = useThree();
     const [astroidBeltRef, astroidBelt] = useResource();
     const [curTrackName, setCurTrackName] = useState();
@@ -65,9 +64,9 @@ export function AsteroidBelt({ track, asteroids, buildings, ...props }) {
     const [renderTiles, setRenderTiles] = useState(true);
 
     useEffect(() => {
-        if (buildings.loaded && asteroids.length == C.NUM_ASTEROIDS) {
+        if (buildings.loaded && asteroidsGeometry) {
 
-            tileFormations.current = generateInstanceGeometries(asteroids[0], buildings, C.NEIGHBORHOOD_PROPS); 
+            tileFormations.current = generateInstanceGeometriesFromFaces(asteroidFaceGroups, asteroidVertexGroups, buildings, C.NEIGHBORHOOD_PROPS); 
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
             // console.log("GENERATE TILES FORMATIONS WITH:", outerSphereGeometry.vertices[54])
             // outerTileFormations.current = generateInstanceGeometries(outerSphereGeometry, buildings, C.NEIGHBORHOOD_PROPS);
@@ -92,18 +91,16 @@ export function AsteroidBelt({ track, asteroids, buildings, ...props }) {
 
     useRender(() => {
         if (astroidBeltRef.current) {
-            // worldRef.current.rotation.x += .001;
+            astroidBeltRef.current.rotation.x += .001;
         }
     })
 
     return <group ref={astroidBeltRef}>
         {astroidBelt && <>
 
-            {asteroids &&
-                asteroids.map((asteroid, idx) => {
-                    return <AsteroidSurface 
-                        key={idx}
-                        geometry={asteroid}
+            {asteroidsGeometry &&
+                    <AsteroidsSurface 
+                        geometry={asteroidsGeometry}
                         bpm={track && track.bpm}
                     />
                 })
@@ -111,22 +108,12 @@ export function AsteroidBelt({ track, asteroids, buildings, ...props }) {
 
             {tileFormations.current &&
                 Object.keys(tileFormations.current).map(tId => {
-                    console.log("MAP:", tId)
                     return <primitive key={tId}
                         object={tileFormations.current[tId]}
                     />
                 })
             }
-            {/* {innerTileFormations.current &&
-                Object.keys(innerTileFormations.current).map(tId => {
-                    return <primitive key={tId}
-                        object={innerTileFormations.current[tId]}
-                    />
-                })
-            } */}
-            {/* <AtmosphereGlow
-                    // radius={distThreshold - .2}
-                /> */}
+          
         </>
         }
     </group>

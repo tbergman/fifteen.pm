@@ -279,7 +279,7 @@ export function Ground29Material({ materialRef, ...props }) {
 		return textureMaps.map(textureMap => {
 			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
 			textureMap.offset.set(0, 0);
-			textureMap.repeat.set(128, 128);
+			textureMap.repeat.set(2, 2);
 			return textureMap;
 		})
 	});
@@ -288,11 +288,11 @@ export function Ground29Material({ materialRef, ...props }) {
 	return <meshStandardMaterial
 		{...props}
 		ref={materialRef}
-		// lights
-		wireframeLineWidth={10}
+		lights
+		// wireframeLineWidth={10}
 		// alphaTest={0.5}
 		// transparent
-		wireframe
+		// wireframe
 		receiveShadow
 		castShadow
 		color={props.color || 0xf0f0f0}
