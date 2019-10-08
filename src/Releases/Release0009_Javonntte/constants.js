@@ -52,15 +52,15 @@ export const ASTEROID_BELT_RADIUS = 1111;
 export const ASTEROID_BELT_CENTER = new THREE.Vector3();
 export const ASTEROID_MAX_SIDES = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? 1.6 : 1.6));
 export const ASTEROID_MAX_TIERS = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? .8 : 1.6));
-export const ASTEROID_MAX_FACE_HEIGHT = .1;
+export const ASTEROID_MAX_FACE_NOISE = .001;
 export const NEIGHBORHOOD_PROPS = {
     count: 100,//WORLD_RADIUS * WORLD_RADIUS, //WORLD_RADIUS * (isMobile ? 2. : 2.),
-    maxSize: isMobile ? Math.floor(ASTEROID_MAX_RADIUS / 2) : Math.floor(ASTEROID_MAX_RADIUS),
-    maxRadius: ASTEROID_MAX_RADIUS, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
+    maxSize: isMobile ? Math.floor(ASTEROID_MAX_RADIUS / 2) : Math.floor(ASTEROID_MAX_RADIUS) * 2,
+    maxRadius: ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
 }
 
 const STARTING_Z = isMobile ? ASTEROID_MAX_RADIUS * 5.13 : ASTEROID_MAX_RADIUS * 1.1;
-export const START_POS = new THREE.Vector3(0, 0, 0);
+export const START_POS = new THREE.Vector3(0, 0, -ASTEROID_BELT_RADIUS);
 // export const START_POS = new THREE.Vector3(0, 0,STARTING_Z);
 export const BASE_SCALE = isMobile ? 1.3 : 10.;
 export const CAMERA_DISTANCE_THRESHOLD = isMobile ? START_POS.z * 1.1 : ASTEROID_MAX_RADIUS + ASTEROID_MAX_RADIUS * .15;
@@ -68,4 +68,4 @@ export const CAMERA_DISTANCE_THRESHOLD = isMobile ? START_POS.z * 1.1 : ASTEROID
 export const MAX_CAMERA_DIST = ASTEROID_MAX_RADIUS - 1.5;// * 1.001;
 // export const MIN_CAMERA_DIST = WORLD_RADIUS * .88;
 export const WORLD_CENTER = new THREE.Vector3();
-export const NUM_ASTEROIDS = 100;
+export const NUM_ASTEROIDS = 20;

@@ -36,7 +36,7 @@ export function AsteroidsSurface({ geometry, bpm }) {
         <Ground29Material
             materialRef={ground29MaterialRef}
             side={THREE.FrontSide}
-            // color={0x0000af}
+        // color={0x0000af}
         />
         {tronMaterial && ground29Material &&
             <group>
@@ -54,7 +54,7 @@ export function AsteroidsSurface({ geometry, bpm }) {
     </>
 }
 
-export function AsteroidBelt({ track, asteroidsGeometry, asteroidFaceGroups, asteroidVertexGroups, buildings, ...props }) {
+export function AsteroidBelt({ track, asteroids, buildings, ...props }) {
     const { camera, scene } = useThree();
     const [astroidBeltRef, astroidBelt] = useResource();
     const [curTrackName, setCurTrackName] = useState();
@@ -64,13 +64,8 @@ export function AsteroidBelt({ track, asteroidsGeometry, asteroidFaceGroups, ast
     const [renderTiles, setRenderTiles] = useState(true);
 
     useEffect(() => {
-        if (buildings.loaded && asteroidsGeometry) {
-
-            tileFormations.current = generateInstanceGeometriesFromFaces(asteroidFaceGroups, asteroidVertexGroups, buildings, C.NEIGHBORHOOD_PROPS); 
-            // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
-            // console.log("GENERATE TILES FORMATIONS WITH:", outerSphereGeometry.vertices[54])
-            // outerTileFormations.current = generateInstanceGeometries(outerSphereGeometry, buildings, C.NEIGHBORHOOD_PROPS);
-            // innerTileFormations.current = generateInstanceGeometries(innerSphereGeometry, buildings, C.NEIGHBORHOOD_PROPS)
+        if (buildings.loaded && asteroids) {
+            tileFormations.current = generateInstanceGeometriesFromFaces(asteroids.faceGroups, asteroids.vertexGroups, buildings, C.NEIGHBORHOOD_PROPS);
         }
     })
 
@@ -84,27 +79,25 @@ export function AsteroidBelt({ track, asteroidsGeometry, asteroidFaceGroups, ast
     useEffect(() => {
         // if (track.current) {
         // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
-
         // }
     }, [curTrackName])
 
 
     useRender(() => {
         if (astroidBeltRef.current) {
-            astroidBeltRef.current.rotation.x += .001;
+            // astroidBeltRef.current.rotation.x += .001;
         }
     })
 
     return <group ref={astroidBeltRef}>
         {astroidBelt && <>
-
-            {asteroidsGeometry &&
-                    <AsteroidsSurface 
-                        geometry={asteroidsGeometry}
-                        bpm={track && track.bpm}
-                    />
-                })
-            }
+            {asteroids &&
+                <AsteroidsSurface
+                    geometry={asteroids.geometry}
+                    bpm={track && track.bpm}
+                />
+            })
+        }
 
             {tileFormations.current &&
                 Object.keys(tileFormations.current).map(tId => {
@@ -113,7 +106,7 @@ export function AsteroidBelt({ track, asteroidsGeometry, asteroidFaceGroups, ast
                     />
                 })
             }
-          
+
         </>
         }
     </group>

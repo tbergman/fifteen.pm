@@ -3,11 +3,9 @@ import { randomPointInSphere } from '../../Utils/random';
 import NoiseSphereGeometry from '../../Utils/NoiseSphere';
 
 // TODO tilt and rotationSpeed
-function generateAstroid(radius, sides, tiers, maxHeight, center) {
-    const noiseWidth = 1.1 * sides;//maxHeight;
-    const noiseHeight = 1.1 * tiers;//maxHeight;
-    const seed = Math.random() * 1000;
-    const noiseSphere = new NoiseSphereGeometry(radius, sides, tiers, { seed, noiseWidth, noiseHeight, center })
+function generateAstroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
+    const seed = 1234;// Math.random() * 1000;
+    const noiseSphere = new NoiseSphereGeometry(radius, sides, tiers, { seed, noiseWidth: .0001, noiseHeight: .0001, center })
     noiseSphere.verticesNeedUpdate = true;
     noiseSphere.computeBoundingSphere();
     noiseSphere.computeBoundingBox();
@@ -16,9 +14,10 @@ function generateAstroid(radius, sides, tiers, maxHeight, center) {
 }
 
 
-export function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids, maxAsteroidRadius, maxSides, maxTiers, maxFaceHeight) {
+export function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids, maxAsteroidRadius, maxFaceNoise) {
     const asteroidFaceGroups = [];
     const asteroidVertexGroups = [];
+    const asteroidCenters = [];
     const asteroidsGeom = new THREE.Geometry()
     for (let i = 0; i < numAsteroids; i++) {
         const center = new THREE.Vector3(
@@ -29,21 +28,24 @@ export function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAst
         const radius = THREE.Math.randInt(maxAsteroidRadius * .75, maxAsteroidRadius);
         const sides = Math.floor(radius / 4);
         const tiers = Math.floor(radius / 4);
-        const faceHeight = Math.floor(maxFaceHeight / radius);
+        const noiseHeight = maxFaceNoise;// * Math.random();
+        const noiseWidth = maxFaceNoise;// * Math.random();
         const asteroidGeom = generateAstroid(
             // TODO parameterize
             radius,
             sides,
             tiers,
-            faceHeight,
+            noiseHeight,
+            noiseWidth,
             center,
         )
+        asteroidCenters.push(center);
         asteroidFaceGroups.push(asteroidGeom.faces);
         asteroidVertexGroups.push(asteroidGeom.vertices);
         asteroidsGeom.merge(asteroidGeom)
     }
     const asteroidBufferGeom = new THREE.BufferGeometry().fromGeometry(asteroidsGeom);
-    return [asteroidBufferGeom, asteroidFaceGroups, asteroidVertexGroups]
+    return {geometry: asteroidBufferGeom, faceGroups: asteroidFaceGroups, vertexGroups: asteroidVertexGroups, centroids: asteroidCenters}
 }
 
 

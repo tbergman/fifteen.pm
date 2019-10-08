@@ -6,7 +6,11 @@ import {
     Facade04Material,
     Facade10Material,
     Facade12Material,
-    CloudMaterial, FoamGripMaterial, Windows1Material, Metal03Material
+    CloudMaterial,
+    FoamGripMaterial,
+    Windows1Material,
+    Metal03Material,
+    TronMaterial,
 } from '../../Utils/materials';
 import { onBuildingsLoaded } from "./buildings";
 import { Camera } from './camera';
@@ -35,19 +39,56 @@ export function Scene({ track }) {
     const [facade10MaterialRef, facade10Material] = useResource();
     const [facade12MaterialRef, facade12Material] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
+    const [tronMaterialRef, tronMaterial] = useResource();
     const lookAt = new THREE.Vector3(0, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .5, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .1);
+    const asteroids = useRef();
     const asteroidFaceGroups = useRef();
     const asteroidsGeom = useRef();
     const asteroidVertexGroups = useRef();
+
+    const road = useRef();
+
     useEffect(() => {
-        [asteroidsGeom.current, asteroidFaceGroups.current, asteroidVertexGroups.current] = generateAsteroids(
+
+        if (asteroids.current) {
+            // Define the curve 
+            var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids, { closed: true, type: 'catmullrom', arcLengthDivisions: asteroids.current.centroids.length });
+
+            // Set up settings for later extrusion
+            var extrudeSettings = {
+                steps: asteroids.current.centroids.length * 20,
+                bevelEnabled: true,
+                extrudePath: closedSpline
+            };
+
+            // Define a triangle
+            var pts = [], count = 3;
+            for (var i = 0; i < count; i++) {
+                var l = 2;
+                var a = 2 * i / count * Math.PI;
+                pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
+            }
+            var shape = new THREE.Shape(pts);
+
+            // Extrude the triangle along the CatmullRom curve
+            road.current = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            // var material = new THREE.MeshLambertMaterial( { color: 0xb00000, wireframe: false } );
+
+            // Create mesh with the resulting geometry
+            // var mesh = new THREE.Mesh( geometry, material );
+        }
+    })
+
+    useEffect(() => {
+        // [asteroidsGeom.current, asteroidFaceGroups.current, asteroidVertexGroups.current] = generateAsteroids(
+        asteroids.current = generateAsteroids(
             C.ASTEROID_BELT_RADIUS,
             C.ASTEROID_BELT_CENTER,
             C.NUM_ASTEROIDS,
             C.ASTEROID_MAX_RADIUS,
             C.ASTEROID_MAX_SIDES,
             C.ASTEROID_MAX_TIERS,
-            C.ASTEROID_MAX_FACE_HEIGHT,
+            C.ASTEROID_MAX_FACE_NOISE,
         )
     }, [])
     useEffect(() => { scene.background = new THREE.Color("black") });
@@ -60,6 +101,9 @@ export function Scene({ track }) {
 
     }, [buildingGeometries])
 
+
+
+
     return (
         <>
             {/* use one material for all buildings  */}
@@ -70,11 +114,18 @@ export function Scene({ track }) {
             <Facade04Material materialRef={facade04MaterialRef} />
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
+            <TronMaterial materialRef={tronMaterialRef} />
             {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
+            {road.current && tronMaterialRef &&
+                <mesh
+                    geometry={road.current}
+                    material={tronMaterial}
+                />
+            }
             <Camera
                 maxDist={C.MAX_CAMERA_DIST}
                 minDist={C.MIN_CAMERA_DIST}
-                fov={70}
+                fov={75}
                 near={1}
                 far={10000}
                 center={C.WORLD_CENTER}
@@ -82,7 +133,7 @@ export function Scene({ track }) {
                     intensity: 1.1,
                     // penumbra: 0.1,
                     distance: 10000,
-                    shadowCameraNear: 1,
+                    shadowCameraNear: .0001,
                     shadowCameraFar: 200,
                     shadowMapSizeWidth: 512,
                     shadowMapSizeHeight: 512,
@@ -92,22 +143,20 @@ export function Scene({ track }) {
                 radius={C.ASTEROID_MAX_RADIUS}
                 movementSpeed={5000}
                 domElement={canvas}
-                rollSpeed={Math.PI * 2}
+                rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
             />
             <FixedLights />
-            <Stars
-                radius={C.ASTEROID_BELT_RADIUS/4}
-            />
-            {asteroidsGeom.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
+            {/* <Stars
+                radius={C.ASTEROID_BELT_RADIUS / 40}
+            /> */}
+            {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
                 <>
                     <AsteroidBelt
                         track={track}
                         // TODO can combine this all into a n object or refernece directly the buffergeom
-                        asteroidsGeometry={asteroidsGeom.current}
-                        asteroidFaceGroups={asteroidFaceGroups.current}
-                        asteroidVertexGroups={asteroidVertexGroups.current}
+                        asteroids={asteroids.current}
                         // startPos={startPos}
                         buildings={{
                             geometries: buildingGeometries,

@@ -60,7 +60,7 @@ function pickSubdivisionBucket(triangle) {
     // console.log("RATIO", ratio);
     // if (ratio > .25) return 36;
     // if (ratio > .2) return [6, 36][THREE.Math.randInt(0, 1)];
-    return [1, 6, 36][THREE.Math.randInt(0, 2)]
+    return [1, 6, 36][THREE.Math.randInt(0, 1)] // don't do 36...
 }
 
 function pickFootprint(tile) {
