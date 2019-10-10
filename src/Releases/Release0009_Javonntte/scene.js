@@ -21,6 +21,7 @@ import { FixedLights } from './lights';
 import { AsteroidBelt } from './AsteroidBelt';
 import { generateAsteroids } from './asteroids';
 import { Stars } from './stars';
+import { onCarLoaded, Cadillac } from './car';
 
 export function Scene({ track }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -32,6 +33,7 @@ export function Scene({ track }) {
      */
     const { camera, canvas, scene } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
+    const [loadingCadillac, cadillacGeometry] = useGLTF(C.CADILLAC_URL, onCarLoaded)
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const [foamGripMaterialRef, foamGripMaterial] = useResource();
     const [windows1MaterialRef, windows1Material] = useResource();
@@ -52,7 +54,9 @@ export function Scene({ track }) {
 
         if (asteroids.current) {
             // Define the curve 
-            var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids, { closed: true, type: 'catmullrom', arcLengthDivisions: asteroids.current.centroids.length });
+            var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids,
+                { closed: true, type: 'catmullrom', arcLengthDivisions: asteroids.current.centroids.length }
+            );
 
             // Set up settings for later extrusion
             var extrudeSettings = {
@@ -64,7 +68,7 @@ export function Scene({ track }) {
             // Define a triangle
             var pts = [], count = 3;
             for (var i = 0; i < count; i++) {
-                var l = 2;
+                var l = 5;
                 var a = 2 * i / count * Math.PI;
                 pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
             }
@@ -72,10 +76,6 @@ export function Scene({ track }) {
 
             // Extrude the triangle along the CatmullRom curve
             road.current = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-            // var material = new THREE.MeshLambertMaterial( { color: 0xb00000, wireframe: false } );
-
-            // Create mesh with the resulting geometry
-            // var mesh = new THREE.Mesh( geometry, material );
         }
     })
 
@@ -94,15 +94,11 @@ export function Scene({ track }) {
     useEffect(() => { scene.background = new THREE.Color("black") });
     useEffect(() => {
         // These actions must occur after buildings load.
-        camera.position.copy(C.START_POS);
-        camera.lookAt(lookAt);
-
+        // camera.position.copy(C.START_POS);
+        // camera.lookAt(lookAt);
         // scene.fog = new THREE.FogExp2(0x0000ff, 0.1);
 
     }, [buildingGeometries])
-
-
-
 
     return (
         <>
@@ -122,31 +118,39 @@ export function Scene({ track }) {
                     material={tronMaterial}
                 />
             }
-            <Camera
-                maxDist={C.MAX_CAMERA_DIST}
-                minDist={C.MIN_CAMERA_DIST}
-                fov={75}
-                near={1}
-                far={10000}
-                center={C.WORLD_CENTER}
-                lightProps={{
-                    intensity: 1.1,
-                    // penumbra: 0.1,
-                    distance: 10000,
-                    shadowCameraNear: .0001,
-                    shadowCameraFar: 200,
-                    shadowMapSizeWidth: 512,
-                    shadowMapSizeHeight: 512,
-                }}
-            />
-            <Controls
+            {!loadingCadillac && road.current &&
+                <Camera
+                    maxDist={C.MAX_CAMERA_DIST}
+                    minDist={C.MIN_CAMERA_DIST}
+                    fov={75}
+                    near={1}
+                    path={road.current}
+                    far={10000}
+                    center={C.WORLD_CENTER}
+                    car={cadillacGeometry}
+                    lightProps={{
+                        intensity: 1.1,
+                        // penumbra: 0.1,
+                        distance: 10000,
+                        shadowCameraNear: .0001,
+                        shadowCameraFar: 200,
+                        shadowMapSizeWidth: 512,
+                        shadowMapSizeHeight: 512,
+                    }}
+                />
+            }
+            {!loadingCadillac && 
+            <Cadillac geometry={cadillacGeometry}/>
+            }
+            {/* {road.current && <Controls
+                road={road.current}
                 radius={C.ASTEROID_MAX_RADIUS}
                 movementSpeed={5000}
                 domElement={canvas}
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            />
+            />} */}
             <FixedLights />
             {/* <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}

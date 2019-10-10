@@ -1,71 +1,93 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
-import { useRender, useThree } from 'react-three-fiber';
+import { useRender, useThree, useResource } from 'react-three-fiber';
+import { Cadillac } from './car';
+import { Metal03Material } from '../../Utils/materials'
 
-export function Camera({ fov, near, far, maxDist, center, lightProps }) {
+export function Camera({ fov, near, far, path, maxDist, center, lightProps, car }) {
+
     const spotLight = useRef();
     const cameraRef = useRef();
+    const parentRef = useRef();
+    const cadillacRef = useRef();
     const { setDefaultCamera, scene } = useThree();
-    const { tooFarAway, setTooFarAway } = useState(false);
+    const frenetFrames = useRef();
+    const [metal03MaterialRef, metal03Material] = useResource();
+    const normal = new THREE.Vector3(0, 0, 0);
+    const binormal = new THREE.Vector3(0, 1, 0);
+    const loopTime = 50000;
+    const scale = 1;
+    const offset = 6;
 
     useEffect(() => {
-        if (cameraRef.current) {
+        if (cameraRef.current && path) {
             setDefaultCamera(cameraRef.current);
         }
-    }, [cameraRef])
+    }, [cameraRef]);
 
-    // useRender((state, time) => {
-    //     if ((time % .5).toFixed(1) == 0) {
-    //         const distToCenter = cameraRef.current.position.distanceTo(center);
-    //         setTooFarAway(distToCenter > maxDist);
-    //     }
-    // })
+    useEffect(() => {
+        const closed = true;
+        if (path) {
+            const curve = path.parameters.options.extrudePath;
+            frenetFrames.current = curve.computeFrenetFrames(loopTime, closed);
+        }
+    });
 
-    // TODO -- add https://discourse.threejs.org/t/three-js-move-camera/6852/3 logic instead of this
-    // that is, add an invisible sphere and check for intersection
-    // useRender(() => {
-    //     if (cameraRef.current.position.x > maxDist) {
-    //         cameraRef.current.position.x = maxDist;
-    //     }
-    //     if (cameraRef.current.position.x < -maxDist) {
-    //         cameraRef.current.position.x = -maxDist;
-    //     }
-    //     if (cameraRef.current.position.y > maxDist) {
-    //         cameraRef.current.position.y = maxDist;
-    //     }
-    //     if (cameraRef.current.position.y < -maxDist) {
-    //         cameraRef.current.position.y = -maxDist;
-    //     }
+    // const cadillacPos = new THREE.Vector3()
+    useRender((state, time) => {
+        if (!frenetFrames.current || !cadillacRef) return;
+        const curve = path.parameters.options.extrudePath;
+        var t = (time % loopTime) / loopTime;
+        var pos = curve.getPointAt(t);
+        pos.multiplyScalar(scale);
+        // interpolation
+        var segments = frenetFrames.current.tangents.length;
+        var pickt = t * segments;
+        var pick = Math.floor(pickt);
+        var pickNext = (pick + 1) % segments;
+        binormal.subVectors(frenetFrames.current.binormals[pickNext], frenetFrames.current.binormals[pick]);
+        binormal.multiplyScalar(pickt - pick).add(frenetFrames.current.binormals[pick]);
+        var dir = curve.getTangentAt(t);
+        normal.copy(binormal).cross(dir);
+        // We move on a offset on its binormal
+        pos.add(normal.clone().multiplyScalar(offset));
+        cameraRef.current.position.copy(pos);
+        // Using arclength for stablization in look ahead.
+        var lookAt = curve.getPointAt((t + 30 / curve.getLength()) % 1).multiplyScalar(scale);
+        // Camera Orientation 2 - up orientation via normal
+        lookAt.copy(pos).add(dir);
+        cameraRef.current.matrix.lookAt(cameraRef.current.position, lookAt, normal);
+        cameraRef.current.rotation.setFromRotationMatrix(cameraRef.current.matrix, cameraRef.current.rotation.order);
+        // cadillacRef.current.position.copy(new THREE.Vector3(cameraRef.current.x, cameraRef.current.y, cameraRef.current.z - 10));
+    })
 
-    //     if (cameraRef.current.position.z > maxDist) {
-    //         cameraRef.current.position.z = maxDist;
-    //     }
-    //     if (cameraRef.current.position.z < -maxDist) {
-    //         cameraRef.current.position.z = -maxDist;
-    //     }
-    // })
-    return <perspectiveCamera
-        // onUpdate={self => {
-        // var helper = new THREE.CameraHelper(self);
-        // scene.add(helper);
-        // }}
-        ref={cameraRef}
-        fov={fov}
-        near={near}
-        far={far}
-    >
-        <spotLight
-            // onUpdate={self => self.lookAt(new THREE.Vector3(0, 0, 1))}
-            ref={spotLight}
-            castShadow
-            // position={new THREE.Vector3(0, 0, 0)}
-            intensity={lightProps.intensity}
-            // penumbra={lightProps.penumbra}
-            distance={lightProps.distance}
-            shadow-camera-near={lightProps.shadowCameraNear}
-            shadow-camera-far={lightProps.shadowCameraFar}
-            shadow-mapSize-width={lightProps.shadowMapSizeWidth}
-            shadow-mapSize-height={lightProps.shadowMapSizeHeight}
-        />
-    </perspectiveCamera>
+    return <>
+        <Metal03Material materialRef={metal03MaterialRef} />
+        <perspectiveCamera
+            ref={cameraRef}
+            fov={fov}
+            near={near}
+            far={far}
+        >
+            {metal03MaterialRef && cameraRef.current && 
+                <mesh
+                    ref = {cadillacRef}
+                    geometry={car}
+                    material={metal03Material}
+                    position={cameraRef.current.position}
+                />
+            }
+            <spotLight
+                ref={spotLight}
+                castShadow
+                intensity={lightProps.intensity}
+                // penumbra={lightProps.penumbra}
+                distance={lightProps.distance}
+                shadow-camera-near={lightProps.shadowCameraNear}
+                shadow-camera-far={lightProps.shadowCameraFar}
+                shadow-mapSize-width={lightProps.shadowMapSizeWidth}
+                shadow-mapSize-height={lightProps.shadowMapSizeHeight}
+            />
+        </perspectiveCamera>
+    </>
 }

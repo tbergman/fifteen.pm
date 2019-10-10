@@ -9,6 +9,7 @@ function loadGLTF(url, onSuccess) {
 }
 
 export const useGLTF = (url, onSuccess) => {
+    if (!onSuccess) onSuccess = (gltf) => gltf;
     const [loading, setLoading] = useState(false);
     const [model, setModel] = useState(false);
     useEffect(() => {
