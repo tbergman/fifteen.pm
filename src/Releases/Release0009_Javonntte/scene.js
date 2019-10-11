@@ -33,7 +33,8 @@ export function Scene({ track }) {
      */
     const { camera, canvas, scene } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
-    const [loadingCadillac, cadillacGeometry] = useGLTF(C.CADILLAC_URL, onCarLoaded)
+    const [loadingCadillacHood, cadillacHoodGeoms] = useGLTF(C.CADILLAC_HOOD_URL, onCarLoaded)
+    const [loadingSteeringWheel, steeringWheelGeoms] = useGLTF(C.STEERING_WHEEL_URL, onCarLoaded)
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const [foamGripMaterialRef, foamGripMaterial] = useResource();
     const [windows1MaterialRef, windows1Material] = useResource();
@@ -48,35 +49,42 @@ export function Scene({ track }) {
     const asteroidsGeom = useRef();
     const asteroidVertexGroups = useRef();
 
-    const road = useRef();
+    // const road = useRef();
+    // useEffect(() => {
+
+    //     if (cadillacGeometries) {
+    //         console.log('adding cad')
+    //         scene.add(cadillacGeometries)
+    //     }
+    // })
 
     useEffect(() => {
 
-        if (asteroids.current) {
-            // Define the curve 
-            var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids,
-                { closed: true, type: 'catmullrom', arcLengthDivisions: asteroids.current.centroids.length }
-            );
+        // if (asteroids.current) {
+        //     // Define the curve 
+        //     var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids,
+        //         { closed: true, type: 'catmullrom', arcLengthDivisions: asteroids.current.centroids.length }
+        //     );
 
-            // Set up settings for later extrusion
-            var extrudeSettings = {
-                steps: asteroids.current.centroids.length * 20,
-                bevelEnabled: true,
-                extrudePath: closedSpline
-            };
+        //     // Set up settings for later extrusion
+        //     var extrudeSettings = {
+        //         steps: asteroids.current.centroids.length * 20,
+        //         bevelEnabled: true,
+        //         extrudePath: closedSpline
+        //     };
 
-            // Define a triangle
-            var pts = [], count = 3;
-            for (var i = 0; i < count; i++) {
-                var l = 5;
-                var a = 2 * i / count * Math.PI;
-                pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
-            }
-            var shape = new THREE.Shape(pts);
+        //     // Define a triangle
+        //     var pts = [], count = 3;
+        //     for (var i = 0; i < count; i++) {
+        //         var l = 5;
+        //         var a = 2 * i / count * Math.PI;
+        //         pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
+        //     }
+        //     var shape = new THREE.Shape(pts);
 
-            // Extrude the triangle along the CatmullRom curve
-            road.current = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-        }
+        //     // Extrude the triangle along the CatmullRom curve
+        //     road.current = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        // }
     })
 
     useEffect(() => {
@@ -91,7 +99,7 @@ export function Scene({ track }) {
             C.ASTEROID_MAX_FACE_NOISE,
         )
     }, [])
-    useEffect(() => { scene.background = new THREE.Color("black") });
+    useEffect(() => { scene.background = new THREE.Color("white") });
     useEffect(() => {
         // These actions must occur after buildings load.
         // camera.position.copy(C.START_POS);
@@ -112,22 +120,23 @@ export function Scene({ track }) {
             <Metal03Material materialRef={metal03MaterialRef} />
             <TronMaterial materialRef={tronMaterialRef} />
             {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
-            {road.current && tronMaterialRef &&
+            {/* {road.current && tronMaterialRef &&
                 <mesh
                     geometry={road.current}
                     material={tronMaterial}
                 />
-            }
-            {!loadingCadillac && road.current &&
+            } */}
+            {!loadingSteeringWheel && 
                 <Camera
                     maxDist={C.MAX_CAMERA_DIST}
                     minDist={C.MIN_CAMERA_DIST}
                     fov={75}
-                    near={1}
-                    path={road.current}
+                    near={.1}
+                    // path={road.current}
                     far={10000}
                     center={C.WORLD_CENTER}
-                    car={cadillacGeometry}
+                    steeringWheelGeoms={steeringWheelGeoms}
+                    cadillacHoodGeoms={cadillacHoodGeoms}
                     lightProps={{
                         intensity: 1.1,
                         // penumbra: 0.1,
@@ -139,23 +148,32 @@ export function Scene({ track }) {
                     }}
                 />
             }
-            {!loadingCadillac && 
-            <Cadillac geometry={cadillacGeometry}/>
-            }
-            {/* {road.current && <Controls
-                road={road.current}
-                radius={C.ASTEROID_MAX_RADIUS}
-                movementSpeed={5000}
-                domElement={canvas}
-                rollSpeed={Math.PI * .5}
-                autoForward={false}
-                dragToLook={false}
-            />} */}
+            {/* {steeringWheelGeoms &&
+                steeringWheelGeoms.map(geometry => {
+                        return <mesh
+                            key={geometry.name}
+                            //ref={cadillacRef}
+                            geometry={geometry}
+                       /> 
+                })
+            } */}
+            {/* {road.current && */}
+                <Controls
+                    // road={road.current}
+                    radius={C.ASTEROID_MAX_RADIUS}
+                    movementSpeed={500}
+                    // movementSpeed={5000}
+                    domElement={canvas}
+                    rollSpeed={Math.PI * .5}
+                    autoForward={false}
+                    dragToLook={false}
+                />
+            {/* } */}
             <FixedLights />
             {/* <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
             /> */}
-            {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
+            {/* {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
                 <>
                     <AsteroidBelt
                         track={track}
@@ -175,9 +193,9 @@ export function Scene({ track }) {
                             loaded: !loadingBuildings,
                         }}
                     /> */}
-                </> : null
+            {/* </> : null
 
-            }
+            } */}
         </>
     );
 }

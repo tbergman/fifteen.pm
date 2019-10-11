@@ -97,13 +97,13 @@ export function Controls({ radius, road, ...props }) {
         // renderer.render(scene, params.animationView === true ? splineCamera : camera);
     })
     return (
-        isMobile ?
-            <orbitControls
-                ref={controls}
-                args={[camera]}
-                {...props}
-            />
-            :
+        // isMobile ?
+            // <orbitControls
+            //     ref={controls}
+            //     args={[camera]}
+            //     {...props}
+            // />
+            // :
             <flyControls
                 ref={controls}
                 args={[camera]}

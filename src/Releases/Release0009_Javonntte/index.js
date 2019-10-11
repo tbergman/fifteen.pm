@@ -32,7 +32,7 @@ export default function Release0009_Javonntte({ }) {
 
     return (
         <MusicPlayerProvider>
-            <Menu
+            {/* <Menu
                 content={CONTENT[window.location.pathname]}
                 menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
                 mediaRef={mediaRef}
@@ -42,7 +42,7 @@ export default function Release0009_Javonntte({ }) {
                 //     setNewTrackSelected(true);
                 // }}
                 didEnterWorld={() => { setHasEntered(true) }}
-            />
+            /> */}
             <Canvas
                 id="canvas"
                 antialias="false"

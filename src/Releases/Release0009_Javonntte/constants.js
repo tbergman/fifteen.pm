@@ -4,7 +4,8 @@ import { isMobile } from '../../Utils/BrowserDetection'
 import { assetPath9 } from './utils';
 
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
-export const CADILLAC_URL = assetPath9("objects/car/steering-wheel.glb")
+export const CADILLAC_HOOD_URL = assetPath9("objects/car/cadillac-hood.glb")
+export const STEERING_WHEEL_URL = assetPath9("objects/car/steering-wheel.glb")
 export const LARGE = "large";
 export const MEDIUM = "medium";
 export const SMALL = "small";

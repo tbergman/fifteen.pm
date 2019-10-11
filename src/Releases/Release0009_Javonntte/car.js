@@ -4,32 +4,36 @@ import { useResource } from 'react-three-fiber';
 import { Metal03Material } from '../../Utils/materials';
 
 export function onCarLoaded(gltf) {
+    // return gltf.scene
     const geometries = []
     gltf.scene.traverse(child => {
         if (child.isMesh) {
             const geometry = child.geometry.clone();
             geometry.name = child.name;
+            console.log(geometry)
             geometries.push(geometry);
         }
     })
-    // just one geometry
-    return geometries[0];
+    return geometries;
 }
 
-
-export function Cadillac({ geometry, position }) {
+export function Cadillac({ geometries, position }) {
     const [metal03MaterialRef, metal03Material] = useResource();
-    
+    console.log(geometries)
     return (
         <>
-            <Metal03Material materialRef={metal03MaterialRef} />
+            {/* <Metal03Material materialRef={metal03MaterialRef} />
             {metal03MaterialRef &&
-                <mesh
-                    geometry={geometry}
-                    material={metal03Material}
-                    position={position ? [position.x, position.y, position.z - 10] : new THREE.Vector3()}
-                />
-            }
+                geometries.map(geometry => {
+                    return <mesh
+                        geometry={geometry}
+                        material={metal03Material}
+
+                    // position={position ? [position.x, position.y, position.z - 10] : new THREE.Vector3()}
+                    />
+                })
+
+            } */}
         </>
     )
 }
