@@ -15,7 +15,7 @@ export function Camera({ fov, near, far, path, maxDist, center, lightProps, stee
     const [metal03MaterialRef, metal03Material] = useResource();
     const normal = new THREE.Vector3(0, 0, 0);
     const binormal = new THREE.Vector3(0, 1, 0);
-    const loopTime = 500000;
+    const loopTime = 50000;
     const scale = 1;
     const offset = 6;
 
@@ -25,41 +25,42 @@ export function Camera({ fov, near, far, path, maxDist, center, lightProps, stee
         }
     }, [cameraRef]);
 
-    // useEffect(() => {
-    //     const closed = true;
-    //     if (path) {
-    //         const curve = path.parameters.options.extrudePath;
-    //         frenetFrames.current = curve.computeFrenetFrames(loopTime, closed);
-    //     }
-    // });
+    useEffect(() => {
+        const closed = true;
+        if (path) {
+            const curve = path.parameters.options.extrudePath;
+            frenetFrames.current = curve.computeFrenetFrames(loopTime, closed);
+        }
+    });
 
     const cadillacPos = new THREE.Vector3()
-    // useRender((state, time) => {
-    //     if (!frenetFrames.current || !cadillacRef) return;
-    //     const curve = path.parameters.options.extrudePath;
-    //     var t = (time % loopTime) / loopTime;
-    //     var pos = curve.getPointAt(t);
-    //     pos.multiplyScalar(scale);
-    //     // interpolation
-    //     var segments = frenetFrames.current.tangents.length;
-    //     var pickt = t * segments;
-    //     var pick = Math.floor(pickt);
-    //     var pickNext = (pick + 1) % segments;
-    //     binormal.subVectors(frenetFrames.current.binormals[pickNext], frenetFrames.current.binormals[pick]);
-    //     binormal.multiplyScalar(pickt - pick).add(frenetFrames.current.binormals[pick]);
-    //     var dir = curve.getTangentAt(t);
-    //     normal.copy(binormal).cross(dir);
-    //     // We move on a offset on its binormal
-    //     pos.add(normal.clone().multiplyScalar(offset));
-    //     cameraRef.current.position.copy(pos);
-    //     // Using arclength for stablization in look ahead.
-    //     var lookAt = curve.getPointAt((t + 30 / curve.getLength()) % 1).multiplyScalar(scale);
-    //     // Camera Orientation 2 - up orientation via normal
-    //     lookAt.copy(pos).add(dir);
-    //     cameraRef.current.matrix.lookAt(cameraRef.current.position, lookAt, normal);
-    //     cameraRef.current.rotation.setFromRotationMatrix(cameraRef.current.matrix, cameraRef.current.rotation.order);
-    //     // cadillacRef.current.position.copy(new THREE.Vector3(cameraRef.current.x, cameraRef.current.y, cameraRef.current.z - 10));
-    // })
+    useRender((state, time) => {
+        if (!frenetFrames.current || !steeringWheelRef) return;
+        const curve = path.parameters.options.extrudePath;
+        var t = (time % loopTime) / loopTime;
+        var pos = curve.getPointAt(t);
+        pos.multiplyScalar(scale);
+        // interpolation
+        var segments = frenetFrames.current.tangents.length;
+        var pickt = t * segments;
+        var pick = Math.floor(pickt);
+        var pickNext = (pick + 1) % segments;
+        binormal.subVectors(frenetFrames.current.binormals[pickNext], frenetFrames.current.binormals[pick]);
+        binormal.multiplyScalar(pickt - pick).add(frenetFrames.current.binormals[pick]);
+        var dir = curve.getTangentAt(t);
+        normal.copy(binormal).cross(dir);
+        // We move on a offset on its binormal
+        pos.add(normal.clone().multiplyScalar(offset));
+        cameraRef.current.position.copy(pos);
+        // Using arclength for stablization in look ahead.
+        var lookAt = curve.getPointAt((t + 30 / curve.getLength()) % 1).multiplyScalar(scale);
+        // Camera Orientation 2 - up orientation via normal
+        lookAt.copy(pos).add(dir);
+        cameraRef.current.matrix.lookAt(cameraRef.current.position, lookAt, normal);
+        cameraRef.current.rotation.setFromRotationMatrix(cameraRef.current.matrix, cameraRef.current.rotation.order);
+        steeringWheelRef.current.rotation.y = cameraRef.current.rotation.x * .2;
+        // cadillacRef.current.position.copy(new THREE.Vector3(cameraRef.current.x, cameraRef.current.y, cameraRef.current.z - 10));
+    })
 
     return <>
         {/* <Metal03Material materialRef={metal03MaterialRef} /> */}

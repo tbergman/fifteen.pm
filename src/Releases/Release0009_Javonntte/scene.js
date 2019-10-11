@@ -48,47 +48,37 @@ export function Scene({ track }) {
     const asteroidFaceGroups = useRef();
     const asteroidsGeom = useRef();
     const asteroidVertexGroups = useRef();
-
-    // const road = useRef();
-    // useEffect(() => {
-
-    //     if (cadillacGeometries) {
-    //         console.log('adding cad')
-    //         scene.add(cadillacGeometries)
-    //     }
-    // })
+    const road = useRef();
 
     useEffect(() => {
+        if (asteroids.current) {
+            // Define the curve 
+            var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids,
+                { closed: true, type: 'catmullrom', arcLengthDivisions: asteroids.current.centroids.length }
+            );
 
-        // if (asteroids.current) {
-        //     // Define the curve 
-        //     var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids,
-        //         { closed: true, type: 'catmullrom', arcLengthDivisions: asteroids.current.centroids.length }
-        //     );
+            // Set up settings for later extrusion
+            var extrudeSettings = {
+                steps: asteroids.current.centroids.length * 20,
+                bevelEnabled: true,
+                extrudePath: closedSpline
+            };
 
-        //     // Set up settings for later extrusion
-        //     var extrudeSettings = {
-        //         steps: asteroids.current.centroids.length * 20,
-        //         bevelEnabled: true,
-        //         extrudePath: closedSpline
-        //     };
+            // Define a triangle
+            var pts = [], count = 3;
+            for (var i = 0; i < count; i++) {
+                var l = 10;
+                var a = 2 * i / count * Math.PI;
+                pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
+            }
+            var shape = new THREE.Shape(pts);
 
-        //     // Define a triangle
-        //     var pts = [], count = 3;
-        //     for (var i = 0; i < count; i++) {
-        //         var l = 5;
-        //         var a = 2 * i / count * Math.PI;
-        //         pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
-        //     }
-        //     var shape = new THREE.Shape(pts);
-
-        //     // Extrude the triangle along the CatmullRom curve
-        //     road.current = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-        // }
+            // Extrude the triangle along the CatmullRom curve
+            road.current = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        }
     })
 
     useEffect(() => {
-        // [asteroidsGeom.current, asteroidFaceGroups.current, asteroidVertexGroups.current] = generateAsteroids(
         asteroids.current = generateAsteroids(
             C.ASTEROID_BELT_RADIUS,
             C.ASTEROID_BELT_CENTER,
@@ -99,7 +89,7 @@ export function Scene({ track }) {
             C.ASTEROID_MAX_FACE_NOISE,
         )
     }, [])
-    useEffect(() => { scene.background = new THREE.Color("white") });
+    useEffect(() => { scene.background = new THREE.Color("black") });
     useEffect(() => {
         // These actions must occur after buildings load.
         // camera.position.copy(C.START_POS);
@@ -120,19 +110,19 @@ export function Scene({ track }) {
             <Metal03Material materialRef={metal03MaterialRef} />
             <TronMaterial materialRef={tronMaterialRef} />
             {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
-            {/* {road.current && tronMaterialRef &&
+            {road.current && tronMaterialRef &&
                 <mesh
                     geometry={road.current}
                     material={tronMaterial}
                 />
-            } */}
+            }
             {!loadingSteeringWheel && 
                 <Camera
                     maxDist={C.MAX_CAMERA_DIST}
                     minDist={C.MIN_CAMERA_DIST}
                     fov={75}
                     near={.1}
-                    // path={road.current}
+                    path={road.current}
                     far={10000}
                     center={C.WORLD_CENTER}
                     steeringWheelGeoms={steeringWheelGeoms}
@@ -148,15 +138,6 @@ export function Scene({ track }) {
                     }}
                 />
             }
-            {/* {steeringWheelGeoms &&
-                steeringWheelGeoms.map(geometry => {
-                        return <mesh
-                            key={geometry.name}
-                            //ref={cadillacRef}
-                            geometry={geometry}
-                       /> 
-                })
-            } */}
             {/* {road.current && */}
                 <Controls
                     // road={road.current}
