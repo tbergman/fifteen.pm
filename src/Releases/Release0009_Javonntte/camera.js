@@ -69,16 +69,26 @@ export function Camera({ fov, near, far, path, maxDist, center, lightProps, stee
             near={near}
             far={far}
         >
-            {cameraRef.current && steeringWheelGeoms.length &&
-                steeringWheelGeoms.map(geometry => {
-                    console.log("ADD MESH")
-                    return <mesh
-                        key={geometry.name}
-                        ref={steeringWheelRef}
-                        geometry={geometry}
-                        position={[0, -14.5, -3]}
-                    />
-                })
+            {cameraRef.current && steeringWheelGeoms.length && cadillacHoodGeoms.length &&
+                <>
+                    <group ref={steeringWheelRef}>
+                        {steeringWheelGeoms.map(geometry => {
+                            return <mesh
+                                key={geometry.name}
+                                ref={steeringWheelRef}
+                                geometry={geometry}
+                                position={[0, -14.5, -3]}
+                            />
+                        })}
+                    </group>
+                    {cadillacHoodGeoms.map(geometry => {
+                        return <mesh
+                            key={geometry.name}
+                            geometry={geometry}
+                            position={[.5, -1.5, .5]}
+                        />
+                    })}
+                </>
             }
             <spotLight
                 ref={spotLight}
@@ -95,11 +105,3 @@ export function Camera({ fov, near, far, path, maxDist, center, lightProps, stee
     </>
 }
 
-// {/* {cadillacHoodGeoms.map(geometry => {
-//                                 return <mesh
-//                                     key={geometry.name}
-//                                     geometry={geometry}
-//                                     position={[1, -1.25, 6]}
-//                                 />
-//                             })} */}
-//                     // </mesh>
