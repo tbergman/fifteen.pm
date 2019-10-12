@@ -17,7 +17,7 @@ export function Camera({ fov, near, far, tubeGeometry, maxDist, center, lightPro
     const normal = new THREE.Vector3(0, 0, 0);
     const binormal = new THREE.Vector3(0, 1, 0);
     const loopTime = 50000;
-    const scale = .8;
+    const scale = .6;
     const offset = 6;
 
     useEffect(() => {
@@ -63,7 +63,6 @@ export function Camera({ fov, near, far, tubeGeometry, maxDist, center, lightPro
         steeringWheelRef.current.rotation.y = cameraRef.current.rotation.y * .2;
         cadillacRef.current.rotation.x = cameraRef.current.rotation.x * .01;
         cadillacRef.current.rotation.y = cameraRef.current.rotation.y * .01;
-        // cadillacRef.current.position.copy(new THREE.Vector3(cameraRef.current.x, cameraRef.current.y, cameraRef.current.z - 10));
     })
 
     return <>
@@ -86,14 +85,18 @@ export function Camera({ fov, near, far, tubeGeometry, maxDist, center, lightPro
                             />
                         })}
                     </group>
-                    {cadillacHoodGeoms.map(geometry => {
+                    {/* {cadillacHoodGeoms.map(geometry => {
+                        // TODO
+                        const opacity = geometry.name == "windows" ? 0 : 1;
                         return <mesh
                             key={geometry.name}
                             geometry={geometry}
-                            scale={[2,2,2]}
-                            position={[.5, -3, -.5]}
+                            scale={[4.1,4.1,4.1]}
+                            position={[1.25, -10, 5]}
+                            material-opacity={opacity}
+                            // position={[1.5, -3, 3.5]}
                         />
-                    })}
+                    })}*/}
                 </group>
             }
             <spotLight

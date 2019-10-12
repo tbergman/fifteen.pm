@@ -52,35 +52,12 @@ export function Scene({ track }) {
 
     useEffect(() => {
         if (asteroids.current) {
-            // Define the curve 
             var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids);
-                // { closed: true, type: 'catmullrom', arcLengthDivisions: asteroids.current.centroids.length }
-            // );
-
             const extrusionSegments = 500;
             const radius = 8;
             const closed = true;
             const radiusSegments = 3;
-            // var extrudePath = splines[ params.spline ];
             const tubeGeometry = new THREE.TubeBufferGeometry( closedSpline, extrusionSegments, radius, radiusSegments, closed );
-
-            // // Set up settings for later extrusion
-            // var extrudeSettings = {
-            //     steps: asteroids.current.centroids.length * 100,
-            //     bevelEnabled: true,
-            //     extrudePath: closedSpline
-            // };
-
-            // // Define a triangle
-            // var pts = [], count = 3;
-            // for (var i = 0; i < count; i++) {
-            //     var l = 50;
-            //     var a = 2 * i / count * Math.PI;
-            //     pts.push(new THREE.Vector2(Math.cos(a) * l, Math.sin(a) * l));
-            // }
-            // var shape = new THREE.Shape(pts);
-
-            // Extrude the triangle along the CatmullRom curve
             road.current = tubeGeometry;//new THREE.ExtrudeGeometry(shape, extrudeSettings);
         }
     })
@@ -123,7 +100,7 @@ export function Scene({ track }) {
                     // material={tronMaterial}
                     material={cloudMaterial}
                     // TODO this is also being set in Camera right now// all this will get refactored lol
-                    scale={[.8,.8,.8]}
+                    scale={[.6,.6,.6]}
                 />
             }
             {!loadingSteeringWheel && 
@@ -131,7 +108,7 @@ export function Scene({ track }) {
                     maxDist={C.MAX_CAMERA_DIST}
                     minDist={C.MIN_CAMERA_DIST}
                     fov={75}
-                    near={.1}
+                    near={1}
                     tubeGeometry={road.current}
                     far={10000}
                     center={C.WORLD_CENTER}
