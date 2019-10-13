@@ -19,6 +19,7 @@ import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
 import { AsteroidBelt } from './AsteroidBelt';
+import {FlatWorld} from './world';
 import { generateAsteroids } from './asteroids';
 import { Stars } from './stars';
 import { onCarLoaded, Cadillac } from './car';
@@ -50,17 +51,17 @@ export function Scene({ track }) {
     const asteroidVertexGroups = useRef();
     const road = useRef();
 
-    useEffect(() => {
-        if (asteroids.current) {
-            var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids);
-            const extrusionSegments = 500;
-            const radius = 8;
-            const closed = true;
-            const radiusSegments = 3;
-            const tubeGeometry = new THREE.TubeBufferGeometry( closedSpline, extrusionSegments, radius, radiusSegments, closed );
-            road.current = tubeGeometry;//new THREE.ExtrudeGeometry(shape, extrudeSettings);
-        }
-    })
+    // useEffect(() => {
+    //     if (asteroids.current) {
+    //         var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids);
+    //         const extrusionSegments = 500;
+    //         const radius = 8;
+    //         const closed = true;
+    //         const radiusSegments = 3;
+    //         const tubeGeometry = new THREE.TubeBufferGeometry( closedSpline, extrusionSegments, radius, radiusSegments, closed );
+    //         road.current = tubeGeometry;//new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    //     }
+    // })
 
     useEffect(() => {
         asteroids.current = generateAsteroids(
@@ -100,16 +101,16 @@ export function Scene({ track }) {
                     // material={tronMaterial}
                     material={cloudMaterial}
                     // TODO this is also being set in Camera right now// all this will get refactored lol
-                    scale={[.6,.6,.6]}
+                    scale={[.6, .6, .6]}
                 />
             }
-            {!loadingSteeringWheel && 
+            {!loadingSteeringWheel &&
                 <Camera
                     maxDist={C.MAX_CAMERA_DIST}
                     minDist={C.MIN_CAMERA_DIST}
                     fov={75}
                     near={1}
-                    tubeGeometry={road.current}
+                    // tubeGeometry={road.current}
                     far={10000}
                     center={C.WORLD_CENTER}
                     steeringWheelGeoms={steeringWheelGeoms}
@@ -126,18 +127,24 @@ export function Scene({ track }) {
                 />
             }
             {/* {road.current && */}
-                <Controls
-                    // road={road.current}
-                    radius={C.ASTEROID_MAX_RADIUS}
-                    movementSpeed={500}
-                    // movementSpeed={5000}
-                    domElement={canvas}
-                    rollSpeed={Math.PI * .5}
-                    autoForward={false}
-                    dragToLook={false}
-                />
-            {/* } */}
+            <Controls
+                // road={road.current}
+                radius={C.ASTEROID_MAX_RADIUS}
+                movementSpeed={500}
+                // movementSpeed={5000}
+                domElement={canvas}
+                rollSpeed={Math.PI * .5}
+                autoForward={false}
+                dragToLook={false}
+            />
             <FixedLights />
+            {!loadingBuildings && <FlatWorld
+                buildings={{
+                    geometries: buildingGeometries,
+                    materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
+                    loaded: !loadingBuildings,
+                }}
+            />}
             {/* <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
             /> */}
@@ -154,13 +161,7 @@ export function Scene({ track }) {
                             loaded: !loadingBuildings,
                         }}
                     />
-                    {/* <FlatWorld
-                        buildings={{
-                            geometries: buildingGeometries,
-                            materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
-                            loaded: !loadingBuildings,
-                        }}
-                    /> */}
+                    
             {/* </> : null
 
             } */}

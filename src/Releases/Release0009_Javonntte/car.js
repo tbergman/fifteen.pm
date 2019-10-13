@@ -10,7 +10,6 @@ export function onCarLoaded(gltf) {
         if (child.isMesh) {
             const geometry = child.geometry.clone();
             geometry.name = child.name;
-            console.log(geometry)
             geometries.push(geometry);
         }
     })

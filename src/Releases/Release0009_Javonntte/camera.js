@@ -2,21 +2,15 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useRender, useThree, useResource } from 'react-three-fiber';
 import { Cadillac } from './car';
-import { Metal03Material } from '../../Utils/materials'
 
-export function Camera({ fov, near, far, tubeGeometry, maxDist, center, lightProps, steeringWheelGeoms, cadillacHoodGeoms }) {
+export function Camera({ fov, near, far, maxDist, center, lightProps, steeringWheelGeoms, cadillacHoodGeoms }) {
 
     const spotLight = useRef();
     const cameraRef = useRef();
     const steeringWheelRef = useRef();
     const cadillacRef = useRef();
-    const { setDefaultCamera, scene } = useThree();
-    const [metal03MaterialRef, metal03Material] = useResource();
-    const normal = new THREE.Vector3(0, 0, 0);
-    const binormal = new THREE.Vector3(0, 1, 0);
-    const loopTime = 50000;
-    const scale = .6;
-    const offset = 6;
+    const { setDefaultCamera } = useThree();
+   
 
     useEffect(() => {
         if (cameraRef.current) {
@@ -24,31 +18,7 @@ export function Camera({ fov, near, far, tubeGeometry, maxDist, center, lightPro
         }
     }, [cameraRef]);
 
-    useRender((state, time) => {
-        // if (!frenetFrames.current || !steeringWheelRef) return;
-        if (!steeringWheelRef) return;
-        // const curve = path.parameters.path.options.extrudePath;
-        var t = (time % loopTime) / loopTime;
-        var pos = tubeGeometry.parameters.path.getPointAt(t);
-        pos.multiplyScalar(scale);
-        // interpolation
-        var segments = tubeGeometry.tangents.length;//frenetFrames.current.tangents.length;
-        var pickt = t * segments;
-        var pick = Math.floor(pickt);
-        var pickNext = (pick + 1) % segments;
-        binormal.subVectors(tubeGeometry.binormals[pickNext], tubeGeometry.binormals[pick]);
-        binormal.multiplyScalar(pickt - pick).add(tubeGeometry.binormals[pick]);
-        var dir = tubeGeometry.parameters.path.getTangentAt(t);
-        normal.copy(binormal).cross(dir);
-        // We move on a offset on its binormal
-        pos.add(normal.clone().multiplyScalar(offset));
-        cameraRef.current.position.copy(pos);
-        // Using arclength for stablization in look ahead.
-        var lookAt = tubeGeometry.parameters.path.getPointAt((t + 30 / tubeGeometry.parameters.path.getLength()) % 1).multiplyScalar(scale);
-        // Camera Orientation 2 - up orientation via normal
-        lookAt.copy(pos).add(dir);
-        cameraRef.current.matrix.lookAt(cameraRef.current.position, lookAt, normal);
-        cameraRef.current.rotation.setFromRotationMatrix(cameraRef.current.matrix, cameraRef.current.rotation.order);
+    useRender((state, time) => { 
         steeringWheelRef.current.rotation.y = cameraRef.current.rotation.y * .2;
         cadillacRef.current.rotation.x = cameraRef.current.rotation.x * .01;
         cadillacRef.current.rotation.y = cameraRef.current.rotation.y * .01;
