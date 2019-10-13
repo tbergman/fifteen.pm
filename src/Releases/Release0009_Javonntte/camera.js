@@ -8,11 +8,9 @@ export function Camera({ fov, near, far, tubeGeometry, maxDist, center, lightPro
 
     const spotLight = useRef();
     const cameraRef = useRef();
-    const parentRef = useRef();
     const steeringWheelRef = useRef();
     const cadillacRef = useRef();
     const { setDefaultCamera, scene } = useThree();
-    const frenetFrames = useRef();
     const [metal03MaterialRef, metal03Material] = useResource();
     const normal = new THREE.Vector3(0, 0, 0);
     const binormal = new THREE.Vector3(0, 1, 0);
@@ -26,15 +24,6 @@ export function Camera({ fov, near, far, tubeGeometry, maxDist, center, lightPro
         }
     }, [cameraRef]);
 
-    // useEffect(() => {
-    //     const closed = true;
-    //     if (tubeGeometry) {
-    //         const curve = tubeGeometry.parameters.options.extrudePath;
-    //         frenetFrames.current = curve.computeFrenetFrames(loopTime, closed);
-    //     }
-    // });
-
-    const cadillacPos = new THREE.Vector3()
     useRender((state, time) => {
         // if (!frenetFrames.current || !steeringWheelRef) return;
         if (!steeringWheelRef) return;
@@ -99,6 +88,7 @@ export function Camera({ fov, near, far, tubeGeometry, maxDist, center, lightPro
                     })}*/}
                 </group>
             }
+            {/* // TODO: car headlights! */}
             <spotLight
                 ref={spotLight}
                 castShadow
