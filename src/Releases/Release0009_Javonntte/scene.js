@@ -95,15 +95,7 @@ export function Scene({ track }) {
             <Metal03Material materialRef={metal03MaterialRef} />
             <TronMaterial materialRef={tronMaterialRef} />
             {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
-            {road.current && cloudMaterial &&
-                <mesh
-                    geometry={road.current}
-                    // material={tronMaterial}
-                    material={cloudMaterial}
-                    // TODO this is also being set in Camera right now// all this will get refactored lol
-                    scale={[.6, .6, .6]}
-                />
-            }
+           
             {!loadingSteeringWheel &&
                 <Camera
                     maxDist={C.MAX_CAMERA_DIST}
@@ -126,8 +118,7 @@ export function Scene({ track }) {
                     }}
                 />
             }
-            {/* {road.current && */}
-            <Controls
+            {/* <Controls
                 // road={road.current}
                 radius={C.ASTEROID_MAX_RADIUS}
                 movementSpeed={500}
@@ -136,7 +127,7 @@ export function Scene({ track }) {
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            />
+            /> */}
             <FixedLights />
             {!loadingBuildings && <FlatWorld
                 buildings={{

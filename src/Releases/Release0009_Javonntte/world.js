@@ -10,7 +10,7 @@ import { generateInstanceGeometriesTileSet, generateInstancedTilesOnGrid } from 
 import InfiniteTiles from '../../Utils/InfiniteTiles';
 import { SkyCityTile } from './tiles';
 import { cloneDeep } from 'lodash';
-import { Road } from './Road';
+import Road from './Road';
 
 // TODO tilt and rotationSpeed
 export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
@@ -117,7 +117,6 @@ export function SphereWorld({ track, buildings, ...props }) {
         );
     })
 
-
     useEffect(() => {
         if (buildings.loaded) {
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
@@ -180,9 +179,11 @@ export function SphereWorld({ track, buildings, ...props }) {
 
 
 function InfiniteTilesTemp({ ...props }) {
-    const centroids = [new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 1, 1), new THREE.Vector3(10, 5, 21)]
+    const [inNextGrid, setInNextGrid] = useState();
 
-    return <group>{React.cloneElement(props.children, { centroids })}</group>
+    return <group>
+        {React.cloneElement(props.children, { ...props })}
+    </group>
 }
 
 export function FlatWorld({ track, buildings, numTileSets, tileGridSize, ...props }) {
@@ -207,21 +208,27 @@ export function FlatWorld({ track, buildings, numTileSets, tileGridSize, ...prop
     //         // }
     //     }
     // }, [])
-
-    console.log("RENDER FLAT WORLD")
-
-    return <InfiniteTilesTemp>
+    const gridSize = 10;
+    const tileSize = 2;
+    return <>
         <Road
-            closed={false}
-            scale={0.6}
-            extrusionSegments={500}
-            radius={8}
-            radiusSegments={3}
-            loopTime={50000}
-            offset={6}
+            tubeProps={{
+                closed: false,
+                scale: 4,
+                extrusionSegments: 100,
+                radius: 2,
+                radiusSegments: 3,
+                offset: 15,
+            }}
             {...props}
         />
-    </InfiniteTilesTemp>
+        {/* <InfiniteTiles
+            tileSize={tileSize}
+            gridSize={gridSize}
+            tileComponent={SkyCityTile}
+        // tileResources={instancedTileFormations.current}
+        /> */}
+    </>
     // return <group ref={worldRef}>
     //     {/* {world && instancedTileFormations.current && */}
 

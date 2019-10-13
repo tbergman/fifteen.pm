@@ -17,13 +17,14 @@ function tileNeighbors(pos, tileSize) {
     // TODO
 }
 
-function addTiles({ tiles, time, grid, camera, tileSize }) {
+function addTiles({ tiles, time, gridSize, camera, tileSize }) {
     // force integer position rounded to nearest tilesize (integers for navigation)
     const cameraX = Math.floor(camera.position.x / tileSize) * tileSize;
     const cameraZ = Math.floor(camera.position.z / tileSize) * tileSize;
-    const halfTiles = Math.floor(grid / 2);
+    const halfTiles = Math.floor(gridSize / 2);
     const halfTilesX = halfTiles;
     const halfTilesY = halfTiles;
+    
     // TODO want to get something like this working: https://discourse.threejs.org/t/functions-to-calculate-the-visible-width-height-at-a-given-z-depth-from-a-perspective-camera/269/19
     // so that the tiles intelligently fill the visible screen with a buffer
     for (let x = -halfTilesX; x <= halfTilesX; x++) {
@@ -69,18 +70,18 @@ function destroyTile({ tiles, tile, scene }) {
     delete tiles.current[tile.id];
 }
 
-export default function InfiniteTiles({ tileSize, grid, tileComponent, tileResources }) {
+export default function InfiniteTiles({ tileSize, gridSize, tileComponent, tileResources }) {
     const { camera, scene } = useThree();
     const tiles = useRef({});
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
-    const boundary = useRef({ x: 0, z: 0 });
+    const boundary = useRef({ x: tileSize * 2, z: 0 }); // trigger tile generation on load
 
     useRender((state, time) => {
         if (shouldTriggerTileGeneration()) {
-            setLastUpdateTime(time);
             boundary.current = { x: camera.position.x, z: camera.position.z };
-            addTiles({ tiles, grid, time, camera, tileSize });
+            addTiles({ tiles, gridSize, time, camera, tileSize });
             refreshTiles({ scene, tiles, time });
+            setLastUpdateTime(time);
         }
     });
 
@@ -99,6 +100,8 @@ export default function InfiniteTiles({ tileSize, grid, tileComponent, tileResou
                 <MemoizedTile
                     tileComponent={tileComponent}
                     tileResources={tileResources}
+                    tileSize={tileSize}
+                    tileGrid={gridSize}
                     {...tileProps}
                 />
             </group>

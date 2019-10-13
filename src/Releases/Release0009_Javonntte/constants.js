@@ -71,3 +71,9 @@ export const MAX_CAMERA_DIST = ASTEROID_MAX_RADIUS - 1.5;// * 1.001;
 // export const MIN_CAMERA_DIST = WORLD_RADIUS * .88;
 export const WORLD_CENTER = new THREE.Vector3();
 export const NUM_ASTEROIDS = 20;
+// TODO getting the warnings gone for  min
+export const MIN_CAMERA_DIST = -1
+export const WORLD_RADIUS = -1
+export const MAX_WORLD_FACE_HEIGHT=ASTEROID_MAX_FACE_NOISE;
+export const SIDES = ASTEROID_MAX_SIDES;
+export const TIERS = ASTEROID_MAX_TIERS;
