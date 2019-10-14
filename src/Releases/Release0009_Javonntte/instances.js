@@ -45,12 +45,14 @@ function createInstance(elements, material) {
 
 // TODO maybe the material ref should be assigned to the incoming geometries array of objects
 // TODO combine formation-generating props together
-export function generateInstanceGeometriesByName(surfaceGeometry, buildings, neighborhoodProps) {
+export function generateInstanceGeometriesByName({surfaceGeometry, buildings, neighborhoodProps}) {
     const elementsByName = {};
     const instancesByName = {};
+    console.log("BUILDINGS IN INSTANCE FUN", buildings)
     // build up a lookup of each geometry by name
     buildings.geometries.forEach((geometry) => elementsByName[geometry.name] = []);
     // generate formations for all tiles
+    console.log("surface geom:", surfaceGeometry)
     const formations = generateFormations(surfaceGeometry, buildings.geometries, neighborhoodProps);
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach((tId) => {

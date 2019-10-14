@@ -63,7 +63,7 @@ function destroyTile({ tiles, tile, scene }) {
     delete tiles.current[tile.id];
 }
 
-export default function InfiniteTiles({ tileSize, gridSize, tileComponent, tileResources }) {
+export default function InfiniteTiles({ tileSize, gridSize, tileComponent, tileResources, ...props }) {
     const { camera, scene } = useThree();
     const tiles = useRef({});
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
@@ -95,6 +95,7 @@ export default function InfiniteTiles({ tileSize, gridSize, tileComponent, tileR
                     tileResources={tileResources}
                     tileSize={tileSize}
                     tileGrid={gridSize}
+                    {...props}
                     {...tileProps}
                 />
             </group>

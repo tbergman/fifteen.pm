@@ -19,7 +19,7 @@ import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
 import { AsteroidBelt } from './AsteroidBelt';
-import {FlatWorld} from './world';
+import {SphereWorld, FlatWorld} from './world';
 import { generateAsteroids } from './asteroids';
 import { Stars } from './stars';
 import { onCarLoaded, Cadillac } from './car';
@@ -118,7 +118,7 @@ export function Scene({ track }) {
                     }}
                 />
             }
-            {/* <Controls
+            <Controls
                 // road={road.current}
                 radius={C.ASTEROID_MAX_RADIUS}
                 movementSpeed={500}
@@ -127,15 +127,22 @@ export function Scene({ track }) {
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            /> */}
+            />
             <FixedLights />
-            {!loadingBuildings && <FlatWorld
+            {!loadingBuildings && buildingGeometries && foamGripMaterialRef && <SphereWorld
                 buildings={{
                     geometries: buildingGeometries,
                     materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
                     loaded: !loadingBuildings,
                 }}
             />}
+            {/* {!loadingBuildings && <FlatWorld
+                buildings={{
+                    geometries: buildingGeometries,
+                    materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
+                    loaded: !loadingBuildings,
+                }}
+            />} */}
             {/* <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
             /> */}
