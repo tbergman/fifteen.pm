@@ -3,13 +3,6 @@ import { useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import {tileIdFrom2d} from './tiles';
 
-// We don't want to constantly refresh tiles - 
-// that could potentially change what a tile looks like
-// while the user is still viewing it!
-export const MemoizedTile = React.memo(props => {
-    return <>{props.tileComponent(props)}</>;
-}, props => !props._isInitialRender);
-
 
 
 function tileNeighbors(pos, tileSize) {
@@ -108,3 +101,11 @@ export default function InfiniteTiles({ tileSize, gridSize, tileComponent, tileR
         )}
     </>;
 }
+
+
+// We don't want to constantly refresh tiles - 
+// that could potentially change what a tile looks like
+// while the user is still viewing it!
+export const MemoizedTile = React.memo(props => {
+    return <>{props.tileComponent(props)}</>;
+}, props => !props._isInitialRender);
