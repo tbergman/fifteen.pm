@@ -13,7 +13,7 @@ export default function Road({ curCamera, closed, scale, extrusionSegments, radi
     const up = new THREE.Vector3(0, 2, 2);// TODO these is supposed to be normalized to 1 and have only 1 non zero value lol
 
     useEffect(() => {
-        const elevationOffset = 30;
+        const elevationOffset = 3;
         const maxElevation = elevationOffset + C.WORLD_RADIUS;
         const steps = [
             // new THREE.Vector3(-maxElevation, 0, -maxElevation),

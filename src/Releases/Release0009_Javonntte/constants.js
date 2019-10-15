@@ -50,7 +50,7 @@ export const TRACK_LOOKUP = (() => {
 const RADIUS_DIVISOR = isMobile ? 60 : 40;
 export const ASTEROID_MAX_RADIUS = Math.floor(window.innerWidth / RADIUS_DIVISOR);
 console.log("radius", ASTEROID_MAX_RADIUS);
-export const ASTEROID_BELT_RADIUS = 1111;
+export const ASTEROID_BELT_RADIUS = 555;
 export const ASTEROID_BELT_CENTER = new THREE.Vector3();
 export const ASTEROID_MAX_SIDES = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? 1.6 : 1.6));
 export const ASTEROID_MAX_TIERS = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? .8 : 1.6));

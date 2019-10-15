@@ -48,22 +48,7 @@ export function Scene({ track }) {
     // const lookAt = new THREE.Vector3(0, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .5, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .1);
     const cameraRef = useRef();
     const asteroids = useRef();
-    const asteroidFaceGroups = useRef();
-    const asteroidsGeom = useRef();
-    const asteroidVertexGroups = useRef();
-    const road = useRef();
-
-    // useEffect(() => {
-    //     if (asteroids.current) {
-    //         var closedSpline = new THREE.CatmullRomCurve3(asteroids.current.centroids);
-    //         const extrusionSegments = 500;
-    //         const radius = 8;
-    //         const closed = true;
-    //         const radiusSegments = 3;
-    //         const tubeGeometry = new THREE.TubeBufferGeometry( closedSpline, extrusionSegments, radius, radiusSegments, closed );
-    //         road.current = tubeGeometry;//new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    //     }
-    // })
+   
 
     useEffect(() => {
         asteroids.current = generateAsteroids(
