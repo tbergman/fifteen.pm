@@ -6,11 +6,11 @@ import { CloudMaterial } from '../../Utils/materials';
 
 
 
-export default function Road({ closedSpline, tubeProps: { scale, extrusionSegments, radius, radiusSegments, closed, offset }, ...props }) {
+export default function Road({ scale, extrusionSegments, radius, radiusSegments, closed, offset, numSteps }) {
 
     const { camera } = useThree();
+
     
-    const numSteps = 200000;
 
 
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
@@ -25,7 +25,6 @@ export default function Road({ closedSpline, tubeProps: { scale, extrusionSegmen
     const binormal = new THREE.Vector3();//0, 1, 0);
 
     useEffect(() => {
-        // console.log("IN THE USE EFFECT")
         const nextSteps = [];
         // if (steps.current) {
         //     // have the previous path and current path line up a
@@ -38,18 +37,18 @@ export default function Road({ closedSpline, tubeProps: { scale, extrusionSegmen
         // const startPos = nextSteps[nextSteps.length - 1]; // start at the 'last' pos
         // nextSteps.push(...buildPath({ startPos, stepSize, numPathSteps }));
         // steps.current = nextSteps;
-        // const steps =  [
-        //     new THREE.Vector3( 0, - 40, - 40 ),
-        //     new THREE.Vector3( 0, 40, - 40 ),
-        //     new THREE.Vector3( 0, 140, - 40 ),
-        //     new THREE.Vector3( 0, 40, 40 ),
-        //     new THREE.Vector3( 0, - 40, 40 )
-        // ];
-       
-        
+        const steps = [
+            new THREE.Vector3(0, - 40, - 40),
+            new THREE.Vector3(0, 40, - 40),
+            new THREE.Vector3(0, 140, - 40),
+            new THREE.Vector3(0, 40, 40),
+            new THREE.Vector3(0, - 40, 40)
+        ];
+        const closedSpline = new THREE.CatmullRomCurve3(steps);
+        closedSpline.closed = true;
         const tubeGeometry = new THREE.TubeBufferGeometry(closedSpline, extrusionSegments, radius, radiusSegments, closed);
         road.current = tubeGeometry;
-        console.log("ROAD", road);
+        
         // else nextSection.current = tubeGeometry;
         // setGeneratingRoad(false);
     }, [])
@@ -67,9 +66,9 @@ export default function Road({ closedSpline, tubeProps: { scale, extrusionSegmen
     // let shouldRenderNextSection = true;
     // let shouldSwapSections = true;
     useRender((state, time) => {
-        
-        
-        var t = ( time % numSteps ) / numSteps;
+
+
+        var t = (time % numSteps) / numSteps;
 
         // if (!nextSection.current && !generatingRoad && shouldRenderNextSection) {
         //     setGeneratingRoad(true);
@@ -89,6 +88,7 @@ export default function Road({ closedSpline, tubeProps: { scale, extrusionSegmen
         // TODO why does this constantly change for initial curSection?
         // if (curSection.current) console.log(curSection.current.parameters.path.getPointAt(0));
         var pos = road.current.parameters.path.getPointAt(t);
+        
         // console.log('pos on road', pos, 'cam pos', camera.position);
         pos.multiplyScalar(scale);
         // interpolation
@@ -104,6 +104,7 @@ export default function Road({ closedSpline, tubeProps: { scale, extrusionSegmen
         // We move on a offset on its binormal
         pos.add(normal.clone().multiplyScalar(offset));
         camera.position.copy(pos);
+        console.log(pos, camera.position)
         // Using arclength for stablization in look ahead.
         var lookAt = road.current.parameters.path.getPointAt((t + 30 / road.current.parameters.path.getLength()) % 1).multiplyScalar(scale);
         // Camera Orientation 2 - up orientation via normal
@@ -125,7 +126,7 @@ export default function Road({ closedSpline, tubeProps: { scale, extrusionSegmen
             />
         }
         {/* {React.cloneElement(props.children, {...props})} */}
-  
+
         {/* {nextSection.current &&
             <mesh
                 geometry={nextSection.current}

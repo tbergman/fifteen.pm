@@ -19,10 +19,11 @@ import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
 import { AsteroidBelt } from './AsteroidBelt';
-import {SphereWorld, FlatWorld} from './world';
+import { SphereWorld, FlatWorld } from './world';
 import { generateAsteroids } from './asteroids';
 import { Stars } from './stars';
 import { onCarLoaded, Cadillac } from './car';
+import Road from './Road';
 
 export function Scene({ track }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -44,7 +45,7 @@ export function Scene({ track }) {
     const [facade12MaterialRef, facade12Material] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
     const [tronMaterialRef, tronMaterial] = useResource();
-    const lookAt = new THREE.Vector3(0, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .5, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .1);
+    // const lookAt = new THREE.Vector3(0, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .5, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .1);
     const asteroids = useRef();
     const asteroidFaceGroups = useRef();
     const asteroidsGeom = useRef();
@@ -95,7 +96,7 @@ export function Scene({ track }) {
             <Metal03Material materialRef={metal03MaterialRef} />
             <TronMaterial materialRef={tronMaterialRef} />
             {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
-           
+
             {!loadingSteeringWheel &&
                 <Camera
                     maxDist={C.MAX_CAMERA_DIST}
@@ -118,7 +119,7 @@ export function Scene({ track }) {
                     }}
                 />
             }
-            <Controls
+            {/* <Controls
                 // road={road.current}
                 radius={C.ASTEROID_MAX_RADIUS}
                 movementSpeed={500}
@@ -127,15 +128,24 @@ export function Scene({ track }) {
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            />
+            /> */}
             <FixedLights />
-            {!loadingBuildings && buildingGeometries && foamGripMaterialRef && <SphereWorld
+            {/* {!loadingBuildings && buildingGeometries && foamGripMaterialRef && <SphereWorld
                 buildings={{
                     geometries: buildingGeometries,
                     materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
                     loaded: !loadingBuildings,
                 }}
-            />}
+            />} */}
+            <Road
+                close={true}
+                scale={4}
+                extrusionSegments={500}
+                radius={2}
+                radiusSegments={3}
+                offset={15}
+                numSteps={20000}
+            />
             {/* {!loadingBuildings && <FlatWorld
                 buildings={{
                     geometries: buildingGeometries,

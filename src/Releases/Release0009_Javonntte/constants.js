@@ -62,8 +62,8 @@ export const NEIGHBORHOOD_PROPS = {
 }
 
 const STARTING_Z = isMobile ? ASTEROID_MAX_RADIUS * 5.13 : ASTEROID_MAX_RADIUS * 1.1;
-export const START_POS = new THREE.Vector3(0, 0, -ASTEROID_BELT_RADIUS);
-// export const START_POS = new THREE.Vector3(0, 0,STARTING_Z);
+// export const START_POS = new THREE.Vector3(0, 0, -ASTEROID_BELT_RADIUS);
+export const START_POS = new THREE.Vector3(0, 0,STARTING_Z);
 export const BASE_SCALE = isMobile ? 1.3 : 10.;
 export const CAMERA_DISTANCE_THRESHOLD = isMobile ? START_POS.z * 1.1 : ASTEROID_MAX_RADIUS + ASTEROID_MAX_RADIUS * .15;
 // max camera distance from center
@@ -73,7 +73,7 @@ export const WORLD_CENTER = new THREE.Vector3();
 export const NUM_ASTEROIDS = 20;
 // TODO getting the warnings gone for  min
 export const MIN_CAMERA_DIST = -1
-export const WORLD_RADIUS = 34
+export const WORLD_RADIUS = ASTEROID_MAX_RADIUS;
 export const MAX_WORLD_FACE_HEIGHT=ASTEROID_MAX_FACE_NOISE;
-export const SIDES = ASTEROID_MAX_SIDES;
-export const TIERS = ASTEROID_MAX_TIERS;
+export const SIDES = 34; // ASTEROID_MAX_SIDES;
+export const TIERS = 34; //ASTEROID_MAX_TIERS;

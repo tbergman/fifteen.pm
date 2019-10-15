@@ -5,7 +5,7 @@ import { generateTiles, generateTilesFromFacesAndVertices } from '../../Utils/Sp
 import { loadKDTree, findNearest } from '../../Utils/KdTree';
 import { groupBuildingGeometries } from './buildings';
 import * as C from './constants';
-
+import { tileId } from '../../Utils/tiles';
 
 function subdivide6(triangleComponents, centroid) {
     return [
@@ -97,11 +97,28 @@ function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, geometries) 
     return formation;
 }
 
-export function generateFormations(surfaceGeometry, geometries, neighborhoodProps) {
+
+function pathOnTree(kdTree) {
+    const startPos = Math.random() - .5 > 0 ? kdTree.root.left : kdTree.root.right;
+    const path = [startPos];
+    let depth = 0;
+    while (depth < kdTree.getMaxDepth()) {
+        const nextStep = Math.random() - .5 > 0 ? path[depth].left : path[depth].right;
+        if (!nextStep) break;
+        path.push(nextStep);
+        depth += 1
+    }
+    console.log("PATH LENGTH", path.length);
+    return path;
+}
+
+export function generateTileFormations(surfaceGeometry, geometries, neighborhoodProps) {
     const tiles = generateTiles(surfaceGeometry);
     const kdTree = loadKDTree(tiles);
+    const path = pathOnTree(kdTree);
+
     const formations = {}
-    Object.keys(tiles).forEach(tileId => formations[tileId] = []);
+    Object.keys(tiles).forEach(id => formations[id] = []);
     const geometriesByCategory = groupBuildingGeometries(geometries);
     const sphereCenter = new THREE.Vector3();
     surfaceGeometry.boundingBox.getCenter(sphereCenter);
@@ -118,6 +135,19 @@ export function generateFormations(surfaceGeometry, geometries, neighborhoodProp
             }
         });
     });
+
+    //TODO tmp
+    path.forEach(step => {
+        console.log('step', step)
+        const id = tileId({ x: step.obj[0], y: step.obj[1], z: step.obj[2] });
+        console.log("TILE", tiles[id])
+        console.log('id', id)
+        console.log('exists? (should be array)', formations[id])
+        const centroid = new THREE.Vector3(step.obj[0], step.obj[1], step.obj[2]);
+        console.log("centroid", centroid)
+        formations[id] = formatTile(tiles[id], centroid, 20, geometriesByCategory);
+    })
+
     return formations;
 }
 

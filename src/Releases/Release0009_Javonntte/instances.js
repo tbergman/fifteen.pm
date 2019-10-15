@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { generateFormations, generateFormationsFromFaces } from './formations';
+import { generateTileFormations, generateFormationsFromFaces } from './formations';
 import { cloneDeep } from 'lodash';
 
 import instancedMesh from 'three-instanced-mesh';
@@ -48,12 +48,10 @@ function createInstance(elements, material) {
 export function generateInstanceGeometriesByName({surfaceGeometry, buildings, neighborhoodProps}) {
     const elementsByName = {};
     const instancesByName = {};
-    console.log("BUILDINGS IN INSTANCE FUN", buildings)
     // build up a lookup of each geometry by name
     buildings.geometries.forEach((geometry) => elementsByName[geometry.name] = []);
     // generate formations for all tiles
-    console.log("surface geom:", surfaceGeometry)
-    const formations = generateFormations(surfaceGeometry, buildings.geometries, neighborhoodProps);
+    const formations = generateTileFormations(surfaceGeometry, buildings.geometries, neighborhoodProps);
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach((tId) => {
         formations[tId].forEach((element) => {

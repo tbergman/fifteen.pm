@@ -46,6 +46,7 @@ function buildPath({ startPos, stepSize, numPathSteps }) {
 }
 
 // TODO tilt and rotationSpeed
+// https://github.com/mrdoob/three.js/blob/master/examples/js/math/ConvexHull.js
 export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
     // variate sphere heights
@@ -187,6 +188,7 @@ export function SphereWorld({ track, buildings, ...props }) {
                 geometry={innerSphereGeometry}
                 bpm={track && track.bpm}
             /> */}
+            {/* // Half face data structure for path creation? https://github.com/mrdoob/three.js/blob/master/examples/js/math/ConvexHull.js */}
             <WorldSurface
                 geometry={outerSphereGeometry}
                 bpm={track && track.bpm}
