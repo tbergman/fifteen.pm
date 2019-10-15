@@ -98,16 +98,14 @@ export function Scene({ track }) {
             <TronMaterial materialRef={tronMaterialRef} />
             {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
 
-            {/* {!loadingSteeringWheel && */}
+            {!loadingSteeringWheel &&
                 <Camera
                     cameraRef={cameraRef}
                     maxDist={C.MAX_CAMERA_DIST}
                     minDist={C.MIN_CAMERA_DIST}
                     fov={75}
                     near={1}
-                    // tubeGeometry={road.current}
                     far={10000}
-                    // center={C.WORLD_CENTER}
                     steeringWheelGeoms={steeringWheelGeoms}
                     cadillacHoodGeoms={cadillacHoodGeoms}
                     lightProps={{
@@ -120,62 +118,50 @@ export function Scene({ track }) {
                         shadowMapSizeHeight: 512,
                     }}
                 />
-            {/* } */}
+            }
             <Controls
-                // road={road.current}
                 radius={C.ASTEROID_MAX_RADIUS}
                 movementSpeed={500}
-                // movementSpeed={5000}
                 domElement={canvas}
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
             />
             <FixedLights />
-            {!loadingBuildings && buildingGeometries && foamGripMaterialRef && <SphereWorld
-                buildings={{
-                    geometries: buildingGeometries,
-                    materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
-                    loaded: !loadingBuildings,
-                }}
-            />}
+            {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
+                <SphereWorld
+                    buildings={{
+                        geometries: buildingGeometries,
+                        materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
+                        loaded: !loadingBuildings,
+                    }}
+                />}
             {cameraRef.current && <Road
-                curCamera = {cameraRef.current}
+                curCamera={cameraRef.current}
                 closed={true}
                 scale={1}
                 extrusionSegments={100}
                 radius={2}
                 radiusSegments={3}
-                offset={8}
+                offset={3}
                 numSteps={20000}
             />}
-            {/* {!loadingBuildings && <FlatWorld
-                buildings={{
-                    geometries: buildingGeometries,
-                    materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
-                    loaded: !loadingBuildings,
-                }}
-            />} */}
-            {/* <Stars
+            <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
-            /> */}
-            {/* {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings ?
-                <>
-                    <AsteroidBelt
-                        track={track}
-                        // TODO can combine this all into a n object or refernece directly the buffergeom
-                        asteroids={asteroids.current}
-                        // startPos={startPos}
-                        buildings={{
-                            geometries: buildingGeometries,
-                            materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
-                            loaded: !loadingBuildings,
-                        }}
-                    />
-                    
-            {/* </> : null
-
-            } */}
+            />
+            {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings &&
+                <AsteroidBelt
+                    track={track}
+                    // TODO can combine this all into a n object or refernece directly the buffergeom
+                    asteroids={asteroids.current}
+                    // startPos={startPos}
+                    buildings={{
+                        geometries: buildingGeometries,
+                        materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
+                        loaded: !loadingBuildings,
+                    }}
+                />
+               }
         </>
     );
 }

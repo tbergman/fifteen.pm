@@ -97,26 +97,37 @@ function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, geometries) 
     return formation;
 }
 
-
-function pathOnTree(kdTree) {
-    const startPos = Math.random() - .5 > 0 ? kdTree.root.left : kdTree.root.right;
-    const path = [startPos];
-    let depth = 0;
-    while (depth < kdTree.getMaxDepth()) {
-        const nextStep = Math.random() - .5 > 0 ? path[depth].left : path[depth].right;
-        if (!nextStep) break;
-        path.push(nextStep);
-        depth += 1
-    }
-    console.log("PATH LENGTH", path.length);
-    return path;
+// TODO tmp hack - this needs to be passed in so that it's shared by the Road component
+const steps = [
+    new THREE.Vector3(C.WORLD_RADIUS, 0, 0),
+    new THREE.Vector3(3 * C.WORLD_RADIUS/4, 0, 3 * C.WORLD_RADIUS/4),
+    new THREE.Vector3(C.WORLD_RADIUS/2, 0, C.WORLD_RADIUS/2),
+    new THREE.Vector3(C.WORLD_RADIUS/4, 0, C.WORLD_RADIUS/4),
+    new THREE.Vector3(0, 0, C.WORLD_RADIUS),
+    new THREE.Vector3(3 * -C.WORLD_RADIUS/4, 0, 3 * C.WORLD_RADIUS/4), 
+    new THREE.Vector3(-C.WORLD_RADIUS/2, 0, C.WORLD_RADIUS/2), 
+    new THREE.Vector3(-C.WORLD_RADIUS/4, 0, C.WORLD_RADIUS/4), 
+    new THREE.Vector3(-C.WORLD_RADIUS, 0, 0),
+    new THREE.Vector3(3 * -C.WORLD_RADIUS/4, 0, 3 * -C.WORLD_RADIUS/4), 
+    new THREE.Vector3(-C.WORLD_RADIUS/2, 0, -C.WORLD_RADIUS/2), 
+    new THREE.Vector3(-C.WORLD_RADIUS/4, 0, -C.WORLD_RADIUS/4), 
+    new THREE.Vector3(0, 0, -C.WORLD_RADIUS), 
+    new THREE.Vector3( 3 * C.WORLD_RADIUS/4, 0, 4 * -C.WORLD_RADIUS/4),
+    new THREE.Vector3(C.WORLD_RADIUS/2, 0, -C.WORLD_RADIUS/2),
+    new THREE.Vector3(C.WORLD_RADIUS/4, 0, -C.WORLD_RADIUS/4),
+]
+// TODO these filter values need to be relative to the world radius.
+function onPath(centroid){
+    return steps.map(step => centroid.distanceTo(step)).filter(f => f < 12).length > 0
 }
+function tooFar(centroid){
+    return steps.map(step => centroid.distanceTo(step)).filter(f => f > 16).length == steps.length;
+}
+
 
 export function generateTileFormations(surfaceGeometry, geometries, neighborhoodProps) {
     const tiles = generateTiles(surfaceGeometry);
     const kdTree = loadKDTree(tiles);
-    const path = pathOnTree(kdTree);
-
     const formations = {}
     Object.keys(tiles).forEach(id => formations[id] = []);
     const geometriesByCategory = groupBuildingGeometries(geometries);
@@ -129,25 +140,14 @@ export function generateTileFormations(surfaceGeometry, geometries, neighborhood
             // if already assigned, 50% chance of replacement
             const id = neighbor.id;
             // colors={track.theme.starColors}
+
+
             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
-            if (replace) {
+            if (replace && !onPath(neighbor.centroid) && !tooFar(neighbor.centroid)) {
                 formations[id] = formatTile(neighbor, neighborhoodCentroid, neighborhoodRadius, geometriesByCategory);
             }
         });
     });
-
-    //TODO tmp
-    path.forEach(step => {
-        console.log('step', step)
-        const id = tileId({ x: step.obj[0], y: step.obj[1], z: step.obj[2] });
-        console.log("TILE", tiles[id])
-        console.log('id', id)
-        console.log('exists? (should be array)', formations[id])
-        const centroid = new THREE.Vector3(step.obj[0], step.obj[1], step.obj[2]);
-        console.log("centroid", centroid)
-        formations[id] = formatTile(tiles[id], centroid, 20, geometriesByCategory);
-    })
-
     return formations;
 }
 

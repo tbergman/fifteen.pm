@@ -12,16 +12,13 @@ export function Camera({ cameraRef, fov, near, far, maxDist, center, lightProps,
     const { setDefaultCamera } = useThree();
 
     useEffect(() => {
-        console.log("RUN THIS EFFECT CAMERA")
-
         if (cameraRef.current) {
-            console.log("SETTING DEFAULT CAM")
             setDefaultCamera(cameraRef.current);
         }
-    });
+    }, [cameraRef.current]);
 
     useRender((state, time) => {
-        // steeringWheelRef.current.rotation.y = cameraRef.current.rotation.y * .2;
+        steeringWheelRef.current.rotation.y = cameraRef.current.rotation.y * .2;
         // cadillacRef.current.rotation.x = cameraRef.current.rotation.x * .01;
         // cadillacRef.current.rotation.y = cameraRef.current.rotation.y * .01;
     })

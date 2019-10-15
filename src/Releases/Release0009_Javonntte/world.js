@@ -132,7 +132,6 @@ export function SphereWorld({ track, buildings, ...props }) {
     const [worldRef, world] = useResource();
     const [curTrackName, setCurTrackName] = useState();
     const outerTileInstances = useRef();
-    const innerTileInstances = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
     const sphereGeometry = useMemo(() => {
         return generateSphereWorldGeometry(
@@ -143,14 +142,6 @@ export function SphereWorld({ track, buildings, ...props }) {
         );
     });
 
-    const innerSphereGeometry = useMemo(() => {
-        return generateSphereWorldGeometry(
-            Math.floor(C.WORLD_RADIUS / 2),
-            Math.floor(C.SIDES / 2),
-            Math.floor(C.TIERS / 2),
-            C.MAX_WORLD_FACE_HEIGHT / 2,
-        );
-    })
 
     useEffect(() => {
         if (buildings.loaded) {
@@ -163,6 +154,9 @@ export function SphereWorld({ track, buildings, ...props }) {
     }, [])
 
     useEffect(() => {
+        if (worldRef){
+            worldRef.current.rotation.z -= Math.PI;
+        }        
         // if (track.current) {
         //     track.current && setCurTrackName(track.current.name)
         // }
@@ -224,83 +218,3 @@ function InfiniteTilesTemp({ ...props }) {
     </group>
 }
 
-export function FlatWorld({ track, buildings, numTileSets, tileGridSize, ...props }) {
-    const { camera, scene } = useThree();
-    const [worldRef, world] = useResource(); // TODO is this doing anything?
-    const [curTrackName, setCurTrackName] = useState();
-    const instancedTileFormations = useRef();
-    const innerTileFormations = useRef();
-    const [renderTiles, setRenderTiles] = useState(true);
-
-    // useEffect(() => {
-    //     if (buildings.loaded) {
-    //         instancedTileFormations.current = generateInstanceGeometriesTileSet({ buildings });
-    //         instancedTileFormations.current = {}
-    //         instancedTileFormations['a'] = generateInstanceGeometriesTileSet({ buildings }) // TODO hackign to figure out weird bug... this should be  keystied to tile ids
-    //         instancedTileFormations['b'] = generateInstanceGeometriesTileSet({ buildings }) // TODO hackign to figure out weird bug... this should be  keystied to tile ids
-    //         // instancedTileFormations.current = [];
-    //         // for (let i = 0; i < numTileSets; i++) {
-    //         //     instancedTileFormations.current.push(
-    //         //         generateInstanceGeometriesTileSet({ buildings: cloneDeep(buildings) })
-    //         //     );
-    //         // }
-    //     }
-    // }, [])
-    const gridSize = 10;
-    const tileSize = 2;
-    const stepSize = 5000;
-    const numPathSteps = 5; // TODO enforce that this is even?
-    const steps = buildPath({ startPos: camera.position, stepSize, numPathSteps });
-    var closedSpline = new THREE.CatmullRomCurve3(steps);
-    closedSpline.closed = true;
-    closedSpline.curveType = 'catmullrom';
-    closedSpline.arcLengthDivisions = 5000;
-    return <>
-
-        <Road
-            closedSpline={closedSpline}
-            tubeProps={{
-                closed: true,
-                scale: 4,
-                extrusionSegments: 100,
-                radius: 2,
-                radiusSegments: 3,
-                offset: 15,
-            }}
-            {...props}
-        />
-
-
-        <InfiniteTiles
-            tileSize={tileSize}
-            gridSize={gridSize}
-            tileComponent={SkyCityTile}
-            road={closedSpline}
-            
-            {...props}
-        // tileResources={instancedTileFormations.current}
-        />
-
-    </>
-    // return <group ref={worldRef}>
-    //     {/* {world && instancedTileFormations.current && */}
-
-    //         // <InfiniteTiles
-    //         //     tileSize={2}
-    //         //     grid={tileGridSize}
-    //         //     tileComponent={SkyCityTile}
-    //         //     tileResources={instancedTileFormations.current}
-    //         //>
-    //         <Road
-    //             close={false}
-    //             scale={0.6}
-    //             extrusionSegments={500}
-    //             radius={8}
-    //             radiusSegments={3}
-    //             loopTime={50000}
-    //             offset={6}
-    //         />
-    //         // </InfiniteTiles>
-    //     // }
-    // </group>
-}
