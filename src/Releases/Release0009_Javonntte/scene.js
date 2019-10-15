@@ -142,11 +142,11 @@ export function Scene({ track }) {
             {cameraRef.current && <Road
                 curCamera = {cameraRef.current}
                 closed={true}
-                scale={4}
+                scale={1}
                 extrusionSegments={100}
                 radius={2}
                 radiusSegments={3}
-                offset={15}
+                offset={8}
                 numSteps={20000}
             />}
             {/* {!loadingBuildings && <FlatWorld

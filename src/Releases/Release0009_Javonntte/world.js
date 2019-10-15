@@ -134,7 +134,7 @@ export function SphereWorld({ track, buildings, ...props }) {
     const outerTileInstances = useRef();
     const innerTileInstances = useRef();
     const [renderTiles, setRenderTiles] = useState(true);
-    const outerSphereGeometry = useMemo(() => {
+    const sphereGeometry = useMemo(() => {
         return generateSphereWorldGeometry(
             C.WORLD_RADIUS,
             C.SIDES,
@@ -156,7 +156,7 @@ export function SphereWorld({ track, buildings, ...props }) {
         if (buildings.loaded) {
             console.log('buildings going in', buildings)
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
-            outerTileInstances.current = generateInstanceGeometriesByName({ surfaceGeometry: outerSphereGeometry, buildings, neighborhoodProps: C.NEIGHBORHOOD_PROPS });
+            outerTileInstances.current = generateInstanceGeometriesByName({ surfaceGeometry: sphereGeometry, buildings, neighborhoodProps: C.NEIGHBORHOOD_PROPS });
             
             // innerTileInstances.current = generateInstanceGeometriesTileSet({ surfaceGeometry: innerSphereGeometry, buildings, ...C.NEIGHBORHOOD_PROPS })
         }
@@ -190,7 +190,7 @@ export function SphereWorld({ track, buildings, ...props }) {
             /> */}
             {/* // Half face data structure for path creation? https://github.com/mrdoob/three.js/blob/master/examples/js/math/ConvexHull.js */}
             <WorldSurface
-                geometry={outerSphereGeometry}
+                geometry={sphereGeometry}
                 bpm={track && track.bpm}
             />
             {outerTileInstances.current &&

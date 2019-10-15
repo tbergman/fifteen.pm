@@ -1,50 +1,38 @@
-import React, { useRef, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useRender, useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import { useRender, useResource, useThree } from 'react-three-fiber';
 import { CloudMaterial } from '../../Utils/materials';
-
+import * as C from './constants';
 
 export default function Road({ curCamera, closed, scale, extrusionSegments, radius, radiusSegments, offset, numSteps }) {
 
-    const [lastUpdateTime, setLastUpdateTime] = useState(0);
-    const [approachingEnd, setApproachingEnd] = useState(false);
-    const [generatingRoad, setGeneratingRoad] = useState(false);
     const road = useRef();
-    const nextSection = useRef();
-    const steps = useRef();
-    const step = useRef();
     const [cloudMaterialRef, cloudMaterial] = useResource();
-    const normal = new THREE.Vector3();//0, 0, 0);
-    const binormal = new THREE.Vector3();//0, 1, 0);
+    const normal = new THREE.Vector3();
+    const binormal = new THREE.Vector3();
 
     useEffect(() => {
-        const nextSteps = [];
+        const elevationOffset = 10;
+        const maxElevation = elevationOffset + C.WORLD_RADIUS;
         const steps = [
-            new THREE.Vector3(0, - 40, - 40),
-            new THREE.Vector3(0, 40, - 40),
-            new THREE.Vector3(0, 140, - 40),
-            new THREE.Vector3(0, 40, 40),
-            new THREE.Vector3(0, - 40, 40)
+            // new THREE.Vector3(0, -maxElevation, -maxElevation),
+            // new THREE.Vector3(0, maxElevation, -maxElevation),
+            // new THREE.Vector3(0, maxElevation, maxElevation),
+            // new THREE.Vector3(0, -maxElevation, maxElevation),
+            new THREE.Vector3(-maxElevation, 0, -maxElevation),
+            new THREE.Vector3(maxElevation, 0, -maxElevation),
+            new THREE.Vector3(maxElevation, 0,  maxElevation),
+            new THREE.Vector3(-maxElevation, 0,  maxElevation),
         ];
         var closedSpline = new THREE.CatmullRomCurve3(steps);
         closedSpline.closed = true;
         closedSpline.curveType = 'catmullrom';
         const tubeGeometry = new THREE.TubeBufferGeometry(closedSpline, extrusionSegments, radius, radiusSegments, closed);
+        console.log(tubeGeometry);
+        
         road.current = tubeGeometry;
     }, [])
 
-
-    // useEffect(() => {
-    //     if (approachingEnd) {
-    //         road.current = nextSection.current;
-    //         nextSection.current = undefined;
-    //         setApproachingEnd(false)
-    //     }
-    // }, [approachingEnd])
-
-    // Drive camera along road
-    // let shouldRenderNextSection = true;
-    // let shouldSwapSections = true;
     useRender((state, time) => {
         var t = (time % numSteps) / numSteps;
         // console.log(t)
@@ -68,7 +56,10 @@ export default function Road({ curCamera, closed, scale, extrusionSegments, radi
         // Camera Orientation 2 - up orientation via normal
         lookAt.copy(pos).add(dir);
         curCamera.matrix.lookAt(curCamera.position, lookAt, normal);
-        curCamera.rotation.setFromRotationMatrix(curCamera.matrix);//, camera.rotation.order);
+        curCamera.rotation.setFromRotationMatrix(curCamera.matrix);
+        curCamera.rotation.z -= Math.PI / 2; // TODO added code - can it be baked into matrix rotation?
+        
+        
     })
 
     // if (road.current) console.log('road array idx 0:', road.current.attributes.position.array[0])
@@ -81,14 +72,5 @@ export default function Road({ curCamera, closed, scale, extrusionSegments, radi
                 scale={[scale, scale, scale]}
             />
         }
-        {/* {React.cloneElement(props.children, {...props})} */}
-
-        {/* {nextSection.current &&
-            <mesh
-                geometry={nextSection.current}
-                material={cloudMaterial}
-                scale={[scale, scale, scale]}
-            />
-        } */}
     </>
 }
