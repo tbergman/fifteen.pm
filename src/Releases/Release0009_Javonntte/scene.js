@@ -46,6 +46,7 @@ export function Scene({ track }) {
     const [metal03MaterialRef, metal03Material] = useResource();
     const [tronMaterialRef, tronMaterial] = useResource();
     // const lookAt = new THREE.Vector3(0, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .5, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .1);
+    const cameraRef = useRef();
     const asteroids = useRef();
     const asteroidFaceGroups = useRef();
     const asteroidsGeom = useRef();
@@ -97,15 +98,16 @@ export function Scene({ track }) {
             <TronMaterial materialRef={tronMaterialRef} />
             {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
 
-            {!loadingSteeringWheel &&
+            {/* {!loadingSteeringWheel && */}
                 <Camera
+                    cameraRef={cameraRef}
                     maxDist={C.MAX_CAMERA_DIST}
                     minDist={C.MIN_CAMERA_DIST}
                     fov={75}
                     near={1}
                     // tubeGeometry={road.current}
                     far={10000}
-                    center={C.WORLD_CENTER}
+                    // center={C.WORLD_CENTER}
                     steeringWheelGeoms={steeringWheelGeoms}
                     cadillacHoodGeoms={cadillacHoodGeoms}
                     lightProps={{
@@ -118,8 +120,8 @@ export function Scene({ track }) {
                         shadowMapSizeHeight: 512,
                     }}
                 />
-            }
-            {/* <Controls
+            {/* } */}
+            <Controls
                 // road={road.current}
                 radius={C.ASTEROID_MAX_RADIUS}
                 movementSpeed={500}
@@ -128,24 +130,25 @@ export function Scene({ track }) {
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            /> */}
+            />
             <FixedLights />
-            {/* {!loadingBuildings && buildingGeometries && foamGripMaterialRef && <SphereWorld
+            {!loadingBuildings && buildingGeometries && foamGripMaterialRef && <SphereWorld
                 buildings={{
                     geometries: buildingGeometries,
                     materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
                     loaded: !loadingBuildings,
                 }}
-            />} */}
-            <Road
-                close={true}
+            />}
+            {cameraRef.current && <Road
+                curCamera = {cameraRef.current}
+                closed={true}
                 scale={4}
-                extrusionSegments={500}
+                extrusionSegments={100}
                 radius={2}
                 radiusSegments={3}
                 offset={15}
                 numSteps={20000}
-            />
+            />}
             {/* {!loadingBuildings && <FlatWorld
                 buildings={{
                     geometries: buildingGeometries,
