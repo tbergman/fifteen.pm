@@ -45,7 +45,7 @@ export function onBuildingsLoaded(gltf) {
             geometry.computeBoundingBox();
             geometry.boundingBox.getSize(geometrySize);
             geometry.name = child.name;
-            geometry.scale(C.BASE_SCALE, C.BASE_SCALE, C.BASE_SCALE);
+            geometry.scale(C.BUILDING_BASE_SCALE, C.BUILDING_BASE_SCALE, C.BUILDING_BASE_SCALE);
             geometries.push(geometry);
         }
     })

@@ -69,7 +69,7 @@ function pickFootprint(tile) {
     // const distToPole = C.ASTEROID_MAX_RADIUS - Math.abs(tile.centroid.y);
     // const closeToPole = distToPole < poleLimit;
     // return closeToPole ? C.SMALL : C.WIDTH_BUCKETS[THREE.Math.randInt(0, C.WIDTH_BUCKETS.length - 1)];
-    return C.WIDTH_BUCKETS[THREE.Math.randInt(0, C.WIDTH_BUCKETS.length - 1)];
+    return C.BUILDING_WIDTH_BUCKETS[THREE.Math.randInt(0, C.BUILDING_WIDTH_BUCKETS.length - 1)];
 }
 
 function pickHeight(tile, neighborhoodCentroid, neighborhoodRadius) {

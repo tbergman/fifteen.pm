@@ -136,8 +136,8 @@ export function SphereWorld({ track, buildings, ...props }) {
     const sphereGeometry = useMemo(() => {
         return generateSphereWorldGeometry(
             C.WORLD_RADIUS,
-            C.SIDES,
-            C.TIERS,
+            C.WORLD_SIDES,
+            C.WORLD_TIERS,
             C.MAX_WORLD_FACE_HEIGHT,
         );
     });
