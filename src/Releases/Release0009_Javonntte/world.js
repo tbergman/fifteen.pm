@@ -145,7 +145,6 @@ export function SphereWorld({ track, buildings, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded) {
-            console.log('buildings going in', buildings)
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
             outerTileInstances.current = generateInstanceGeometriesByName({ 
                 surfaceGeometry: sphereGeometry,

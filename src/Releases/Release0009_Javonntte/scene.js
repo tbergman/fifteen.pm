@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useResource, useThree, useRender } from 'react-three-fiber';
 import * as THREE from 'three';
 import { useGLTF } from "../../Utils/hooks";
@@ -37,6 +37,7 @@ export function Scene({ track }) {
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [loadingCadillacHood, cadillacHoodGeoms] = useGLTF(C.CADILLAC_HOOD_URL, onCarLoaded)
     const [loadingSteeringWheel, steeringWheelGeoms] = useGLTF(C.STEERING_WHEEL_URL, onCarLoaded)
+    const [lightsOn, setLightsOn] = useState(true);
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const [foamGripMaterialRef, foamGripMaterial] = useResource();
     const [windows1MaterialRef, windows1Material] = useResource();
@@ -61,7 +62,7 @@ export function Scene({ track }) {
             C.ASTEROID_MAX_FACE_NOISE,
         )
     }, [])
-    useEffect(() => { scene.background = new THREE.Color("black") });
+    useEffect(() => {  });
     useEffect(() => {
         // These actions must occur after buildings load.
         // camera.position.copy(C.START_POS);
@@ -69,6 +70,10 @@ export function Scene({ track }) {
         // scene.fog = new THREE.FogExp2(0x0000ff, 0.1);
 
     }, [buildingGeometries])
+
+    useEffect(() => {
+        scene.background = new THREE.Color(lightsOn ? "white" : "black");
+    }, [lightsOn])
 
     return (
         <>
@@ -82,7 +87,12 @@ export function Scene({ track }) {
             <Metal03Material materialRef={metal03MaterialRef} />
             <TronMaterial materialRef={tronMaterialRef} />
             {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
-
+            {/* <mesh
+                position={new THREE.Vector3(0, 0, -5)}
+            >
+                <boxGeometry attach='geometry' />
+                <meshBasicMaterial attach='material' side={THREE.DoubleSide} color={new THREE.Color("red")} />
+            </mesh> */}
             {!loadingSteeringWheel &&
                 <Camera
                     cameraRef={cameraRef}
@@ -93,6 +103,9 @@ export function Scene({ track }) {
                     far={10000}
                     steeringWheelGeoms={steeringWheelGeoms}
                     cadillacHoodGeoms={cadillacHoodGeoms}
+                    onButtonClicked={() => {
+                        setLightsOn(lightsOn ? false : true)
+                    }}
                     lightProps={{
                         intensity: 1.1,
                         // penumbra: 0.1,
@@ -113,15 +126,15 @@ export function Scene({ track }) {
                 dragToLook={false}
             />
             <FixedLights />
-            {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
+            {/* {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <SphereWorld
                     buildings={{
                         geometries: buildingGeometries,
                         materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
                         loaded: !loadingBuildings,
                     }}
-                />}
-            {cameraRef.current && <Road
+                />} */}
+            {/* {cameraRef.current && <Road
                 curCamera={cameraRef.current}
                 closed={true}
                 scale={1}
@@ -130,11 +143,11 @@ export function Scene({ track }) {
                 radiusSegments={3}
                 offset={2}
                 numSteps={20000}
-            />}
-            <Stars
+            />} */}
+            {/* <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
-            />
-            {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings &&
+            /> */}
+            {/* {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings &&
                 <AsteroidBelt
                     track={track}
                     // TODO can combine this all into a n object or refernece directly the buffergeom
@@ -146,7 +159,7 @@ export function Scene({ track }) {
                         loaded: !loadingBuildings,
                     }}
                 />
-               }
+               } */}
         </>
     );
 }

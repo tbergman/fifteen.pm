@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
-import {useRender} from 'react-three-fiber';
+import React, { useMemo, useRef } from 'react';
+import * as THREE from 'three';
+import { useRender, useResource } from 'react-three-fiber';
 import { useGLTF } from "../../Utils/hooks";
-import * as C from './constants';
 
 export function onCarLoaded(gltf) {
     // return gltf.scene
@@ -16,27 +16,51 @@ export function onCarLoaded(gltf) {
     return geometries;
 }
 
-// NOT WORKING
-export function Car({ curCamera, position, steeringWheelGeoms }) {
-    const steeringWheelRef = useRef();
-    // const [steeringWheelLoading, steeringWheelGeoms] = useGLTF(C.STEERING_WHEEL_URL, onCarLoaded)
+export function Car({ curCamera, position, steeringWheelGeoms, onButtonClicked }) {
+    const [carRef, car] = useResource();
+    const [steeringWheelRef, steeringWheel] = useResource();
+    const [buttonRef, button] = useResource();
+    const buttonPos = new THREE.Vector3(10, 10, -5);//.add(position);
+    // useMemo(() => {
+    //     const buttonP = new THREE.Vector3(0, 0, 5);
+    //     return buttonP.add(position);
+    // });
+
     useRender((state, time) => {
-        steeringWheelRef.current.rotation.y = curCamera.rotation.y * .2;
+        if (!steeringWheel) return;
+        console.log('button', button)
+        steeringWheel.rotation.y = curCamera.rotation.y * .2;
         // cadillacRef.current.rotation.x = cameraRef.current.rotation.x * .01;
         // cadillacRef.current.rotation.y = cameraRef.current.rotation.y * .01;
     })
-    return <>
-        {/* {steeringWheelLoading. ? */}
-            <group ref={steeringWheelRef}>
-                {steeringWheelGeoms.map(geometry => {
-                    return <mesh
-                        key={geometry.name}
-                        ref={steeringWheelRef}
-                        geometry={geometry}
-                        position={position}
-                    />
-                })}
-            </group> : null
-        }
-    </>;
+    return <group
+        ref={carRef}
+        position={position}
+    >
+        <group ref={steeringWheelRef}>
+            {steeringWheelGeoms.map(geometry => {
+                return <mesh
+                    key={geometry.name}
+                    ref={steeringWheelRef}
+                    geometry={geometry}
+                />
+            })}
+        </group>
+        <group
+            ref={buttonRef}
+            position={buttonPos}
+            scale={[2, 2, 2]}
+        >
+            <mesh
+                onPointerOver={self => onButtonClicked()}
+            >
+                <boxGeometry attach='geometry' />
+                <meshBasicMaterial
+                    attach='material'
+                    side={THREE.DoubleSide}
+                    color={new THREE.Color("red")}
+                />
+            </mesh>
+        </group>
+    </group>;
 }

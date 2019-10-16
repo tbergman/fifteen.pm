@@ -29,33 +29,32 @@ export default function Road({ curCamera, closed, scale, extrusionSegments, radi
         closedSpline.closed = true;
         closedSpline.curveType = 'catmullrom';
         const tubeGeometry = new THREE.TubeBufferGeometry(closedSpline, extrusionSegments, radius, radiusSegments, closed);
-        console.log('tube geom', tubeGeometry);
         road.current = tubeGeometry;
     }, [])
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
     useRender((state, time) => {
-        var t = (time % numSteps) / numSteps;
-        var pos = road.current.parameters.path.getPointAt(t);
-        pos.multiplyScalar(scale);
-        // interpolation
-        var segments = road.current.tangents.length;
-        var pickt = t * segments;
-        var pick = Math.floor(pickt);
-        var pickNext = (pick + 1) % segments;
-        binormal.subVectors(road.current.binormals[pickNext], road.current.binormals[pick]);
-        binormal.multiplyScalar(pickt - pick).add(road.current.binormals[pick]).add(up);
-        var dir = road.current.parameters.path.getTangentAt(t);
-        normal.copy(binormal).cross(dir)
-        // We move on a offset on its binormal
-        pos.add(normal.clone().multiplyScalar(offset));
-        curCamera.position.copy(pos);
-        // Using arclength for stablization in look ahead.
-        var lookAt = road.current.parameters.path.getPointAt((t + 30 / road.current.parameters.path.getLength()) % 1).multiplyScalar(scale);
-        // Camera Orientation 2 - up orientation via normal
-        lookAt.copy(pos).add(dir);
-        curCamera.matrix.lookAt(curCamera.position, lookAt, normal);
-        curCamera.rotation.setFromRotationMatrix(curCamera.matrix);
+        // var t = (time % numSteps) / numSteps;
+        // var pos = road.current.parameters.path.getPointAt(t);
+        // pos.multiplyScalar(scale);
+        // // interpolation
+        // var segments = road.current.tangents.length;
+        // var pickt = t * segments;
+        // var pick = Math.floor(pickt);
+        // var pickNext = (pick + 1) % segments;
+        // binormal.subVectors(road.current.binormals[pickNext], road.current.binormals[pick]);
+        // binormal.multiplyScalar(pickt - pick).add(road.current.binormals[pick]).add(up);
+        // var dir = road.current.parameters.path.getTangentAt(t);
+        // normal.copy(binormal).cross(dir)
+        // // We move on a offset on its binormal
+        // pos.add(normal.clone().multiplyScalar(offset));
+        // curCamera.position.copy(pos);
+        // // Using arclength for stablization in look ahead.
+        // var lookAt = road.current.parameters.path.getPointAt((t + 30 / road.current.parameters.path.getLength()) % 1).multiplyScalar(scale);
+        // // Camera Orientation 2 - up orientation via normal
+        // lookAt.copy(pos).add(dir);
+        // curCamera.matrix.lookAt(curCamera.position, lookAt, normal);
+        // curCamera.rotation.setFromRotationMatrix(curCamera.matrix);
         // curCamera.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
 
     })
