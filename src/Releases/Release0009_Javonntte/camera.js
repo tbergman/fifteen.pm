@@ -1,12 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useRender, useThree, useResource } from 'react-three-fiber';
-import { Cadillac } from './car';
+import { Car } from './car';
 
 export function Camera({ cameraRef, fov, near, far, maxDist, center, lightProps, steeringWheelGeoms, cadillacHoodGeoms }) {
 
     const spotLight = useRef();
-    
+
     const steeringWheelRef = useRef();
     const cadillacRef = useRef();
     const { setDefaultCamera } = useThree();
@@ -29,6 +29,10 @@ export function Camera({ cameraRef, fov, near, far, maxDist, center, lightProps,
         near={near}
         far={far}
     >
+        {/* <Car
+            curCamera={cameraRef.current}
+            position={[0, -14.5, 3]}
+        /> */}
         {
             cameraRef.current && steeringWheelGeoms.length && cadillacHoodGeoms.length &&
             <group ref={steeringWheelRef}>

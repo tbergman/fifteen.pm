@@ -67,8 +67,8 @@ export const WORLD_NEIGHBORHOOD_PROPS = ASTEROID_NEIGHBORHOOD_PROPS;
 // TODO getting the warnings gone for  min
 export const WORLD_RADIUS = ASTEROID_MAX_RADIUS;
 export const MAX_WORLD_FACE_HEIGHT=ASTEROID_MAX_FACE_NOISE;
-export const WORLD_SIDES = 34; // ASTEROID_MAX_SIDES;
-export const WORLD_TIERS = 34; //ASTEROID_MAX_TIERS;
+export const WORLD_SIDES = 34;
+export const WORLD_TIERS = 34;
 export const WORLD_ROAD_WIDTH = isMobile ? 17 : 17;
 export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 26 : 26;
 

@@ -1,7 +1,7 @@
-import React from 'react';
-import * as THREE from 'three';
-import { useResource } from 'react-three-fiber';
-import { Metal03Material } from '../../Utils/materials';
+import React, { useRef } from 'react';
+import {useRender} from 'react-three-fiber';
+import { useGLTF } from "../../Utils/hooks";
+import * as C from './constants';
 
 export function onCarLoaded(gltf) {
     // return gltf.scene
@@ -16,23 +16,28 @@ export function onCarLoaded(gltf) {
     return geometries;
 }
 
-export function Cadillac({ geometries, position }) {
-    const [metal03MaterialRef, metal03Material] = useResource();
-    console.log(geometries)
-    return (
-        <>
-            {/* <Metal03Material materialRef={metal03MaterialRef} />
-            {metal03MaterialRef &&
-                geometries.map(geometry => {
+// NOT WORKING
+export function Car({ curCamera, position }) {
+    const steeringWheelRef = useRef();
+    const [steeringWheelLoading, steeringWheelGeoms] = useGLTF(C.STEERING_WHEEL_URL, onCarLoaded)
+    useRender((state, time) => {
+        console.log(steeringWheelGeoms);
+        steeringWheelRef.current.rotation.y = curCamera.rotation.y * .2;
+        // cadillacRef.current.rotation.x = cameraRef.current.rotation.x * .01;
+        // cadillacRef.current.rotation.y = cameraRef.current.rotation.y * .01;
+    })
+    return <>
+        {/* {steeringWheelLoading. ? */}
+            <group ref={steeringWheelRef}>
+                {steeringWheelGeoms.map(geometry => {
                     return <mesh
+                        key={geometry.name}
+                        // ref={steeringWheelRef}
                         geometry={geometry}
-                        material={metal03Material}
-
-                    // position={position ? [position.x, position.y, position.z - 10] : new THREE.Vector3()}
+                        position={position}
                     />
-                })
-
-            } */}
-        </>
-    )
+                })}
+            </group> : null
+        }
+    </>;
 }
