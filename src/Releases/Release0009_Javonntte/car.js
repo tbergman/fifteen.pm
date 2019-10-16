@@ -17,11 +17,10 @@ export function onCarLoaded(gltf) {
 }
 
 // NOT WORKING
-export function Car({ curCamera, position }) {
+export function Car({ curCamera, position, steeringWheelGeoms }) {
     const steeringWheelRef = useRef();
-    const [steeringWheelLoading, steeringWheelGeoms] = useGLTF(C.STEERING_WHEEL_URL, onCarLoaded)
+    // const [steeringWheelLoading, steeringWheelGeoms] = useGLTF(C.STEERING_WHEEL_URL, onCarLoaded)
     useRender((state, time) => {
-        console.log(steeringWheelGeoms);
         steeringWheelRef.current.rotation.y = curCamera.rotation.y * .2;
         // cadillacRef.current.rotation.x = cameraRef.current.rotation.x * .01;
         // cadillacRef.current.rotation.y = cameraRef.current.rotation.y * .01;
@@ -32,7 +31,7 @@ export function Car({ curCamera, position }) {
                 {steeringWheelGeoms.map(geometry => {
                     return <mesh
                         key={geometry.name}
-                        // ref={steeringWheelRef}
+                        ref={steeringWheelRef}
                         geometry={geometry}
                         position={position}
                     />

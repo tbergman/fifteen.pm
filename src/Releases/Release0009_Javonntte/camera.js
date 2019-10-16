@@ -17,11 +17,11 @@ export function Camera({ cameraRef, fov, near, far, maxDist, center, lightProps,
         }
     }, [cameraRef.current]);
 
-    useRender((state, time) => {
-        steeringWheelRef.current.rotation.y = cameraRef.current.rotation.y * .2;
-        // cadillacRef.current.rotation.x = cameraRef.current.rotation.x * .01;
-        // cadillacRef.current.rotation.y = cameraRef.current.rotation.y * .01;
-    })
+    // useRender((state, time) => {
+    //     steeringWheelRef.current.rotation.y = cameraRef.current.rotation.y * .2;
+    //     // cadillacRef.current.rotation.x = cameraRef.current.rotation.x * .01;
+    //     // cadillacRef.current.rotation.y = cameraRef.current.rotation.y * .01;
+    // })
 
     return <perspectiveCamera
         ref={cameraRef}
@@ -29,22 +29,14 @@ export function Camera({ cameraRef, fov, near, far, maxDist, center, lightProps,
         near={near}
         far={far}
     >
-        {/* <Car
-            curCamera={cameraRef.current}
-            position={[0, -14.5, 3]}
-        /> */}
         {
             cameraRef.current && steeringWheelGeoms.length && cadillacHoodGeoms.length &&
-            <group ref={steeringWheelRef}>
-                {steeringWheelGeoms.map(geometry => {
-                    return <mesh
-                        key={geometry.name}
-                        ref={steeringWheelRef}
-                        geometry={geometry}
-                        position={[0, -14.5, -3]}
-                    />
-                })}
-            </group>
+            <Car
+                curCamera={cameraRef.current}
+                position={[0, -14.5, -3]}
+                steeringWheelGeoms={steeringWheelGeoms} // TODO don't pass this in, init in in the component!
+            />
+         
         }
         <spotLight
             ref={spotLight}
