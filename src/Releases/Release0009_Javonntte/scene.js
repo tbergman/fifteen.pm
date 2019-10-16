@@ -86,13 +86,6 @@ export function Scene({ track }) {
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
             <TronMaterial materialRef={tronMaterialRef} />
-            {/* <FoamGripMaterial materialRef={cloudMaterialRef} /> */}
-            {/* <mesh
-                position={new THREE.Vector3(0, 0, -5)}
-            >
-                <boxGeometry attach='geometry' />
-                <meshBasicMaterial attach='material' side={THREE.DoubleSide} color={new THREE.Color("red")} />
-            </mesh> */}
             {!loadingSteeringWheel &&
                 <Camera
                     cameraRef={cameraRef}
@@ -126,15 +119,15 @@ export function Scene({ track }) {
                 dragToLook={false}
             />
             <FixedLights />
-            {/* {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
+            {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <SphereWorld
                     buildings={{
                         geometries: buildingGeometries,
                         materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
                         loaded: !loadingBuildings,
                     }}
-                />} */}
-            {/* {cameraRef.current && <Road
+                />}
+            {cameraRef.current && <Road
                 curCamera={cameraRef.current}
                 closed={true}
                 scale={1}
@@ -143,11 +136,11 @@ export function Scene({ track }) {
                 radiusSegments={3}
                 offset={2}
                 numSteps={20000}
-            />} */}
-            {/* <Stars
+            />}
+            <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
-            /> */}
-            {/* {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings &&
+            /> 
+            {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings &&
                 <AsteroidBelt
                     track={track}
                     // TODO can combine this all into a n object or refernece directly the buffergeom
@@ -159,7 +152,7 @@ export function Scene({ track }) {
                         loaded: !loadingBuildings,
                     }}
                 />
-               } */}
+               }
         </>
     );
 }
