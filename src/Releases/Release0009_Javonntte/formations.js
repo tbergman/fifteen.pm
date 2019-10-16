@@ -118,10 +118,10 @@ const steps = [
 ]
 // TODO these filter values need to be relative to the world radius.
 function onPath(centroid){
-    return steps.map(step => centroid.distanceTo(step)).filter(f => f < 17).length > 0
+    return steps.map(step => centroid.distanceTo(step)).filter(f => f < C.WORLD_ROAD_WIDTH).length > 0; // TODO ROAD_WIDTH passed in
 }
 function tooFar(centroid){
-    return steps.map(step => centroid.distanceTo(step)).filter(f => f > 26).length == steps.length;
+    return steps.map(step => centroid.distanceTo(step)).filter(f => f > C.WORLD_BUILDING_CORRIDOR_WIDTH).length == steps.length;
 }
 
 
