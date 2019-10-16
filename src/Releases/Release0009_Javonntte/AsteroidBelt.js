@@ -65,7 +65,12 @@ export function AsteroidBelt({ track, asteroids, buildings, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded && asteroids) {
-            tileFormations.current = generateInstanceGeometriesFromFaces(asteroids.faceGroups, asteroids.vertexGroups, buildings, C.NEIGHBORHOOD_PROPS);
+            tileFormations.current = generateInstanceGeometriesFromFaces(
+                asteroids.faceGroups,
+                asteroids.vertexGroups,
+                buildings,
+                C.ASTEROID_NEIGHBORHOOD_PROPS
+            );
         }
     })
 

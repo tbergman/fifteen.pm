@@ -4,8 +4,8 @@ import NoiseSphereGeometry from '../../Utils/NoiseSphere';
 
 // TODO tilt and rotationSpeed
 function generateAstroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
-    const seed = 1234;// Math.random() * 1000;
-    const noiseSphere = new NoiseSphereGeometry(radius, sides, tiers, { seed, noiseWidth: .0001, noiseHeight: .0001, center })
+    const seed = Math.random() * 1000;
+    const noiseSphere = new NoiseSphereGeometry(radius, sides, tiers, { seed, noiseWidth: 1, noiseHeight: 10, center })
     noiseSphere.verticesNeedUpdate = true;
     noiseSphere.computeBoundingSphere();
     noiseSphere.computeBoundingBox();

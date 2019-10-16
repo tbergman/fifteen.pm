@@ -12,38 +12,38 @@ import { SkyCityTile } from './tiles';
 import { cloneDeep } from 'lodash';
 import Road from './Road';
 
-function forwardStep(curStep, stepSize) {
-    const stepVec = new THREE.Vector3(0, 0, stepSize);
-    // stepVec.y = (Math.random() - .5) * stepSize;
-    if (Math.random() - .5 > 0) stepVec.x += stepSize;
-    else stepVec.x -= stepSize;
-    return curStep.clone().addVectors(curStep, stepVec);
-}
+// function forwardStep(curStep, stepSize) {
+//     const stepVec = new THREE.Vector3(0, 0, stepSize);
+//     // stepVec.y = (Math.random() - .5) * stepSize;
+//     if (Math.random() - .5 > 0) stepVec.x += stepSize;
+//     else stepVec.x -= stepSize;
+//     return curStep.clone().addVectors(curStep, stepVec);
+// }
 
-function backStep(step, stepSize, index) {
-    const stepVec = new THREE.Vector3();
-    stepVec.x = step.x - stepSize;
-    stepVec.y = 0;//Math.random() - .5 * stepSize;
-    stepVec.z = step.z;// * Math.random() * 1.5;
-    return stepVec;
-}
+// function backStep(step, stepSize, index) {
+//     const stepVec = new THREE.Vector3();
+//     stepVec.x = step.x - stepSize;
+//     stepVec.y = 0;//Math.random() - .5 * stepSize;
+//     stepVec.z = step.z;// * Math.random() * 1.5;
+//     return stepVec;
+// }
 
-function buildPath({ startPos, stepSize, numPathSteps }) {
-    const prevStep = startPos.clone();
-    const steps = [prevStep.clone()]
-    for (let i = 0; i < numPathSteps / 2; i++) {
-        const forward = forwardStep(prevStep, stepSize);
-        steps.push(forward);
-        prevStep.copy(forward);
+// function buildPath({ startPos, stepSize, numPathSteps }) {
+//     const prevStep = startPos.clone();
+//     const steps = [prevStep.clone()]
+//     for (let i = 0; i < numPathSteps / 2; i++) {
+//         const forward = forwardStep(prevStep, stepSize);
+//         steps.push(forward);
+//         prevStep.copy(forward);
 
-    }
-    for (let i = steps.length - 1; i > 2; i--) {
-        const back = backStep(steps[i], stepSize, i);
-        steps.push(back);
-    }
-    console.log("NUM STEPS", steps.length)
-    return steps;
-}
+//     }
+//     for (let i = steps.length - 1; i > 2; i--) {
+//         const back = backStep(steps[i], stepSize, i);
+//         steps.push(back);
+//     }
+//     console.log("NUM STEPS", steps.length)
+//     return steps;
+// }
 
 // TODO tilt and rotationSpeed
 // https://github.com/mrdoob/three.js/blob/master/examples/js/math/ConvexHull.js
@@ -147,7 +147,11 @@ export function SphereWorld({ track, buildings, ...props }) {
         if (buildings.loaded) {
             console.log('buildings going in', buildings)
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
-            outerTileInstances.current = generateInstanceGeometriesByName({ surfaceGeometry: sphereGeometry, buildings, neighborhoodProps: C.NEIGHBORHOOD_PROPS });
+            outerTileInstances.current = generateInstanceGeometriesByName({ 
+                surfaceGeometry: sphereGeometry,
+                buildings,
+                neighborhoodProps: C.WORLD_NEIGHBORHOOD_PROPS
+            });
             
             // innerTileInstances.current = generateInstanceGeometriesTileSet({ surfaceGeometry: innerSphereGeometry, buildings, ...C.NEIGHBORHOOD_PROPS })
         }

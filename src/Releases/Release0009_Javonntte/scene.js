@@ -128,7 +128,7 @@ export function Scene({ track }) {
                 extrusionSegments={100}
                 radius={2}
                 radiusSegments={3}
-                offset={3}
+                offset={2}
                 numSteps={20000}
             />}
             <Stars

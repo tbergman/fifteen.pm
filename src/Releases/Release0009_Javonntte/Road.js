@@ -13,7 +13,7 @@ export default function Road({ curCamera, closed, scale, extrusionSegments, radi
     const up = new THREE.Vector3(0, 2, 2);// TODO these is supposed to be normalized to 1 and have only 1 non zero value lol
 
     useEffect(() => {
-        const elevationOffset = 3;
+        const elevationOffset = 8;
         const maxElevation = elevationOffset + C.WORLD_RADIUS;
         const steps = [
             // new THREE.Vector3(-maxElevation, 0, -maxElevation),
@@ -56,7 +56,7 @@ export default function Road({ curCamera, closed, scale, extrusionSegments, radi
         lookAt.copy(pos).add(dir);
         curCamera.matrix.lookAt(curCamera.position, lookAt, normal);
         curCamera.rotation.setFromRotationMatrix(curCamera.matrix);
-        //// curCamera.rotation.z -= Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
+        // curCamera.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
 
     })
 

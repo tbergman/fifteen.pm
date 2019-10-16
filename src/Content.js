@@ -343,6 +343,13 @@ export const CONTENT = {
     artist: "JAVONNTTE",
     tracks: [
       {
+        title: "Natural",
+        type: "soundcloud",
+        id: "679771259",
+        secretToken: "s-W6P06",
+        bpm: "120",
+      },
+      {
         title: "City Life",
         type: "soundcloud",
         id: "679771262",
@@ -356,13 +363,7 @@ export const CONTENT = {
         secretToken: "s-XeIko",
         bpm: "95",
       },
-      {
-        title: "Natural",
-        type: "soundcloud",
-        id: "679771259",
-        secretToken: "s-W6P06",
-        bpm: "120",
-      },
+     
     ],
     theme: {
       message: "In the year 4182 all of Detroit Cloud City goes wild for City Lights, an early 21st century EP by Javonntte pulled off some bricked drives in the archives.",
