@@ -30,6 +30,16 @@ function cloudEnvMap() {
 		]);
 }
 
+
+export function customDepthMaterial(material) {
+	return new THREE.ShaderMaterial({
+		vertexShader: vsDepthVertex,
+		fragmentShader: THREE.ShaderLib.basic.fragmentShader,
+		uniforms: material.uniforms
+	});
+
+}
+
 export function initFoamGripMaterial(textureLoader) {
 	var envMapCube = new THREE.CubeTextureLoader()
 		.setPath(assetPathShared('textures/env-maps/barc-rooftop/'))
@@ -244,7 +254,7 @@ export function Metal03Material({ materialRef, ...props }) {
 		const displacementMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_disp.jpg"))
 		const textureMaps = [envMap, colorMap, normalMap, metalMap, roughnessMap, displacementMap]
 		return textureMaps.map(textureMap => {
-			const repeat = props.textureRepeat || {x: 1, y: 1};
+			const repeat = props.textureRepeat || { x: 1, y: 1 };
 			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
 			textureMap.offset.set(0, 0);
 			textureMap.repeat.set(repeat.x, repeat.y);
@@ -287,7 +297,7 @@ export function Ground29Material({ materialRef, ...props }) {
 			return textureMap;
 		})
 	});
-	
+
 	// return <meshStandardMaterial
 	return <meshStandardMaterial
 		{...props}
@@ -471,11 +481,13 @@ export function TronMaterial({ materialRef, bpm, side }) {
 }
 
 
-export function customDepthMaterial(material) {
-	return new THREE.ShaderMaterial({
-		vertexShader: vsDepthVertex,
-		fragmentShader: THREE.ShaderLib.basic.fragmentShader,
-		uniforms: material.uniforms
-	});
-
+// TODO
+export function EmissiveMaterial({ materialRef, ...props }) {
+	return <meshStandardMaterial
+		{...props}
+		ref={materialRef}
+		lights
+		receiveShadow
+		castShadow
+	/>
 }

@@ -1,22 +1,15 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { apply as applyThree, Canvas, extend, useRender, useThree } from 'react-three-fiber';
+import React, { useEffect, useRef } from 'react';
+import { a, apply as applySpring } from 'react-spring/three';
+import { extend, useFrame, useRender, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { apply as applySpring, useSpring, a, interpolate } from 'react-spring/three'
+import { ClearMaskPass, DotScreenPass, GlitchPass, HorizontalBlurShader, MaskPass, VerticalBlurShader } from 'three-full';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
-// Import and register postprocessing classes as three-native-elements
-import { UnrealBloomPass } from 'three-full';
-import { EffectComposer } from 'three-full';
-import { RenderPass } from 'three-full';
-import { GlitchPass } from 'three-full';
-import { DotScreenPass } from 'three-full';
-import { MaskPass } from 'three-full';
-import { ShaderPass } from 'three-full';
-import { ColorifyShader } from 'three-full';
-import { ClearMaskPass } from 'three-full';
-import { FilmPass } from 'three-full';
-import { VignetteShader } from 'three-full';
-import { HorizontalBlurShader } from 'three-full';
-import { VerticalBlurShader } from 'three-full';
+
 
 applySpring({ EffectComposer, RenderPass, GlitchPass, UnrealBloomPass, DotScreenPass, MaskPass, ShaderPass, ClearMaskPass, VerticalBlurShader, HorizontalBlurShader, FilmPass })
 extend({ EffectComposer, RenderPass, GlitchPass, UnrealBloomPass, DotScreenPass, MaskPass, ShaderPass, ClearMaskPass, VerticalBlurShader, HorizontalBlurShader, FilmPass })
@@ -103,7 +96,7 @@ export const Advanced2Effect = React.memo(({ camera }) => {
                 attachArray="passes"
                 // renderToScreen
                 args={[new THREE.Vector2(0.8, 0), 0.5, 1.]} // center angle scale
-            /> 
+            />
             <filmPass
                 attachArray="passes"
                 renderToScreen
@@ -151,4 +144,19 @@ export const Advanced2Effect = React.memo(({ camera }) => {
 
         </effectComposer>
     );
+});
+
+export const BloomFilmEffect = React.memo(({ }) => {
+    const composer = useRef()
+    const { scene, gl, size, camera } = useThree()
+    useEffect(() => void composer.current.setSize(size.width, size.height), [size])
+    useRender(() => composer.current.render(), 2)
+    return (
+        <effectComposer ref={composer} args={[gl]}>
+            <renderPass attachArray="passes" scene={scene} camera={camera} />
+            {/* // strength, radius threshold */}
+            <unrealBloomPass attachArray="passes" args={[undefined, 2.6, 0.54, .998]} />
+            <filmPass attachArray="passes" args={[0.5, 0.5, 1500, false]} />
+        </effectComposer>
+    )
 });

@@ -94,7 +94,6 @@ class Player extends PureComponent {
     const { curTrackIdx } = this.state;
     const nextTrackIdx = curTrackIdx + 1 === trackList.length ? 0 : curTrackIdx + 1;
     const track = trackList[nextTrackIdx];
-
     this.setCurrentTrack(nextTrackIdx, track);
   }
 

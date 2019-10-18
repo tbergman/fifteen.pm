@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { Canvas, useRender } from 'react-three-fiber';
 import { CONTENT } from '../../Content';
 import Menu from '../../UI/Menu/Menu'; // TODO code stutter :/
+import {BloomFilmEffect} from '../../Utils/Effects';
 import { Scene } from './scene';
 import * as C from './constants';
 import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
@@ -56,6 +57,7 @@ export default function Release0009_Javonntte({ }) {
                 <Scene
                     track={track}
                 />
+                <BloomFilmEffect />
             </Canvas>
         </MusicPlayerProvider>
     );

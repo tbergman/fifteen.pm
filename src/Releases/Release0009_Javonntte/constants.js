@@ -90,4 +90,14 @@ export const BUILDING_HEIGHT_BUCKETS = [
 ]
 
 // CAR
-export const LIGHTS_BUTTON = "lights_button"
+export const BUTTON_LIFE = "button_life"
+export const BUTTON_DREAM = "button_dream"
+export const BUTTON_SWING = "button_swing"
+export const BUTTON_NATURAL = "button_natural"
+export const SPEEDOMETER = "speedometer"
+export const DASH_BUTTONS = [
+    BUTTON_LIFE,
+    BUTTON_DREAM,
+    BUTTON_SWING,
+    BUTTON_NATURAL,
+]

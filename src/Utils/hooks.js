@@ -8,6 +8,7 @@ function loadGLTF(url, onSuccess) {
         }).then(gltf => onSuccess(gltf)));
 }
 
+// TODO -- maybe use this it looks sturdy https://github.com/react-spring/react-three-fiber/blob/799d21878a472f7f2bfb2c7051c5f84a56bc491f/src/hooks.ts#L94
 export const useGLTF = (url, onSuccess) => {
     if (!onSuccess) onSuccess = (gltf) => gltf;
     const [loading, setLoading] = useState(false);
