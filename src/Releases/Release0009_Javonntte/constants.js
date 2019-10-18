@@ -7,7 +7,7 @@ import { assetPath9 } from './utils';
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
 export const CADILLAC_HOOD_URL = assetPath9("objects/car/cadillac-hood2.glb")
 export const STEERING_WHEEL_URL = assetPath9("objects/car/steering-wheel.glb")
-
+export const DASH_URL = assetPath9("objects/car/dash.glb")
 
 
 // TRACK THEMES
@@ -88,3 +88,6 @@ export const BUILDING_HEIGHT_BUCKETS = [
     SHORT,
     TALL,
 ]
+
+// CAR
+export const LIGHTS_BUTTON = "lights_button"

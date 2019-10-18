@@ -234,18 +234,20 @@ export function CloudMaterial({ materialRef, ...props }) {
 
 export function Metal03Material({ materialRef, ...props }) {
 	// https://www.cc0textures.com/view.php?tex=Metal03
-	const [colorMap, normalMap, metalMap, roughnessMap, displacementMap] = useMemo(() => {
+	const [envMap, colorMap, normalMap, metalMap, roughnessMap, displacementMap] = useMemo(() => {
 		const textureLoader = new THREE.TextureLoader();
+		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
 		const colorMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_col.jpg"))
 		const normalMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_nrm.jpg"))
 		const metalMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_met.jpg"))
 		const roughnessMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_rgh.jpg"))
 		const displacementMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_disp.jpg"))
-		const textureMaps = [colorMap, normalMap, metalMap, roughnessMap, displacementMap]
+		const textureMaps = [envMap, colorMap, normalMap, metalMap, roughnessMap, displacementMap]
 		return textureMaps.map(textureMap => {
+			const repeat = props.textureRepeat || {x: 1, y: 1};
 			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
 			textureMap.offset.set(0, 0);
-			textureMap.repeat.set(2, 2);
+			textureMap.repeat.set(repeat.x, repeat.y);
 			return textureMap;
 		})
 	});
@@ -255,12 +257,14 @@ export function Metal03Material({ materialRef, ...props }) {
 		lights
 		receiveShadow
 		castShadow
+		envMap={envMap}
 		map={colorMap}
 		normalMap={normalMap}
 		metalMap={metalMap}
+		roughness={props.roughness || 0.5}
 		roughnessMap={roughnessMap}
-		displacementScale={props.displaceScale || .1} // TODO play around
-		displacementBias={props.displacementBias || -.01}
+		displacementScale={props.displacementScale || 0} // TODO play around
+		displacementBias={props.displacementBias || 0}
 		displacementMap={displacementMap}
 	/>
 }

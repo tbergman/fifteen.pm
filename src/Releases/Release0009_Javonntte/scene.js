@@ -22,7 +22,7 @@ import { AsteroidBelt } from './AsteroidBelt';
 import { SphereWorld, FlatWorld } from './world';
 import { generateAsteroids } from './asteroids';
 import { Stars } from './stars';
-import { onCarLoaded, Cadillac } from './car';
+import { onCarElementLoaded, onDashLoaded, Cadillac } from './car';
 import Road from './Road';
 
 export function Scene({ track }) {
@@ -35,8 +35,9 @@ export function Scene({ track }) {
      */
     const { camera, canvas, scene } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
-    const [loadingCadillacHood, cadillacHoodGeoms] = useGLTF(C.CADILLAC_HOOD_URL, onCarLoaded)
-    const [loadingSteeringWheel, steeringWheelGeoms] = useGLTF(C.STEERING_WHEEL_URL, onCarLoaded)
+    const [loadingCadillacHood, cadillacHoodGeoms] = useGLTF(C.CADILLAC_HOOD_URL, onCarElementLoaded)
+    const [loadingSteeringWheel, steeringWheelGeoms] = useGLTF(C.STEERING_WHEEL_URL, onCarElementLoaded)
+    const [loadingDash, dashGeoms] = useGLTF(C.DASH_URL, onCarElementLoaded)
     const [lightsOn, setLightsOn] = useState(true);
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const [foamGripMaterialRef, foamGripMaterial] = useResource();
@@ -49,7 +50,7 @@ export function Scene({ track }) {
     // const lookAt = new THREE.Vector3(0, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .5, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .1);
     const cameraRef = useRef();
     const asteroids = useRef();
-   
+
 
     useEffect(() => {
         asteroids.current = generateAsteroids(
@@ -62,7 +63,7 @@ export function Scene({ track }) {
             C.ASTEROID_MAX_FACE_NOISE,
         )
     }, [])
-    useEffect(() => {  });
+    useEffect(() => { });
     useEffect(() => {
         // These actions must occur after buildings load.
         // camera.position.copy(C.START_POS);
@@ -86,7 +87,8 @@ export function Scene({ track }) {
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
             <TronMaterial materialRef={tronMaterialRef} />
-            {!loadingSteeringWheel &&
+z
+            {!loadingSteeringWheel && !loadingDash &&
                 <Camera
                     cameraRef={cameraRef}
                     maxDist={C.MAX_CAMERA_DIST}
@@ -94,10 +96,13 @@ export function Scene({ track }) {
                     fov={75}
                     near={1}
                     far={10000}
-                    steeringWheelGeoms={steeringWheelGeoms}
-                    cadillacHoodGeoms={cadillacHoodGeoms}
-                    onButtonClicked={() => {
-                        setLightsOn(lightsOn ? false : true)
+                    carProps={{
+                        steeringWheelGeoms: steeringWheelGeoms,
+                        cadillacHoodGeoms: cadillacHoodGeoms,
+                        dashGeoms: dashGeoms,
+                        onLightsButtonClicked: () => {
+                            setLightsOn(lightsOn ? false : true)
+                        }
                     }}
                     lightProps={{
                         intensity: 1.1,
@@ -139,7 +144,7 @@ export function Scene({ track }) {
             />}
             <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
-            /> 
+            />
             {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings &&
                 <AsteroidBelt
                     track={track}
@@ -152,7 +157,7 @@ export function Scene({ track }) {
                         loaded: !loadingBuildings,
                     }}
                 />
-               }
+            }
         </>
     );
 }

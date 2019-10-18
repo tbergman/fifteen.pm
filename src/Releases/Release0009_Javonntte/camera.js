@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { useRender, useThree, useResource } from 'react-three-fiber';
 import { Car } from './car';
 
-export function Camera({ cameraRef, fov, near, far, onButtonClicked, lightProps, steeringWheelGeoms, cadillacHoodGeoms }) {
+export function Camera({ cameraRef, fov, near, far, carProps, lightProps }) {
 
     const spotLight = useRef();
 
@@ -30,12 +30,14 @@ export function Camera({ cameraRef, fov, near, far, onButtonClicked, lightProps,
         far={far}
     >
         {
-            cameraRef.current && steeringWheelGeoms.length && cadillacHoodGeoms.length &&
+            cameraRef.current &&
+           //  carProps.steeringWheelGeoms.length && cadillacHoodGeoms.length &&
             <Car
                 curCamera={cameraRef.current}
                 position={new THREE.Vector3(0, -14.5, -3)}
-                steeringWheelGeoms={steeringWheelGeoms} // TODO don't pass this in, init in in the component!
-                onButtonClicked={onButtonClicked}
+                {...carProps}
+                // steeringWheelGeoms={steeringWheelGeoms} // TODO don't pass this in, init in in the component!
+                // onButtonClicked={onButtonClicked}
             />
          
         }
