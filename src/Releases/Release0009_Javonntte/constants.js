@@ -44,7 +44,6 @@ export const TRACK_LOOKUP = (() => {
 export const NUM_ASTEROIDS = 8;
 const ASTEROID_RADIUS_DIVISOR = isMobile ? 40 : 40;
 export const ASTEROID_MAX_RADIUS = Math.floor(window.innerWidth / ASTEROID_RADIUS_DIVISOR);
-console.log("radius", ASTEROID_MAX_RADIUS);
 export const ASTEROID_BELT_RADIUS = 255;
 export const ASTEROID_BELT_CENTER = new THREE.Vector3();
 export const ASTEROID_MAX_SIDES = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? 1.6 : 1.6));
@@ -54,37 +53,27 @@ export const ASTEROID_MAX_FACE_NOISE = 1;
 // CAMERA
 const STARTING_Z = isMobile ? ASTEROID_MAX_RADIUS * 1.1 : ASTEROID_MAX_RADIUS * 1.1;
 // max camera distance from center
-export const START_POS = new THREE.Vector3(0, 0,STARTING_Z);
+export const START_POS = new THREE.Vector3(0, 0, STARTING_Z);
 
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
 export const WORLD_RADIUS = ASTEROID_MAX_RADIUS;
-export const MAX_WORLD_FACE_HEIGHT=ASTEROID_MAX_FACE_NOISE;
+export const MAX_WORLD_FACE_HEIGHT = ASTEROID_MAX_FACE_NOISE;
 export const WORLD_SIDES = 34;
 export const WORLD_TIERS = 34;
-export const WORLD_ROAD_WIDTH = isMobile ? 17 : 17;
 export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 26 : 26;
-export const WORLD_ROAD_PATH = [
-    new THREE.Vector3(WORLD_RADIUS, 0, 0),
-    new THREE.Vector3(3 * WORLD_RADIUS / 4, 0, 3 * WORLD_RADIUS / 4),
-    new THREE.Vector3(WORLD_RADIUS / 2, 0, WORLD_RADIUS / 2),
-    new THREE.Vector3(WORLD_RADIUS / 4, 0, WORLD_RADIUS / 4),
-    new THREE.Vector3(0, 0, WORLD_RADIUS),
-    new THREE.Vector3(3 * -WORLD_RADIUS / 4, 0, 3 * WORLD_RADIUS / 4),
-    new THREE.Vector3(-WORLD_RADIUS / 2, 0, WORLD_RADIUS / 2),
-    new THREE.Vector3(-WORLD_RADIUS / 4, 0, WORLD_RADIUS / 4),
-    new THREE.Vector3(-WORLD_RADIUS, 0, 0),
-    new THREE.Vector3(3 * -WORLD_RADIUS / 4, 0, 3 * -WORLD_RADIUS / 4),
-    new THREE.Vector3(-WORLD_RADIUS / 2, 0, -WORLD_RADIUS / 2),
-    new THREE.Vector3(-WORLD_RADIUS / 4, 0, -WORLD_RADIUS / 4),
-    new THREE.Vector3(0, 0, -WORLD_RADIUS),
-    new THREE.Vector3(3 * WORLD_RADIUS / 4, 0, 4 * -WORLD_RADIUS / 4),
-    new THREE.Vector3(WORLD_RADIUS / 2, 0, -WORLD_RADIUS / 2),
-    new THREE.Vector3(WORLD_RADIUS / 4, 0, -WORLD_RADIUS / 4),
-]
+export const WORLD_ROAD_WIDTH = isMobile ? 17 : 17;
+const MAX_ROAD_ELEVATION = WORLD_RADIUS + 8;
+export const WORLD_ROAD_PATH = (() => {
+    const circle = new THREE.CircleGeometry(MAX_ROAD_ELEVATION)
+    const points = circle.vertices.reverse() // reverse it so driver is going in expected dir
+    return points.slice(0, points.length - 2); // don't overlap the loop (rm last elt)
+})();
+
 
 // BUILDING
 export const BUILDING_BASE_SCALE = 1.;
+// model geometry categories
 export const LARGE = "large";
 export const MEDIUM = "medium";
 export const SMALL = "small";
@@ -101,6 +90,7 @@ export const BUILDING_HEIGHT_BUCKETS = [
 ]
 
 // CAR
+// model geometry names
 export const BUTTON_LIFE = "button_life"
 export const BUTTON_DREAM = "button_dream"
 export const BUTTON_SWING = "button_swing"

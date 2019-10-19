@@ -129,7 +129,7 @@ export function Scene({ track }) {
                 radius={2}
                 radiusSegments={3}
                 offset={2}
-                numSteps={200000} // determines the speed of the car (yes the road is driving the car at the moment)
+                numSteps={9000} // determines the speed of the car (yes the road is driving the car at the moment)
             />}
             <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
