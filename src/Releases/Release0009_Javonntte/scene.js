@@ -14,7 +14,6 @@ import {
 } from '../../Utils/materials';
 import { BloomFilmEffect } from '../../Utils/Effects';
 import { onBuildingsLoaded } from "./buildings";
-import { Camera } from './camera';
 import * as C from "./constants";
 import { Controls } from "./controls";
 import "./index.css";
@@ -23,8 +22,7 @@ import { AsteroidBelt } from './AsteroidBelt';
 import { World, FlatWorld } from './world';
 import { generateAsteroids } from './asteroids';
 import { Stars } from './stars';
-import { onCarElementLoaded, onDashLoaded, Cadillac } from './Car';
-import Car from './Car';
+import Car, {onCarElementLoaded} from './car/Car';
 import Road from './Road';
 import { worldNeighborhoods, asteroidNeighborhoods } from './neighborhoods';
 
@@ -39,10 +37,10 @@ export function Scene({ track }) {
      */
     const { camera, canvas, scene } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
+    const [lightsOn, setLightsOn] = useState(true);
     const [loadingCadillacHood, cadillacHoodGeoms] = useGLTF(C.CADILLAC_HOOD_URL, onCarElementLoaded)
     const [loadingSteeringWheel, steeringWheelGeoms] = useGLTF(C.STEERING_WHEEL_URL, onCarElementLoaded)
     const [loadingDash, dashGeoms] = useGLTF(C.DASH_URL, onCarElementLoaded)
-    const [lightsOn, setLightsOn] = useState(true);
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const [foamGripMaterialRef, foamGripMaterial] = useResource();
     const [windows1MaterialRef, windows1Material] = useResource();
@@ -105,7 +103,7 @@ export function Scene({ track }) {
                 dragToLook={false}
             />
             <FixedLights />
-            {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
+            {/* {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <>
                     <World
                         neighborhoods={worldNeighborhoods}
@@ -124,29 +122,19 @@ export function Scene({ track }) {
                         }}
                     />
                 </>
-            }
+            } */}
             <Road
                 closed={true}
                 extrusionSegments={100}
                 radius={2}
                 radiusSegments={3}
             >
-                {(!loadingSteeringWheel && !loadingDash && steeringWheelGeoms.length && dashGeoms) ?
+                {!loadingSteeringWheel && !loadingDash && steeringWheelGeoms.length && dashGeoms &&
                     <Car
-                        position={new THREE.Vector3(0, -14.5, -3)}
                         drivingProps={{
                             offset: 2,
                             scale: 1,
                             numSteps: 20, // determines the speed of the car
-                        }}
-                        lightProps={{
-                            intensity: 1.1,
-                            // penumbra: 0.1,
-                            distance: 10000,
-                            shadowCameraNear: .0001,
-                            shadowCameraFar: 200,
-                            shadowMapSizeWidth: 512,
-                            shadowMapSizeHeight: 512,
                         }}
                         steeringWheelGeoms={steeringWheelGeoms}
                         cadillacHoodGeoms={cadillacHoodGeoms}
@@ -154,7 +142,8 @@ export function Scene({ track }) {
                         onLightsButtonClicked={() => {
                             setLightsOn(lightsOn ? false : true)
                         }}
-                    /> : null
+
+                    />
                 }
             </Road>
             <Stars

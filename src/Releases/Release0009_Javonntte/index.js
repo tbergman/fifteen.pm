@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { Canvas, useFrame } from 'react-three-fiber';
 import { CONTENT } from '../../Content';
 import Menu from '../../UI/Menu/Menu'; // TODO code stutter :/
-import { Scene } from './scene';
+import { Scene } from './Scene';
 import * as C from './constants';
 import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import './index.css';
