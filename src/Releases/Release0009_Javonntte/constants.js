@@ -41,7 +41,7 @@ export const TRACK_LOOKUP = (() => {
 
 // ASTEROID CONSTANTS
 // This is divided by the window inner width in the constant below so movile screens have smaller asteroids
-export const NUM_ASTEROIDS = 28;
+export const NUM_ASTEROIDS = 8;
 const ASTEROID_RADIUS_DIVISOR = isMobile ? 40 : 40;
 export const ASTEROID_MAX_RADIUS = Math.floor(window.innerWidth / ASTEROID_RADIUS_DIVISOR);
 console.log("radius", ASTEROID_MAX_RADIUS);
