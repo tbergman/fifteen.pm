@@ -8,7 +8,7 @@ import "./index.css";
 import { Stars } from './stars';
 import { generateInstanceGeometriesFromFaces } from "./instances";
 import NoiseSphereGeometry from '../../Utils/NoiseSphere';
-
+import { generateAsteroids } from './asteroids';
 
 
 
@@ -54,18 +54,24 @@ export function AsteroidsSurface({ geometry, bpm }) {
     </>
 }
 
-export function AsteroidBelt({ track, asteroids, buildings, ...props }) {
-    const { camera, scene } = useThree();
-    const [astroidBeltRef, astroidBelt] = useResource();
-    const [curTrackName, setCurTrackName] = useState();
-    const [surfaceRendered, setSurfaceRendered] = useState(false);
-    const tileFormations = useRef();
-    const innerTileFormations = useRef();
-    const [renderTiles, setRenderTiles] = useState(true);
+export function AsteroidBelt({ track, buildings, ...props }) {
+    const [asteroidBeltRef, asteroidBelt] = useResource();
+    const tileInstances = useRef();
+   const asteroids = useMemo(() => {
+       return generateAsteroids(
+            C.ASTEROID_BELT_RADIUS,
+            C.ASTEROID_BELT_CENTER,
+            C.NUM_ASTEROIDS,
+            C.ASTEROID_MAX_RADIUS,
+            C.ASTEROID_MAX_SIDES,
+            C.ASTEROID_MAX_TIERS,
+            C.ASTEROID_MAX_FACE_NOISE,
+        )
+    }, [])
 
     useEffect(() => {
-        if (buildings.loaded && asteroids) {
-            tileFormations.current = generateInstanceGeometriesFromFaces(
+        if (buildings.loaded) {
+            tileInstances.current = generateInstanceGeometriesFromFaces(
                 asteroids.faceGroups,
                 asteroids.vertexGroups,
                 buildings,
@@ -74,45 +80,29 @@ export function AsteroidBelt({ track, asteroids, buildings, ...props }) {
         }
     })
 
-    useEffect(() => {
-        if (track.current) {
-            track.current && setCurTrackName(track.current.name)
-        }
-    })
+    // useRender(() => {
+    //     if (asteroidBeltRef.current) {
+    //         // astroidBeltRef.current.rotation.x += .01;
+    //     }
+    // })
 
-    // TODO use state for cur track here
-    useEffect(() => {
-        // if (track.current) {
-        // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
-        // }
-    }, [curTrackName])
-
-
-    useRender(() => {
-        if (astroidBeltRef.current) {
-            // astroidBeltRef.current.rotation.x += .001;
-        }
-    })
-
-    return <group ref={astroidBeltRef}>
-        {astroidBelt && <>
-            {asteroids &&
-                <AsteroidsSurface
-                    geometry={asteroids.geometry}
-                    bpm={track && track.bpm}
-                />
-            })
-        }
-
-            {tileFormations.current &&
-                Object.keys(tileFormations.current).map(tId => {
-                    return <primitive key={tId}
-                        object={tileFormations.current[tId]}
-                    />
-                })
+    return <group ref={asteroidBeltRef}>
+            {asteroidBelt &&
+                <>
+                    {asteroids &&
+                        <AsteroidsSurface
+                            geometry={asteroids.geometry}
+                            bpm={track && track.bpm}
+                        />
+                    }
+                    {tileInstances.current &&
+                        Object.keys(tileInstances.current).map(tId => {
+                            return <primitive key={tId}
+                                object={tileInstances.current[tId]}
+                            />
+                        })
+                    }
+                </>
             }
-
-        </>
-        }
-    </group>
+        </group>
 }

@@ -41,11 +41,11 @@ export const TRACK_LOOKUP = (() => {
 
 // ASTEROID CONSTANTS
 // This is divided by the window inner width in the constant below so movile screens have smaller asteroids
-export const NUM_ASTEROIDS = 20;
+export const NUM_ASTEROIDS = 28;
 const ASTEROID_RADIUS_DIVISOR = isMobile ? 40 : 40;
 export const ASTEROID_MAX_RADIUS = Math.floor(window.innerWidth / ASTEROID_RADIUS_DIVISOR);
 console.log("radius", ASTEROID_MAX_RADIUS);
-export const ASTEROID_BELT_RADIUS = 555;
+export const ASTEROID_BELT_RADIUS = 255;
 export const ASTEROID_BELT_CENTER = new THREE.Vector3();
 export const ASTEROID_MAX_SIDES = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? 1.6 : 1.6));
 export const ASTEROID_MAX_TIERS = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? .8 : 1.6));

@@ -1,49 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRender, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { CloudMaterial, Ground29Material, TronMaterial } from '../../Utils/materials';
-import { SphereTiles } from '../../Utils/SphereTiles';
+import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import * as C from './constants';
 import "./index.css";
-import { Stars } from './stars';
 import { generateInstanceGeometriesByName, generateInstancedTilesOnGrid } from "./instances";
-import InfiniteTiles from '../../Utils/InfiniteTiles';
-import { SkyCityTile } from './tiles';
-import { cloneDeep } from 'lodash';
-import Road from './Road';
 
-// function forwardStep(curStep, stepSize) {
-//     const stepVec = new THREE.Vector3(0, 0, stepSize);
-//     // stepVec.y = (Math.random() - .5) * stepSize;
-//     if (Math.random() - .5 > 0) stepVec.x += stepSize;
-//     else stepVec.x -= stepSize;
-//     return curStep.clone().addVectors(curStep, stepVec);
-// }
-
-// function backStep(step, stepSize, index) {
-//     const stepVec = new THREE.Vector3();
-//     stepVec.x = step.x - stepSize;
-//     stepVec.y = 0;//Math.random() - .5 * stepSize;
-//     stepVec.z = step.z;// * Math.random() * 1.5;
-//     return stepVec;
-// }
-
-// function buildPath({ startPos, stepSize, numPathSteps }) {
-//     const prevStep = startPos.clone();
-//     const steps = [prevStep.clone()]
-//     for (let i = 0; i < numPathSteps / 2; i++) {
-//         const forward = forwardStep(prevStep, stepSize);
-//         steps.push(forward);
-//         prevStep.copy(forward);
-
-//     }
-//     for (let i = steps.length - 1; i > 2; i--) {
-//         const back = backStep(steps[i], stepSize, i);
-//         steps.push(back);
-//     }
-//     console.log("NUM STEPS", steps.length)
-//     return steps;
-// }
 
 // TODO tilt and rotationSpeed
 // https://github.com/mrdoob/three.js/blob/master/examples/js/math/ConvexHull.js
@@ -85,17 +47,7 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     return geometry;
 }
 
-function AtmosphereGlow({ radius }) {
-    const geometry = useMemo(() => new THREE.SphereGeometry(radius, radius / 3, radius / 3))
-    const [materialRef, material] = useResource();
-    return <>
-        <CloudMaterial materialRef={materialRef} />
-        {material && <mesh
-            geometry={geometry}
-            material={material}
-        />}
-    </>
-}
+
 
 export function WorldSurface({ geometry, bpm }) {
     const [tronMaterialRef, tronMaterial] = useResource();
@@ -113,10 +65,6 @@ export function WorldSurface({ geometry, bpm }) {
         />
         {tronMaterial && ground29Material &&
             <group>
-                {/* <mesh
-                    geometry={geometry}
-                    material={tronMaterial}
-                /> */}
                 <mesh
                     geometry={geometry}
                     material={ground29Material}
@@ -128,11 +76,8 @@ export function WorldSurface({ geometry, bpm }) {
 }
 
 export function SphereWorld({ track, buildings, ...props }) {
-    const { camera, scene } = useThree();
     const [worldRef, world] = useResource();
-    const [curTrackName, setCurTrackName] = useState();
-    const outerTileInstances = useRef();
-    const [renderTiles, setRenderTiles] = useState(true);
+    const tileInstances = useRef();
     const sphereGeometry = useMemo(() => {
         return generateSphereWorldGeometry(
             C.WORLD_RADIUS,
@@ -141,83 +86,38 @@ export function SphereWorld({ track, buildings, ...props }) {
             C.MAX_WORLD_FACE_HEIGHT,
         );
     });
-
-
     useEffect(() => {
         if (buildings.loaded) {
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
-            outerTileInstances.current = generateInstanceGeometriesByName({ 
+            tileInstances.current = generateInstanceGeometriesByName({
                 surfaceGeometry: sphereGeometry,
                 buildings,
                 neighborhoodProps: C.WORLD_NEIGHBORHOOD_PROPS
             });
-            
-            // innerTileInstances.current = generateInstanceGeometriesTileSet({ surfaceGeometry: innerSphereGeometry, buildings, ...C.NEIGHBORHOOD_PROPS })
         }
     }, [])
-
     useEffect(() => {
-        if (worldRef){
+        if (worldRef) {
             worldRef.current.rotation.z -= Math.PI;
-        }        
-        // if (track.current) {
-        //     track.current && setCurTrackName(track.current.name)
-        // }
-    })
-
-    // TODO use state for cur track here
-    useEffect(() => {
-        // if (track.current) {
-        // scene.fog = track.theme.fogColor ? new THREE.FogExp2(track.theme.fogColor, 0.1) : null;
-        // }
-    }, [curTrackName])
-
-
-    useRender(() => {
-        if (worldRef.current) {
-            // worldRef.current.rotation.x += .001;
         }
     })
-
     return <group ref={worldRef}>
         {world && <>
-            {/* <WorldSurface
-                geometry={innerSphereGeometry}
-                bpm={track && track.bpm}
-            /> */}
             {/* // Half face data structure for path creation? https://github.com/mrdoob/three.js/blob/master/examples/js/math/ConvexHull.js */}
             <WorldSurface
                 geometry={sphereGeometry}
                 bpm={track && track.bpm}
             />
-            {outerTileInstances.current &&
-                Object.keys(outerTileInstances.current).map(instanceName => {
+            {tileInstances.current &&
+                Object.keys(tileInstances.current).map(instanceName => {
                     return <primitive key={instanceName}
-                        object={outerTileInstances.current[instanceName]}
+                        object={tileInstances.current[instanceName]}
                     />
                 })
             }
-            {/* {innerTileFormations.current &&
-                Object.keys(innerTileFormations.current).map(instanceName => {
-                    return <primitive key={instanceName}
-                        object={innerTileFormations.current[instanceName]}
-                    />
-                })
-            } */}
-            {/* <AtmosphereGlow
-                    // radius={distThreshold - .2}
-                /> */}
         </>
         }
     </group>
 }
 
-
-function InfiniteTilesTemp({ ...props }) {
-    const [inNextGrid, setInNextGrid] = useState();
-
-    return <group>
-        {React.cloneElement(props.children, { ...props })}
-    </group>
-}
 

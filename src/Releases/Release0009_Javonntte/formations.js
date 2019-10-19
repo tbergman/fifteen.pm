@@ -125,7 +125,7 @@ function tooFar(centroid){
 }
 
 
-export function generateTileFormations(surfaceGeometry, geometries, neighborhoodProps) {
+export function generateTileFormations( surfaceGeometry, geometries, neighborhoodProps) {
     const tiles = generateTiles(surfaceGeometry);
     const kdTree = loadKDTree(tiles);
     const formations = {}

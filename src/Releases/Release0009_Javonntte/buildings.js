@@ -3,13 +3,32 @@ import * as THREE from 'three';
 import { cloneDeep } from 'lodash';
 import * as C from './constants';
 
+export function onBuildingsLoaded(gltf) {
+    const geometries = []
+    const geometrySize = new THREE.Vector3();
+    gltf.scene.traverse(child => {
+        if (child.isMesh) {
+            child.position.set(0, 0, 0);
+            const geometry = child.geometry.clone();
+            geometry.toNonIndexed();
+            geometry.computeBoundingBox();
+            geometry.boundingBox.getSize(geometrySize);
+            geometry.name = child.name;
+            geometry.scale(C.BUILDING_BASE_SCALE, C.BUILDING_BASE_SCALE, C.BUILDING_BASE_SCALE);
+            geometries.push(geometry);
+        }
+    })
+    return geometries;
+}
+
 export function groupBuildingGeometries(geometries) {
     const maxHeightBucket = {
         short: [],
         tall: [],
     }
     /**
-     * geometries are a nested key structure with each leaf an array: geometries.{maxWidthBucket}.{maxHeightBucket}.{category}
+     * geometries are a nested key structure with each leaf an array: 
+     *  geometries.{maxWidthBucket}.{maxHeightBucket}
      */
     const maxWidthBucket = {
         // these are bucketed by approximate max widths
@@ -34,20 +53,3 @@ export function Buildings({ material, formation, normal }) {
     />
 }
 
-export function onBuildingsLoaded(gltf) {
-    const geometries = []
-    const geometrySize = new THREE.Vector3();
-    gltf.scene.traverse(child => {
-        if (child.isMesh) {
-            child.position.set(0, 0, 0);
-            const geometry = child.geometry.clone();
-            geometry.toNonIndexed();
-            geometry.computeBoundingBox();
-            geometry.boundingBox.getSize(geometrySize);
-            geometry.name = child.name;
-            geometry.scale(C.BUILDING_BASE_SCALE, C.BUILDING_BASE_SCALE, C.BUILDING_BASE_SCALE);
-            geometries.push(geometry);
-        }
-    })
-    return geometries;
-}

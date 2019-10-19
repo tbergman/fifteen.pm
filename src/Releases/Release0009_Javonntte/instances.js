@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { generateTileFormations, generateFormationsFromFaces } from './formations';
-import { cloneDeep } from 'lodash';
-
+import {randomPointsOnSphere } from '../../Utils/random';
 import instancedMesh from 'three-instanced-mesh';
+import * as C from './constants';
 instancedMesh(THREE);
 
 function updateCluster(cluster, normal, centroid, index, vector3) {
@@ -37,7 +37,6 @@ function createInstance(elements, material) {
     };
     for (let i = 0; i < totalInstances; i++) {
         updateCluster(cluster, elements[i].normal, elements[i].centroid, i, _v3)
-        // updateCluster(cluster, elements[i].normal.multiplyScalar(-1), elements[i].centroid, i, _v3)
     }
     cluster.castShadow = true;
     return cluster;
@@ -51,6 +50,7 @@ export function generateInstanceGeometriesByName({surfaceGeometry, buildings, ne
     // build up a lookup of each geometry by name
     buildings.geometries.forEach((geometry) => elementsByName[geometry.name] = []);
     // generate formations for all tiles
+    
     const formations = generateTileFormations(surfaceGeometry, buildings.geometries, neighborhoodProps);
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach((tId) => {

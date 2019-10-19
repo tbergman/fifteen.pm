@@ -33,6 +33,7 @@ export default function Road({ curCamera, closed, scale, extrusionSegments, radi
     }, [])
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
+    // The road is driving the car... refactor to pass the road's path to car and put this logic in the car.
     useRender((state, time) => {
         var t = (time % numSteps) / numSteps;
         var pos = road.current.parameters.path.getPointAt(t);
@@ -56,7 +57,6 @@ export default function Road({ curCamera, closed, scale, extrusionSegments, radi
         curCamera.matrix.lookAt(curCamera.position, lookAt, normal);
         curCamera.rotation.setFromRotationMatrix(curCamera.matrix);
         curCamera.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
-
     })
 
     return <>

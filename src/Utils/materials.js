@@ -31,6 +31,16 @@ function cloudEnvMap() {
 }
 
 
+function tileTextureMaps(textureMaps, props) {
+	return textureMaps.map(textureMap => {
+		const repeat = props.textureRepeat || { x: 1, y: 1 };
+		textureMap.wrapS = THREE.RepeatWrapping;
+		textureMap.offset.set(0, 0);
+		textureMap.repeat.set(repeat.x, repeat.y);
+		return textureMap;
+	});
+}
+
 export function customDepthMaterial(material) {
 	return new THREE.ShaderMaterial({
 		vertexShader: vsDepthVertex,
@@ -214,12 +224,7 @@ export function CloudMaterial({ materialRef, ...props }) {
 		const metalnessMap = textureLoader.load(assetPathShared("textures/aluminum-scuffed/Aluminum-Scuffed_metallic.png"));
 		const envMap = cloudEnvMap();
 		const textureMaps = [colorMap, normalMap, metalnessMap, envMap];
-		return textureMaps.map(textureMap => {
-			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
-			textureMap.offset.set(0, 0);
-			textureMap.repeat.set(3, 3);
-			return textureMap;
-		})
+		return tileTextureMaps(textureMaps, props);
 	});
 	return <meshPhongMaterial
 		{...props}
@@ -253,13 +258,7 @@ export function Metal03Material({ materialRef, ...props }) {
 		const roughnessMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_rgh.jpg"))
 		const displacementMap = textureLoader.load(assetPathShared("textures/metal03/Metal03_disp.jpg"))
 		const textureMaps = [envMap, colorMap, normalMap, metalMap, roughnessMap, displacementMap]
-		return textureMaps.map(textureMap => {
-			const repeat = props.textureRepeat || { x: 1, y: 1 };
-			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
-			textureMap.offset.set(0, 0);
-			textureMap.repeat.set(repeat.x, repeat.y);
-			return textureMap;
-		})
+		return tileTextureMaps(textureMaps, props);
 	});
 	return <meshStandardMaterial
 		{...props}
@@ -289,13 +288,7 @@ export function Ground29Material({ materialRef, ...props }) {
 		const roughnessMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_rgh.jpg"))
 		const displacementMap = textureLoader.load(assetPathShared("textures/ground29/Ground29_disp.jpg"))
 		const textureMaps = [colorMap, normalMap, aoMap, roughnessMap, displacementMap]
-		// return textureMaps;
-		return textureMaps.map(textureMap => {
-			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
-			textureMap.offset.set(0, 0);
-			textureMap.repeat.set(2, 2);
-			return textureMap;
-		})
+		return tileTextureMaps(textureMaps, props);
 	});
 
 	// return <meshStandardMaterial
@@ -331,12 +324,7 @@ export function Facade12Material({ materialRef, ...props }) {
 		const roughnessMap = textureLoader.load(assetPathShared("textures/facade12/Facade12_rgh.jpg"))
 		const displacementMap = textureLoader.load(assetPathShared("textures/facade12/Facade12_disp.jpg"))
 		const textureMaps = [colorMap, normalMap, emissiveMap, roughnessMap, displacementMap]
-		return textureMaps.map(textureMap => {
-			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
-			textureMap.offset.set(0, 0);
-			textureMap.repeat.set(4, 4);
-			return textureMap;
-		})
+		return tileTextureMaps(textureMaps, props);
 	})
 
 	return <meshStandardMaterial
@@ -367,13 +355,8 @@ export function Facade04Material({ materialRef, ...props }) {
 		const maskMap = textureLoader.load(assetPathShared("textures/facade04/Facade04_mask.jpg"))
 		const displacementMap = textureLoader.load(assetPathShared("textures/facade04/Facade04_disp.jpg"))
 		const textureMaps = [colorMap, normalMap, emissiveMap, roughnessMap, metalnessMap, maskMap, displacementMap]
-		return textureMaps.map(textureMap => {
-			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
-			textureMap.offset.set(0, 0);
-			textureMap.repeat.set(16, 16);
-			return textureMap;
-		})
-	})
+		return tileTextureMaps(textureMaps, props);
+	});
 
 	return <meshStandardMaterial
 		{...props}
@@ -403,13 +386,8 @@ export function Facade10Material({ materialRef, ...props }) {
 		const metalnessMap = textureLoader.load(assetPathShared("textures/facade10/Facade10_met.jpg"))
 		const displacementMap = textureLoader.load(assetPathShared("textures/facade10/Facade10_disp.jpg"))
 		const textureMaps = [colorMap, normalMap, emissiveMap, roughnessMap, metalnessMap, displacementMap]
-		return textureMaps.map(textureMap => {
-			textureMap.wrapS = colorMap.wrapT = THREE.RepeatWrapping;
-			textureMap.offset.set(0, 0);
-			textureMap.repeat.set(16, 16);
-			return textureMap;
-		})
-	})
+		return tileTextureMaps(textureMaps, props);
+	});
 
 	return <meshStandardMaterial
 		{...props}
@@ -480,6 +458,30 @@ export function TronMaterial({ materialRef, bpm, side }) {
 	/>;
 }
 
+
+export function BlackLeather12({ materialRef, ...props }) {
+	const [diffuseMap, glossinessMap, heightMap, normalMap, reflectionMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const diffuseMap = textureLoader.load(assetPathShared("textures/black-leather-12/black_leather_12_diffuse.png"))
+		const glossinessMap = textureLoader.load(assetPathShared("textures/black-leather-12/black_leather_12_glossiness.png"))
+		const heightMap = textureLoader.load(assetPathShared("textures/black-leather-12/black_leather_12_height.png"))
+		const normalMap = textureLoader.load(assetPathShared("textures/black-leather-12/black_leather_12_normal.png"))
+		const reflectionMap = textureLoader.load(assetPathShared("textures/black-leather-12/black_leather_12_reflection.png"))
+		const textureMaps = [diffuseMap, glossinessMap, heightMap, normalMap, reflectionMap]
+		return tileTextureMaps(textureMaps, props);
+	});
+	return <meshStandardMaterial
+		ref={materialRef}
+		map={diffuseMap}
+		roughnessMap={glossinessMap}
+		roughness={0.1}
+		displacementMap={heightMap}
+		displacementScale={.01}
+		normalMap={normalMap}
+		envMap={reflectionMap}
+		roughness={-1} // invert roughness to get glossiness
+	/>
+}
 
 // TODO
 export function EmissiveMaterial({ materialRef, ...props }) {

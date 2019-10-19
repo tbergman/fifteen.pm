@@ -46,31 +46,8 @@ export function Scene({ track }) {
     const [facade10MaterialRef, facade10Material] = useResource();
     const [facade12MaterialRef, facade12Material] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
-    const [tronMaterialRef, tronMaterial] = useResource();
-    // const lookAt = new THREE.Vector3(0, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .5, C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .1);
+
     const cameraRef = useRef();
-    const asteroids = useRef();
-
-
-    useEffect(() => {
-        asteroids.current = generateAsteroids(
-            C.ASTEROID_BELT_RADIUS,
-            C.ASTEROID_BELT_CENTER,
-            C.NUM_ASTEROIDS,
-            C.ASTEROID_MAX_RADIUS,
-            C.ASTEROID_MAX_SIDES,
-            C.ASTEROID_MAX_TIERS,
-            C.ASTEROID_MAX_FACE_NOISE,
-        )
-    }, [])
-    useEffect(() => { });
-    useEffect(() => {
-        // These actions must occur after buildings load.
-        // camera.position.copy(C.START_POS);
-        // camera.lookAt(lookAt);
-        // scene.fog = new THREE.FogExp2(0x0000ff, 0.1);
-
-    }, [buildingGeometries])
 
     useEffect(() => {
         scene.background = new THREE.Color(lightsOn ? "white" : "black");
@@ -86,8 +63,7 @@ export function Scene({ track }) {
             <Facade04Material materialRef={facade04MaterialRef} />
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
-            <TronMaterial materialRef={tronMaterialRef} />
-z
+
             {!loadingSteeringWheel && !loadingDash &&
                 <Camera
                     cameraRef={cameraRef}
@@ -98,6 +74,7 @@ z
                     far={10000}
                     carProps={{
                         steeringWheelGeoms: steeringWheelGeoms,
+                        // road: road,
                         cadillacHoodGeoms: cadillacHoodGeoms,
                         dashGeoms: dashGeoms,
                         onLightsButtonClicked: () => {
@@ -116,7 +93,7 @@ z
                 />
             }
             <Controls
-                radius={C.ASTEROID_MAX_RADIUS}
+                radius={C.ASTEROID_MAX_RADIUS} // in use?
                 movementSpeed={500}
                 domElement={canvas}
                 rollSpeed={Math.PI * .5}
@@ -124,14 +101,24 @@ z
                 dragToLook={false}
             />
             <FixedLights />
-            {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
-                <SphereWorld
-                    buildings={{
-                        geometries: buildingGeometries,
-                        materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
-                        loaded: !loadingBuildings,
-                    }}
-                />}
+            {!loadingBuildings &&buildingGeometries && foamGripMaterialRef &&
+                <>
+                    <SphereWorld
+                        buildings={{
+                            geometries: buildingGeometries,
+                            materials: [foamGripMaterial],
+                            loaded: !loadingBuildings,
+                        }}
+                    />
+                    <AsteroidBelt
+                        buildings={{
+                            geometries: buildingGeometries,
+                            materials: [foamGripMaterial],
+                            loaded: !loadingBuildings,
+                        }}
+                    />
+                </>
+            }
             {cameraRef.current && <Road
                 curCamera={cameraRef.current}
                 closed={true}
@@ -140,24 +127,11 @@ z
                 radius={2}
                 radiusSegments={3}
                 offset={2}
-                numSteps={20000}
+                numSteps={200000} // determines the speed of the car (yes the road is driving the car at the moment)
             />}
             <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
             />
-            {asteroids.current && foamGripMaterialRef && facade04Material && facade12Material && facade10Material && !loadingBuildings &&
-                <AsteroidBelt
-                    track={track}
-                    // TODO can combine this all into a n object or refernece directly the buffergeom
-                    asteroids={asteroids.current}
-                    // startPos={startPos}
-                    buildings={{
-                        geometries: buildingGeometries,
-                        materials: [foamGripMaterial],//acade12Material],//[metal03Material, facade12Material, foamGripMaterial],
-                        loaded: !loadingBuildings,
-                    }}
-                />
-            }
         </>
     );
 }
