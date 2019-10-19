@@ -1,28 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useRender, useResource, useThree } from 'react-three-fiber';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { CloudMaterial, Ground29Material, TronMaterial } from '../../Utils/materials';
-import { SphereTiles } from '../../Utils/SphereTiles';
+import { generateAsteroids } from './asteroids';
 import * as C from './constants';
 import "./index.css";
-import { Stars } from './stars';
 import { generateInstanceGeometriesByName } from "./instances";
-import NoiseSphereGeometry from '../../Utils/NoiseSphere';
-import { generateAsteroids } from './asteroids';
 
-
-
-function AtmosphereGlow({ radius }) {
-    const geometry = useMemo(() => new THREE.SphereGeometry(radius, radius / 3, radius / 3))
-    const [materialRef, material] = useResource();
-    return <>
-        <CloudMaterial materialRef={materialRef} />
-        {material && <mesh
-            geometry={geometry}
-            material={material}
-        />}
-    </>
-}
 
 export function AsteroidsSurface({ geometry, bpm }) {
     const [tronMaterialRef, tronMaterial] = useResource();
@@ -70,14 +54,6 @@ export function AsteroidBelt({ track, buildings, neighborhoods, ...props }) {
     }, [])
 
     useEffect(() => {
-        // if (buildings.loaded) {
-        //     tileInstances.current = generateInstanceGeometriesFromFaces(
-        //         asteroids.faceGroups,
-        //         asteroids.vertexGroups,
-        //         buildings,
-        //         C.ASTEROID_NEIGHBORHOOD_PROPS
-        //     );
-        // }
         if (buildings.loaded) {
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
             tileInstances.current = generateInstanceGeometriesByName({

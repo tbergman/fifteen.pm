@@ -1,11 +1,9 @@
 import * as THREE from 'three';
 import { faceCentroid, subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromFace, triangleFromVertices } from '../../Utils/geometry';
 import { randomArrayVal, selectNRandomFromArray, randomPointsOnSphere } from '../../Utils/random';
-import { generateTiles, generateDispersedTiles } from '../../Utils/SphereTiles';
 import { loadKDTree, findNearest } from '../../Utils/KdTree';
 import { groupBuildingGeometries } from './buildings';
 import * as C from './constants';
-import { tileId } from '../../Utils/tiles';
 
 function subdivide6(triangleComponents, centroid) {
     return [
@@ -116,27 +114,3 @@ export function generateTileFormations(surface, geometries, neighborhoods) {
     });
     return formations;
 }
-
-
-// TODO just copying piecemail from the above function; this can all get cleaned up and/or combined
-// export function generateFormationsFromFaces(faceGroups, vertexGroups, geometries, neighborhoods) {
-//     const tiles = generateDispersedTiles(faceGroups, vertexGroups);
-//     const kdTree = loadKDTree(tiles);
-//     const formations = {}
-//     Object.keys(tiles).forEach(tileId => formations[tileId] = []);
-//     const geometriesByCategory = groupBuildingGeometries(geometries);
-//     const randomTiles = selectNRandomFromArray(Object.values(tiles).map(v => v), neighborhoods.count)
-//     randomTiles.forEach(tile => {
-//         // TODO oof need to refactor so you can do kdTree.findNearest here
-//         const [neighborhoodRadius, neighbors] = findNearest(tile.centroid, kdTree, neighborhoods.maxSize, neighborhoods.maxRadius, tiles);
-//         Object.values(neighbors).forEach(neighbor => {
-//             // if already assigned, 50% chance of replacement
-//             const id = neighbor.id;
-//             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
-//             if (replace) {
-//                 formations[id] = formatTile(neighbor, tile.centroid, neighborhoodRadius, geometriesByCategory);
-//             }
-//         });
-//     });
-//     return formations;
-// }

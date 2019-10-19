@@ -19,12 +19,14 @@ import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
 import { AsteroidBelt } from './AsteroidBelt';
-import { SphereWorld, FlatWorld } from './world';
+import { World, FlatWorld } from './world';
 import { generateAsteroids } from './asteroids';
 import { Stars } from './stars';
 import { onCarElementLoaded, onDashLoaded, Cadillac } from './car';
 import Road from './Road';
 import {worldNeighborhoods, asteroidNeighborhoods} from './neighborhoods';
+
+
 export function Scene({ track }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
@@ -90,18 +92,18 @@ export function Scene({ track }) {
                     }}
                 />
             }
-            <Controls
+            {/* <Controls
                 radius={C.ASTEROID_MAX_RADIUS} // in use?
                 movementSpeed={500}
                 domElement={canvas}
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            />
+            /> */}
             <FixedLights />
             {!loadingBuildings &&buildingGeometries && foamGripMaterialRef &&
                 <>
-                    <SphereWorld
+                    <World
                         neighborhoods={worldNeighborhoods}
                         buildings={{
                             geometries: buildingGeometries,

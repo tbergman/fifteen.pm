@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import { generateTileFormations, generateFormationsFromFaces } from './formations';
+import { generateTileFormations } from './formations';
 import instancedMesh from 'three-instanced-mesh';
-import * as C from './constants';
 instancedMesh(THREE);
 
 function updateCluster(cluster, normal, centroid, index, vector3) {
@@ -41,11 +40,8 @@ function createInstance(elements, material) {
     return cluster;
 }
 
-
-
-
 // TODO maybe the material ref should be assigned to the incoming geometries array of objects
-export function generateInstanceGeometriesByName({ surface, buildings, neighborhoods}) {
+export function generateInstanceGeometriesByName({ surface, buildings, neighborhoods }) {
     const elementsByName = {};
     const instancesByName = {};
     // build up a lookup of each geometry by name
@@ -67,26 +63,3 @@ export function generateInstanceGeometriesByName({ surface, buildings, neighborh
     });
     return instancesByName;
 }
-
-// // TODO just copying piecemail from the above function; this can all get cleaned up and/or combined
-// export function generateInstanceGeometriesFromFaces(faceGroups, vertexGroups, buildings, neighborhoodProps) {
-//     const elementsByName = {};
-//     const instancesByName = {};
-//     // build up a lookup of each geometry by name
-//     buildings.geometries.forEach((geometry) => elementsByName[geometry.name] = []);
-//     // generate formations for all tiles
-//     const formations = generateFormationsFromFaces(faceGroups, vertexGroups, buildings.geometries, neighborhoodProps);
-//     // add each geometry instance from each tile formation to the elements by name look up
-//     Object.keys(formations).forEach((tId) => {
-//         formations[tId].forEach((element) => {
-//             elementsByName[element.geometry.name].push(element);
-//         })
-//     });
-//     // create an instance geometry for each geometry type that includes all locations on each formation for that geometry
-//     Object.keys(elementsByName).forEach((name) => {
-//         if (elementsByName[name].length) {
-//             instancesByName[name] = createInstance(elementsByName[name], buildings.materials[THREE.Math.randInt(0, buildings.materials.length - 1)]);
-//         }
-//     });
-//     return instancesByName;
-// }

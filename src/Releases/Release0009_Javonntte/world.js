@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import * as C from './constants';
 import "./index.css";
-import { generateInstanceGeometriesByName, generateInstancedTilesOnGrid } from "./instances";
+import { generateInstanceGeometriesByName } from "./instances";
 
 
 // TODO tilt and rotationSpeed
@@ -75,7 +75,7 @@ export function WorldSurface({ geometry, bpm }) {
     </>
 }
 
-export function SphereWorld({ track, buildings, neighborhoods, ...props }) {
+export function World({ track, buildings, neighborhoods, ...props }) {
     const [worldRef, world] = useResource();
     const tileInstances = useRef();
     const sphereGeometry = useMemo(() => {
