@@ -97,14 +97,13 @@ export function Scene({ track }) {
                 //     }}
                 // />
             } */}
-            {/* <Controls
+            <Controls
                 radius={C.ASTEROID_MAX_RADIUS} // in use?
                 movementSpeed={500}
-                domElement={canvas}
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            /> */}
+            />
             <FixedLights />
             {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <>
@@ -126,21 +125,14 @@ export function Scene({ track }) {
                     />
                 </>
             }
-            {/* {cameraRef.current &&  */}
             <Road
-                // curCamera={cameraRef.current}
                 closed={true}
-                
                 extrusionSegments={100}
                 radius={2}
                 radiusSegments={3}
-                
-                
             >
-
                 {(!loadingSteeringWheel && !loadingDash && steeringWheelGeoms.length && dashGeoms) ?
                     <Car
-                        // curCamera={cameraRef.current}
                         position={new THREE.Vector3(0, -14.5, -3)}
                         drivingProps={{
                             offset: 2,
@@ -157,18 +149,14 @@ export function Scene({ track }) {
                             shadowMapSizeHeight: 512,
                         }}
                         steeringWheelGeoms={steeringWheelGeoms}
-                        // road: road,
                         cadillacHoodGeoms={cadillacHoodGeoms}
                         dashGeoms={dashGeoms}
                         onLightsButtonClicked={() => {
                             setLightsOn(lightsOn ? false : true)
                         }}
-
                     /> : null
                 }
-
             </Road>
-            {/* } */}
             <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
             />

@@ -209,14 +209,14 @@ export default function Car({
         curCamera.matrix.lookAt(curCamera.position, lookAt, normal);
         curCamera.rotation.setFromRotationMatrix(curCamera.matrix);
         curCamera.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
-
+        car.position.copy(curCamera.position).add(position);
     })
 
     // TODO render order to make sure the car's always in front https://discourse.threejs.org/t/always-render-mesh-on-top-of-another/120/5
     return <
         group
         ref={carRef}
-        position={position}
+     
     >
         <SteeringWheel
             curCamera={curCamera}

@@ -9,8 +9,9 @@ extend({ OrbitControls, FlyControls });
 
 export function Controls({ radius, road, ...props }) {
     const controls = useRef();
-    const { camera } = useThree();
+    const { camera, gl } = useThree();
     const delta = .001;
+    console.log("GL", gl)
     useFrame(() => { controls.current && controls.current.update(delta) });
     return (
         isMobile ?
@@ -22,7 +23,7 @@ export function Controls({ radius, road, ...props }) {
             :
             <flyControls
                 ref={controls}
-                args={[camera]}
+                args={[camera, gl.domElement]}
                 {...props}
             />
     );
