@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { faceCentroid, subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromFace, triangleFromVertices } from '../../Utils/geometry';
 import { randomArrayVal, selectNRandomFromArray, randomPointsOnSphere } from '../../Utils/random';
-import { generateTiles, generateTilesFromFacesAndVertices } from '../../Utils/SphereTiles';
+import { generateTiles, generateDispersedTiles } from '../../Utils/SphereTiles';
 import { loadKDTree, findNearest } from '../../Utils/KdTree';
 import { groupBuildingGeometries } from './buildings';
 import * as C from './constants';
@@ -97,53 +97,19 @@ function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, geometries) 
     return formation;
 }
 
-// TODO tmp hack - this needs to be passed in so that it's shared by the Road component
-const steps = [
-    new THREE.Vector3(C.WORLD_RADIUS, 0, 0),
-    new THREE.Vector3(3 * C.WORLD_RADIUS/4, 0, 3 * C.WORLD_RADIUS/4),
-    new THREE.Vector3(C.WORLD_RADIUS/2, 0, C.WORLD_RADIUS/2),
-    new THREE.Vector3(C.WORLD_RADIUS/4, 0, C.WORLD_RADIUS/4),
-    new THREE.Vector3(0, 0, C.WORLD_RADIUS),
-    new THREE.Vector3(3 * -C.WORLD_RADIUS/4, 0, 3 * C.WORLD_RADIUS/4), 
-    new THREE.Vector3(-C.WORLD_RADIUS/2, 0, C.WORLD_RADIUS/2), 
-    new THREE.Vector3(-C.WORLD_RADIUS/4, 0, C.WORLD_RADIUS/4), 
-    new THREE.Vector3(-C.WORLD_RADIUS, 0, 0),
-    new THREE.Vector3(3 * -C.WORLD_RADIUS/4, 0, 3 * -C.WORLD_RADIUS/4), 
-    new THREE.Vector3(-C.WORLD_RADIUS/2, 0, -C.WORLD_RADIUS/2), 
-    new THREE.Vector3(-C.WORLD_RADIUS/4, 0, -C.WORLD_RADIUS/4), 
-    new THREE.Vector3(0, 0, -C.WORLD_RADIUS), 
-    new THREE.Vector3( 3 * C.WORLD_RADIUS/4, 0, 4 * -C.WORLD_RADIUS/4),
-    new THREE.Vector3(C.WORLD_RADIUS/2, 0, -C.WORLD_RADIUS/2),
-    new THREE.Vector3(C.WORLD_RADIUS/4, 0, -C.WORLD_RADIUS/4),
-]
-// TODO these filter values need to be relative to the world radius.
-function onPath(centroid){
-    return steps.map(step => centroid.distanceTo(step)).filter(f => f < C.WORLD_ROAD_WIDTH).length > 0; // TODO ROAD_WIDTH passed in
-}
-function tooFar(centroid){
-    return steps.map(step => centroid.distanceTo(step)).filter(f => f > C.WORLD_BUILDING_CORRIDOR_WIDTH).length == steps.length;
-}
-
-
-export function generateTileFormations( surfaceGeometry, geometries, neighborhoodProps) {
-    const tiles = generateTiles(surfaceGeometry);
+export function generateTileFormations(surface, geometries, neighborhoods) {
+    const tiles = neighborhoods.generateTiles({surface});
     const kdTree = loadKDTree(tiles);
     const formations = {}
     Object.keys(tiles).forEach(id => formations[id] = []);
     const geometriesByCategory = groupBuildingGeometries(geometries);
-    const sphereCenter = new THREE.Vector3();
-    surfaceGeometry.boundingBox.getCenter(sphereCenter);
-    randomPointsOnSphere(C.ASTEROID_MAX_RADIUS, sphereCenter, neighborhoodProps.count).forEach(neighborhoodCentroid => {
-        // TODO oof need to refactor so you can do kdTree.findNearest here
-        const [neighborhoodRadius, neighbors] = findNearest(neighborhoodCentroid, kdTree, neighborhoodProps.maxSize, neighborhoodProps.maxRadius, tiles);
+    neighborhoods.getCentroids({surface, tiles}).forEach(neighborhoodCentroid => {
+        const [neighborhoodRadius, neighbors] = findNearest(neighborhoodCentroid, kdTree, neighborhoods.maxSize, neighborhoods.maxRadius, tiles);
         Object.values(neighbors).forEach(neighbor => {
             // if already assigned, 50% chance of replacement
             const id = neighbor.id;
-            // colors={track.theme.starColors}
-
-
             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
-            if (replace && !onPath(neighbor.centroid) && !tooFar(neighbor.centroid)) {
+            if (replace && neighborhoods.rules(neighbor)) {
                 formations[id] = formatTile(neighbor, neighborhoodCentroid, neighborhoodRadius, geometriesByCategory);
             }
         });
@@ -151,25 +117,26 @@ export function generateTileFormations( surfaceGeometry, geometries, neighborhoo
     return formations;
 }
 
+
 // TODO just copying piecemail from the above function; this can all get cleaned up and/or combined
-export function generateFormationsFromFaces(faceGroups, vertexGroups, geometries, neighborhoodProps) {
-    const tiles = generateTilesFromFacesAndVertices(faceGroups, vertexGroups);
-    const kdTree = loadKDTree(tiles);
-    const formations = {}
-    Object.keys(tiles).forEach(tileId => formations[tileId] = []);
-    const geometriesByCategory = groupBuildingGeometries(geometries);
-    const randomTiles = selectNRandomFromArray(Object.values(tiles).map(v => v), neighborhoodProps.count)
-    randomTiles.forEach(tile => {
-        // TODO oof need to refactor so you can do kdTree.findNearest here
-        const [neighborhoodRadius, neighbors] = findNearest(tile.centroid, kdTree, neighborhoodProps.maxSize, neighborhoodProps.maxRadius, tiles);
-        Object.values(neighbors).forEach(neighbor => {
-            // if already assigned, 50% chance of replacement
-            const id = neighbor.id;
-            const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
-            if (replace) {
-                formations[id] = formatTile(neighbor, tile.centroid, neighborhoodRadius, geometriesByCategory);
-            }
-        });
-    });
-    return formations;
-}
+// export function generateFormationsFromFaces(faceGroups, vertexGroups, geometries, neighborhoods) {
+//     const tiles = generateDispersedTiles(faceGroups, vertexGroups);
+//     const kdTree = loadKDTree(tiles);
+//     const formations = {}
+//     Object.keys(tiles).forEach(tileId => formations[tileId] = []);
+//     const geometriesByCategory = groupBuildingGeometries(geometries);
+//     const randomTiles = selectNRandomFromArray(Object.values(tiles).map(v => v), neighborhoods.count)
+//     randomTiles.forEach(tile => {
+//         // TODO oof need to refactor so you can do kdTree.findNearest here
+//         const [neighborhoodRadius, neighbors] = findNearest(tile.centroid, kdTree, neighborhoods.maxSize, neighborhoods.maxRadius, tiles);
+//         Object.values(neighbors).forEach(neighbor => {
+//             // if already assigned, 50% chance of replacement
+//             const id = neighbor.id;
+//             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
+//             if (replace) {
+//                 formations[id] = formatTile(neighbor, tile.centroid, neighborhoodRadius, geometriesByCategory);
+//             }
+//         });
+//     });
+//     return formations;
+// }

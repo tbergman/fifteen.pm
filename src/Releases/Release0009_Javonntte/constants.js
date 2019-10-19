@@ -50,11 +50,6 @@ export const ASTEROID_BELT_CENTER = new THREE.Vector3();
 export const ASTEROID_MAX_SIDES = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? 1.6 : 1.6));
 export const ASTEROID_MAX_TIERS = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? .8 : 1.6));
 export const ASTEROID_MAX_FACE_NOISE = 1;
-export const ASTEROID_NEIGHBORHOOD_PROPS = {
-    count: 100,//WORLD_RADIUS * WORLD_RADIUS, //WORLD_RADIUS * (isMobile ? 2. : 2.),
-    maxSize: isMobile ? ASTEROID_MAX_RADIUS * 2 : Math.floor(ASTEROID_MAX_RADIUS) * 2,
-    maxRadius: ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
-}
 
 // CAMERA
 const STARTING_Z = isMobile ? ASTEROID_MAX_RADIUS * 1.1 : ASTEROID_MAX_RADIUS * 1.1;
@@ -63,14 +58,30 @@ export const START_POS = new THREE.Vector3(0, 0,STARTING_Z);
 
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
-export const WORLD_NEIGHBORHOOD_PROPS = ASTEROID_NEIGHBORHOOD_PROPS;
-// TODO getting the warnings gone for  min
 export const WORLD_RADIUS = ASTEROID_MAX_RADIUS;
 export const MAX_WORLD_FACE_HEIGHT=ASTEROID_MAX_FACE_NOISE;
 export const WORLD_SIDES = 34;
 export const WORLD_TIERS = 34;
 export const WORLD_ROAD_WIDTH = isMobile ? 17 : 17;
 export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 26 : 26;
+export const WORLD_ROAD_PATH = [
+    new THREE.Vector3(WORLD_RADIUS, 0, 0),
+    new THREE.Vector3(3 * WORLD_RADIUS / 4, 0, 3 * WORLD_RADIUS / 4),
+    new THREE.Vector3(WORLD_RADIUS / 2, 0, WORLD_RADIUS / 2),
+    new THREE.Vector3(WORLD_RADIUS / 4, 0, WORLD_RADIUS / 4),
+    new THREE.Vector3(0, 0, WORLD_RADIUS),
+    new THREE.Vector3(3 * -WORLD_RADIUS / 4, 0, 3 * WORLD_RADIUS / 4),
+    new THREE.Vector3(-WORLD_RADIUS / 2, 0, WORLD_RADIUS / 2),
+    new THREE.Vector3(-WORLD_RADIUS / 4, 0, WORLD_RADIUS / 4),
+    new THREE.Vector3(-WORLD_RADIUS, 0, 0),
+    new THREE.Vector3(3 * -WORLD_RADIUS / 4, 0, 3 * -WORLD_RADIUS / 4),
+    new THREE.Vector3(-WORLD_RADIUS / 2, 0, -WORLD_RADIUS / 2),
+    new THREE.Vector3(-WORLD_RADIUS / 4, 0, -WORLD_RADIUS / 4),
+    new THREE.Vector3(0, 0, -WORLD_RADIUS),
+    new THREE.Vector3(3 * WORLD_RADIUS / 4, 0, 4 * -WORLD_RADIUS / 4),
+    new THREE.Vector3(WORLD_RADIUS / 2, 0, -WORLD_RADIUS / 2),
+    new THREE.Vector3(WORLD_RADIUS / 4, 0, -WORLD_RADIUS / 4),
+]
 
 // BUILDING
 export const BUILDING_BASE_SCALE = 1.;

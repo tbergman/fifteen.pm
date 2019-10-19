@@ -75,7 +75,7 @@ export function WorldSurface({ geometry, bpm }) {
     </>
 }
 
-export function SphereWorld({ track, buildings, ...props }) {
+export function SphereWorld({ track, buildings, neighborhoods, ...props }) {
     const [worldRef, world] = useResource();
     const tileInstances = useRef();
     const sphereGeometry = useMemo(() => {
@@ -90,9 +90,9 @@ export function SphereWorld({ track, buildings, ...props }) {
         if (buildings.loaded) {
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
             tileInstances.current = generateInstanceGeometriesByName({
-                surfaceGeometry: sphereGeometry,
+                surface: sphereGeometry,
                 buildings,
-                neighborhoodProps: C.WORLD_NEIGHBORHOOD_PROPS
+                neighborhoods: neighborhoods
             });
         }
     }, [])

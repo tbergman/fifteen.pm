@@ -6,7 +6,7 @@ import { SphereTiles } from '../../Utils/SphereTiles';
 import * as C from './constants';
 import "./index.css";
 import { Stars } from './stars';
-import { generateInstanceGeometriesFromFaces } from "./instances";
+import { generateInstanceGeometriesByName } from "./instances";
 import NoiseSphereGeometry from '../../Utils/NoiseSphere';
 import { generateAsteroids } from './asteroids';
 
@@ -54,7 +54,7 @@ export function AsteroidsSurface({ geometry, bpm }) {
     </>
 }
 
-export function AsteroidBelt({ track, buildings, ...props }) {
+export function AsteroidBelt({ track, buildings, neighborhoods, ...props }) {
     const [asteroidBeltRef, asteroidBelt] = useResource();
     const tileInstances = useRef();
    const asteroids = useMemo(() => {
@@ -70,13 +70,21 @@ export function AsteroidBelt({ track, buildings, ...props }) {
     }, [])
 
     useEffect(() => {
+        // if (buildings.loaded) {
+        //     tileInstances.current = generateInstanceGeometriesFromFaces(
+        //         asteroids.faceGroups,
+        //         asteroids.vertexGroups,
+        //         buildings,
+        //         C.ASTEROID_NEIGHBORHOOD_PROPS
+        //     );
+        // }
         if (buildings.loaded) {
-            tileInstances.current = generateInstanceGeometriesFromFaces(
-                asteroids.faceGroups,
-                asteroids.vertexGroups,
+            // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
+            tileInstances.current = generateInstanceGeometriesByName({
+                surface: asteroids,
                 buildings,
-                C.ASTEROID_NEIGHBORHOOD_PROPS
-            );
+                neighborhoods: neighborhoods
+            });
         }
     })
 

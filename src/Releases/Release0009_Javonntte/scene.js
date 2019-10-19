@@ -24,7 +24,7 @@ import { generateAsteroids } from './asteroids';
 import { Stars } from './stars';
 import { onCarElementLoaded, onDashLoaded, Cadillac } from './car';
 import Road from './Road';
-
+import {worldNeighborhoods, asteroidNeighborhoods} from './neighborhoods';
 export function Scene({ track }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
@@ -67,8 +67,6 @@ export function Scene({ track }) {
             {!loadingSteeringWheel && !loadingDash &&
                 <Camera
                     cameraRef={cameraRef}
-                    maxDist={C.MAX_CAMERA_DIST}
-                    minDist={C.MIN_CAMERA_DIST}
                     fov={75}
                     near={1}
                     far={10000}
@@ -104,6 +102,7 @@ export function Scene({ track }) {
             {!loadingBuildings &&buildingGeometries && foamGripMaterialRef &&
                 <>
                     <SphereWorld
+                        neighborhoods={worldNeighborhoods}
                         buildings={{
                             geometries: buildingGeometries,
                             materials: [foamGripMaterial],
@@ -111,6 +110,7 @@ export function Scene({ track }) {
                         }}
                     />
                     <AsteroidBelt
+                        neighborhoods={asteroidNeighborhoods}
                         buildings={{
                             geometries: buildingGeometries,
                             materials: [foamGripMaterial],

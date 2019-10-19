@@ -81,10 +81,10 @@ export const MemoizedSphereTile = React.memo(props => {
     return <>{props.tileComponent(props)}</>;
 }, props => !props.isRendered);
 
-export function generateTiles(sphereGeometry) {
-    const vertices = sphereGeometry.vertices;
+export function generateTiles({surface}) {
+    const vertices = surface.vertices;
     const tiles = {}
-    sphereGeometry.faces.forEach((face, index) => {
+    surface.faces.forEach((face, index) => {
         const triangle = triangleFromFace(face, vertices);
         const centroid = faceCentroid(face, vertices);
         const tile = initFaceTile(face, centroid, triangle);
@@ -94,13 +94,13 @@ export function generateTiles(sphereGeometry) {
     return tiles;
 }
 
-// TODO just copying piecemail from the above function; this can all get cleaned up and/or combined
-export function generateTilesFromFacesAndVertices(faceGroups, vertexGroups) {
+
+export function generateDispersedTiles({surface}){
     const tiles = {}
-    faceGroups.forEach((faces, i) => {
+    surface.faceGroups.forEach((faces, i) => {
         faces.forEach(face => {
-            const triangle = triangleFromFace(face, vertexGroups[i]);
-            const centroid = faceCentroid(face, vertexGroups[i]);
+            const triangle = triangleFromFace(face, surface.vertexGroups[i]);
+            const centroid = faceCentroid(face, surface.vertexGroups[i]);
             const tile = initFaceTile(face, centroid, triangle);
             const tId = tileId(centroid);
             tiles[tId] = tile;

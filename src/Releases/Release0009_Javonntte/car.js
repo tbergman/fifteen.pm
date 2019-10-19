@@ -92,7 +92,6 @@ function SteeringWheel({ curCamera, steeringWheelGeoms }) {
     const [blackLeather12MaterialRef, blackLeather12Material] = useResource();
     useRender((state, time) => {
         if (!steeringWheel) return;
-        console.log('button', button)
         steeringWheel.rotation.y = curCamera.rotation.y * .2;
         // cadillacRef.current.rotation.x = cameraRef.current.rotation.x * .01;
         // cadillacRef.current.rotation.y = cameraRef.current.rotation.y * .01;
@@ -103,7 +102,6 @@ function SteeringWheel({ curCamera, steeringWheelGeoms }) {
             textureRepeat={{x:4, y: 1}}
         />
         {blackLeather12Material && steeringWheelGeoms.map(geometry => {
-            console.log('geometryname', geometry.name)
             // if (geometry.name == "Gloves") {
                 return <mesh
                     key={geometry.name}
