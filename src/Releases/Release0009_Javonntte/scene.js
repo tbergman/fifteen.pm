@@ -12,7 +12,7 @@ import {
     Metal03Material,
     TronMaterial,
 } from '../../Utils/materials';
-import {BloomFilmEffect} from '../../Utils/Effects';
+import { BloomFilmEffect } from '../../Utils/Effects';
 import { onBuildingsLoaded } from "./buildings";
 import { Camera } from './camera';
 import * as C from "./constants";
@@ -23,9 +23,10 @@ import { AsteroidBelt } from './AsteroidBelt';
 import { World, FlatWorld } from './world';
 import { generateAsteroids } from './asteroids';
 import { Stars } from './stars';
-import { onCarElementLoaded, onDashLoaded, Cadillac } from './car';
+import { onCarElementLoaded, onDashLoaded, Cadillac } from './Car';
+import Car from './Car';
 import Road from './Road';
-import {worldNeighborhoods, asteroidNeighborhoods} from './neighborhoods';
+import { worldNeighborhoods, asteroidNeighborhoods } from './neighborhoods';
 
 
 export function Scene({ track }) {
@@ -66,34 +67,36 @@ export function Scene({ track }) {
             <Facade04Material materialRef={facade04MaterialRef} />
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
+            {/* 
+            {!loadingSteeringWheel && !loadingDash && steeringWheelGeoms.length && dashGeoms &&
 
-            {!loadingSteeringWheel && !loadingDash &&
-                <Camera
-                    cameraRef={cameraRef}
-                    fov={75}
-                    near={1}
-                    far={10000}
-                    carProps={{
-                        steeringWheelGeoms: steeringWheelGeoms,
-                        // road: road,
-                        cadillacHoodGeoms: cadillacHoodGeoms,
-                        dashGeoms: dashGeoms,
-                        onLightsButtonClicked: () => {
-                            console.log("CLICKED!")   
-                            setLightsOn(lightsOn ? false : true)
-                        }
-                    }}
-                    lightProps={{
-                        intensity: 1.1,
-                        // penumbra: 0.1,
-                        distance: 10000,
-                        shadowCameraNear: .0001,
-                        shadowCameraFar: 200,
-                        shadowMapSizeWidth: 512,
-                        shadowMapSizeHeight: 512,
-                    }}
-                />
-            }
+
+                // <Camera
+                //     cameraRef={cameraRef}
+                //     fov={75}
+                //     near={1}
+                //     far={10000}
+                //     carProps={{
+                //         steeringWheelGeoms: steeringWheelGeoms,
+                //         // road: road,
+                //         cadillacHoodGeoms: cadillacHoodGeoms,
+                //         dashGeoms: dashGeoms,
+                //         onLightsButtonClicked: () => {
+                //             console.log("CLICKED!")   
+                //             setLightsOn(lightsOn ? false : true)
+                //         }
+                //     }}
+                //     lightProps={{
+                //         intensity: 1.1,
+                //         // penumbra: 0.1,
+                //         distance: 10000,
+                //         shadowCameraNear: .0001,
+                //         shadowCameraFar: 200,
+                //         shadowMapSizeWidth: 512,
+                //         shadowMapSizeHeight: 512,
+                //     }}
+                // />
+            } */}
             {/* <Controls
                 radius={C.ASTEROID_MAX_RADIUS} // in use?
                 movementSpeed={500}
@@ -103,7 +106,7 @@ export function Scene({ track }) {
                 dragToLook={false}
             /> */}
             <FixedLights />
-            {!loadingBuildings &&buildingGeometries && foamGripMaterialRef &&
+            {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <>
                     <World
                         neighborhoods={worldNeighborhoods}
@@ -123,20 +126,53 @@ export function Scene({ track }) {
                     />
                 </>
             }
-            {cameraRef.current && <Road
-                curCamera={cameraRef.current}
+            {/* {cameraRef.current &&  */}
+            <Road
+                // curCamera={cameraRef.current}
                 closed={true}
-                scale={1}
+                
                 extrusionSegments={100}
                 radius={2}
                 radiusSegments={3}
-                offset={2}
-                numSteps={200} // determines the speed of the car (yes the road is driving the car at the moment)
-            />}
+                
+                
+            >
+
+                {(!loadingSteeringWheel && !loadingDash && steeringWheelGeoms.length && dashGeoms) ?
+                    <Car
+                        // curCamera={cameraRef.current}
+                        position={new THREE.Vector3(0, -14.5, -3)}
+                        drivingProps={{
+                            offset: 2,
+                            scale: 1,
+                            numSteps: 20, // determines the speed of the car
+                        }}
+                        lightProps={{
+                            intensity: 1.1,
+                            // penumbra: 0.1,
+                            distance: 10000,
+                            shadowCameraNear: .0001,
+                            shadowCameraFar: 200,
+                            shadowMapSizeWidth: 512,
+                            shadowMapSizeHeight: 512,
+                        }}
+                        steeringWheelGeoms={steeringWheelGeoms}
+                        // road: road,
+                        cadillacHoodGeoms={cadillacHoodGeoms}
+                        dashGeoms={dashGeoms}
+                        onLightsButtonClicked={() => {
+                            setLightsOn(lightsOn ? false : true)
+                        }}
+
+                    /> : null
+                }
+
+            </Road>
+            {/* } */}
             <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
             />
-             {/* <BloomFilmEffect /> */}
+            {/* <BloomFilmEffect /> */}
         </>
     );
 }

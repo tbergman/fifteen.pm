@@ -4,13 +4,10 @@ import * as THREE from 'three';
 import { CloudMaterial } from '../../Utils/materials';
 import * as C from './constants';
 
-export default function Road({ curCamera, closed, scale, extrusionSegments, radius, radiusSegments, offset, numSteps }) {
-    const {clock} = useThree();
+export default function Road({ curCamera, closed, scale, extrusionSegments, radius, radiusSegments, offset, numSteps, ...props }) {
+    curCamera = curCamera || useThree().camera;
     const road = useRef();
     const [cloudMaterialRef, cloudMaterial] = useResource();
-    const normal = new THREE.Vector3();
-    const binormal = new THREE.Vector3();
-    const up = new THREE.Vector3(0, 2, 2);// TODO these is supposed to be normalized to 1 and have only 1 non zero value lol
 
     useEffect(() => {
         const steps = C.WORLD_ROAD_PATH
@@ -21,42 +18,18 @@ export default function Road({ curCamera, closed, scale, extrusionSegments, radi
         road.current = tubeGeometry;
     }, [])
 
-    // TODO http://jsfiddle.net/krw8nwLn/66/
-    // The road is driving the car... refactor to pass the road's path to car and put this logic in the car.
-    useFrame(() => {
-        var t = (clock.elapsedTime % numSteps) / numSteps;
-        console.log(clock.elapsedTime, t);
-        var pos = road.current.parameters.path.getPointAt(t);
-        pos.multiplyScalar(scale);
-        // interpolation
-        var segments = road.current.tangents.length;
-        var pickt = t * segments;
-        var pick = Math.floor(pickt);
-        var pickNext = (pick + 1) % segments;
-        binormal.subVectors(road.current.binormals[pickNext], road.current.binormals[pick]);
-        binormal.multiplyScalar(pickt - pick).add(road.current.binormals[pick]).add(up);
-        var dir = road.current.parameters.path.getTangentAt(t);
-        normal.copy(binormal).cross(dir)
-        // We move on a offset on its binormal
-        pos.add(normal.clone().multiplyScalar(offset));
-        curCamera.position.copy(pos);
-        // Using arclength for stablization in look ahead.
-        var lookAt = road.current.parameters.path.getPointAt((t + 30 / road.current.parameters.path.getLength()) % 1).multiplyScalar(scale);
-        // Camera Orientation 2 - up orientation via normal
-        lookAt.copy(pos).add(dir);
-        curCamera.matrix.lookAt(curCamera.position, lookAt, normal);
-        curCamera.rotation.setFromRotationMatrix(curCamera.matrix);
-        curCamera.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
-    })
-
     return <>
         <CloudMaterial materialRef={cloudMaterialRef} emissive={0xd4af37} />
         {cloudMaterialRef && road.current &&
-            <mesh
-                geometry={road.current}
-                material={cloudMaterial}
-                scale={[scale, scale, scale]}
-            />
+            <>
+                <mesh
+                    geometry={road.current}
+                    material={cloudMaterial}
+                />
+                {React.Children.toArray(props.children).map(element => {
+                    return React.cloneElement(element, { road: road.current })
+                })}
+            </>
         }
     </>
 }

@@ -8,6 +8,7 @@ import * as C from './constants';
 import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import './index.css';
 import { MusicPlayerProvider, MusicPlayerContext } from '../../UI/Player/ActiveSongContext';
+import {BloomFilmEffect} from '../../Utils/Effects';
 
 export default function Release0009_Javonntte({ }) {
     const mediaRef = useRef();
@@ -45,10 +46,10 @@ export default function Release0009_Javonntte({ }) {
             /> */}
             <Canvas
                 id="canvas"
-                antialias="false"
+                // antialias="false"
                 onCreated={({ gl }) => {
                     gl.shadowMap.enabled = true;
-                    gl.shadowMap.type = THREE.PCFSoftShadowMap;
+                //     gl.shadowMap.type = THREE.PCFSoftShadowMap;
                     gl.gammaInput = true;
                     gl.gammaOutput = true;
                 }}
@@ -56,7 +57,7 @@ export default function Release0009_Javonntte({ }) {
                 <Scene
                     track={track}
                 />
-               
+               {/* <BloomFilmEffect /> */}
             </Canvas>
         </MusicPlayerProvider>
     );

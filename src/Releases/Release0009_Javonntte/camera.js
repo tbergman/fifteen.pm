@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree, useResource } from 'react-three-fiber';
-import { Car } from './car';
+import { Car } from './Car';
 
 export function Camera({ cameraRef, fov, near, far, carProps, lightProps }) {
 
@@ -15,9 +15,9 @@ export function Camera({ cameraRef, fov, near, far, carProps, lightProps }) {
 
     return <perspectiveCamera
         ref={cameraRef}
-        fov={fov}
-        near={near}
-        far={far}
+        // fov={fov}
+        // near={near}
+        // far={far}
     >
         {
             cameraRef.current &&
