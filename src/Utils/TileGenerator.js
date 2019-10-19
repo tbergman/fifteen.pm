@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useRender, useThree } from 'react-three-fiber';
+import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 
 // We don't want to constantly refresh tiles - 
@@ -72,7 +72,7 @@ export default function TileGenerator({ tileSize, grid, tileComponent, tileResou
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const boundary = useRef({ x: 0, z: 0 });
 
-    useRender((state, time) => {
+    useFrame((state, time) => {
         if (shouldTriggerTileGeneration()) {
             setLastUpdateTime(time);
             boundary.current = { x: camera.position.x, z: camera.position.z };

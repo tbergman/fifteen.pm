@@ -64,7 +64,7 @@ export function AsteroidBelt({ track, buildings, neighborhoods, ...props }) {
         }
     })
 
-    // useRender(() => {
+    // useFrame(() => {
     //     if (asteroidBeltRef.current) {
     //         // astroidBeltRef.current.rotation.x += .01;
     //     }

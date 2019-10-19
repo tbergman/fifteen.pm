@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import { assetPathShared } from "./assets.js";
-import { useRender, useThree } from 'react-three-fiber';
+import { useFrame, useThree } from 'react-three-fiber';
 
 /* eslint import/no-webpack-loader-syntax: off */
 import skinningVertexShader from '!raw-loader!glslify-loader!../Shaders/skinningVertex.glsl';
@@ -433,7 +433,7 @@ export function TronMaterial({ materialRef, bpm, side }) {
 	const { camera, size } = useThree();
 	let t = 0;
 
-	useRender(
+	useFrame(
 		(state, time) => {
 			if (!materialRef.current) return; // avoid re-initialization async issues (e.g. if tiling)
 			materialRef.current.uniforms.uTime.value = time;

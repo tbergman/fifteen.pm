@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useRender, useResource, useThree } from 'react-three-fiber';
+import { useFrame, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import * as C from './constants';

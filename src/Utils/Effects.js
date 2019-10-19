@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { a, apply as applySpring } from 'react-spring/three';
-import { extend, useFrame, useRender, useThree } from 'react-three-fiber';
+import { extend, useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { ClearMaskPass, DotScreenPass, GlitchPass, HorizontalBlurShader, MaskPass, VerticalBlurShader } from 'three-full';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
@@ -21,7 +21,7 @@ export const GlitchEffect = React.memo(({ factor }) => {
     const composer = useRef()
     useEffect(() => void composer.current.setSize(size.width, size.height), [size])
     // This takes over as the main render-loop (when 2nd arg is set to true)
-    useRender(() => composer.current.render(), true)
+    useFrame(() => composer.current.render(), true)
     return (
         <effectComposer ref={composer} args={[gl]}>
             <renderPass attachArray="passes" args={[scene, camera]} />
@@ -35,7 +35,7 @@ export const BloomEffect = React.memo(({ camera, radius = .1, threshold = .01, s
     const { gl, scene, size } = useThree()
     const composer = useRef()
     useEffect(() => void composer.current.setSize(size.width, size.height), [size])
-    useRender(() => { return composer.current.render() }, true)
+    useFrame(() => { return composer.current.render() }, true)
     return (
 
         <effectComposer ref={composer} args={[gl]}>
@@ -58,7 +58,7 @@ export const Advanced2Effect = React.memo(({ camera }) => {
     const composer = useRef();
     const delta = useRef(0.01);
     useEffect(() => void composer.current.setSize(size.width, size.height), [size]);
-    useRender(() => { return composer.current.render(delta.current) }, true);
+    useFrame(() => { return composer.current.render(delta.current) }, true);
 
     return (
         <effectComposer ref={composer} args={[gl]}>
@@ -150,7 +150,7 @@ export const BloomFilmEffect = React.memo(({ }) => {
     const composer = useRef()
     const { scene, gl, size, camera } = useThree()
     useEffect(() => void composer.current.setSize(size.width, size.height), [size])
-    useRender(() => composer.current.render(), 2)
+    useFrame(() => composer.current.render(), 2)
     return (
         <effectComposer ref={composer} args={[gl]}>
             <renderPass attachArray="passes" scene={scene} camera={camera} />

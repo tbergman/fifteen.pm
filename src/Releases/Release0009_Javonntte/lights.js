@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { useResource, useRender, useThree } from 'react-three-fiber';
+import { useResource, useFrame, useThree } from 'react-three-fiber';
 import * as C from './constants';
 
 export function FixedLights() {
@@ -8,7 +8,7 @@ export function FixedLights() {
     // const [spotLightRef, spotLight] = useResource();
     // const spotLight = useRef();
     const pointLight = useRef();
-    // useRender(() => {
+    // useFrame(() => {
     //     if (spotLight.current && camera) {
     //         // spotLight.current.position.copy(camera.position)
     //         // spotLight.current.rotation.x += .1;

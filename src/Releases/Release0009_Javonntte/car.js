@@ -1,6 +1,6 @@
 import React, { useMemo, useRef } from 'react';
 import * as THREE from 'three';
-import { useRender, useResource } from 'react-three-fiber';
+import { useFrame, useResource, useLoader } from 'react-three-fiber';
 import { useGLTF } from "../../Utils/hooks";
 import * as C from './constants';
 import { EmissiveMaterial, Metal03Material, TronMaterial, BlackLeather12 } from '../../Utils/materials';
@@ -24,6 +24,36 @@ function Button({ geom, clicked }) {
 
 }
 
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+// TODO !!! --> https://github.com/react-spring/react-three-fiber/blob/master/migration.md#gltf-to-jsx
+function Model(props) {
+    const group = useRef()
+    const gltf = useLoader(GLTFLoader, stork)
+    const actions = useRef()
+    const [mixer] = useState(() => new THREE.AnimationMixer())
+    useFrame((state, delta) => mixer.update(delta))
+    useEffect(() => {
+      const root = group.current
+      actions.current = { storkFly_B_: mixer.clipAction(gltf.animations[0], root) }
+      return () => gltf.animations.forEach(clip => mixer.uncacheClip(clip))
+    }, [])
+    useEffect(() => void actions.current.storkFly_B_.play(), [])
+    return (
+      <group ref={group} {...props}>
+        <scene name="AuxScene">
+          <mesh
+            castShadow
+            receiveShadow
+            name="mesh_0"
+            morphTargetDictionary={gltf.__$[1].morphTargetDictionary}
+            morphTargetInfluences={gltf.__$[1].morphTargetInfluences}>
+            <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
+            <meshStandardMaterial attach="material" {...gltf.__$[1].material} />
+          </mesh>
+        </scene>
+      </group>
+    )
+  }
 
 function Dash({ dashGeoms, onLightsButtonClicked }) {
     const [dashRef, dash] = useResource();
@@ -90,7 +120,7 @@ function Dash({ dashGeoms, onLightsButtonClicked }) {
 function SteeringWheel({ curCamera, steeringWheelGeoms }) {
     const [steeringWheelRef, steeringWheel] = useResource();
     const [blackLeather12MaterialRef, blackLeather12Material] = useResource();
-    useRender((state, time) => {
+    useFrame((state, time) => {
         if (!steeringWheel) return;
         steeringWheel.rotation.y = curCamera.rotation.y * .2;
         // cadillacRef.current.rotation.x = cameraRef.current.rotation.x * .01;
@@ -147,7 +177,7 @@ export function Car({
     const [carRef, car] = useResource();
       // TODO http://jsfiddle.net/krw8nwLn/66/
     // The road is driving the car... refactor to pass the road's path to car and put this logic in the car.
-    // useRender((state, time) => {
+    // useFrame((state, time) => {
     //     var t = (time % numSteps) / numSteps;
     //     var pos = road.parameters.path.getPointAt(t);
     //     pos.multiplyScalar(scale);

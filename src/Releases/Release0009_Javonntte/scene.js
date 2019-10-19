@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useResource, useThree, useRender } from 'react-three-fiber';
+import { useResource, useThree, useFrame } from 'react-three-fiber';
 import * as THREE from 'three';
 import { useGLTF } from "../../Utils/hooks";
 import {
@@ -12,6 +12,7 @@ import {
     Metal03Material,
     TronMaterial,
 } from '../../Utils/materials';
+import {BloomFilmEffect} from '../../Utils/Effects';
 import { onBuildingsLoaded } from "./buildings";
 import { Camera } from './camera';
 import * as C from "./constants";
@@ -78,6 +79,7 @@ export function Scene({ track }) {
                         cadillacHoodGeoms: cadillacHoodGeoms,
                         dashGeoms: dashGeoms,
                         onLightsButtonClicked: () => {
+                            console.log("CLICKED!")   
                             setLightsOn(lightsOn ? false : true)
                         }
                     }}
@@ -129,11 +131,12 @@ export function Scene({ track }) {
                 radius={2}
                 radiusSegments={3}
                 offset={2}
-                numSteps={9000} // determines the speed of the car (yes the road is driving the car at the moment)
+                numSteps={200} // determines the speed of the car (yes the road is driving the car at the moment)
             />}
             <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
             />
+             {/* <BloomFilmEffect /> */}
         </>
     );
 }

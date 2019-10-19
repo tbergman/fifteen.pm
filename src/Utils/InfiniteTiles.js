@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useRender, useThree } from 'react-three-fiber';
+import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import {tileIdFrom2d} from './tiles';
 
@@ -69,7 +69,7 @@ export default function InfiniteTiles({ tileSize, gridSize, tileComponent, tileR
     const [lastUpdateTime, setLastUpdateTime] = useState(0);
     const boundary = useRef({ x: tileSize * 2, z: 0 }); // trigger tile generation on load
 
-    useRender((state, time) => {
+    useFrame((state, time) => {
         if (shouldTriggerTileGeneration()) {
             boundary.current = { x: camera.position.x, z: camera.position.z };
             addTiles({ tiles, gridSize, time, camera, tileSize });

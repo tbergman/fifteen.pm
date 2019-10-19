@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useRender, useThree } from 'react-three-fiber';
+import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { faceCentroid, triangleFromFace } from './geometry';
 import { findNearest, loadKDTree } from './KdTree';
@@ -50,7 +50,7 @@ export function SphereTiles({ rotation, sphereGeometry, tileComponent, tileEleme
         kdTree.current = loadKDTree(allTiles.current);
     }, [])
 
-    useRender((state, time) => {
+    useFrame((state, time) => {
         if ((time % .05).toFixed(2) == 0) {
             searchPosition.current = getSearchPosition();
         }

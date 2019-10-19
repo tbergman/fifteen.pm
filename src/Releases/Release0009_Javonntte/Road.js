@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { useRender, useResource } from 'react-three-fiber';
+import { useFrame, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { CloudMaterial } from '../../Utils/materials';
 import * as C from './constants';
 
 export default function Road({ curCamera, closed, scale, extrusionSegments, radius, radiusSegments, offset, numSteps }) {
-
+    const {clock} = useThree();
     const road = useRef();
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const normal = new THREE.Vector3();
@@ -23,8 +23,9 @@ export default function Road({ curCamera, closed, scale, extrusionSegments, radi
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
     // The road is driving the car... refactor to pass the road's path to car and put this logic in the car.
-    useRender((state, time) => {
-        var t = (time % numSteps) / numSteps;
+    useFrame(() => {
+        var t = (clock.elapsedTime % numSteps) / numSteps;
+        console.log(clock.elapsedTime, t);
         var pos = road.current.parameters.path.getPointAt(t);
         pos.multiplyScalar(scale);
         // interpolation

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
-import { useRender, useThree, useResource } from 'react-three-fiber';
+import { useFrame, useThree, useResource } from 'react-three-fiber';
 import { Car } from './car';
 
 export function Camera({ cameraRef, fov, near, far, carProps, lightProps }) {
