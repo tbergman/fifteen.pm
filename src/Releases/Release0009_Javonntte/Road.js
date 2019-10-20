@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { CloudMaterial } from '../../Utils/materials';
 import * as C from './constants';
 
-export default function Road({ curCamera, closed, scale, extrusionSegments, radius, radiusSegments, offset, numSteps, ...props }) {
+export default function Road({ curCamera, closed, extrusionSegments, radius, radiusSegments, offset, numSteps, ...props }) {
     curCamera = curCamera || useThree().camera;
     const road = useRef();
     const [cloudMaterialRef, cloudMaterial] = useResource();

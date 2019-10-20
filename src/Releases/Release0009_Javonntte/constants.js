@@ -5,10 +5,7 @@ import { assetPath9 } from './utils';
 
 // ASSETS
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
-export const CADILLAC_HOOD_URL = assetPath9("objects/car/cadillac-hood2.glb")
-export const STEERING_WHEEL_URL = assetPath9("objects/car/steering-wheel.glb")
-export const DASH_URL = assetPath9("objects/car/dash.glb")
-
+export const CAR_URL =  assetPath9("objects/car/car.glb");
 
 // TRACK THEMES
 const THEMES = [
@@ -49,11 +46,6 @@ export const ASTEROID_BELT_CENTER = new THREE.Vector3();
 export const ASTEROID_MAX_SIDES = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? 1.6 : 1.6));
 export const ASTEROID_MAX_TIERS = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? .8 : 1.6));
 export const ASTEROID_MAX_FACE_NOISE = 1;
-
-// CAMERA
-const STARTING_Z = isMobile ? ASTEROID_MAX_RADIUS * 1.1 : ASTEROID_MAX_RADIUS * 1.1;
-// max camera distance from center
-export const START_POS = new THREE.Vector3(0, 0, STARTING_Z);
 
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();

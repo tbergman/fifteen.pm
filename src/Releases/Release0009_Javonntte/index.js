@@ -46,10 +46,8 @@ export default function Release0009_Javonntte({ }) {
             /> */}
             <Canvas
                 id="canvas"
-                // antialias="false"
                 onCreated={({ gl }) => {
                     gl.shadowMap.enabled = true;
-                //     gl.shadowMap.type = THREE.PCFSoftShadowMap;
                     gl.gammaInput = true;
                     gl.gammaOutput = true;
                 }}

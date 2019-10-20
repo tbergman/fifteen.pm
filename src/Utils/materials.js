@@ -429,29 +429,24 @@ export function Windows1Material({ materialRef, ...props }) {
 
 export function TronMaterial({ materialRef, bpm, side }) {
 	materialRef = materialRef ? materialRef : useRef().current;
-	const BPM = 120; // TODO not passing down
-	const { camera, size } = useThree();
-	let t = 0;
+	const { clock, camera, size } = useThree();
 
 	useFrame(
-		(state, time) => {
+		() => {
 			if (!materialRef.current) return; // avoid re-initialization async issues (e.g. if tiling)
-			materialRef.current.uniforms.uTime.value = time;
+			materialRef.current.uniforms.uTime.value = clock.oldTime;
 		});
 	const uniforms = useMemo(() => {
 		return {
 			uTime: { value: 0 },
 			uCurCenter: { value: camera.position },
 			uResolution: { value: new THREE.Vector2(size.width, size.length) },
-			// uLightPosition: {value: camera.children[0].position},
-			uBPM: { value: BPM },// TODO bpm },
+			uBPM: { value: bpm },// TODO bpm },
 		}
 	}, [materialRef, bpm]);
 	return <shaderMaterial
 		ref={materialRef}
 		uniforms={uniforms}
-		// lights={true}
-		// vertexShader={simpleWithDepthVertex}
 		side={side}
 		vertexShader={simpleVertex}
 		fragmentShader={tronFragmentShader}
