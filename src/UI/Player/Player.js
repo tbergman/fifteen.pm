@@ -2,7 +2,7 @@ import React, { useContext, Fragment, PureComponent } from 'react';
 import './Player.css'
 import { formatSoundcloudSrc } from "../../Utils/Audio/SoundcloudUtils";
 import { loadVideo } from '../../Utils/Loaders';
-import {MusicPlayerContext, MusicPlayerProvider} from './ActiveSongContext';
+import {MusicPlayerContext, MusicPlayerProvider} from './MusicPlayerContext';
 
 class Player extends PureComponent {
   state = {

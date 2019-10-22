@@ -7,7 +7,9 @@ import { Scene } from './Scene';
 import * as C from './constants';
 import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import './index.css';
-import { MusicPlayerProvider, MusicPlayerContext } from '../../UI/Player/ActiveSongContext';
+import TrackList from "../../UI/Player/TrackList";
+import PlayerControls from "../../UI/Player/PlayerControls";
+import { MusicPlayerProvider } from '../../UI/Player/MusicPlayerContext';
 import { BloomFilmEffect } from '../../Utils/Effects';
 
 export default function Release0009_Javonntte({ }) {
@@ -32,8 +34,11 @@ export default function Release0009_Javonntte({ }) {
 
 
     return (
-        <MusicPlayerProvider>
-            {/* <Menu
+        <MusicPlayerProvider tracks={CONTENT[window.location.pathname].tracks}>
+            <div>
+                <TrackList />
+                <PlayerControls />
+                {/* <Menu
                 content={CONTENT[window.location.pathname]}
                 menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
                 mediaRef={mediaRef}
@@ -44,26 +49,27 @@ export default function Release0009_Javonntte({ }) {
                 // }}
                 didEnterWorld={() => { setHasEntered(true) }}
             /> */}
-            <Canvas
-                id="canvas"
-                onCreated={({ gl }) => {
-                    gl.shadowMap.enabled = true;
-                    gl.gammaInput = true;
-                    gl.gammaOutput = true;
-                }}
-            >
-                <Scene
-                    track={track}
-                    onButtonClicked={(dispatchConfig) => {
-                        const buttonName = dispatchConfig.eventObject.name;
-                        const trackId = TRACK_BUTTON_ID_LOOKUP[buttonName];
-                        if (curTrack !== trackId) {
-                            setCurTrack(trackId);
-                        }
+                <Canvas
+                    id="canvas"
+                    onCreated={({ gl }) => {
+                        gl.shadowMap.enabled = true;
+                        gl.gammaInput = true;
+                        gl.gammaOutput = true;
                     }}
-                />
-                {/* <BloomFilmEffect /> */}
-            </Canvas>
+                >
+                    <Scene
+                        track={track}
+                        onButtonClicked={(dispatchConfig) => {
+                            const buttonName = dispatchConfig.eventObject.name;
+                            const trackId = TRACK_BUTTON_ID_LOOKUP[buttonName];
+                            if (curTrack !== trackId) {
+                                setCurTrack(trackId);
+                            }
+                        }}
+                    />
+                    {/* <BloomFilmEffect /> */}
+                </Canvas>
+            </div>
         </MusicPlayerProvider>
     );
 }

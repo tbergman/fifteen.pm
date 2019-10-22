@@ -352,7 +352,7 @@ export const CONTENT = {
       {
         title: "Swing House Madness",
         type: "soundcloud",
-        id: "679771262",
+        id: "693475855",
         secretToken: "s-qakud",
         bpm: "120",
       },

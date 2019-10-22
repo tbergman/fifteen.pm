@@ -20,7 +20,7 @@ import Release0009_Javonntte from "./Releases/Release0009_Javonntte/index";
 ReactDOM.render(
     <Router history={history}>
         <div>
-            <Header />
+            {/* <Header /> */}
             <Route exact path="/" component={App} />
             <Route path="/1" component={Release0001_Yahceph} />
             <Route path="/2" component={Release0002_YearUnknown} />
