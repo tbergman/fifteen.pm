@@ -6,23 +6,30 @@ import * as C from './constants';
 
 
 function onPath(centroid) {
-    return C.WORLD_ROAD_PATH.map(step => centroid.distanceTo(step)).filter(f => f < C.WORLD_ROAD_WIDTH).length > 0; // TODO ROAD_WIDTH passed in
+    return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
+        .filter(distFromPoint => distFromPoint < C.WORLD_ROAD_WIDTH)
+        .length > 0;
 }
-function tooFar(centroid) {
-    return C.WORLD_ROAD_PATH.map(step => centroid.distanceTo(step)).filter(f => f > C.WORLD_BUILDING_CORRIDOR_WIDTH).length == C.WORLD_ROAD_PATH.length;
+function tooClose(centroid) {
+    return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
+        .filter(distFromPoint => distFromPoint > C.WORLD_BUILDING_CORRIDOR_WIDTH)
+        .length == C.WORLD_ROAD_PATH.length;
 }
 
+/*
+Return true if we should render the neighbor
+*/
 function sphereWorldNeighborhoodRules(neighbor) {
-    return !onPath(neighbor.centroid) && !tooFar(neighbor.centroid)
+    return !onPath(neighbor.centroid) && !tooClose(neighbor.centroid)
 }
 
-function asteroidCentroids({tiles}) {
+function asteroidCentroids({ tiles }) {
     const numRandPoints = C.NUM_ASTEROIDS * 5;
     const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numRandPoints).map(tile => tile.centroid);
     return centroids;
 }
 
-function sphereCentroids({surface}) {
+function sphereCentroids({ surface }) {
     const sphereCenter = new THREE.Vector3();
     surface.boundingBox.getCenter(sphereCenter);
     const numRandPoints = C.WORLD_RADIUS * 2;

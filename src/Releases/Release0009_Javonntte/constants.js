@@ -57,7 +57,7 @@ export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 26 : 26;
 export const WORLD_ROAD_WIDTH = isMobile ? 17 : 17;
 const MAX_ROAD_ELEVATION = WORLD_RADIUS + 8;
 export const WORLD_ROAD_PATH = (() => {
-    const circle = new THREE.CircleGeometry(MAX_ROAD_ELEVATION)
+    const circle = new THREE.CircleGeometry(WORLD_RADIUS);//MAX_ROAD_ELEVATION)
     const points = circle.vertices.reverse() // reverse it so driver is going in expected dir
     return points.slice(0, points.length - 2); // don't overlap the loop (rm last elt)
 })();

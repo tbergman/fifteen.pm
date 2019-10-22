@@ -62,13 +62,13 @@ export function Scene({ track }) {
             <Facade04Material materialRef={facade04MaterialRef} />
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
-            {/* <Controls
+            <Controls
                 // curCamera={camera}
                 movementSpeed={500}
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            /> */}
+            />
             <FixedLights />
             <Suspense fallback={null}>
                 <Road
@@ -79,7 +79,7 @@ export function Scene({ track }) {
                 >
                     <Car
                         drivingProps={{
-                            offset: 7,
+                            offset: 1,
                             scale: 1,
                             numSteps: 20, // determines the speed of the car
                         }}
@@ -89,7 +89,7 @@ export function Scene({ track }) {
                     />
                 </Road>
             </Suspense>
-            {/* {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
+            {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <>
                     <World
                         neighborhoods={worldNeighborhoods}
@@ -108,10 +108,10 @@ export function Scene({ track }) {
                         }}
                     />
                 </>
-            } */}
+            }
             {/* <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
-            /> */}
+            />
             {/* <BloomFilmEffect /> */}
         </>
     );
