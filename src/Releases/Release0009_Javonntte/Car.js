@@ -52,21 +52,33 @@ function Wheel({ gltf, rotation }) {
     </group>
 }
 
-function DashButtons({ gltf }) {
+function DashButtons({ gltf, onButtonClicked }) {
     return <group>
-        <mesh name="button_swing" >
+        <mesh
+            name="button_swing"
+            onPointerUp={onButtonClicked}
+        >
             <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[1].material} />
         </mesh>
-        <mesh name="button_life" >
+        <mesh
+            name="button_life"
+            onPointerUp={onButtonClicked}
+        >
             <bufferGeometry attach="geometry" {...gltf.__$[2].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[2].material} />
         </mesh>
-        <mesh name="button_dream" >
+        <mesh
+            name="button_dream"
+            onPointerUp={onButtonClicked}
+        >
             <bufferGeometry attach="geometry" {...gltf.__$[3].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[3].material} />
         </mesh>
-        <mesh name="button_natural" >
+        <mesh
+            name="button_natural"
+            onPointerUp={onButtonClicked}
+        >
             <bufferGeometry attach="geometry" {...gltf.__$[4].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[4].material} />
         </mesh>
@@ -89,13 +101,13 @@ function DashCam(props) {
     useFrame(() => {
         if (lookLeft && ref.current.rotation.y < 1.5) ref.current.rotation.y += .0075;
         else if (lookRight && ref.current.rotation.y > -1.5) ref.current.rotation.y -= .0075;
-        if (!lookLeft && ref.current.rotation.y > 0){
+        if (!lookLeft && ref.current.rotation.y > 0) {
             ref.current.rotation.y -= .1;
         }
-        if (!lookRight && ref.current.rotation.y < 0){
+        if (!lookRight && ref.current.rotation.y < 0) {
             ref.current.rotation.y += .1;
         }
-        
+
     })
     return <perspectiveCamera
         ref={ref}
@@ -110,9 +122,8 @@ function DashCam(props) {
 export default function Car({
     dashCamRef,
     road,
-
     roadOffset,
-    onLightsButtonClicked,
+    onButtonClicked,
 }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
@@ -206,7 +217,7 @@ export default function Car({
         {car &&
             <>
                 <DashCam />
-                <DashButtons gltf={gltf} />
+                <DashButtons gltf={gltf} onButtonClicked={onButtonClicked} />
                 <Wheel gltf={gltf} rotation={car.rotation} />
             </>
         }

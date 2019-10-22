@@ -24,8 +24,20 @@ const THEMES = [
         fogColor: 0x0000ff,
         backgroundColor: 0x00ff00,
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
-    }
+    },
+    {
+        // fogColor: 0xff0000, i.e. turn off fog
+        backgroundColor: 0xff0000,
+        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+    },
 ]
+
+export const TRACK_BUTTON_ID_LOOKUP = {
+    "button_life": "679771262" ,
+    "button_swing": "679771262",
+    "button_natural": "679771259",
+    "button_dream": "679771253", 
+}
 export const TRACK_LOOKUP = (() => {
     const lookup = {};
     CONTENT["/9"].tracks.forEach((track, index) => lookup[track.id] = {

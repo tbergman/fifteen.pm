@@ -27,7 +27,7 @@ import Road from './Road';
 import { worldNeighborhoods, asteroidNeighborhoods } from './neighborhoods';
 
 
-export function Scene({ track }) {
+export function Scene({ track, onButtonClicked }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
        example: https://codesandbox.io/s/use-three-renders-thrice-i4k6c
@@ -37,7 +37,6 @@ export function Scene({ track }) {
      */
     const { canvas, scene } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
-    const [lightsOn, setLightsOn] = useState(true);
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const [foamGripMaterialRef, foamGripMaterial] = useResource();
     const [windows1MaterialRef, windows1Material] = useResource();
@@ -48,9 +47,9 @@ export function Scene({ track }) {
 
     // const [cameraRef, camera] = useResource();
 
-    useEffect(() => {
-        scene.background = new THREE.Color(lightsOn ? "white" : "black");
-    }, [lightsOn])
+    // useEffect(() => {
+    //     scene.background = new THREE.Color(lightsOn ? "white" : "black");
+    // }, [lightsOn])
 
     return (
         <>
@@ -80,9 +79,7 @@ export function Scene({ track }) {
                     <Car
                         speed={20}
                         roadOffset={1}
-                        onLightsButtonClicked={() => {
-                            setLightsOn(lightsOn ? false : true)
-                        }}
+                        onButtonClicked={onButtonClicked}
                     />
                 </Road>
             </Suspense>

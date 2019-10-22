@@ -8,7 +8,7 @@ import * as C from './constants';
 import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import './index.css';
 import { MusicPlayerProvider, MusicPlayerContext } from '../../UI/Player/ActiveSongContext';
-import {BloomFilmEffect} from '../../Utils/Effects';
+import { BloomFilmEffect } from '../../Utils/Effects';
 
 export default function Release0009_Javonntte({ }) {
     const mediaRef = useRef();
@@ -54,8 +54,15 @@ export default function Release0009_Javonntte({ }) {
             >
                 <Scene
                     track={track}
+                    onButtonClicked={(dispatchConfig) => {
+                        const buttonName = dispatchConfig.eventObject.name;
+                        const trackId = TRACK_BUTTON_ID_LOOKUP[buttonName];
+                        if (curTrack !== trackId) {
+                            setCurTrack(trackId);
+                        }
+                    }}
                 />
-               {/* <BloomFilmEffect /> */}
+                {/* <BloomFilmEffect /> */}
             </Canvas>
         </MusicPlayerProvider>
     );

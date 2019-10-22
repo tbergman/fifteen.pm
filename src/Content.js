@@ -343,10 +343,17 @@ export const CONTENT = {
     artist: "JAVONNTTE",
     tracks: [
       {
-        title: "City Lights",
+        title: "City Life",
         type: "soundcloud",
         id: "679771262",
         secretToken: "s-pqcS4",
+        bpm: "120",
+      },
+      {
+        title: "Swing House Madness",
+        type: "soundcloud",
+        id: "679771262",
+        secretToken: "s-qakud",
         bpm: "120",
       },
       {
@@ -354,13 +361,6 @@ export const CONTENT = {
         type: "soundcloud",
         id: "679771259",
         secretToken: "s-W6P06",
-        bpm: "120",
-      },
-      {
-        title: "City Lights",
-        type: "soundcloud",
-        id: "679771262",
-        secretToken: "s-pqcS4",
         bpm: "120",
       },
       {
