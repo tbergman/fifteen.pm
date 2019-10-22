@@ -79,7 +79,7 @@ export function Scene({ track }) {
                 >
                     <Car
                         drivingProps={{
-                            offset: 2,
+                            offset: 7,
                             scale: 1,
                             numSteps: 20, // determines the speed of the car
                         }}
@@ -89,7 +89,7 @@ export function Scene({ track }) {
                     />
                 </Road>
             </Suspense>
-            {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
+            {/* {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <>
                     <World
                         neighborhoods={worldNeighborhoods}
@@ -108,10 +108,10 @@ export function Scene({ track }) {
                         }}
                     />
                 </>
-            }
-            <Stars
+            } */}
+            {/* <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
-            />
+            /> */}
             {/* <BloomFilmEffect /> */}
         </>
     );

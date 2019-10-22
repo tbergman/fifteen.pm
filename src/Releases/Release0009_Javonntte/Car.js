@@ -19,6 +19,59 @@ export function onCarElementLoaded(gltf) {
     return geometries;
 }
 
+function Wheel({ gltf, rotation }) {
+    const [wheelRef, wheel] = useResource()
+    const { camera } = useThree();
+    const axis = useMemo(() => {
+        return new THREE.Vector3(0., 1., 0.);
+    })
+    useFrame(() => {
+        if (!wheel) return;
+        // TODO this looks dumb, needs to rotate on axis at center of wheel
+        wheel.rotation.z = rotation.z * .1;
+
+    })
+    return <group ref={wheelRef}>
+        <mesh name="wheel" >
+          <bufferGeometry attach="geometry" {...gltf.__$[6].geometry} />
+          <meshStandardMaterial attach="material" {...gltf.__$[6].material} />
+        </mesh>
+        <mesh name="wheel_internal" >
+          <bufferGeometry attach="geometry" {...gltf.__$[7].geometry} />
+          <meshStandardMaterial attach="material" {...gltf.__$[7].material} />
+        </mesh>
+        <mesh name="Gloves" >
+          <bufferGeometry attach="geometry" {...gltf.__$[8].geometry} />
+          <meshStandardMaterial attach="material" {...gltf.__$[8].material} />
+        </mesh>
+        <mesh name="Tops" >
+          <bufferGeometry attach="geometry" {...gltf.__$[9].geometry} />
+          <meshStandardMaterial attach="material" {...gltf.__$[9].material} />
+        </mesh>
+    </group>
+}
+
+function DashButtons({ gltf }) {
+    return <group>
+         <mesh name="button_swing" >
+          <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
+          <meshStandardMaterial attach="material" {...gltf.__$[1].material} />
+        </mesh>
+        <mesh name="button_life" >
+          <bufferGeometry attach="geometry" {...gltf.__$[2].geometry} />
+          <meshStandardMaterial attach="material" {...gltf.__$[2].material} />
+        </mesh>
+        <mesh name="button_dream" >
+          <bufferGeometry attach="geometry" {...gltf.__$[3].geometry} />
+          <meshStandardMaterial attach="material" {...gltf.__$[3].material} />
+        </mesh>
+        <mesh name="button_natural" >
+          <bufferGeometry attach="geometry" {...gltf.__$[4].geometry} />
+          <meshStandardMaterial attach="material" {...gltf.__$[4].material} />
+        </mesh>
+    </group>
+}
+
 function DashCam(props) {
     const ref = useRef()
     const { aspect, size, setDefaultCamera } = useThree()
@@ -33,7 +86,11 @@ function DashCam(props) {
     useFrame(() => ref.current.updateMatrixWorld())
     return <perspectiveCamera
         ref={ref}
-        {...props}
+        aspect={size.width / size.height}
+        radius={(size.width + size.height) / 4}
+        fov={55}
+        position={[0, .068, .15]}
+        onUpdate={self => self.updateProjectionMatrix()}
     />
 }
 
@@ -44,6 +101,7 @@ export default function Car({
     onLightsButtonClicked,
 }) {
     const [tronMaterialRef, tronMaterial] = useResource();
+    const [metal03MaterialRef, metal03Material] = useResource();
     const gltf = useLoader(GLTFLoader, C.CAR_URL, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
@@ -59,6 +117,13 @@ export default function Car({
             new THREE.Vector3(0, 2, 2), // TODO these is supposed to be normalized to 1 and have only 1 non zero value lol  
         ]
     });
+// TODO TMP
+    useEffect(()=> {
+        if (car){
+            console.log("SET")
+            // car.position.set(new THREE.Vector3(0, -5, -10));
+        }
+    })
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
     useFrame(() => {
@@ -91,50 +156,18 @@ export default function Car({
     // TODO render order to make sure the car's always in front https://discourse.threejs.org/t/always-render-mesh-on-top-of-another/120/5
     return (
         <group ref={carRef}>
-            <DashCam  />
+            <DashCam />
             <TronMaterial
                 materialRef={tronMaterialRef}
                 bpm={120} // TODO
-            /> 
+            />
+            <Metal03Material materialRef={metal03MaterialRef} />
             {/* Auto generated using gltfjsx --> */}
-            <mesh name="dash">
-                <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
-            </mesh>
-            <mesh name="button_swing" >
-                <bufferGeometry attach="geometry" {...gltf.__$[2].geometry} />
-                <meshStandardMaterial attach="material" {...gltf.__$[2].material} />
-            </mesh>
-            <mesh name="button_life" >
-                <bufferGeometry attach="geometry" {...gltf.__$[3].geometry} />
-                <meshStandardMaterial attach="material" {...gltf.__$[3].material} />
-            </mesh>
-            <mesh name="button_dream" >
-                <bufferGeometry attach="geometry" {...gltf.__$[4].geometry} />
-                <meshStandardMaterial attach="material" {...gltf.__$[4].material} />
-            </mesh>
-            <mesh name="button_natural" >
-                <bufferGeometry attach="geometry" {...gltf.__$[5].geometry} />
-                <meshStandardMaterial attach="material" {...gltf.__$[5].material} />
-            </mesh>
+            {car && <DashButtons gltf={gltf} />}
             {tronMaterial && <mesh name="speedometer" material={tronMaterial}>
-                <bufferGeometry attach="geometry" {...gltf.__$[6].geometry} />
+                <bufferGeometry attach="geometry" {...gltf.__$[5].geometry} />
             </mesh>}
-            <mesh name="wheel" >
-                <bufferGeometry attach="geometry" {...gltf.__$[7].geometry} />
-                <meshStandardMaterial attach="material" {...gltf.__$[7].material} />
-            </mesh>
-            <mesh name="wheel_internal" >
-                <bufferGeometry attach="geometry" {...gltf.__$[8].geometry} />
-                <meshStandardMaterial attach="material" {...gltf.__$[8].material} />
-            </mesh>
-            <mesh name="Gloves" >
-                <bufferGeometry attach="geometry" {...gltf.__$[9].geometry} />
-                <meshStandardMaterial attach="material" {...gltf.__$[9].material} />
-            </mesh>
-            <mesh name="Tops" >
-                <bufferGeometry attach="geometry" {...gltf.__$[10].geometry} />
-                <meshStandardMaterial attach="material" {...gltf.__$[10].material} />
-            </mesh>
+            {car && <Wheel gltf={gltf} rotation={car.rotation} />}
 
         </group>)
 }
