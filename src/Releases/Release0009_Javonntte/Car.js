@@ -75,9 +75,11 @@ function DashButtons({ gltf }) {
 
 function DashCam(props) {
     const ref = useRef()
-    const { aspect, size, setDefaultCamera } = useThree()
+    const { aspect, size, setDefaultCamera } = useThree();
     const t = useThree();
     // Make the camera known to the system
+    const lookLeft = useKeyPress('ArrowLeft');
+    const lookRight = useKeyPress('ArrowRight');
     useEffect(() => {
         ref.current.aspect = aspect;
         ref.current.updateMatrixWorld()
@@ -85,6 +87,17 @@ function DashCam(props) {
     }, [])
     // Update it every frame
     useFrame(() => ref.current.updateMatrixWorld())
+    useFrame(() => {
+        if (lookLeft && ref.current.rotation.y < 1.5) ref.current.rotation.y += .0075;
+        if (lookRight && ref.current.rotation.y > -1.5) ref.current.rotation.y -= .0075;
+        if (!lookLeft && ref.current.rotation.y > 0){
+            ref.current.rotation.y -= .1;
+        }
+        if (!lookRight && ref.current.rotation.y < 0){
+            ref.current.rotation.y += .1;
+        } 
+        console.log(ref.current.rotation)
+    })
     return <perspectiveCamera
         ref={ref}
         aspect={size.width / size.height}
@@ -156,8 +169,6 @@ export default function Car({
 
         }
         cur.current += delta.current;
-        console.log('speed:', speed.current, 'delta', delta.current, 'cur', cur.current);
-        // const t = (clock.elapsedTime % speed.current) / speed.current;
         const t = (cur.current % speed.current) / speed.current;
         const pos = road.parameters.path.getPointAt(t);
         // interpolation
@@ -183,20 +194,20 @@ export default function Car({
 
 
     // TODO render order to make sure the car's always in front https://discourse.threejs.org/t/always-render-mesh-on-top-of-another/120/5
-    return (
-        <group ref={carRef}>
-            <DashCam />
-            <TronMaterial
-                materialRef={tronMaterialRef}
-                bpm={120} // TODO
-            />
-            <Metal03Material materialRef={metal03MaterialRef} />
-            {/* Auto generated using gltfjsx --> */}
-            {car && <DashButtons gltf={gltf} />}
-            {tronMaterial && <mesh name="speedometer" material={tronMaterial}>
+    return <group ref={carRef}>
+        <TronMaterial materialRef={tronMaterialRef} bpm={120} />
+        <Metal03Material materialRef={metal03MaterialRef} />
+        {tronMaterial &&
+            <mesh name="speedometer" material={tronMaterial}>
                 <bufferGeometry attach="geometry" {...gltf.__$[5].geometry} />
-            </mesh>}
-            {car && <Wheel gltf={gltf} rotation={car.rotation} />}
-
-        </group>)
+            </mesh>
+        }
+        {car &&
+            <>
+                <DashCam />
+                <DashButtons gltf={gltf} />
+                <Wheel gltf={gltf} rotation={car.rotation} />
+            </>
+        }
+    </group>
 }
