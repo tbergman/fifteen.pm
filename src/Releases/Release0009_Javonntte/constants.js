@@ -50,35 +50,18 @@ export const ASTEROID_MAX_FACE_NOISE = 1;
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
 export const WORLD_RADIUS = ASTEROID_MAX_RADIUS;
+console.log("WORLD RADIUS", WORLD_RADIUS)
 export const MAX_WORLD_FACE_HEIGHT = ASTEROID_MAX_FACE_NOISE;
 export const WORLD_SIDES = 34;
 export const WORLD_TIERS = 34;
 export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 26 : 26;
-export const WORLD_ROAD_WIDTH = isMobile ? 17 : 17;
+export const WORLD_ROAD_WIDTH = isMobile ? 3 : WORLD_RADIUS / 5;
 export const MAX_ROAD_ELEVATION = WORLD_RADIUS + 8;
-// export const WORLD_ROAD_PATH = (() => {
-//     const circle = new THREE.CircleGeometry(WORLD_RADIUS);//MAX_ROAD_ELEVATION)
-//     const points = circle.vertices.reverse() // reverse it so driver is going in expected dir
-//     return points.slice(0, points.length - 2); // don't overlap the loop (rm last elt)
-// })();
-export const WORLD_ROAD_PATH = [
-    new THREE.Vector3(WORLD_RADIUS, 0, 0),
-    new THREE.Vector3(3 * WORLD_RADIUS / 4, 0, 3 * WORLD_RADIUS / 4),
-    new THREE.Vector3(WORLD_RADIUS / 2, 0, WORLD_RADIUS / 2),
-    new THREE.Vector3(WORLD_RADIUS / 4, 0, WORLD_RADIUS / 4),
-    new THREE.Vector3(0, 0, WORLD_RADIUS),
-    new THREE.Vector3(3 * -WORLD_RADIUS / 4, 0, 3 * WORLD_RADIUS / 4),
-    new THREE.Vector3(-WORLD_RADIUS / 2, 0, WORLD_RADIUS / 2),
-    new THREE.Vector3(-WORLD_RADIUS / 4, 0, WORLD_RADIUS / 4),
-    new THREE.Vector3(-WORLD_RADIUS, 0, 0),
-    new THREE.Vector3(3 * -WORLD_RADIUS / 4, 0, 3 * -WORLD_RADIUS / 4),
-    new THREE.Vector3(-WORLD_RADIUS / 2, 0, -WORLD_RADIUS / 2),
-    new THREE.Vector3(-WORLD_RADIUS / 4, 0, -WORLD_RADIUS / 4),
-    new THREE.Vector3(0, 0, -WORLD_RADIUS),
-    new THREE.Vector3(3 * WORLD_RADIUS / 4, 0, 4 * -WORLD_RADIUS / 4),
-    new THREE.Vector3(WORLD_RADIUS / 2, 0, -WORLD_RADIUS / 2),
-    new THREE.Vector3(WORLD_RADIUS / 4, 0, -WORLD_RADIUS / 4),
-];
+export const WORLD_ROAD_PATH = (() => {
+    const circle = new THREE.CircleGeometry(WORLD_RADIUS, WORLD_RADIUS);//MAX_ROAD_ELEVATION)
+    const points = circle.vertices.reverse() // reverse it so driver is going in expected dir
+    return points.slice(0, points.length - 2); // don't overlap the loop (rm last elt)
+})();
 
 // BUILDING
 export const BUILDING_BASE_SCALE = 1.;

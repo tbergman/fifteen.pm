@@ -10,18 +10,7 @@ export default function Road({ curCamera, closed, extrusionSegments, radius, rad
     const [cloudMaterialRef, cloudMaterial] = useResource();
 
     useEffect(() => {
-        // const steps = C.WORLD_ROAD_PATH
-        const steps = [
-            // new THREE.Vector3(-maxElevation, 0, -maxElevation),
-            // new THREE.Vector3(maxElevation, 0, -maxElevation),
-            // new THREE.Vector3(maxElevation, 0,  maxElevation),
-            // new THREE.Vector3(-maxElevation, 0,  maxElevation),
-            new THREE.Vector3(C.MAX_ROAD_ELEVATION, 0, 0),
-            new THREE.Vector3(0, 0, C.MAX_ROAD_ELEVATION),
-            new THREE.Vector3(-C.MAX_ROAD_ELEVATION, 0, 0),
-            new THREE.Vector3(0, 0, -C.MAX_ROAD_ELEVATION),
-        ];
-        // const steps = C.WORLD_ROAD_PATH;
+        const steps = C.WORLD_ROAD_PATH
         var closedSpline = new THREE.CatmullRomCurve3(steps);
         closedSpline.closed = true;
         closedSpline.curveType = 'catmullrom';
