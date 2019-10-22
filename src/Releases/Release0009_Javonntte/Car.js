@@ -75,8 +75,7 @@ function DashButtons({ gltf }) {
 
 function DashCam(props) {
     const ref = useRef()
-    const { aspect, size, setDefaultCamera } = useThree();
-    const t = useThree();
+    const { aspect, size, mouse, setDefaultCamera } = useThree();
     // Make the camera known to the system
     const lookLeft = useKeyPress('ArrowLeft');
     const lookRight = useKeyPress('ArrowRight');
@@ -89,14 +88,14 @@ function DashCam(props) {
     useFrame(() => ref.current.updateMatrixWorld())
     useFrame(() => {
         if (lookLeft && ref.current.rotation.y < 1.5) ref.current.rotation.y += .0075;
-        if (lookRight && ref.current.rotation.y > -1.5) ref.current.rotation.y -= .0075;
+        else if (lookRight && ref.current.rotation.y > -1.5) ref.current.rotation.y -= .0075;
         if (!lookLeft && ref.current.rotation.y > 0){
             ref.current.rotation.y -= .1;
         }
         if (!lookRight && ref.current.rotation.y < 0){
             ref.current.rotation.y += .1;
-        } 
-        console.log(ref.current.rotation)
+        }
+        
     })
     return <perspectiveCamera
         ref={ref}
@@ -133,7 +132,8 @@ export default function Car({
     });
     const accelerationPressed = useKeyPress('ArrowUp');
     const slowDownPressed = useKeyPress('ArrowDown');
-    const cur = useRef();
+    // driving units
+    const offset = useRef();
     const delta = useRef();
     const speed = useRef();
 
@@ -144,8 +144,8 @@ export default function Car({
         if (!delta.current) {
             delta.current = .01;
         }
-        if (!cur.current) {
-            cur.current = 0;
+        if (!offset.current) {
+            offset.current = 0;
         }
     })
 
@@ -153,9 +153,10 @@ export default function Car({
     useFrame(() => {
         // TODO these floats as constants?
         if (accelerationPressed) {
-            if (delta.current < .05) {
+            if (delta.current < .05 && speed.current > 5) {
+                console.log(speed.current)
                 speed.current -= .1;
-                delta.current += .001;
+                // delta.current += .001;
             }
         }
         if (slowDownPressed) {
@@ -168,8 +169,8 @@ export default function Car({
             }
 
         }
-        cur.current += delta.current;
-        const t = (cur.current % speed.current) / speed.current;
+        offset.current += delta.current;
+        const t = (offset.current % speed.current) / speed.current;
         const pos = road.parameters.path.getPointAt(t);
         // interpolation
         const segments = road.tangents.length;
