@@ -78,11 +78,8 @@ export function Scene({ track }) {
                     radiusSegments={3}
                 >
                     <Car
-                        drivingProps={{
-                            offset: 1,
-                            scale: 1,
-                            numSteps: 20, // determines the speed of the car
-                        }}
+                        speed={20}
+                        roadOffset={1}
                         onLightsButtonClicked={() => {
                             setLightsOn(lightsOn ? false : true)
                         }}

@@ -55,7 +55,7 @@ export const MAX_WORLD_FACE_HEIGHT = ASTEROID_MAX_FACE_NOISE;
 export const WORLD_SIDES = 34;
 export const WORLD_TIERS = 34;
 export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 26 : 26;
-export const WORLD_ROAD_WIDTH = isMobile ? 3 : WORLD_RADIUS / 5;
+export const WORLD_ROAD_WIDTH = isMobile ? 3 : WORLD_RADIUS / 6;
 export const MAX_ROAD_ELEVATION = WORLD_RADIUS + 8;
 export const WORLD_ROAD_PATH = (() => {
     const circle = new THREE.CircleGeometry(WORLD_RADIUS, WORLD_RADIUS);//MAX_ROAD_ELEVATION)

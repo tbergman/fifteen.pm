@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { useFrame, useResource, useThree, useLoader } from 'react-three-fiber';
 import { EmissiveMaterial, Metal03Material, TronMaterial } from '../../Utils/materials';
+import { useKeyPress } from '../../Utils/hooks';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import * as C from './constants';
@@ -33,41 +34,41 @@ function Wheel({ gltf, rotation }) {
     })
     return <group ref={wheelRef}>
         <mesh name="wheel" >
-          <bufferGeometry attach="geometry" {...gltf.__$[6].geometry} />
-          <meshStandardMaterial attach="material" {...gltf.__$[6].material} />
+            <bufferGeometry attach="geometry" {...gltf.__$[6].geometry} />
+            <meshStandardMaterial attach="material" {...gltf.__$[6].material} />
         </mesh>
         <mesh name="wheel_internal" >
-          <bufferGeometry attach="geometry" {...gltf.__$[7].geometry} />
-          <meshStandardMaterial attach="material" {...gltf.__$[7].material} />
+            <bufferGeometry attach="geometry" {...gltf.__$[7].geometry} />
+            <meshStandardMaterial attach="material" {...gltf.__$[7].material} />
         </mesh>
         <mesh name="Gloves" >
-          <bufferGeometry attach="geometry" {...gltf.__$[8].geometry} />
-          <meshStandardMaterial attach="material" {...gltf.__$[8].material} />
+            <bufferGeometry attach="geometry" {...gltf.__$[8].geometry} />
+            <meshStandardMaterial attach="material" {...gltf.__$[8].material} />
         </mesh>
         <mesh name="Tops" >
-          <bufferGeometry attach="geometry" {...gltf.__$[9].geometry} />
-          <meshStandardMaterial attach="material" {...gltf.__$[9].material} />
+            <bufferGeometry attach="geometry" {...gltf.__$[9].geometry} />
+            <meshStandardMaterial attach="material" {...gltf.__$[9].material} />
         </mesh>
     </group>
 }
 
 function DashButtons({ gltf }) {
     return <group>
-         <mesh name="button_swing" >
-          <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
-          <meshStandardMaterial attach="material" {...gltf.__$[1].material} />
+        <mesh name="button_swing" >
+            <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
+            <meshStandardMaterial attach="material" {...gltf.__$[1].material} />
         </mesh>
         <mesh name="button_life" >
-          <bufferGeometry attach="geometry" {...gltf.__$[2].geometry} />
-          <meshStandardMaterial attach="material" {...gltf.__$[2].material} />
+            <bufferGeometry attach="geometry" {...gltf.__$[2].geometry} />
+            <meshStandardMaterial attach="material" {...gltf.__$[2].material} />
         </mesh>
         <mesh name="button_dream" >
-          <bufferGeometry attach="geometry" {...gltf.__$[3].geometry} />
-          <meshStandardMaterial attach="material" {...gltf.__$[3].material} />
+            <bufferGeometry attach="geometry" {...gltf.__$[3].geometry} />
+            <meshStandardMaterial attach="material" {...gltf.__$[3].material} />
         </mesh>
         <mesh name="button_natural" >
-          <bufferGeometry attach="geometry" {...gltf.__$[4].geometry} />
-          <meshStandardMaterial attach="material" {...gltf.__$[4].material} />
+            <bufferGeometry attach="geometry" {...gltf.__$[4].geometry} />
+            <meshStandardMaterial attach="material" {...gltf.__$[4].material} />
         </mesh>
     </group>
 }
@@ -97,7 +98,8 @@ function DashCam(props) {
 export default function Car({
     dashCamRef,
     road,
-    drivingProps,
+
+    roadOffset,
     onLightsButtonClicked,
 }) {
     const [tronMaterialRef, tronMaterial] = useResource();
@@ -107,7 +109,6 @@ export default function Car({
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
     })
-
     const { size, viewport, clock, setDefaultCamera } = useThree();
     const [carRef, car] = useResource();
     const [normal, binormal, up] = useMemo(() => {
@@ -117,20 +118,48 @@ export default function Car({
             new THREE.Vector3(0, 2, 2), // TODO these is supposed to be normalized to 1 and have only 1 non zero value lol  
         ]
     });
-// TODO TMP
-    useEffect(()=> {
-        if (car){
-            console.log("SET")
-            // car.position.set(new THREE.Vector3(0, -5, -10));
+    const accelerationPressed = useKeyPress('ArrowUp');
+    const slowDownPressed = useKeyPress('ArrowDown');
+    const cur = useRef();
+    const delta = useRef();
+    const speed = useRef();
+
+    useEffect(() => {
+        if (!speed.current) {
+            speed.current = 20;
+        }
+        if (!delta.current) {
+            delta.current = .01;
+        }
+        if (!cur.current) {
+            cur.current = 0;
         }
     })
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
     useFrame(() => {
-        if (!car) return;
-        const t = (clock.elapsedTime % drivingProps.numSteps) / drivingProps.numSteps;
+        // TODO these floats as constants?
+        if (accelerationPressed) {
+            if (delta.current < .05) {
+                speed.current -= .1;
+                delta.current += .001;
+            }
+        }
+        if (slowDownPressed) {
+            if (delta.current >= 0) {
+                speed.current += .1;
+                delta.current -= .001;
+            }
+            if (delta.current < 0) {
+                delta.current = 0;
+            }
+
+        }
+        cur.current += delta.current;
+        console.log('speed:', speed.current, 'delta', delta.current, 'cur', cur.current);
+        // const t = (clock.elapsedTime % speed.current) / speed.current;
+        const t = (cur.current % speed.current) / speed.current;
         const pos = road.parameters.path.getPointAt(t);
-        pos.multiplyScalar(drivingProps.scale);
         // interpolation
         const segments = road.tangents.length;
         const pickt = t * segments;
@@ -141,10 +170,10 @@ export default function Car({
         const dir = road.parameters.path.getTangentAt(t);
         normal.copy(binormal).cross(dir)
         // We move on a offset on its binormal
-        pos.add(normal.clone().multiplyScalar(drivingProps.offset));
+        pos.add(normal.clone().multiplyScalar(roadOffset));
         car.position.copy(pos);
         // Using arclength for stablization in look ahead.
-        const lookAt = road.parameters.path.getPointAt((t + 30 / road.parameters.path.getLength()) % 1).multiplyScalar(drivingProps.scale);
+        const lookAt = road.parameters.path.getPointAt((t + 30 / road.parameters.path.getLength()) % 1);
         // Camera Orientation 2 - up orientation via normal
         lookAt.copy(pos).add(dir);
         car.matrix.lookAt(car.position, lookAt, normal);

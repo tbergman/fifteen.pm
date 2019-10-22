@@ -27,6 +27,7 @@ export default function Road({ curCamera, closed, extrusionSegments, radius, rad
                     material={cloudMaterial}
                 />
                 {React.Children.toArray(props.children).map(element => {
+                    console.log(element);
                     return React.cloneElement(element, { road: road.current })
                 })}
             </>
