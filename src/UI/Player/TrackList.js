@@ -4,7 +4,6 @@ import './Player.css'
 // import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 // import {faPlay, faPause} from "@fortawesome/free-solid-svg-icons";
 export default function TrackList({ selectedColor, fillColor, ...props }) {
-  console.log("TRACKLIST PROPS", props);
   const { trackList, currentTrackName, playTrack, isPlaying } = useMusicPlayer();
   return trackList.length > 1 ?
     <>

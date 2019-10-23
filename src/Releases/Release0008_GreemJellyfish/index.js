@@ -626,6 +626,7 @@ export default class Release0008_GreemJellyFish extends Component {
                     mediaRef={el => this.mediaElement = el}
                     auxMedia={CONSTANTS.auxMedia}
                     useAuxMediaOnly={true}
+                    legacyPlayer={true}
                 />
                 <div className="release">
                     <div ref={(element) => this.container = element} />

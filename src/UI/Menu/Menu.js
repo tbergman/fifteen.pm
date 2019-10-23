@@ -1,6 +1,7 @@
 import React, { PureComponent, Fragment } from "react";
 import Modal from "react-modal";
 import Player from "../Player/Player";
+import LegacyPlayer from "../Player/LegacyPlayer";
 import Navigation from "../Navigation/Navigation";
 import anime from "animejs";
 import { SHAPES, MENU_ICON_OPEN } from "./MenuConstants";
@@ -239,10 +240,21 @@ class Menu extends PureComponent {
   };
 
   renderPlayer = () => {
-    const { content, mediaRef, auxMedia, useAuxMediaOnly } = this.props;
+    const { content, mediaRef, auxMedia, useAuxMediaOnly, legacyPlayer } = this.props;
     const { hasEnteredWorld } = this.state;
     if (this.props.shouldRenderPlayer) {
-      return (
+      return (legacyPlayer ?
+        // TODO any of the players that haven't been updated to work with new hooks-based player
+        <LegacyPlayer
+          trackList={content.tracks}
+          message={content.artist}
+          fillColor={content.theme.iconColor}
+          mediaRef={mediaRef}
+          initialized={hasEnteredWorld}
+          auxMedia={auxMedia}
+          useAuxOnly={useAuxMediaOnly}
+          updateSongFn={this.props.updateSongFn}
+        /> :
         <Player
           trackList={content.tracks}
           message={content.artist}
