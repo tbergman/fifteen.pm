@@ -38,7 +38,7 @@ export default function UI({
                 isRelease={content.isHome ? false : true}
                 colors={content.colors}
                 message={content.message}
-                controlsHelp={content.controls}    
+                instructions={content.instructions}    
             />}
         </>
     )

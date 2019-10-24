@@ -77,11 +77,6 @@
     width: 200px;
 }
 
-.overlay-controls-help {
-    align-self: flex-start;
-    align-items: center;
-}
-
 .overlay-content-item {
     display: flex;
     width: 100%;

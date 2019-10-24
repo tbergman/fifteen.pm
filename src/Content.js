@@ -383,10 +383,10 @@ export const CONTENT = {
       // textColor: '#0f0',
       // navColor: '#1b03a3',
     },
-    controls: [
+    instructions: [
       {
         icon: ArrowKeys,
-        instructions: "use arrow keys to drive the hoverboard"
+        text: "use arrow keys to drive the hoverboard"
       },
     ]
   }
