@@ -2,8 +2,8 @@ import React, { useState, useEffect, Fragment } from "react";
 import { TOTAL_RELEASES } from "../Content";
 import "./Navigation.css";
 
-export default function Navigation({ defaultColor }) {
 
+export default function Navigation({ defaultColor }) {
 
     const [currentLocation, setCurrentLocation] = useState(window.location.pathname);
     const [currentIndex, setCurrentIndex] = useState(parseInt(window.location.pathname.replace("/", "")));

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { MusicPlayerContext } from "./MusicPlayerContext";
 import AudioStreamer from '../../Utils/Audio/AudioStreamer'; // TODO haven't touched this in ages...
 
@@ -6,7 +6,6 @@ const useMusicPlayer = () => {
   const [state, setState] = useContext(MusicPlayerContext);
 
   function playTrack(index) {
-    console.log(state.audioPlayer);
     if (index === state.currentTrackIndex) {
       togglePlay();
     } else {

@@ -1,0 +1,34 @@
+#playlist-container {
+    z-index: 999999999;
+    position: relative;
+    /* top: -20x; */
+    margin-left: 10px;
+    display: flex;
+    /* align-self: flex-end; */
+    align-items: center;
+}
+
+#playlist-container ul {
+    padding: 0;
+}
+
+#playlist-container .active-track {
+    display: flex;
+    font-weight: bold;
+}
+
+#current-track-smiley {
+    margin-left: -17px;
+    margin-right: 10px;
+}
+
+#playlist li {
+    list-style-type: none;
+    font-size: 13px;
+    padding-bottom: 5px;
+}
+
+.no-touch #playlist li:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}

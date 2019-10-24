@@ -1,7 +1,7 @@
 import React, { Fragment, PureComponent } from 'react';
-import './Player.css'
 import { formatSoundcloudSrc } from "../../Utils/Audio/SoundcloudUtils";
 import { loadVideo } from '../../Utils/Loaders';
+import './LegacyPlayer.css'
 
 class LegacyPlayer extends PureComponent {
   state = {

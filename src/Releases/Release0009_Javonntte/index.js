@@ -1,15 +1,9 @@
 import React, { useRef, useContext, useMemo, useEffect, useState } from 'react';
-import * as THREE from 'three';
 import { Canvas, useFrame } from 'react-three-fiber';
 import { CONTENT } from '../../Content';
-import LegacyMenu from '../../UI/LegacyMenu/LegacyMenu'; // TODO code stutter :/
 import { Scene } from './Scene';
 import UI from '../../UI/UI';
-import * as C from './constants';
-import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import './index.css';
-import TrackList from "../../UI/Player/TrackList";
-import PlayerControls from "../../UI/Player/PlayerControls";
 import { MusicPlayerProvider } from '../../UI/Player/MusicPlayerContext';
 import { BloomFilmEffect } from '../../Utils/Effects';
 
