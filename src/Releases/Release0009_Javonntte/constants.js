@@ -11,22 +11,26 @@ export const CAR_URL =  assetPath9("objects/car/car.glb");
 const THEMES = [
     // index matches track list order
     {
+        textFillColor: 0xf0ffff,
         fogColor: 0x0000aa,
         backgroundColor: 0x000000,
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
     {
-        // fogColor: 0xff0000, i.e. turn off fog
+        textFillColor: 0xf0ffff,
+        fogColor: 0xff0000,
         backgroundColor: 0xff0000,
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
     {
+        textFillColor: 0xf0ffff,
         fogColor: 0x0000ff,
         backgroundColor: 0x00ff00,
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
     {
-        // fogColor: 0xff0000, i.e. turn off fog
+        textFillColor: 0xf0ffff,
+        fogColor: 0xff0000,
         backgroundColor: 0xff0000,
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },

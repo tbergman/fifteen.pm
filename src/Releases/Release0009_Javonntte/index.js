@@ -1,9 +1,10 @@
-import React, { useRef, useContext, useEffect, useState } from 'react';
+import React, { useRef, useContext, useMemo, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from 'react-three-fiber';
 import { CONTENT } from '../../Content';
 import Menu from '../../UI/Menu/Menu'; // TODO code stutter :/
 import { Scene } from './Scene';
+import Player from '../../UI/Player/Player';
 import * as C from './constants';
 import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import './index.css';
@@ -13,11 +14,9 @@ import { MusicPlayerProvider } from '../../UI/Player/MusicPlayerContext';
 import { BloomFilmEffect } from '../../Utils/Effects';
 
 export default function Release0009_Javonntte({ }) {
-    const mediaRef = useRef();
-    const [newTrackSelected, setNewTrackSelected] = useState(false);
     const track = useRef();
     const [hasEntered, setHasEntered] = useState(false);
-    const [activeSong, updateActiveSong] = useState("1");
+    const content = useMemo(() => CONTENT[window.location.pathname]);
 
     useEffect(() => {
         if (hasEntered) {
@@ -28,17 +27,9 @@ export default function Release0009_Javonntte({ }) {
         }
     });
 
-    useEffect(() => {
-        // console.log("activeSong!", activeSong);
-    }, [activeSong])
-
-
     return (
-        <MusicPlayerProvider tracks={CONTENT[window.location.pathname].tracks}>
-            <div>
-                <TrackList />
-                <PlayerControls />
-                {/* <Menu
+        <MusicPlayerProvider tracks={content.tracks}>
+            {/* <Menu
                 content={CONTENT[window.location.pathname]}
                 menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
                 mediaRef={mediaRef}
@@ -49,27 +40,34 @@ export default function Release0009_Javonntte({ }) {
                 // }}
                 didEnterWorld={() => { setHasEntered(true) }}
             /> */}
-                <Canvas
-                    id="canvas"
-                    onCreated={({ gl }) => {
-                        gl.shadowMap.enabled = true;
-                        gl.gammaInput = true;
-                        gl.gammaOutput = true;
+            {/* <Menu> */}
+            <Player
+                colors={content.colors}
+                artist={content.artist}
+                tracks={content.tracks}
+
+            />
+            {/* </Menu> */}
+            <Canvas
+                id="canvas"
+                onCreated={({ gl }) => {
+                    gl.shadowMap.enabled = true;
+                    gl.gammaInput = true;
+                    gl.gammaOutput = true;
+                }}
+            >
+                <Scene
+                    track={track}
+                    onButtonClicked={(dispatchConfig) => {
+                        const buttonName = dispatchConfig.eventObject.name;
+                        const trackId = TRACK_BUTTON_ID_LOOKUP[buttonName];
+                        if (curTrack !== trackId) {
+                            setCurTrack(trackId);
+                        }
                     }}
-                >
-                    <Scene
-                        track={track}
-                        onButtonClicked={(dispatchConfig) => {
-                            const buttonName = dispatchConfig.eventObject.name;
-                            const trackId = TRACK_BUTTON_ID_LOOKUP[buttonName];
-                            if (curTrack !== trackId) {
-                                setCurTrack(trackId);
-                            }
-                        }}
-                    />
-                    {/* <BloomFilmEffect /> */}
-                </Canvas>
-            </div>
-        </MusicPlayerProvider>
+                />
+                {/* <BloomFilmEffect /> */}
+            </Canvas>
+        </MusicPlayerProvider >
     );
 }

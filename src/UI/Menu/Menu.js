@@ -9,6 +9,7 @@ import { CONTENT, TOTAL_RELEASES } from "../../Content";
 import "./Menu.css";
 import { PurchaseLink } from "../Controls/Icons";
 
+
 class Menu extends PureComponent {
   state = {
     home: CONTENT[window.location.pathname].home,
@@ -307,3 +308,22 @@ class Menu extends PureComponent {
 }
 
 export default Menu;
+
+/**
+ * 
+ * The menu should be called UI and look like:
+ * 
+ * return (
+ *  <>
+ *    {header && <Header />}
+ *    {player && <Player />}
+ *    {infoButton && <InfoButton />}
+ *    {overlay && <Overlay />}
+ *    {navigation && <Navigation />}
+ * </>
+ * )
+ * 
+ * 
+ * 
+ * 
+ */

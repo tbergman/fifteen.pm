@@ -2,10 +2,18 @@ import React, {Component} from 'react';
 import pure from 'recompose/pure';
 import {CONTENT} from "../../Content";
 
+
+// TODO -- switching over to colors.on instead of theme.logoSvgFillColor
+function getFillColor(){
+  const content = CONTENT[window.location.pathname];
+  if (content.theme) return content.theme.logoSvgFillColor  || "#ffffff";
+  if (content.colors) return content.colors.on;
+}
+
 class Logo extends Component {
   
   static defaultProps = {
-    fillColor: CONTENT[window.location.pathname].theme.logoSvgFillColor || "#ffffff" // TODO centralize this logic
+    fillColor: getFillColor()
   }
 
   onClick = (e) => {

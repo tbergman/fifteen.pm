@@ -341,6 +341,8 @@ export const CONTENT = {
   },
   "/9": {
     artist: "JAVONNTTE",
+    message: "In the year 4182 all of Detroit Cloud City goes wild for City Lights, an early 21st century EP by Javonntte pulled off some bricked drives in the archives.",
+    purchaseLink: "TODO",
     tracks: [
       {
         title: "City Life",
@@ -372,15 +374,15 @@ export const CONTENT = {
       },
      
     ],
-    theme: {
-      message: "In the year 4182 all of Detroit Cloud City goes wild for City Lights, an early 21st century EP by Javonntte pulled off some bricked drives in the archives.",
-      purchaseLink: "TODO",
-      iconColor: '#0f0',
-      fillColor: 'rgba(0, 0, 255, 0.5)',
-      textColor: '#0f0',
-      navColor: '#1b03a3',
-      controls: []
-    }
+    colors: {
+      on: '#0f0',
+      off: '#f0f',
+      // iconColor: '#0f0',
+      // fillColor: 'rgba(0, 0, 255, 0.5)',
+      // textColor: '#0f0',
+      // navColor: '#1b03a3',
+    },
+    controls: []
   }
 };
 
