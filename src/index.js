@@ -7,7 +7,7 @@ import App from './App';
 import Header from './UI/Header/Header';
 import history from './history'
 import Release0001_Yahceph from './Releases/Release0001_Yahceph';
-import Release0002_YearUnknown from "./Releases/Release0002_YearUnknown";
+import Release0002_YearUnknown from "./Releases/Release0002_YearUnknown/index";
 import Release0003_Othere from "./Releases/Release0003_Othere";
 import Release0004_JonCannon from "./Releases/Release0004_JonCannon/index";
 import Release0005_Plebeian from "./Releases/Release0005_Plebeian/index";

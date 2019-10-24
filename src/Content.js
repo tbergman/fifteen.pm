@@ -58,30 +58,27 @@ export const CONTENT = {
   },
   "/2": {
     artist: "YEAR UNKNOWN",
-    textModel: assetPath("2/objects/text.gltf"),
+    message: "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly drum disturbance.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/track/timer",
     tracks: [
       {
-        title: "Timer",
+        name: "Timer",
         id: "475418370",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly drum disturbance.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/timer",
-      iconColor: '#fff',
-      fillColor: 'rgba(127, 0, 255, 0.5)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
+    colors: {
+      default: '#fff',
+      selection: 'rgba(127, 0, 255, 0.5)',
+      bg: 'rgba(127, 0, 255, 0.5)',
+      instructions: [
         {
           icon: MouseMove,
-          instructions: "click and drag mouse to look around"
+          text: "click and drag mouse to look around"
         },
         {
           icon: TwoFingerScroll,
-          instructions: "scroll to zoom"
+          text: "scroll to zoom"
         }
       ]
     }
