@@ -1,0 +1,11 @@
+.overlay-svg {
+    border: none;
+    z-index: 1;
+}
+
+.overlay-svg svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+}

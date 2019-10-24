@@ -1,4 +1,5 @@
 import React from 'react';
+import './OverlaySVG.css';
 
 export default function OverlaySVG({ svgRef, color, shape }) {
     /**

@@ -1,5 +1,6 @@
 
 import React from 'react';
+import './OverlayInstructions.css';
 
 export default function OverlayInstructions({ instructions, color }) {
     return <div className="overlay-instructions">

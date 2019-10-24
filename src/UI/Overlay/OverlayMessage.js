@@ -1,4 +1,5 @@
 import React from 'react';
+import './OverlayMessage.css'
 
 export default function OverlayMessage({ message, color }) {
     return (

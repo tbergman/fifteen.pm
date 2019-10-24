@@ -3,6 +3,7 @@ import OverlayEnterButton from './OverlayEnterButton';
 import OverlayInstructions from './OverlayInstructions';
 import OverlayPurchaseLink from './OverlayPurchaseLink';
 import OverlayMessage from './OverlayMessage';
+import './OverlayContent.css';
 
 /**
 *  Renders content inside react modal
