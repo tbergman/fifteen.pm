@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce';
 import GLTFLoader from 'three-gltf-loader';
 import { loadGLTF } from '../Utils/Loaders';
 import { assetPath } from "../Utils/assets";
-import Menu from "../UI/Menu/Menu";
+import LegacyMenu from "../UI/LegacyMenu/LegacyMenu";
 import { OrbitControls } from 'three-full';
 import { initRockMaterial } from '../Utils/materials.js';
 import { Water2 } from "../Utils/Water2"
@@ -134,6 +134,7 @@ class HomeDefault extends PureComponent {
         <li><a href="/6">vveiss</a></li>
         <li><a href="/7">Jon Fay</a></li>
         <li><a href="/8">Greem Jellyfish</a></li>
+        <li><a href="/9">Javonntte</a></li> 
       </ul>
     </div>);
   }
@@ -141,7 +142,7 @@ class HomeDefault extends PureComponent {
   render() {
     return (
       <Fragment>
-        <Menu
+        <LegacyMenu
           overlayOpen={false}
           shouldRenderPlayer={false}
         />

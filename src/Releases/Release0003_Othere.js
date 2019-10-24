@@ -6,7 +6,8 @@ import AudioStreamer from "../Utils/Audio/AudioStreamer";
 import { OrbitControls } from "../Utils/OrbitControls";
 import { isMobile } from "../Utils/BrowserDetection";
 import { CONTENT } from "../Content";
-import Menu from '../UI/Menu/Menu';
+import LegacyMenu from '../UI/LegacyMenu/LegacyMenu';
+import UI from '../UI/UI';
 
 const BPM = 130;
 const BEAT_TIME = (60 / BPM);
@@ -647,7 +648,7 @@ class Release0003_Othere extends PureComponent {
   render() {
     return (
       <Fragment>
-        <Menu
+        <LegacyMenu
           menuIconFillColor="red"
           content={CONTENT[window.location.pathname]}
           mediaRef={el => this.audioElement = el}

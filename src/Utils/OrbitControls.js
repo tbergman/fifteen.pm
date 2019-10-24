@@ -225,7 +225,7 @@ export const OrbitControls = function (object, domElement) {
 
   this.dispose = function () {
 
-    scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
+    scope.domElement.removeEventListener('contextmenu', onContextLegacyMenu, false);
     scope.domElement.removeEventListener('mousedown', onMouseDown, false);
     scope.domElement.removeEventListener('wheel', onMouseWheel, false);
 
@@ -890,7 +890,7 @@ export const OrbitControls = function (object, domElement) {
 
   }
 
-  function onContextMenu(event) {
+  function onContextLegacyMenu(event) {
 
     if (scope.enabled === false) return;
 
@@ -900,7 +900,7 @@ export const OrbitControls = function (object, domElement) {
 
   //
 
-  scope.domElement.addEventListener('contextmenu', onContextMenu, false);
+  scope.domElement.addEventListener('contextmenu', onContextLegacyMenu, false);
 
   scope.domElement.addEventListener('mousedown', onMouseDown, false);
   scope.domElement.addEventListener('wheel', onMouseWheel, false);

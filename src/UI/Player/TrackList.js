@@ -2,21 +2,24 @@ import React from "react";
 import useMusicPlayer from "./hooks";
 import './Player.css'
 
+
+
 export default function TrackList({ tracks, colors }) {
   // const { trackList, fillColor, selectedColor } = this.props;
   // const { curTrackIdx } = this.state;
   // const curTrack = trackList[curTrackIdx];
   const { currentTrackName, playTrack } = useMusicPlayer();
   return (
+
     <div id="playlist-container">
       <ul key='playlist' id="playlist">
         {tracks.length > 1 ?
           tracks.map((track, index) => {
-            const isCurTrack = track.title === currentTrackName;
+            const isCurTrack = currentTrackName === track.name;
             return <li
-              key={track.id}
+              key={track.name}
               data-id={index}
-              style={{ color: isCurTrack ? colors.on : colors.off }}
+              style={{ color: isCurTrack ? colors.selected : colors.default }}
               className={isCurTrack ? "active-track" : null}
               onClick={() => playTrack(index)}
             >

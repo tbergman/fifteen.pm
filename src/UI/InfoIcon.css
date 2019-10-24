@@ -1,0 +1,16 @@
+#info-icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    bottom: 0;
+    margin-top: 10px;
+    z-index: 10001;
+    opacity: 0.5;
+    transition: 500ms all ease;
+    -webkit-transition: 500ms all ease;
+}
+
+#info-icon:hover {
+    opacity: 1;
+    cursor: pointer;
+}

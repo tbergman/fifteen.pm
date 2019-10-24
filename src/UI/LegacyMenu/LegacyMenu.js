@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from "react";
 import Modal from "react-modal";
 import Player from "../Player/Player";
 import LegacyPlayer from "../Player/LegacyPlayer";
-import Navigation from "../Navigation/Navigation";
+import LegacyNavigation from "../LegacyNavigation/LegacyNavigation";
 import anime from "animejs";
 import { SHAPES, MENU_ICON_OPEN } from "./MenuConstants";
 import { CONTENT, TOTAL_RELEASES } from "../../Content";
@@ -10,7 +10,7 @@ import "./Menu.css";
 import { PurchaseLink } from "../Controls/Icons";
 
 
-class Menu extends PureComponent {
+class LegacyMenu extends PureComponent {
   state = {
     home: CONTENT[window.location.pathname].home,
     theme: CONTENT[window.location.pathname].theme,
@@ -209,7 +209,7 @@ class Menu extends PureComponent {
             d={SHAPES[this.state.shapeIndex].path}
           />
         </g>
-      </svg> 
+      </svg>
     </div>);
   }
 
@@ -244,36 +244,23 @@ class Menu extends PureComponent {
     const { content, mediaRef, auxMedia, useAuxMediaOnly, legacyPlayer } = this.props;
     const { hasEnteredWorld } = this.state;
     if (this.props.shouldRenderPlayer) {
-      return (legacyPlayer ?
-        // TODO any of the players that haven't been updated to work with new hooks-based player
-        <LegacyPlayer
-          trackList={content.tracks}
-          message={content.artist}
-          fillColor={content.theme.iconColor}
-          mediaRef={mediaRef}
-          initialized={hasEnteredWorld}
-          auxMedia={auxMedia}
-          useAuxOnly={useAuxMediaOnly}
-          updateSongFn={this.props.updateSongFn}
-        /> :
-        <Player
-          trackList={content.tracks}
-          message={content.artist}
-          fillColor={content.theme.iconColor}
-          mediaRef={mediaRef}
-          initialized={hasEnteredWorld}
-          auxMedia={auxMedia}
-          useAuxOnly={useAuxMediaOnly}
-          updateSongFn={this.props.updateSongFn}
-        />
-      );
+      return <LegacyPlayer
+        trackList={content.tracks}
+        message={content.artist}
+        fillColor={content.theme.iconColor}
+        mediaRef={mediaRef}
+        initialized={hasEnteredWorld}
+        auxMedia={auxMedia}
+        useAuxOnly={useAuxMediaOnly}
+        updateSongFn={this.props.updateSongFn}
+      />
     }
   };
 
   renderNavigation = () => {
     const { totalReleases } = this.props;
     return (
-      <Navigation
+      <LegacyNavigation
         fillColor={this.state.theme.navColor} // TODO this should be a prop
         totalReleases={totalReleases}
       />
@@ -307,23 +294,5 @@ class Menu extends PureComponent {
   };
 }
 
-export default Menu;
+export default LegacyMenu;
 
-/**
- * 
- * The menu should be called UI and look like:
- * 
- * return (
- *  <>
- *    {header && <Header />}
- *    {player && <Player />}
- *    {infoButton && <InfoButton />}
- *    {overlay && <Overlay />}
- *    {navigation && <Navigation />}
- * </>
- * )
- * 
- * 
- * 
- * 
- */

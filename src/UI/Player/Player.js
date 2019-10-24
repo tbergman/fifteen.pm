@@ -15,9 +15,9 @@ export default function Player({ artist, tracks, colors }) {
     playNextTrack
   } = useMusicPlayer();
   return (
-    <div className="footer" id="player-container">
+    <div id="player-container">
       <TrackList tracks={tracks} colors={colors} />
-      <PlayButton color={colors.off} text={artist} />
+      <PlayButton color={colors.default} text={artist} />
     </div>
   );
 }

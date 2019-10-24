@@ -15,7 +15,7 @@ export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
   "/3": "red"
 }
 
-export const TOTAL_RELEASES = 8;
+export const TOTAL_RELEASES = 9;
 
 export const CONTENT = {
   "/": {
@@ -375,14 +375,20 @@ export const CONTENT = {
      
     ],
     colors: {
-      on: '#0f0',
-      off: '#f0f',
+      default: '#0f0',
+      selection: '#f0f',
+      bg: '#00f',
       // iconColor: '#0f0',
       // fillColor: 'rgba(0, 0, 255, 0.5)',
       // textColor: '#0f0',
       // navColor: '#1b03a3',
     },
-    controls: []
+    controls: [
+      {
+        icon: ArrowKeys,
+        instructions: "use arrow keys to drive the hoverboard"
+      },
+    ]
   }
 };
 

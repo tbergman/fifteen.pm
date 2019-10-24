@@ -1,15 +1,18 @@
 import { useContext } from 'react';
 import { MusicPlayerContext } from "./MusicPlayerContext";
+import AudioStreamer from '../../Utils/Audio/AudioStreamer'; // TODO haven't touched this in ages...
 
 const useMusicPlayer = () => {
   const [state, setState] = useContext(MusicPlayerContext);
 
   function playTrack(index) {
+    console.log(state.audioPlayer);
     if (index === state.currentTrackIndex) {
       togglePlay();
     } else {
       state.audioPlayer.pause();
       state.audioPlayer = new Audio(state.tracks[index].file);
+      // state.audioStream = new AudioStreamer(state.audioPlayer); // not tested yet
       state.audioPlayer.play();
       setState(state => ({ ...state, currentTrackIndex: index, isPlaying: true }));
     }
@@ -42,6 +45,7 @@ const useMusicPlayer = () => {
     isPlaying: state.isPlaying,
     playPreviousTrack,
     playNextTrack,
+    audioStream: state.audioStream,
   }
 };
 

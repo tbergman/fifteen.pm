@@ -11,7 +11,7 @@ import { assetPath } from "../../Utils/assets";
 import { cameraViews } from "./Utils/cameraViews";
 import { CONTENT } from "../../Content";
 import { soundcloudTrackIdFromSrc } from "../../Utils/Audio/SoundcloudUtils";
-import Menu from '../../UI/Menu/Menu';
+import LegacyMenu from '../../UI/LegacyMenu/LegacyMenu';
 
 export const assetPath5 = (p) => {
   return assetPath("5/" + p);
@@ -438,7 +438,7 @@ class Release0005_Plebeian extends Component {
   render() {
     return (
       <Fragment>
-        <Menu
+        <LegacyMenu
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="white"
           mediaRef={el => this.audioElement = el}

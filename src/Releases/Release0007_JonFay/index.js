@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { CONTENT } from "../../Content";
-import Menu from '../../UI/Menu/Menu';
+import LegacyMenu from '../../UI/LegacyMenu/LegacyMenu';
 import { assetPath } from "../../Utils/assets";
 import Unity, { UnityContent } from "react-unity-webgl";
 
@@ -89,7 +89,7 @@ class Release0007_JonFay extends Component {
   render() {
     return (
       <Fragment>
-        <Menu
+        <LegacyMenu
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="black"
           didEnterWorld={() => {

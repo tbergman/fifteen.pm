@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 import './Release.css';
 
 import { CONTENT } from "../Content"
-import Menu from '../UI/Menu/Menu';
+import LegacyMenu from '../UI/LegacyMenu/LegacyMenu';
 import AudioStreamer from "../Utils/Audio/AudioStreamer";
 
 
@@ -293,7 +293,7 @@ class Release0001_Yahceph extends PureComponent {
   render() {
     return (
       <Fragment>
-        <Menu
+        <LegacyMenu
           content={CONTENT[window.location.pathname]}
           mediaRef={el => this.audioElement = el}
           didEnterWorld={() => { this.hasEntered = true }}

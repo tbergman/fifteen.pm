@@ -10,7 +10,7 @@ import debounce from 'lodash/debounce';
 import { isMobile } from "../Utils/BrowserDetection";
 import { OrbitControls } from "../Utils/OrbitControls";
 import { CONTENT } from "../Content";
-import Menu from '../UI/Menu/Menu';
+import LegacyMenu from '../UI/LegacyMenu/LegacyMenu';
 
 /* this handles number of segments in cloth , TO DO fix this */
 let pinsFormation = [];
@@ -642,7 +642,7 @@ class Release0002_YearUnknown extends Component {
   render() {
     return (
       <Fragment>
-        <Menu
+        <LegacyMenu
           content={CONTENT[window.location.pathname]}
           mediaRef={el => this.audioElement = el}
         />

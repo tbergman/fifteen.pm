@@ -2,9 +2,9 @@ import React, { useRef, useContext, useMemo, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from 'react-three-fiber';
 import { CONTENT } from '../../Content';
-import Menu from '../../UI/Menu/Menu'; // TODO code stutter :/
+import LegacyMenu from '../../UI/LegacyMenu/LegacyMenu'; // TODO code stutter :/
 import { Scene } from './Scene';
-import Player from '../../UI/Player/Player';
+import UI from '../../UI/UI';
 import * as C from './constants';
 import { soundcloudTrackIdFromSrc } from '../../Utils/Audio/SoundcloudUtils';
 import './index.css';
@@ -29,7 +29,7 @@ export default function Release0009_Javonntte({ }) {
 
     return (
         <MusicPlayerProvider tracks={content.tracks}>
-            {/* <Menu
+            {/* <LegacyMenu
                 content={CONTENT[window.location.pathname]}
                 menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
                 mediaRef={mediaRef}
@@ -40,14 +40,9 @@ export default function Release0009_Javonntte({ }) {
                 // }}
                 didEnterWorld={() => { setHasEntered(true) }}
             /> */}
-            {/* <Menu> */}
-            <Player
-                colors={content.colors}
-                artist={content.artist}
-                tracks={content.tracks}
-
-            />
-            {/* </Menu> */}
+            {/* <LegacyMenu> */}
+            <UI content={content}/>
+            {/* </LegacyMenu> */}
             <Canvas
                 id="canvas"
                 onCreated={({ gl }) => {

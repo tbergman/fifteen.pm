@@ -6,7 +6,7 @@ import { isIE } from "../../Utils/BrowserDetection.js";
 import { loadGLTF } from "../../Utils/Loaders";
 import { Water2 } from "../../Utils/Water2"
 import { CONTENT } from '../../Content'
-import Menu from '../../UI/Menu/Menu';
+import LegacyMenu from '../../UI/LegacyMenu/LegacyMenu';
 import '../../UI/Player/Player.css';
 import { OrbitControls } from 'three-full';
 import GLTFLoader from 'three-gltf-loader';
@@ -620,7 +620,7 @@ export default class Release0008_GreemJellyFish extends Component {
     render() {
         return (
             <Fragment>
-                <Menu
+                <LegacyMenu
                     content={CONTENT[window.location.pathname]}
                     menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
                     mediaRef={el => this.mediaElement = el}

@@ -2,7 +2,7 @@ import React, { Fragment, Component } from "react";
 import { CONTENT } from "../../Content";
 import "./Navigation.css";
 
-class Navigation extends Component {
+class LegacyNavigation extends Component {
   state = {
     currentLocation: window.location.pathname,
     currentIndex: parseInt(window.location.pathname.replace("/", "")),
@@ -88,4 +88,4 @@ class Navigation extends Component {
   }
 }
 
-export default Navigation;
+export default LegacyNavigation;

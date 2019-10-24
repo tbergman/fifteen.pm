@@ -14,7 +14,7 @@ import {
   sleep,
   keyPressIsFirstPersonControls
 } from "./utils";
-import Menu from "../../UI/Menu/Menu";
+import LegacyMenu from "../../UI/LegacyMenu/LegacyMenu";
 
 class Release0004_JonCannon extends Component {
   constructor() {
@@ -409,7 +409,7 @@ class Release0004_JonCannon extends Component {
   render() {
     return (
       <Fragment>
-        <Menu
+        <LegacyMenu
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="white"
           didEnterWorld={() => {

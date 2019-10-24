@@ -244,18 +244,14 @@ class HomeMobile extends Component {
           <li><a href="/6">vveiss</a></li>
           <li><a href="/7">Jon Fay</a></li>
           <li><a href="/8">Greem Jellyfish</a></li>
+          <li><a href="/9">Javonntte</a></li> 
         </ul>
     </div>);
   }
 
   render() {
     return (
-      <Fragment>
-        {/* <Menu
-          overlayOpen={false}
-          renderPlayer={false}
-          ref={element => this.menuRef = element}
-        /> */}
+      <Fragment> 
         {!this.state.overlayOpen && this.renderReleaseas()}
         <div ref={element => this.container = element} />
       </Fragment>

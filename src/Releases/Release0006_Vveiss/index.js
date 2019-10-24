@@ -8,7 +8,7 @@ import { Lensflare, LensflareElement } from 'three-full';
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 // import { OrbitControls } from "../../Utils/OrbitControls";
 import { CONSTANTS } from "../Release0006_Vveiss/constants";
-import Menu from '../../UI/Menu/Menu';
+import LegacyMenu from '../../UI/LegacyMenu/LegacyMenu';
 
 export const assetPath6 = (p) => {
   return assetPath("6/" + p);
@@ -538,7 +538,7 @@ class Release0006_Vveiss extends Component {
   render() {
     return (
       <Fragment>
-        <Menu
+        <LegacyMenu
           content={CONTENT[window.location.pathname]}
           menuIconFillColor="white"
           mediaRef={el => this.audioElement = el}
