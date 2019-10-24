@@ -3,84 +3,85 @@ import { TOTAL_RELEASES } from "../Content";
 import "./Navigation.css";
 
 
-export default function Navigation({ defaultColor }) {
+const useNavigation = () => {
+    const [path, setPath] = useState(window.location.pathname);
+    const currentIndex = parseInt(path.replace("/", ""))
+    const isHome = () => path === "/";
+    
+    useEffect(() => {
+        if (path && path !== window.location.pathname){
+            window.location.pathname = path;
+        }
+    }, [path])
 
-    const [currentLocation, setCurrentLocation] = useState(window.location.pathname);
-    const [currentIndex, setCurrentIndex] = useState(parseInt(window.location.pathname.replace("/", "")));
-
-    function setLocation(path) {
-        window.location.pathname = path;
-    };
-
-    // useEffect(() => {
-    //     console.log(window.location.pathname);
-    //     if(!currentLocation) return;
-    //     window.location.pathname = currentLocation;
-    // }, [currentLocation])
-
-    function isHome() {
-        return currentLocation === "/";
-    }
-
-    function getPrevReleasePath() {
-        let prevRelease;
+    function prevRelease() {
         if (isHome()) {
-            prevRelease = "/" + TOTAL_RELEASES.toString();
+            return "/" + TOTAL_RELEASES.toString();
         } else if (currentIndex == 1) {
-            prevRelease = "/";
+            return "/";
         } else {
-            prevRelease = "/" + (currentIndex - 1).toString();
+            return "/" + (currentIndex - 1).toString();
         }
-        return prevRelease;
     };
 
-    function renderPrevArrow() {
-        return <div className="arrow arrow-prev">
-            <svg
-                viewBox="0 0 25 25"
-                width="100%"
-                height="100%"
-                onClick={() => setLocation(getPrevReleasePath())}
-            >
-                <g className="arrow-path" fill={defaultColor}>
-                    <path d="M14.41,16l5.3-5.29a1,1,0,0,0-1.42-1.42l-6,6a1,1,0,0,0,0,1.42l6,6a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z" />
-                </g>
-            </svg>
-        </div>
-    };
-
-    function getNextReleasePath() {
-        let nextRelease;
+    function nextRelease() {
         if (currentIndex == TOTAL_RELEASES) {
-            nextRelease = "/";
+            return "/";
         } else if (isHome()) {
-            nextRelease = "/1";
+            return "/1";
         } else {
-            nextRelease = "/" + (currentIndex + 1).toString();
+            return "/" + (currentIndex + 1).toString();
         }
-        return nextRelease;
     };
 
-    function renderNextArrow() {
+    return {
+        goToPrev: () => setPath(prevRelease()),
+        goToNext: () => setPath(nextRelease()),
+    }
+}
+
+function NextNavigationArrow({ color }) {
+    const { goToNext } = useNavigation();
+    return (
         <div className="arrow arrow-next">
             <svg
                 viewBox="0 0 25 25"
                 width="100%"
                 height="100%"
-                onClick={() => setLocation(getNextReleasePath())}
+                onClick={() => goToNext()}
             >
-                <g className="arrow-path" fill={defaultColor}>
+                <g className="arrow-path" fill={color}>
                     <path d="M19.71,15.29l-6-6a1,1,0,0,0-1.42,1.42L17.59,16l-5.3,5.29a1,1,0,0,0,0,1.42,1,1,0,0,0,1.42,0l6-6A1,1,0,0,0,19.71,15.29Z" />
                 </g>
             </svg>
         </div>
-    };
+    );
+}
 
 
+function PrevNavigationArrow({ color }) {
+    const { goToPrev } = useNavigation();
     return (
-        <Fragment>
-            {renderPrevArrow()}
-            {renderNextArrow()}
-        </Fragment>
+        <div className="arrow arrow-prev">
+            <svg
+                viewBox="0 0 25 25"
+                width="100%"
+                height="100%"
+                onClick={() => goToPrev()}
+            >
+                <g className="arrow-path" fill={color}>
+                    <path d="M14.41,16l5.3-5.29a1,1,0,0,0-1.42-1.42l-6,6a1,1,0,0,0,0,1.42l6,6a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42Z" />
+                </g>
+            </svg>
+        </div>
+    );
+}
+
+export default function Navigation({ color }) {
+    return (
+        <>
+            <PrevNavigationArrow color={color} />
+            <NextNavigationArrow color={color} />
+        </>
     );
 }
