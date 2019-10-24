@@ -11,21 +11,25 @@ import './OverlayContent.css';
 *    - instructions
 *    - action button
 */
-export default function OverlayContent({ loading, hasEnteredWorld, toggleOverlay, isRelease, color, instructions, message, purchaseLink }) {
+export default function OverlayContent({
+    instructions,
+    purchaseLink,
+    message,
+    color,
+    onToggle,
+    }) {
     return (
         <div className="overlay-content">
             <div className="overlay-header-and-controls">
                 <OverlayMessage message={message} color={color} />
-                {isRelease && <OverlayInstructions instructions={instructions} color={color} />}
-                {isRelease && <OverlayPurchaseLink href={purchaseLink} color={color} />}
+                {instructions && <OverlayInstructions instructions={instructions} color={color} />}
+                {purchaseLink && <OverlayPurchaseLink href={purchaseLink} color={color} />}
             </div>
             <OverlayEnterButton
-                loading={loading}
-                isRelease={isRelease}
-                hasEnteredWorld={hasEnteredWorld}
-                onEnter={toggleOverlay}
                 color={color}
+                onClick={onToggle}  
             />
         </div>
     );
 }
+

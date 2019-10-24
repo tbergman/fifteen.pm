@@ -8,7 +8,7 @@ import './Logo.css';
 function getFillColor(){
   const content = CONTENT[window.location.pathname];
   if (content.theme) return content.theme.logoSvgFillColor  || "#ffffff";
-  if (content.colors) return content.colors.on;
+  if (content.colors) return content.colors.default;
 }
 
 class Logo extends Component {

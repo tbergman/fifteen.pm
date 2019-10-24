@@ -13,6 +13,8 @@ export const assetPath7Images = (p) => {
   return assetPath("7/images/" + p);
 }
 
+// To use the new UI component you'll have to employ Suspense while 
+// unity assets loads
 class Release0007_JonFay extends Component {
   state = {
     progression: 0,
@@ -86,6 +88,8 @@ class Release0007_JonFay extends Component {
     }
   };
 
+  // To use the new UI component you'll have to employ Suspense while 
+  // unity assets loads
   render() {
     return (
       <Fragment>

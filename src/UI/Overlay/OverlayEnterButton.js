@@ -5,7 +5,7 @@ import './OverlayEnterButton.css'
  *  Show 'CLOSE' for releases on additional modal opens 
  *  Show 'CLOSE' for home page
 */
-export default function OverlayEnterButton({ loading, isRelease, hasEnteredWorld, color, onClickEnter }) {
+export default function OverlayEnterButton({ color, onClick }) {
     const [ENTER, CLOSE, LOADING] = useMemo(() => {
         return [
             "ENTER",
@@ -15,20 +15,20 @@ export default function OverlayEnterButton({ loading, isRelease, hasEnteredWorld
     })
     const [text, setText] = useState(ENTER);
 
-    useEffect(() => {
-        if (!isRelease || hasEnteredWorld) {
-            setText(CLOSE);
-        } else if (loading) {
-            setText(LOADING);
-        }
-    }, [hasEnteredWorld, loading, isRelease])
+    // useEffect(() => {
+    //     if (!isRelease || hasEnteredWorld) {
+    //         setText(CLOSE);
+    //     } else if (loading) {
+    //         setText(LOADING);
+    //     }
+    // }, [hasEnteredWorld, loading, isRelease])
 
     return (
         <div className="enter-container">
             <button
                 type="button"
                 style={{ color: color }}
-                onClick={onClickEnter}
+                onClick={onClick}
             >
                 {text}
             </button>

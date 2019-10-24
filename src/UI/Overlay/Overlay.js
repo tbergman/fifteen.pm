@@ -6,22 +6,25 @@ import OverlayContent from './OverlayContent';
 import OverlaySVG from './OVerlaySVG';
 import './Overlay.css'
 
-export default function Overlay({ message, instructions, loading, isRelease, colors }) {
+export default function Overlay({
+    message,
+    instructions,
+    purchaseLink,
+    colors,
+    loadWithOverlayOpen,
+    shouldUpdateOverlay,
+    onToggle,
+}) {
 
-    const [hasEnteredWorld, setHasEnteredWorld] = useState(!isRelease);
-    const [open, setOpen] = useState(isRelease);
+    const [open, setOpen] = useState(loadWithOverlayOpen ? true : false);
+    const [isOpen, setIsOpen] = useState(loadWithOverlayOpen ? true : false);
+    const [afterOpen, setAfterOpen] = useState(false); // loads opened or closed, there is no after.
+    const [closingModal, shouldCloseModal] = useState(true);
     const ref = useRef();
     const svgRef = useRef();
     const shape = useMemo(() => OVERLAY_SHAPES[0]);
 
-    function toggleOverlay(e) {
-        e.preventDefault();
-        if (loading) return;
-        setOpen(!open)
-        if (!hasEnteredWorld) setHasEnteredWorld(true);
-    }
-
-    function animateOverlay() {
+    useEffect(() => {
         anime({
             targets: svgRef.current,
             easing: shape.easing,
@@ -33,20 +36,20 @@ export default function Overlay({ message, instructions, loading, isRelease, col
             loop: true,
             direction: "alternate"
         });
-    }
+    }, [afterOpen])
 
+    useEffect(() => {
+        if (afterOpen) setIsOpen(!isOpen)
+    }, [shouldUpdateOverlay])
 
     return <>
         {open ?
             <div ref={ref} className="modal">
                 <Modal
-                    isOpen={open}
+                    isOpen={isOpen}
                     appElement={ref.current}
-                    onAfterOpen={() => animateOverlay()}
-                    onRequestClose={() => {
-                        setOpen(false);
-                        if (!hasEnteredWorld) setHasEnteredWorld(true);
-                    }}
+                    onAfterOpen={() => setAfterOpen(true)}
+                    onRequestClose={() => setIsOpen(false)}
                     shouldCloseOnOverlayClick={true}
                     ariaHideApp={false}
                     className="overlay-modal"
@@ -55,16 +58,13 @@ export default function Overlay({ message, instructions, loading, isRelease, col
                     }}
                 >
                     <>
-
                         <OverlayContent
                             instructions={instructions}
-                            hasEnteredWorld={hasEnteredWorld}
-                            toggleOverlay={toggleOverlay}
+                            purchaseLink={purchaseLink}
                             message={message}
-                            isRelease={isRelease}
                             color={colors.default}
+                            onToggle={onToggle}
                         />
-
                         <OverlaySVG
                             svgRef={svgRef}
                             color={colors.bg}
