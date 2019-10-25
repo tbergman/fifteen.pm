@@ -374,7 +374,6 @@ class Release0004_JonCannon extends Component {
   };
 
   renderScene = () => {
-    // console.log("HAS ENTERED WORLD", this.hasEntered)
     if (this.state.hasEntered) {
       if (this.state.mindState === C.MIND_STATE_CHILLIN) {
         let now = new Date();
