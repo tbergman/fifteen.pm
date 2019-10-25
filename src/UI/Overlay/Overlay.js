@@ -17,9 +17,8 @@ export default function Overlay({
     const [afterOpen, setAfterOpen] = useState(false); // loads opened or closed, there is no after.
     const ref = useRef();
 
-
     useEffect(() => {
-        if (afterOpen) setIsOpen(!isOpen)
+        if (afterOpen || (!loadWithOverlayOpen && shouldUpdateOverlay)) setIsOpen(!isOpen)
     }, [shouldUpdateOverlay])
 
     return <>

@@ -21,7 +21,7 @@ export default function UI({
     const [infoIcon, toggleInfoIcon] = useState(loadWithInfoIcon ? true : false);
     const [overlay, toggleOverlay] = useState(loadWithOverlay ? true : false);
     const [overlayHasBeenClosed, setOverlayHasBeenClosed] = useState(!loadWithOverlay);
-    const hasTracks = useMemo(() => content.tracks.length); // TODO will this work with multiple releases?
+    const hasTracks = useMemo(() => content.tracks ? true : false); // TODO will this work with multiple releases?
     
     useEffect(() => {
         toggleInfoIcon(loadWithInfoIcon || overlayHasBeenClosed);
@@ -37,7 +37,6 @@ export default function UI({
             {logo && <Logo />}
             {navigation && <Navigation color={content.colors.default} />}
             <Overlay
-                
                 message={content.message}
                 instructions={content.instructions}
                 purchaseLink={content.purchaseLink}

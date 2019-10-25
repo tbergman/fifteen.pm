@@ -23,20 +23,7 @@ export default function Release0009_Javonntte({ }) {
 
     return (
         <MusicPlayerProvider tracks={content.tracks}>
-            {/* <LegacyMenu
-                content={CONTENT[window.location.pathname]}
-                menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
-                mediaRef={mediaRef}
-                updateSongFn={updateActiveSong}
-                // mediaRef={el => {
-                //     mediaRef.current = el;
-                //     setNewTrackSelected(true);
-                // }}
-                didEnterWorld={() => { setHasEntered(true) }}
-            /> */}
-            {/* <LegacyMenu> */}
             <UI content={content}/>
-            {/* </LegacyMenu> */}
             <Canvas
                 id="canvas"
                 onCreated={({ gl }) => {

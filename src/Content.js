@@ -20,14 +20,13 @@ export const TOTAL_RELEASES = 9;
 export const CONTENT = {
   "/": {
     home: true, // TODO rm
-    theme: {
-      message:
-        "fifteen.pm invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
-      iconColor: 'white',
-      navColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.5)',
-      textColor: 'white',
-    },
+    message:
+      "fifteen.pm invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
+    colors: {
+      default: '#fff',
+      selection: 'rgba(0, 0, 0, 0.5)',
+      bg: 'rgba(0, 0, 0, 0.5)',
+    }
   },
   "/1": {
     artist: "YAHCEPH",
@@ -369,7 +368,7 @@ export const CONTENT = {
         secretToken: "s-XeIko",
         bpm: "95",
       },
-     
+
     ],
     colors: {
       default: '#0f0',

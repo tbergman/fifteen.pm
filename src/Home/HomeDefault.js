@@ -5,10 +5,11 @@ import debounce from 'lodash/debounce';
 import GLTFLoader from 'three-gltf-loader';
 import { loadGLTF } from '../Utils/Loaders';
 import { assetPath } from "../Utils/assets";
-import LegacyMenu from "../UI/LegacyMenu/LegacyMenu";
 import { OrbitControls } from 'three-full';
 import { initRockMaterial } from '../Utils/materials.js';
 import { Water2 } from "../Utils/Water2"
+import UI from '../UI/UI';
+import {CONTENT} from '../Content'
 
 class HomeDefault extends PureComponent {
   state = {
@@ -142,10 +143,7 @@ class HomeDefault extends PureComponent {
   render() {
     return (
       <Fragment>
-        <LegacyMenu
-          overlayOpen={false}
-          shouldRenderPlayer={false}
-        />
+        <UI content={CONTENT["/"]} loadWithOverlay={false}/>
         {!this.state.overlayOpen && this.renderReleaseas()}
         <div className="release" ref={element => this.container = element} />
       </Fragment>
