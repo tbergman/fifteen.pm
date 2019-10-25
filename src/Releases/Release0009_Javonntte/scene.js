@@ -1,33 +1,20 @@
-import React, { Suspense, useState, useEffect, useRef } from 'react';
-import { useResource, useThree, useFrame } from 'react-three-fiber';
-import * as THREE from 'three';
+import React, { Suspense } from 'react';
+import { useResource, useThree } from 'react-three-fiber';
 import { useGLTF } from "../../Utils/hooks";
-import {
-    Facade04Material,
-    Facade10Material,
-    Facade12Material,
-    CloudMaterial,
-    FoamGripMaterial,
-    Windows1Material,
-    Metal03Material,
-    TronMaterial,
-} from '../../Utils/materials';
-import { BloomFilmEffect } from '../../Utils/Effects';
+import { CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material } from '../../Utils/materials';
+import { AsteroidBelt } from './AsteroidBelt';
 import { onBuildingsLoaded } from "./buildings";
+import Car from './Car';
 import * as C from "./constants";
-import { Controls } from "./controls";
 import "./index.css";
 import { FixedLights } from './lights';
-import { AsteroidBelt } from './AsteroidBelt';
-import { World, FlatWorld } from './world';
-import { generateAsteroids } from './asteroids';
-import { Stars } from './stars';
-import Car, { onCarElementLoaded } from './Car';
+import { asteroidNeighborhoods, worldNeighborhoods } from './neighborhoods';
 import Road from './Road';
-import { worldNeighborhoods, asteroidNeighborhoods } from './neighborhoods';
+import { World } from './world';
+import useMusicPlayer from '../../UI/Player/hooks';
 
 
-export function Scene({ track, onButtonClicked }) {
+export function Scene({ }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
        example: https://codesandbox.io/s/use-three-renders-thrice-i4k6c
@@ -50,6 +37,8 @@ export function Scene({ track, onButtonClicked }) {
     // useEffect(() => {
     //     scene.background = new THREE.Color(lightsOn ? "white" : "black");
     // }, [lightsOn])
+
+    const {} = useMusicPlayer('Scene');
 
     return (
         <>
@@ -79,7 +68,6 @@ export function Scene({ track, onButtonClicked }) {
                     <Car
                         speed={20}
                         roadOffset={1}
-                        onButtonClicked={onButtonClicked}
                     />
                 </Road>
             </Suspense>

@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import Logo from './Logo';
-import Player from './Player/Player'
+import React, { useEffect, useMemo, useState } from 'react';
 import InfoIcon from './InfoIcon';
+import Logo from './Logo';
 import Navigation from './Navigation';
 import Overlay from './Overlay/Overlay';
-
+import Player from './Player/Player';
 import './UI.css';
+import useMusicPlayer from './Player/hooks';
+
 
 export default function UI({
     content,
@@ -22,15 +23,17 @@ export default function UI({
     const [overlay, toggleOverlay] = useState(loadWithOverlay ? true : false);
     const [overlayHasBeenClosed, setOverlayHasBeenClosed] = useState(!loadWithOverlay);
     const hasTracks = useMemo(() => content.tracks ? true : false); // TODO will this work with multiple releases?
-    
-    useEffect(() => {
-        toggleInfoIcon(loadWithInfoIcon || overlayHasBeenClosed);
-        togglePlayer(loadWithPlayer || overlayHasBeenClosed && hasTracks);
-    }, [overlayHasBeenClosed])
+
+    const { playTrack } = useMusicPlayer('UI');
 
     useEffect(() => {
         if (!overlay && !overlayHasBeenClosed) setOverlayHasBeenClosed(true);
     }, [overlay])
+
+    useEffect(() => {
+        toggleInfoIcon(loadWithInfoIcon || overlayHasBeenClosed);
+        togglePlayer(loadWithPlayer || overlayHasBeenClosed && hasTracks);
+    }, [overlayHasBeenClosed])
 
     return (
         <>

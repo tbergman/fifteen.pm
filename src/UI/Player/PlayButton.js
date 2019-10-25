@@ -4,7 +4,7 @@ import useMusicPlayer from "./hooks";
 import './PlayButton.css';
 
 export default function PlayButton({ color, text }) {
-    const {isPlaying, togglePlay} = useMusicPlayer();
+    const {isPlaying, togglePlay} = useMusicPlayer('PlayButton');
     return (
       <div id="play-button-container">
         <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" fill={color}>

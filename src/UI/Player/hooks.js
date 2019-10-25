@@ -2,7 +2,8 @@ import { useContext, useEffect } from 'react';
 import { MusicPlayerContext } from "./MusicPlayerContext";
 import AudioStreamer from '../../Utils/Audio/AudioStreamer'; // TODO haven't touched this in ages...
 
-const useMusicPlayer = () => {
+const useMusicPlayer = (where) => {
+  
   const [state, setState] = useContext(MusicPlayerContext);
 
   function playTrack(index) {
@@ -35,6 +36,8 @@ const useMusicPlayer = () => {
     const newIndex = (state.currentTrackIndex + 1) % state.tracks.length;
     playTrack(newIndex);
   }
+
+  console.log(where, state)
 
   return {
     playTrack,

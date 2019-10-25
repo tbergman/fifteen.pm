@@ -42,7 +42,7 @@ export const TRACK_BUTTON_ID_LOOKUP = {
     "button_natural": "679771259",
     "button_dream": "679771253", 
 }
-export const TRACK_LOOKUP = (() => {
+export const TRACK_METADATA = (() => {
     const lookup = {};
     CONTENT["/9"].tracks.forEach((track, index) => lookup[track.id] = {
         bpm: track.bpm,

@@ -3,7 +3,7 @@ import useMusicPlayer from "./hooks";
 import './TrackList.css'
 
 export default function TrackList({ tracks, colors }) {
-  const { currentTrackName, playTrack } = useMusicPlayer();
+  const { currentTrackName, playTrack } = useMusicPlayer('TrackList');
 
   return (tracks.length > 1 ?
     <div id="playlist">

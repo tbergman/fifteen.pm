@@ -6,6 +6,8 @@ import { useKeyPress } from '../../Utils/hooks';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import * as C from './constants';
+import { MusicPlayerContext } from '../../UI/Player/MusicPlayerContext';
+import useMusicPlayer from '../../UI/Player/hooks';
 
 export function onCarElementLoaded(gltf) {
     // return gltf.scene
@@ -52,37 +54,39 @@ function Wheel({ gltf, rotation }) {
     </group>
 }
 
-function DashButtons({ gltf, onButtonClicked }) {
+function DashButtons({ gltf }) {
+    const { playTrack } = useMusicPlayer('DashButtons');
     return <group>
         <mesh
             name="button_swing"
-            onPointerUp={onButtonClicked}
+            onPointerUp={() => playTrack(0)}
         >
             <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[1].material} />
         </mesh>
         <mesh
             name="button_life"
-            onPointerUp={onButtonClicked}
+            onPointerUp={() => playTrack(1)}
         >
             <bufferGeometry attach="geometry" {...gltf.__$[2].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[2].material} />
         </mesh>
         <mesh
             name="button_dream"
-            onPointerUp={onButtonClicked}
+            onPointerUp={() => playTrack(2)}
         >
             <bufferGeometry attach="geometry" {...gltf.__$[3].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[3].material} />
         </mesh>
         <mesh
             name="button_natural"
-            onPointerUp={onButtonClicked}
+            onPointerUp={() => playTrack(3)}
         >
             <bufferGeometry attach="geometry" {...gltf.__$[4].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[4].material} />
         </mesh>
     </group>
+
 }
 
 function DashCam(props) {
@@ -119,11 +123,10 @@ function DashCam(props) {
     />
 }
 
-export default function Car({
+function Car({
     dashCamRef,
     road,
     roadOffset,
-    onButtonClicked,
 }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
@@ -217,9 +220,11 @@ export default function Car({
         {car &&
             <>
                 <DashCam />
-                <DashButtons gltf={gltf} onButtonClicked={onButtonClicked} />
+                <DashButtons gltf={gltf} />
                 <Wheel gltf={gltf} rotation={car.rotation} />
             </>
         }
     </group>
 }
+
+export default Car;
