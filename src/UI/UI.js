@@ -5,7 +5,6 @@ import Navigation from './Navigation';
 import Overlay from './Overlay/Overlay';
 import Player from './Player/Player';
 import './UI.css';
-import useMusicPlayer from './Player/hooks';
 
 
 export default function UI({
@@ -23,8 +22,6 @@ export default function UI({
     const [overlay, toggleOverlay] = useState(loadWithOverlay ? true : false);
     const [overlayHasBeenClosed, setOverlayHasBeenClosed] = useState(!loadWithOverlay);
     const hasTracks = useMemo(() => content.tracks ? true : false); // TODO will this work with multiple releases?
-
-    const { playTrack } = useMusicPlayer('UI');
 
     useEffect(() => {
         if (!overlay && !overlayHasBeenClosed) setOverlayHasBeenClosed(true);

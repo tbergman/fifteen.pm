@@ -5,7 +5,7 @@ import TrackList from "./TrackList";
 import "./Player.css";
 
 export default function Player({ artist, tracks, colors, playOnLoad=true }) {
-  const {playTrack} = useMusicPlayer('Player');
+  const {playTrack} = useMusicPlayer();
   
   useEffect(() => {
     if (playOnLoad) playTrack(0);

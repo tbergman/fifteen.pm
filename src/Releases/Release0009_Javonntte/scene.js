@@ -4,7 +4,7 @@ import { useGLTF } from "../../Utils/hooks";
 import { CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material } from '../../Utils/materials';
 import { AsteroidBelt } from './AsteroidBelt';
 import { onBuildingsLoaded } from "./buildings";
-import Car from './Car';
+import Car from './car/Car';
 import * as C from "./constants";
 import "./index.css";
 import { FixedLights } from './lights';
@@ -37,8 +37,6 @@ export function Scene({ }) {
     // useEffect(() => {
     //     scene.background = new THREE.Color(lightsOn ? "white" : "black");
     // }, [lightsOn])
-
-    const {} = useMusicPlayer('Scene');
 
     return (
         <>
