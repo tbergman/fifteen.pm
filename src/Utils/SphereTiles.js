@@ -97,10 +97,10 @@ export function generateTiles({surface}) {
 
 export function generateDispersedTiles({surface}){
     const tiles = {}
-    surface.faceGroups.forEach((faces, i) => {
-        faces.forEach(face => {
-            const triangle = triangleFromFace(face, surface.vertexGroups[i]);
-            const centroid = faceCentroid(face, surface.vertexGroups[i]);
+    surface.instances.forEach(instance => {
+        instance.faces.forEach(face => {
+            const triangle = triangleFromFace(face, instance.vertices);
+            const centroid = faceCentroid(face, instance.vertices);
             const tile = initFaceTile(face, centroid, triangle);
             const tId = tileId(centroid);
             tiles[tId] = tile;

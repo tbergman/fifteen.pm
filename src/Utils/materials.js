@@ -296,10 +296,10 @@ export function Ground29Material({ materialRef, ...props }) {
 		{...props}
 		ref={materialRef}
 		lights
-		// wireframeLineWidth={10}
+		wireframeLineWidth={10}
 		// alphaTest={0.5}
 		// transparent
-		// wireframe
+		wireframe
 		receiveShadow
 		castShadow
 		color={props.color || 0xf0f0f0}

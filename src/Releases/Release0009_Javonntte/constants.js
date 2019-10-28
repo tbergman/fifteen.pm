@@ -66,10 +66,9 @@ export const ASTEROID_MAX_FACE_NOISE = 1;
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
 export const WORLD_RADIUS = ASTEROID_MAX_RADIUS;
-console.log("WORLD RADIUS", WORLD_RADIUS)
 export const MAX_WORLD_FACE_HEIGHT = ASTEROID_MAX_FACE_NOISE;
-export const WORLD_SIDES = 34;
-export const WORLD_TIERS = 34;
+export const WORLD_SIDES = 24;
+export const WORLD_TIERS = 24;
 export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 26 : 26;
 export const WORLD_ROAD_WIDTH = isMobile ? 3 : WORLD_RADIUS / 6;
 export const MAX_ROAD_ELEVATION = WORLD_RADIUS + 8;

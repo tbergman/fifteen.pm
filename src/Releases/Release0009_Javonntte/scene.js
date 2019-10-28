@@ -1,4 +1,5 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
+import * as THREE from 'three';
 import { useResource, useThree } from 'react-three-fiber';
 import { useGLTF } from "../../Utils/hooks";
 import { CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material } from '../../Utils/materials';
@@ -11,8 +12,7 @@ import { FixedLights } from './lights';
 import { asteroidNeighborhoods, worldNeighborhoods } from './neighborhoods';
 import Road from './Road';
 import { World } from './world';
-import useMusicPlayer from '../../UI/Player/hooks';
-
+import {Controls} from './controls';
 
 export function Scene({ }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -22,7 +22,7 @@ export function Scene({ }) {
        Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
        (For instance: a complicated geometry.)
      */
-    const { canvas, scene } = useThree();
+    const { scene } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
     const [foamGripMaterialRef, foamGripMaterial] = useResource();
@@ -32,11 +32,9 @@ export function Scene({ }) {
     const [facade12MaterialRef, facade12Material] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
 
-    // const [cameraRef, camera] = useResource();
-
-    // useEffect(() => {
-    //     scene.background = new THREE.Color(lightsOn ? "white" : "black");
-    // }, [lightsOn])
+    useEffect(() => {
+        scene.background = new THREE.Color("white");
+    }, [])
 
     return (
         <>
@@ -48,13 +46,13 @@ export function Scene({ }) {
             <Facade04Material materialRef={facade04MaterialRef} />
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
-            {/* <Controls
+            <Controls
                 // curCamera={camera}
                 movementSpeed={500}
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            /> */}
+            />
             <FixedLights />
             <Suspense fallback={null}>
                 <Road

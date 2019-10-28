@@ -38,6 +38,7 @@ function sphereCentroids({ surface }) {
 }
 
 export const worldNeighborhoods = {
+    globalRadius: C.WORLD_RADIUS, // TODO might not use this
     count: 100,
     maxSize: isMobile ? C.WORLD_RADIUS * 2 : Math.floor(C.WORLD_RADIUS) * 2,
     maxRadius: C.WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
@@ -48,6 +49,7 @@ export const worldNeighborhoods = {
 }
 
 export const asteroidNeighborhoods = {
+    globalRadius: C.ASTEROID_MAX_RADIUS,
     count: 100,
     maxSize: isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
     maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
@@ -55,4 +57,5 @@ export const asteroidNeighborhoods = {
     rules: () => true,
     getCentroids: asteroidCentroids,
     generateTiles: generateDispersedTiles,
+    
 }

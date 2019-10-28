@@ -60,6 +60,7 @@ export function AsteroidBelt({ track, buildings, neighborhoods, ...props }) {
                 surface: asteroids,
                 buildings,
                 neighborhoods: neighborhoods
+                
             });
         }
     })

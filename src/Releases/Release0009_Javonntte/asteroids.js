@@ -15,10 +15,11 @@ function generateAstroid(radius, sides, tiers, noiseHeight, noiseWidth, center) 
 
 
 export function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids, maxAsteroidRadius, maxFaceNoise) {
-    const asteroidFaceGroups = [];
-    const asteroidVertexGroups = [];
-    const asteroidCenters = [];
     const asteroidsGeom = new THREE.Geometry()
+    const asteroids = {
+        geometry: undefined,
+        instances: [],
+    };
     for (let i = 0; i < numAsteroids; i++) {
         const center = new THREE.Vector3(
             asteroidBeltRadius * 1.5 * (Math.random() - .5),
@@ -39,13 +40,17 @@ export function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAst
             noiseWidth,
             center,
         )
-        asteroidCenters.push(center);
-        asteroidFaceGroups.push(asteroidGeom.faces);
-        asteroidVertexGroups.push(asteroidGeom.vertices);
         asteroidsGeom.merge(asteroidGeom)
+        asteroids.instances.push({
+            faces: asteroidGeom.faces,
+            vertices: asteroidGeom.vertices,
+            centroid: center,
+            radius: radius,
+        })
     }
     const asteroidBufferGeom = new THREE.BufferGeometry().fromGeometry(asteroidsGeom);
-    return {geometry: asteroidBufferGeom, faceGroups: asteroidFaceGroups, vertexGroups: asteroidVertexGroups, centroids: asteroidCenters}
+    asteroids.geometry = asteroidBufferGeom;
+    return asteroids;
 }
 
 

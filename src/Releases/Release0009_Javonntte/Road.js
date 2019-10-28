@@ -22,10 +22,10 @@ export default function Road({ curCamera, closed, extrusionSegments, radius, rad
         <CloudMaterial materialRef={cloudMaterialRef} emissive={0xd4af37} />
         {cloudMaterialRef && road.current &&
             <>
-                <mesh
+                {/* <mesh
                     geometry={road.current}
                     material={cloudMaterial}
-                />
+                /> */}
                 {React.Children.toArray(props.children).map(element => {
                     return React.cloneElement(element, { road: road.current })
                 })}

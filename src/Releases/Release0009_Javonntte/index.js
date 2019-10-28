@@ -11,7 +11,7 @@ export default function Release0009_Javonntte({ }) {
     const content = useMemo(() => CONTENT[window.location.pathname]);
     return (
         <MusicPlayerProvider tracks={content.tracks}>
-            <UI content={content} />
+            {/* <UI content={content} /> */}
             <JavonntteCanvas />
         </MusicPlayerProvider >
     );
