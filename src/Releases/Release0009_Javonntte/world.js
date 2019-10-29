@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useFrame, useResource, useThree } from 'react-three-fiber';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import * as C from './constants';
 import "./index.css";
-import { generateInstanceGeometriesByName } from "./instances";
+import { generateTileset } from "./tiles";
 
 
 // TODO tilt and rotationSpeed
@@ -89,7 +89,7 @@ export function World({ track, buildings, neighborhoods, ...props }) {
     useEffect(() => {
         if (buildings.loaded) {
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
-            tileInstances.current = generateInstanceGeometriesByName({
+            tileInstances.current = generateTileset({
                 surface: sphereGeometry,
                 buildings,
                 neighborhoods: neighborhoods

@@ -1,5 +1,5 @@
 import { isMobile } from '../../Utils/BrowserDetection'
-import { generateTiles, generateDispersedTiles } from '../../Utils/SphereTiles';
+import { generateTiles, generateTilesFromInstance } from '../../Utils/SphereTiles';
 import { randomPointsOnSphere, selectNRandomFromArray } from '../../Utils/random';
 import * as THREE from 'three';
 import * as C from './constants';
@@ -23,13 +23,13 @@ function sphereWorldNeighborhoodRules(neighbor) {
     return !onPath(neighbor.centroid) && !tooClose(neighbor.centroid)
 }
 
-function asteroidCentroids({ tiles }) {
-    const numRandPoints = C.NUM_ASTEROIDS * 5;
+function getAsteroidCentroids({ tiles }) {    
+    const numRandPoints = 1; // TODO; use instance.radius
     const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numRandPoints).map(tile => tile.centroid);
     return centroids;
 }
 
-function sphereCentroids({ surface }) {
+function getWorldCentroids({ surface }) {
     const sphereCenter = new THREE.Vector3();
     surface.boundingBox.getCenter(sphereCenter);
     const numRandPoints = C.WORLD_RADIUS * 2;
@@ -38,24 +38,21 @@ function sphereCentroids({ surface }) {
 }
 
 export const worldNeighborhoods = {
-    globalRadius: C.WORLD_RADIUS, // TODO might not use this
     count: 100,
     maxSize: isMobile ? C.WORLD_RADIUS * 2 : Math.floor(C.WORLD_RADIUS) * 2,
     maxRadius: C.WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
     dispersed: true, // marking if the neighborhood is on a single world or not
     rules: sphereWorldNeighborhoodRules,
-    getCentroids: sphereCentroids,
+    getCentroids: getWorldCentroids,
     generateTiles: generateTiles,
 }
 
 export const asteroidNeighborhoods = {
-    globalRadius: C.ASTEROID_MAX_RADIUS,
     count: 100,
     maxSize: isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
     maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
     dispersed: true, // marking if the neighborhood is on a single world or not
     rules: () => true,
-    getCentroids: asteroidCentroids,
-    generateTiles: generateDispersedTiles,
-    
+    getCentroids: getAsteroidCentroids,
+    generateTiles: generateTiles,
 }

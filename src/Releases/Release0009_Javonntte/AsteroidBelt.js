@@ -5,7 +5,7 @@ import { CloudMaterial, Ground29Material, TronMaterial } from '../../Utils/mater
 import { generateAsteroids } from './asteroids';
 import * as C from './constants';
 import "./index.css";
-import { generateInstanceGeometriesByName } from "./instances";
+import { generateTileset } from "./tiles";
 
 
 export function AsteroidsSurface({ geometry, bpm }) {
@@ -40,7 +40,7 @@ export function AsteroidsSurface({ geometry, bpm }) {
 
 export function AsteroidBelt({ track, buildings, neighborhoods, ...props }) {
     const [asteroidBeltRef, asteroidBelt] = useResource();
-    const tileInstances = useRef();
+    const asteroidTilesets = useRef();
    const asteroids = useMemo(() => {
        return generateAsteroids(
             C.ASTEROID_BELT_RADIUS,
@@ -56,20 +56,15 @@ export function AsteroidBelt({ track, buildings, neighborhoods, ...props }) {
     useEffect(() => {
         if (buildings.loaded) {
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
-            tileInstances.current = generateInstanceGeometriesByName({
-                surface: asteroids,
-                buildings,
-                neighborhoods: neighborhoods
-                
-            });
+            asteroidTilesets.current = asteroids.instances.map(instance => {
+                return generateTileset({
+                    surface: instance,
+                    buildings,
+                    neighborhoods: neighborhoods      
+                }); 
+            })
         }
     })
-
-    // useFrame(() => {
-    //     if (asteroidBeltRef.current) {
-    //         // astroidBeltRef.current.rotation.x += .01;
-    //     }
-    // })
 
     return <group ref={asteroidBeltRef}>
             {asteroidBelt &&
@@ -80,11 +75,13 @@ export function AsteroidBelt({ track, buildings, neighborhoods, ...props }) {
                             bpm={track && track.bpm}
                         />
                     }
-                    {tileInstances.current &&
-                        Object.keys(tileInstances.current).map(tId => {
-                            return <primitive key={tId}
-                                object={tileInstances.current[tId]}
-                            />
+                    {asteroidTilesets.current &&
+                        asteroidTilesets.current.map(asteroidTileset => {  
+                            return Object.keys(asteroidTileset).map(instanceName => {
+                                return <primitive key={instanceName}
+                                    object={asteroidTileset[instanceName]}
+                                />
+                            })
                         })
                     }
                 </>

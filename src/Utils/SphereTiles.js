@@ -81,30 +81,15 @@ export const MemoizedSphereTile = React.memo(props => {
     return <>{props.tileComponent(props)}</>;
 }, props => !props.isRendered);
 
-export function generateTiles({surface}) {
+export function generateTiles({ surface }) {
     const vertices = surface.vertices;
     const tiles = {}
-    surface.faces.forEach((face, index) => {
+    surface.faces.forEach((face) => {
         const triangle = triangleFromFace(face, vertices);
         const centroid = faceCentroid(face, vertices);
         const tile = initFaceTile(face, centroid, triangle);
         const tId = tileId(centroid);
         tiles[tId] = tile;
-    })
-    return tiles;
-}
-
-
-export function generateDispersedTiles({surface}){
-    const tiles = {}
-    surface.instances.forEach(instance => {
-        instance.faces.forEach(face => {
-            const triangle = triangleFromFace(face, instance.vertices);
-            const centroid = faceCentroid(face, instance.vertices);
-            const tile = initFaceTile(face, centroid, triangle);
-            const tId = tileId(centroid);
-            tiles[tId] = tile;
-        })
     })
     return tiles;
 }

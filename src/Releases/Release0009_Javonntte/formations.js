@@ -68,16 +68,13 @@ function pickFootprint(tile, globalArea) {
     // return closeToPole ? C.SMALL : C.WIDTH_BUCKETS[THREE.Math.randInt(0, C.WIDTH_BUCKETS.length - 1)];
     // return C.BUILDING_WIDTH_BUCKETS[THREE.Math.randInt(0, C.BUILDING_WIDTH_BUCKETS.length - 1)];
     // const globalArea = 4 * Math.PI * globalRadius
-    console.log('tile', tile, 'area', tile.triangle.getArea());
-    
     return C.BUILDING_WIDTH_BUCKETS[2];
-    
 }
 
 function pickHeight(tile, neighborhoodCentroid, neighborhoodRadius) {
     const relativeDistFromNeighborhoodCenter = neighborhoodCentroid.distanceTo(tile.centroid) / neighborhoodRadius;
     // return relativeDistFromNeighborhoodCenter > .5 ? C.SHORT : C.TALL;
-return C.SHORT;//[C.SHORT, C.TALL][THREE.Math.randInt(0, 1)]; //relativeDistFromNeighborhoodCenter > .5 ? C.SHORT : C.TALL;
+    return C.SHORT;//[C.SHORT, C.TALL][THREE.Math.randInt(0, 1)]; //relativeDistFromNeighborhoodCenter > .5 ? C.SHORT : C.TALL;
 }
 
 function filterGeometries(tile, neighborhoodCentroid, neighborhoodRadius, geometries, globalRadius) {
@@ -101,20 +98,20 @@ function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, geometries, 
 }
 
 // expensive 1-time operation for tileset
-export function     generateTileFormations(surface, geometries, neighborhoods) {
-    const tiles = neighborhoods.generateTiles({surface});
+export function generateTileFormations(surface, geometries, neighborhoods) {
+    const tiles = neighborhoods.generateTiles({ surface });
     const kdTree = loadKDTree(tiles);
     const formations = {}
     Object.keys(tiles).forEach(id => formations[id] = []);
     const geometriesByCategory = groupBuildingGeometries(geometries);
-    neighborhoods.getCentroids({surface, tiles}).forEach(neighborhoodCentroid => {
-        const [neighborhoodRadius, neighbors] = findNearest(neighborhoodCentroid, kdTree, neighborhoods.maxSize, neighborhoods.maxRadius, tiles);
+    neighborhoods.getCentroids({ surface, tiles }).forEach(centroid => {
+        const [neighborhoodRadius, neighbors] = findNearest(centroid, kdTree, neighborhoods.maxSize, neighborhoods.maxRadius, tiles);
         Object.values(neighbors).forEach(neighbor => {
             // if already assigned, 50% chance of replacement
             const id = neighbor.id;
             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
             if (replace && neighborhoods.rules(neighbor)) {
-                formations[id] = formatTile(neighbor, neighborhoodCentroid, neighborhoodRadius, geometriesByCategory, neighborhoods.globalRadius);
+                formations[id] = formatTile(neighbor, centroid, neighborhoodRadius, geometriesByCategory, neighborhoods.globalRadius);
             }
         });
     });
