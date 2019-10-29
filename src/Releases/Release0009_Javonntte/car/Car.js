@@ -9,6 +9,7 @@ import * as C from '../constants';
 import Dashboard from './Dashboard';
 import DashCam from './DashCam';
 import SteeringWheel from './SteeringWheel';
+import Headlights from './Headlights';
 
 function Car({
     dashCamRef,
@@ -23,7 +24,6 @@ function Car({
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
     })
-    const { size, viewport, clock, setDefaultCamera } = useThree();
     const [carRef, car] = useResource();
     const [normal, binormal, up] = useMemo(() => {
         return [
@@ -41,10 +41,10 @@ function Car({
 
     useEffect(() => {
         if (!speed.current) {
-            speed.current = 20;
+            speed.current = 10;
         }
         if (!delta.current) {
-            delta.current = .01;
+            delta.current = .005;
         }
         if (!offset.current) {
             offset.current = 0;
@@ -55,7 +55,7 @@ function Car({
     useFrame(() => {
         // TODO these floats as constants?
         if (accelerationPressed) {
-            if (delta.current < .05 && speed.current > 5) {
+            if (delta.current < .05 && speed.current > 4) {
                 console.log(speed.current)
                 speed.current -= .1;
                 // delta.current += .001;
@@ -110,6 +110,7 @@ function Car({
                 <DashCam />
                 <Dashboard gltf={gltf} onTrackSelect={onTrackSelect} />
                 <SteeringWheel gltf={gltf} rotation={car.rotation} />
+                <Headlights />
             </>
         }
     </group>

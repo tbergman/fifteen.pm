@@ -43,13 +43,12 @@ export function Scene({ }) {
     function setColorTheme(metadata){
         scene.background = metadata.theme.background;
         scene.fog = metadata.theme.fog;
- 
+        // tmp
+        // scene.background = new THREE.Color('white');
     }
 
     function onTrackSelect(trackId){
-        scene.background = new THREE.Color("black");
         const metadata = C.TRACK_METADATA[trackId]
-        console.log("PLAY TRACK", trackId, metadata.index)
         setColorTheme(metadata);
        // playTrack(metadata.index)
     }
@@ -60,7 +59,10 @@ export function Scene({ }) {
             <FoamGripMaterial materialRef={foamGripMaterialRef} color={0x0000af} />
             <CloudMaterial materialRef={cloudMaterialRef} emissive={0xd4af37} />
             <Windows1Material materialRef={windows1MaterialRef} />
-            <Facade10Material materialRef={facade10MaterialRef} />
+            <Facade10Material
+                materialRef={facade10MaterialRef}
+                // textureRepeat={{x: 2, y: 2}}
+               />
             <Facade04Material materialRef={facade04MaterialRef} />
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
@@ -92,7 +94,7 @@ export function Scene({ }) {
                         neighborhoods={worldNeighborhoods}
                         buildings={{
                             geometries: buildingGeometries,
-                            materials: [foamGripMaterial],
+                            materials: [metal03Material, foamGripMaterial, facade10Material], //cloudMaterial], //facade12Material],//foamGripMaterial],
                             loaded: !loadingBuildings,
                         }}
                     />
@@ -100,7 +102,7 @@ export function Scene({ }) {
                         neighborhoods={asteroidNeighborhoods}
                         buildings={{
                             geometries: buildingGeometries,
-                            materials: [foamGripMaterial],
+                            materials: [facade10Material],//[foamGripMaterial],
                             loaded: !loadingBuildings,
                         }}
                     />
@@ -109,7 +111,7 @@ export function Scene({ }) {
             <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
             />
-            {/* <BloomFilmEffect /> */}
+            <BloomFilmEffect />
         </>
     );
 }

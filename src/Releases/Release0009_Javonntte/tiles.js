@@ -44,52 +44,47 @@ function format36({ geometries, normal, centroid, triangle }) {
 
 function format6({ geometries, normal, centroid, triangle }) {
     const subdividedTriangle = subdivideTriangle(triangle);
-    // const randGeoms = selectNRandomFromArray(geometries, 6)
-    // return subdivide6(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, geometry: randGeoms[idx] }));
-    return subdivide6(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, geometry: geometries[1] }));
+    const randGeoms = selectNRandomFromArray(geometries, 6)
+    return subdivide6(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, geometry: randGeoms[idx] }));
+    // return subdivide6(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, geometry: geometries[1] }));
 }
 
 function format1({ geometries, normal, centroid }) {
+    // return [formatElement({ normal, centroid, geometry: geometries[1] })]
     return [formatElement({ normal, centroid, geometry: randomArrayVal(geometries) })]
 }
 
-function pickSubdivisionBucket(triangle) {
-    const area = triangle.getArea();
-    // console.log(area);
-    // TODO choose subdivision size based on size of triangle?
-    // return [1, 6, 36][THREE.Math.randInt(0, 2)] // not doing 36...
-    return 6;
-}
-
-function pickFootprint(tile, globalArea) {
-    // TODO don't populate if it's this close to pole
-    // const poleLimit = C.ASTEROID_MAX_RADIUS - C.ASTEROID_MAX_RADIUS * .99 + Math.random() * .1;
-    // const distToPole = C.ASTEROID_MAX_RADIUS - Math.abs(tile.centroid.y);
-    // const closeToPole = distToPole < poleLimit;
-    // return closeToPole ? C.SMALL : C.WIDTH_BUCKETS[THREE.Math.randInt(0, C.WIDTH_BUCKETS.length - 1)];
-    // return C.BUILDING_WIDTH_BUCKETS[THREE.Math.randInt(0, C.BUILDING_WIDTH_BUCKETS.length - 1)];
-    // const globalArea = 4 * Math.PI * globalRadius
-    return C.BUILDING_WIDTH_BUCKETS[2];
-}
-
-function pickHeight(tile, neighborhoodCentroid, neighborhoodRadius) {
-    const relativeDistFromNeighborhoodCenter = neighborhoodCentroid.distanceTo(tile.centroid) / neighborhoodRadius;
-    // return relativeDistFromNeighborhoodCenter > .5 ? C.SHORT : C.TALL;
-    return C.SHORT;//[C.SHORT, C.TALL][THREE.Math.randInt(0, 1)]; //relativeDistFromNeighborhoodCenter > .5 ? C.SHORT : C.TALL;
-}
-
-function filterGeometries(tile, neighborhoodCentroid, neighborhoodRadius, geometries) {
-    const footprint = pickFootprint(tile);
-    const height = pickHeight(tile, neighborhoodCentroid, neighborhoodRadius);
-    return geometries[footprint][height];
+function pickGeometries(tile, geometries) {
+    const area = tile.triangle.getArea();
+    if (area > 16) {
+        return [
+            {
+                allowedGeometries: geometries[C.BUILDING_WIDTH_BUCKETS[2]],
+                subdivisions: 1
+            },
+            {
+                allowedGeometries: geometries[C.BUILDING_WIDTH_BUCKETS[1]],
+                subdivisions: 6
+            }
+        ][THREE.Math.randInt(0, 1)]
+    } else if (area > 14) {
+        return {
+            allowedGeometries: geometries[C.BUILDING_WIDTH_BUCKETS[1]],
+            subdivisions: 6
+        }
+    } else {
+        return {
+            allowedGeometries: geometries[C.BUILDING_WIDTH_BUCKETS[0]],
+            subdivisions: 6
+        }
+    }
 }
 
 function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, geometries) {
-    const allowedGeometries = filterGeometries(tile, neighborhoodCentroid, neighborhoodRadius, geometries);
-    const subdivisionBucket = pickSubdivisionBucket(tile.triangle);
+    const { allowedGeometries, subdivisions } = pickGeometries(tile, geometries)
     const formationProps = { geometries: allowedGeometries, ...tile };
     const formation = (() => {
-        switch (subdivisionBucket) {
+        switch (subdivisions) {
             case 1: return format1(formationProps);
             case 6: return format6(formationProps);
             case 36: return format36(formationProps);
@@ -118,7 +113,6 @@ function generateTileFormations(surface, geometries, neighborhoods) {
     });
     return formations;
 }
-
 
 // TODO maybe the material ref should be assigned to the incoming geometries array of objects
 export function generateTileset({ surface, buildings, neighborhoods }) {

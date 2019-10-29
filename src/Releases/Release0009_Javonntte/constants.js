@@ -70,8 +70,8 @@ export const WORLD_RADIUS = ASTEROID_MAX_RADIUS;
 export const MAX_WORLD_FACE_HEIGHT = ASTEROID_MAX_FACE_NOISE;
 export const WORLD_SIDES = 24;
 export const WORLD_TIERS = 24;
-export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 26 : 26;
-export const WORLD_ROAD_WIDTH = isMobile ? 3 : WORLD_RADIUS / 6;
+export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 20 : 20;
+export const WORLD_ROAD_WIDTH = isMobile ? 3 : WORLD_RADIUS / 7;
 export const MAX_ROAD_ELEVATION = WORLD_RADIUS + 8;
 export const WORLD_ROAD_PATH = (() => {
     const circle = new THREE.CircleGeometry(WORLD_RADIUS, WORLD_RADIUS);//MAX_ROAD_ELEVATION)
@@ -96,6 +96,12 @@ export const BUILDING_HEIGHT_BUCKETS = [
     SHORT,
     TALL,
 ]
+
+
+export const BUILDING_MATERIAL = {
+    "large_tall_low_michigancentralstation": "foamGripMaterial"
+}
+
 
 // CAR
 // model geometry names

@@ -85,7 +85,8 @@ export const MemoizedSphereTile = React.memo(props => {
 export function generateTiles({ surface }) { 
     const vertices = surface.vertices;
     const tiles = {}
-    const area = 4 * Math.PI * Math.pow(surface.radius, 2);
+    const radius = surface.radius ? surface.radius : surface.parameters.radius;
+    const area = 4 * Math.PI * Math.pow(radius, 2);
     surface.faces.forEach((face) => {
         const triangle = triangleFromFace(face, vertices);
         const centroid = faceCentroid(face, vertices);

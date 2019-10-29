@@ -22,25 +22,17 @@ export function onBuildingsLoaded(gltf) {
 }
 
 export function groupBuildingGeometries(geometries) {
-    const maxHeightBucket = {
-        short: [],
-        tall: [],
-    }
-    /**
-     * geometries are a nested key structure with each leaf an array: 
-     *  geometries.{maxWidthBucket}.{maxHeightBucket}
-     */
     const maxWidthBucket = {
         // these are bucketed by approximate max widths
-        small: cloneDeep(maxHeightBucket),
-        medium: cloneDeep(maxHeightBucket),
-        large: cloneDeep(maxHeightBucket),
+        small: [],
+        medium: [],
+        large: [],
     }
     const grouped = maxWidthBucket;
     geometries.forEach(geometry => {
         // Not using categories
         const [maxWidthBucket, maxHeightBucket, category, name] = geometry.name.split("_");
-        grouped[maxWidthBucket][maxHeightBucket].push(geometry);
+        grouped[maxWidthBucket].push(geometry);
     })
     return grouped;
 }

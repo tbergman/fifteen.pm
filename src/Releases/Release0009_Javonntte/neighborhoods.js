@@ -23,8 +23,8 @@ function sphereWorldNeighborhoodRules(neighbor) {
     return !onPath(neighbor.centroid) && !tooClose(neighbor.centroid)
 }
 
-function getAsteroidCentroids({ tiles }) {    
-    const numRandPoints = 1; // TODO; use instance.radius
+function getAsteroidCentroids({ tiles, surface }) {    
+    const numRandPoints = surface.radius / 6; // TODO; use instance.radius
     const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numRandPoints).map(tile => tile.centroid);
     return centroids;
 }
