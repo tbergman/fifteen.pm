@@ -34,31 +34,26 @@ function Car({
     });
     const accelerationPressed = useKeyPress('ArrowUp');
     const slowDownPressed = useKeyPress('ArrowDown');
+    const rotateLeftPressed = useKeyPress('ArrowLeft');
+    const rotateRightPressed = useKeyPress('ArrowRight');
     // driving units
     const offset = useRef();
     const delta = useRef();
     const speed = useRef();
 
     useEffect(() => {
-        if (!speed.current) {
-            speed.current = 10;
-        }
-        if (!delta.current) {
-            delta.current = .005;
-        }
-        if (!offset.current) {
-            offset.current = 0;
-        }
+        if (!speed.current) speed.current = 10;
+        if (!delta.current) delta.current = .005;
+        if (!offset.current) offset.current = 0;
     })
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
     useFrame(() => {
-        // TODO these floats as constants?
+        // TODO these floats as constants relative to world radius
         if (accelerationPressed) {
             if (delta.current < .05 && speed.current > 4) {
                 console.log(speed.current)
                 speed.current -= .1;
-                // delta.current += .001;
             }
         }
         if (slowDownPressed) {
@@ -71,6 +66,11 @@ function Car({
             }
 
         }
+
+
+        // if (rotateLeftPressed){
+
+        // }
         offset.current += delta.current;
         const t = (offset.current % speed.current) / speed.current;
         const pos = road.parameters.path.getPointAt(t);
@@ -85,14 +85,23 @@ function Car({
         normal.copy(binormal).cross(dir)
         // We move on a offset on its binormal
         pos.add(normal.clone().multiplyScalar(roadOffset));
-        car.position.copy(pos);
-        // Using arclength for stablization in look ahead.
-        const lookAt = road.parameters.path.getPointAt((t + 30 / road.parameters.path.getLength()) % 1);
-        // Camera Orientation 2 - up orientation via normal
-        lookAt.copy(pos).add(dir);
-        car.matrix.lookAt(car.position, lookAt, normal);
-        car.rotation.setFromRotationMatrix(car.matrix);
-        car.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
+        if (rotateLeftPressed) {
+            car.position.y -= normal.y * 4;
+            car.rotation.z -= .01;
+        } else if (rotateRightPressed){
+            car.position.y += normal.y * 4;
+            car.rotation.z += .01;
+        } else {
+            car.position.copy(pos);
+            // Using arclength for stablization in look ahead.
+            const lookAt = road.parameters.path.getPointAt((t + 30 / road.parameters.path.getLength()) % 1);
+            // Camera Orientation 2 - up orientation via normal
+            lookAt.copy(pos).add(dir);
+            car.matrix.lookAt(car.position, lookAt, normal);
+
+            car.rotation.setFromRotationMatrix(car.matrix);
+            car.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
+        }
     })
 
 
