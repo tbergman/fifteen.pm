@@ -8,7 +8,8 @@ export default function Overlay({
     message,
     instructions,
     purchaseLink,
-    colors,
+    overlayColor,
+    overlayContentsColor,
     loadWithOverlayOpen,
     shouldUpdateOverlay,
     onToggle,
@@ -40,11 +41,11 @@ export default function Overlay({
                         instructions={instructions}
                         purchaseLink={purchaseLink}
                         message={message}
-                        color={colors.default}
+                        color={overlayContentColor}
                         onToggle={onToggle}
                     />
                     <OverlaySVG
-                        color={colors.bg}
+                        color={overlayColor}
                     />
                 </>
             </Modal>

@@ -4,7 +4,6 @@ import { formatSoundcloudSrc } from "../../Utils/Audio/SoundcloudUtils"
 const MusicPlayerContext = React.createContext([{}, () => {}]);
 
 const MusicPlayerProvider = ({tracks, ...props}) => {
-  console.log("THE PROPS", props)
   const loadedTracks = useMemo(() => {
     return tracks.map(track => {
       return {

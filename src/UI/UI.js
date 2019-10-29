@@ -40,7 +40,8 @@ export default function UI({
                 message={content.message}
                 instructions={content.instructions}
                 purchaseLink={content.purchaseLink}
-                colors={content.colors}
+                overlayColor={content.colors.overlay}
+                overlayContentColor={content.colors.overlayContent}
                 loadWithOverlayOpen={loadWithOverlay}
                 shouldUpdateOverlay={overlay}
                 onToggle={() => toggleOverlay(!overlay)}
@@ -48,7 +49,8 @@ export default function UI({
             <div className="footer">
                 {player && <Player
                     artist={content.artist}
-                    colors={content.colors}
+                    playerColor={content.colors.player}
+                    selectedColor={content.colors.onHover}
                     tracks={content.tracks}
                 />}
                 {infoIcon && <InfoIcon

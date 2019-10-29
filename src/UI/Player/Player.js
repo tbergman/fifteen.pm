@@ -4,7 +4,7 @@ import PlayButton from "./PlayButton";
 import TrackList from "./TrackList";
 import "./Player.css";
 
-export default function Player({ artist, tracks, colors, playOnLoad=true }) {
+export default function Player({ artist, tracks, playerColor, selectedColor, playOnLoad=true }) {
   const {playTrack} = useMusicPlayer();
   
   useEffect(() => {
@@ -13,8 +13,8 @@ export default function Player({ artist, tracks, colors, playOnLoad=true }) {
 
   return (
     <div id="player-container">
-      <PlayButton color={colors.default} text={artist} />
-      <TrackList tracks={tracks} colors={colors} />
+      <PlayButton color={playerColor} text={artist} />
+      <TrackList tracks={tracks} defaultColor={playerColor} selectedColor={selectedColor} />
     </div>
   );
 }

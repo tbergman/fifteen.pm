@@ -11,5 +11,5 @@ export default function Release0002_YearUnknown({ }) {
             <UI content={content} />
             <Canvas />
         </MusicPlayerProvider>
-    )
+    );
 }

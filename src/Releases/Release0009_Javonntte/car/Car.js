@@ -10,6 +10,7 @@ import Dashboard from './Dashboard';
 import DashCam from './DashCam';
 import SteeringWheel from './SteeringWheel';
 import Headlights from './Headlights';
+import useMusicPlayer from '../../../UI/Player/hooks';
 
 function Car({
     dashCamRef,
@@ -40,6 +41,7 @@ function Car({
     const offset = useRef();
     const delta = useRef();
     const speed = useRef();
+    const {audioStream} = useMusicPlayer();
 
     useEffect(() => {
         if (!speed.current) speed.current = 10;
@@ -66,11 +68,6 @@ function Car({
             }
 
         }
-
-
-        // if (rotateLeftPressed){
-
-        // }
         offset.current += delta.current;
         const t = (offset.current % speed.current) / speed.current;
         const pos = road.parameters.path.getPointAt(t);
@@ -88,6 +85,8 @@ function Car({
         if (rotateLeftPressed) {
             car.position.y -= normal.y * 4;
             car.rotation.z -= .01;
+            console.log('audiostream', audioStream);
+
         } else if (rotateRightPressed){
             car.position.y += normal.y * 4;
             car.rotation.z += .01;
@@ -98,7 +97,6 @@ function Car({
             // Camera Orientation 2 - up orientation via normal
             lookAt.copy(pos).add(dir);
             car.matrix.lookAt(car.position, lookAt, normal);
-
             car.rotation.setFromRotationMatrix(car.matrix);
             car.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
         }

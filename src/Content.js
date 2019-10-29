@@ -23,9 +23,10 @@ export const CONTENT = {
     message:
       "fifteen.pm invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
     colors: {
-      default: '#fff',
-      selection: 'rgba(0, 0, 0, 0.5)',
-      bg: 'rgba(0, 0, 0, 0.5)',
+      logo: 'white',
+      overlayContent: 'white',
+      overlay: 'rgba(0, 255, 0, 0.5)',
+      onHover: 'rgba(0, 0, 0, 0.5)',
     }
   },
   "/1": {
@@ -67,9 +68,11 @@ export const CONTENT = {
       }
     ],
     colors: {
-      default: '#fff',
-      selection: 'rgba(127, 0, 255, 0.5)',
-      bg: 'rgba(127, 0, 255, 0.5)',
+      logo: 'white',
+      overlayContent: 'white',
+      overlay: 'rgba(127, 0, 255, 0.5)',
+      player: 'rgba(127, 0, 255, 0.5)',
+      onHover:'rgba(240, 0, 255, 0.75)', 
       instructions: [
         {
           icon: MouseMove,
@@ -84,35 +87,34 @@ export const CONTENT = {
   },
   "/3": {
     artist: "OTHERE",
-    textModel: assetPath("3/objects/text.gltf"),
+    message:
+      "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/track/lets-beach",
     tracks: [
       {
-        title: "Let's Beach",
+        name: "Let's Beach",
         id: "482138307",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/lets-beach",
-      iconColor: 'rgba(255, 0, 0, 1)',
-      navColor: 'rgba(255, 0, 0, 1)',
-      fillColor: 'rgba(255, 0, 0, 0.7)',
-      logoSvgFillColor: 'rgba(255, 0, 0, 1)',
-      textColor: 'white',
-      controls: [
+    colors: {
+      logo: 'red',
+      player: 'red',
+      overlay: 'red',
+      overlayContent: 'white',
+      onHover: 'gray',
+      instructions: [
         {
           icon: Hover,
-          instructions: "hover over inner orb to activate filter"
+          text: "hover over inner orb to activate filter"
         },
         {
           icon: MouseMove,
-          instructions: "click and drag mouse to look around"
+          text: "click and drag mouse to look around"
         },
         {
           icon: TwoFingerScroll,
-          instructions: "scroll to zoom and fly through filter"
+          text: "scroll to zoom and fly through filter"
         }
       ]
     }
@@ -371,9 +373,10 @@ export const CONTENT = {
 
     ],
     colors: {
-      default: '#0f0',
-      selection: '#f0f',
-      bg: '#00f',
+      logo: '#0f0',
+      overlay: '#f0f',
+      overlayContent: '#00f',
+      player: '#00f',
       // iconColor: '#0f0',
       // fillColor: 'rgba(0, 0, 255, 0.5)',
       // textColor: '#0f0',

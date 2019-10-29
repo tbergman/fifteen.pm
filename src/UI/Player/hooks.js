@@ -12,7 +12,8 @@ const useMusicPlayer = () => {
     } else {
       state.audioPlayer.pause();
       state.audioPlayer = new Audio(state.tracks[index].file);
-      // state.audioStream = new AudioStreamer(state.audioPlayer); // not tested yet
+      state.audioPlayer.crossOrigin = "anonymous";
+      state.audioStream = new AudioStreamer(state.audioPlayer); // not tested yet
       state.audioPlayer.play();
       setState(state => ({ ...state, currentTrackIndex: index, isPlaying: true }));
     }
@@ -46,6 +47,7 @@ const useMusicPlayer = () => {
     playPreviousTrack,
     playNextTrack,
     audioStream: state.audioStream,
+    currentTime: state.audioPlayer.currentTime,
   }
 };
 

@@ -1,15 +1,13 @@
-import React, { Component, Fragment } from 'react';
-import { cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth } from "../../Utils/Cloth";
-import { service } from "../../Utils/service";
-
 import * as CANNON from 'cannon';
-import * as THREE from 'three';
-import '../Release.css';
-import * as TWEEN from 'three-tween';
 import debounce from 'lodash/debounce';
+import React, { Component } from 'react';
+import * as THREE from 'three';
+import * as TWEEN from 'three-tween';
 import { isMobile } from "../../Utils/BrowserDetection";
+import { cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth } from "../../Utils/Cloth";
 import { OrbitControls } from "../../Utils/OrbitControls";
-
+import { service } from "../../Utils/service";
+import '../Release.css';
 
 /* this handles number of segments in cloth , TO DO fix this */
 let pinsFormation = [];
@@ -640,13 +638,10 @@ export default class Scene extends Component {
     }
   
     render() {
-  
       return (
-  
         <div className="release">
           <div ref={element => this.container = element} />
         </div>
-  
       );
     }
   }
