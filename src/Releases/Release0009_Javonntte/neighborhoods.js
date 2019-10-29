@@ -1,7 +1,7 @@
-import { isMobile } from '../../Utils/BrowserDetection'
-import { generateTiles, generateTilesFromInstance } from '../../Utils/SphereTiles';
-import { randomPointsOnSphere, selectNRandomFromArray } from '../../Utils/random';
 import * as THREE from 'three';
+import { isMobile } from '../../Utils/BrowserDetection';
+import { randomPointsOnSphere, selectNRandomFromArray } from '../../Utils/random';
+import { generateTiles } from '../../Utils/SphereTiles';
 import * as C from './constants';
 
 
