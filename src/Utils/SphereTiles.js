@@ -82,7 +82,7 @@ export const MemoizedSphereTile = React.memo(props => {
     return <>{props.tileComponent(props)}</>;
 }, props => !props.isRendered);
 
-export function generateTiles({ surface }) {
+export function generateTiles({ surface }) { 
     const vertices = surface.vertices;
     const tiles = {}
     const area = 4 * Math.PI * Math.pow(surface.radius, 2);

@@ -6,7 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { useKeyPress } from '../../../Utils/hooks';
 import { Metal03Material, TronMaterial } from '../../../Utils/materials';
 import * as C from '../constants';
-import DashBoard from './DashBoard';
+import Dashboard from './Dashboard';
 import DashCam from './DashCam';
 import SteeringWheel from './SteeringWheel';
 
@@ -14,6 +14,7 @@ function Car({
     dashCamRef,
     road,
     roadOffset,
+    onTrackSelect,
 }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
@@ -107,7 +108,7 @@ function Car({
         {car &&
             <>
                 <DashCam />
-                <DashBoard gltf={gltf} />
+                <Dashboard gltf={gltf} onTrackSelect={onTrackSelect} />
                 <SteeringWheel gltf={gltf} rotation={car.rotation} />
             </>
         }

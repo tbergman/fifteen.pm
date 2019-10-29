@@ -12,7 +12,10 @@ import { FixedLights } from './lights';
 import { asteroidNeighborhoods, worldNeighborhoods } from './neighborhoods';
 import Road from './Road';
 import { World } from './world';
+import {BloomFilmEffect} from '../../Utils/Effects';
+import Stars from './stars';
 import {Controls} from './controls';
+import useMusicPlayer from '../../UI/Player/hooks';
 
 export function Scene({ }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
@@ -31,10 +34,25 @@ export function Scene({ }) {
     const [facade10MaterialRef, facade10Material] = useResource();
     const [facade12MaterialRef, facade12Material] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
+    const {playTrack} = useMusicPlayer();
 
     useEffect(() => {
-        scene.background = new THREE.Color("white");
+        setColorTheme(C.TRACK_METADATA["679771262"]);
     }, [])
+
+    function setColorTheme(metadata){
+        scene.background = metadata.theme.background;
+        scene.fog = metadata.theme.fog;
+ 
+    }
+
+    function onTrackSelect(trackId){
+        scene.background = new THREE.Color("black");
+        const metadata = C.TRACK_METADATA[trackId]
+        console.log("PLAY TRACK", trackId, metadata.index)
+        setColorTheme(metadata);
+       // playTrack(metadata.index)
+    }
 
     return (
         <>
@@ -46,13 +64,13 @@ export function Scene({ }) {
             <Facade04Material materialRef={facade04MaterialRef} />
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
-            <Controls
+            {/* <Controls
                 // curCamera={camera}
                 movementSpeed={500}
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            />
+            /> */}
             <FixedLights />
             <Suspense fallback={null}>
                 <Road
@@ -64,6 +82,7 @@ export function Scene({ }) {
                     <Car
                         speed={20}
                         roadOffset={1}
+                        onTrackSelect={onTrackSelect}
                     />
                 </Road>
             </Suspense>
@@ -87,7 +106,7 @@ export function Scene({ }) {
                     />
                 </>
             }
-            {/* <Stars
+            <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
             />
             {/* <BloomFilmEffect /> */}

@@ -1,34 +1,32 @@
 import React from 'react';
-import useMusicPlayer from '../../../UI/Player/hooks';
+import * as C from '../constants';
 
-
-export default function DashBoard({ gltf }) {
-    const { playTrack } = useMusicPlayer();
+export default function Dashboard({ gltf, onTrackSelect }) {
     return <group>
         <mesh
-            name="button_swing"
-            onPointerUp={() => playTrack(0)}
+            name={C.BUTTON_SWING}
+            onPointerUp={() => onTrackSelect(C.TRACK_BUTTON_LOOKUP[C.BUTTON_SWING])}
         >
             <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[1].material} />
         </mesh>
         <mesh
-            name="button_life"
-            onPointerUp={() => playTrack(1)}
+            name={C.BUTTON_LIFE}
+            onPointerUp={() => onTrackSelect(C.TRACK_BUTTON_LOOKUP[C.BUTTON_LIFE])}
         >
             <bufferGeometry attach="geometry" {...gltf.__$[2].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[2].material} />
         </mesh>
         <mesh
-            name="button_dream"
-            onPointerUp={() => playTrack(2)}
+            name={C.BUTTON_DREAM}
+            onPointerUp={() => onTrackSelect(C.TRACK_BUTTON_LOOKUP[C.BUTTON_DREAM])}
         >
             <bufferGeometry attach="geometry" {...gltf.__$[3].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[3].material} />
         </mesh>
         <mesh
-            name="button_natural"
-            onPointerUp={() => playTrack(3)}
+            name={C.BUTTON_NATURAL}
+            onPointerUp={() => onTrackSelect(C.TRACK_BUTTON_LOOKUP[C.BUTTON_NATURAL])}
         >
             <bufferGeometry attach="geometry" {...gltf.__$[4].geometry} />
             <meshStandardMaterial attach="material" {...gltf.__$[4].material} />

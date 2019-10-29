@@ -2,7 +2,7 @@ import React from 'react';
 import * as THREE from 'three';
 
 // from https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_fly.html
-export function Stars({ radius }) {
+export default function Stars({ radius }) {
     let i, r = radius, starsGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry()];
     const vertices1 = [];
     const vertices2 = [];

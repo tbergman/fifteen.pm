@@ -8,37 +8,37 @@ export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
 export const CAR_URL =  assetPath9("objects/car/car.glb");
 
 // TRACK THEMES
-const THEMES = [
+export const THEMES = [
     // index matches track list order
     {
         textFillColor: 0xf0ffff,
-        fogColor: 0x0000aa,
-        backgroundColor: 0x000000,
+        fog: new THREE.FogExp2( 0xefd1b5, 0.0025 ),
+        background: new THREE.Color(0x000000),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
     {
         textFillColor: 0xf0ffff,
-        fogColor: 0xff0000,
-        backgroundColor: 0xff0000,
+        fog: new THREE.FogExp2( 0xefd1b5, 0.25 ),
+        background: new THREE.Color(0xff0000),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
     {
         textFillColor: 0xf0ffff,
-        fogColor: 0x0000ff,
-        backgroundColor: 0x00ff00,
+        fog: new THREE.FogExp2( 0xefd1b5, 0.025 ),
+        background: new THREE.Color(0x00ff00),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
     {
         textFillColor: 0xf0ffff,
-        fogColor: 0xff0000,
-        backgroundColor: 0xff0000,
+        fog: new THREE.FogExp2( 0x0faf00, 0.5 ),
+        background: new THREE.Color(0xff0000),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
 ]
 
-export const TRACK_BUTTON_ID_LOOKUP = {
-    "button_life": "679771262" ,
-    "button_swing": "679771262",
+export const TRACK_BUTTON_LOOKUP = {
+    "button_life": "679771262",
+    "button_swing": "693475855",
     "button_natural": "679771259",
     "button_dream": "679771253", 
 }
@@ -48,6 +48,7 @@ export const TRACK_METADATA = (() => {
         bpm: track.bpm,
         name: track.title,
         theme: THEMES[index],
+        index: index,
     });
     return lookup;
 })();
