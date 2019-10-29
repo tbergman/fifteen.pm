@@ -9,7 +9,7 @@ export default function Overlay({
     instructions,
     purchaseLink,
     overlayColor,
-    overlayContentsColor,
+    overlayContentColor,
     loadWithOverlayOpen,
     shouldUpdateOverlay,
     onToggle,

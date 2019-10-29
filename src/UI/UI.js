@@ -34,7 +34,7 @@ export default function UI({
 
     return (
         <>
-            {logo && <Logo />}
+            {logo && <Logo color={content.colors.logo} />}
             {navigation && <Navigation color={content.colors.default} />}
             <Overlay
                 message={content.message}

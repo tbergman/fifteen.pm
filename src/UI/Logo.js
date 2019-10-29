@@ -5,18 +5,16 @@ import './Logo.css';
 
 // TODO refactor to functional component
 // TODO -- switching over to colors.on instead of theme.logoSvgFillColor
-function getFillColor(){
-  const content = CONTENT[window.location.pathname];
-  if (content.theme) return content.theme.logoSvgFillColor  || "#ffffff";
-  if (content.colors) return content.colors.default;
+function getFillColor(color){
+  if (color) return color;
+  else {
+    const content = CONTENT[window.location.pathname];
+    return content.theme.logoSvgFillColor  || "#ffffff";
+  }
 }
 
 class Logo extends Component {
   
-  static defaultProps = {
-    fillColor: getFillColor()
-  }
-
   onClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -28,13 +26,15 @@ class Logo extends Component {
   }
 
   render() {
-    const {fillColor} = this.props;
+    const {color} = this.props;
+    // TODO TMP while still using LegacyMenu for some releases
+    if (!color) color = 0xfff;
     return (
       <div className="logo-wrapper"
            onClick={this.onClick}>
         <div id="logo-light"/>
         <svg width="75" height="75" viewBox="-1.2 -1.2 2.2 2.2">
-         <g fill="none" stroke={fillColor} strokeWidth="0.01">
+         <g fill="none" stroke={color} strokeWidth="0.01">
             <circle r="1"/>
             <g id="grid">
               <path d="M0 1A1 1 0 0 1 0-1">
