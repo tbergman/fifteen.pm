@@ -5,12 +5,13 @@ import { faceCentroid, triangleFromFace } from './geometry';
 import { findNearest, loadKDTree } from './KdTree';
 import { tileId } from './tiles';
 
-function initFaceTile(face, centroid, triangle) {
+function initFaceTile(face, centroid, triangle, relativeArea) {
     return {
         id: tileId(centroid),
         centroid: centroid,
         normal: face.normal,
         triangle: triangle,
+        relativeArea: relativeArea,
     }
 }
 
@@ -84,10 +85,12 @@ export const MemoizedSphereTile = React.memo(props => {
 export function generateTiles({ surface }) {
     const vertices = surface.vertices;
     const tiles = {}
+    const area = 4 * Math.PI * Math.pow(surface.radius, 2);
     surface.faces.forEach((face) => {
         const triangle = triangleFromFace(face, vertices);
         const centroid = faceCentroid(face, vertices);
-        const tile = initFaceTile(face, centroid, triangle);
+        const relativeArea = triangle.getArea() / area;
+        const tile = initFaceTile(face, centroid, triangle, relativeArea);
         const tId = tileId(centroid);
         tiles[tId] = tile;
     })
