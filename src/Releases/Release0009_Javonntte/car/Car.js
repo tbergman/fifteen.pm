@@ -12,12 +12,17 @@ import SteeringWheel from './SteeringWheel';
 import Headlights from './Headlights';
 import useMusicPlayer from '../../../UI/Player/hooks';
 
+// TODO move these somewhere else
+
+const FILTER_RESONANCE = 11;
+
 function Car({
     dashCamRef,
     road,
     roadOffset,
     onTrackSelect,
 }) {
+    const { mouse } = useThree();
     const [tronMaterialRef, tronMaterial] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
     const gltf = useLoader(GLTFLoader, C.CAR_URL, loader => {
@@ -41,7 +46,7 @@ function Car({
     const offset = useRef();
     const delta = useRef();
     const speed = useRef();
-    const {audioStream} = useMusicPlayer();
+    const { audioStream } = useMusicPlayer();
 
     useEffect(() => {
         if (!speed.current) speed.current = 10;
@@ -85,12 +90,19 @@ function Car({
         if (rotateLeftPressed) {
             car.position.y -= normal.y * 4;
             car.rotation.z -= .01;
-            console.log('audiostream', audioStream);
-
-        } else if (rotateRightPressed){
+            const freq = Math.max(1500 - car.position.y, 0);
+            audioStream.filter.frequency.value =freq;
+            audioStream.filter.Q.value = FILTER_RESONANCE
+        } else if (rotateRightPressed) {
+            audioStream.filter.frequency.value = Math.min(Math.abs(car.position.y), 22050);
+            audioStream.filter.Q.value = FILTER_RESONANCE
             car.position.y += normal.y * 4;
             car.rotation.z += .01;
         } else {
+            if (audioStream) {
+                audioStream.filter.frequency.value = 22000;
+                audioStream.filter.Q.value = 0;
+            }
             car.position.copy(pos);
             // Using arclength for stablization in look ahead.
             const lookAt = road.parameters.path.getPointAt((t + 30 / road.parameters.path.getLength()) % 1);

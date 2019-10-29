@@ -557,6 +557,7 @@ export default class Scene extends PureComponent {
     }
 
 
+    // TODO move this into a useAudioFilter hook
     scaleFreq = (range, minFilterRange, maxFilterRange, targetFilterMinRange, targetFilterMaxRange) => {
         return (targetFilterMaxRange - targetFilterMinRange) *
             (range - minFilterRange) / (maxFilterRange - minFilterRange) + targetFilterMinRange;

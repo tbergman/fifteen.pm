@@ -374,13 +374,10 @@ export const CONTENT = {
     ],
     colors: {
       logo: '#0f0',
-      overlay: '#f0f',
-      overlayContent: '#00f',
-      player: '#00f',
-      // iconColor: '#0f0',
-      // fillColor: 'rgba(0, 0, 255, 0.5)',
-      // textColor: '#0f0',
-      // navColor: '#1b03a3',
+      overlay: '#0f0',
+      overlayContent: '#fff',
+      player: '#0f0',
+      onHover: '#fff9',
     },
     instructions: [
       {
