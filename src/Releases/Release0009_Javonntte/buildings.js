@@ -37,11 +37,13 @@ export function groupBuildingGeometries(geometries) {
     return grouped;
 }
 
-export function Buildings({ material, formation, normal }) {
-    return <mesh
-        geometry={formation.geometry}
-        material={material}
-        position={formation.centroid}
-    />
+export default function Buildings({ instancedBuildings }) {
+    return <>
+        {Object.keys(instancedBuildings).map(instanceName => {
+            return <primitive key={instanceName}
+                object={instancedBuildings[instanceName]}
+            />
+        })
+        }
+    </>;
 }
-

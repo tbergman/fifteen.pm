@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromVertices } from '../../Utils/geometry';
 import { findNearest, loadKDTree } from '../../Utils/KdTree';
 import { randomArrayVal, selectNRandomFromArray } from '../../Utils/random';
-import { groupBuildingGeometries } from './buildings';
+import { groupBuildingGeometries } from './Buildings';
 import * as C from './constants';
 import { createInstance } from './instances';
 

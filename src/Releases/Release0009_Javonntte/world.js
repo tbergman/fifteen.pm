@@ -5,7 +5,7 @@ import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import * as C from './constants';
 import "./index.css";
 import { generateTileset } from "./tiles";
-
+import Buildings from './Buildings';
 
 // TODO tilt and rotationSpeed
 // https://github.com/mrdoob/three.js/blob/master/examples/js/math/ConvexHull.js
@@ -77,7 +77,7 @@ export function WorldSurface({ geometry, bpm }) {
 
 export function World({ track, buildings, neighborhoods, ...props }) {
     const [worldRef, world] = useResource();
-    const tileInstances = useRef();
+    const instancedBuildings = useRef();
     const sphereGeometry = useMemo(() => {
         return generateSphereWorldGeometry(
             C.WORLD_RADIUS,
@@ -89,7 +89,7 @@ export function World({ track, buildings, neighborhoods, ...props }) {
     useEffect(() => {
         if (buildings.loaded) {
             // TODO this is the naive approach but we need to combine alike geometries from both spheres at the time of instancing to reduce draw calls.
-            tileInstances.current = generateTileset({
+            instancedBuildings.current = generateTileset({
                 surface: sphereGeometry,
                 buildings,
                 neighborhoods: neighborhoods
@@ -108,12 +108,8 @@ export function World({ track, buildings, neighborhoods, ...props }) {
                 geometry={sphereGeometry}
                 bpm={track && track.bpm}
             />
-            {tileInstances.current &&
-                Object.keys(tileInstances.current).map(instanceName => {
-                    return <primitive key={instanceName}
-                        object={tileInstances.current[instanceName]}
-                    />
-                })
+            {instancedBuildings.current &&
+                <Buildings instancedBuildings={instancedBuildings.current} />
             }
         </>
         }

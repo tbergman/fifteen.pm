@@ -5,6 +5,7 @@ import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import NoiseSphereGeometry from '../../Utils/NoiseSphere';
 import * as C from './constants';
 import { generateTileset } from "./tiles";
+import Buildings from './Buildings';
 
 function generateAsteroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
     const seed = Math.random() * 1000;
@@ -86,7 +87,7 @@ function AsteroidsSurface({ geometry, bpm }) {
 
 export function Asteroids({ track, buildings, neighborhoods, ...props }) {
     const [asteroidBeltRef, asteroidBelt] = useResource();
-    const instancedBuildings = useRef();
+    const instancedBuildingGroups = useRef();
     const asteroids = useMemo(() => {
         return generateAsteroids(
             C.ASTEROID_BELT_RADIUS,
@@ -101,7 +102,7 @@ export function Asteroids({ track, buildings, neighborhoods, ...props }) {
 
     useEffect(() => {
         if (buildings.loaded) {
-            instancedBuildings.current = asteroids.instances.map(instance => {
+            instancedBuildingGroups.current = asteroids.instances.map(instance => {
                 return generateTileset({
                     surface: instance,
                     buildings,
@@ -120,14 +121,10 @@ export function Asteroids({ track, buildings, neighborhoods, ...props }) {
                         bpm={track && track.bpm}
                     />
                 }
-                {instancedBuildings.current &&
-                    instancedBuildings.current.map(instancedBuilding => {
-                        return Object.keys(instancedBuilding).map(instanceName => {
-                            return <primitive key={instanceName}
-                                object={instancedBuilding[instanceName]}
-                            />
-                        })
-                    })
+                {instancedBuildingGroups.current &&
+                    instancedBuildingGroups.current.map((instancedBuildings, index) => {
+                        return <Buildings key={index} instancedBuildings={instancedBuildings} />
+                    })}
                 }
             </>
         }
