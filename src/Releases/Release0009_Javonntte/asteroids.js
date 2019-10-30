@@ -8,7 +8,7 @@ import { generateTileset } from "./tiles";
 import Buildings from './Buildings';
 
 function generateAsteroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
-    const seed = Math.random() * 1000;
+    const seed = Math.floor(Math.random() * 1000);
     const noiseSphere = new NoiseSphereGeometry(radius, sides, tiers, { seed, noiseWidth: noiseWidth, noiseHeight: noiseHeight, center })
     noiseSphere.verticesNeedUpdate = true;
     noiseSphere.computeBoundingSphere();
@@ -24,18 +24,22 @@ function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids,
         instances: [],
     };
     for (let i = 0; i < numAsteroids; i++) {
-        const center = new THREE.Vector3(
-            asteroidBeltRadius * 1.5 * (Math.random() - .5),
-            asteroidBeltRadius * 1.5 * (Math.random() - .5),
-            asteroidBeltRadius * 1.5 * (Math.random() - .5),
-        );
         const radius = THREE.Math.randInt(maxAsteroidRadius * .75, maxAsteroidRadius);
         const sides = Math.floor(radius / 4);
         const tiers = Math.floor(radius / 4);
+        // ensure at least one asteroid is in the center of the belt
+        const center = i == 0 ? new THREE.Vector3(
+                asteroidBeltCenter.x,
+                asteroidBeltCenter.y,
+                asteroidBeltCenter.z,
+            ) : new THREE.Vector3(
+                asteroidBeltRadius * 1.5 * (Math.random() - .5),
+                asteroidBeltRadius * 1.5 * (Math.random() - .5),
+                asteroidBeltRadius * 1.5 * (Math.random() - .5),
+            )   
         const noiseHeight = maxFaceNoise;
         const noiseWidth = maxFaceNoise;
         const asteroidGeom = generateAsteroid(
-            // TODO parameterize
             radius,
             sides,
             tiers,

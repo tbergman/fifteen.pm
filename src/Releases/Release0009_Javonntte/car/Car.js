@@ -54,8 +54,7 @@ function Car({
     useFrame(() => {
         // TODO these floats as constants relative to world radius
         if (accelerationPressed) {
-            if (delta.current < .05 && speed.current > 4) {
-                console.log(speed.current)
+            if (delta.current < .05 && speed.current > 1) {
                 speed.current -= .1;
             }
         }

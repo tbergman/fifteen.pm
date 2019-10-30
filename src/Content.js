@@ -343,17 +343,17 @@ export const CONTENT = {
     purchaseLink: "TODO",
     tracks: [
       {
-        name: "City Life",
-        type: "soundcloud",
-        id: "679771262",
-        secretToken: "s-pqcS4",
-        bpm: "120",
-      },
-      {
         name: "Swing House Madness",
         type: "soundcloud",
         id: "693475855",
         secretToken: "s-qakud",
+        bpm: "120",
+      },
+      {
+        name: "City Life",
+        type: "soundcloud",
+        id: "679771262",
+        secretToken: "s-pqcS4",
         bpm: "120",
       },
       {
