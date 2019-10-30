@@ -1,6 +1,5 @@
 import React from 'react';
 import * as THREE from 'three';
-import { cloneDeep } from 'lodash';
 import * as C from './constants';
 
 export function onBuildingsLoaded(gltf) {
