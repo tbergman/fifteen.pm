@@ -47,13 +47,12 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
 
 
 
-export function WorldSurface({ geometry, bpm }) {
+export function WorldSurface({ geometry }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [ground29MaterialRef, ground29Material] = useResource();
     return <>
         <TronMaterial
             materialRef={tronMaterialRef}
-            bpm={bpm}
             side={THREE.BackSide}
         />
         <Ground29Material
@@ -65,6 +64,11 @@ export function WorldSurface({ geometry, bpm }) {
             <group>
                 <mesh
                     geometry={geometry}
+                    material={tronMaterial}
+                    receiveShadow
+                />
+                <mesh
+                    geometry={geometry}
                     material={ground29Material}
                     receiveShadow
                 />
@@ -73,7 +77,7 @@ export function WorldSurface({ geometry, bpm }) {
     </>
 }
 
-export function World({ track, buildings, neighborhoods, ...props }) {
+export function World({ buildings, neighborhoods }) {
     const instancedBuildings = useRef();
     const sphereGeometry = useMemo(() => {
         return generateSphereWorldGeometry(
@@ -93,10 +97,7 @@ export function World({ track, buildings, neighborhoods, ...props }) {
         }
     }, [buildings.loaded])
     return <group >
-        <WorldSurface
-            geometry={sphereGeometry}
-            bpm={track && track.bpm}
-        />
+        <WorldSurface geometry={sphereGeometry} />
         {instancedBuildings.current &&
             <Buildings instancedBuildings={instancedBuildings.current} />
         }

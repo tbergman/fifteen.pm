@@ -3,14 +3,15 @@ import { useFrame, useLoader, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import useMusicPlayer from '../../../UI/Player/hooks';
 import { useKeyPress } from '../../../Utils/hooks';
 import { Metal03Material, TronMaterial } from '../../../Utils/materials';
 import * as C from '../constants';
+import Chassis from './Chassis';
 import Dashboard from './Dashboard';
 import DashCam from './DashCam';
-import SteeringWheel from './SteeringWheel';
 import Headlights from './Headlights';
-import useMusicPlayer from '../../../UI/Player/hooks';
+import SteeringWheel from './SteeringWheel';
 
 function Car({
     dashCamRef,
@@ -18,7 +19,6 @@ function Car({
     roadOffset,
     onTrackSelect,
 }) {
-    const { mouse } = useThree();
     const [tronMaterialRef, tronMaterial] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
     const gltf = useLoader(GLTFLoader, C.CAR_URL, loader => {
@@ -42,6 +42,7 @@ function Car({
     const offset = useRef();
     const delta = useRef();
     const speed = useRef();
+    // using a filter for left and right arrow press
     const { audioStream } = useMusicPlayer();
 
     useEffect(() => {
@@ -51,6 +52,7 @@ function Car({
     })
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
+    // TODO how to break up this logic?
     useFrame(() => {
         // TODO these floats as constants relative to world radius
         if (accelerationPressed) {
@@ -122,7 +124,8 @@ function Car({
         {car &&
             <>
                 <DashCam />
-                <Dashboard gltf={gltf} onTrackSelect={onTrackSelect} />
+                {gltf && <Dashboard gltf={gltf} onTrackSelect={onTrackSelect} />}
+                <Chassis gltf={gltf} />
                 <SteeringWheel gltf={gltf} rotation={car.rotation} />
                 <Headlights />
             </>

@@ -7,54 +7,6 @@ import { assetPath9 } from './utils';
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
 export const CAR_URL =  assetPath9("objects/car/car.glb");
 
-// TRACK THEMES
-export const THEMES = [
-    // index matches track list order
-    {
-        textFillColor: 0xf0ffff,
-        fog: new THREE.FogExp2( 0xefd1b5, 0.0025 ),
-        background: new THREE.Color(0x000000),
-        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
-    },
-    {
-        textFillColor: 0xf0ffff,
-        fog: new THREE.FogExp2( 0xefd1b5, 0.25 ),
-        background: new THREE.Color(0xff0000),
-        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
-    },
-    {
-        textFillColor: 0xf0ffff,
-        fog: new THREE.FogExp2( 0xefd1b5, 0.025 ),
-        background: new THREE.Color(0x00ff00),
-        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
-    },
-    {
-        textFillColor: 0xf0ffff,
-        fog: new THREE.FogExp2( 0x0faf00, 0.5 ),
-        background: new THREE.Color(0xff0000),
-        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
-    },
-]
-
-export const TRACK_BUTTON_LOOKUP = {
-    "button_life": "679771262",
-    "button_swing": "693475855",
-    "button_natural": "679771259",
-    "button_dream": "679771253", 
-}
-export const TRACK_METADATA = (() => {
-    const lookup = {};
-    CONTENT["/9"].tracks.forEach((track, index) => lookup[track.id] = {
-        bpm: track.bpm,
-        name: track.title,
-        theme: THEMES[index],
-        index: index,
-    });
-    return lookup;
-})();
-
-
-
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
 const WORLD_RADIUS_DIVISOR = isMobile ? 40 : 40;
@@ -67,7 +19,7 @@ export const WORLD_ROAD_WIDTH = isMobile ? 3 : WORLD_RADIUS / 7;
 export const MAX_ROAD_ELEVATION = WORLD_RADIUS + 8;
 export const WORLD_ROAD_PATH = (() => {
     const circle = new THREE.CircleGeometry(WORLD_RADIUS, WORLD_RADIUS);
-    const points = circle.vertices.reverse() // reverse it so driver is going in expected dir
+    const points = circle.vertices.reverse(); // reverse it so driver is going in expected dir
     return points.slice(0, points.length - 2); // don't overlap the loop (rm last elt)
 })();
 
@@ -98,12 +50,55 @@ export const BUILDING_HEIGHT_BUCKETS = [
     SHORT,
     TALL,
 ]
-
-
 export const BUILDING_MATERIAL = {
     "large_tall_low_michigancentralstation": "foamGripMaterial"
 }
 
+
+// TRACK INFO
+export const TRACK_THEMES = [
+    // index matches track list order
+    {
+        textFillColor: 0xf0ffff,
+        fog: new THREE.FogExp2( 0xefd1b5, 0.0025 ),
+        background: new THREE.Color(0x000000),
+        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+    },
+    {
+        textFillColor: 0xf0ffff,
+        fog: new THREE.FogExp2( 0xefd1b5, 0.25 ),
+        background: new THREE.Color(0xff0000),
+        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+    },
+    {
+        textFillColor: 0xf0ffff,
+        fog: new THREE.FogExp2( 0xefd1b5, 0.025 ),
+        background: new THREE.Color(0x00ff00),
+        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+    },
+    {
+        textFillColor: 0xf0ffff,
+        fog: new THREE.FogExp2( 0x0faf00, 0.5 ),
+        background: new THREE.Color(0xff0000),
+        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+    },
+]
+export const TRACK_LOOKUP = {
+    "life": "679771262",
+    "swing": "693475855",
+    "natural": "679771259",
+    "dream": "679771253", 
+}
+export const TRACK_METADATA = (() => {
+    const lookup = {};
+    CONTENT["/9"].tracks.forEach((track, index) => lookup[track.id] = {
+        bpm: track.bpm,
+        name: track.title,
+        theme: TRACK_THEMES[index],
+        index: index,
+    });
+    return lookup;
+})();
 
 // CAR
 // model geometry names

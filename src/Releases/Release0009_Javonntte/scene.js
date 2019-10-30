@@ -44,7 +44,7 @@ export function Scene({ }) {
         scene.background = metadata.theme.background;
         scene.fog = metadata.theme.fog;
         // tmp
-        // scene.background = new THREE.Color('white');
+        scene.background = new THREE.Color('white');
     }
 
     function onTrackSelect(trackId){
@@ -88,7 +88,7 @@ export function Scene({ }) {
                     />
                 </Road>
             </Suspense>
-            {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
+            {/* {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <>
                     <World
                         neighborhoods={worldNeighborhoods}
@@ -111,7 +111,7 @@ export function Scene({ }) {
             <Stars
                 radius={C.ASTEROID_BELT_RADIUS / 40}
             />
-            <BloomFilmEffect />
+            <BloomFilmEffect /> */}
         </>
     );
 }
