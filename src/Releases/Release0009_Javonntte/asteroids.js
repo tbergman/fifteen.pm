@@ -1,11 +1,14 @@
+import React, { useEffect, useMemo, useRef } from 'react';
+import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import { randomPointInSphere } from '../../Utils/random';
+import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import NoiseSphereGeometry from '../../Utils/NoiseSphere';
+import * as C from './constants';
+import { generateTileset } from "./tiles";
 
-// TODO tilt and rotationSpeed
-function generateAstroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
+function generateAsteroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
     const seed = Math.random() * 1000;
-    const noiseSphere = new NoiseSphereGeometry(radius, sides, tiers, { seed, noiseWidth: 1, noiseHeight: 10, center })
+    const noiseSphere = new NoiseSphereGeometry(radius, sides, tiers, { seed, noiseWidth: noiseWidth, noiseHeight: noiseHeight, center })
     noiseSphere.verticesNeedUpdate = true;
     noiseSphere.computeBoundingSphere();
     noiseSphere.computeBoundingBox();
@@ -13,8 +16,7 @@ function generateAstroid(radius, sides, tiers, noiseHeight, noiseWidth, center) 
     return noiseSphere;
 }
 
-
-export function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids, maxAsteroidRadius, maxFaceNoise) {
+function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids, maxAsteroidRadius, maxFaceNoise) {
     const asteroidsGeom = new THREE.Geometry()
     const asteroids = {
         geometry: undefined,
@@ -29,9 +31,9 @@ export function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAst
         const radius = THREE.Math.randInt(maxAsteroidRadius * .75, maxAsteroidRadius);
         const sides = Math.floor(radius / 4);
         const tiers = Math.floor(radius / 4);
-        const noiseHeight = maxFaceNoise;// * Math.random();
-        const noiseWidth = maxFaceNoise;// * Math.random();
-        const asteroidGeom = generateAstroid(
+        const noiseHeight = maxFaceNoise;
+        const noiseWidth = maxFaceNoise;
+        const asteroidGeom = generateAsteroid(
             // TODO parameterize
             radius,
             sides,
@@ -53,4 +55,81 @@ export function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAst
     return asteroids;
 }
 
+function AsteroidsSurface({ geometry, bpm }) {
+    const [tronMaterialRef, tronMaterial] = useResource();
+    const [ground29MaterialRef, ground29Material] = useResource();
+    return <>
+        <TronMaterial
+            materialRef={tronMaterialRef}
+            bpm={bpm}
+            side={THREE.BackSide}
+        />
+        <Ground29Material
+            materialRef={ground29MaterialRef}
+            side={THREE.FrontSide}
+        />
+        {tronMaterial && ground29Material &&
+            <group>
+                <mesh
+                    geometry={geometry}
+                    material={tronMaterial}
+                />
+                <mesh
+                    geometry={geometry}
+                    material={ground29Material}
+                    receiveShadow
+                />
+            </group>
+        }
+    </>
+}
 
+export function Asteroids({ track, buildings, neighborhoods, ...props }) {
+    const [asteroidBeltRef, asteroidBelt] = useResource();
+    const instancedBuildings = useRef();
+    const asteroids = useMemo(() => {
+        return generateAsteroids(
+            C.ASTEROID_BELT_RADIUS,
+            C.ASTEROID_BELT_CENTER,
+            C.NUM_ASTEROIDS,
+            C.ASTEROID_MAX_RADIUS,
+            C.ASTEROID_MAX_SIDES,
+            C.ASTEROID_MAX_TIERS,
+            C.ASTEROID_MAX_FACE_NOISE,
+        )
+    }, [])
+
+    useEffect(() => {
+        if (buildings.loaded) {
+            instancedBuildings.current = asteroids.instances.map(instance => {
+                return generateTileset({
+                    surface: instance,
+                    buildings,
+                    neighborhoods: neighborhoods
+                });
+            })
+        }
+    })
+
+    return <group ref={asteroidBeltRef}>
+        {asteroidBelt &&
+            <>
+                {asteroids &&
+                    <AsteroidsSurface
+                        geometry={asteroids.geometry}
+                        bpm={track && track.bpm}
+                    />
+                }
+                {instancedBuildings.current &&
+                    instancedBuildings.current.map(instancedBuilding => {
+                        return Object.keys(instancedBuilding).map(instanceName => {
+                            return <primitive key={instanceName}
+                                object={instancedBuilding[instanceName]}
+                            />
+                        })
+                    })
+                }
+            </>
+        }
+    </group>
+}

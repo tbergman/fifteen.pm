@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { useResource, useThree } from 'react-three-fiber';
 import { useGLTF } from "../../Utils/hooks";
 import { CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material } from '../../Utils/materials';
-import { AsteroidBelt } from './AsteroidBelt';
+import { Asteroids } from './Asteroids';
 import { onBuildingsLoaded } from "./buildings";
 import Car from './car/Car';
 import * as C from "./constants";
@@ -13,7 +13,7 @@ import { asteroidNeighborhoods, worldNeighborhoods } from './neighborhoods';
 import Road from './Road';
 import { World } from './world';
 import {BloomFilmEffect} from '../../Utils/Effects';
-import Stars from './stars';
+import Stars from './Stars';
 import {Controls} from './controls';
 import useMusicPlayer from '../../UI/Player/hooks';
 
@@ -98,7 +98,7 @@ export function Scene({ }) {
                             loaded: !loadingBuildings,
                         }}
                     />
-                    <AsteroidBelt
+                    <Asteroids
                         neighborhoods={asteroidNeighborhoods}
                         buildings={{
                             geometries: buildingGeometries,
