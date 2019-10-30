@@ -74,7 +74,6 @@ export function WorldSurface({ geometry, bpm }) {
 }
 
 export function World({ track, buildings, neighborhoods, ...props }) {
-    const [worldRef, world] = useResource();
     const instancedBuildings = useRef();
     const sphereGeometry = useMemo(() => {
         return generateSphereWorldGeometry(
@@ -84,7 +83,7 @@ export function World({ track, buildings, neighborhoods, ...props }) {
             C.MAX_WORLD_FACE_HEIGHT,
         );
     });
-    useEffect(() => {
+    useMemo(() => {
         if (buildings.loaded) {
             instancedBuildings.current = generateTileset({
                 surface: sphereGeometry,
@@ -92,22 +91,14 @@ export function World({ track, buildings, neighborhoods, ...props }) {
                 neighborhoods: neighborhoods
             });
         }
-    }, [])
-    useEffect(() => {
-        if (worldRef) {
-            worldRef.current.rotation.z -= Math.PI;
-        }
-    })
-    return <group ref={worldRef}>
-        {world && <>
-            <WorldSurface
-                geometry={sphereGeometry}
-                bpm={track && track.bpm}
-            />
-            {instancedBuildings.current &&
-                <Buildings instancedBuildings={instancedBuildings.current} />
-            }
-        </>
+    }, [buildings.loaded])
+    return <group >
+        <WorldSurface
+            geometry={sphereGeometry}
+            bpm={track && track.bpm}
+        />
+        {instancedBuildings.current &&
+            <Buildings instancedBuildings={instancedBuildings.current} />
         }
     </group>
 }

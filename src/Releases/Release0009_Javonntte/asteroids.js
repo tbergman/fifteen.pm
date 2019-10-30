@@ -86,8 +86,6 @@ function AsteroidsSurface({ geometry, bpm }) {
 }
 
 export function Asteroids({ track, buildings, neighborhoods, ...props }) {
-    const [asteroidBeltRef, asteroidBelt] = useResource();
-    const instancedBuildingGroups = useRef();
     const asteroids = useMemo(() => {
         return generateAsteroids(
             C.ASTEROID_BELT_RADIUS,
@@ -100,9 +98,9 @@ export function Asteroids({ track, buildings, neighborhoods, ...props }) {
         )
     }, [])
 
-    useEffect(() => {
+    const instancedBuildingGroups = useMemo(() => {
         if (buildings.loaded) {
-            instancedBuildingGroups.current = asteroids.instances.map(instance => {
+            return asteroids.instances.map(instance => {
                 return generateTileset({
                     surface: instance,
                     buildings,
@@ -110,23 +108,19 @@ export function Asteroids({ track, buildings, neighborhoods, ...props }) {
                 });
             })
         }
-    })
+    }, [buildings.loaded])
 
-    return <group ref={asteroidBeltRef}>
-        {asteroidBelt &&
-            <>
-                {asteroids &&
-                    <AsteroidsSurface
-                        geometry={asteroids.geometry}
-                        bpm={track && track.bpm}
-                    />
-                }
-                {instancedBuildingGroups.current &&
-                    instancedBuildingGroups.current.map((instancedBuildings, index) => {
-                        return <Buildings key={index} instancedBuildings={instancedBuildings} />
-                    })}
-                }
-            </>
+    return <group>
+        {asteroids &&
+            <AsteroidsSurface
+                geometry={asteroids.geometry}
+                bpm={track && track.bpm}
+            />
+        }
+        {instancedBuildingGroups &&
+            instancedBuildingGroups.map((instancedBuildings, index) => {
+                return <Buildings key={index} instancedBuildings={instancedBuildings} />
+            })}
         }
     </group>
 }

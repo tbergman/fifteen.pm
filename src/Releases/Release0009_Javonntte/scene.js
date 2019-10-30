@@ -102,7 +102,7 @@ export function Scene({ }) {
                         neighborhoods={asteroidNeighborhoods}
                         buildings={{
                             geometries: buildingGeometries,
-                            materials: [facade10Material],//[foamGripMaterial],
+                            materials: [foamGripMaterial],
                             loaded: !loadingBuildings,
                         }}
                     />
