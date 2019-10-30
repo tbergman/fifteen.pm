@@ -9,9 +9,10 @@ import JavonntteCanvas from './Canvas';
 
 export default function Release0009_Javonntte({ }) {
     const content = useMemo(() => CONTENT[window.location.pathname]);
+    const tracks = useMemo(() => content.tracks)
     return (
-        <MusicPlayerProvider tracks={content.tracks}>
-            {/* <UI content={content} /> */}
+        <MusicPlayerProvider tracks={tracks}>
+            <UI content={content} />
             <JavonntteCanvas />
         </MusicPlayerProvider >
     );

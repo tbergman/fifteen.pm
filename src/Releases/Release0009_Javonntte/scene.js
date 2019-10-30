@@ -12,9 +12,9 @@ import { FixedLights } from './lights';
 import { asteroidNeighborhoods, worldNeighborhoods } from './neighborhoods';
 import Road from './Road';
 import { World } from './World';
-import {BloomFilmEffect} from '../../Utils/Effects';
+import { BloomFilmEffect } from '../../Utils/Effects';
 import Stars from './Stars';
-import {Controls} from './controls';
+import { Controls } from './controls';
 import useMusicPlayer from '../../UI/Player/hooks';
 
 export function Scene({ }) {
@@ -34,23 +34,23 @@ export function Scene({ }) {
     const [facade10MaterialRef, facade10Material] = useResource();
     const [facade12MaterialRef, facade12Material] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
-    const {playTrack} = useMusicPlayer();
+    const { playTrack } = useMusicPlayer();
 
     useEffect(() => {
         setColorTheme(C.TRACK_METADATA["679771262"]);
     }, [])
 
-    function setColorTheme(metadata){
+    function setColorTheme(metadata) {
         scene.background = metadata.theme.background;
         scene.fog = metadata.theme.fog;
         // tmp
-        scene.background = new THREE.Color('white');
+        // scene.background = new THREE.Color('white');
     }
 
-    function onTrackSelect(trackId){
+    function onTrackSelect(trackId) {
         const metadata = C.TRACK_METADATA[trackId]
         setColorTheme(metadata);
-       // playTrack(metadata.index)
+        playTrack(metadata.index)
     }
 
     return (
@@ -61,8 +61,8 @@ export function Scene({ }) {
             <Windows1Material materialRef={windows1MaterialRef} />
             <Facade10Material
                 materialRef={facade10MaterialRef}
-                // textureRepeat={{x: 2, y: 2}}
-               />
+            // textureRepeat={{x: 2, y: 2}}
+            />
             <Facade04Material materialRef={facade04MaterialRef} />
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
