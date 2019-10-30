@@ -12,10 +12,6 @@ import SteeringWheel from './SteeringWheel';
 import Headlights from './Headlights';
 import useMusicPlayer from '../../../UI/Player/hooks';
 
-// TODO move these somewhere else
-
-const FILTER_RESONANCE = 11;
-
 function Car({
     dashCamRef,
     road,
@@ -91,11 +87,11 @@ function Car({
             car.position.y -= normal.y * 4;
             car.rotation.z -= .01;
             const freq = Math.max(1500 - car.position.y, 0);
-            audioStream.filter.frequency.value =freq;
-            audioStream.filter.Q.value = FILTER_RESONANCE
+            audioStream.filter.frequency.value = freq;
+            audioStream.filter.Q.value = 11;
         } else if (rotateRightPressed) {
             audioStream.filter.frequency.value = Math.min(Math.abs(car.position.y), 22050);
-            audioStream.filter.Q.value = FILTER_RESONANCE
+            audioStream.filter.Q.value = 11;
             car.position.y += normal.y * 4;
             car.rotation.z += .01;
         } else {
