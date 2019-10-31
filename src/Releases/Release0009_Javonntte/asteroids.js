@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
+import useMusicPlayer from '../../UI/Player/hooks';
 import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import NoiseSphereGeometry from '../../Utils/NoiseSphere';
-import useMusicPlayer from '../../UI/Player/hooks';
+import Buildings from './Buildings';
 import * as C from './constants';
 import { generateTileset } from "./tiles";
-import Buildings from './Buildings';
 
 function generateAsteroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
     const seed = Math.floor(Math.random() * 1000);

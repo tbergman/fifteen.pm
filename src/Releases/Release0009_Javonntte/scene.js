@@ -15,16 +15,8 @@ import { BloomFilmEffect } from '../../Utils/Effects';
 import Stars from './Stars';
 import DetroitLogo from './DetroitLogo';
 import { Controls } from './controls';
-import useMusicPlayer from '../../UI/Player/hooks';
 
-export function Scene({ colorTheme, onTrackSelect }) {
-    /* Note: Known behavior that useThree re-renders childrens thrice:
-       issue: https://github.com/drcmda/react-three-fiber/issues/66
-       example: https://codesandbox.io/s/use-three-renders-thrice-i4k6c
-       tldr: Developer says that changing this behavior requires a major version bump and will be breaking.
-       Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
-       (For instance: a complicated geometry.)
-     */
+export function Scene({ colorTheme, onTrackSelect }) { 
     const { scene } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
@@ -36,13 +28,9 @@ export function Scene({ colorTheme, onTrackSelect }) {
     const [metal03MaterialRef, metal03Material] = useResource();
    
     useEffect(() => {
-        // scene.background = colorTheme.background;
-        // scene.fog = colorTheme.fog;
-        // // tmp
-        scene.background = "white"
-        console.log("SUP")
-    // }, [colorTheme])
-    });
+        scene.background = colorTheme.background;
+        scene.fog = colorTheme.fog;
+    }, [colorTheme])
 
     return (
         <>
@@ -63,7 +51,6 @@ export function Scene({ colorTheme, onTrackSelect }) {
             /> */}
             <FixedLights />
             <Suspense fallback={null}>
-                
                 <Road
                     closed={true}
                     extrusionSegments={100}
@@ -78,7 +65,6 @@ export function Scene({ colorTheme, onTrackSelect }) {
                 </Road>
                 <DetroitLogo />
             </Suspense>
-            
             {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <>
                     <World

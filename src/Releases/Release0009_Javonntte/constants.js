@@ -27,8 +27,8 @@ export const WORLD_ROAD_PATH = (() => {
 // LOGO
 // TODO use world radius?
 export const LOGO_POS = new THREE.Vector3(
-    -25.8,
-    -400.5,
+    -500,
+    -300,
     0,
 )
 
@@ -71,8 +71,7 @@ export const TRACK_THEMES = [
     {
         textFillColor: 0xf0ffff,
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
-        background: new THREE.Color(0xffffff),
-        // background: new THREE.Color(0x000000),
+        background: new THREE.Color(0x000000),
         starColors: [0x555555, 0x333333, 0x1a1a1a],
         worldSurface: 0x0000af,
     },
