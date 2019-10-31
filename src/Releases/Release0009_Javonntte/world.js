@@ -77,8 +77,8 @@ export function WorldSurface({ geometry, color }) {
     </>
 }
 
-export function World({ buildings, neighborhoods, surfaceColor }) {
-    const instancedBuildings = useRef();
+export function World({ neighborhoods, surfaceColor }) {
+    
     const sphereGeometry = useMemo(() => {
         return generateSphereWorldGeometry(
             C.WORLD_RADIUS,
@@ -87,19 +87,9 @@ export function World({ buildings, neighborhoods, surfaceColor }) {
             C.MAX_WORLD_FACE_HEIGHT,
         );
     });
-    useMemo(() => {
-        if (buildings.loaded) {
-            instancedBuildings.current = generateTileset({
-                surface: sphereGeometry,
-                buildings,
-                neighborhoods: neighborhoods
-            });
-        }
-    }, [buildings.loaded])
+
     return <group >
         <WorldSurface geometry={sphereGeometry} color={surfaceColor} />
-        {instancedBuildings.current &&
-            <Buildings instancedBuildings={instancedBuildings.current} />
-        }
+        <Buildings surface={sphereGeometry} neighborhoods={neighborhoods} />
     </group>
 }

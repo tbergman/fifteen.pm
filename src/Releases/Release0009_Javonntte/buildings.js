@@ -36,7 +36,20 @@ export function groupBuildingGeometries(geometries) {
     return grouped;
 }
 
-export default function Buildings({ instancedBuildings }) {
+export default function Buildings({ surface, neighborhoods }) {
+    const instancedBuildings = useRef()
+    const {buildings} = useBuildings();
+
+    useMemo(() => {
+        if (buildings){
+            instancedBuildings.current = generateTileset({
+                surface,
+                buildings,
+                neighborhoods
+            });
+        }
+    }, [buildings])
+
     return <>
         {Object.keys(instancedBuildings).map(instanceName => {
             return <primitive key={instanceName}
