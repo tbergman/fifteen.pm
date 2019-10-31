@@ -83,12 +83,7 @@ export const TRACK_THEMES = [
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
     },
 ]
-export const TRACK_LOOKUP = {
-    "life": "679771262",
-    "swing": "693475855",
-    "natural": "679771259",
-    "dream": "679771253", 
-}
+
 export const TRACK_METADATA = (() => {
     const lookup = {};
     CONTENT["/9"].tracks.forEach((track, index) => lookup[track.id] = {
@@ -99,6 +94,12 @@ export const TRACK_METADATA = (() => {
     });
     return lookup;
 })();
+export const TRACK_LOOKUP = {
+    "life": "679771262",
+    "swing": "693475855",
+    "natural": "679771259",
+    "dream": "679771253", 
+}
 
 // CAR
 // model geometry names
@@ -107,7 +108,6 @@ export const DASH_BUTTONS = [
     "button_swing",
     "button_natural",
     "button_dream",
-    "button_test",
 ]
 export const STEERING_WHEEL_PARTS = [
     "gloves",

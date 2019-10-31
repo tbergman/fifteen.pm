@@ -114,10 +114,15 @@ function Car({
         {car &&
             <>
                 <DashCam />
-                {gltf && <Dashboard gltf={gltf} onTrackSelect={onTrackSelect} />}
+                <Dashboard gltf={gltf} onTrackSelect={onTrackSelect} />
                 <Chassis gltf={gltf} />
                 <SteeringWheel gltf={gltf} rotation={car.rotation} />
                 <Headlights />
+                {/* This pointlight makes the dash and chassis look good... */}
+                <pointLight
+                    position={[.8, -.75, 2]}
+                    intensity={.5}
+                />
             </>
         }
     </group>

@@ -1,9 +1,9 @@
-import React, { useRef, useMemo, useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useFrame, useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import { useResource, useFrame } from 'react-three-fiber';
 import useMusicPlayer from '../../../UI/Player/hooks';
+import { EmissiveScuffedPlasticMaterial } from '../../../Utils/materials';
 import * as C from '../constants';
-import { SurfaceImperfections08, EmissiveScuffedPlasticMaterial } from '../../../Utils/materials';
 
 export default function Dashboard({ gltf, onTrackSelect }) {
     const { currentTrackName } = useMusicPlayer();
@@ -11,6 +11,7 @@ export default function Dashboard({ gltf, onTrackSelect }) {
     const [defaultButtonMaterialRef, defaultButtonMaterial] = useResource();
     const materials = [selectedButtonMaterial, defaultButtonMaterial];
     const [materialsLoaded, setMaterialsLoaded] = useState(false);
+    const [selectedButton, setSelectedButton] = useState(null);
     const dashboardButtons = useMemo(() => {
         const buttons = {};
         gltf.scene.traverse(child => {
@@ -43,39 +44,42 @@ export default function Dashboard({ gltf, onTrackSelect }) {
     }, [materialsLoaded])
 
     useEffect(() => {
-        if (materials.filter(material => material ? true : false).length == materials.length){
+        if (materials.filter(material => material ? true : false).length == materials.length) {
             setMaterialsLoaded(true)
         }
     })
 
-    function pickMaterial(geometry) {
-        const isCurTrack = currentTrackName && currentTrackName.toLowerCase().includes(geometry.name);
-        return isCurTrack ? selectedButtonMaterial : defaultButtonMaterial;
-    }
+    useEffect(() => {
+        if (!currentTrackName) return;
+        C.DASH_BUTTONS.forEach(buttonName => {
+            const songShortHand = buttonName.split("button_")[1];
+            if (currentTrackName.toLowerCase().includes(songShortHand)) {
+                setSelectedButton(buttonName)
+            }
+        })
+
+    }, [currentTrackName])
 
     return <>
-        <EmissiveScuffedPlasticMaterial materialRef={selectedButtonMaterialRef} />
+        <EmissiveScuffedPlasticMaterial materialRef={selectedButtonMaterialRef} color="yellow" />
         <EmissiveScuffedPlasticMaterial materialRef={defaultButtonMaterialRef} />
-            {materialsLoaded && Object.keys(dashboardButtons).map(buttonName => {
-                const geometry = dashboardButtons[buttonName];
-                return (
-                    <mesh
-                        ref={buttonRefs[buttonName]}
-                        key={buttonName}
-                        onClick={e => {
-                            const curActionName = buttonName + "Action";
-                            actions.current[curActionName].play();
-                            // onTrackSelect(C.TRACK_LOOKUP[geometry.name])
-                        }}
-                        material={pickMaterial(geometry)}
-                    >
-                        <bufferGeometry attach="geometry" {...geometry} />
-                    </mesh>
-                )
-            })}
-        <pointLight
-            position={[.8, -.75, 2]}
-            intensity={.5}
-        />
+        {materialsLoaded && Object.keys(dashboardButtons).map(buttonName => {
+            const geometry = dashboardButtons[buttonName];
+            return (
+                <mesh
+                    ref={buttonRefs[buttonName]}
+                    key={buttonName}
+                    onClick={e => {
+                        const curActionName = buttonName + "Action";
+                        actions.current[curActionName].play();
+                        const trackShorthand = buttonName.split("button_")[1];
+                        onTrackSelect(C.TRACK_LOOKUP[trackShorthand])
+                    }}
+                    material={selectedButton === buttonName ? selectedButtonMaterial : defaultButtonMaterial}
+                >
+                    <bufferGeometry attach="geometry" {...geometry} />
+                </mesh>
+            )
+        })}
     </>
 }
