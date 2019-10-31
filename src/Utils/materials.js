@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { assetPathShared } from "./assets.js";
 import { useFrame, useThree } from 'react-three-fiber';
@@ -430,24 +430,28 @@ export function Windows1Material({ materialRef, ...props }) {
 
 export function TronMaterial({ materialRef, bpm, side }) {
 	materialRef = materialRef ? materialRef : useRef().current;
-	const { clock, camera, size } = useThree();
-
-	useFrame(
-		() => {
-			if (!materialRef.current) return; // avoid re-initialization async issues (e.g. if tiling)
-			materialRef.current.uniforms.uTime.value = clock.oldTime;
-		});
-	const uniforms = useMemo(() => {
-		return {
+	const { clock, size } = useThree();
+	const uniforms = useRef();
+	useEffect(() => {
+		uniforms.current = {
 			uTime: { value: 0 },
-			uCurCenter: { value: camera.position },
 			uResolution: { value: new THREE.Vector2(size.width, size.length) },
-			uBPM: { value: bpm },// TODO bpm },
+			uBPM: { value: bpm }
 		}
-	}, [materialRef, bpm]);
+	}, []);
+
+	useFrame(() => {
+		if (!uniforms.current.uTime) return; // avoid re-initialization async issues (e.g. if tiling)
+		uniforms.current.uTime.value = clock.oldTime;
+	});
+
+	useEffect(() => {
+		if (uniforms.current.uBPM) uniforms.current.uBPM.value = bpm;
+	}, [bpm])
+
 	return <shaderMaterial
 		ref={materialRef}
-		uniforms={uniforms}
+		uniforms={uniforms.current}
 		side={side}
 		vertexShader={simpleVertex}
 		fragmentShader={tronFragmentShader}
@@ -481,19 +485,22 @@ export function BlackLeather12({ materialRef, ...props }) {
 
 // TODO
 export function EmissiveScuffedPlasticMaterial({ materialRef, ...props }) {
-	const [metalnessMap, normalMap, roughnessMap, envMap] = useMemo(() => {
+	const [metalnessMap, normalMap, roughnessMap, alphaMap, envMap] = useMemo(() => {
 		const textureLoader = new THREE.TextureLoader();
 		const metalnessMap = textureLoader.load(assetPathShared("textures/plastic-pattern1/plasticpattern1-metalness.png"))
 		const normalMap = textureLoader.load(assetPathShared("textures/plastic-pattern1/plasticpattern1-normal2b.png"))
 		const roughnessMap = textureLoader.load(assetPathShared("textures/plastic-pattern1/plasticpattern1-roughness2.png"))
+		const alphaMap = textureLoader.load(assetPathShared("textures/chain-alpha-map/alphaMap.png"))
 		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
-		const textureMaps = [metalnessMap, normalMap, roughnessMap, envMap];
+		const textureMaps = [metalnessMap, normalMap, roughnessMap, alphaMap, envMap];
 		return tileTextureMaps(textureMaps, props)
 	});
 	return <meshStandardMaterial
 		ref={materialRef}
 		lights
 		receiveShadow
+		transparent={props.transparent}
+		alphaMap={alphaMap}
 		color={props.color || "red"}
 		metalnessMap={metalnessMap}
 		normalMap={normalMap}

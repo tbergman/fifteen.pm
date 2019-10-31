@@ -3,6 +3,7 @@ import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import NoiseSphereGeometry from '../../Utils/NoiseSphere';
+import useMusicPlayer from '../../UI/Player/hooks';
 import * as C from './constants';
 import { generateTileset } from "./tiles";
 import Buildings from './Buildings';
@@ -29,14 +30,14 @@ function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids,
         const tiers = Math.floor(radius / 4);
         // ensure at least one asteroid is in the center of the belt
         const center = i == 0 ? new THREE.Vector3(
-                asteroidBeltCenter.x,
-                asteroidBeltCenter.y,
-                asteroidBeltCenter.z,
-            ) : new THREE.Vector3(
-                asteroidBeltRadius * 1.5 * (Math.random() - .5),
-                asteroidBeltRadius * 1.5 * (Math.random() - .5),
-                asteroidBeltRadius * 1.5 * (Math.random() - .5),
-            )   
+            asteroidBeltCenter.x,
+            asteroidBeltCenter.y,
+            asteroidBeltCenter.z,
+        ) : new THREE.Vector3(
+            asteroidBeltRadius * 1.5 * (Math.random() - .5),
+            asteroidBeltRadius * 1.5 * (Math.random() - .5),
+            asteroidBeltRadius * 1.5 * (Math.random() - .5),
+        )
         const noiseHeight = maxFaceNoise;
         const noiseWidth = maxFaceNoise;
         const asteroidGeom = generateAsteroid(
@@ -60,9 +61,10 @@ function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids,
     return asteroids;
 }
 
-function AsteroidsSurface({ geometry, bpm }) {
+function AsteroidsSurface({ geometry }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [ground29MaterialRef, ground29Material] = useResource();
+    const { bpm } = useMusicPlayer();
     return <>
         <TronMaterial
             materialRef={tronMaterialRef}
@@ -115,12 +117,7 @@ export function Asteroids({ track, buildings, neighborhoods, ...props }) {
     }, [buildings.loaded])
 
     return <group>
-        {asteroids &&
-            <AsteroidsSurface
-                geometry={asteroids.geometry}
-                bpm={track && track.bpm}
-            />
-        }
+        {asteroids && <AsteroidsSurface geometry={asteroids.geometry} />}
         {instancedBuildingGroups &&
             instancedBuildingGroups.map((instancedBuildings, index) => {
                 return <Buildings key={index} instancedBuildings={instancedBuildings} />

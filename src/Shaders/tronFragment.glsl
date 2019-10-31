@@ -7,7 +7,6 @@ uniform vec3 lightPosition;
 uniform vec2 uResolution;
 uniform float uTime;
 uniform float uBPM;
-uniform vec3 uCurCenter;
 const int NUM_LINES = 100;
 
 float random(in vec2 _st) {

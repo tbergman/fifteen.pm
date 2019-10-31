@@ -8,7 +8,7 @@ export default function Chassis({ gltf }) {
     })
     const [scuffedPlasticMaterialRef, scuffedPlasticMaterial] = useResource();
     return <>
-        <EmissiveScuffedPlasticMaterial materialRef={scuffedPlasticMaterialRef} color="black" />
+        <EmissiveScuffedPlasticMaterial materialRef={scuffedPlasticMaterialRef} transparent={true} color={0x030303} />
         {scuffedPlasticMaterial &&
             <mesh
                 name="chassis"
