@@ -499,8 +499,10 @@ export function EmissiveScuffedPlasticMaterial({ materialRef, ...props }) {
 		ref={materialRef}
 		lights
 		receiveShadow
-		transparent={props.transparent}
-		alphaMap={alphaMap}
+		// transparent={props.transparent}
+		// alphaMap={alphaMap}
+		emissive={props.emissive ? props.emissive : "black"}
+		emissiveIntensity={10}
 		color={props.color || "red"}
 		metalnessMap={metalnessMap}
 		normalMap={normalMap}

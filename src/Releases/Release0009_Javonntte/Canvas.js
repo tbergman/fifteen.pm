@@ -1,10 +1,9 @@
 import React from 'react';
+import { Canvas } from 'react-three-fiber';
+import { MusicPlayerContext } from '../../UI/Player/MusicPlayerContext';
 import { Scene } from './Scene';
-import { Canvas, useFrame } from 'react-three-fiber';
-import { MusicPlayerProvider, MusicPlayerContext } from '../../UI/Player/MusicPlayerContext';
-import { BloomFilmEffect } from '../../Utils/Effects';
 
-export default function JavonntteCanvas({ }) {
+export default function JavonntteCanvas({ colorTheme, onTrackSelect }) {
     return (
         // Unfortunately some gymnastics required here to pass music player context through canvas.
         // There's more than one way to solve this and some room for clean-up but this does the job.
@@ -22,7 +21,7 @@ export default function JavonntteCanvas({ }) {
                         }}
                     >
                         <MusicPlayerContext.Provider value={value}>
-                            <Scene />
+                            <Scene colorTheme={colorTheme} onTrackSelect={onTrackSelect} />
                         </MusicPlayerContext.Provider>
                     </Canvas>
                 )}

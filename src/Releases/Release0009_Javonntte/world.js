@@ -47,7 +47,7 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
 
 
 
-export function WorldSurface({ geometry }) {
+export function WorldSurface({ geometry, color }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [ground29MaterialRef, ground29Material] = useResource();
     return <>
@@ -58,7 +58,7 @@ export function WorldSurface({ geometry }) {
         <Ground29Material
             materialRef={ground29MaterialRef}
             side={THREE.FrontSide}
-            color={0x0000af}
+            color={color}
         />
         {tronMaterial && ground29Material &&
             <group>
@@ -77,7 +77,7 @@ export function WorldSurface({ geometry }) {
     </>
 }
 
-export function World({ buildings, neighborhoods }) {
+export function World({ buildings, neighborhoods, surfaceColor }) {
     const instancedBuildings = useRef();
     const sphereGeometry = useMemo(() => {
         return generateSphereWorldGeometry(
@@ -97,7 +97,7 @@ export function World({ buildings, neighborhoods }) {
         }
     }, [buildings.loaded])
     return <group >
-        <WorldSurface geometry={sphereGeometry} />
+        <WorldSurface geometry={sphereGeometry} color={surfaceColor} />
         {instancedBuildings.current &&
             <Buildings instancedBuildings={instancedBuildings.current} />
         }

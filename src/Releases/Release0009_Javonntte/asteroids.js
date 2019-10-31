@@ -29,11 +29,7 @@ function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids,
         const sides = Math.floor(radius / 4);
         const tiers = Math.floor(radius / 4);
         // ensure at least one asteroid is in the center of the belt
-        const center = i == 0 ? new THREE.Vector3(
-            asteroidBeltCenter.x,
-            asteroidBeltCenter.y,
-            asteroidBeltCenter.z,
-        ) : new THREE.Vector3(
+        const center = new THREE.Vector3(
             asteroidBeltRadius * 1.5 * (Math.random() - .5),
             asteroidBeltRadius * 1.5 * (Math.random() - .5),
             asteroidBeltRadius * 1.5 * (Math.random() - .5),

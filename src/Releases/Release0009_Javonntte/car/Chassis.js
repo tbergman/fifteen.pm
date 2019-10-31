@@ -1,18 +1,18 @@
 import React, { useMemo } from 'react';
 import { useResource } from 'react-three-fiber';
-import { Metal03Material, EmissiveScuffedPlasticMaterial } from '../../../Utils/materials';
+import { FoamGripMaterial } from '../../../Utils/materials';
 
 export default function Chassis({ gltf }) {
     const chassis = useMemo(() => {
         return gltf.__$.filter(elt => elt.name == "chassis")[0];
     })
-    const [scuffedPlasticMaterialRef, scuffedPlasticMaterial] = useResource();
+    const [foamGripRef, foamGrip] = useResource();
     return <>
-        <EmissiveScuffedPlasticMaterial materialRef={scuffedPlasticMaterialRef} transparent={true} color={0x030303} />
-        {scuffedPlasticMaterial &&
+        <FoamGripMaterial materialRef={foamGripRef} />
+        {foamGrip &&
             <mesh
                 name="chassis"
-                material={scuffedPlasticMaterial}
+                material={foamGrip}
             >
                 <bufferGeometry attach="geometry" {...chassis.geometry} />
             </mesh>

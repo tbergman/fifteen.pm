@@ -21,7 +21,7 @@ export default function SteeringWheel({ gltf, rotation }) {
             "gloves": metal03,
             "sleeves": foamGrip,
             "wheel": blackLeather,
-            "wheel_internal": tron,
+            "wheel_internal": metal03,
         }
     })
 
@@ -31,7 +31,7 @@ export default function SteeringWheel({ gltf, rotation }) {
     })
 
     return <group ref={wheelRef}>
-        <Metal03Material materialRef={metal03Ref} color={0xff0000}/>
+        <Metal03Material materialRef={metal03Ref} />
         <BlackLeather12 materialRef={blackLeatherRef} skipDisplacement />
         <FoamGripMaterial materialRef={foamGripRef} />
         <TronMaterial materialRef={tronRef} bpm={bpm} />

@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useResource, useThree } from 'react-three-fiber';
 import { useGLTF } from "../../Utils/hooks";
@@ -17,7 +17,7 @@ import Stars from './Stars';
 import { Controls } from './controls';
 import useMusicPlayer from '../../UI/Player/hooks';
 
-export function Scene({ }) {
+export function Scene({ colorTheme, onTrackSelect }) {
     /* Note: Known behavior that useThree re-renders childrens thrice:
        issue: https://github.com/drcmda/react-three-fiber/issues/66
        example: https://codesandbox.io/s/use-three-renders-thrice-i4k6c
@@ -25,6 +25,7 @@ export function Scene({ }) {
        Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
        (For instance: a complicated geometry.)
      */
+    console.log(colorTheme, onTrackSelect);
     const { scene } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
@@ -34,24 +35,13 @@ export function Scene({ }) {
     const [facade10MaterialRef, facade10Material] = useResource();
     const [facade12MaterialRef, facade12Material] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
-    const { playTrack } = useMusicPlayer();
+    // const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA["679771262"].theme);
+    // const { playTrack } = useMusicPlayer();
 
     useEffect(() => {
-        setColorTheme(C.TRACK_METADATA["679771262"]);
-    }, [])
-
-    function setColorTheme(metadata) {
-        scene.background = metadata.theme.background;
-        scene.fog = metadata.theme.fog;
-        // tmp
-        // scene.background = new THREE.Color('white');
-    }
-
-    function onTrackSelect(trackId) {
-        const metadata = C.TRACK_METADATA[trackId]
-        setColorTheme(metadata);
-        playTrack(metadata.index)
-    }
+        scene.background = colorTheme.background;
+        scene.fog = colorTheme.fog;
+    }, [colorTheme])
 
     return (
         <>
@@ -59,10 +49,7 @@ export function Scene({ }) {
             <FoamGripMaterial materialRef={foamGripMaterialRef} color={0x0000af} />
             <CloudMaterial materialRef={cloudMaterialRef} emissive={0xd4af37} />
             <Windows1Material materialRef={windows1MaterialRef} />
-            <Facade10Material
-                materialRef={facade10MaterialRef}
-            // textureRepeat={{x: 2, y: 2}}
-            />
+            <Facade10Material materialRef={facade10MaterialRef} />
             <Facade04Material materialRef={facade04MaterialRef} />
             <Facade12Material materialRef={facade12MaterialRef} />
             <Metal03Material materialRef={metal03MaterialRef} />
@@ -91,10 +78,11 @@ export function Scene({ }) {
             {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <>
                     <World
+                        surfaceColor={colorTheme.worldSurface}
                         neighborhoods={worldNeighborhoods}
                         buildings={{
                             geometries: buildingGeometries,
-                            materials: [metal03Material, foamGripMaterial, facade10Material], //cloudMaterial], //facade12Material],//foamGripMaterial],
+                            materials: [metal03Material, foamGripMaterial, facade10Material],
                             loaded: !loadingBuildings,
                         }}
                     />
@@ -108,9 +96,7 @@ export function Scene({ }) {
                     />
                 </>
             }
-            <Stars
-                radius={C.ASTEROID_BELT_RADIUS / 40}
-            />
+            <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} />
             <BloomFilmEffect />
         </>
     );

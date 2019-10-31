@@ -54,7 +54,6 @@ export const BUILDING_MATERIAL = {
     "large_tall_low_michigancentralstation": "foamGripMaterial"
 }
 
-
 // TRACK INFO
 export const TRACK_THEMES = [
     // index matches track list order
@@ -62,25 +61,29 @@ export const TRACK_THEMES = [
         textFillColor: 0xf0ffff,
         fog: new THREE.FogExp2( 0xefd1b5, 0.0025 ),
         background: new THREE.Color(0x000000),
-        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+        starColors: [0x555555, 0x333333, 0x1a1a1a],
+        worldSurface: 0x0000af,
     },
     {
         textFillColor: 0xf0ffff,
-        fog: new THREE.FogExp2( 0xefd1b5, 0.25 ),
-        background: new THREE.Color(0xff0000),
-        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+        fog: new THREE.FogExp2( 0xefd1b5, 0.0025 ),
+        background: new THREE.Color(0xffffff),
+        starColors: [0x000000, 0x111111, 0x222222],
+        worldSurface: 0xffff10,
     },
     {
         textFillColor: 0xf0ffff,
         fog: new THREE.FogExp2( 0xefd1b5, 0.025 ),
         background: new THREE.Color(0x00ff00),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+        worldSurface: 0xf0ffff,
     },
     {
         textFillColor: 0xf0ffff,
-        fog: new THREE.FogExp2( 0x0faf00, 0.5 ),
+        fog: new THREE.FogExp2( 0x0faf00, 0.05 ),
         background: new THREE.Color(0xff0000),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+        worldSurface: 0x00affb,
     },
 ]
 

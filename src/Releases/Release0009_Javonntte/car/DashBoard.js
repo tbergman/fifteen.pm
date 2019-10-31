@@ -57,11 +57,10 @@ export default function Dashboard({ gltf, onTrackSelect }) {
                 setSelectedButton(buttonName)
             }
         })
-
     }, [currentTrackName])
 
     return <>
-        <EmissiveScuffedPlasticMaterial materialRef={selectedButtonMaterialRef} color="yellow" />
+        <EmissiveScuffedPlasticMaterial materialRef={selectedButtonMaterialRef} color="yellow" emissive="pink" />
         <EmissiveScuffedPlasticMaterial materialRef={defaultButtonMaterialRef} />
         {materialsLoaded && Object.keys(dashboardButtons).map(buttonName => {
             const geometry = dashboardButtons[buttonName];
@@ -71,9 +70,10 @@ export default function Dashboard({ gltf, onTrackSelect }) {
                     key={buttonName}
                     onClick={e => {
                         const curActionName = buttonName + "Action";
+                        console.log("BLAHBLAHBLAH", curActionName);
                         actions.current[curActionName].play();
                         const trackShorthand = buttonName.split("button_")[1];
-                        onTrackSelect(C.TRACK_LOOKUP[trackShorthand])
+                        // onTrackSelect(C.TRACK_LOOKUP[trackShorthand])
                     }}
                     material={selectedButton === buttonName ? selectedButtonMaterial : defaultButtonMaterial}
                 >
