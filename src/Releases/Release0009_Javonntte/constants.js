@@ -102,14 +102,16 @@ export const TRACK_METADATA = (() => {
 
 // CAR
 // model geometry names
-export const BUTTON_LIFE = "button_life"
-export const BUTTON_DREAM = "button_dream"
-export const BUTTON_SWING = "button_swing"
-export const BUTTON_NATURAL = "button_natural"
-export const SPEEDOMETER = "speedometer"
 export const DASH_BUTTONS = [
-    BUTTON_LIFE,
-    BUTTON_DREAM,
-    BUTTON_SWING,
-    BUTTON_NATURAL,
+    "button_life",
+    "button_swing",
+    "button_natural",
+    "button_dream",
+    "button_test",
+]
+export const STEERING_WHEEL_PARTS = [
+    "gloves",
+    "sleeves",
+    "wheel",
+    "wheel_internal"
 ]

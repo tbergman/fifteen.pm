@@ -12,7 +12,7 @@ export default function Release0009_Javonntte({ }) {
     const tracks = useMemo(() => content.tracks)
     return (
         <MusicPlayerProvider tracks={tracks}>
-            <UI content={content} />
+            {/* <UI content={content} /> */}
             <JavonntteCanvas />
         </MusicPlayerProvider >
     );

@@ -19,8 +19,6 @@ function Car({
     roadOffset,
     onTrackSelect,
 }) {
-    const [tronMaterialRef, tronMaterial] = useResource();
-    const [metal03MaterialRef, metal03Material] = useResource();
     const gltf = useLoader(GLTFLoader, C.CAR_URL, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
@@ -111,16 +109,8 @@ function Car({
         }
     })
 
-
     // TODO render order to make sure the car's always in front https://discourse.threejs.org/t/always-render-mesh-on-top-of-another/120/5
     return <group ref={carRef}>
-        <TronMaterial materialRef={tronMaterialRef} bpm={120} />
-        <Metal03Material materialRef={metal03MaterialRef} />
-        {tronMaterial &&
-            <mesh name="speedometer" material={tronMaterial}>
-                <bufferGeometry attach="geometry" {...gltf.__$[5].geometry} />
-            </mesh>
-        }
         {car &&
             <>
                 <DashCam />

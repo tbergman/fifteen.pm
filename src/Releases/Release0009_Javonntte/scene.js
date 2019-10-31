@@ -44,7 +44,7 @@ export function Scene({ }) {
         scene.background = metadata.theme.background;
         scene.fog = metadata.theme.fog;
         // tmp
-        // scene.background = new THREE.Color('white');
+        scene.background = new THREE.Color('white');
     }
 
     function onTrackSelect(trackId) {

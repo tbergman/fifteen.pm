@@ -479,12 +479,45 @@ export function BlackLeather12({ materialRef, ...props }) {
 }
 
 // TODO
-export function EmissiveMaterial({ materialRef, ...props }) {
+export function EmissiveScuffedPlasticMaterial({ materialRef, ...props }) {
+	const [metalnessMap, normalMap, roughnessMap, envMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const metalnessMap = textureLoader.load(assetPathShared("textures/plastic-pattern1/plasticpattern1-metalness.png"))
+		const normalMap = textureLoader.load(assetPathShared("textures/plastic-pattern1/plasticpattern1-normal2b.png"))
+		const roughnessMap = textureLoader.load(assetPathShared("textures/plastic-pattern1/plasticpattern1-roughness2.png"))
+		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
+		const textureMaps = [metalnessMap, normalMap, roughnessMap, envMap];
+		return tileTextureMaps(textureMaps, props)
+	});
 	return <meshStandardMaterial
-		{...props}
 		ref={materialRef}
 		lights
 		receiveShadow
-		castShadow
+		color={props.color || "red"}
+		metalnessMap={metalnessMap}
+		normalMap={normalMap}
+		roughnessMap={roughnessMap}
+		envMap={envMap}
+	/>
+}
+
+export function SurfaceImperfections08({ materialRef, ...props }) {
+	const [diffuseMap, glossinessMap, normalMap, envMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const diffuseMap = textureLoader.load(assetPathShared("textures/surface-imperfections08/SurfaceImperfections08_var1.jpg"));
+		const glossinessMap = textureLoader.load(assetPathShared("textures/surface-imperfections08/SurfaceImperfections08_var1.jpg"));
+		const normalMap = textureLoader.load(assetPathShared("textures/surface-imperfections08/SurfaceImperfections08_nrm.jpg"));
+		const envMap = cloudEnvMap();
+		const textureMaps = [diffuseMap, glossinessMap, normalMap, envMap];
+		return tileTextureMaps(textureMaps, props);
+	});
+	return <meshStandardMaterial
+		ref={materialRef}
+		map={diffuseMap}
+		roughnessMap={glossinessMap}
+		roughness={0.1}
+		normalMap={normalMap}
+		envMap={envMap}
+		roughness={-1} // invert roughness to get glossiness
 	/>
 }
