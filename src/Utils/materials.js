@@ -268,6 +268,7 @@ export function Metal03Material({ materialRef, ...props }) {
 		castShadow
 		envMap={envMap}
 		map={colorMap}
+		color={props.color || "white"}
 		normalMap={normalMap}
 		metalMap={metalMap}
 		roughness={props.roughness || 0.5}
@@ -470,8 +471,8 @@ export function BlackLeather12({ materialRef, ...props }) {
 		map={diffuseMap}
 		roughnessMap={glossinessMap}
 		roughness={0.1}
-		displacementMap={heightMap}
-		displacementScale={.01}
+		displacementMap={!props.skipDisplacement && heightMap}
+		displacementScale={props.displacementScale || .01}
 		normalMap={normalMap}
 		envMap={reflectionMap}
 		roughness={-1} // invert roughness to get glossiness

@@ -48,6 +48,7 @@ const useMusicPlayer = () => {
     playNextTrack,
     audioStream: state.audioStream,
     currentTime: state.audioPlayer.currentTime,
+    bpm: state.currentTrackIndex !== null && state.tracks[state.currentTrackIndex].bpm,
   }
 };
 
