@@ -6,7 +6,7 @@ import { assetPath9 } from './utils';
 // ASSETS
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
 export const CAR_URL = assetPath9("objects/car/car.glb");
-export const LOGO_URL = assetPath9("objects/logo/logo.glb");    
+export const LOGO_URL = assetPath9("objects/logo/logo.glb");
 
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
@@ -23,14 +23,13 @@ export const WORLD_ROAD_PATH = (() => {
     const points = circle.vertices.reverse(); // reverse it so driver is going in expected dir
     return points.slice(0, points.length - 2); // don't overlap the loop (rm last elt)
 })();
-export const LOGO_POS = new THREE.Vector3(
 
-    // 171.54176330566406,
-    // -135.2608504295349,
-    // 129
-    WORLD_ROAD_PATH[1].x - WORLD_RADIUS * 20, 
-    WORLD_ROAD_PATH[1].y - WORLD_RADIUS * 50,
-    WORLD_ROAD_PATH[1].z + WORLD_RADIUS * 50, 
+// LOGO
+// TODO use world radius?
+export const LOGO_POS = new THREE.Vector3(
+    -25.8,
+    -400.5,
+    0,
 )
 
 console.log("LOGO POS", LOGO_POS)

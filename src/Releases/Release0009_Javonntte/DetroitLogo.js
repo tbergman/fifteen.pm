@@ -17,7 +17,7 @@ export default function DetroitLogo({ }) {
     
     useFrame(() => {
         if (!logo) return;
-        logo.rotation.y -= .01;
+        logo.rotation.x += .01;
     })
 
     return (

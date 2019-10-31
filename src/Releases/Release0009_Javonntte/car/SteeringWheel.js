@@ -18,9 +18,9 @@ export default function SteeringWheel({ gltf, rotation }) {
 
     const wheelMaterial = useMemo(() => {
         return {
-            "gloves": metal03,
+            "gloves": foamGrip,
             "sleeves": foamGrip,
-            "wheel": blackLeather,
+            "wheel": foamGrip,
             "wheel_internal": metal03,
         }
     })
@@ -31,9 +31,9 @@ export default function SteeringWheel({ gltf, rotation }) {
     })
 
     return <group ref={wheelRef}>
-        <Metal03Material materialRef={metal03Ref} />
-        <BlackLeather12 materialRef={blackLeatherRef} skipDisplacement />
-        <FoamGripMaterial materialRef={foamGripRef} />
+        <Metal03Material materialRef={metal03Ref} color="black" />
+        <BlackLeather12 materialRef={blackLeatherRef} color="black"     skipDisplacement />
+        <meshBasicMaterial ref={foamGripRef} color="black" />
         <TronMaterial materialRef={tronRef} bpm={bpm} />
         {wheelParts.map((wheelPart, index) => {
             return <mesh

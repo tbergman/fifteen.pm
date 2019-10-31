@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { useFrame, useLoader, useResource, useThree } from 'react-three-fiber';
+import { useFrame, useLoader, useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import useMusicPlayer from '../../../UI/Player/hooks';
 import { useKeyPress } from '../../../Utils/hooks';
-import { Metal03Material, TronMaterial } from '../../../Utils/materials';
 import * as C from '../constants';
 import Chassis from './Chassis';
 import Dashboard from './Dashboard';

@@ -8,7 +8,7 @@ export default function Chassis({ gltf }) {
     })
     const [foamGripRef, foamGrip] = useResource();
     return <>
-        <FoamGripMaterial materialRef={foamGripRef} />
+        <FoamGripMaterial materialRef={foamGripRef} color="black" />
         {foamGrip &&
             <mesh
                 name="chassis"
