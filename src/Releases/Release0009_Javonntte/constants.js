@@ -5,7 +5,8 @@ import { assetPath9 } from './utils';
 
 // ASSETS
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
-export const CAR_URL =  assetPath9("objects/car/car.glb");
+export const CAR_URL = assetPath9("objects/car/car.glb");
+export const LOGO_URL = assetPath9("objects/logo/logo.glb");    
 
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
@@ -22,13 +23,24 @@ export const WORLD_ROAD_PATH = (() => {
     const points = circle.vertices.reverse(); // reverse it so driver is going in expected dir
     return points.slice(0, points.length - 2); // don't overlap the loop (rm last elt)
 })();
+export const LOGO_POS = new THREE.Vector3(
+
+    // 171.54176330566406,
+    // -135.2608504295349,
+    // 129
+    WORLD_ROAD_PATH[1].x - WORLD_RADIUS * 20, 
+    WORLD_ROAD_PATH[1].y - WORLD_RADIUS * 50,
+    WORLD_ROAD_PATH[1].z + WORLD_RADIUS * 50, 
+)
+
+console.log("LOGO POS", LOGO_POS)
 
 // ASTEROID CONSTANTS
 // This is divided by the window inner width in the constant below so movile screens have smaller asteroids
 export const NUM_ASTEROIDS = 8;
 export const ASTEROID_MAX_RADIUS = WORLD_RADIUS;
-export const ASTEROID_BELT_RADIUS = 255;
-export const ASTEROID_BELT_CENTER = WORLD_ROAD_PATH[0];// Ensure this is a point on the road so we have at least 1 asteroid intersecting it for a fun drive-thru
+export const ASTEROID_BELT_RADIUS = WORLD_RADIUS * 8;
+// export const ASTEROID_BELT_CENTER = WORLD_ROAD_PATH[0];// Ensure this is a point on the road so we have at least 1 asteroid intersecting it for a fun drive-thru
 export const ASTEROID_MAX_SIDES = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? 1.6 : 1.6));
 export const ASTEROID_MAX_TIERS = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? .8 : 1.6));
 export const ASTEROID_MAX_FACE_NOISE = MAX_WORLD_FACE_HEIGHT;
@@ -59,28 +71,29 @@ export const TRACK_THEMES = [
     // index matches track list order
     {
         textFillColor: 0xf0ffff,
-        fog: new THREE.FogExp2( 0xefd1b5, 0.0025 ),
-        background: new THREE.Color(0x000000),
+        fog: new THREE.FogExp2(0xefd1b5, 0.0025),
+        background: new THREE.Color(0xffffff),
+        // background: new THREE.Color(0x000000),
         starColors: [0x555555, 0x333333, 0x1a1a1a],
         worldSurface: 0x0000af,
     },
     {
         textFillColor: 0xf0ffff,
-        fog: new THREE.FogExp2( 0xefd1b5, 0.0025 ),
+        fog: new THREE.FogExp2(0xefd1b5, 0.0025),
         background: new THREE.Color(0xffffff),
         starColors: [0x000000, 0x111111, 0x222222],
         worldSurface: 0xffff10,
     },
     {
         textFillColor: 0xf0ffff,
-        fog: new THREE.FogExp2( 0xefd1b5, 0.025 ),
+        fog: new THREE.FogExp2(0xefd1b5, 0.025),
         background: new THREE.Color(0x00ff00),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
         worldSurface: 0xf0ffff,
     },
     {
         textFillColor: 0xf0ffff,
-        fog: new THREE.FogExp2( 0x0faf00, 0.05 ),
+        fog: new THREE.FogExp2(0x0faf00, 0.05),
         background: new THREE.Color(0xff0000),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
         worldSurface: 0x00affb,
@@ -101,7 +114,7 @@ export const TRACK_LOOKUP = {
     "life": "679771262",
     "swing": "693475855",
     "natural": "679771259",
-    "dream": "679771253", 
+    "dream": "679771253",
 }
 
 // CAR

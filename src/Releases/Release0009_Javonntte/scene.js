@@ -13,6 +13,7 @@ import Road from './Road';
 import { World } from './World';
 import { BloomFilmEffect } from '../../Utils/Effects';
 import Stars from './Stars';
+import DetroitLogo from './DetroitLogo';
 import { Controls } from './controls';
 import useMusicPlayer from '../../UI/Player/hooks';
 
@@ -24,7 +25,6 @@ export function Scene({ colorTheme, onTrackSelect }) {
        Their general recommendation/philosophy is that if you are "declaring calculations" they should implement useMemo
        (For instance: a complicated geometry.)
      */
-    console.log(colorTheme, onTrackSelect);
     const { scene } = useThree();
     const [loadingBuildings, buildingGeometries] = useGLTF(C.BUILDINGS_URL, onBuildingsLoaded);
     const [cloudMaterialRef, cloudMaterial] = useResource();
@@ -34,13 +34,15 @@ export function Scene({ colorTheme, onTrackSelect }) {
     const [facade10MaterialRef, facade10Material] = useResource();
     const [facade12MaterialRef, facade12Material] = useResource();
     const [metal03MaterialRef, metal03Material] = useResource();
-    // const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA["679771262"].theme);
-    // const { playTrack } = useMusicPlayer();
-
+   
     useEffect(() => {
-        scene.background = colorTheme.background;
-        scene.fog = colorTheme.fog;
-    }, [colorTheme])
+        // scene.background = colorTheme.background;
+        // scene.fog = colorTheme.fog;
+        // // tmp
+        scene.background = "white"
+        console.log("SUP")
+    // }, [colorTheme])
+    });
 
     return (
         <>
@@ -61,6 +63,7 @@ export function Scene({ colorTheme, onTrackSelect }) {
             /> */}
             <FixedLights />
             <Suspense fallback={null}>
+                
                 <Road
                     closed={true}
                     extrusionSegments={100}
@@ -73,7 +76,9 @@ export function Scene({ colorTheme, onTrackSelect }) {
                         onTrackSelect={onTrackSelect}
                     />
                 </Road>
+                <DetroitLogo />
             </Suspense>
+            
             {!loadingBuildings && buildingGeometries && foamGripMaterialRef &&
                 <>
                     <World
