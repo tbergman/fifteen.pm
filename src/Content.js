@@ -72,7 +72,7 @@ export const CONTENT = {
       overlayContent: 'white',
       overlay: 'rgba(127, 0, 255, 0.5)',
       player: 'rgba(127, 0, 255, 0.5)',
-      onHover:'rgba(240, 0, 255, 0.75)', 
+      onHover: 'rgba(240, 0, 255, 0.75)',
       instructions: [
         {
           icon: MouseMove,
@@ -343,17 +343,17 @@ export const CONTENT = {
     purchaseLink: "TODO",
     tracks: [
       {
-        name: "Swing House Madness",
-        type: "soundcloud",
-        id: "693475855",
-        secretToken: "s-qakud",
-        bpm: "120",
-      },
-      {
         name: "City Life",
         type: "soundcloud",
         id: "679771262",
         secretToken: "s-pqcS4",
+        bpm: "120",
+      },
+      {
+        name: "Swing House Madness",
+        type: "soundcloud",
+        id: "693475855",
+        secretToken: "s-qakud",
         bpm: "120",
       },
       {

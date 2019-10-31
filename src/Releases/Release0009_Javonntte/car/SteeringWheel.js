@@ -8,6 +8,7 @@ export default function SteeringWheel({ gltf, rotation }) {
     const [wheelRef, wheel] = useResource()
     const [tronRef, tron] = useResource();
     const [foamGripRef, foamGrip] = useResource();
+    const [blackLeatherRef, blackLeather] = useResource()
     const [metal03Ref, metal03] = useResource();
     const { bpm } = useMusicPlayer();
 
@@ -17,10 +18,10 @@ export default function SteeringWheel({ gltf, rotation }) {
 
     const wheelMaterial = useMemo(() => {
         return {
-            "gloves": tron,
+            "gloves": metal03,
             "sleeves": foamGrip,
-            "wheel": metal03,
-            "wheel_internal": metal03,
+            "wheel": blackLeather,
+            "wheel_internal": tron,
         }
     })
 
@@ -31,6 +32,7 @@ export default function SteeringWheel({ gltf, rotation }) {
 
     return <group ref={wheelRef}>
         <Metal03Material materialRef={metal03Ref} color={0xff0000}/>
+        <BlackLeather12 materialRef={blackLeatherRef} skipDisplacement />
         <FoamGripMaterial materialRef={foamGripRef} />
         <TronMaterial materialRef={tronRef} bpm={bpm} />
         {wheelParts.map((wheelPart, index) => {
