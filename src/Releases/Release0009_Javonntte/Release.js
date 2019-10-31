@@ -24,8 +24,10 @@ export default function Release({ }) {
         playTrack(metadata.index)
     }
 
-    return <>
-        {content && <UI content={content} />}
-        <JavonntteCanvas colorTheme={colorTheme} onTrackSelect={onTrackSelect} />
-    </>
+    return <>{content &&
+        <>
+            <UI content={content} />
+            <JavonntteCanvas colorTheme={colorTheme} onTrackSelect={onTrackSelect} />
+        </>
+    }</>
 }

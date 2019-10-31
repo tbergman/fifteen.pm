@@ -73,7 +73,7 @@ export default function Dashboard({ gltf, onTrackSelect }) {
                         console.log("BLAHBLAHBLAH", curActionName);
                         actions.current[curActionName].play();
                         const trackShorthand = buttonName.split("button_")[1];
-                        // onTrackSelect(C.TRACK_LOOKUP[trackShorthand])
+                        onTrackSelect(C.TRACK_LOOKUP[trackShorthand])
                     }}
                     material={selectedButton === buttonName ? selectedButtonMaterial : defaultButtonMaterial}
                 >

@@ -7,7 +7,6 @@ import { Asteroids } from './Asteroids';
 import { onBuildingsLoaded } from "./Buildings";
 import Car from './car/Car';
 import * as C from "./constants";
-import "./index.css";
 import { FixedLights } from './lights';
 import { asteroidNeighborhoods, worldNeighborhoods } from './neighborhoods';
 import Road from './Road';
