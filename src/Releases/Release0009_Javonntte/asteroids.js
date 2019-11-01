@@ -62,23 +62,23 @@ function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
     const [ground29MaterialRef, ground29Material] = useResource();
     const { bpm } = useMusicPlayer();
     return <>
-        <TronMaterial
+        {/* <TronMaterial
             materialRef={tronMaterialRef}
             bpm={bpm}
             side={THREE.BackSide}
             color={insideColor}
-        />
+        /> */}
         <Ground29Material
             materialRef={ground29MaterialRef}
             side={THREE.FrontSide}
             color={outsideColor}
         />
-        {tronMaterial && ground29Material &&
+        {ground29Material &&
             <group>
-                <mesh
+                {/* <mesh
                     geometry={geometry}
                     material={tronMaterial}
-                />
+                /> */}
                 <mesh
                     geometry={geometry}
                     material={ground29Material}

@@ -1,21 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import * as THREE from 'three';
-import { assetPathShared } from "./assets.js";
-import { useFrame, useThree } from 'react-three-fiber';
-
-/* eslint import/no-webpack-loader-syntax: off */
-import skinningVertexShader from '!raw-loader!glslify-loader!../Shaders/skinningVertex.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
 import riverFragmentShader from '!raw-loader!glslify-loader!../Shaders/riverFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
 import simpleVertex from '!raw-loader!glslify-loader!../Shaders/simpleVertex.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
+import skinningVertexShader from '!raw-loader!glslify-loader!../Shaders/skinningVertex.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
 import tronFragmentShader from '!raw-loader!glslify-loader!../Shaders/tronFragment.glsl';
-
 /* eslint import/no-webpack-loader-syntax: off */
 import vsDepthVertex from '!raw-loader!glslify-loader!../Shaders/vsDepthVertex.glsl';
-/* eslint import/no-webpack-loader-syntax: off */
-import simpleWithDepthVertex from '!raw-loader!glslify-loader!../Shaders/simpleWithDepthVertex.glsl';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { useFrame, useThree } from 'react-three-fiber';
+import * as THREE from 'three';
+import { assetPathShared } from "./assets.js";
+import { hexToRgb } from './colors';
+
 
 function cloudEnvMap() {
 	return new THREE.CubeTextureLoader()
@@ -429,15 +427,20 @@ export function Windows1Material({ materialRef, ...props }) {
 }
 
 export function TronMaterial({ materialRef, bpm, side, color }) {
+	
+	color = color || 0xffffff;
+	console.log(color, color.toString(16));
 	materialRef = materialRef ? materialRef : useRef().current;
 	const { clock, size } = useThree();
 	const uniforms = useRef();
 	useEffect(() => {
+		
+		const baseColor = hexToRgb(color.toString(16));
 		uniforms.current = {
 			uTime: { value: 0 },
 			uResolution: { value: new THREE.Vector2(size.width, size.length) },
 			uBPM: { value: bpm },
-			uBaseColor: { value: color },
+			uBaseColor: { value: new THREE.Vector3(baseColor.r, baseColor.g, baseColor.g) },
 		}
 	}, []);
 

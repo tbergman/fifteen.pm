@@ -65,7 +65,6 @@ export function WorldSurface({ geometry, color }) {
                 <mesh
                     geometry={geometry}
                     material={tronMaterial}
-                    receiveShadow
                 />
                 <mesh
                     geometry={geometry}

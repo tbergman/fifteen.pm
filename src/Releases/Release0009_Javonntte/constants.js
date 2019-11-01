@@ -75,9 +75,9 @@ export const TRACK_THEMES = [
         textFillColor: 0xf0ffff,
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
         background: new THREE.Color(0xffffff),
-        starColors: [0x000000, 0x111111, 0x222222],
+        starColors: [0x0000ef, 0x111111, 0x222222],
         world: 0xffff10,
-        asteroid: {insideColor: 0x0000ff, outsideColor: 0xf0f0f0}
+        asteroid: {insideColor: 0xf000af, outsideColor: 0xfff000}
     },
     {
         textFillColor: 0xf0ffff,
@@ -85,7 +85,7 @@ export const TRACK_THEMES = [
         background: new THREE.Color(0x00ff00),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
         world: 0xf0ffff,
-        asteroid: {insideColor: 0x0000ff, outsideColor: 0xf0f0f0}
+        asteroid: {insideColor: 0x00a0ff, outsideColor: 0x00fff0}
     },
     {
         textFillColor: 0xf0ffff,
@@ -93,7 +93,7 @@ export const TRACK_THEMES = [
         background: new THREE.Color(0xff0000),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
         world: 0x00affb,
-        asteroid: {insideColor: 0x0000ff, outsideColor: 0xf0f0f0}
+        asteroid: {insideColor: 0x0b00ff, outsideColor: 0xfaf23b}
     },
 ]
 

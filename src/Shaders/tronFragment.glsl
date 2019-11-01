@@ -7,6 +7,7 @@ uniform vec3 lightPosition;
 uniform vec2 uResolution;
 uniform float uTime;
 uniform float uBPM;
+uniform vec3 uBaseColor;
 const int NUM_LINES = 100;
 
 float random(in vec2 _st) {
@@ -61,9 +62,10 @@ float plotY(vec2 st, float pct) {
 void main() {
   float bps = uBPM / 60.;
   float wavyLines = sin(vUv.x * uTime / bps * .1);
-  vec3 col = vec3(0., 0., wavyLines);
+  
+  vec3 col = uBaseColor + wavyLines;
 
-  float numBeats = floor(uTime / 60. / bps);
+  float numBeats = floor(uTime) / 60. / bps;
 
   for (int i = 0; i < NUM_LINES; i++) {
     float pos = float(i) / float(NUM_LINES);
