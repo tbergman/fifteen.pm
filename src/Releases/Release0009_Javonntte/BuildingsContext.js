@@ -1,8 +1,8 @@
 
 
-import React, { useEffect, useState, useMemo } from 'react';
-import * as THREE from 'three';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useLoader, useResource } from 'react-three-fiber';
+import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material } from '../../Utils/materials';
@@ -28,8 +28,6 @@ const BuildingsProvider = ({ ...props }) => {
     const [facade10Ref, facade10] = useResource();
     const [facade12Ref, facade12] = useResource();
     const [metal03Ref, metal03] = useResource();
-
-    const mats = [metal03, foamGrip, facade10]
 
 
     const buildingMaterial = useMemo(() => {
@@ -131,4 +129,4 @@ const BuildingsProvider = ({ ...props }) => {
     </BuildingsContext.Provider>
 }
 
-export { BuildingsContext, BuildingsProvider }
+export { BuildingsContext, BuildingsProvider };

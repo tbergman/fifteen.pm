@@ -110,13 +110,9 @@ function generateTileFormations(surface, buildings, neighborhoods) {
     return formations;
 }
 
-// TODO maybe the material ref should be assigned to the incoming geometries array of objects
 export function generateTileset({ surface, buildings, neighborhoods }) {
     const instances = {};
     const instancedMeshes = {};
-    // build up a lookup of each geometry by name
-    // buildings.forEach((building) => instances[building.name] = { material: building.material, instances: [] });
-    // get centers for each formation
     // generate formations for all tiles
     const formations = generateTileFormations(surface, buildings, neighborhoods);
     // add each geometry instance from each tile formation to the elements by name look up

@@ -7,6 +7,7 @@ import NoiseSphereGeometry from '../../Utils/NoiseSphere';
 import Buildings from './Buildings';
 import * as C from './constants';
 import { generateTileset } from "./tiles";
+import { asteroidNeighborhoods } from './neighborhoods';
 
 function generateAsteroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
     const seed = Math.floor(Math.random() * 1000);
@@ -87,6 +88,7 @@ function AsteroidsSurface({ geometry }) {
 }
 
 export function Asteroids({ track, buildings, neighborhoods, ...props }) {
+
     const asteroids = useMemo(() => {
         return generateAsteroids(
             C.ASTEROID_BELT_RADIUS,
@@ -99,24 +101,27 @@ export function Asteroids({ track, buildings, neighborhoods, ...props }) {
         )
     }, [])
 
-    const instancedBuildingGroups = useMemo(() => {
-        if (buildings.loaded) {
-            return asteroids.instances.map(instance => {
-                return generateTileset({
-                    surface: instance,
-                    buildings,
-                    neighborhoods: neighborhoods
-                });
-            })
-        }
-    }, [buildings.loaded])
+    // const instancedBuildingGroups = useMemo(() => {
+    //     if (buildings.loaded) {
+    //         return asteroids.instances.map(instance => {
+    //             return generateTileset({
+    //                 surface: instance,
+    //                 buildings,
+    //                 neighborhoods: neighborhoods
+    //             });
+    //         })
+    //     }
+    // }, [buildings.loaded])
 
-    return <group>
-        {asteroids && <AsteroidsSurface geometry={asteroids.geometry} />}
-        {instancedBuildingGroups &&
-            instancedBuildingGroups.map((instancedBuildings, index) => {
-                return <Buildings key={index} instancedBuildings={instancedBuildings} />
-            })}
+    return <>
+        {asteroids &&
+            <>
+                <AsteroidsSurface geometry={asteroids.geometry} />
+                {asteroids.instances.map((instance, index) => {
+                    return <Buildings key={index} surface={instance} neighborhoods={asteroidNeighborhoods} />
+                })}
+            </>
         }
-    </group>
+    </>;
+
 }
