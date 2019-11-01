@@ -25,7 +25,7 @@ export default function DetroitLogo({ }) {
          <FoamGripMaterial materialRef={foamGripRef} />
         <group ref={logoRef} position={C.LOGO_POS}>
             {logo && foamGrip &&
-                <mesh onUpdate={console.log(logo) } material={foamGrip}>
+                <mesh material={foamGrip}>
                     <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
                 </mesh>
             }

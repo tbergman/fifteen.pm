@@ -4,7 +4,6 @@ import { Asteroids } from './Asteroids';
 import Car from './car/Car';
 import * as C from "./constants";
 import { FixedLights } from './lights';
-import { asteroidNeighborhoods, worldNeighborhoods } from './neighborhoods';
 import Road from './Road';
 import { World } from './World';
 import { BloomFilmEffect } from '../../Utils/Effects';
@@ -45,15 +44,14 @@ export function Scene({ colorTheme, onTrackSelect }) {
                     />
                 </Road>
                 <DetroitLogo />
-            </Suspense>
-            <BuildingsProvider>
-                <World
-                    surfaceColor={colorTheme.worldSurface}
-                    neighborhoods={worldNeighborhoods}
-                />
-                {/* <Asteroids surfaceColor={colorTheme.astroidSurface} neighborhoods={asteroidNeighborhoods} />
+                <BuildingsProvider>
+                    <World
+                        surfaceColor={colorTheme.worldSurface}
+                    />
+                    {/* <Asteroids surfaceColor={colorTheme.astroidSurface} neighborhoods={asteroidNeighborhoods} />
                     */}
-            </BuildingsProvider>
+                </BuildingsProvider>
+            </Suspense>
             <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} />
             <BloomFilmEffect />
         </>

@@ -5,6 +5,7 @@ import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import Buildings from './Buildings';
 import * as C from './constants';
 import { generateTileset } from "./tiles";
+import { worldNeighborhoods } from './neighborhoods';
 
 
 export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
@@ -77,7 +78,7 @@ export function WorldSurface({ geometry, color }) {
     </>
 }
 
-export function World({ neighborhoods, surfaceColor }) {
+export function World({ surfaceColor }) {
     
     const sphereGeometry = useMemo(() => {
         return generateSphereWorldGeometry(
@@ -90,6 +91,6 @@ export function World({ neighborhoods, surfaceColor }) {
 
     return <group >
         <WorldSurface geometry={sphereGeometry} color={surfaceColor} />
-        <Buildings surface={sphereGeometry} neighborhoods={neighborhoods} />
+        <Buildings surface={sphereGeometry} neighborhoods={worldNeighborhoods} />
     </group>
 }

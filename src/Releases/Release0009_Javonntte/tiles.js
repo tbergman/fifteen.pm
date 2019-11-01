@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromVertices } from '../../Utils/geometry';
 import { findNearest, loadKDTree } from '../../Utils/KdTree';
 import { randomArrayVal, selectNRandomFromArray } from '../../Utils/random';
-import { groupBuildingGeometries } from './Buildings';
 import * as C from './constants';
 import { createInstance } from './instances';
 
@@ -27,69 +26,68 @@ function subdivide36(triangleComponents, centroid) {
     return thirtySix;
 }
 
-function formatElement({ triangle, normal, centroid, geometry }) {
+function formatElement({ triangle, normal, centroid, building }) {
     if (triangle) centroid = centroidFromPoints(triangle.a, triangle.b, triangle.c);
     return {
-        geometry: geometry,
+        ...building,
         centroid: centroid,
         normal: normal,
+        
     }
 }
 
-function format36({ geometries, normal, centroid, triangle }) {
+function format36({ buildings, normal, centroid, triangle }) {
     const subdividedTriangle = subdivideTriangle(triangle);
-    const randGeoms = selectNRandomFromArray(geometries, 36)
-    return subdivide36(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, geometry: randGeoms[idx] }));
+    const randBuildings = selectNRandomFromArray(buildings, 36)
+    return subdivide36(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, building: randBuildings[idx] }));
 }
 
-function format6({ geometries, normal, centroid, triangle }) {
+function format6({ buildings, normal, centroid, triangle }) {
     const subdividedTriangle = subdivideTriangle(triangle);
-    const randGeoms = selectNRandomFromArray(geometries, 6)
-    return subdivide6(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, geometry: randGeoms[idx] }));
-    // return subdivide6(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, geometry: geometries[1] }));
+    const randBuildings = selectNRandomFromArray(buildings, 6)
+    return subdivide6(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, building: randBuildings[idx] }));
 }
 
-function format1({ geometries, normal, centroid }) {
-    // return [formatElement({ normal, centroid, geometry: geometries[1] })]
-    return [formatElement({ normal, centroid, geometry: randomArrayVal(geometries) })]
+function format1({ buildings, normal, centroid }) {
+    return [formatElement({ normal, centroid, building: randomArrayVal(buildings) })]
 }
 
-function pickGeometries(tile, geometries) {
+function pickBuildings(tile, buildings) {
     const area = tile.triangle.getArea();
     if (area > 16) {
         return [
             {
-                allowedGeometries: geometries[C.BUILDING_WIDTH_BUCKETS[2]],
+                allowedBuildings: buildings.filter(building => building.footprint == C.LARGE),
                 subdivisions: 1
             },
             {
-                allowedGeometries: geometries[C.BUILDING_WIDTH_BUCKETS[1]],
+                allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
                 subdivisions: 6
             }
         ][THREE.Math.randInt(0, 1)]
     } else if (area > 14) {
         return {
-            allowedGeometries: geometries[C.BUILDING_WIDTH_BUCKETS[1]],
+            allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
             subdivisions: 6
         }
     } else {
         return {
-            allowedGeometries: geometries[C.BUILDING_WIDTH_BUCKETS[0]],
+            allowedBuildings: buildings.filter(building => building.footprint == C.SMALL),
             subdivisions: 6
         }
     }
 }
 
-function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, geometries) {
-    const { allowedGeometries, subdivisions } = pickGeometries(tile, geometries)
-    const formationProps = { geometries: allowedGeometries, ...tile };
+function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, buildings) {
+    const { allowedBuildings, subdivisions } = pickBuildings(tile, buildings)
+    const formationProps = { buildings: allowedBuildings, ...tile };
     const formation = (() => {
         switch (subdivisions) {
             case 1: return format1(formationProps);
             case 6: return format6(formationProps);
             case 36: return format36(formationProps);
         }
-    })().filter(f => f.geometry && THREE.Math.randInt(0, 20) > 1); // Add if geom exists and also include a chaos monkey removal of random subdivisions
+    })();
     return formation;
 }
 
@@ -97,17 +95,15 @@ function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, geometries) 
 function generateTileFormations(surface, buildings, neighborhoods) {
     const tiles = neighborhoods.generateTiles({ surface });
     const kdTree = loadKDTree(tiles);
-    const formations = {}
+    const formations = {};
     Object.keys(tiles).forEach(id => formations[id] = []);
-    const geometriesByCategory = groupBuildingGeometries(geometries);
     neighborhoods.getCentroids({ surface, tiles }).forEach(centroid => {
         const [neighborhoodRadius, neighbors] = findNearest(centroid, kdTree, neighborhoods.maxSize, neighborhoods.maxRadius, tiles);
         Object.values(neighbors).forEach(neighbor => {
-            // if already assigned, 50% chance of replacement
             const id = neighbor.id;
             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
             if (replace && neighborhoods.rules(neighbor)) {
-                formations[id] = formatTile(neighbor, centroid, neighborhoodRadius, geometriesByCategory);
+                formations[id] = formatTile(neighbor, centroid, neighborhoodRadius, buildings);
             }
         });
     });
@@ -116,24 +112,25 @@ function generateTileFormations(surface, buildings, neighborhoods) {
 
 // TODO maybe the material ref should be assigned to the incoming geometries array of objects
 export function generateTileset({ surface, buildings, neighborhoods }) {
-    const elementsByName = {};
-    const instancesByName = {};
+    const instances = {};
+    const instancedMeshes = {};
     // build up a lookup of each geometry by name
-    buildings.forEach((building) => elementsByName[building.name] = {material: building.material, instances: []});
+    // buildings.forEach((building) => instances[building.name] = { material: building.material, instances: [] });
     // get centers for each formation
     // generate formations for all tiles
     const formations = generateTileFormations(surface, buildings, neighborhoods);
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach(tId => {
-        formations[tId].forEach(element => {
-            elementsByName[element.geometry.name].geometries.push(element);
+        formations[tId].forEach(buildingInstance => {
+            if (!instances[buildingInstance.name]) instances[buildingInstance.name] = [];
+            instances[buildingInstance.name].push(buildingInstance);
         });
     });
     // create an instance geometry for each geometry type that includes all locations on each formation for that geometry
-    Object.keys(elementsByName).forEach((name) => {
-        if (elementsByName[name].geometries.length) {
-            instancesByName[name] = createInstance(elementsByName[name].instances, elementsByName[name].material);
+    Object.keys(instances).forEach((name) => {
+        if (instances[name].length) {
+            instancedMeshes[name] = createInstance(instances[name]);
         }
-    });
-    return instancesByName;
+    })
+    return instancedMeshes;
 }

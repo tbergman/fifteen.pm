@@ -17,18 +17,17 @@ function updateCluster(cluster, normal, centroid, index, vector3) {
     cluster.setScaleAt(index, vector3.set(1, 1, 1));
 }
 
-export function createInstance(elements, material) {
-    const totalInstances = elements.length;
-    const geometry = elements[0].geometry;
+export function createInstance(instances) {
+    const totalInstances = instances.length;
     const cluster = new THREE.InstancedMesh(
-        geometry,
-        material,
+        instances[0].geometry,
+        instances[0].material,
         totalInstances,              // instance count
         false,                       // is it dynamic
     );
     var _v3 = new THREE.Vector3();    
     for (let i = 0; i < totalInstances; i++) {
-        updateCluster(cluster, elements[i].normal, elements[i].centroid, i, _v3)
+        updateCluster(cluster, instances[i].normal, instances[i].centroid, i, _v3)
     }
     cluster.castShadow = true;
     return cluster;

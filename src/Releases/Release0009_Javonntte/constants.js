@@ -32,8 +32,6 @@ export const LOGO_POS = new THREE.Vector3(
     0,
 )
 
-console.log("LOGO POS", LOGO_POS)
-
 // ASTEROID CONSTANTS
 // This is divided by the window inner width in the constant below so movile screens have smaller asteroids
 export const NUM_ASTEROIDS = 8;
@@ -45,7 +43,6 @@ export const ASTEROID_MAX_TIERS = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? .
 export const ASTEROID_MAX_FACE_NOISE = MAX_WORLD_FACE_HEIGHT;
 
 // BUILDING
-export const BUILDING_BASE_SCALE = 1.;
 // model geometry categories
 export const LARGE = "large";
 export const MEDIUM = "medium";
@@ -61,9 +58,7 @@ export const BUILDING_HEIGHT_BUCKETS = [
     SHORT,
     TALL,
 ]
-export const BUILDING_MATERIAL = {
-    "large_tall_low_michigancentralstation": "foamGripMaterial"
-}
+
 
 // TRACK INFO
 export const TRACK_THEMES = [
