@@ -429,12 +429,10 @@ export function Windows1Material({ materialRef, ...props }) {
 export function TronMaterial({ materialRef, bpm, side, color }) {
 	
 	color = color || 0xffffff;
-	console.log(color, color.toString(16));
 	materialRef = materialRef ? materialRef : useRef().current;
 	const { clock, size } = useThree();
 	const uniforms = useRef();
 	useEffect(() => {
-		
 		const baseColor = hexToRgb(color.toString(16));
 		uniforms.current = {
 			uTime: { value: 0 },
