@@ -428,7 +428,7 @@ export function Windows1Material({ materialRef, ...props }) {
 	/>
 }
 
-export function TronMaterial({ materialRef, bpm, side }) {
+export function TronMaterial({ materialRef, bpm, side, color }) {
 	materialRef = materialRef ? materialRef : useRef().current;
 	const { clock, size } = useThree();
 	const uniforms = useRef();
@@ -436,7 +436,8 @@ export function TronMaterial({ materialRef, bpm, side }) {
 		uniforms.current = {
 			uTime: { value: 0 },
 			uResolution: { value: new THREE.Vector2(size.width, size.length) },
-			uBPM: { value: bpm }
+			uBPM: { value: bpm },
+			uBaseColor: { value: color },
 		}
 	}, []);
 

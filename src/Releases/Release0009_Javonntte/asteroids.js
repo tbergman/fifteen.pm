@@ -57,7 +57,7 @@ function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids,
     return asteroids;
 }
 
-function AsteroidsSurface({ geometry }) {
+function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [ground29MaterialRef, ground29Material] = useResource();
     const { bpm } = useMusicPlayer();
@@ -66,10 +66,12 @@ function AsteroidsSurface({ geometry }) {
             materialRef={tronMaterialRef}
             bpm={bpm}
             side={THREE.BackSide}
+            color={insideColor}
         />
         <Ground29Material
             materialRef={ground29MaterialRef}
             side={THREE.FrontSide}
+            color={outsideColor}
         />
         {tronMaterial && ground29Material &&
             <group>
@@ -87,7 +89,7 @@ function AsteroidsSurface({ geometry }) {
     </>
 }
 
-export function Asteroids({ track, buildings, neighborhoods, ...props }) {
+export function Asteroids({ colors }) {
 
     const asteroids = useMemo(() => {
         return generateAsteroids(
@@ -101,22 +103,10 @@ export function Asteroids({ track, buildings, neighborhoods, ...props }) {
         )
     }, [])
 
-    // const instancedBuildingGroups = useMemo(() => {
-    //     if (buildings.loaded) {
-    //         return asteroids.instances.map(instance => {
-    //             return generateTileset({
-    //                 surface: instance,
-    //                 buildings,
-    //                 neighborhoods: neighborhoods
-    //             });
-    //         })
-    //     }
-    // }, [buildings.loaded])
-
     return <>
         {asteroids &&
             <>
-                <AsteroidsSurface geometry={asteroids.geometry} />
+                <AsteroidsSurface geometry={asteroids.geometry} {...colors} />
                 {asteroids.instances.map((instance, index) => {
                     return <Buildings key={index} surface={instance} neighborhoods={asteroidNeighborhoods} />
                 })}

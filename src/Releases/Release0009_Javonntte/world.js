@@ -1,10 +1,9 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import Buildings from './Buildings';
 import * as C from './constants';
-import { generateTileset } from "./tiles";
 import { worldNeighborhoods } from './neighborhoods';
 
 
