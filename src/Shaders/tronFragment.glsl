@@ -63,7 +63,7 @@ void main() {
   float bps = uBPM / 60.;
   float wavyLines = sin(vUv.x * uTime / bps * .1);
   
-  vec3 col = uBaseColor + wavyLines;
+  vec3 col = vec3(0, 0, wavyLines);
 
   float numBeats = floor(uTime) / 60. / bps;
 
@@ -85,6 +85,7 @@ void main() {
     //   col += lineY * streak;
     // }
   }
+  col *= uBaseColor;
   gl_FragColor = vec4(col, 1.0);
   // st += st * abs(sin(u_time*0.1)*3.0);
   // vec3 color = vec3(0.0);
