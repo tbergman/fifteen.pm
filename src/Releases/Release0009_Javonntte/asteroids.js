@@ -4,9 +4,8 @@ import * as THREE from 'three';
 import useMusicPlayer from '../../UI/Player/hooks';
 import { Ground29Material, TronMaterial } from '../../Utils/materials';
 import NoiseSphereGeometry from '../../Utils/NoiseSphere';
-import Buildings from './Buildings';
+import Buildings from './buildings/Buildings';
 import * as C from './constants';
-import { generateTileset } from "./tiles";
 import { asteroidNeighborhoods } from './neighborhoods';
 
 function generateAsteroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
@@ -61,7 +60,6 @@ function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [ground29MaterialRef, ground29Material] = useResource();
     const { bpm } = useMusicPlayer();
-    console.log("insideColor", insideColor)
     return <>
         <TronMaterial
             materialRef={tronMaterialRef}

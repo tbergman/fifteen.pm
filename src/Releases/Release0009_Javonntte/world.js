@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { Ground29Material, TronMaterial } from '../../Utils/materials';
-import Buildings from './Buildings';
+import Buildings from './buildings/Buildings';
 import * as C from './constants';
 import { worldNeighborhoods } from './neighborhoods';
 

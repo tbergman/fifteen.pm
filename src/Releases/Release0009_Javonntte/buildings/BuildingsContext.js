@@ -5,8 +5,8 @@ import { useLoader, useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material } from '../../Utils/materials';
-import * as C from './constants';
+import { CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material } from '../../../Utils/materials';
+import * as C from '../constants';
 
 
 const BuildingsContext = React.createContext([{}, () => { }]);

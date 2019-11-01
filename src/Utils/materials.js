@@ -422,7 +422,6 @@ export function Windows1Material({ materialRef, ...props }) {
 		shininess={100}
 		map={colorMap}
 		envMap={envMap}
-	// color={0xff0000}
 	/>
 }
 

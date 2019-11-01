@@ -10,7 +10,7 @@ import { BloomFilmEffect } from '../../Utils/Effects';
 import Stars from './Stars';
 import DetroitLogo from './DetroitLogo';
 import { Controls } from './controls';
-import { BuildingsProvider } from './BuildingsContext';
+import { BuildingsProvider } from './buildings/BuildingsContext';
 
 export function Scene({ colorTheme, onTrackSelect }) {
     const { scene } = useThree();
