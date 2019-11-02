@@ -1,21 +1,18 @@
-import React, { useMemo } from 'react';
-import { useResource } from 'react-three-fiber';
-import { FoamGripMaterial } from '../../../Utils/materials';
+import React, { useMemo, useContext } from 'react';
+import { MaterialsContext } from '../MaterialsContext';
 
 export default function Chassis({ gltf }) {
     const chassis = useMemo(() => {
         return gltf.__$.filter(elt => elt.name == "chassis")[0];
     })
-    const [foamGripRef, foamGrip] = useResource();
+    const { foamGripBlack } = useContext(MaterialsContext);
     return <>
-        <FoamGripMaterial materialRef={foamGripRef} color="black" />
-        {foamGrip &&
-            <mesh
-                name="chassis"
-                material={foamGrip}
-            >
-                <bufferGeometry attach="geometry" {...chassis.geometry} />
-            </mesh>
-        }
+        <mesh
+            name="chassis"
+            material={foamGripBlack}
+        >
+            <bufferGeometry attach="geometry" {...chassis.geometry} />
+        </mesh>
+
     </>;
 }
