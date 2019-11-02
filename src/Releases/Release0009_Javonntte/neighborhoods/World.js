@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useContext } from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { Ground29Material, TronMaterial } from '../../../Utils/materials';
-import * as C from '../constants';
+import {MaterialsContext} from '../MaterialsContext';
 
 export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
@@ -42,50 +42,22 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     return geometry;
 }
 
-
-
 export function WorldSurface({ geometry, color }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [ground29MaterialRef, ground29Material] = useResource();
+    const {tron, ground29} = useContext(MaterialsContext);
     return <>
-        <TronMaterial
-            materialRef={tronMaterialRef}
-            side={THREE.BackSide}
-        />
-        <Ground29Material
-            materialRef={ground29MaterialRef}
-            side={THREE.FrontSide}
-            color={color}
-        />
-        {tronMaterial && ground29Material &&
             <group>
                 <mesh
                     geometry={geometry}
-                    material={tronMaterial}
+                    material={tron}
                 />
                 <mesh
                     geometry={geometry}
-                    material={ground29Material}
+                    material={ground29}
                     receiveShadow
                 />
             </group>
-        }
     </>
 }
 
-// export function World({ surfaceColor }) {
-    
-//     const sphereGeometry = useMemo(() => {
-//         return generateSphereWorldGeometry(
-//             C.WORLD_RADIUS,
-//             C.WORLD_SIDES,
-//             C.WORLD_TIERS,
-//             C.MAX_WORLD_FACE_HEIGHT,
-//         );
-//     });
-
-//     return <group >
-//         <WorldSurface geometry={sphereGeometry} color={surfaceColor} />
-//         {/* <Buildings surface={sphereGeometry} neighborhoods={worldNeighborhoods} /> */}
-//     </group>
-// }

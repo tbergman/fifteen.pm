@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useContext } from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import useMusicPlayer from '../../../UI/Player/hooks';
@@ -6,6 +6,7 @@ import { Ground29Material, TronMaterial } from '../../../Utils/materials';
 import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
 // import Neighborhood from './neighborhoods';
 import * as C from '../constants';
+import { MaterialsContext } from '../MaterialsContext';
 // import { asteroidNeighborhoods } from './neighborhoods';
 
 function generateAsteroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
@@ -57,58 +58,19 @@ export function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAst
 }
 
 export function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
-    const [tronMaterialRef, tronMaterial] = useResource();
-    const [ground29MaterialRef, ground29Material] = useResource();
-    const { bpm } = useMusicPlayer();
+    const { tron, ground29 } = useContext(MaterialsContext);
     return <>
-        <TronMaterial
-            materialRef={tronMaterialRef}
-            bpm={bpm}
-            side={THREE.BackSide}
-            color={insideColor}
-        />
-        <Ground29Material
-            materialRef={ground29MaterialRef}
-            side={THREE.FrontSide}
-            color={outsideColor}
-        />
-        {ground29Material &&
-            <group>
-                {/* <mesh
-                    geometry={geometry}
-                    material={tronMaterial}
-                /> */}
-                <mesh
-                    geometry={geometry}
-                    material={ground29Material}
-                    receiveShadow
-                />
-            </group>
-        }
+        <group>
+            <mesh
+                geometry={geometry}
+                material={tron}
+            />
+            <mesh
+                geometry={geometry}
+                material={ground29}
+                receiveShadow
+            />
+        </group>
+
     </>
 }
-
-// export function Asteroids({ colors }) {
-
-//     const asteroids = useMemo(() => {
-//         return generateAsteroids(
-        //     C.ASTEROID_BELT_RADIUS,
-        //     C.ASTEROID_BELT_CENTER,
-        //     C.NUM_ASTEROIDS,
-        //     C.ASTEROID_MAX_RADIUS,
-        //     C.ASTEROID_MAX_FACE_NOISE,
-        // )
-//     }, [])
-
-//     return <>
-//         {asteroids &&
-//             <>
-//                 <AsteroidsSurface geometry={asteroids.geometry} {...colors} />
-//                 {asteroids.instances.map((instance, index) => {
-//                     return <Neighborhood key={index} surface={instance} neighborhoods={asteroidNeighborhoods} />
-//                 })}
-//             </>
-//         }
-//     </>;
-
-// }

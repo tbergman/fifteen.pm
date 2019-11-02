@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useFrame, useLoader, useResource, useThree } from 'react-three-fiber';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { FoamGripMaterial } from '../../Utils/materials';
 import * as C from './constants';
+import { MaterialsContext } from './MaterialsContext';
 
 
 export default function DetroitLogo({ }) {
@@ -13,8 +14,8 @@ export default function DetroitLogo({ }) {
         loader.setDRACOLoader(dracoLoader)
     })
     const [logoRef, logo] = useResource();
-    const [foamGripRef, foamGrip] = useResource();
-    
+    const { metal03 } = useContext(MaterialsContext);
+
     useFrame(() => {
         if (!logo) return;
         logo.rotation.x += .01;
@@ -22,14 +23,13 @@ export default function DetroitLogo({ }) {
 
     return (
         <>
-         <FoamGripMaterial materialRef={foamGripRef} />
-        <group ref={logoRef} position={C.LOGO_POS}>
-            {logo && foamGrip &&
-                <mesh material={foamGrip}>
-                    <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
-                </mesh>
-            }
-        </group>
+            <group ref={logoRef} position={C.LOGO_POS}>
+                {logo &&
+                    <mesh material={metal03}>
+                        <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
+                    </mesh>
+                }
+            </group>
         </>
     )
 }

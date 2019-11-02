@@ -1,8 +1,9 @@
 
 
 import React, { useEffect, useState } from 'react';
+import * as THREE from 'three';
 import { useResource } from 'react-three-fiber';
-import { BlackLeather12, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, OrnateBrass2, Rock19, ScuffedPlasticMaterial, Tiles36, Tiles60, Windows1Material } from '../../Utils/materials';
+import { BlackLeather12, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, OrnateBrass2, Rock19, ScuffedPlasticMaterial, Tiles36, Tiles60, Windows1Material, TronMaterial, Ground29Material } from '../../Utils/materials';
 
 const MaterialsContext = React.createContext([{}, () => { }]);
 
@@ -27,6 +28,8 @@ const MaterialsProvider = ({ ...props }) => {
     const [scuffedPlasticBlackRef, scuffedPlasticBlack] = useResource();
     const [scuffedPlasticGlowingRef, scuffedPlasticGlowing] = useResource();
     const [blackLeather12Ref, blackLeather12] = useResource();
+    const [tronRef, tron] = useResource();
+    const [ground29Ref, ground29] = useResource();
 
     const materials = {
         cloud,
@@ -47,6 +50,8 @@ const MaterialsProvider = ({ ...props }) => {
         scuffedPlasticGlowing,
         scuffedPlasticBlack,
         blackLeather12,
+        tron,
+        ground29,
     }
 
     useEffect(() => {
@@ -74,6 +79,8 @@ const MaterialsProvider = ({ ...props }) => {
         <ScuffedPlasticMaterial materialRef={scuffedPlasticBlackRef} color={0x000000} />
         <ScuffedPlasticMaterial materialRef={scuffedPlasticGlowingRef} color="yellow" emissive="pink" />
         <BlackLeather12 materialRef={blackLeather12Ref} />
+        <TronMaterial materialRef={tronRef} side={THREE.BackSide} />
+        <Ground29Material materialRef={ground29Ref} />
         {props.children}
     </MaterialsContext.Provider>
 }
