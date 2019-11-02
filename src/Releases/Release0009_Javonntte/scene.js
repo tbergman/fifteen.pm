@@ -33,9 +33,9 @@ export function Scene({ colorTheme, onTrackSelect }) {
             <Suspense fallback={null}>
                 <Road
                     closed={true}
-                    extrusionSegments={100}
+                    extrusionSegments={10}
                     radius={2}
-                    radiusSegments={3}
+                    radiusSegments={4}
                 >
                     <Car
                         speed={20}

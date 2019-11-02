@@ -14,7 +14,9 @@ export default function Road({ curCamera, closed, extrusionSegments, radius, rad
         var closedSpline = new THREE.CatmullRomCurve3(steps);
         closedSpline.closed = true;
         closedSpline.curveType = 'catmullrom';
+        
         const tubeGeometry = new THREE.TubeBufferGeometry(closedSpline, extrusionSegments, radius, radiusSegments, closed);
+        
         road.current = tubeGeometry;
     }, [])
 

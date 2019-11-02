@@ -24,11 +24,10 @@ function Car({
         loader.setDRACOLoader(dracoLoader)
     })
     const [carRef, car] = useResource();
-    const [normal, binormal, up] = useMemo(() => {
+    const [normal, binormal] = useMemo(() => {
         return [
             new THREE.Vector3(),
             new THREE.Vector3(),
-            new THREE.Vector3(0, 2, 2), // TODO these is supposed to be normalized to 1 and have only 1 non zero value lol  
         ]
     });
     const accelerationPressed = useKeyPress('ArrowUp');
@@ -76,9 +75,9 @@ function Car({
         const pick = Math.floor(pickt);
         const pickNext = (pick + 1) % segments;
         binormal.subVectors(road.binormals[pickNext], road.binormals[pick]);
-        binormal.multiplyScalar(pickt - pick).add(road.binormals[pick]).add(up);
+        binormal.multiplyScalar(pickt - pick).add(road.binormals[pick]);//.add(up);
         const dir = road.parameters.path.getTangentAt(t);
-        normal.copy(binormal).cross(dir)
+        normal.copy(binormal); // most examples have .cross(dir) here but this will rotate the normal to the 'side' of the orientation we want to achieve 
         // We move on a offset on its binormal
         pos.add(normal.clone().multiplyScalar(roadOffset));
         if (rotateLeftPressed) {
