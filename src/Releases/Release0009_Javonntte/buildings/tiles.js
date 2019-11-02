@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromVertices } from '../../Utils/geometry';
-import { findNearest, loadKDTree } from '../../Utils/KdTree';
-import { randomArrayVal, selectNRandomFromArray } from '../../Utils/random';
-import * as C from './constants';
-import { createInstance } from './instances';
+import { subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromVertices } from '../../../Utils/geometry';
+import { findNearest, loadKDTree } from '../../../Utils/KdTree';
+import { randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
+import * as C from '../constants';
+import { createInstance } from '../instances';
 
 function subdivide6(triangleComponents, centroid) {
     return [
@@ -53,29 +53,29 @@ function format1({ buildings, normal, centroid }) {
 }
 
 function pickBuildings(tile, buildings) {
-    const area = tile.triangle.getArea();
-    if (area > 16) {
-        return [
-            {
-                allowedBuildings: buildings.filter(building => building.footprint == C.LARGE),
-                subdivisions: 1
-            },
-            {
-                allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
-                subdivisions: 6
-            }
-        ][THREE.Math.randInt(0, 1)]
-    } else if (area > 14) {
-        return {
-            allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
-            subdivisions: 6
-        }
-    } else {
+    // const area = tile.triangle.getArea();
+    // if (area > 16) {
+    //     return [
+    //         {
+    //             allowedBuildings: buildings.filter(building => building.footprint == C.LARGE),
+    //             subdivisions: 1
+    //         },
+    //         {
+    //             allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
+    //             subdivisions: 6
+    //         }
+    //     ][THREE.Math.randInt(0, 1)]
+    // } else if (area > 14) {
+    //     return {
+    //         allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
+    //         subdivisions: 6
+    //     }
+    // } else {
         return {
             allowedBuildings: buildings.filter(building => building.footprint == C.SMALL),
             subdivisions: 6
         }
-    }
+    // }
 }
 
 function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, buildings) {
@@ -124,9 +124,7 @@ export function generateTileset({ surface, buildings, neighborhoods }) {
     });
     // create an instance geometry for each geometry type that includes all locations on each formation for that geometry
     Object.keys(instances).forEach((name) => {
-        if (instances[name].length) {
-            instancedMeshes[name] = createInstance(instances[name]);
-        }
+        if (instances[name].length) instancedMeshes[name] = createInstance(instances[name]);
     })
     return instancedMeshes;
 }

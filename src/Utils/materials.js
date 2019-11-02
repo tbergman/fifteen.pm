@@ -426,7 +426,7 @@ export function Windows1Material({ materialRef, ...props }) {
 }
 
 export function TronMaterial({ materialRef, bpm, side, color }) {
-	
+
 	color = color || 0xffffff;
 	materialRef = materialRef ? materialRef : useRef().current;
 	const { clock, size } = useThree();
@@ -518,7 +518,7 @@ export function SurfaceImperfections08({ materialRef, ...props }) {
 		const diffuseMap = textureLoader.load(assetPathShared("textures/surface-imperfections08/SurfaceImperfections08_var1.jpg"));
 		const glossinessMap = textureLoader.load(assetPathShared("textures/surface-imperfections08/SurfaceImperfections08_var1.jpg"));
 		const normalMap = textureLoader.load(assetPathShared("textures/surface-imperfections08/SurfaceImperfections08_nrm.jpg"));
-		const envMap = cloudEnvMap();
+		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
 		const textureMaps = [diffuseMap, glossinessMap, normalMap, envMap];
 		return tileTextureMaps(textureMaps, props);
 	});
@@ -530,5 +530,111 @@ export function SurfaceImperfections08({ materialRef, ...props }) {
 		normalMap={normalMap}
 		envMap={envMap}
 		roughness={-1} // invert roughness to get glossiness
+	/>
+}
+
+export function Tiles60({ materialRef, ...props }) {
+
+	const [colorMap, displacementMap, metalMap, normalMap, roughnessMap, envMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const colorMap = textureLoader.load(assetPathShared("textures/tiles-60/Tiles60_col.jpg"));
+		const displacementMap = textureLoader.load(assetPathShared("textures/tiles-60/Tiles60_disp.jpg"));
+		const metalMap = textureLoader.load(assetPathShared("textures/tiles-60/Tiles60_met.jpg"));
+		const normalMap = textureLoader.load(assetPathShared("textures/tiles-60/Tiles60_nrm.jpg"));
+		const roughnessMap = textureLoader.load(assetPathShared("textures/tiles-60/Tiles60_rgh.jpg"))
+		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
+		const textureMaps = [colorMap, displacementMap, metalMap, normalMap, roughnessMap, envMap];
+		return tileTextureMaps(textureMaps, props);
+	});
+	return <meshStandardMaterial
+		ref={materialRef}
+		map={colorMap}
+		displacementMap={displacementMap}
+		displacementScale={0.1}
+		metalMap={metalMap}
+		normalMap={normalMap}
+		// roughnessMap={roughnessMap}
+		envMap={envMap}
+		roughness={-1} // invert roughness to get glossiness
+	/>
+}
+
+export function Tiles36({ materialRef, ...props }) {
+
+	const [colorMap, displacementMap, normalMap, roughnessMap, envMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const colorMap = textureLoader.load(assetPathShared("textures/tiles-36/Tiles36_col.jpg"));
+		const displacementMap = textureLoader.load(assetPathShared("textures/tiles-36/Tiles36_disp.jpg"));
+		const normalMap = textureLoader.load(assetPathShared("textures/tiles-36/Tiles36_nrm.jpg"));
+		const roughnessMap = textureLoader.load(assetPathShared("textures/tiles-36/Tiles36_rgh.jpg"))
+		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
+		const textureMaps = [colorMap, displacementMap, normalMap, roughnessMap, envMap];
+		return tileTextureMaps(textureMaps, props);
+	});
+	return <meshStandardMaterial
+		ref={materialRef}
+		map={colorMap}
+		displacementMap={displacementMap}
+		displacementScale={.2}
+		normalMap={normalMap}
+		roughnessMap={roughnessMap}
+		envMap={envMap}
+	// roughness={-1} // invert roughness to get glossiness
+	/>
+}
+
+export function Rock19({ materialRef, ...props }) {
+	// https://cc0textures.com/view.php?tex=Rock19
+	const [aoMap, colorMap, displacementMap, normalMap, roughnessMap, envMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const aoMap = textureLoader.load(assetPathShared("textures/rock-19/Rock19_AO.jpg"));
+		const colorMap = textureLoader.load(assetPathShared("textures/rock-19/Rock19_col.jpg"));
+		const displacementMap = textureLoader.load(assetPathShared("textures/rock-19/Rock19_disp.jpg"));
+		const normalMap = textureLoader.load(assetPathShared("textures/rock-19/Rock19_nrm.jpg"));
+		const roughnessMap = textureLoader.load(assetPathShared("textures/rock-19/Rock19_rgh.jpg"));
+		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
+		const textureMaps = [aoMap, colorMap, displacementMap, normalMap, roughnessMap, envMap];
+		return tileTextureMaps(textureMaps, props);
+	});
+	return <meshStandardMaterial
+		ref={materialRef}
+		map={colorMap}
+		aoMap={aoMap}
+		displacementMap={displacementMap}
+		displacementScale={.2}
+		normalMap={normalMap}
+		roughnessMap={roughnessMap}
+		envMap={envMap}
+	// roughness={-1} // invert roughness to get glossiness
+	/>
+}
+
+export function OrnateBrass2({ materialRef, ...props }) {
+	// https://freepbr.com/materials/ornate-brass-2/
+	const [albedoMap, aoMap, heightMap, metallicMap, normalMap, roughnessMap, envMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const albedoMap = textureLoader.load(assetPathShared("textures/ornate-brass2/ornate-brass2_albedo.png"));
+		const aoMap = textureLoader.load(assetPathShared("textures/ornate-brass2/ornate-brass2_ao.png"));
+		const heightMap = textureLoader.load(assetPathShared("textures/ornate-brass2/ornate-brass2_height.png"));
+		const metallicMap = textureLoader.load(assetPathShared("textures/ornate-brass2/ornate-brass2_metallic.png"));
+		const normalMap = textureLoader.load(assetPathShared("textures/ornate-brass2/ornate-brass2_normal-dx.png"));
+		const roughnessMap = textureLoader.load(assetPathShared("textures/ornate-brass2/ornate-brass2_roughness.png"));
+		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
+		const textureMaps = [albedoMap, aoMap, heightMap, metallicMap, normalMap, roughnessMap, envMap];
+		return tileTextureMaps(textureMaps, props);
+	})
+	return <meshStandardMaterial
+		ref={materialRef}
+		map={albedoMap}
+		aoMap={aoMap}
+		// specular={0xf0f000}
+		shininess={.1}
+		heightMap={heightMap}
+		metallicMap={metallicMap}
+		// displacementScale={.2}
+		normalMap={normalMap}
+		roughnessMap={roughnessMap}
+		envMap={envMap}
+	// roughness={-1} // invert roughness to get glossiness
 	/>
 }

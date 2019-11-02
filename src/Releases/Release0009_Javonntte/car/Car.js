@@ -104,7 +104,7 @@ function Car({
             lookAt.copy(pos).add(dir);
             car.matrix.lookAt(car.position, lookAt, normal);
             car.rotation.setFromRotationMatrix(car.matrix);
-            car.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
+            // car.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
         }
     })
 

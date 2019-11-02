@@ -5,7 +5,7 @@ import { useLoader, useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material } from '../../../Utils/materials';
+import { Tiles60, Tiles36, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material, Rock19, OrnateBrass2 } from '../../../Utils/materials';
 import * as C from '../constants';
 
 
@@ -28,57 +28,59 @@ const BuildingsProvider = ({ ...props }) => {
     const [facade10Ref, facade10] = useResource();
     const [facade12Ref, facade12] = useResource();
     const [metal03Ref, metal03] = useResource();
-
-
+    const [tiles60Ref, tiles60] = useResource();
+    const [tiles36Ref, tiles36] = useResource();
+    const [rock19Ref, rock19] = useResource();
+    const [ornateBrass2Ref, ornateBrass2] = useResource()
     const buildingMaterial = useMemo(() => {
         return {
-            "large_short_low_present_boxy": foamGrip,
-            "large_short_low_present_boxy": foamGrip,
-            "large_short_low_present_factory": foamGrip,
-            "large_short_low_present_factory": foamGrip,
-            "large_tall_low_michigancentralstation": foamGrip,
-            "large_tall_low_michigancentralstation": foamGrip,
-            "large_tall_tower_present_bookcadillachotel": foamGrip,
-            "large_tall_tower_present_bookcadillachotel": foamGrip,
-            "large_tall_tower_present_penobscot": foamGrip,
-            "large_tall_tower_present_penobscot": foamGrip,
-            "large_tall_tower_present_talltower": foamGrip,
-            "large_tall_tower_present_talltower": foamGrip,
-            "medium_short_diamond_future_diamondhull_geo001": foamGrip,
-            "medium_short_diamond_future_diamondhull_geo001": foamGrip,
-            "medium_tall_diamond_future_diamondhull_geo": foamGrip,
-            "medium_tall_diamond_future_diamondhull_geo": foamGrip,
-            "medium_tall_diamond_future_disco1": foamGrip,
-            "medium_tall_diamond_future_disco1": foamGrip,
-            "medium_tall_diamond_future_shinyhull1": foamGrip,
-            "medium_tall_diamond_future_shinyhull1": foamGrip,
-            "medium_tall_diamond_future_unlithull_geo": foamGrip,
-            "medium_tall_diamond_future_unlithull_geo": foamGrip,
-            "medium_tall_diamond_future_unlithull_geo001": foamGrip,
-            "medium_tall_diamond_future_unlithull_geo001": foamGrip,
-            "medium_tall_ribbony_fture_celvinyl_geo003": foamGrip,
-            "medium_tall_ribbony_fture_celvinyl_geo003": foamGrip,
-            "medium_tall_ribbony_future_celvinyl_geo002": foamGrip,
-            "medium_tall_ribbony_future_celvinyl_geo002": foamGrip,
-            "medium_tall_tower_present_broderick": foamGrip,
-            "medium_tall_tower_present_broderick": foamGrip,
-            "medium_tall_tower_present_fancytower": foamGrip,
-            "medium_tall_tower_present_fancytower": foamGrip,
-            "medium_tall_tower_present_tower": foamGrip,
-            "medium_tall_tower_present_tower": foamGrip,
-            "small_short_twirly_future_disco1_small_cactus": foamGrip,
-            "small_short_twirly_future_disco1_small_cactus": foamGrip,
-            "small_short_twirly_future_disco1_small_worm": foamGrip,
-            "small_short_twirly_future_disco1_small_worm": foamGrip,
-            "small_tall_diamond_future_diamondhull_geo002": foamGrip,
-            "small_tall_diamond_future_diamondhull_geo002": foamGrip,
-            "small_tall_diamond_future_toongeo1": foamGrip,
-            "small_tall_diamond_future_toongeo1": foamGrip,
-            "small_tall_tower_present_lightwire1": foamGrip,
-            "small_tall_tower_present_lightwire1": foamGrip,
-            "small_tall_tower_present_needle": foamGrip,
-            "small_tall_tower_present_needle": foamGrip,
-            "small_tall_twirly_future_comet_geo": foamGrip,
+            // "large_short_low_present_boxy": facade12,
+            // "large_short_low_present_boxy": foamGrip,
+            // "large_short_low_present_factory": foamGrip,
+            // "large_short_low_present_factory": foamGrip,
+            // "large_tall_low_michigancentralstation": foamGrip,
+            // "large_tall_low_michigancentralstation": foamGrip,
+            // "large_tall_tower_present_bookcadillachotel": foamGrip,
+            // "large_tall_tower_present_bookcadillachotel": foamGrip,
+            // "large_tall_tower_present_penobscot": foamGrip,
+            // "large_tall_tower_present_penobscot": foamGrip,
+            // "large_tall_tower_present_talltower": foamGrip,
+            // "large_tall_tower_present_talltower": foamGrip,
+            // "medium_short_diamond_future_diamondhull_geo001": foamGrip,
+            // "medium_short_diamond_future_diamondhull_geo001": foamGrip,
+            // "medium_tall_diamond_future_diamondhull_geo": foamGrip,
+            // "medium_tall_diamond_future_diamondhull_geo": foamGrip,
+            // "medium_tall_diamond_future_disco1": foamGrip,
+            // "medium_tall_diamond_future_disco1": foamGrip,
+            // "medium_tall_diamond_future_shinyhull1": foamGrip,
+            // "medium_tall_diamond_future_shinyhull1": foamGrip,
+            // "medium_tall_diamond_future_unlithull_geo": foamGrip,
+            // "medium_tall_diamond_future_unlithull_geo": foamGrip,
+            // "medium_tall_diamond_future_unlithull_geo001": foamGrip,
+            // "medium_tall_diamond_future_unlithull_geo001": foamGrip,
+            // "medium_tall_ribbony_fture_celvinyl_geo003": foamGrip,
+            // "medium_tall_ribbony_fture_celvinyl_geo003": foamGrip,
+            // "medium_tall_ribbony_future_celvinyl_geo002": foamGrip,
+            // "medium_tall_ribbony_future_celvinyl_geo002": foamGrip,
+            // "medium_tall_tower_present_broderick": foamGrip,
+            // "medium_tall_tower_present_broderick": foamGrip,
+            // "medium_tall_tower_present_fancytower": foamGrip,
+            // "medium_tall_tower_present_fancytower": foamGrip,
+            // "medium_tall_tower_present_tower": foamGrip,
+            // "medium_tall_tower_present_tower": foamGrip,
+            // "small_short_twirly_future_disco1_small_cactus": foamGrip,
+            // "small_short_twirly_future_disco1_small_cactus": foamGrip,
+            // "small_short_twirly_future_disco1_small_worm": foamGrip,
+            // "small_short_twirly_future_disco1_small_worm": foamGrip,
+            // "small_tall_diamond_future_diamondhull_geo002": foamGrip,
+            // "small_tall_diamond_future_diamondhull_geo002": foamGrip,
+            // "small_tall_diamond_future_toongeo1": foamGrip,
+            // "small_tall_diamond_future_toongeo1": foamGrip,
+            // "small_tall_tower_present_lightwire1": foamGrip,
+            // "small_tall_tower_present_lightwire1": foamGrip,
+            // "small_tall_tower_present_needle": foamGrip,
+            // "small_tall_tower_present_needle": foamGrip,
+            // "small_tall_twirly_future_comet_geo": foamGrip,
             "small_tall_twirly_future_comet_geo": foamGrip,
         }
     });
@@ -105,9 +107,14 @@ const BuildingsProvider = ({ ...props }) => {
                 building.material = buildingMaterial[building.name];
                 const [maxWidthBucket, maxHeightBucket, category, name] = child.name.split("_");
                 building.footprint = maxWidthBucket;
-                _b.push(building);
+                // TODO TMP rm this conditional!
+                if (Object.keys(buildingMaterial).includes(building.name)) {
+                    _b.push(building);
+                }
+
             }
         })
+        console.log("all buildings:", _b);
         return _b;
     }, [loaded])
 
@@ -117,7 +124,7 @@ const BuildingsProvider = ({ ...props }) => {
         setLoaded(allMats.length == loadedMats.length && gltf);
     })
 
-    return <BuildingsContext.Provider value={{buildings, loaded}}>
+    return <BuildingsContext.Provider value={{ buildings, loaded }}>
         <FoamGripMaterial materialRef={foamGripRef} color={0x0000af} />
         <CloudMaterial materialRef={cloudRef} emissive={0xd4af37} />
         <Windows1Material materialRef={windows1Ref} />
@@ -125,6 +132,11 @@ const BuildingsProvider = ({ ...props }) => {
         <Facade04Material materialRef={facade04Ref} />
         <Facade12Material materialRef={facade12Ref} />
         <Metal03Material materialRef={metal03Ref} />
+        <Tiles60 materialRef={tiles60Ref} />
+        <Tiles36 materialRef={tiles36Ref} />
+        <Rock19 materialRef={rock19Ref} />
+        <OrnateBrass2 materialRef={ornateBrass2Ref} textureRepeat={{x: 1, y:1}}/>
+        
         {props.children}
     </BuildingsContext.Provider>
 }

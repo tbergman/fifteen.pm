@@ -4,7 +4,7 @@ import { useResource } from 'react-three-fiber';
 export default function Headlights({ }) {
     const [leftTargetRef, leftTarget] = useResource();
     const [rightTargetRef, rightTarget] = useResource();
-    const [intensity, angle, penumbra] = useMemo(() => [10, 0.25, 0.25])
+    const [intensity, angle, penumbra] = useMemo(() => [5, 0.25, 0.25])
     return (
         <>
             <group ref={leftTargetRef} position={[-1.25, -.5, -3.5]} />

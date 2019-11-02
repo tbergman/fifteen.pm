@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { BuildingsContext } from './BuildingsContext';
-import { generateTileset } from '../tiles';
+import { generateTileset } from './tiles';
 
 export default function Buildings({ surface, neighborhoods }) {
     const instancedBuildings = useRef()

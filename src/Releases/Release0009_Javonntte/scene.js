@@ -29,7 +29,7 @@ export function Scene({ colorTheme, onTrackSelect }) {
                 autoForward={false}
                 dragToLook={false}
             /> */}
-            <FixedLights />
+            {/* <FixedLights /> */}
             <Suspense fallback={null}>
                 <Road
                     closed={true}

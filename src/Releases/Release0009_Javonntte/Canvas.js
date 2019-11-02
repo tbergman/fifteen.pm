@@ -14,10 +14,13 @@ export default function JavonntteCanvas({ colorTheme, onTrackSelect }) {
                 value => (
                     <Canvas
                         id="canvas"
+                        pixelRatio={window.devicePixelRatio}
                         onCreated={({ gl }) => {
                             gl.shadowMap.enabled = true;
                             gl.gammaInput = true;
                             gl.gammaOutput = true;
+                            gl.antialias = true;
+                            // gl.setPixelRatio(window.devicePixelRatio * 1.5);
                         }}
                     >
                         <MusicPlayerContext.Provider value={value}>
