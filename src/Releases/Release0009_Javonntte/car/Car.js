@@ -119,8 +119,8 @@ function Car({
                 <Headlights />
                 {/* This pointlight makes the dash and chassis look good... */}
                 <pointLight
-                    position={[.8, -.75, 2]}
-                    intensity={.01}
+                    position={[.8, -.75, 1.5]}
+                    intensity={.05}
                 />
             </>
         }

@@ -5,7 +5,7 @@ import { useLoader, useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Tiles60, Tiles36, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material, Rock19, OrnateBrass2, EmissiveScuffedPlasticMaterial } from '../../../Utils/materials';
+import { Tiles60, Tiles36, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, Windows1Material, Rock19, OrnateBrass2, ScuffedPlasticMaterial } from '../../../Utils/materials';
 import * as C from '../constants';
 
 
@@ -42,19 +42,19 @@ const BuildingsProvider = ({ ...props }) => {
             // "large_tall_tower_present_bookcadillachotel": foamGrip,
             // "large_tall_tower_present_penobscot": foamGrip,
             // "large_tall_tower_present_talltower": foamGrip,
-            // "medium_short_diamond_future_diamondhull_geo001": foamGrip,
-            // "medium_tall_diamond_future_diamondhull_geo": foamGrip,
-            // "medium_tall_diamond_future_disco1": foamGrip,
-            // "medium_tall_diamond_future_shinyhull1": foamGrip,
-            // "medium_tall_diamond_future_unlithull_geo": foamGrip,
-            // "medium_tall_diamond_future_unlithull_geo001": foamGrip,
-            // "medium_tall_ribbony_future_celvinyl_geo003": foamGrip,
-            // "medium_tall_ribbony_future_celvinyl_geo002": foamGrip,
-            // "medium_tall_tower_present_broderick": foamGrip,
+            "medium_short_diamond_future_diamondhull_geo001": {material: foamGripSilver},
+            "medium_tall_diamond_future_diamondhull_geo": {material: foamGripSilver},
+            "medium_tall_diamond_future_disco1": {material: foamGripSilver},
+            "medium_tall_diamond_future_shinyhull1": {material: foamGripSilver},
+            "medium_tall_diamond_future_unlithull_geo": {material: foamGripSilver},
+            "medium_tall_diamond_future_unlithull_geo001": {material: foamGripSilver},
+            "medium_tall_ribbony_future_celvinyl_geo003": {material: foamGripSilver},
+            "medium_tall_ribbony_future_celvinyl_geo002": {material: foamGripSilver},
+            "medium_tall_tower_present_broderick": {material: facade12},
             "medium_tall_tower_present_fancytower": {material: facade10},
             "medium_tall_tower_present_tower": { material: tiles36 },
-            "small_short_twirly_future_disco1_small_cactus": { material: facade04 },
-            "small_short_twirly_future_disco1_small_worm": { material: facade12 },
+            "small_short_twirly_future_disco1_small_cactus": { material: scuffedPlastic },
+            "small_short_twirly_future_disco1_small_worm": { material: foamGripPurple },
             "small_tall_diamond_future_diamondhull_geo002": { material: metal03 },
             "small_tall_diamond_future_toongeo1": { material: scuffedPlastic },
             "small_tall_tower_future_lightwire1": { material: ornateBrass2 },
@@ -120,7 +120,7 @@ const BuildingsProvider = ({ ...props }) => {
         <Tiles36 materialRef={tiles36Ref} shininess={100} textureRepeat={{ x: 1, y: 1 }} color={0xffc60a} />
         <Rock19 materialRef={rock19Ref} displacementScale={0.05} />
         <OrnateBrass2 materialRef={ornateBrass2Ref} color={0x0000ff} />
-        <EmissiveScuffedPlasticMaterial materialRef={scuffedPlasticRef} color={0x918b78} />
+        <ScuffedPlasticMaterial materialRef={scuffedPlasticRef} color={0xffc60a} />
         {props.children}
     </BuildingsContext.Provider>
 }

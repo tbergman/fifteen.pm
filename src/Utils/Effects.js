@@ -155,8 +155,8 @@ export const BloomFilmEffect = React.memo(({ }) => {
         <effectComposer ref={composer} args={[gl]}>
             <renderPass attachArray="passes" scene={scene} camera={camera} />
             {/* // strength, radius threshold */}
-            {/* <unrealBloomPass attachArray="passes" args={[undefined, 2.6, 0.54, .998]} /> */}
-            {/* <filmPass attachArray="passes" args={[.35, 0.025, 1, false]} /> */}
+            <unrealBloomPass attachArray="passes" args={[undefined, 2.6, 0.54, .998]} />
+            <filmPass attachArray="passes" args={[.35, 0.25, 1000, false]} />
         </effectComposer>
     )
 });

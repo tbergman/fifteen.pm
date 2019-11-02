@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useFrame, useResource } from 'react-three-fiber';
 import * as THREE from 'three';
 import useMusicPlayer from '../../../UI/Player/hooks';
-import { EmissiveScuffedPlasticMaterial } from '../../../Utils/materials';
+import { ScuffedPlasticMaterial } from '../../../Utils/materials';
 import * as C from '../constants';
 
 export default function Dashboard({ gltf, onTrackSelect }) {
@@ -60,8 +60,8 @@ export default function Dashboard({ gltf, onTrackSelect }) {
     }, [currentTrackName])
 
     return <>
-        <EmissiveScuffedPlasticMaterial materialRef={selectedButtonMaterialRef} color="yellow" emissive="pink" />
-        <EmissiveScuffedPlasticMaterial materialRef={defaultButtonMaterialRef} />
+        <ScuffedPlasticMaterial materialRef={selectedButtonMaterialRef} color="yellow" emissive="pink" />
+        <ScuffedPlasticMaterial materialRef={defaultButtonMaterialRef} />
         {materialsLoaded && Object.keys(dashboardButtons).map(buttonName => {
             const geometry = dashboardButtons[buttonName];
             return (
@@ -70,7 +70,6 @@ export default function Dashboard({ gltf, onTrackSelect }) {
                     key={buttonName}
                     onClick={e => {
                         const curActionName = buttonName + "Action";
-                        console.log("BLAHBLAHBLAH", curActionName);
                         actions.current[curActionName].play();
                         const trackShorthand = buttonName.split("button_")[1];
                         onTrackSelect(C.TRACK_LOOKUP[trackShorthand])

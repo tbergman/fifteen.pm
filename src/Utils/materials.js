@@ -486,7 +486,7 @@ export function BlackLeather12({ materialRef, ...props }) {
 }
 
 // TODO
-export function EmissiveScuffedPlasticMaterial({ materialRef, ...props }) {
+export function ScuffedPlasticMaterial({ materialRef, ...props }) {
 	const [metalnessMap, normalMap, roughnessMap, alphaMap, envMap] = useMemo(() => {
 		const textureLoader = new THREE.TextureLoader();
 		const metalnessMap = textureLoader.load(assetPathShared("textures/plastic-pattern1/plasticpattern1-metalness.png"))
@@ -510,6 +510,7 @@ export function EmissiveScuffedPlasticMaterial({ materialRef, ...props }) {
 		normalMap={normalMap}
 		roughnessMap={roughnessMap}
 		envMap={envMap}
+		{...props}
 	/>
 }
 

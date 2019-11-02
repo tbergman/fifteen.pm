@@ -68,7 +68,7 @@ function pickBuildings(tile, buildings) {
     if (area > 14) {
         return {
             allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
-            subdivisions: 1
+            subdivisions: 6 // TODO make subdivision3
         }
     } else {
         return {
