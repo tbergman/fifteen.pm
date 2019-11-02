@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { a, apply as applySpring } from 'react-spring/three';
 import { extend, useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
@@ -148,15 +148,19 @@ export const Advanced2Effect = React.memo(({ camera }) => {
 
 export const BloomFilmEffect = React.memo(({ }) => {
     const composer = useRef()
-    const { scene, gl, size, camera } = useThree()
+    const { scene, gl, size, camera, clock } = useThree()
+    const [v, setV] = useState();
     useEffect(() => void composer.current.setSize(size.width, size.height), [size])
-    useFrame(() => composer.current.render(), 2)
+    useFrame(() => {
+        composer.current.render()
+        setV(Math.sin(clock.oldTime));
+    }, 2)
     return (
         <effectComposer ref={composer} args={[gl]}>
             <renderPass attachArray="passes" scene={scene} camera={camera} />
             {/* // strength, radius threshold */}
             <unrealBloomPass attachArray="passes" args={[undefined, 2.6, 0.54, .998]} />
-            <filmPass attachArray="passes" args={[.35, 0.25, 1000, false]} />
+            <filmPass attachArray="passes" args={[.33, .4, 148, false]} />
         </effectComposer>
     )
 });

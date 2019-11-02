@@ -16,6 +16,17 @@ function subdivide6(triangleComponents, centroid) {
     ]
 }
 
+function subdivide3(triangleComponents, centroid) {
+    return [
+        triangleFromVertices(triangleComponents.i1, triangleComponents.a, centroid),
+        // triangleFromVertices(triangleComponents.a, triangleComponents.i2, centroid),
+        triangleFromVertices(triangleComponents.i2, triangleComponents.b, centroid),
+        // triangleFromVertices(triangleComponents.b, triangleComponents.i3, centroid),
+        triangleFromVertices(triangleComponents.i3, triangleComponents.c, centroid),
+        // triangleFromVertices(triangleComponents.c, triangleComponents.i1, centroid),
+    ]
+}
+
 function subdivide36(triangleComponents, centroid) {
     const thirtySix = [];
     subdivide6(triangleComponents, centroid).forEach(subTriangle => {
@@ -32,25 +43,24 @@ function formatElement({ triangle, normal, centroid, building }) {
         ...building,
         centroid: centroid,
         normal: normal,
-        
+
     }
 }
 
-function format36({ buildings, normal, centroid, triangle }) {
+
+function formatN({ buildings, normal, centroid, triangle, n }) {
+    if (n === 1) return [formatElement({ normal, centroid, building: randomArrayVal(buildings) })]
     const subdividedTriangle = subdivideTriangle(triangle);
-    const randBuildings = selectNRandomFromArray(buildings, 36)
-    return subdivide36(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, building: randBuildings[idx] }));
+    const randBuildings = selectNRandomFromArray(buildings, n)
+    const subdivideN = {
+        3: subdivide3,
+        6: subdivide6,
+        36: subdivide36,
+    }[n];
+    return subdivideN(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, building: randBuildings[idx] }));
 }
 
-function format6({ buildings, normal, centroid, triangle }) {
-    const subdividedTriangle = subdivideTriangle(triangle);
-    const randBuildings = selectNRandomFromArray(buildings, 6)
-    return subdivide6(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, building: randBuildings[idx] }));
-}
 
-function format1({ buildings, normal, centroid }) {
-    return [formatElement({ normal, centroid, building: randomArrayVal(buildings) })]
-}
 
 function pickBuildings(tile, buildings) {
     const area = tile.triangle.getArea();
@@ -68,7 +78,7 @@ function pickBuildings(tile, buildings) {
     if (area > 14) {
         return {
             allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
-            subdivisions: 6 // TODO make subdivision3
+            subdivisions: 3
         }
     } else {
         return {
@@ -85,14 +95,7 @@ function pickBuildings(tile, buildings) {
 
 function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, buildings) {
     const { allowedBuildings, subdivisions } = pickBuildings(tile, buildings)
-    const formationProps = { buildings: allowedBuildings, ...tile };
-    const formation = (() => {
-        switch (subdivisions) {
-            case 1: return format1(formationProps);
-            case 6: return format6(formationProps);
-            case 36: return format36(formationProps);
-        }
-    })();
+    const formation = formatN({ n: subdivisions, buildings: allowedBuildings, ...tile });
     return formation;
 }
 
