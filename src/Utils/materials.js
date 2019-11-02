@@ -390,7 +390,6 @@ export function Facade10Material({ materialRef, ...props }) {
 	});
 
 	return <meshStandardMaterial
-		{...props}
 		ref={materialRef}
 		lights
 		receiveShadow
@@ -400,6 +399,7 @@ export function Facade10Material({ materialRef, ...props }) {
 		emissiveMap={emissiveMap}
 		metalnessMap={metalnessMap}
 		roughnessMap={roughnessMap}
+		{...props}
 	// displacementMap={displacementMap}
 	/>
 }

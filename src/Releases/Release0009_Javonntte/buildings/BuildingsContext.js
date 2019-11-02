@@ -51,7 +51,7 @@ const BuildingsProvider = ({ ...props }) => {
             // "medium_tall_ribbony_future_celvinyl_geo003": foamGrip,
             // "medium_tall_ribbony_future_celvinyl_geo002": foamGrip,
             // "medium_tall_tower_present_broderick": foamGrip,
-            // "medium_tall_tower_present_fancytower": foamGrip,
+            "medium_tall_tower_present_fancytower": {material: facade10},
             "medium_tall_tower_present_tower": { material: tiles36 },
             "small_short_twirly_future_disco1_small_cactus": { material: facade04 },
             "small_short_twirly_future_disco1_small_worm": { material: facade12 },
@@ -112,7 +112,7 @@ const BuildingsProvider = ({ ...props }) => {
         <FoamGripMaterial materialRef={foamGripSilverRef} color={0x0000af} />
         <CloudMaterial materialRef={cloudRef} emissive={0xd4af37} />
         <Windows1Material materialRef={windows1Ref} />
-        <Facade10Material materialRef={facade10Ref} />
+        <Facade10Material materialRef={facade10Ref} shininess={100} textureRepeat={{x: 1, y: 1}}/>
         <Facade04Material materialRef={facade04Ref} textureRepeat={{ x: 1, y: 1 }} color={0xc0c0c0} />
         <Facade12Material materialRef={facade12Ref} />
         <Metal03Material materialRef={metal03Ref} textureRepeat={{ x: 2, y: 2 }} />
@@ -120,7 +120,7 @@ const BuildingsProvider = ({ ...props }) => {
         <Tiles36 materialRef={tiles36Ref} shininess={100} textureRepeat={{ x: 1, y: 1 }} color={0xffc60a} />
         <Rock19 materialRef={rock19Ref} displacementScale={0.05} />
         <OrnateBrass2 materialRef={ornateBrass2Ref} color={0x0000ff} />
-        <EmissiveScuffedPlasticMaterial materialRef={scuffedPlasticRef} color={0xffc60a} />
+        <EmissiveScuffedPlasticMaterial materialRef={scuffedPlasticRef} color={0x918b78} />
         {props.children}
     </BuildingsContext.Provider>
 }

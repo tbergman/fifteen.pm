@@ -53,7 +53,7 @@ function format1({ buildings, normal, centroid }) {
 }
 
 function pickBuildings(tile, buildings) {
-    // const area = tile.triangle.getArea();
+    const area = tile.triangle.getArea();
     // if (area > 16) {
     //     return [
     //         {
@@ -65,16 +65,21 @@ function pickBuildings(tile, buildings) {
     //             subdivisions: 6
     //         }
     //     ][THREE.Math.randInt(0, 1)]
-    // } else if (area > 14) {
-    //     return {
-    //         allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
-    //         subdivisions: 6
-    //     }
-    // } else {
+    if (area > 14) {
         return {
-            allowedBuildings: buildings.filter(building => building),
+            allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
+            subdivisions: 1
+        }
+    } else {
+        return {
+            allowedBuildings: buildings.filter(building => building.footprint === C.SMALL),
             subdivisions: 6
         }
+    }
+
+    // return {
+    //     allowedBuildings: buildings.filter(building => building),
+    //     subdivisions: 6
     // }
 }
 
