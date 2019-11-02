@@ -2,8 +2,7 @@ import * as THREE from 'three';
 import { subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromVertices } from '../../../Utils/geometry';
 import { findNearest, loadKDTree } from '../../../Utils/KdTree';
 import { randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
-import * as C from '../constants';
-import { createInstance } from '../instances';
+import { createInstance } from './instances';
 
 function subdivide6(triangleComponents, centroid) {
     return [
@@ -60,18 +59,18 @@ function formatN({ buildings, normal, centroid, triangle, n }) {
 }
 
 // expensive 1-time operation for tileset
-function generateTileFormations(surface, buildings, neighborhoods) {
-    const tiles = neighborhoods.generateTiles({ surface });
+function generateTileFormations(buildings, neighborhood) {
+    const tiles = neighborhood.generateTiles({ surface: neighborhood.surface });
     const kdTree = loadKDTree(tiles);
     const formations = {};
     Object.keys(tiles).forEach(id => formations[id] = []);
-    neighborhoods.getCentroids({ surface, tiles }).forEach(centroid => {
-        const [neighborhoodRadius, neighbors] = findNearest(centroid, kdTree, neighborhoods.maxSize, neighborhoods.maxRadius, tiles);
+    neighborhood.getCentroids({ surface: neighborhood.surface, tiles }).forEach(centroid => {
+        const [neighborhoodRadius, neighbors] = findNearest(centroid, kdTree, neighborhood.maxSize, neighborhood.maxRadius, tiles);
         Object.values(neighbors).forEach(neighbor => {
             const id = neighbor.id;
             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
-            if (replace && neighborhoods.rules(neighbor)) {
-                const { allowedBuildings, subdivisions } = neighborhoods.pickBuildings(neighbor, buildings);
+            if (replace && neighborhood.rules(neighbor)) {
+                const { allowedBuildings, subdivisions } = neighborhood.pickBuildings(neighbor, buildings);
                 formations[id] = formatN({ n: subdivisions, buildings: allowedBuildings, ...neighbor });
             }
         });
@@ -79,11 +78,10 @@ function generateTileFormations(surface, buildings, neighborhoods) {
     return formations;
 }
 
-export function generateTileset({ surface, buildings, neighborhoods }) {
+export function generateInstanceAttributes({ buildings, neighborhood }) {
     const instances = {};
-    const instancedMeshes = {};
     // generate formations for all tiles
-    const formations = generateTileFormations(surface, buildings, neighborhoods);
+    const formations = generateTileFormations(buildings, neighborhood);
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach(tId => {
         formations[tId].forEach(buildingInstance => {
@@ -91,9 +89,23 @@ export function generateTileset({ surface, buildings, neighborhoods }) {
             instances[buildingInstance.name].push(buildingInstance);
         });
     });
-    // create an instance geometry for each geometry type that includes all locations on each formation for that geometry
-    Object.keys(instances).forEach((name) => {
-        if (instances[name].length) instancedMeshes[name] = createInstance(instances[name]);
+    return instances;
+}
+
+export function generateTilesets({ buildings, groups }) {
+    const instancedMeshes = {};
+    const instancesByGroup = groups.map(neighborhood => {
+        return generateInstanceAttributes({ buildings, neighborhood })
+    })
+    const joinedInstancesByName = {};
+    instancesByGroup.forEach(instancesByName => {
+        Object.keys(instancesByName).forEach((name) => {
+            if (!joinedInstancesByName[name]) joinedInstancesByName[name] = [];
+            joinedInstancesByName[name].push(...instancesByName[name]) 
+        })
+    })
+    Object.keys(joinedInstancesByName).forEach((name) => {
+        if (joinedInstancesByName[name].length) instancedMeshes[name] = createInstance(joinedInstancesByName[name]);
     })
     return instancedMeshes;
 }

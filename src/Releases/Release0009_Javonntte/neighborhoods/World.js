@@ -1,11 +1,8 @@
 import React, { useMemo } from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import { Ground29Material, TronMaterial } from '../../Utils/materials';
-import Buildings from './buildings/Buildings';
-import * as C from './constants';
-import { worldNeighborhoods } from './neighborhoods';
-
+import { Ground29Material, TronMaterial } from '../../../Utils/materials';
+import * as C from '../constants';
 
 export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
@@ -76,19 +73,19 @@ export function WorldSurface({ geometry, color }) {
     </>
 }
 
-export function World({ surfaceColor }) {
+// export function World({ surfaceColor }) {
     
-    const sphereGeometry = useMemo(() => {
-        return generateSphereWorldGeometry(
-            C.WORLD_RADIUS,
-            C.WORLD_SIDES,
-            C.WORLD_TIERS,
-            C.MAX_WORLD_FACE_HEIGHT,
-        );
-    });
+//     const sphereGeometry = useMemo(() => {
+//         return generateSphereWorldGeometry(
+//             C.WORLD_RADIUS,
+//             C.WORLD_SIDES,
+//             C.WORLD_TIERS,
+//             C.MAX_WORLD_FACE_HEIGHT,
+//         );
+//     });
 
-    return <group >
-        <WorldSurface geometry={sphereGeometry} color={surfaceColor} />
-        <Buildings surface={sphereGeometry} neighborhoods={worldNeighborhoods} />
-    </group>
-}
+//     return <group >
+//         <WorldSurface geometry={sphereGeometry} color={surfaceColor} />
+//         {/* <Buildings surface={sphereGeometry} neighborhoods={worldNeighborhoods} /> */}
+//     </group>
+// }

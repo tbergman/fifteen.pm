@@ -4,3 +4,4 @@ export const tileId = ({x, y, z}) => [x.toFixed(3), y.toFixed(3), z.toFixed(3)].
 export const tileIdFrom2d = ({ x, z }) => tileId({x, y: 0, z})
 
 
+

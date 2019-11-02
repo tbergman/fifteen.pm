@@ -1,16 +1,17 @@
 import React, { Suspense, useEffect, useState } from 'react';
 import { useResource, useThree } from 'react-three-fiber';
-import { Asteroids } from './Asteroids';
+import { Asteroids } from './neighborhoods/Asteroids';
 import Car from './car/Car';
 import * as C from "./constants";
 import { FixedLights } from './lights';
 import Road from './Road';
-import { World } from './World';
+import { World } from './neighborhoods/World';
 import { BloomFilmEffect } from '../../Utils/Effects';
 import Stars from './Stars';
 import DetroitLogo from './DetroitLogo';
 import { Controls } from './controls';
-import { BuildingsProvider } from './buildings/BuildingsContext';
+import { BuildingsProvider } from './neighborhoods/BuildingsContext';
+import Neighborhoods from './neighborhoods/neighborhoods';
 
 export function Scene({ colorTheme, onTrackSelect }) {
     const { scene } = useThree();
@@ -45,8 +46,7 @@ export function Scene({ colorTheme, onTrackSelect }) {
                 </Road>
                 {/* <DetroitLogo /> */}
                 <BuildingsProvider>
-                    <World surfaceColor={colorTheme.world} />
-                    <Asteroids colors={colorTheme.asteroid} />
+                    <Neighborhoods colors={colorTheme} />
                 </BuildingsProvider>
             </Suspense>
             <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} />

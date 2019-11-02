@@ -1,9 +1,13 @@
+import React, { useContext, useEffect, useState } from 'react';
 import * as THREE from 'three';
-import { isMobile } from '../../Utils/BrowserDetection';
-import { randomPointsOnSphere, selectNRandomFromArray } from '../../Utils/random';
-import { generateTiles } from '../../Utils/SphereTiles';
-import * as C from './constants';
-
+import { isMobile } from '../../../Utils/BrowserDetection';
+import { randomPointsOnSphere, selectNRandomFromArray } from '../../../Utils/random';
+import { generateTiles } from '../../../Utils/SphereTiles';
+import * as C from '../constants';
+import { AsteroidsSurface, generateAsteroids } from './Asteroids';
+import { BuildingsContext } from './BuildingsContext';
+import { generateTilesets } from './tiles';
+import { generateSphereWorldGeometry, WorldSurface } from './World';
 
 function onPath(centroid) {
     return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
@@ -67,27 +71,70 @@ function pickAsteroidBuildings(tile, buildings) {
             allowedBuildings: presentBuildings.filter(building => building.footprint == C.MEDIUM),
             subdivisions: 3
         }
-    } 
+    }
 }
 
-export const worldNeighborhoods = {
+// TODO organize
+const worldNeighborhoods = {
     count: 100,
     maxSize: isMobile ? C.WORLD_RADIUS * 2 : Math.floor(C.WORLD_RADIUS) * 2,
     maxRadius: C.WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
-    dispersed: true, // marking if the neighborhood is on a single world or not
     rules: sphereWorldNeighborhoodRules,
     getCentroids: getWorldCentroids,
     generateTiles: generateTiles,
     pickBuildings: pickWorldBuildings,
+    surface: generateSphereWorldGeometry(
+        C.WORLD_RADIUS,
+        C.WORLD_SIDES,
+        C.WORLD_TIERS,
+        C.MAX_WORLD_FACE_HEIGHT,
+    ),
 }
 
-export const asteroidNeighborhoods = {
-    count: 100,
-    maxSize: isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
-    maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
-    dispersed: true, // marking if the neighborhood is on a single world or not
-    rules: () => true,
-    getCentroids: getAsteroidCentroids,
-    generateTiles: generateTiles,
-    pickBuildings: pickAsteroidBuildings
+// TODO where to put
+const asteroidSurfaces = generateAsteroids(
+    C.ASTEROID_BELT_RADIUS,
+    C.ASTEROID_BELT_CENTER,
+    C.NUM_ASTEROIDS,
+    C.ASTEROID_MAX_RADIUS,
+    C.ASTEROID_MAX_FACE_NOISE,
+);
+
+// TODO can we clean this up...
+export default function Neighborhoods({ colors }) {
+    const { buildings, loaded } = useContext(BuildingsContext);
+    const [meshes, setMeshes] = useState();
+
+    useEffect(() => {
+        if (loaded) {
+            const asteroidGroups = asteroidSurfaces.instances.map(instance => {
+                return {
+                    count: 100,
+                    maxSize: isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
+                    maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
+                    rules: () => true,
+                    getCentroids: getAsteroidCentroids,
+                    generateTiles: generateTiles,
+                    pickBuildings: pickAsteroidBuildings,
+                    surface: instance,
+                }
+            })
+            const worldGroup = worldNeighborhoods;
+            setMeshes(generateTilesets({
+                buildings,
+                groups: [worldGroup, ...asteroidGroups],
+            }));
+        }
+    }, [loaded]);
+
+    return <>
+        <WorldSurface geometry={worldNeighborhoods.surface} color={colors.world} />
+        <AsteroidsSurface geometry={asteroidSurfaces.geometry} {...colors.asteroid} />
+        {meshes && Object.keys(meshes).map(meshName => {
+            return <primitive key={meshName}
+                object={meshes[meshName]}
+            />
+        })
+        }
+    </>
 }

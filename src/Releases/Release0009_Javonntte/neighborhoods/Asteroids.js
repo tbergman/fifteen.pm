@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import useMusicPlayer from '../../UI/Player/hooks';
-import { Ground29Material, TronMaterial } from '../../Utils/materials';
-import NoiseSphereGeometry from '../../Utils/NoiseSphere';
-import Buildings from './buildings/Buildings';
-import * as C from './constants';
-import { asteroidNeighborhoods } from './neighborhoods';
+import useMusicPlayer from '../../../UI/Player/hooks';
+import { Ground29Material, TronMaterial } from '../../../Utils/materials';
+import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
+// import Neighborhood from './neighborhoods';
+import * as C from '../constants';
+// import { asteroidNeighborhoods } from './neighborhoods';
 
 function generateAsteroid(radius, sides, tiers, noiseHeight, noiseWidth, center) {
     const seed = Math.floor(Math.random() * 1000);
@@ -18,7 +18,7 @@ function generateAsteroid(radius, sides, tiers, noiseHeight, noiseWidth, center)
     return noiseSphere;
 }
 
-function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids, maxAsteroidRadius, maxFaceNoise) {
+export function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids, maxAsteroidRadius, maxFaceNoise) {
     const asteroidsGeom = new THREE.Geometry()
     const asteroids = {
         geometry: undefined,
@@ -56,7 +56,7 @@ function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids,
     return asteroids;
 }
 
-function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
+export function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [ground29MaterialRef, ground29Material] = useResource();
     const { bpm } = useMusicPlayer();
@@ -88,27 +88,27 @@ function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
     </>
 }
 
-export function Asteroids({ colors }) {
+// export function Asteroids({ colors }) {
 
-    const asteroids = useMemo(() => {
-        return generateAsteroids(
-            C.ASTEROID_BELT_RADIUS,
-            C.ASTEROID_BELT_CENTER,
-            C.NUM_ASTEROIDS,
-            C.ASTEROID_MAX_RADIUS,
-            C.ASTEROID_MAX_FACE_NOISE,
-        )
-    }, [])
+//     const asteroids = useMemo(() => {
+//         return generateAsteroids(
+        //     C.ASTEROID_BELT_RADIUS,
+        //     C.ASTEROID_BELT_CENTER,
+        //     C.NUM_ASTEROIDS,
+        //     C.ASTEROID_MAX_RADIUS,
+        //     C.ASTEROID_MAX_FACE_NOISE,
+        // )
+//     }, [])
 
-    return <>
-        {asteroids &&
-            <>
-                <AsteroidsSurface geometry={asteroids.geometry} {...colors} />
-                {asteroids.instances.map((instance, index) => {
-                    return <Buildings key={index} surface={instance} neighborhoods={asteroidNeighborhoods} />
-                })}
-            </>
-        }
-    </>;
+//     return <>
+//         {asteroids &&
+//             <>
+//                 <AsteroidsSurface geometry={asteroids.geometry} {...colors} />
+//                 {asteroids.instances.map((instance, index) => {
+//                     return <Neighborhood key={index} surface={instance} neighborhoods={asteroidNeighborhoods} />
+//                 })}
+//             </>
+//         }
+//     </>;
 
-}
+// }
