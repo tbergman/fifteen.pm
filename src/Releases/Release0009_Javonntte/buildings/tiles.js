@@ -72,7 +72,7 @@ function pickBuildings(tile, buildings) {
     //     }
     // } else {
         return {
-            allowedBuildings: buildings.filter(building => building.footprint == C.SMALL),
+            allowedBuildings: buildings.filter(building => building),
             subdivisions: 6
         }
     // }

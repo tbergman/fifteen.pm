@@ -43,10 +43,10 @@ export function Scene({ colorTheme, onTrackSelect }) {
                         onTrackSelect={onTrackSelect}
                     />
                 </Road>
-                <DetroitLogo />
+                {/* <DetroitLogo /> */}
                 <BuildingsProvider>
                     <World surfaceColor={colorTheme.world} />
-                    <Asteroids colors={colorTheme.asteroid} />
+                    {/* <Asteroids colors={colorTheme.asteroid} /> */}
                 </BuildingsProvider>
             </Suspense>
             <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} />

@@ -26,8 +26,8 @@ function generateAsteroids(asteroidBeltRadius, asteroidBeltCenter, numAsteroids,
     };
     for (let i = 0; i < numAsteroids; i++) {
         const radius = THREE.Math.randInt(maxAsteroidRadius * .75, maxAsteroidRadius);
-        const sides = Math.floor(radius / 4);
-        const tiers = Math.floor(radius / 4);
+        const sides = Math.floor(radius);//Math.floor(Math.min(radius * Math.random(), 5));
+        const tiers = Math.floor(Math.max(radius * Math.random(), radius));
         const center = new THREE.Vector3(
             asteroidBeltRadius * 1.5 * (Math.random() - .5),
             asteroidBeltRadius * 1.5 * (Math.random() - .5),
@@ -96,8 +96,6 @@ export function Asteroids({ colors }) {
             C.ASTEROID_BELT_CENTER,
             C.NUM_ASTEROIDS,
             C.ASTEROID_MAX_RADIUS,
-            C.ASTEROID_MAX_SIDES,
-            C.ASTEROID_MAX_TIERS,
             C.ASTEROID_MAX_FACE_NOISE,
         )
     }, [])

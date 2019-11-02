@@ -358,7 +358,7 @@ export function Facade04Material({ materialRef, ...props }) {
 	});
 
 	return <meshStandardMaterial
-		{...props}
+		
 		ref={materialRef}
 		lights
 		receiveShadow
@@ -369,6 +369,7 @@ export function Facade04Material({ materialRef, ...props }) {
 		emissiveMap={emissiveMap}
 		metalnessMap={metalnessMap}
 		roughnessMap={roughnessMap}
+		{...props}
 	// displacementMap={displacementMap}
 	/>
 }
@@ -560,7 +561,6 @@ export function Tiles60({ materialRef, ...props }) {
 }
 
 export function Tiles36({ materialRef, ...props }) {
-
 	const [colorMap, displacementMap, normalMap, roughnessMap, envMap] = useMemo(() => {
 		const textureLoader = new THREE.TextureLoader();
 		const colorMap = textureLoader.load(assetPathShared("textures/tiles-36/Tiles36_col.jpg"));
@@ -575,10 +575,12 @@ export function Tiles36({ materialRef, ...props }) {
 		ref={materialRef}
 		map={colorMap}
 		displacementMap={displacementMap}
-		displacementScale={.2}
+		displacementScale={.05}
+		roughness={0}
 		normalMap={normalMap}
 		roughnessMap={roughnessMap}
 		envMap={envMap}
+		{...props}
 	// roughness={-1} // invert roughness to get glossiness
 	/>
 }
@@ -601,10 +603,12 @@ export function Rock19({ materialRef, ...props }) {
 		map={colorMap}
 		aoMap={aoMap}
 		displacementMap={displacementMap}
-		displacementScale={.2}
+		// displacementScale={1}
+		specular={0x00ff00}
 		normalMap={normalMap}
 		roughnessMap={roughnessMap}
 		envMap={envMap}
+		{...props}	
 	// roughness={-1} // invert roughness to get glossiness
 	/>
 }
@@ -628,7 +632,7 @@ export function OrnateBrass2({ materialRef, ...props }) {
 		map={albedoMap}
 		aoMap={aoMap}
 		// specular={0xf0f000}
-		shininess={.1}
+		shininess={1}
 		heightMap={heightMap}
 		metallicMap={metallicMap}
 		// displacementScale={.2}

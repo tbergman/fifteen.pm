@@ -37,10 +37,7 @@ export const LOGO_POS = new THREE.Vector3(
 export const NUM_ASTEROIDS = 8;
 export const ASTEROID_MAX_RADIUS = WORLD_RADIUS;
 export const ASTEROID_BELT_RADIUS = WORLD_RADIUS * 8;
-// export const ASTEROID_BELT_CENTER = WORLD_ROAD_PATH[0];// Ensure this is a point on the road so we have at least 1 asteroid intersecting it for a fun drive-thru
-export const ASTEROID_MAX_SIDES = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? 1.6 : 1.6));
-export const ASTEROID_MAX_TIERS = Math.floor(ASTEROID_MAX_RADIUS * (isMobile ? .8 : 1.6));
-export const ASTEROID_MAX_FACE_NOISE = MAX_WORLD_FACE_HEIGHT;
+export const ASTEROID_MAX_FACE_NOISE = 10;
 
 // BUILDING
 // model geometry categories
