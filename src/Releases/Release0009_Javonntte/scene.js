@@ -11,6 +11,7 @@ import Stars from './Stars';
 import DetroitLogo from './DetroitLogo';
 import { Controls } from './controls';
 import { BuildingsProvider } from './neighborhoods/BuildingsContext';
+import {MaterialsProvider} from './MaterialsContext';
 import Neighborhoods from './neighborhoods/neighborhoods';
 
 export function Scene({ colorTheme, onTrackSelect }) {
@@ -31,6 +32,7 @@ export function Scene({ colorTheme, onTrackSelect }) {
                 dragToLook={false}
             /> */}
             {/* <FixedLights /> */}
+            <MaterialsProvider>
             <Suspense fallback={null}>
                 <Road
                     closed={true}
@@ -38,19 +40,18 @@ export function Scene({ colorTheme, onTrackSelect }) {
                     radius={2}
                     radiusSegments={4}
                 >
-                    <Car
-                        speed={20}
-                        roadOffset={1}
-                        onTrackSelect={onTrackSelect}
-                    />
+                    <Car onTrackSelect={onTrackSelect} />
                 </Road>
                 {/* <DetroitLogo /> */}
                 <BuildingsProvider>
                     <Neighborhoods colors={colorTheme} />
                 </BuildingsProvider>
+
             </Suspense>
+
             <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} />
             <BloomFilmEffect />
+            </MaterialsProvider>
         </>
     );
 }

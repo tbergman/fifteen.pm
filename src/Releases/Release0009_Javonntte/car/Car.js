@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { useFrame, useLoader, useResource } from 'react-three-fiber';
+import { useFrame, useLoader, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -42,14 +42,16 @@ function Car({
     const { audioStream } = useMusicPlayer();
 
     useEffect(() => {
-        if (!speed.current) speed.current = 10;
+        if (!speed.current) speed.current = 2;
         if (!delta.current) delta.current = .005;
         if (!offset.current) offset.current = 0;
     })
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
     // TODO how to break up this logic?
+    // const {gl} = useThree();
     useFrame(() => {
+        // console.log(gl)
         // TODO these floats as constants relative to world radius
         if (accelerationPressed) {
             if (delta.current < .05 && speed.current > 1) {
@@ -79,7 +81,7 @@ function Car({
         const dir = road.parameters.path.getTangentAt(t);
         normal.copy(binormal); // most examples have .cross(dir) here but this will rotate the normal to the 'side' of the orientation we want to achieve 
         // We move on a offset on its binormal
-        pos.add(normal.clone().multiplyScalar(roadOffset));
+        pos.add(normal.clone());
         if (rotateLeftPressed) {
             car.position.y -= normal.y * 4;
             car.rotation.z -= .01;
