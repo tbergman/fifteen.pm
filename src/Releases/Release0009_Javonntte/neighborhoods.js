@@ -23,7 +23,7 @@ function sphereWorldNeighborhoodRules(neighbor) {
     return !onPath(neighbor.centroid) && !tooClose(neighbor.centroid)
 }
 
-function getAsteroidCentroids({ tiles, surface }) {    
+function getAsteroidCentroids({ tiles, surface }) {
     const numRandPoints = surface.radius / 6; // TODO; use instance.radius
     const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numRandPoints).map(tile => tile.centroid);
     return centroids;
@@ -37,6 +37,39 @@ function getWorldCentroids({ surface }) {
     return centroids;
 }
 
+function pickWorldBuildings(tile, buildings) {
+    const futureBuildings = buildings.filter(building => building.era == C.FUTURE);
+    const area = tile.triangle.getArea();
+    if (area > 14) {
+        return {
+            allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
+            subdivisions: 3
+        }
+    } else {
+        return {
+            allowedBuildings: futureBuildings.filter(building => building.footprint === C.SMALL),
+            subdivisions: 6
+        }
+    }
+}
+
+function pickAsteroidBuildings(tile, buildings) {
+    const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
+    const area = tile.triangle.getArea();
+    if (area > 14) {
+        return {
+            allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+            subdivisions: 1
+        }
+    }
+    else {
+        return {
+            allowedBuildings: presentBuildings.filter(building => building.footprint == C.MEDIUM),
+            subdivisions: 3
+        }
+    } 
+}
+
 export const worldNeighborhoods = {
     count: 100,
     maxSize: isMobile ? C.WORLD_RADIUS * 2 : Math.floor(C.WORLD_RADIUS) * 2,
@@ -45,6 +78,7 @@ export const worldNeighborhoods = {
     rules: sphereWorldNeighborhoodRules,
     getCentroids: getWorldCentroids,
     generateTiles: generateTiles,
+    pickBuildings: pickWorldBuildings,
 }
 
 export const asteroidNeighborhoods = {
@@ -55,4 +89,5 @@ export const asteroidNeighborhoods = {
     rules: () => true,
     getCentroids: getAsteroidCentroids,
     generateTiles: generateTiles,
+    pickBuildings: pickAsteroidBuildings
 }

@@ -415,7 +415,6 @@ export function Windows1Material({ materialRef, ...props }) {
 		return [colorMap, envMap];
 	});
 	return <meshStandardMaterial
-		{...props}
 		ref={materialRef}
 		lights
 		receiveShadow
@@ -423,6 +422,7 @@ export function Windows1Material({ materialRef, ...props }) {
 		shininess={100}
 		map={colorMap}
 		envMap={envMap}
+		{...props}
 	/>
 }
 
@@ -477,11 +477,13 @@ export function BlackLeather12({ materialRef, ...props }) {
 		map={diffuseMap}
 		roughnessMap={glossinessMap}
 		roughness={0.1}
-		displacementMap={!props.skipDisplacement && heightMap}
-		displacementScale={props.displacementScale || .01}
+		heightMap={heightMap}
+		// displacementMap={!props.skipDisplacement && heightMap}
+		// displacementScale={props.displacementScale || .01}
 		normalMap={normalMap}
 		envMap={reflectionMap}
 		roughness={-1} // invert roughness to get glossiness
+		{...props}
 	/>
 }
 

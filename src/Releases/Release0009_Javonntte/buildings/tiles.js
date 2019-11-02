@@ -47,7 +47,6 @@ function formatElement({ triangle, normal, centroid, building }) {
     }
 }
 
-
 function formatN({ buildings, normal, centroid, triangle, n }) {
     if (n === 1) return [formatElement({ normal, centroid, building: randomArrayVal(buildings) })]
     const subdividedTriangle = subdivideTriangle(triangle);
@@ -58,45 +57,6 @@ function formatN({ buildings, normal, centroid, triangle, n }) {
         36: subdivide36,
     }[n];
     return subdivideN(subdividedTriangle, centroid).map((triangle, idx) => formatElement({ triangle, normal, building: randBuildings[idx] }));
-}
-
-
-
-function pickBuildings(tile, buildings) {
-    const area = tile.triangle.getArea();
-    // if (area > 16) {
-    //     return [
-    //         {
-    //             allowedBuildings: buildings.filter(building => building.footprint == C.LARGE),
-    //             subdivisions: 1
-    //         },
-    //         {
-    //             allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
-    //             subdivisions: 6
-    //         }
-    //     ][THREE.Math.randInt(0, 1)]
-    if (area > 14) {
-        return {
-            allowedBuildings: buildings.filter(building => building.footprint == C.MEDIUM),
-            subdivisions: 3
-        }
-    } else {
-        return {
-            allowedBuildings: buildings.filter(building => building.footprint === C.SMALL),
-            subdivisions: 6
-        }
-    }
-
-    // return {
-    //     allowedBuildings: buildings.filter(building => building),
-    //     subdivisions: 6
-    // }
-}
-
-function formatTile(tile, neighborhoodCentroid, neighborhoodRadius, buildings) {
-    const { allowedBuildings, subdivisions } = pickBuildings(tile, buildings)
-    const formation = formatN({ n: subdivisions, buildings: allowedBuildings, ...tile });
-    return formation;
 }
 
 // expensive 1-time operation for tileset
@@ -111,7 +71,8 @@ function generateTileFormations(surface, buildings, neighborhoods) {
             const id = neighbor.id;
             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;
             if (replace && neighborhoods.rules(neighbor)) {
-                formations[id] = formatTile(neighbor, centroid, neighborhoodRadius, buildings);
+                const { allowedBuildings, subdivisions } = neighborhoods.pickBuildings(neighbor, buildings);
+                formations[id] = formatN({ n: subdivisions, buildings: allowedBuildings, ...neighbor });
             }
         });
     });

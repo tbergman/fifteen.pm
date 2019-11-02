@@ -46,6 +46,8 @@ export const MEDIUM = "medium";
 export const SMALL = "small";
 export const TALL = "tall";
 export const SHORT = "short";
+export const PRESENT = "present"
+export const FUTURE = "future"
 export const BUILDING_WIDTH_BUCKETS = [
     SMALL,
     MEDIUM,
