@@ -4,8 +4,8 @@ import { ImprovedNoise } from 'three/examples/jsm/math/ImprovedNoise';
 
 // source: https://blog.webmaestro.fr/3d-noise-sphere-geometry-with-three-js/
 export default class NoiseSphereGeometry extends THREE.SphereGeometry {
-    constructor(radius, widthSegments, heightSegments, { seed, noiseWidth, noiseHeight, center }) {
-        super(radius, widthSegments, heightSegments);
+    constructor({ centroid, radius, sides, tiers, seed, noiseWidth, noiseHeight }) {
+        super(radius, sides, tiers);
         const getNoise = (vertice) => ImprovedNoise().noise(
             seed + vertice.x / noiseWidth,
             seed + vertice.y / noiseWidth,
@@ -29,7 +29,7 @@ export default class NoiseSphereGeometry extends THREE.SphereGeometry {
             this
                 .vertices[v]
                 .multiplyScalar(1 + this.vertices[v].elevation * noiseHeight / radius)
-                .addVectors(this.vertices[v], center);
+                .addVectors(this.vertices[v], centroid);
         }
     }
 }
