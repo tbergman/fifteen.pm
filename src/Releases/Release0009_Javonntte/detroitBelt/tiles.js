@@ -78,10 +78,8 @@ function generateTileFormations(buildings, neighborhood) {
     return formations;
 }
 
-export function generateInstanceAttributes({ buildings, neighborhood }) {
+export function generateInstanceAttributes(formations) {
     const instances = {};
-    // generate formations for all tiles
-    const formations = generateTileFormations(buildings, neighborhood);
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach(tId => {
         formations[tId].forEach(buildingInstance => {
@@ -95,7 +93,9 @@ export function generateInstanceAttributes({ buildings, neighborhood }) {
 export function generateTilesets({ buildings, groups }) {
     const instancedMeshes = {};
     const instancesByGroup = groups.map(neighborhood => {
-        return generateInstanceAttributes({ buildings, neighborhood })
+        // generate formations for all tiles
+        const formations = generateTileFormations(buildings, neighborhood);
+        return generateInstanceAttributes(formations);
     })
     const joinedInstancesByName = {};
     instancesByGroup.forEach(instancesByName => {
