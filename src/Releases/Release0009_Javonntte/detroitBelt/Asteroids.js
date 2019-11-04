@@ -7,13 +7,16 @@ import { generateTiles } from '../../../Utils/SphereTiles';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 
+// TODO
+// function AsteroidBelt
 
 function getAsteroidNeighborhoodCentroids({ tiles, surface }) {
     const numCentroids = 1;//Math.max(0, surface.radius / 10);
     console.log('num neighborhood points', numCentroids)
     console.log('surface', surface);
     console.log('tiles', tiles)
-    const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
+    // const pointsOnSurface = surface.vertices;
+    const centroids = selectNRandomFromArray(surface.vertices, numCentroids);
     return centroids;
 }
 
