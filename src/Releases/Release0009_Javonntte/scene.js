@@ -29,24 +29,24 @@ export function Scene({ colorTheme, onTrackSelect }) {
 
     return (
         <>
-            <Controls
+            {/* <Controls
                 // curCamera={camera}
                 movementSpeed={5000}
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            />
+            /> */}
             <FixedLights />
             <MaterialsProvider>
             <Suspense fallback={null}>
-                {/* <Road
+                <Road
                     closed={true}
                     extrusionSegments={10}
                     radius={2}
                     radiusSegments={4}
                 >
                     <Car onTrackSelect={onTrackSelect} />
-                </Road> */}
+                </Road>
                 {/* <DetroitLogo /> */}
                 <BuildingsProvider>
                     <DetroitBelt colors={colorTheme} />
@@ -54,8 +54,8 @@ export function Scene({ colorTheme, onTrackSelect }) {
 
             </Suspense>
 
-            {/* <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} /> */}
-            <BloomFilmEffect />
+            <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} />
+            {/* <BloomFilmEffect /> */}
             </MaterialsProvider>
         </>
     );

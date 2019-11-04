@@ -42,16 +42,14 @@ function Car({
     const { audioStream } = useMusicPlayer();
 
     useEffect(() => {
-        if (!speed.current) speed.current = 2;
+        if (!speed.current) speed.current = 20;
         if (!delta.current) delta.current = .005;
         if (!offset.current) offset.current = 0;
     })
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
     // TODO how to break up this logic?
-    // const {gl} = useThree();
     useFrame(() => {
-        // console.log(gl)
         // TODO these floats as constants relative to world radius
         if (accelerationPressed) {
             if (delta.current < .05 && speed.current > 1) {
@@ -83,16 +81,17 @@ function Car({
         // We move on a offset on its binormal
         pos.add(normal.clone());
         if (rotateLeftPressed) {
-            car.position.y -= normal.y * 4;
+            car.position.y -= normal.y * 2;
             car.rotation.z -= .01;
             const freq = Math.max(1500 - car.position.y, 0);
             audioStream.filter.frequency.value = freq;
             audioStream.filter.Q.value = 11;
         } else if (rotateRightPressed) {
+            car.position.y += normal.y * 2;
+            car.rotation.z += .01;
             audioStream.filter.frequency.value = Math.min(Math.abs(car.position.y), 22050);
             audioStream.filter.Q.value = 11;
-            car.position.y += normal.y * 4;
-            car.rotation.z += .01;
+            
         } else {
             if (audioStream) {
                 audioStream.filter.frequency.value = 22000;

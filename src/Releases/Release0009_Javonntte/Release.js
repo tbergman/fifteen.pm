@@ -26,7 +26,7 @@ export default function Release({ }) {
 
     return <>{content &&
         <>
-            {/* <UI content={content} /> */}
+            <UI content={content} />
             <JavonntteCanvas colorTheme={colorTheme} onTrackSelect={onTrackSelect} />
         </>
     }</>

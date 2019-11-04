@@ -66,7 +66,6 @@ function generateTileFormations(buildings, neighborhood) {
     Object.keys(tiles).forEach(id => formations[id] = []);
     neighborhood.getNeighborhoodCentroids({ surface: neighborhood.surface, tiles }).forEach(centroid => {
         const [neighborhoodRadius, neighbors] = findNearest(centroid, kdTree, neighborhood.numTiles, neighborhood.maxRadius, tiles);
-        console.log('num neighborhoods', neighbors.length)
         Object.values(neighbors).forEach(neighbor => {
             const id = neighbor.id;
             const replace = !formations[id].length || formations[id] && THREE.Math.randInt(0, 1) == 1;

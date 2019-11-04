@@ -1,3 +1,4 @@
+
 import React, { useContext } from 'react';
 import * as THREE from 'three';
 import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
@@ -8,54 +9,20 @@ import { MaterialsContext } from '../MaterialsContext';
 // TODO buildings should be grabbed in the provider since they are different
 // than world geoms so it's the same number of total instances no matter how i slice it and there's no need to try and combine world vs asteroid instances
 // then this can become a component again
-class AsteroidBelt {
-    constructor(props) {
-        this.props = props;
-        this.surfaces = {
-            geometry: undefined,
-            instances: [],
-        };
-        this.asteroidsGeom = new THREE.Geometry();
-        this.neighborhoods = [];
-    }
+export function generateAsteroidSurfaces(props) {
+    const surfaces = {
+        geometry: undefined,
+        instances: [],
+    };
 
-    getAsteroidNeighborhoodCentroids({ tiles, surface }) {
-        const numCentroids = 1;//Math.max(0, surface.radius / 10);
-        // console.log('num neighborhood points', numCentroids)
-        // console.log('surface', surface);
-        // console.log('tiles', tiles)
-        // // const pointsOnSurface = surface.vertices;
-        // const centroids = selectNRandomFromArray(surface.faces, numCentroids);
-        
-        // return centroids;
-        // const numRandPoints = surface.radius / 6; // TODO; use instance.radius
-        const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
-        return centroids;
-    }
+    const asteroidsGeom = new THREE.Geometry();
 
-    pickAsteroidBuildings(tile, buildings) {
-        const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
-        const area = tile.triangle.getArea();
-        // if (area > 14) {
-        //     return {
-        //         allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-        //         subdivisions: 1
-        //     }
-        // }
-        // else {
-        return {
-            allowedBuildings: presentBuildings.filter(building => building.footprint == C.MEDIUM),
-            subdivisions: 1
-        }
-        // }
-    }
-
-    _generateAsteroidCentroids({ beltRadius, numAsteroids }) {
+    function _generateAsteroidCentroids({ beltRadius, numAsteroids }) {
         const centroids = [];
-        const distBetweenRings = 5;
+        const distBetweenRings = 3;
         const closestRingRadius = 0;
         let curRingRadius = closestRingRadius;
-        const satelliteSlots = 20;
+        const satelliteSlots = 20; // potential locations on ring for satellite
         while (centroids.length < numAsteroids) {
             curRingRadius += distBetweenRings;
             const orbitRing = new THREE.CircleGeometry(curRingRadius, satelliteSlots);
@@ -66,41 +33,17 @@ class AsteroidBelt {
         return centroids;
     }
 
-    _generateSurfaces() {
-        this.surfaces.instances = this._generateAsteroidCentroids({ ...this.props }).map(centroid => {
-            const instance = this._generateAsteroidInstance({ centroid: centroid, ...this.props });
-            this.asteroidsGeom.merge(instance.geometry);
-            return instance;
-        });
-        this.surfaces.geometry = new THREE.BufferGeometry().fromGeometry(this.asteroidsGeom);
-    }
-
-    _generateSurfaceNeighborhoods() {
-        if (!this.surfaces.instances) console.error("You need to generate surfaces before generating surface neighborhoods.");
-        this.surfaces.instances.forEach(instance => {
-            // TODO a shared type class with world neighborhood
-            this.neighborhoods.push({
-                numTiles: 1,//isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
-                maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
-                rules: () => true,
-                getNeighborhoodCentroids: this.getAsteroidNeighborhoodCentroids,
-                // centroids: this._generateAsteroidNeighborhoodCentroids(), // TODO when refactor World
-                pickBuildings: this.pickAsteroidBuildings,
-                surface: instance,
-            });
-        })
-    }
-
-    _generateAsteroidNoiseSphere({ centroid, radius, sides, tiers, noiseHeight, noiseWidth }) {
+    function _generateAsteroidNoiseSphere({ centroid, radius, sides, tiers, noiseHeight, noiseWidth }) {
         const noiseSphere = new NoiseSphereGeometry(
             radius,
             sides,
             tiers,
-            {centroid: centroid,
-            seed: Math.floor(Math.random() * 1000),
-            noiseWidth: noiseWidth,
-            noiseHeight: noiseHeight,
-        })
+            {
+                centroid: centroid,
+                seed: Math.floor(Math.random() * 1000),
+                noiseWidth: noiseWidth,
+                noiseHeight: noiseHeight,
+            })
         noiseSphere.verticesNeedUpdate = true;
         noiseSphere.computeBoundingSphere();
         noiseSphere.computeBoundingBox();
@@ -108,13 +51,14 @@ class AsteroidBelt {
         return noiseSphere;
     }
 
-    _generateAsteroidInstance({ centroid, beltRadius, maxAsteroidRadius, maxAsteroidNoise }) {
+    function _generateAsteroidInstance({ centroid, beltRadius, maxAsteroidRadius, maxAsteroidNoise }) {
         const radius = THREE.Math.randInt(maxAsteroidRadius * .75, maxAsteroidRadius);
-        const asteroidGeom = this._generateAsteroidNoiseSphere({
+        const asteroidGeom = _generateAsteroidNoiseSphere({
             centroid: centroid,
             radius: radius,
-            sides: Math.floor(radius),
-            tiers: Math.floor(Math.max(radius * Math.random(), radius)),
+            // sides: Math.floor(radius),
+            sides: Math.floor(Math.max(radius * Math.random() + .5, radius)),
+            tiers: Math.floor(Math.max(radius * Math.random(), radius/2)),
             noiseHeight: maxAsteroidNoise,
             noiseWidth: maxAsteroidNoise,
         })
@@ -127,22 +71,52 @@ class AsteroidBelt {
         }
     }
 
-    generate() {
-        this._generateSurfaces();
-        this._generateSurfaceNeighborhoods();
-        return this;
-    }
+    surfaces.instances = _generateAsteroidCentroids({ ...props }).map(centroid => {
+        const instance = _generateAsteroidInstance({ centroid: centroid, ...props });
+        asteroidsGeom.merge(instance.geometry);
+        return instance;
+    });
+    surfaces.geometry = new THREE.BufferGeometry().fromGeometry(asteroidsGeom);
+    return surfaces;
 }
 
-export function generateAsteroidAssets() {
-    const belt = new AsteroidBelt({
-        beltRadius: C.ASTEROID_BELT_RADIUS,
-        beltCenter: C.ASTEROID_BELT_CENTER,
-        numAsteroids: C.NUM_ASTEROIDS,
-        maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
-        maxAsteroidNoise: C.ASTEROID_MAX_FACE_NOISE,
-    }).generate();
-    return [belt.surfaces, belt.neighborhoods];
+
+function getAsteroidNeighborhoodCentroids({ tiles, surface }) {
+    const numCentroids = Math.max(0, surface.radius / 2);
+    const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
+    return centroids;
+}
+
+function pickAsteroidBuildings(tile, buildings) {
+    const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
+    return [
+        {
+            allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+            subdivisions: 1
+        },
+        {
+            allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+            subdivisions: 1
+        }
+    ][THREE.Math.randInt(0, 1)]
+}
+
+
+export function generateAsteroidNeighborhoods(surfaces) {
+    const neighborhoods = []
+    surfaces.instances.forEach(instance => {
+        // TODO a shared type class with world neighborhood
+        neighborhoods.push({
+            numTiles: 1,//isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
+            maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
+            rules: () => true,
+            getNeighborhoodCentroids: getAsteroidNeighborhoodCentroids,
+            // centroids: this._generateAsteroidNeighborhoodCentroids(), // TODO when refactor World
+            pickBuildings: pickAsteroidBuildings,
+            surface: instance,
+        });
+    })
+    return neighborhoods;
 }
 
 export function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
