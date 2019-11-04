@@ -35,7 +35,7 @@ const BuildingsProvider = ({ ...props }) => {
         return {
             "large_short_low_present_boxy": { material: blackLeather12 },
             "large_short_low_present_factory": { material: metal03 },
-            "large_tall_logo_present_logo": {material: foamGripSilver },
+            "large_tall_logo_present_logo": { material: foamGripSilver },
             "large_tall_low_michigancentralstation": { material: foamGripSilver },
             "large_tall_tower_present_bookcadillachotel": { material: foamGripSilver },
             "large_tall_tower_present_penobscot": { material: metal03 },
@@ -51,10 +51,14 @@ const BuildingsProvider = ({ ...props }) => {
             "medium_tall_tower_present_broderick": { material: facade12 },
             "medium_tall_tower_present_fancytower": { material: facade10 },
             "medium_tall_tower_present_tower": { material: tiles36 },
+            "medium_tall_tower_future_needle7": { material: foamGripSilver },
             "small_short_twirly_future_disco1_small_cactus": { material: scuffedPlasticBlack },
             "small_short_twirly_future_disco1_small_worm": { material: foamGripPurple },
             "small_tall_diamond_future_diamondhull_geo002": { material: metal03 },
             "small_tall_diamond_future_toongeo1": { material: scuffedPlasticBlack },
+            "small_tall_tower_future_needle3": { material: foamGripSilver },
+            "small_tall_tower_future_needle4": { material: foamGripSilver },
+            "small_tall_tower_future_needle6": { material: foamGripSilver },
             "small_tall_tower_future_lightwire1": { material: ornateBrass2 },
             "small_tall_tower_present_needle": { material: foamGripPurple },
             "small_tall_twirly_future_comet_geo": { material: foamGripSilver },
@@ -79,6 +83,7 @@ const BuildingsProvider = ({ ...props }) => {
                 geometry.computeBoundingBox();
                 geometry.boundingBox.getSize(geometrySize);
                 building.name = child.name;
+                console.log('buildingname', building.name);
                 // TODO TMP rm this conditional!
                 if (Object.keys(attributes).includes(building.name)) {
                     building.geometry = geometry;

@@ -44,10 +44,14 @@ function pickWorldBuildings(tile, buildings) {
             subdivisions: 3
         }
     } else {
-        return {
+        return [{
             allowedBuildings: futureBuildings.filter(building => building.footprint === C.SMALL),
             subdivisions: 6
-        }
+        },
+        {
+            allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
+            subdivisions: 1
+        }][THREE.Math.randInt(0, 1)]
     }
 }
 
