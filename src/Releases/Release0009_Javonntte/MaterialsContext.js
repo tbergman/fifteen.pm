@@ -74,7 +74,7 @@ const MaterialsProvider = ({ ...props }) => {
         <Tiles60 materialRef={tiles60Ref} />
         <Tiles36 materialRef={tiles36Ref} shininess={100} />
         <Rock19 materialRef={rock19Ref} displacementScale={0.05} />
-        <OrnateBrass2 materialRef={ornateBrass2Ref} />
+        <OrnateBrass2 materialRef={ornateBrass2Ref} color="black" />
         <ScuffedPlasticMaterial materialRef={scuffedPlasticRedRef} />
         <ScuffedPlasticMaterial materialRef={scuffedPlasticBlackRef} color={0x000000} />
         <ScuffedPlasticMaterial materialRef={scuffedPlasticGlowingRef} color="yellow" emissive="pink" />

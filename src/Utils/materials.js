@@ -634,6 +634,7 @@ export function OrnateBrass2({ materialRef, ...props }) {
 		ref={materialRef}
 		map={albedoMap}
 		aoMap={aoMap}
+		color={props.color || "white"}
 		// specular={0xf0f000}
 		shininess={1}
 		heightMap={heightMap}
