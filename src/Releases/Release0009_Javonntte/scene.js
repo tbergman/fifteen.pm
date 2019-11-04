@@ -1,7 +1,8 @@
 import React, { Suspense, useEffect, useState } from 'react';
-import { useResource, useThree } from 'react-three-fiber';
+import { useResource, useThree, useFrame } from 'react-three-fiber';
 import { Asteroids } from './detroitBelt/Asteroids';
 import Car from './car/Car';
+import * as THREE from 'three';
 import * as C from "./constants";
 import { FixedLights } from './lights';
 import Road from './Road';
@@ -15,33 +16,37 @@ import {MaterialsProvider} from './MaterialsContext';
 import DetroitBelt from './detroitBelt/DetroitBelt';
 
 export function Scene({ colorTheme, onTrackSelect }) {
-    const { scene } = useThree();
+    const { scene, camera } = useThree();
 
     useEffect(() => {
         scene.background = colorTheme.background;
         scene.fog = colorTheme.fog;
     }, [colorTheme])
 
+    useEffect(() => {
+        // camera.position.set([0, 0, 0]);     
+    })
+
     return (
         <>
-            {/* <Controls
+            <Controls
                 // curCamera={camera}
-                movementSpeed={500}
+                movementSpeed={5000}
                 rollSpeed={Math.PI * .5}
                 autoForward={false}
                 dragToLook={false}
-            /> */}
-            {/* <FixedLights /> */}
+            />
+            <FixedLights />
             <MaterialsProvider>
             <Suspense fallback={null}>
-                <Road
+                {/* <Road
                     closed={true}
                     extrusionSegments={10}
                     radius={2}
                     radiusSegments={4}
                 >
                     <Car onTrackSelect={onTrackSelect} />
-                </Road>
+                </Road> */}
                 {/* <DetroitLogo /> */}
                 <BuildingsProvider>
                     <DetroitBelt colors={colorTheme} />
@@ -49,7 +54,7 @@ export function Scene({ colorTheme, onTrackSelect }) {
 
             </Suspense>
 
-            <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} />
+            {/* <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} /> */}
             <BloomFilmEffect />
             </MaterialsProvider>
         </>

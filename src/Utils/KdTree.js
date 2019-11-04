@@ -26,7 +26,6 @@ export function loadKDTree(tiles) {
 export const useKDTree = (tiles) => {
     const [loading, setLoading] = useState(false);
     const [kdTree, setKDTree] = useState(false);
-
     // const [loading, setLoading] = useState(false);
     // const [model, setModel] = useState(false);
     useEffect(() => {

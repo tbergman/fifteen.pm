@@ -1,8 +1,73 @@
 import React, { useContext } from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import { Ground29Material, TronMaterial } from '../../../Utils/materials';
-import {MaterialsContext} from '../MaterialsContext';
+import { isMobile } from '../../../Utils/BrowserDetection';
+import { randomPointsOnSphere } from '../../../Utils/random';
+import { generateTiles } from '../../../Utils/SphereTiles';
+import * as C from '../constants';
+import { MaterialsContext } from '../MaterialsContext';
+
+
+
+function onPath(centroid) {
+    return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
+        .filter(distFromPoint => distFromPoint < C.WORLD_ROAD_WIDTH)
+        .length > 0;
+}
+function tooClose(centroid) {
+    return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
+        .filter(distFromPoint => distFromPoint > C.WORLD_BUILDING_CORRIDOR_WIDTH)
+        .length == C.WORLD_ROAD_PATH.length;
+}
+
+/*
+Return true if we should render the neighbor
+*/
+function sphereWorldNeighborhoodRules(neighbor) {
+    return !onPath(neighbor.centroid) && !tooClose(neighbor.centroid)
+}
+
+function getWorldNeighborhoodCentroids({ surface }) {
+    const sphereCenter = new THREE.Vector3();
+    surface.boundingBox.getCenter(sphereCenter);
+    const numRandPoints = C.WORLD_RADIUS * 2;
+    const centroids = randomPointsOnSphere(C.WORLD_RADIUS, sphereCenter, numRandPoints);
+    return centroids;
+}
+
+function pickWorldBuildings(tile, buildings) {
+    const futureBuildings = buildings.filter(building => building.era == C.FUTURE);
+    const area = tile.triangle.getArea();
+    if (area > 14) {
+        return {
+            allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
+            subdivisions: 3
+        }
+    } else {
+        return {
+            allowedBuildings: futureBuildings.filter(building => building.footprint === C.SMALL),
+            subdivisions: 6
+        }
+    }
+}
+
+// TODO organize
+export const worldNeighborhoods = {
+    count: 100,
+    numTiles: isMobile ? C.WORLD_RADIUS * 2 : Math.floor(C.WORLD_RADIUS) * 2,
+    maxRadius: C.WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
+    rules: sphereWorldNeighborhoodRules,
+    getNeighborhoodCentroids: getWorldNeighborhoodCentroids,
+    generateTiles: generateTiles,
+    pickBuildings: pickWorldBuildings,
+    surface: generateSphereWorldGeometry(
+        C.WORLD_RADIUS,
+        C.WORLD_SIDES,
+        C.WORLD_TIERS,
+        C.MAX_WORLD_FACE_HEIGHT,
+    ),
+}
+
 
 export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
@@ -45,19 +110,19 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
 export function WorldSurface({ geometry, color }) {
     const [tronMaterialRef, tronMaterial] = useResource();
     const [ground29MaterialRef, ground29Material] = useResource();
-    const {tron, ground29} = useContext(MaterialsContext);
+    const { tron, ground29 } = useContext(MaterialsContext);
     return <>
-            <group>
-                <mesh
-                    geometry={geometry}
-                    material={tron}
-                />
-                <mesh
-                    geometry={geometry}
-                    material={ground29}
-                    receiveShadow
-                />
-            </group>
+        <group>
+            <mesh
+                geometry={geometry}
+                material={tron}
+            />
+            <mesh
+                geometry={geometry}
+                material={ground29}
+                receiveShadow
+            />
+        </group>
     </>
 }
 

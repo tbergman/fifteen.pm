@@ -1,36 +1,37 @@
 import React, { useContext } from 'react';
 import * as THREE from 'three';
-// import { asteroidNeighborhoods } from './neighborhoods';
 import isMobile from '../../../Utils/BrowserDetection';
 import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
-import { selectNRandomFromArray } from '../../../Utils/random';
+import { selectNRandomFromArray, randomArrayVal } from '../../../Utils/random';
 import { generateTiles } from '../../../Utils/SphereTiles';
-// import Neighborhood from './neighborhoods';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 
 
-function getAsteroidCentroids({ tiles, surface }) {
-    const numRandPoints = surface.radius / 6; // TODO; use instance.radius
-    const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numRandPoints).map(tile => tile.centroid);
+function getAsteroidNeighborhoodCentroids({ tiles, surface }) {
+    const numCentroids = 1;//Math.max(0, surface.radius / 10);
+    console.log('num neighborhood points', numCentroids)
+    console.log('surface', surface);
+    console.log('tiles', tiles)
+    const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
     return centroids;
 }
 
 function pickAsteroidBuildings(tile, buildings) {
     const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
     const area = tile.triangle.getArea();
-    if (area > 14) {
-        return {
-            allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-            subdivisions: 1
-        }
+    // if (area > 14) {
+    //     return {
+    //         allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+    //         subdivisions: 1
+    //     }
+    // }
+    // else {
+    return {
+        allowedBuildings: presentBuildings.filter(building => building.footprint == C.MEDIUM),
+        subdivisions: 1
     }
-    else {
-        return {
-            allowedBuildings: presentBuildings.filter(building => building.footprint == C.MEDIUM),
-            subdivisions: 3
-        }
-    }
+    // }
 }
 
 function generateAsteroidNoiseSphere({ centroid, radius, sides, tiers, noiseHeight, noiseWidth }) {
@@ -72,19 +73,22 @@ function generateAsteroidInstance({ centroid, beltRadius, maxAsteroidRadius, max
 }
 function generateAsteroidCentroids({ beltRadius, numAsteroids }) {
     const centroids = [];
-    for (let i = 0; i < numAsteroids; i++) {
-        const centroid = new THREE.Vector3(
-            beltRadius * 1.5 * (Math.random() - .5),
-            beltRadius * 1.5 * (Math.random() - .5),
-            beltRadius * 1.5 * (Math.random() - .5),
-        )
-        centroids.push(centroid);
+    const distBetweenRings = 5;
+    const closestRingRadius = 0;
+    let curRingRadius = closestRingRadius;
+    const satelliteSlots = 20;
+    while (centroids.length < numAsteroids){
+        curRingRadius += distBetweenRings;
+        const orbitRing = new THREE.CircleGeometry(curRingRadius, satelliteSlots);
+        const orbitPoint = randomArrayVal(orbitRing.vertices.slice(1, orbitRing.vertices.length));
+        orbitPoint.z = [-1, 1][THREE.Math.randInt(0, 1)] * closestRingRadius + beltRadius * (Math.random() - 0.5);
+        centroids.push(orbitPoint);
     }
-
     return centroids;
 }
 
 export function generateAsteroidSurfaces(props) {
+    
     const asteroids = {
         geometry: undefined,
         instances: [],
@@ -108,12 +112,12 @@ export function generateAsteroidSurfaces(props) {
 
 export function generateAsteroidNeighborhoods(instances) {
     return instances.map(instance => {
+        // TODO a shared type class with world neighborhood
         return {
-            count: 100,
-            maxSize: isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
+            numTiles: 1,//isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
             maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
             rules: () => true,
-            getCentroids: getAsteroidCentroids,
+            getNeighborhoodCentroids: getAsteroidNeighborhoodCentroids,
             generateTiles: generateTiles,
             pickBuildings: pickAsteroidBuildings,
             surface: instance,
