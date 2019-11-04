@@ -13,7 +13,8 @@ import { worldNeighborhoods, WorldSurface } from './World';
 export default function DetroitBelt({ colors }) {
     const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
     const [meshes, setMeshes] = useState();
-    const [asteroidSurfaces, asteroidNeighborhoods] = useMemo(() => generateAsteroidAssets());
+    const [asteroidSurfaces, asteroidNeighborhoods] = useMemo(() => {return generateAsteroidAssets()});
+    console.log(asteroidNeighborhoods);
     useEffect(() => {
         if (buildingsLoaded) {
             setMeshes(generateTilesets({

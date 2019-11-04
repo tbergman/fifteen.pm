@@ -96,22 +96,7 @@ function generateAsteroidCentroids({ beltRadius, numAsteroids }) {
     return centroids;
 }
 
-export function generateAsteroidSurfaces(props) {
 
-    const asteroids = {
-        geometry: undefined,
-        instances: [],
-    };
-    const asteroidsGeom = new THREE.Geometry();
-    asteroids.instances = generateAsteroidCentroids({ ...props }).map(centroid => {
-        const instance = generateAsteroidInstance({ centroid: centroid, ...props });
-        asteroidsGeom.merge(instance.geometry);
-        return instance;
-    });
-    const asteroidBufferGeom = new THREE.BufferGeometry().fromGeometry(asteroidsGeom);
-    asteroids.geometry = asteroidBufferGeom;
-    return asteroids;
-}
 
 
 // TODO buildings should be grabbed in the provider since they are different
@@ -120,30 +105,66 @@ export function generateAsteroidSurfaces(props) {
 
 
 export function generateAsteroidNeighborhoods(instances) {
-    return instances.map(instance => {
-        // TODO a shared type class with world neighborhood
-        return {
-            numTiles: 1,//isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
-            maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
-            rules: () => true,
-            getNeighborhoodCentroids: getAsteroidNeighborhoodCentroids,
-            generateTiles: generateTiles,
-            pickBuildings: pickAsteroidBuildings,
-            surface: instance,
-        }
-    })
+   
+}
+
+class AsteroidNeighborhood{
+
+}
+
+class AsteroidBelt {
+    constructor(props) {
+        this.props = props;
+        this.surfaces = {
+            geometry: undefined,
+            instances: [],
+        };
+        this.asteroidsGeom = new THREE.Geometry();
+        this.neighborhoods = [];
+    }
+
+    _generateSurfaces() {
+        this.surfaces.instances = generateAsteroidCentroids({ ...this.props }).map(centroid => {
+            const instance = generateAsteroidInstance({ centroid: centroid, ...this.props });
+            this.asteroidsGeom.merge(instance.geometry);
+            return instance;
+        });
+        this.surfaces.geometry = new THREE.BufferGeometry().fromGeometry(this.asteroidsGeom);
+    }
+
+    _generateSurfaceNeighborhoods(){
+        if (!this.surfaces.instances) console.error("You need to generate surfaces before generating surface neighborhoods.");
+        this.surfaces.instances.forEach(instance => {
+            // TODO a shared type class with world neighborhood
+            this.neighborhoods.push({
+                numTiles: 1,//isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
+                maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
+                rules: () => true,
+                getNeighborhoodCentroids: getAsteroidNeighborhoodCentroids,
+                generateTiles: generateTiles,
+                pickBuildings: pickAsteroidBuildings,
+                surface: instance,
+            });
+        })
+    }
+
+    generate(){
+        this._generateSurfaces();
+        this._generateSurfaceNeighborhoods();
+        return this;
+    }
 }
 
 export function generateAsteroidAssets() {
-    const surfaces = generateAsteroidSurfaces({
+    const belt = new AsteroidBelt({
         beltRadius: C.ASTEROID_BELT_RADIUS,
         beltCenter: C.ASTEROID_BELT_CENTER,
         numAsteroids: C.NUM_ASTEROIDS,
         maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
         maxAsteroidNoise: C.ASTEROID_MAX_FACE_NOISE,
-    })
-    const neighborhoods = generateAsteroidNeighborhoods(surfaces.instances);
-    return [surfaces, neighborhoods];
+    }).generate();
+    console.log("OBJ:", belt);
+    return [belt.surfaces, belt.neighborhoods];
 }
 
 export function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
