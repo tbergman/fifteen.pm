@@ -58,7 +58,6 @@ export const worldNeighborhoods = {
     maxRadius: C.WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
     rules: sphereWorldNeighborhoodRules,
     getNeighborhoodCentroids: getWorldNeighborhoodCentroids,
-    generateTiles: generateTiles,
     pickBuildings: pickWorldBuildings,
     surface: generateSphereWorldGeometry(
         C.WORLD_RADIUS,

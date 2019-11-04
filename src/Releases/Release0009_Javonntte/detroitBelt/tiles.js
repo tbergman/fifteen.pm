@@ -3,6 +3,7 @@ import { subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCe
 import { findNearest, loadKDTree } from '../../../Utils/KdTree';
 import { randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
 import { createInstance } from './instances';
+import { generateTiles } from '../../../Utils/SphereTiles';
 
 function subdivide6(triangleComponents, centroid) {
     return [
@@ -42,7 +43,6 @@ function formatElement({ triangle, normal, centroid, building }) {
         ...building,
         centroid: centroid,
         normal: normal,
-
     }
 }
 
@@ -60,7 +60,7 @@ function formatN({ buildings, normal, centroid, triangle, n }) {
 
 // expensive 1-time operation for tileset
 function generateTileFormations(buildings, neighborhood) {
-    const tiles = neighborhood.generateTiles({ surface: neighborhood.surface });
+    const tiles = generateTiles({ surface: neighborhood.surface });
     const kdTree = loadKDTree(tiles);
     const formations = {};
     Object.keys(tiles).forEach(id => formations[id] = []);
@@ -102,7 +102,7 @@ export function generateTilesets({ buildings, groups }) {
     instancesByGroup.forEach(instancesByName => {
         Object.keys(instancesByName).forEach((name) => {
             if (!joinedInstancesByName[name]) joinedInstancesByName[name] = [];
-            joinedInstancesByName[name].push(...instancesByName[name]) 
+            joinedInstancesByName[name].push(...instancesByName[name])
         })
     })
     Object.keys(joinedInstancesByName).forEach((name) => {

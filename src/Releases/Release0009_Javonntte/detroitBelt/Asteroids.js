@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import * as THREE from 'three';
 import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
 import { randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
-import { generateTiles } from '../../../Utils/SphereTiles';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 
@@ -26,11 +25,12 @@ class AsteroidBelt {
         // console.log('surface', surface);
         // console.log('tiles', tiles)
         // // const pointsOnSurface = surface.vertices;
-        const centroids = selectNRandomFromArray(surface.vertices, numCentroids);
-        return centroids;
-        // const numRandPoints = surface.radius / 6; // TODO; use instance.radius
-        // const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numRandPoints).map(tile => tile.centroid);
+        // const centroids = selectNRandomFromArray(surface.faces, numCentroids);
+        
         // return centroids;
+        // const numRandPoints = surface.radius / 6; // TODO; use instance.radius
+        const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
+        return centroids;
     }
 
     pickAsteroidBuildings(tile, buildings) {
@@ -84,7 +84,7 @@ class AsteroidBelt {
                 maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
                 rules: () => true,
                 getNeighborhoodCentroids: this.getAsteroidNeighborhoodCentroids,
-                generateTiles: generateTiles,
+                // centroids: this._generateAsteroidNeighborhoodCentroids(), // TODO when refactor World
                 pickBuildings: this.pickAsteroidBuildings,
                 surface: instance,
             });
@@ -92,11 +92,11 @@ class AsteroidBelt {
     }
 
     _generateAsteroidNoiseSphere({ centroid, radius, sides, tiers, noiseHeight, noiseWidth }) {
-        const noiseSphere = new NoiseSphereGeometry({
-            centroid: centroid,
-            radius: radius,
-            sides: sides,
-            tiers: tiers,
+        const noiseSphere = new NoiseSphereGeometry(
+            radius,
+            sides,
+            tiers,
+            {centroid: centroid,
             seed: Math.floor(Math.random() * 1000),
             noiseWidth: noiseWidth,
             noiseHeight: noiseHeight,
