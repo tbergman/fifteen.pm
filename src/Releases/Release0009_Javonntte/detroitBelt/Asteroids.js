@@ -10,14 +10,20 @@ import { MaterialsContext } from '../MaterialsContext';
 // TODO
 // function AsteroidBelt
 
+
+
+
 function getAsteroidNeighborhoodCentroids({ tiles, surface }) {
     const numCentroids = 1;//Math.max(0, surface.radius / 10);
-    console.log('num neighborhood points', numCentroids)
-    console.log('surface', surface);
-    console.log('tiles', tiles)
-    // const pointsOnSurface = surface.vertices;
+    // console.log('num neighborhood points', numCentroids)
+    // console.log('surface', surface);
+    // console.log('tiles', tiles)
+    // // const pointsOnSurface = surface.vertices;
     const centroids = selectNRandomFromArray(surface.vertices, numCentroids);
     return centroids;
+    // const numRandPoints = surface.radius / 6; // TODO; use instance.radius
+    // const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numRandPoints).map(tile => tile.centroid);
+    // return centroids;
 }
 
 function pickAsteroidBuildings(tile, buildings) {
@@ -80,7 +86,7 @@ function generateAsteroidCentroids({ beltRadius, numAsteroids }) {
     const closestRingRadius = 0;
     let curRingRadius = closestRingRadius;
     const satelliteSlots = 20;
-    while (centroids.length < numAsteroids){
+    while (centroids.length < numAsteroids) {
         curRingRadius += distBetweenRings;
         const orbitRing = new THREE.CircleGeometry(curRingRadius, satelliteSlots);
         const orbitPoint = randomArrayVal(orbitRing.vertices.slice(1, orbitRing.vertices.length));
@@ -91,7 +97,7 @@ function generateAsteroidCentroids({ beltRadius, numAsteroids }) {
 }
 
 export function generateAsteroidSurfaces(props) {
-    
+
     const asteroids = {
         geometry: undefined,
         instances: [],
@@ -126,6 +132,18 @@ export function generateAsteroidNeighborhoods(instances) {
             surface: instance,
         }
     })
+}
+
+export function generateAsteroidAssets() {
+    const surfaces = generateAsteroidSurfaces({
+        beltRadius: C.ASTEROID_BELT_RADIUS,
+        beltCenter: C.ASTEROID_BELT_CENTER,
+        numAsteroids: C.NUM_ASTEROIDS,
+        maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
+        maxAsteroidNoise: C.ASTEROID_MAX_FACE_NOISE,
+    })
+    const neighborhoods = generateAsteroidNeighborhoods(surfaces.instances);
+    return [surfaces, neighborhoods];
 }
 
 export function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
