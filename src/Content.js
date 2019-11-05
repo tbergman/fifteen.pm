@@ -15,7 +15,7 @@ export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
   "/3": "red"
 }
 
-export const TOTAL_RELEASES = 9;
+export const TOTAL_RELEASES = 10;
 
 export const CONTENT = {
   "/": {
@@ -378,6 +378,48 @@ export const CONTENT = {
       overlayContent: '#fff',
       player: '#0f0',
       onHover: '#fff9',
+    },
+    instructions: [
+      {
+        icon: ArrowKeys,
+        text: "use arrow keys to drive the hoverboard"
+      },
+    ]
+  },
+  "/10": {
+    artist: "Alien D",
+    message: "work the cube",
+    purchaseLink: "TODO",
+    tracks: [
+      {
+        name: "Frog Shirt",
+        type: "soundcloud",
+        id: "708031990",
+        secretToken: "s-NKawM",
+        bpm: "120",
+      },
+      {
+        name: "Show U",
+        type: "soundcloud",
+        id: "708031987",
+        secretToken: "s-BnEVI",
+        bpm: "120",
+      },
+      {
+        name: "Cube Jazz",
+        type: "soundcloud",
+        id: "708031996",
+        secretToken: "s-f0NWB",
+        bpm: "120",
+      }
+    ],
+    colors: {
+      default: '#fff',
+      logo: '#fff',
+      overlay: '#000',
+      overlayContent: '#fff',
+      player: '#fff',
+      onHover: '#fff',
     },
     instructions: [
       {

@@ -136,6 +136,7 @@ class HomeDefault extends PureComponent {
         <li><a href="/7">Jon Fay</a></li>
         <li><a href="/8">Greem Jellyfish</a></li>
         <li><a href="/9">Javonntte</a></li> 
+        <li><a href="/10">Alien D</a></li> 
       </ul>
     </div>);
   }
