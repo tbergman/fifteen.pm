@@ -1,7 +1,17 @@
-import React from 'react';
-import { Canvas } from 'react-three-fiber';
+import React, { useRef } from 'react'
+import { Canvas, extend, useThree, useRender } from 'react-three-fiber'
 import { MusicPlayerContext } from '../../UI/Player/MusicPlayerContext';
 import { Scene } from './Scene';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+
+extend({ OrbitControls })
+
+const Controls = props => {
+  const { camera } = useThree()
+  const controls = useRef()
+  useRender(() => controls.current && controls.current.update())
+  return <orbitControls ref={controls} args={[camera]} {...props} />
+}
 
 export default function AlienDCanvas({ }) {
     return (
@@ -14,18 +24,12 @@ export default function AlienDCanvas({ }) {
                 value => (
                     <Canvas
                         id="canvas"
-                        pixelRatio={window.devicePixelRatio}
-                        onCreated={({ gl }) => {
-                            gl.shadowMap.enabled = true;
-                            gl.gammaInput = true;
-                            gl.gammaOutput = true;
-                            gl.antialias = true;
-                            // gl.setPixelRatio(window.devicePixelRatio * 1.5);
-                        }}
+                        camera={{ position: [0, 0, 300] }}
                     >
                         <MusicPlayerContext.Provider value={value}>
                             <Scene />
                         </MusicPlayerContext.Provider>
+                        <Controls/>
                     </Canvas>
                 )}
         </MusicPlayerContext.Consumer>
