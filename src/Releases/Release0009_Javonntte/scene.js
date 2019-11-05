@@ -29,13 +29,13 @@ export function Scene({ colorTheme, onTrackSelect }) {
 
     return (
         <>
-            <Controls
+            {/* <Controls
                 // curCamera={camera}
                 movementSpeed={5000}
                 rollSpeed={Math.PI * .5}
-                autoForward={false}
-                dragToLook={false}
-            />
+                // autoForward={false}
+                // dragToLook={false}
+            /> */}
             <FixedLights />
             <MaterialsProvider>
             <Suspense fallback={null}>

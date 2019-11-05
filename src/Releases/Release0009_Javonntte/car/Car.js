@@ -38,6 +38,7 @@ function Car({
     const offset = useRef();
     const delta = useRef();
     const speed = useRef();
+    const lookAt = useRef();
     // using a filter for left and right arrow press
     const { audioStream } = useMusicPlayer();
 
@@ -99,10 +100,10 @@ function Car({
             }
             car.position.copy(pos);
             // Using arclength for stablization in look ahead.
-            const lookAt = road.parameters.path.getPointAt((t + 30 / road.parameters.path.getLength()) % 1);
+            lookAt.current = road.parameters.path.getPointAt((t + 30 / road.parameters.path.getLength()) % 1);
             // Camera Orientation 2 - up orientation via normal
-            lookAt.copy(pos).add(dir);
-            car.matrix.lookAt(car.position, lookAt, normal);
+            lookAt.current.copy(pos).add(dir);
+            car.matrix.lookAt(car.position, lookAt.current, normal);
             car.rotation.setFromRotationMatrix(car.matrix);
             // car.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
         }
@@ -112,7 +113,7 @@ function Car({
     return <group ref={carRef}>
         {car &&
             <>
-                <DashCam />
+                <DashCam target={lookAt.current}/>
                 <Dashboard gltf={gltf} onTrackSelect={onTrackSelect} />
                 <Chassis gltf={gltf} />
                 <SteeringWheel gltf={gltf} rotation={car.rotation} />
