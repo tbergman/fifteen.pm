@@ -22,9 +22,11 @@ export default function JavonntteCanvas({ colorTheme, onTrackSelect }) {
                             gl.antialias = true;
                             // gl.setPixelRatio(window.devicePixelRatio * 1.5);
                         }}
+                        onPointerMissed={console.log('pointer missed')}
+                        
                     >
                         <MusicPlayerContext.Provider value={value}>
-                            <Scene colorTheme={colorTheme} onTrackSelect={onTrackSelect} />
+                            <Scene colorTheme={colorTheme} onTrackSelect={onTrackSelect} onClick={console.log("on click scene")} />
                         </MusicPlayerContext.Provider>
                     </Canvas>
                 )}

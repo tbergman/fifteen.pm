@@ -59,8 +59,8 @@ export function generateAsteroidSurfaces(props) {
             // sides: Math.floor(radius),
             sides: Math.floor(Math.max(radius * Math.random() + .5, radius * 1.5)),
             tiers: Math.floor(Math.max(radius * Math.random(), radius)),
-            noiseHeight: maxAsteroidNoise,
-            noiseWidth: maxAsteroidNoise,
+            noiseHeight: maxAsteroidNoise * (Math.random() + .5),
+            noiseWidth: maxAsteroidNoise * (Math.random() + .5) * 2,
         })
         return {
             geometry: asteroidGeom,

@@ -83,8 +83,6 @@ const BuildingsProvider = ({ ...props }) => {
                 geometry.computeBoundingBox();
                 geometry.boundingBox.getSize(geometrySize);
                 building.name = child.name;
-                console.log('buildingname', building.name);
-                // TODO TMP rm this conditional!
                 if (Object.keys(attributes).includes(building.name)) {
                     building.geometry = geometry;
                     building.material = attributes[building.name].material;
@@ -94,8 +92,6 @@ const BuildingsProvider = ({ ...props }) => {
                     building.era = era;
                     _b.push(building);
                 }
-
-
             }
         })
         return _b;

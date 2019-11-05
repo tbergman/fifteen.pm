@@ -3,20 +3,24 @@ import { CONTENT } from '../../Content';
 import { isMobile } from '../../Utils/BrowserDetection'
 import { assetPath9 } from './utils';
 
+export const BASE_SCALE = isMobile ? .1 : 1;
+
 // ASSETS
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
 export const CAR_URL = assetPath9("objects/car/car.glb");
 export const LOGO_URL = assetPath9("objects/logo/logo.glb");
 
+console.log("IS MOBILE", isMobile);
+
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
-const WORLD_RADIUS_DIVISOR = isMobile ? 40 : 40;
+const WORLD_RADIUS_DIVISOR = isMobile ? 80 : 40;
 export const WORLD_RADIUS = Math.floor(window.innerWidth / WORLD_RADIUS_DIVISOR);
 export const MAX_WORLD_FACE_HEIGHT = 1;
 export const WORLD_SIDES = 24;
 export const WORLD_TIERS = 24;
 export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 20 : 20;
-export const WORLD_ROAD_WIDTH = isMobile ? 3 : WORLD_RADIUS / 7;
+export const WORLD_ROAD_WIDTH = isMobile ? WORLD_RADIUS / 7 : WORLD_RADIUS / 7;
 export const MAX_ROAD_ELEVATION = WORLD_RADIUS + 8;
 export const WORLD_ROAD_PATH = (() => {
     const circle = new THREE.CircleGeometry(WORLD_RADIUS, WORLD_RADIUS);

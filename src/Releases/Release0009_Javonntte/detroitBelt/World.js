@@ -58,7 +58,7 @@ function pickWorldBuildings(tile, buildings) {
 // TODO organize
 export const worldNeighborhoods = {
     count: 100,
-    numTiles: isMobile ? C.WORLD_RADIUS * 2 : Math.floor(C.WORLD_RADIUS) * 2,
+    numTiles: isMobile ? Math.floor(C.WORLD_RADIUS) * 2 : Math.floor(C.WORLD_RADIUS) * 2,
     maxRadius: C.WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
     rules: sphereWorldNeighborhoodRules,
     getNeighborhoodCentroids: getWorldNeighborhoodCentroids,

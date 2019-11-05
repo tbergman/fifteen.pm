@@ -14,15 +14,15 @@ export function Controls({curCamera, ...props}) {
     const delta = .001;
     useFrame(() => { controls.current && controls.current.update(delta) });
     return (
-        // isMobile ?
-            // <orbitControls
-            //     ref={controls}
-            //     args={[curCamera]}
-            //     enableKeys={false}
-            //     enableZoom={false}
-            //     {...props}
-            // />
-            // :
+        isMobile ?
+            <orbitControls
+                ref={controls}
+                args={[curCamera]}
+                enableKeys={false}
+                enableZoom={false}
+                {...props}
+            />
+            :
             <flyControls
                 ref={controls}
                 args={[curCamera, gl.domElement]}
