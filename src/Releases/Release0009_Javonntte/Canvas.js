@@ -4,6 +4,7 @@ import { MusicPlayerContext } from '../../UI/Player/MusicPlayerContext';
 import { Scene } from './Scene';
 
 export default function JavonntteCanvas({ colorTheme, onTrackSelect }) {
+
     return (
         // Unfortunately some gymnastics required here to pass music player context through canvas.
         // There's more than one way to solve this and some room for clean-up but this does the job.
@@ -14,6 +15,7 @@ export default function JavonntteCanvas({ colorTheme, onTrackSelect }) {
                 value => (
                     <Canvas
                         id="canvas"
+
                         pixelRatio={window.devicePixelRatio}
                         onCreated={({ gl }) => {
                             gl.shadowMap.enabled = true;
@@ -23,10 +25,18 @@ export default function JavonntteCanvas({ colorTheme, onTrackSelect }) {
                             // gl.setPixelRatio(window.devicePixelRatio * 1.5);
                         }}
                         onPointerMissed={console.log('pointer missed')}
-                        
+
                     >
                         <MusicPlayerContext.Provider value={value}>
-                            <Scene colorTheme={colorTheme} onTrackSelect={onTrackSelect} onClick={console.log("on click scene")} />
+                            <Scene
+                                colorTheme={colorTheme}
+                                onTrackSelect={onTrackSelect}
+                                onClick={console.log("on click scene")}
+                                onUpdate={(self) => {
+                                    console.log('canvas updated', self)
+                                    window.addEventListener("click", () => { console.log("OOHEEEE") })
+                                }}
+                            />
                         </MusicPlayerContext.Provider>
                     </Canvas>
                 )}

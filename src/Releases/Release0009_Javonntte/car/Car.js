@@ -18,6 +18,7 @@ function Car({
     roadOffset,
     onTrackSelect,
 }) {
+
     const gltf = useLoader(GLTFLoader, C.CAR_URL, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
@@ -48,10 +49,8 @@ function Car({
         if (!offset.current) offset.current = 0;
     })
 
-    // TODO http://jsfiddle.net/krw8nwLn/66/
-    // TODO how to break up this logic?
-    useFrame(() => {
-        // TODO these floats as constants relative to world radius
+
+    const updateSpeed = () => {
         if (accelerationPressed) {
             if (delta.current < .05 && speed.current > 1) {
                 speed.current -= .1;
@@ -67,9 +66,11 @@ function Car({
             }
 
         }
-        offset.current += delta.current;
-        const t = (offset.current % speed.current) / speed.current;
+    }
+
+    function getCurTrajectory(t) {
         const pos = road.parameters.path.getPointAt(t);
+        offset.current += delta.current;
         // interpolation
         const segments = road.tangents.length;
         const pickt = t * segments;
@@ -81,31 +82,53 @@ function Car({
         normal.copy(binormal); // most examples have .cross(dir) here but this will rotate the normal to the 'side' of the orientation we want to achieve 
         // We move on a offset on its binormal
         pos.add(normal.clone());
-        if (rotateLeftPressed) {
-            car.position.y -= normal.y * 2;
-            car.rotation.z -= .01;
-            const freq = Math.max(1500 - car.position.y, 0);
-            audioStream.filter.frequency.value = freq;
-            audioStream.filter.Q.value = 11;
-        } else if (rotateRightPressed) {
-            car.position.y += normal.y * 2;
-            car.rotation.z += .01;
-            audioStream.filter.frequency.value = Math.min(Math.abs(car.position.y), 22050);
-            audioStream.filter.Q.value = 11;
-            
-        } else {
-            if (audioStream) {
-                audioStream.filter.frequency.value = 22000;
-                audioStream.filter.Q.value = 0;
-            }
-            car.position.copy(pos);
-            // Using arclength for stablization in look ahead.
-            lookAt.current = road.parameters.path.getPointAt((t + 30 / road.parameters.path.getLength()) % 1);
-            // Camera Orientation 2 - up orientation via normal
-            lookAt.current.copy(pos).add(dir);
-            car.matrix.lookAt(car.position, lookAt.current, normal);
-            car.rotation.setFromRotationMatrix(car.matrix);
-            // car.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
+        return [pos, dir];
+    }
+
+    const spinLeft = () => {
+        car.position.y -= normal.y * 2;
+        car.rotation.z -= .01;
+        const freq = Math.max(1500 - car.position.y, 0);
+        audioStream.filter.frequency.value = freq;
+        audioStream.filter.Q.value = 11;
+    }
+
+    const spinRight = () => {
+        car.position.y += normal.y * 2;
+        car.rotation.z += .01;
+        audioStream.filter.frequency.value = Math.min(Math.abs(car.position.y), 22050);
+        audioStream.filter.Q.value = 11;
+    }
+
+    const setDefaultAudioFilter = () => {
+        audioStream.filter.frequency.value = 22000;
+        audioStream.filter.Q.value = 0;
+    }
+
+    const updateCurTrajectory = (t, pos, dir) => {
+        car.position.copy(pos);
+        // Using arclength for stablization in look ahead.
+        lookAt.current = road.parameters.path.getPointAt((t + 30 / road.parameters.path.getLength()) % 1);
+        // Camera Orientation 2 - up orientation via normal
+        lookAt.current.copy(pos).add(dir);
+        car.matrix.lookAt(car.position, lookAt.current, normal);
+        car.rotation.setFromRotationMatrix(car.matrix);
+        // car.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
+    }
+
+
+    // TODO http://jsfiddle.net/krw8nwLn/66/
+    // TODO how to break up this logic?
+    useFrame(() => {
+        updateSpeed();
+        // TODO these floats as constants relative to world radius
+        const t = (offset.current % speed.current) / speed.current;
+        const [pos, dir] = getCurTrajectory(t);
+        if (rotateLeftPressed) spinLeft();
+        else if (rotateRightPressed) spinRight();
+        else {
+            if (audioStream) setDefaultAudioFilter();
+            updateCurTrajectory(t, pos, dir);
         }
     })
 
@@ -113,7 +136,7 @@ function Car({
     return <group ref={carRef}>
         {car &&
             <>
-                <DashCam target={lookAt.current}/>
+                <DashCam target={lookAt.current} />
                 <Dashboard gltf={gltf} onTrackSelect={onTrackSelect} />
                 <Chassis gltf={gltf} />
                 <SteeringWheel gltf={gltf} rotation={car.rotation} />

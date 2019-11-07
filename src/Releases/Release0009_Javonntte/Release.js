@@ -9,7 +9,7 @@ export default function Release({ }) {
     const { playTrack, currentTrackId } = useMusicPlayer();
     const [content, setContent] = useState(false);
     const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA["679771262"].theme);
-
+    
     useEffect(() => {
         setContent(CONTENT[window.location.pathname])
     }, []);

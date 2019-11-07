@@ -3,7 +3,7 @@ import { CONTENT } from '../../Content';
 import { isMobile } from '../../Utils/BrowserDetection'
 import { assetPath9 } from './utils';
 
-export const BASE_SCALE = isMobile ? .1 : 1;
+export const BASE_SCALE = isMobile ? 1 : 1;
 
 // ASSETS
 export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
@@ -14,8 +14,9 @@ console.log("IS MOBILE", isMobile);
 
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
-const WORLD_RADIUS_DIVISOR = isMobile ? 80 : 40;
-export const WORLD_RADIUS = Math.floor(window.innerWidth / WORLD_RADIUS_DIVISOR);
+const WORLD_RADIUS_DIVISOR = isMobile ? 40 : 40;
+export const WORLD_RADIUS = 48;// Math.floor(window.innerWidth / WORLD_RADIUS_DIVISOR);
+console.log("WORLD RADIUS", WORLD_RADIUS);
 export const MAX_WORLD_FACE_HEIGHT = 1;
 export const WORLD_SIDES = 24;
 export const WORLD_TIERS = 24;
