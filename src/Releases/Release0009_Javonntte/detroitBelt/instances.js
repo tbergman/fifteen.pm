@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import instancedMesh from 'three-instanced-mesh';
 instancedMesh(THREE);
-import * as C from '../constants';
 
 
 function updateCluster(cluster, normal, centroid, index, vector3, color) {
@@ -16,7 +15,7 @@ function updateCluster(cluster, normal, centroid, index, vector3, color) {
     const quaternion = new THREE.Quaternion().setFromRotationMatrix(obj.matrix);
     cluster.setQuaternionAt(index, quaternion);
     // scale
-    cluster.setScaleAt(index, vector3.set(C.BASE_SCALE * Math.random() + .5, C.BASE_SCALE * Math.random() + .5, C.BASE_SCALE * Math.random() + .5));
+    cluster.setScaleAt(index, vector3.set(Math.random() + .5, Math.random() + .5, Math.random() + .5));
     if (color) {
         color.setHSL(Math.random(), 0.5, 0.5);
         cluster.setColorAt(index, color);
