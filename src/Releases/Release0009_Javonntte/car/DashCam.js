@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree, extend } from 'react-three-fiber';
 import { FirstPersonControls } from 'three-full';
@@ -12,15 +12,17 @@ extend({ OrbitControls, FlyControls, PointerLockControls });
 export default function DashCam({ target }) {
     const ref = useRef()
     const { gl, mouse, aspect, size, setDefaultCamera } = useThree();
-
+    const [touching, setTouching] = useState(false);
     useEffect(() => {
         window.addEventListener("touchmove", touchLook, false);
+        window.addEventListener("touchend", touchEnd, false);
     })
 
     const [euler, PI_7, PI_11, PI_24] = useMemo(() => [new THREE.Euler(0, 0, 0, 'YXZ'), Math.PI / 7, Math.PI / 11, Math.PI / 24])
 
     const touchLook = (event) => {
         if (!ref.current) return;
+        if (!touching) setTouching(true);
         var movementX = (event.touches[0].clientX - window.innerWidth / 2) || 0;
         var movementY = (event.touches[0].clientY - window.innerHeight / 2) || 0;
         euler.setFromQuaternion(ref.current.quaternion);
@@ -30,6 +32,23 @@ export default function DashCam({ target }) {
         euler.x = Math.max(- PI_24, Math.min(PI_7, euler.x));
         ref.current.quaternion.setFromEuler(euler);
     }
+
+    const touchEnd = (event) => {
+        setTouching(false);
+    }
+
+    useFrame(() => {
+        if (touching) return;
+        // if (lookLeft && ref.current.rotation.y < 1.5) ref.current.rotation.y += .0075;
+        // else if (lookRight && ref.current.rotation.y > -1.5) ref.current.rotation.y -= .0075;
+        if (ref.current.rotation.y > 0) {
+            ref.current.rotation.y -= .1;
+        }
+        if (ref.current.rotation.y < 0) {
+            ref.current.rotation.y += .1;
+        }
+
+    })
 
     // Make the camera known to the system
     const lookAt = useRef(new THREE.Vector3());
