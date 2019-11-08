@@ -16,7 +16,6 @@ console.log("IS MOBILE", isMobile);
 export const WORLD_CENTER = new THREE.Vector3();
 const WORLD_RADIUS_DIVISOR = isMobile ? 40 : 40;
 export const WORLD_RADIUS = 48;// Math.floor(window.innerWidth / WORLD_RADIUS_DIVISOR);
-console.log("WORLD RADIUS", WORLD_RADIUS);
 export const MAX_WORLD_FACE_HEIGHT = 1;
 export const WORLD_SIDES = 24;
 export const WORLD_TIERS = 24;
@@ -42,7 +41,6 @@ export const LOGO_POS = new THREE.Vector3(
 export const NUM_ASTEROIDS = 130;
 export const ASTEROID_MAX_RADIUS = WORLD_RADIUS/3;
 export const ASTEROID_BELT_RADIUS = WORLD_RADIUS * 8;
-export const ASTEROID_MAX_FACE_NOISE = 10;
 
 // BUILDING
 // model geometry categories

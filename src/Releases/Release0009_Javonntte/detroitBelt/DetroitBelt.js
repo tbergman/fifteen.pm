@@ -15,7 +15,6 @@ const asteroidSurfaces = generateAsteroidSurfaces({
     beltCenter: C.ASTEROID_BELT_CENTER,
     numAsteroids: C.NUM_ASTEROIDS,
     maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
-    maxAsteroidNoise: C.ASTEROID_MAX_FACE_NOISE,
 })
 
 export default function DetroitBelt({ colors }) {

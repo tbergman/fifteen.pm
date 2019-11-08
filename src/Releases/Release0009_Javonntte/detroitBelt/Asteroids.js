@@ -19,8 +19,8 @@ export function generateAsteroidSurfaces(props) {
 
     function _generateAsteroidCentroids({ beltRadius, numAsteroids }) {
         const centroids = [];
-        const distBetweenRings = 3;
-        const closestRingRadius = 0;
+        const distBetweenRings = 4;
+        const closestRingRadius = 10;
         let curRingRadius = closestRingRadius;
         const satelliteSlots = 20; // potential locations on ring for satellite
         while (centroids.length < numAsteroids) {
@@ -33,16 +33,17 @@ export function generateAsteroidSurfaces(props) {
         return centroids;
     }
 
-    function _generateAsteroidNoiseSphere({ centroid, radius, sides, tiers, noiseHeight, noiseWidth }) {
+    function _generateAsteroidNoiseSphere({ centroid, radius }) {
         const noiseSphere = new NoiseSphereGeometry(
             radius,
-            sides,
-            tiers,
+            10, // sides
+            Math.floor(Math.max(radius * Math.random(), radius * 2)), // tiers
             {
                 centroid: centroid,
                 seed: Math.floor(Math.random() * 1000),
-                noiseWidth: noiseWidth,
-                noiseHeight: noiseHeight,
+                noiseWidth: 25,
+                noiseHeight: 25,
+                scale: {x: Math.random() * 1.5, y: 1, z: 1}
             })
         noiseSphere.verticesNeedUpdate = true;
         noiseSphere.computeBoundingSphere();
@@ -51,17 +52,9 @@ export function generateAsteroidSurfaces(props) {
         return noiseSphere;
     }
 
-    function _generateAsteroidInstance({ centroid, beltRadius, maxAsteroidRadius, maxAsteroidNoise }) {
+    function _generateAsteroidInstance({ centroid, beltRadius, maxAsteroidRadius }) {
         const radius = THREE.Math.randInt(maxAsteroidRadius * .75, maxAsteroidRadius);
-        const asteroidGeom = _generateAsteroidNoiseSphere({
-            centroid: centroid,
-            radius: radius,
-            // sides: Math.floor(radius),
-            sides: Math.floor(Math.max(radius * Math.random() + .5, radius * 1.5)),
-            tiers: Math.floor(Math.max(radius * Math.random(), radius)),
-            noiseHeight: maxAsteroidNoise * (Math.random() + .5),
-            noiseWidth: maxAsteroidNoise * (Math.random() + .5) * 2,
-        })
+        const asteroidGeom = _generateAsteroidNoiseSphere({centroid: centroid, radius: radius})
         return {
             geometry: asteroidGeom,
             faces: asteroidGeom.faces,
