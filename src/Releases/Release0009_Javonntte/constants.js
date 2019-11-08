@@ -36,7 +36,7 @@ export const LOGO_POS = new THREE.Vector3(
 
 // ASTEROID CONSTANTS
 // This is divided by the window inner width in the constant below so movile screens have smaller asteroids
-export const NUM_ASTEROIDS = 130;
+export const NUM_ASTEROIDS = 133;
 export const ASTEROID_MAX_RADIUS = WORLD_RADIUS/3;
 export const ASTEROID_BELT_RADIUS = WORLD_RADIUS * 8;
 

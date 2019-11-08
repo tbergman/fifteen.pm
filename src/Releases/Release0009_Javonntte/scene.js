@@ -54,7 +54,7 @@ export function Scene({ colorTheme, onTrackSelect }) {
 
             </Suspense>
 
-            <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} />
+            <Stars radius={2} colors={colorTheme.starColors} />
             {/* <BloomFilmEffect /> */}
             </MaterialsProvider>
         </>
