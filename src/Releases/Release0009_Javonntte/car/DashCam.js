@@ -9,13 +9,13 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 
 extend({ OrbitControls, FlyControls, PointerLockControls });
 
-export default function DashCam({ target }) {
+export default function DashCam({ }) {
     const ref = useRef()
     const { gl, mouse, aspect, size, setDefaultCamera } = useThree();
     const [touching, setTouching] = useState(false);
     useEffect(() => {
         window.addEventListener("touchmove", touchLook, false);
-        window.addEventListener("touchend", touchEnd, false);
+        window.addEventListener("touchend", () => setTouching(false), false);
     })
 
     const [euler, PI_7, PI_11, PI_24] = useMemo(() => [new THREE.Euler(0, 0, 0, 'YXZ'), Math.PI / 7, Math.PI / 11, Math.PI / 24])
@@ -33,10 +33,7 @@ export default function DashCam({ target }) {
         ref.current.quaternion.setFromEuler(euler);
     }
 
-    const touchEnd = (event) => {
-        setTouching(false);
-    }
-
+    // revert back to rotation 0 on mobile if no touch action
     useFrame(() => {
         if (!isMobile || touching) return;
         if (ref.current.rotation.y > 0) {
@@ -53,8 +50,9 @@ export default function DashCam({ target }) {
         }
     })
 
+    // TODO limit look down on desktop -- might just want to write own look function and remove pointer lock controls
+
     // Make the camera known to the system
-    const lookAt = useRef(new THREE.Vector3());
     useEffect(() => {
         ref.current.aspect = aspect;
         ref.current.updateMatrixWorld()
