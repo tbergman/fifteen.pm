@@ -38,16 +38,19 @@ export default function DashCam({ target }) {
     }
 
     useFrame(() => {
-        if (touching) return;
-        // if (lookLeft && ref.current.rotation.y < 1.5) ref.current.rotation.y += .0075;
-        // else if (lookRight && ref.current.rotation.y > -1.5) ref.current.rotation.y -= .0075;
+        if (!isMobile || touching) return;
         if (ref.current.rotation.y > 0) {
             ref.current.rotation.y -= .1;
         }
         if (ref.current.rotation.y < 0) {
             ref.current.rotation.y += .1;
         }
-
+        if (ref.current.rotation.x > 0) {
+            ref.current.rotation.x -= .1;
+        }
+        if (ref.current.rotation.x < 0) {
+            ref.current.rotation.x += .1;
+        }
     })
 
     // Make the camera known to the system

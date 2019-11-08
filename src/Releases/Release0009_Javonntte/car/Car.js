@@ -116,7 +116,6 @@ function Car({
         // car.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
     }
 
-
     // TODO http://jsfiddle.net/krw8nwLn/66/
     // TODO how to break up this logic?
     useFrame(() => {
