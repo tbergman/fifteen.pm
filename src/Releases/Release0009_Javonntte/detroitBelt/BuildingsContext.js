@@ -33,7 +33,7 @@ const BuildingsProvider = ({ ...props }) => {
 
     const attributes = useMemo(() => {
         return {
-            "large_short_low_present_boxy": { material: blackLeather12 },
+            "large_short_low_present_boxy": { material: metal03 },
             "large_short_low_present_factory": { material: metal03 },
             "large_tall_logo_present_logo": { material: foamGripSilver },
             "large_tall_low_michigancentralstation": { material: foamGripSilver },
