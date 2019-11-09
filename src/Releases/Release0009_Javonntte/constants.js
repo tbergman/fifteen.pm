@@ -37,7 +37,7 @@ export const LOGO_POS = new THREE.Vector3(
 // ASTEROID CONSTANTS
 // This is divided by the window inner width in the constant below so movile screens have smaller asteroids
 export const NUM_ASTEROIDS = 133;
-export const ASTEROID_MAX_RADIUS = WORLD_RADIUS/3;
+export const ASTEROID_MAX_RADIUS = WORLD_RADIUS / 3;
 export const ASTEROID_BELT_RADIUS = WORLD_RADIUS * 8;
 
 // BUILDING
@@ -59,41 +59,58 @@ export const BUILDING_HEIGHT_BUCKETS = [
     TALL,
 ]
 
-
 // TRACK INFO
 export const TRACK_THEMES = [
     // index matches track list order
     {
-        textFillColor: 0xf0ffff,
+        UIColors: CONTENT["/9"].colors,
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
         background: new THREE.Color(0x000000),
         starColors: [0x555555, 0x333333, 0x1a1a1a],
         world: 0x0000af,
-        asteroid: {insideColor: 0x0000ff, outsideColor: 0xf0f0f0}
+        asteroid: { insideColor: 0x0000ff, outsideColor: 0xf0f0f0 }
     },
     {
-        textFillColor: 0xf0ffff,
+        UIColors: {
+            logo: '#f00',
+            overlay: '#ff0',
+            overlayContent: '#f0f',
+            player: '#aaa',
+            onHover: '#0ff0',
+        },
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
         background: new THREE.Color(0xffffff),
         starColors: [0x0000ef, 0x111111, 0x222222],
         world: 0xffff10,
-        asteroid: {insideColor: 0xf000af, outsideColor: 0xfff000}
+        asteroid: { insideColor: 0xf000af, outsideColor: 0xfff000 }
     },
     {
-        textFillColor: 0xf0ffff,
+        UIColors: {
+            logo: '#0f0',
+            overlay: '#0f0',
+            overlayContent: '#fff',
+            player: '#0a0',
+            onHover: '#fff9',
+        },
         fog: new THREE.FogExp2(0xefd1b5, 0.025),
         background: new THREE.Color(0x00ff00),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
         world: 0xf0ffff,
-        asteroid: {insideColor: 0x00a0ff, outsideColor: 0x00fff0}
+        asteroid: { insideColor: 0x00a0ff, outsideColor: 0x00fff0 }
     },
     {
-        textFillColor: 0xf0ffff,
+        UIColors: {
+            logo: '#0f0',
+            overlay: '#0f0',
+            overlayContent: '#fff',
+            player: '#faf',
+            onHover: '#fff9',
+        },
         fog: new THREE.FogExp2(0x0faf00, 0.05),
         background: new THREE.Color(0xff0000),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
         world: 0x00affb,
-        asteroid: {insideColor: 0x0b00ff, outsideColor: 0xfaf23b}
+        asteroid: { insideColor: 0x0b00ff, outsideColor: 0xfaf23b }
     },
 ]
 

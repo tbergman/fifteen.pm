@@ -47,13 +47,11 @@ export function Scene({ colorTheme, onTrackSelect }) {
                 >
                     <Car onTrackSelect={onTrackSelect} />
                 </Road>
-                {/* <DetroitLogo /> */}
                 <BuildingsProvider>
                     <DetroitBelt colors={colorTheme} />
                 </BuildingsProvider>
 
             </Suspense>
-
             <Stars radius={2} colors={colorTheme.starColors} />
             {/* <BloomFilmEffect /> */}
             </MaterialsProvider>
