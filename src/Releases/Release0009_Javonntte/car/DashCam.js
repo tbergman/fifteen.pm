@@ -14,10 +14,10 @@ export default function DashCam({ }) {
         window.addEventListener("touchend", () => setLooking(false), false);
     })
 
-    const [euler, PI_7, PI_11, PI_96] = useMemo(() => [
+    const [euler, PI_7, PI_48, PI_96] = useMemo(() => [
         new THREE.Euler(0, 0, 0, 'YXZ'),
         Math.PI / 7,
-        Math.PI / 11,
+        Math.PI / 48,
         Math.PI / 96
     ])
 
@@ -36,7 +36,7 @@ export default function DashCam({ }) {
         euler.setFromQuaternion(ref.current.quaternion);
         euler.x -= movementY * 0.00005;
         euler.y -= movementX * 0.00005;
-        euler.y = Math.max(- PI_11, Math.min(PI_11, euler.y));
+        euler.y = Math.max(- PI_48, Math.min(PI_48, euler.y));
         euler.x = Math.max(- PI_96, Math.min(PI_7, euler.x));
         ref.current.quaternion.setFromEuler(euler);
     }
