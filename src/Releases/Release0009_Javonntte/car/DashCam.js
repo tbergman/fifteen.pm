@@ -1,56 +1,54 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { useFrame, useThree, extend } from 'react-three-fiber';
-import { FirstPersonControls } from 'three-full';
-import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { isMobile } from '../../../Utils/BrowserDetection';
-import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
-
-extend({ OrbitControls, FlyControls, PointerLockControls });
+import { useFrame, useThree } from 'react-three-fiber';
+import isMobile from '../../../Utils/BrowserDetection';
 
 export default function DashCam({ }) {
     const ref = useRef()
-    const { gl, mouse, aspect, size, setDefaultCamera } = useThree();
-    const [touching, setTouching] = useState(false);
+    const { aspect, size, setDefaultCamera } = useThree();
+    const [looking, setLooking] = useState(false);
+    
     useEffect(() => {
-        window.addEventListener("touchmove", touchLook, false);
-        window.addEventListener("touchend", () => setTouching(false), false);
+        window.addEventListener("touchmove", look, false);
+        window.addEventListener("mousemove", look, false);
+        window.addEventListener("touchend", () => setLooking(false), false);
     })
 
-    const [euler, PI_7, PI_11, PI_24] = useMemo(() => [new THREE.Euler(0, 0, 0, 'YXZ'), Math.PI / 7, Math.PI / 11, Math.PI / 24])
+    const [euler, PI_7, PI_11, PI_96] = useMemo(() => [
+        new THREE.Euler(0, 0, 0, 'YXZ'),
+        Math.PI / 7,
+        Math.PI / 11,
+        Math.PI / 96
+    ])
 
-    const touchLook = (event) => {
+    const look = (event) => {
         if (!ref.current) return;
-        if (!touching) setTouching(true);
-        var movementX = (event.touches[0].clientX - window.innerWidth / 2) || 0;
-        var movementY = (event.touches[0].clientY - window.innerHeight / 2) || 0;
+        if (!looking) setLooking(true);
+        const [clientX, clientY] = (() => {
+            if (event.touches) {
+                return [event.touches[0].clientX, event.touches[0].clientY]
+            } else {
+                return [event.clientX, event.clientY]
+            }
+        })()
+        const movementX = (clientX - window.innerWidth / 2) || 0;
+        const movementY = (clientY - window.innerHeight / 2) || 0;
         euler.setFromQuaternion(ref.current.quaternion);
         euler.x -= movementY * 0.00005;
         euler.y -= movementX * 0.00005;
         euler.y = Math.max(- PI_11, Math.min(PI_11, euler.y));
-        euler.x = Math.max(- PI_24, Math.min(PI_7, euler.x));
+        euler.x = Math.max(- PI_96, Math.min(PI_7, euler.x));
         ref.current.quaternion.setFromEuler(euler);
     }
 
     // revert back to rotation 0 on mobile if no touch action
     useFrame(() => {
-        if (!isMobile || touching) return;
-        if (ref.current.rotation.y > 0) {
-            ref.current.rotation.y -= .1;
-        }
-        if (ref.current.rotation.y < 0) {
-            ref.current.rotation.y += .1;
-        }
-        if (ref.current.rotation.x > 0) {
-            ref.current.rotation.x -= .1;
-        }
-        if (ref.current.rotation.x < 0) {
-            ref.current.rotation.x += .1;
-        }
+        if (!isMobile || looking) return;
+        if (ref.current.rotation.y > 0) ref.current.rotation.y -= .1;
+        if (ref.current.rotation.y < 0) ref.current.rotation.y += .1;
+        if (ref.current.rotation.x > 0) ref.current.rotation.x -= .1;
+        if (ref.current.rotation.x < 0) ref.current.rotation.x += .1;
     })
-
-    // TODO limit look down on desktop -- might just want to write own look function and remove pointer lock controls
 
     // Make the camera known to the system
     useEffect(() => {
@@ -58,9 +56,9 @@ export default function DashCam({ }) {
         ref.current.updateMatrixWorld()
         setDefaultCamera(ref.current);
     }, [])
+
     // Update it every frame
     useFrame(() => ref.current.updateMatrixWorld())
-    const controls = useRef();
     return <>
         <perspectiveCamera
             ref={ref}
@@ -71,11 +69,5 @@ export default function DashCam({ }) {
             position={[0, .068, .15]}
             onUpdate={self => self.updateProjectionMatrix()}
         />
-        {ref.current &&
-            <pointerLockControls
-                ref={controls}
-                args={[ref.current, gl.domElement]}
-                isLocked={true} />
-        }
     </>
 }
