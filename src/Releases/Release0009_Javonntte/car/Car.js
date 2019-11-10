@@ -16,7 +16,7 @@ function Car({
     dashCamRef,
     road,
     roadOffset,
-    onTrackSelect,
+    onThemeSelect,
 }) {
 
     const gltf = useLoader(GLTFLoader, C.CAR_URL, loader => {
@@ -135,7 +135,7 @@ function Car({
         {car &&
             <>
                 <DashCam />
-                <Dashboard gltf={gltf} onTrackSelect={onTrackSelect} />
+                <Dashboard gltf={gltf} onThemeSelect={onThemeSelect} />
                 <Chassis gltf={gltf} />
                 <SteeringWheel gltf={gltf} rotation={car.rotation} />
                 <Headlights />

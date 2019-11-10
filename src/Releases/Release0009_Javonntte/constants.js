@@ -62,6 +62,7 @@ export const BUILDING_HEIGHT_BUCKETS = [
 // TRACK INFO
 export const TRACK_THEMES = [
     // index matches track list order
+    // NIGHT
     {
         UIColors: CONTENT["/9"].colors,
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
@@ -70,19 +71,21 @@ export const TRACK_THEMES = [
         world: 0x0000af,
         asteroid: { insideColor: 0x0000ff, outsideColor: 0xf0f0f0 }
     },
+
+    // DAY
     {
         UIColors: {
             logo: '#f00',
-            overlay: '#ff0',
+            overlay: '#f00',
             overlayContent: '#f0f',
             player: '#aaa',
             onHover: '#0ff0',
         },
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
-        background: new THREE.Color(0xffffff),
+        background: new THREE.Color(0xfe8981),
         starColors: [0x0000ef, 0x111111, 0x222222],
         world: 0xffff10,
-        asteroid: { insideColor: 0xf000af, outsideColor: 0xfff000 }
+        asteroid: { insideColor: 0xf000af, outsideColor: 0xbe7dd4 }
     },
     {
         UIColors: {

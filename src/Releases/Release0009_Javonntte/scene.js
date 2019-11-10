@@ -12,18 +12,22 @@ import Stars from './Stars';
 import DetroitLogo from './DetroitLogo';
 import { Controls } from './controls';
 import { BuildingsProvider } from './detroitBelt/BuildingsContext';
-import {MaterialsProvider} from './MaterialsContext';
+import { MaterialsProvider } from './MaterialsContext';
 import DetroitBelt from './detroitBelt/DetroitBelt';
+import Sky from './Sky';
 
-export function Scene({ colorTheme, onTrackSelect }) {
+export function Scene({ colorTheme, onThemeSelect }) {
     const { scene, camera } = useThree();
 
-    useEffect(() => {
-        scene.background = colorTheme.background;
-        scene.fog = colorTheme.fog;
-    }, [colorTheme])
+    // useEffect(() => {
+    //     scene.background = colorTheme.background;
+    //     scene.fog = colorTheme.fog;
+    // }, [colorTheme])
 
-    useEffect(() => {
+    useEffect(() => {      
+        console.log("Set background");
+        scene.background = 0xff000;//"white";  
+        camera.lookAt(new THREE.Vector3(0,0,-10))
         // camera.position.set([0, 0, 0]);     
     })
 
@@ -33,28 +37,30 @@ export function Scene({ colorTheme, onTrackSelect }) {
                 // curCamera={camera}
                 movementSpeed={5000}
                 rollSpeed={Math.PI * .5}
-                // autoForward={false}
-                // dragToLook={false}
+            // autoForward={false}
+            // dragToLook={false}
             /> */}
-            <FixedLights />
-            <MaterialsProvider>
-            <Suspense fallback={null}>
+            {/* <FixedLights /> */}
+            {/* <MaterialsProvider> */}
+                {/* <Stars radius={2} colors={colorTheme.starColors} /> */}
+                {/* <Sky /> */}
+                {/* <Suspense fallback={null}>
                 <Road
                     closed={true}
                     extrusionSegments={10}
                     radius={2}
                     radiusSegments={4}
                 >
-                    <Car onTrackSelect={onTrackSelect} />
+                    <Car onThemeSelect={onThemeSelect} />
                 </Road>
                 <BuildingsProvider>
                     <DetroitBelt colors={colorTheme} />
                 </BuildingsProvider>
 
-            </Suspense>
-            <Stars radius={2} colors={colorTheme.starColors} />
-            {/* <BloomFilmEffect /> */}
-            </MaterialsProvider>
+            </Suspense> */}
+
+                {/* <BloomFilmEffect /> */}
+            {/* </MaterialsProvider> */}
         </>
     );
 }

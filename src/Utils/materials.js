@@ -7,6 +7,8 @@ import skinningVertexShader from '!raw-loader!glslify-loader!../Shaders/skinning
 /* eslint import/no-webpack-loader-syntax: off */
 import tronFragmentShader from '!raw-loader!glslify-loader!../Shaders/tronFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
+import sunsetGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/sunsetGradientFragment.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
 import vsDepthVertex from '!raw-loader!glslify-loader!../Shaders/vsDepthVertex.glsl';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
@@ -645,4 +647,39 @@ export function OrnateBrass2({ materialRef, ...props }) {
 		envMap={envMap}
 	// roughness={-1} // invert roughness to get glossiness
 	/>
+}
+
+export function SunsetGradient({materialRef, ...props}){
+	// color = color || 0xffffff;
+	// materialRef = materialRef ? materialRef : useRef().current;
+	// const { clock, size } = useThree();
+	// const uniforms = useRef();
+	// useEffect(() => {
+	// 	const baseColor = hexToRgb(color.toString(16));
+	// 	uniforms.current = {
+	// 		uTime: { value: 0 },
+	// 		uResolution: { value: new THREE.Vector2(size.width, size.length) },
+	// 		uBPM: { value: bpm },
+	// 		uBaseColor: { value: new THREE.Vector3(baseColor.r, baseColor.g, baseColor.g) },
+	// 	}
+	// }, []);
+
+	// useFrame(() => {
+	// 	if (!uniforms.current.uTime) return; // avoid re-initialization async issues (e.g. if tiling)
+	// 	uniforms.current.uTime.value = clock.oldTime;
+	// });
+
+	// useEffect(() => {
+	// 	if (uniforms.current.uBPM) uniforms.current.uBPM.value = bpm;
+	// }, [bpm])
+
+	return <shaderMaterial
+		ref={materialRef}
+		// uniforms={uniforms.current}
+		// side={side}
+		vertexShader={simpleVertex}
+		// fragmentShader={sunsetGradientFragmentShader}
+		fragmentShader={tronFragmentShader}
+		{...props}
+	/>;
 }

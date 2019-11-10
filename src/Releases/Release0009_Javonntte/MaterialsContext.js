@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useResource } from 'react-three-fiber';
-import { BlackLeather12, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, OrnateBrass2, Rock19, ScuffedPlasticMaterial, Tiles36, Tiles60, Windows1Material, TronMaterial, Ground29Material } from '../../Utils/materials';
+import { BlackLeather12, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, OrnateBrass2, Rock19, ScuffedPlasticMaterial, Tiles36, Tiles60, Windows1Material, TronMaterial, Ground29Material, SunsetGradient } from '../../Utils/materials';
 
 const MaterialsContext = React.createContext([{}, () => { }]);
 
@@ -30,6 +30,7 @@ const MaterialsProvider = ({ ...props }) => {
     const [blackLeather12Ref, blackLeather12] = useResource();
     const [tronRef, tron] = useResource();
     const [ground29Ref, ground29] = useResource();
+    const [sunsetRef, sunset] = useResource();
 
     const materials = {
         cloud,
@@ -52,6 +53,7 @@ const MaterialsProvider = ({ ...props }) => {
         blackLeather12,
         tron,
         ground29,
+        sunset,
     }
 
     useEffect(() => {
@@ -60,7 +62,7 @@ const MaterialsProvider = ({ ...props }) => {
         setLoaded(allMats.length == loadedMats.length);
     })
 
-    return <MaterialsContext.Provider value={{loaded, ...materials }}>
+    return <MaterialsContext.Provider value={{ loaded, ...materials }}>
         <FoamGripMaterial materialRef={foamGripPurpleRef} color={0xff00af} specular={0x00ff00} />
         <FoamGripMaterial materialRef={foamGripSilverRef} color={0x0000af} />
         <FoamGripMaterial materialRef={foamGripBlackRef} color="black" />
@@ -81,6 +83,7 @@ const MaterialsProvider = ({ ...props }) => {
         <BlackLeather12 materialRef={blackLeather12Ref} />
         <TronMaterial materialRef={tronRef} side={THREE.BackSide} />
         <Ground29Material materialRef={ground29Ref} />
+        <SunsetGradient materialRef={sunsetRef} side={THREE.BackSide} />
         {props.children}
     </MaterialsContext.Provider>
 }
