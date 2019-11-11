@@ -8,7 +8,7 @@ export default function Sky({ height, width, scale}) {
     const { camera } = useThree(); //tmp
     return (
         <mesh material={sunset} scale={[scale,scale,scale]}>
-            <boxBufferGeometry attach="geometry" />
+            <sphereBufferGeometry attach="geometry" args={[1, 50, 50]} />
         </mesh>
     )
 }

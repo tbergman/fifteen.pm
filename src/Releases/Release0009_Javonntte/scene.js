@@ -33,13 +33,13 @@ export function Scene({ colorTheme, onThemeSelect }) {
 
     return (
         <>
-            <Controls
+            {/* <Controls
                 // curCamera={camera}
                 movementSpeed={5000}
                 rollSpeed={Math.PI * .5}
             // autoForward={false}
             // dragToLook={false}
-            />
+            /> */}
             <FixedLights />
             <MaterialsProvider>
                 <Stars radius={2} colors={colorTheme.starColors} />
@@ -60,7 +60,7 @@ export function Scene({ colorTheme, onThemeSelect }) {
 
             </Suspense>
 
-                {/* <BloomFilmEffect /> */}
+                <BloomFilmEffect />
             </MaterialsProvider>
         </>
     );
