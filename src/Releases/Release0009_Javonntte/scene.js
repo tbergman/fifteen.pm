@@ -25,26 +25,27 @@ export function Scene({ colorTheme, onThemeSelect }) {
     // }, [colorTheme])
 
     useEffect(() => {      
-        console.log("Set background");
-        scene.background = 0xff000;//"white";  
-        camera.lookAt(new THREE.Vector3(0,0,-10))
+        // console.log("Set background");
+        scene.background = new THREE.Color("black");  
+        // camera.lookAt(new THREE.Vector3(0,0,-10))
         // camera.position.set([0, 0, 0]);     
     })
 
     return (
         <>
-            {/* <Controls
+            <Controls
                 // curCamera={camera}
                 movementSpeed={5000}
                 rollSpeed={Math.PI * .5}
             // autoForward={false}
             // dragToLook={false}
-            /> */}
-            {/* <FixedLights /> */}
-            {/* <MaterialsProvider> */}
-                {/* <Stars radius={2} colors={colorTheme.starColors} /> */}
-                {/* <Sky /> */}
-                {/* <Suspense fallback={null}>
+            />
+            <FixedLights />
+            <MaterialsProvider>
+                <Stars radius={2} colors={colorTheme.starColors} />
+                <Sky scale={1500} />
+              
+                <Suspense fallback={null}>
                 <Road
                     closed={true}
                     extrusionSegments={10}
@@ -57,10 +58,10 @@ export function Scene({ colorTheme, onThemeSelect }) {
                     <DetroitBelt colors={colorTheme} />
                 </BuildingsProvider>
 
-            </Suspense> */}
+            </Suspense>
 
                 {/* <BloomFilmEffect /> */}
-            {/* </MaterialsProvider> */}
+            </MaterialsProvider>
         </>
     );
 }

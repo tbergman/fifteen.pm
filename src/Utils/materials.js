@@ -679,7 +679,7 @@ export function SunsetGradient({materialRef, ...props}){
 		// side={side}
 		vertexShader={simpleVertex}
 		// fragmentShader={sunsetGradientFragmentShader}
-		fragmentShader={tronFragmentShader}
+		fragmentShader={sunsetGradientFragmentShader}
 		{...props}
 	/>;
 }
