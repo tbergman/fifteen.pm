@@ -11,7 +11,6 @@ const MARGIN = 0;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight - 2 * MARGIN;
 let resolution = 50;
-const numBlobs = 10;
 
 class HomeMobile extends Component {
   state = {
