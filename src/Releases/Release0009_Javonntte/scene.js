@@ -50,10 +50,8 @@ export function Scene({ colorTheme, onThemeSelect }) {
                 <BuildingsProvider>
                     <DetroitBelt colors={colorTheme} />
                 </BuildingsProvider>
-
             </Suspense>
-
-                {/* <BloomFilmEffect /> */}
+                <BloomFilmEffect />
             </MaterialsProvider>
         </>
     );

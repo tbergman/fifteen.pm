@@ -110,10 +110,16 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     return geometry;
 }
 
-export function WorldSurface({ geometry, color }) {
-    const [tronMaterialRef, tronMaterial] = useResource();
-    const [ground29MaterialRef, ground29Material] = useResource();
-    const { tron, ground29 } = useContext(MaterialsContext);
+export function WorldSurface({ geometry, materialName }) {
+    
+    const { tron, ground29, ornateBrass2Tiledx10, rock19 } = useContext(MaterialsContext);
+    function exteriorMaterial(){
+        return {
+            "ornateBrass2": ornateBrass2Tiledx10,
+            "ground29": ground29,
+            "rock19": rock19,
+        }[materialName]
+    }
     return <>
         <group>
             <mesh
@@ -122,7 +128,7 @@ export function WorldSurface({ geometry, color }) {
             />
             <mesh
                 geometry={geometry}
-                material={ground29}
+                material={exteriorMaterial()}
                 receiveShadow
             />
         </group>

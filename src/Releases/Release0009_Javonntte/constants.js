@@ -35,7 +35,7 @@ export const LOGO_POS = new THREE.Vector3(
 )
 
 // ASTEROID CONSTANTS
-// This is divided by the window inner width in the constant below so movile screens have smaller asteroids
+// This is divided by the window inner width in the constant below so movile screens have smaller surfacess
 export const NUM_ASTEROIDS = 133;
 export const ASTEROID_MAX_RADIUS = WORLD_RADIUS / 3;
 export const ASTEROID_BELT_RADIUS = WORLD_RADIUS * 8;
@@ -68,8 +68,7 @@ export const TRACK_THEMES = [
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
         background: new THREE.Color(0x000000),
         starColors: [0x555555, 0x333333, 0x1a1a1a],
-        world: 0x0000af,
-        asteroid: { insideColor: 0x0000ff, outsideColor: 0xf0f0f0 },
+        surfaces: "ground29",
         sky: "night",
     },
 
@@ -85,8 +84,7 @@ export const TRACK_THEMES = [
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
         background: new THREE.Color(0xfe8981),
         starColors: [0x0000ef, 0x111111, 0x222222],
-        world: 0xffff10,
-        asteroid: { insideColor: 0xf000af, outsideColor: 0xbe7dd4 },
+        surfaces: "ground29",
         sky: "sunset",
     },
     // HELL
@@ -98,12 +96,11 @@ export const TRACK_THEMES = [
             player: '#0a0',
             onHover: '#fff9',
         },
-        fog: new THREE.FogExp2(0xefd1b5, 0.025),
-        background: new THREE.Color(0x00ff00),
+        fog: new THREE.FogExp2(0xff0000, 0.0025),
+        background: new THREE.Color(0xff0000),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
-        world: 0xf0ffff,
-        asteroid: { insideColor: 0x00a0ff, outsideColor: 0x00fff0 },
-        sky: "hell"
+        surfaces: "ornateBrass2",
+        sky: "hell",
     },
     // DAY
     {
@@ -114,12 +111,11 @@ export const TRACK_THEMES = [
             player: '#faf',
             onHover: '#fff9',
         },
-        fog: new THREE.FogExp2(0x0faf00, 0.05),
-        background: new THREE.Color(0xff0000),
-        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
-        world: 0x00affb,
-        asteroid: { insideColor: 0x0b00ff, outsideColor: 0xfaf23b },
-        sky: "day"
+        fog: new THREE.FogExp2(0xffffff, 0.00005),
+        background: new THREE.Color(0xffffff),
+        starColors: [0x555555, 0x333333, 0x1a1a1a],
+        surfaces: "rock19",
+        sky: "day",
     },
 ]
 

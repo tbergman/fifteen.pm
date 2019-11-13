@@ -34,8 +34,8 @@ export default function DetroitBelt({ colors }) {
     }, [buildingsLoaded]);
 
     return <>
-        <WorldSurface geometry={worldNeighborhoods.surface} color={colors.world} />
-        <AsteroidsSurface geometry={asteroidSurfaces.geometry} {...colors.asteroid} />
+        <WorldSurface geometry={worldNeighborhoods.surface} materialName={colors.surfaces} />
+        <AsteroidsSurface geometry={asteroidSurfaces.geometry} materialName={colors.surfaces} />
         {meshes && Object.keys(meshes).map(meshName => {
             return <primitive key={meshName}
                 object={meshes[meshName]}

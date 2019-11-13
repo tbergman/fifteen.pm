@@ -24,6 +24,7 @@ const MaterialsProvider = ({ ...props }) => {
     const [tiles36Ref, tiles36] = useResource();
     const [rock19Ref, rock19] = useResource();
     const [ornateBrass2Ref, ornateBrass2] = useResource();
+    const [ornateBrass2Tiledx10Ref, ornateBrass2Tiledx10] = useResource();
     const [scuffedPlasticRedRef, scuffedPlasticRed] = useResource();
     const [scuffedPlasticBlackRef, scuffedPlasticBlack] = useResource();
     const [scuffedPlasticGlowingRef, scuffedPlasticGlowing] = useResource();
@@ -50,6 +51,7 @@ const MaterialsProvider = ({ ...props }) => {
         tiles36,
         rock19,
         ornateBrass2,
+        ornateBrass2Tiledx10,
         scuffedPlasticRed,
         scuffedPlasticGlowing,
         scuffedPlasticBlack,
@@ -82,7 +84,8 @@ const MaterialsProvider = ({ ...props }) => {
         <Tiles60 materialRef={tiles60Ref} />
         <Tiles36 materialRef={tiles36Ref} shininess={100} />
         <Rock19 materialRef={rock19Ref} displacementScale={0.05} />
-        <OrnateBrass2 materialRef={ornateBrass2Ref} color="black" />
+        <OrnateBrass2 materialRef={ornateBrass2Ref} textureRepeat={{x: 2, y: 2}} color="black" />
+        <OrnateBrass2 materialRef={ornateBrass2Tiledx10Ref} textureRepeat={{x: 10, y: 10}} color="black" />
         <ScuffedPlasticMaterial materialRef={scuffedPlasticRedRef} />
         <ScuffedPlasticMaterial materialRef={scuffedPlasticBlackRef} color={0x000000} />
         <ScuffedPlasticMaterial materialRef={scuffedPlasticGlowingRef} color="yellow" emissive="pink" />

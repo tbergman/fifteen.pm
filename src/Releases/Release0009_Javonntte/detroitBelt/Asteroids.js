@@ -112,8 +112,17 @@ export function generateAsteroidNeighborhoods(surfaces) {
     return neighborhoods;
 }
 
-export function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
-    const { tron, ground29 } = useContext(MaterialsContext);
+export function AsteroidsSurface({ geometry, materialName }) {
+    const { tron, ground29, ornateBrass2, rock19 } = useContext(MaterialsContext);
+    
+    function exteriorMaterial(){
+        return {
+            "ornateBrass2": ornateBrass2,
+            "ground29": ground29,
+            "rock19": rock19,
+        }[materialName]
+    }
+
     return <>
         <group>
             <mesh
@@ -122,7 +131,7 @@ export function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
             />
             <mesh
                 geometry={geometry}
-                material={ground29}
+                material={exteriorMaterial()}
                 receiveShadow
             />
         </group>

@@ -13,9 +13,9 @@ import vsDepthVertex from '!raw-loader!glslify-loader!../Shaders/vsDepthVertex.g
 /* eslint import/no-webpack-loader-syntax: off */
 import nightGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/nightGradientFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
-import dayGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/nightGradientFragment.glsl';
+import dayGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/dayGradientFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
-import hellGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/nightGradientFragment.glsl';
+import hellGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/hellGradientFragment.glsl';
 
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
@@ -33,7 +33,7 @@ function cloudEnvMap() {
 			'bluecloud_ft.jpg',
 			'bluecloud_lf.jpg',
 			'bluecloud_rt.jpg',
-			'bluecloud_up.jpg',
+		'bluecloud_up.jpg',
 		]);
 }
 

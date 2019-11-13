@@ -23,12 +23,11 @@ export default function Release({ }) {
     function onTrackSelect(trackId) {
         const metadata = C.TRACK_METADATA[trackId]
         setColorTheme(metadata.theme);
-        // playTrack(metadata.index)
+        playTrack(metadata.index)
     }
 
     useEffect(() => {
         content.colors = colorTheme.UIColors;
-        console.log("CONTENT COLS:", content.colors);
     }, [colorTheme])
 
     return <>{content &&
