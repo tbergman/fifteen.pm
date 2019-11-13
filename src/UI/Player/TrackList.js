@@ -6,7 +6,7 @@ export default function TrackList({ tracks, defaultColor, selectedColor }) {
   const { currentTrackName, playTrack } = useMusicPlayer();
 
   return (tracks.length > 1 ?
-    <div id="playlist">
+    <div id="tracklist">
       <ul>
         {tracks.map((track, index) => {
           const isCurTrack = currentTrackName === track.name;
