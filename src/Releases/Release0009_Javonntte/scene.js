@@ -19,17 +19,17 @@ import Sky from './Sky';
 export function Scene({ colorTheme, onThemeSelect }) {
     const { scene, camera } = useThree();
 
-    // useEffect(() => {
-    //     scene.background = colorTheme.background;
-    //     scene.fog = colorTheme.fog;
-    // }, [colorTheme])
+    useEffect(() => {
+        scene.background = colorTheme.background;
+        scene.fog = colorTheme.fog;
+    }, [colorTheme])
 
-    useEffect(() => {      
-        // console.log("Set background");
-        scene.background = new THREE.Color("black");  
-        // camera.lookAt(new THREE.Vector3(0,0,-10))
-        // camera.position.set([0, 0, 0]);     
-    })
+    // useEffect(() => {      
+    //     // console.log("Set background");
+    //     scene.background = new THREE.Color("black");  
+    //     // camera.lookAt(new THREE.Vector3(0,0,-10))
+    //     // camera.position.set([0, 0, 0]);     
+    // })
 
     return (
         <>
@@ -60,7 +60,7 @@ export function Scene({ colorTheme, onThemeSelect }) {
 
             </Suspense>
 
-                <BloomFilmEffect />
+                {/* <BloomFilmEffect /> */}
             </MaterialsProvider>
         </>
     );

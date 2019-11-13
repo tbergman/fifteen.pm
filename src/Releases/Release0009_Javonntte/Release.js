@@ -12,28 +12,29 @@ export default function Release({ }) {
     const [content, setContent] = useState(cloneDeep(CONTENT[window.location.pathname]));
     const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA["679771262"].theme);
 
-    useEffect(() => {
-        setContent(CONTENT[window.location.pathname])
-    }, []);
+    // useEffect(() => {
+    //     setContent(CONTENT[window.location.pathname])
+    // }, []);
 
     useEffect(() => {
         if (currentTrackId) setColorTheme(C.TRACK_METADATA[currentTrackId].theme);
     }, [currentTrackId])
 
-    function onThemeSelect(trackId) {
+    function onTrackSelect(trackId) {
         const metadata = C.TRACK_METADATA[trackId]
         setColorTheme(metadata.theme);
-        playTrack(metadata.index)
+        // playTrack(metadata.index)
     }
 
     useEffect(() => {
         content.colors = colorTheme.UIColors;
+        console.log("CONTENT COLS:", content.colors);
     }, [colorTheme])
 
     return <>{content &&
         <>
             <UI content={content} />
-            <JavonntteCanvas colorTheme={colorTheme} onThemeSelect={onThemeSelect} />
+            <JavonntteCanvas colorTheme={colorTheme} onThemeSelect={onTrackSelect} />
         </>
     }</>
 }

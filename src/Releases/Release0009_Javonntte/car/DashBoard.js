@@ -41,6 +41,7 @@ export default function Dashboard({ gltf, onThemeSelect }) {
                 <mesh
                     key={buttonName}
                     onClick={e => {
+                        console.log("CLICK")
                         const trackShorthand = buttonName.split("button_")[1];
                         onThemeSelect(C.TRACK_LOOKUP[trackShorthand])
                     }}
