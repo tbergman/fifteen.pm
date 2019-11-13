@@ -3,7 +3,7 @@ import { Canvas } from 'react-three-fiber';
 import { MusicPlayerContext } from '../../UI/Player/MusicPlayerContext';
 import { Scene } from './Scene';
 
-export default function JavonntteCanvas({ colorTheme, onThemeSelect }) {
+export default function JavonntteCanvas({ setContentReady, colorTheme, onThemeSelect }) {
 
     return (
         // Unfortunately some gymnastics required here to pass music player context through canvas.
@@ -26,6 +26,7 @@ export default function JavonntteCanvas({ colorTheme, onThemeSelect }) {
                     >
                         <MusicPlayerContext.Provider value={value}>
                             <Scene
+                                setContentReady={setContentReady}
                                 colorTheme={colorTheme}
                                 onThemeSelect={onThemeSelect}
                             />

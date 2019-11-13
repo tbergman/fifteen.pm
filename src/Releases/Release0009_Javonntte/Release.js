@@ -10,6 +10,7 @@ import { cloneDeep } from 'lodash';
 export default function Release({ }) {
     const { playTrack, currentTrackId } = useMusicPlayer();
     const [content, setContent] = useState(cloneDeep(CONTENT[window.location.pathname]));
+    const [contentReady, setContentReady] = useState(false);
     const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA["679771262"].theme);
 
     // useEffect(() => {
@@ -32,8 +33,12 @@ export default function Release({ }) {
 
     return <>{content &&
         <>
-            <UI content={content} />
-            <JavonntteCanvas colorTheme={colorTheme} onThemeSelect={onTrackSelect} />
+            <UI contentReady={contentReady} content={content} />
+            <JavonntteCanvas
+                setContentReady={setContentReady}
+                colorTheme={colorTheme}
+                onThemeSelect={onTrackSelect}
+            />
         </>
     }</>
 }

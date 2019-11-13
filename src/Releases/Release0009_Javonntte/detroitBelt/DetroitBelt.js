@@ -17,19 +17,21 @@ const asteroidSurfaces = generateAsteroidSurfaces({
     maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
 })
 
-export default function DetroitBelt({ colors }) {
+export default function DetroitBelt({ setContentReady, colors }) {
     const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
     const [meshes, setMeshes] = useState();
 
     const asteroidNeighborhoods = useMemo(() => {
         if (asteroidSurfaces) return generateAsteroidNeighborhoods(asteroidSurfaces);
     }, [asteroidSurfaces]);
+
     useEffect(() => {
         if (buildingsLoaded) {
             setMeshes(generateTilesets({
                 buildings,
                 groups: [worldNeighborhoods, ...asteroidNeighborhoods],
             }));
+            setContentReady(true)
         }
     }, [buildingsLoaded]);
 

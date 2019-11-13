@@ -16,7 +16,7 @@ import { MaterialsProvider } from './MaterialsContext';
 import DetroitBelt from './detroitBelt/DetroitBelt';
 import Sky from './Sky';
 
-export function Scene({ colorTheme, onThemeSelect }) {
+export function Scene({ setContentReady, colorTheme, onThemeSelect }) {
     const { scene, camera } = useThree();
 
     useEffect(() => {
@@ -37,20 +37,22 @@ export function Scene({ colorTheme, onThemeSelect }) {
             <MaterialsProvider>
                 <Stars radius={2} colors={colorTheme.starColors} />
                 <Sky theme={colorTheme.sky} scale={1500} />
-              
                 <Suspense fallback={null}>
-                <Road
-                    closed={true}
-                    extrusionSegments={10}
-                    radius={2}
-                    radiusSegments={4}
-                >
-                    <Car onThemeSelect={onThemeSelect} />
-                </Road>
-                <BuildingsProvider>
-                    <DetroitBelt colors={colorTheme} />
-                </BuildingsProvider>
-            </Suspense>
+                    <Road
+                        closed={true}
+                        extrusionSegments={10}
+                        radius={2}
+                        radiusSegments={4}
+                    >
+                        <Car onThemeSelect={onThemeSelect} />
+                    </Road>
+                    <BuildingsProvider>
+                        <DetroitBelt
+                            setContentReady={setContentReady}
+                            colors={colorTheme}
+                        />
+                    </BuildingsProvider>
+                </Suspense>
                 <BloomFilmEffect />
             </MaterialsProvider>
         </>
