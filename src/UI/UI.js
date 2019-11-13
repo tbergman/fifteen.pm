@@ -9,6 +9,7 @@ import './UI.css';
 
 export default function UI({
     content,
+    contentReady = true,
     loadWithLogo = true,
     loadWithNavigation = true,
     loadWithOverlay = true,
@@ -37,6 +38,8 @@ export default function UI({
             {logo && <Logo color={content.colors.logo} />}
             {navigation && <Navigation color={content.colors.default} />}
             <Overlay
+                hasBeenClosed={overlayHasBeenClosed}
+                contentReady={contentReady}
                 message={content.message}
                 instructions={content.instructions}
                 purchaseLink={content.purchaseLink}

@@ -231,7 +231,8 @@ export const CONTENT = {
   },
   "/7": {
     artist: "JON FAY",
-    textModel: assetPath("7/objects/text.gltf"),
+    message: "In this 22-minute meditation, Jon Fay captures the infinite pulse of the rave as it empties into the dawn.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
     tracks: [
       {
         title: "GOLDEN GROOVE",
@@ -239,33 +240,32 @@ export const CONTENT = {
         type: "soundcloud"
       }
     ],
-    theme: {
-      message: "In this 22-minute meditation, Jon Fay captures the infinite pulse of the rave as it empties into the dawn.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
-      iconColor: '#fff',
-      fillColor: 'rgba(255, 102, 0, 0.4)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: SlowLoad,
-          instructions: "takes a few seconds to load"
-        },
-        {
-          icon: ArrowKeys,
-          instructions: "use arrow keys to walk forever"
-        },
-        {
-          icon: MouseMove,
-          instructions: "move mouse to look around"
-        },
-        {
-          icon: NoPhone,
-          instructions: "doesn't work on phones",
-          alwaysShow: true
-        }
-      ]
-    }
+    colors: {
+      logo: '#fff',
+      overlayContent: '#fff',
+      overlay: 'rgba(255, 102, 0, 0.4)',
+      player: 'rgba(255, 102, 0, 0.4)',
+      onHover: 'rgba(255, 102, 0, 0.4)',
+    },
+    instructions: [
+      {
+        icon: SlowLoad,
+        text: "takes a few seconds to load"
+      },
+      {
+        icon: ArrowKeys,
+        text: "use arrow keys to walk forever"
+      },
+      {
+        icon: MouseMove,
+        text: "move mouse to look around"
+      },
+      {
+        icon: NoPhone,
+        text: "doesn't work on phones",
+        alwaysShow: true
+      }
+    ]
   },
   "/greem-and-fifteenpm-opening": {
     artist: "",

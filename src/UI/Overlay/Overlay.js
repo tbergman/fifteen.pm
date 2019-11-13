@@ -5,6 +5,8 @@ import OverlayContent from './OverlayContent';
 import OverlaySVG from './OverlaySVG';
 
 export default function Overlay({
+    hasBeenClosed,
+    contentReady,
     message,
     instructions,
     purchaseLink,
@@ -38,6 +40,8 @@ export default function Overlay({
             >
                 <>
                     <OverlayContent
+                        hasBeenClosed={hasBeenClosed}
+                        contentReady={contentReady}
                         instructions={instructions}
                         purchaseLink={purchaseLink}
                         message={message}

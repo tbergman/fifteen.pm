@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, { useMemo } from 'react';
 import { CONTENT } from "../../Content";
 import UI from '../../UI/UI';
 import { MusicPlayerProvider } from '../../UI/Player/MusicPlayerContext';
