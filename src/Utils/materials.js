@@ -10,6 +10,13 @@ import tronFragmentShader from '!raw-loader!glslify-loader!../Shaders/tronFragme
 import sunsetGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/sunsetGradientFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
 import vsDepthVertex from '!raw-loader!glslify-loader!../Shaders/vsDepthVertex.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import nightGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/nightGradientFragment.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import dayGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/nightGradientFragment.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import hellGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/nightGradientFragment.glsl';
+
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
@@ -650,36 +657,38 @@ export function OrnateBrass2({ materialRef, ...props }) {
 }
 
 export function SunsetGradient({materialRef, ...props}){
-	// color = color || 0xffffff;
-	// materialRef = materialRef ? materialRef : useRef().current;
-	// const { clock, size } = useThree();
-	// const uniforms = useRef();
-	// useEffect(() => {
-	// 	const baseColor = hexToRgb(color.toString(16));
-	// 	uniforms.current = {
-	// 		uTime: { value: 0 },
-	// 		uResolution: { value: new THREE.Vector2(size.width, size.length) },
-	// 		uBPM: { value: bpm },
-	// 		uBaseColor: { value: new THREE.Vector3(baseColor.r, baseColor.g, baseColor.g) },
-	// 	}
-	// }, []);
-
-	// useFrame(() => {
-	// 	if (!uniforms.current.uTime) return; // avoid re-initialization async issues (e.g. if tiling)
-	// 	uniforms.current.uTime.value = clock.oldTime;
-	// });
-
-	// useEffect(() => {
-	// 	if (uniforms.current.uBPM) uniforms.current.uBPM.value = bpm;
-	// }, [bpm])
-
 	return <shaderMaterial
 		ref={materialRef}
-		// uniforms={uniforms.current}
-		// side={side}
 		vertexShader={simpleVertex}
-		// fragmentShader={sunsetGradientFragmentShader}
 		fragmentShader={sunsetGradientFragmentShader}
+		{...props}
+	/>;
+}
+
+export function NightGradient({materialRef, ...props}){
+	return <shaderMaterial
+		ref={materialRef}
+		vertexShader={simpleVertex}
+		fragmentShader={nightGradientFragmentShader}
+		{...props}
+	/>;
+}
+
+
+export function HellGradient({materialRef, ...props}){
+	return <shaderMaterial
+		ref={materialRef}
+		vertexShader={simpleVertex}
+		fragmentShader={hellGradientFragmentShader}
+		{...props}
+	/>;
+}
+
+export function DayGradient({materialRef, ...props}){
+	return <shaderMaterial
+		ref={materialRef}
+		vertexShader={simpleVertex}
+		fragmentShader={dayGradientFragmentShader}
 		{...props}
 	/>;
 }

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useResource } from 'react-three-fiber';
-import { BlackLeather12, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, OrnateBrass2, Rock19, ScuffedPlasticMaterial, Tiles36, Tiles60, Windows1Material, TronMaterial, Ground29Material, SunsetGradient } from '../../Utils/materials';
+import { BlackLeather12, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, OrnateBrass2, Rock19, ScuffedPlasticMaterial, Tiles36, Tiles60, Windows1Material, TronMaterial, Ground29Material, SunsetGradient, NightGradient, HellGradient, DayGradient } from '../../Utils/materials';
 
 const MaterialsContext = React.createContext([{}, () => { }]);
 
@@ -31,6 +31,9 @@ const MaterialsProvider = ({ ...props }) => {
     const [tronRef, tron] = useResource();
     const [ground29Ref, ground29] = useResource();
     const [sunsetRef, sunset] = useResource();
+    const [nightRef, night] = useResource();
+    const [hellRef, hell] = useResource();
+    const [dayRef, day] = useResource();
 
     const materials = {
         cloud,
@@ -54,6 +57,9 @@ const MaterialsProvider = ({ ...props }) => {
         tron,
         ground29,
         sunset,
+        night,
+        hell,
+        day,
     }
 
     useEffect(() => {
@@ -84,6 +90,9 @@ const MaterialsProvider = ({ ...props }) => {
         <TronMaterial materialRef={tronRef} side={THREE.BackSide} />
         <Ground29Material materialRef={ground29Ref} />
         <SunsetGradient materialRef={sunsetRef} side={THREE.BackSide} />
+        <NightGradient materialRef={nightRef} side={THREE.BackSide} />
+        <HellGradient materialRef={hellRef} side={THREE.Backside} />
+        <DayGradient materialRef={dayRef} side={THREE.BackSide} />
         {props.children}
     </MaterialsContext.Provider>
 }

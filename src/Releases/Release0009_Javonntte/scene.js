@@ -24,13 +24,6 @@ export function Scene({ colorTheme, onThemeSelect }) {
         scene.fog = colorTheme.fog;
     }, [colorTheme])
 
-    // useEffect(() => {      
-    //     // console.log("Set background");
-    //     scene.background = new THREE.Color("black");  
-    //     // camera.lookAt(new THREE.Vector3(0,0,-10))
-    //     // camera.position.set([0, 0, 0]);     
-    // })
-
     return (
         <>
             {/* <Controls
@@ -43,7 +36,7 @@ export function Scene({ colorTheme, onThemeSelect }) {
             <FixedLights />
             <MaterialsProvider>
                 <Stars radius={2} colors={colorTheme.starColors} />
-                <Sky scale={1500} />
+                <Sky theme={colorTheme.sky} scale={1500} />
               
                 <Suspense fallback={null}>
                 <Road
