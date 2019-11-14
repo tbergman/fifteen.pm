@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useMusicPlayer from '../../UI/Player/hooks';
 import '../Release.css';
 import Scene from './Scene';
@@ -7,14 +7,6 @@ import Scene from './Scene';
 export default function Canvas({ }) {
     const { isPlaying, audioStream, currentTime } = useMusicPlayer();
     const [audioAttributes, setAudioAttributes] = useState();
-    // const [audioAttribute]
-
-
-    function initAudioAttributes() {
-        // this.audioStream = new AudioStreamer(this.audioElement);
-        if (audio.current) return;
-        audio.current = {};
-    }
 
     useEffect(() => {
         if (audioStream && !audioAttributes) {

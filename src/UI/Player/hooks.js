@@ -13,7 +13,7 @@ const useMusicPlayer = () => {
       state.audioPlayer.pause();
       state.audioPlayer = new Audio(state.tracks[index].file);
       state.audioPlayer.crossOrigin = "anonymous";
-      state.audioStream = new AudioStreamer(state.audioPlayer); // not tested yet
+      state.audioStream = new AudioStreamer(state.audioPlayer);
       state.audioPlayer.play();
       setState(state => ({ ...state, currentTrackIndex: index, isPlaying: true }));
     }

@@ -31,7 +31,8 @@ export const CONTENT = {
   },
   "/1": {
     artist: "YAHCEPH",
-    textModel: assetPath("1/objects/text.gltf"),
+    message: 'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
+    purchaseLink: "https://fifteenpm.bandcamp.com/track/wun-4-jas",
     tracks: [
       {
         title: "Wun 4 Jas",
@@ -39,22 +40,19 @@ export const CONTENT = {
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/wun-4-jas",
-      iconColor: '#fff',
-      fillColor: 'rgba(255,105,180, 1)',
-      logoSvgFillColor: 'rgba(255,105,180, 1)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: MouseMove,
-          instructions: "move mouse to make water ripple"
-        }
-      ]
-    }
+    colors: {
+      logo: '#fff',
+      overlay: 'rgba(255,105,180, 1)',
+      overlayContent: '#fff',
+      player: 'rgba(255,105,180, 1)',
+      onHover: '#fff',
+    },
+    instructions: [
+      {
+        icon: MouseMove,
+        text: "move mouse to make water ripple"
+      }
+    ]
   },
   "/2": {
     artist: "YEAR UNKNOWN",
