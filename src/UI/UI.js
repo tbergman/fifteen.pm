@@ -15,6 +15,7 @@ export default function UI({
     loadWithOverlay = true,
     loadWithInfoIcon = false,
     loadWithPlayer = false,
+    onOverlayHasBeenClosed = () => {},
 }) {
     const logo = useState(loadWithLogo ? true : false);
     const navigation = useState(loadWithNavigation ? true : false);
@@ -25,7 +26,10 @@ export default function UI({
     const hasTracks = useMemo(() => content.tracks ? true : false); // TODO will this work with multiple releases?
 
     useEffect(() => {
-        if (!overlay && !overlayHasBeenClosed) setOverlayHasBeenClosed(true);
+        if (!overlay && !overlayHasBeenClosed) {
+            setOverlayHasBeenClosed(true);
+            onOverlayHasBeenClosed();
+        }
     }, [overlay])
 
     useEffect(() => {

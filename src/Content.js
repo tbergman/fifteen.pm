@@ -119,7 +119,8 @@ export const CONTENT = {
   },
   "/4": {
     artist: "JON CANNON",
-    textModel: assetPath("4/objects/text.gltf"),
+    message: "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/album/ep-1",
     tracks: [
       {
         title: "Nothing (Blood)",
@@ -137,34 +138,33 @@ export const CONTENT = {
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/album/ep-1",
-      iconColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.5)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: MouseMove,
-          instructions: "move mouse to look around"
-        },
-        {
-          icon: Click,
-          instructions: "click to advance flight path"
-        },
-        {
-          icon: ArrowKeys,
-          instructions: "use arrow keys to fly around"
-        },
-        {
-          icon: NoPhone,
-          instructions: "doesn't work on phones",
-          alwaysShow: true
-        }
-      ]
-    }
+    colors: {
+      logo: '#fff',
+      overlayContent: '#fff',
+      overlay: 'rgba(0, 0, 0, 0.5)',
+      player: 'rgba(0, 0, 0, 0.5)',
+      onHover: '#fff', 
+    },
+    instructions: [
+      {
+        icon: MouseMove,
+        text: "move mouse to look around"
+      },
+      {
+        icon: Click,
+        text: "click to advance flight path"
+      },
+      {
+        icon: ArrowKeys,
+        text: "use arrow keys to fly around"
+      },
+      {
+        icon: NoPhone,
+        text: "doesn't work on phones",
+        alwaysShow: true
+      }
+    ]
+
   },
   "/5": {
     artist: "PLEBEIAN",
