@@ -62,6 +62,9 @@ export const INDUSTRIAL_BUILDINGS = [
     "large_short_low_present_factory",
     "large_short_low_present_boxy",
 ]
+export const SUNSET_BUILDINGS = [
+    "medium_tall_tower_future_talltower"
+]
 // TRACK INFO
 export const TRACK_THEMES = [
     // index matches track list order
@@ -90,7 +93,7 @@ export const TRACK_THEMES = [
         starColors: [0x0000ef, 0x111111, 0x222222],
         surfaces: "ground29",
         sky: "sunset",
-        world: "future",
+        world: "sunset",
     },
     // HELL
     {

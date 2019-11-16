@@ -9,7 +9,8 @@ import BuildingInstances from './BuildingInstances';
 const neighborhoods = {
     future: [worldNeighborhoods.future, ...asteroidNeighborhoods.future],
     squiggles: [worldNeighborhoods.squiggles, ...asteroidNeighborhoods.squiggles],
-    industrial: [worldNeighborhoods.industrial, ...asteroidNeighborhoods.industrial]
+    industrial: [worldNeighborhoods.industrial, ...asteroidNeighborhoods.industrial],
+    sunset: [worldNeighborhoods.sunset, ...asteroidNeighborhoods.sunset],
 }
 
 export default function DetroitBelt({ setContentReady, theme }) {
@@ -22,7 +23,8 @@ export default function DetroitBelt({ setContentReady, theme }) {
         const _meshes = {
             future: generateTilesets({ buildings, neighborhoods: neighborhoods.future }),
             squiggles: generateTilesets({ buildings, neighborhoods: neighborhoods.squiggles }),
-            industrial: generateTilesets({ buildings, neighborhoods: neighborhoods.industrial })
+            industrial: generateTilesets({ buildings, neighborhoods: neighborhoods.industrial }),
+            sunset: generateTilesets({ buildings, neighborhoods: neighborhoods.sunset })
         }
         setContentReady(true);
         return _meshes;

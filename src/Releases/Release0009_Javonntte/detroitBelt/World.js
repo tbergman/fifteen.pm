@@ -62,6 +62,15 @@ class WorldNeighborhoods {
         }
     }
 
+    pickSunsetBuildings(tile, buildings){
+        
+        const sunsetBuildings = buildings.filter(building => C.SUNSET_BUILDINGS.includes(building.name))
+        return {
+            allowedBuildings: sunsetBuildings,
+            subdivisions: 6,
+        }
+    }
+
     pickNaturalBuildings(tile, buildings) {
         const squigglyBuildings = buildings.filter(building => building.name == "small_tall_twirly_future_comet_geo")
         return {
@@ -85,6 +94,7 @@ class WorldNeighborhoods {
             "future": this.pickFutureBuildings,
             "industrial": this.pickIndustrialBuildings,
             "squiggles": this.pickNaturalBuildings,
+            "sunset": this.pickSunsetBuildings,
             
         }[this.category]
         const picked = pick(tile, buildings);
@@ -142,6 +152,7 @@ export const neighborhoods = {
     future: new WorldNeighborhoods(surface, "future"),
     squiggles: new WorldNeighborhoods(surface, "squiggles"),
     industrial: new WorldNeighborhoods(surface, "industrial"),
+    sunset: new WorldNeighborhoods(surface, "sunset"),
 }
 
 export function WorldSurface({ geometry, materialName }) {

@@ -132,11 +132,26 @@ class AsteroidNeighborhoods {
         ][THREE.Math.randInt(0, 1)]
     }
 
+    pickSunsetBuildings(tile, buildings) {
+        const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
+        return [
+            {
+                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+                subdivisions: 1
+            },
+            {
+                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+                subdivisions: 1
+            }
+        ][THREE.Math.randInt(0, 1)]
+    }
+
     pickBuildings(tile, buildings) {
         const pick = {
             "future": this.pickFutureBuildings,
             "industrial": this.pickIndustrialBuildings,
             "squiggles": this.pickSquiggleBuildings,
+            "sunset": this.pickSunsetBuildings,
 
         }[this.category]
         const picked = pick(tile, buildings);
@@ -158,6 +173,7 @@ export const neighborhoods = {
     future: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "future")),
     squiggles: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "squiggles")),
     industrial: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "industrial")),
+    sunset: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "sunset")), 
 }
 
 export function AsteroidsSurface({ geometry, materialName }) {
