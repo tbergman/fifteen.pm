@@ -91,7 +91,7 @@ class AsteroidNeighborhoods {
     }
 
     pickFutureBuildings(tile, buildings) {
-        const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
+        const presentBuildings = buildings.filter(building => building.name === "large_tall_logo_present_logo");
         return [
             {
                 allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
@@ -105,7 +105,7 @@ class AsteroidNeighborhoods {
     }
 
     pickSquiggleBuildings(tile, buildings) {
-        const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
+        const presentBuildings = buildings.filter(building => building.name === "large_tall_tower_present_penobscot");
         return [
             {
                 allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
@@ -119,7 +119,7 @@ class AsteroidNeighborhoods {
     }
 
     pickIndustrialBuildings(tile, buildings) {
-        const presentBuildings = buildings.filter(building => building.name=="large_short_low_present_boxy");
+        const presentBuildings = buildings.filter(building => building.name == "large_short_low_present_boxy");
         // building.era === C.PRESENT);
         return [
             {
@@ -134,7 +134,7 @@ class AsteroidNeighborhoods {
     }
 
     pickSunsetBuildings(tile, buildings) {
-        const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
+        const presentBuildings = buildings.filter(building => building.name == "large_tall_tower_present_bookcadillachotel");
         return [
             {
                 allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
@@ -152,7 +152,7 @@ class AsteroidNeighborhoods {
             "future": this.pickFutureBuildings,
             "industrial": this.pickIndustrialBuildings,
             "squiggles": this.pickSquiggleBuildings,
-            // "sunset": this.pickSunsetBuildings,
+            "sunset": this.pickSunsetBuildings,
 
         }[this.category]
         const picked = pick(tile, buildings);
@@ -174,7 +174,7 @@ export const neighborhoods = {
     future: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "future")),
     squiggles: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "squiggles")),
     industrial: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "industrial")),
-    // sunset: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "sunset")), 
+    sunset: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "sunset")),
 }
 
 export function AsteroidsSurface({ geometry, materialName }) {

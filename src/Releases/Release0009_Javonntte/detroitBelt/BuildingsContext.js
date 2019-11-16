@@ -46,7 +46,7 @@ const BuildingsProvider = ({ ...props }) => {
             "medium_tall_diamond_future_unlithull_geo001": { material: foamGripSilver },
             "medium_tall_ribbony_future_celvinyl_geo003": { material: foamGripSilver },
             "medium_tall_ribbony_future_celvinyl_geo002": { material: foamGripSilver },
-            "medium_tall_tower_future_talltower": { material: facade10, randColor: true },
+            "medium_tall_tower_present_talltower": { material: facade10, randColor: true },
             "medium_tall_tower_present_broderick": { material: facade12, randColor: true },
             "medium_tall_tower_present_fancytower": { material: facade10, randColor: true },
             "medium_tall_tower_present_tower": { material: tiles36 },
