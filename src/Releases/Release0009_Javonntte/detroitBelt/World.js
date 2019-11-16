@@ -7,76 +7,68 @@ import { generateTiles } from '../../../Utils/SphereTiles';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 
-// class WorldNeighborhood{
-//     constructor(){
+export class WorldNeighborhoods {
+    constructor() {
+        this.count = 100;
+        this.numTiles = Math.floor(C.WORLD_RADIUS) * 2
+        this.maxRadius = C.WORLD_RADIUS * 6 // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
+        this.surface = generateSphereWorldGeometry(
+            C.WORLD_RADIUS,
+            C.WORLD_SIDES,
+            C.WORLD_TIERS,
+            C.MAX_WORLD_FACE_HEIGHT,
+        )
+    }
 
-//     }
-// }
+    onPath(centroid) {
+        return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
+            .filter(distFromPoint => distFromPoint < C.WORLD_ROAD_WIDTH)
+            .length > 0;
+    }
+    tooClose(centroid) {
+        return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
+            .filter(distFromPoint => distFromPoint > C.WORLD_BUILDING_CORRIDOR_WIDTH)
+            .length == C.WORLD_ROAD_PATH.length;
+    }
 
-function onPath(centroid) {
-    return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
-        .filter(distFromPoint => distFromPoint < C.WORLD_ROAD_WIDTH)
-        .length > 0;
-}
-function tooClose(centroid) {
-    return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
-        .filter(distFromPoint => distFromPoint > C.WORLD_BUILDING_CORRIDOR_WIDTH)
-        .length == C.WORLD_ROAD_PATH.length;
-}
+    /*
+    Return true if we should render the neighbor
+    */
+    rules(neighbor) {
+        return !this.onPath(neighbor.centroid) && !this.tooClose(neighbor.centroid)
+    }
 
-/*
-Return true if we should render the neighbor
-*/
-function sphereWorldNeighborhoodRules(neighbor) {
-    return !onPath(neighbor.centroid) && !tooClose(neighbor.centroid)
-}
+    getNeighborhoodCentroids({ surface }) {
+        const sphereCenter = new THREE.Vector3();
+        surface.boundingBox.getCenter(sphereCenter);
+        const numRandPoints = C.WORLD_RADIUS * 2;
+        const centroids = randomPointsOnSphere(C.WORLD_RADIUS, sphereCenter, numRandPoints);
+        return centroids;
+    }
 
-function getWorldNeighborhoodCentroids({ surface }) {
-    const sphereCenter = new THREE.Vector3();
-    surface.boundingBox.getCenter(sphereCenter);
-    const numRandPoints = C.WORLD_RADIUS * 2;
-    const centroids = randomPointsOnSphere(C.WORLD_RADIUS, sphereCenter, numRandPoints);
-    return centroids;
-}
-
-function pickWorldBuildings(tile, buildings) {
-    const futureBuildings = buildings.filter(building => building.era == C.FUTURE);
-    const area = tile.triangle.getArea();
-    if (area > 14) {
-        return {
-            allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
-            subdivisions: 3
+    pickBuildings(tile, buildings) {
+        const futureBuildings = buildings.filter(building => building.era == C.FUTURE);
+        const area = tile.triangle.getArea();
+        if (area > 14) {
+            return {
+                allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
+                subdivisions: 3
+            }
+        } else {
+            return [{
+                allowedBuildings: futureBuildings.filter(building => building.footprint === C.SMALL),
+                subdivisions: 6
+            },
+            {
+                allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
+                subdivisions: 1
+            }][THREE.Math.randInt(0, 1)]
         }
-    } else {
-        return [{
-            allowedBuildings: futureBuildings.filter(building => building.footprint === C.SMALL),
-            subdivisions: 6
-        },
-        {
-            allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
-            subdivisions: 1
-        }][THREE.Math.randInt(0, 1)]
     }
 }
 
-// TODO organize
-export const worldNeighborhoods = {
-    count: 100,
-    numTiles: Math.floor(C.WORLD_RADIUS) * 2,
-    maxRadius: C.WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
-    rules: sphereWorldNeighborhoodRules,
-    getNeighborhoodCentroids: getWorldNeighborhoodCentroids,
-    pickBuildings: pickWorldBuildings,
-    surface: generateSphereWorldGeometry(
-        C.WORLD_RADIUS,
-        C.WORLD_SIDES,
-        C.WORLD_TIERS,
-        C.MAX_WORLD_FACE_HEIGHT,
-    ),
-}
 
-
-export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
+function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
     // variate sphere heights
     var vertexIndex;
@@ -115,9 +107,9 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
 }
 
 export function WorldSurface({ geometry, materialName }) {
-    
+
     const { tron, ground29, ornateBrass2Tiledx10, rock19 } = useContext(MaterialsContext);
-    function exteriorMaterial(){
+    function exteriorMaterial() {
         return {
             "ornateBrass2": ornateBrass2Tiledx10,
             "ground29": ground29,

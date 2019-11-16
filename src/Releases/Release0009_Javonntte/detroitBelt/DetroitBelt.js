@@ -5,9 +5,9 @@ import { randomPointsOnSphere, selectNRandomFromArray } from '../../../Utils/ran
 
 import * as C from '../constants';
 import { AsteroidsSurface, generateAsteroidSurfaces, AsteroidBelt, generateAsteroidNeighborhoods } from './Asteroids';
-import { BuildingsContext } from './BuildingsContext';
-import { generateTilesets } from './tiles';
-import { worldNeighborhoods, WorldSurface } from './World';
+// import { BuildingsContext } from './BuildingsContext';
+// import { generateTilesets } from './tiles';
+import { WorldNeighborhoods, WorldSurface } from './World';
 // import Buildings from './Buildings';
 import BuildingInstances from './Buildings';
 
@@ -20,6 +20,8 @@ const asteroidSurfaces = generateAsteroidSurfaces({
 })
 
 export default function DetroitBelt({ setContentReady, theme }) {
+
+    const worldNeighborhoods = useMemo(() => new WorldNeighborhoods())
 
     const asteroidNeighborhoods = useMemo(() => {
         if (asteroidSurfaces) return generateAsteroidNeighborhoods(asteroidSurfaces);

@@ -43,7 +43,7 @@ export function generateAsteroidSurfaces(props) {
                 seed: Math.floor(Math.random() * 1000),
                 noiseWidth: 25,
                 noiseHeight: 25,
-                scale: {x: Math.random() * 1.5, y: 1, z: 1}
+                scale: { x: Math.random() * 1.5, y: 1, z: 1 }
             })
         noiseSphere.verticesNeedUpdate = true;
         noiseSphere.computeBoundingSphere();
@@ -54,7 +54,7 @@ export function generateAsteroidSurfaces(props) {
 
     function _generateAsteroidInstance({ centroid, beltRadius, maxAsteroidRadius }) {
         const radius = THREE.Math.randInt(maxAsteroidRadius * .75, maxAsteroidRadius);
-        const asteroidGeom = _generateAsteroidNoiseSphere({centroid: centroid, radius: radius})
+        const asteroidGeom = _generateAsteroidNoiseSphere({ centroid: centroid, radius: radius })
         return {
             geometry: asteroidGeom,
             faces: asteroidGeom.faces,
@@ -114,8 +114,8 @@ export function generateAsteroidNeighborhoods(surfaces) {
 
 export function AsteroidsSurface({ geometry, materialName }) {
     const { tron, ground29, ornateBrass2, rock19 } = useContext(MaterialsContext);
-    
-    function exteriorMaterial(){
+
+    function exteriorMaterial() {
         return {
             "ornateBrass2": ornateBrass2,
             "ground29": ground29,
