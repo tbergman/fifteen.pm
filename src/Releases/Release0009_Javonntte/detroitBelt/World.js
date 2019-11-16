@@ -94,7 +94,7 @@ class WorldNeighborhoods {
             "future": this.pickFutureBuildings,
             "industrial": this.pickIndustrialBuildings,
             "squiggles": this.pickNaturalBuildings,
-            "sunset": this.pickSunsetBuildings,
+            // "sunset": this.pickSunsetBuildings,
             
         }[this.category]
         const picked = pick(tile, buildings);
@@ -152,7 +152,7 @@ export const neighborhoods = {
     future: new WorldNeighborhoods(surface, "future"),
     squiggles: new WorldNeighborhoods(surface, "squiggles"),
     industrial: new WorldNeighborhoods(surface, "industrial"),
-    sunset: new WorldNeighborhoods(surface, "sunset"),
+    // sunset: new WorldNeighborhoods(surface, "sunset"),
 }
 
 export function WorldSurface({ geometry, materialName }) {

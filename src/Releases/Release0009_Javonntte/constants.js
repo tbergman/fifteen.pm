@@ -93,7 +93,7 @@ export const TRACK_THEMES = [
         starColors: [0x0000ef, 0x111111, 0x222222],
         surfaces: "ground29",
         sky: "sunset",
-        world: "sunset",
+        // world: "sunset",
     },
     // HELL
     {
