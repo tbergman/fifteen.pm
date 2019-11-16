@@ -1,16 +1,12 @@
-import React, { useMemo } from 'react';
+import { default as React, useContext, useEffect, useMemo, useState } from 'react';
 import * as C from '../constants';
 import { AsteroidNeighborhoods, AsteroidsSurface, generateAsteroidSurfaces } from './Asteroids';
-import BuildingInstances from './BuildingInstances';
+import { BuildingsContext } from './BuildingsContext';
+import { generateTilesets } from './tiles';
 import { generateSphereWorldGeometry, WorldNeighborhoods, WorldSurface } from './World';
 
 
-const worldSurface = generateSphereWorldGeometry(
-    C.WORLD_RADIUS,
-    C.WORLD_SIDES,
-    C.WORLD_TIERS,
-    C.MAX_WORLD_FACE_HEIGHT,
-)
+
 
 // TODO having issue getting these values to align with those passed into
 // generateAsteroidNeighborhoods when placing this in its own useMemo,
@@ -22,21 +18,71 @@ const asteroidSurfaces = generateAsteroidSurfaces({
     maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
 })
 
-export default function DetroitBelt({ setContentReady, theme }) {
+// tmp
+const worldNeighborhoodCategories = ["squiggles"]
 
-    const worldNeighborhoods = useMemo(() => new WorldNeighborhoods(worldSurface))
+// const worldNeighborhoods = new WorldNeighborhoods(worldSurface, "squiggles");//worldNeighborhoodCategories.map(category => new WorldNeighborhoods(worldSurface, category));
+
+const worldSurface = generateSphereWorldGeometry(
+    C.WORLD_RADIUS,
+    C.WORLD_SIDES,
+    C.WORLD_TIERS,
+    C.MAX_WORLD_FACE_HEIGHT,
+)
+
+const worldNeighborhoods = {
+    future: new WorldNeighborhoods(worldSurface, "future"),
+    squiggles: new WorldNeighborhoods(worldSurface, "squiggles")
+}
+
+export default function DetroitBelt({ setContentReady, theme }) {
+    const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
+    const [worldTheme, setWorldTheme] = useState();
+    const [meshes, setMeshes] = useState();
+
+
+    const worldMeshes = useMemo(() => {
+        if (!buildingsLoaded) return;
+        const futureMeshes = generateTilesets({ buildings, neighborhoods: [worldNeighborhoods.future] })
+        const squiggleMeshes = generateTilesets({ buildings, neighborhoods: [worldNeighborhoods.squiggles] })
+        setContentReady(true);
+        return { future: futureMeshes, squiggles: squiggleMeshes }
+    }, [buildingsLoaded])
 
     const asteroidNeighborhoods = useMemo(() => {
         return asteroidSurfaces.instances.map(surface => new AsteroidNeighborhoods(surface));
     })
 
+    useEffect(() => {
+        setWorldTheme(theme.world)
+    }, [theme])
+
+    // useEffect(() => {
+    //     if (buildingsLoaded) {
+    //         setMeshes(generateTilesets({
+    //             buildings,
+    //             neighborhoods: [worldNeighborhood, ...asteroidNeighborhoods],
+    //         }));
+    //         setContentReady(true)
+    //     }
+    // }, [buildingsLoaded, theme]);
+
+
     return <>
-        <WorldSurface geometry={worldNeighborhoods.surface} materialName={theme.surfaces} />
+
         <AsteroidsSurface geometry={asteroidSurfaces.geometry} materialName={theme.surfaces} />
-        <BuildingInstances
+        {/* <BuildingInstances
             theme={theme.buildings}
-            neighborhoods={[worldNeighborhoods, ...asteroidNeighborhoods]}
+            neighborhoods={[worldNeighborhood, ...asteroidNeighborhoods]}
             setContentReady={setContentReady}
-        />
+        /> */}
+        {buildingsLoaded && worldSurface && worldMeshes ?
+            <>
+                <WorldSurface geometry={worldSurface} materialName={theme.surfaces} />
+                {Object.keys(worldMeshes[worldTheme]).map(meshName => {
+                    return <primitive key={meshName} object={worldMeshes[worldTheme][meshName]} />
+                })}
+            </> : null
+        }
     </>
 }

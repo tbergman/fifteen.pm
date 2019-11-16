@@ -70,6 +70,7 @@ export const TRACK_THEMES = [
         starColors: [0x555555, 0x333333, 0x1a1a1a],
         surfaces: "ground29",
         sky: "night",
+        world: "future",
     },
 
     // SUNSET
@@ -86,6 +87,7 @@ export const TRACK_THEMES = [
         starColors: [0x0000ef, 0x111111, 0x222222],
         surfaces: "ground29",
         sky: "sunset",
+        world: "future",
     },
     // HELL
     {
@@ -101,6 +103,7 @@ export const TRACK_THEMES = [
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
         surfaces: "ornateBrass2",
         sky: "hell",
+        world: "squiggles",
     },
     // DAY
     {
@@ -116,6 +119,7 @@ export const TRACK_THEMES = [
         starColors: [0x555555, 0x333333, 0x1a1a1a],
         surfaces: "rock19",
         sky: "day",
+        world: "squiggles",
     },
 ]
 

@@ -21,7 +21,6 @@ const BuildingsProvider = ({ ...props }) => {
 
     const {
         loaded: materialsLoaded,
-        blackLeather12,
         metal03,
         foamGripSilver,
         foamGripPurple,
@@ -88,7 +87,7 @@ const BuildingsProvider = ({ ...props }) => {
                     building.material = attributes[building.name].material;
                     const [maxWidthBucket, maxHeightBucket, category, era, name] = child.name.split("_");
                     building.footprint = maxWidthBucket;
-                    // TODO separate out all "present" and "future" era and use present for asteroids and future for city
+                    building.category = category;
                     building.era = era;
                     _b.push(building);
                 }
@@ -107,4 +106,3 @@ const BuildingsProvider = ({ ...props }) => {
 }
 
 export { BuildingsContext, BuildingsProvider };
-

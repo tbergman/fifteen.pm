@@ -15,14 +15,14 @@ export default function BuildingInstances({ setContentReady, neighborhoods }) {
             }));
             setContentReady(true)
         }
-    }, [buildingsLoaded]);
+    }, [buildingsLoaded, neighborhoods]);
 
 
-    return <>{
-        meshes && Object.keys(meshes).map(meshName => {
-            return <primitive key={meshName}
-                object={meshes[meshName]}
-            />
-        })
-    }</>
+    return <>
+        {/* {
+            meshes && Object.keys(meshes).map(meshName => {
+                return <primitive key={meshName} object={meshes[meshName]} />
+            })
+        } */}
+    </>
 }

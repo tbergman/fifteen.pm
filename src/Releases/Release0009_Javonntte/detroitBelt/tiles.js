@@ -78,7 +78,7 @@ function generateTileFormations(buildings, neighborhood) {
     return formations;
 }
 
-export function generateInstanceAttributes(formations) {
+function generateInstanceAttributes(formations) {
     const instances = {};
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach(tId => {

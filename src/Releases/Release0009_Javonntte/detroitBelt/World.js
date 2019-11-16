@@ -8,8 +8,9 @@ import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 
 export class WorldNeighborhoods {
-    constructor(surface) {
-        this.surface=surface;
+    constructor(surface, category) {
+        this.surface = surface;
+        this.category = category;
         this.count = 100;
         this.numTiles = Math.floor(C.WORLD_RADIUS) * 2
         this.maxRadius = C.WORLD_RADIUS * 6 // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
@@ -41,7 +42,7 @@ export class WorldNeighborhoods {
         return centroids;
     }
 
-    pickBuildings(tile, buildings) {
+    pickFutureBuildings(tile, buildings) {
         const futureBuildings = buildings.filter(building => building.era == C.FUTURE);
         const area = tile.triangle.getArea();
         if (area > 14) {
@@ -59,6 +60,24 @@ export class WorldNeighborhoods {
                 subdivisions: 1
             }][THREE.Math.randInt(0, 1)]
         }
+    }
+
+    pickSquigglyBuildings(tile, buildings){
+        const squigglyBuildings = buildings.filter(building => building.name == "small_tall_twirly_future_comet_geo")
+        return {
+            allowedBuildings: squigglyBuildings,
+            subdivisions: 6,
+        }
+    }
+
+    pickBuildings(tile, buildings){
+        const pick = {
+            "future": this.pickFutureBuildings,
+            "squiggles": this.pickSquigglyBuildings
+        }[this.category]
+        const picked = pick(tile, buildings);
+        // console.log("PICKED", picked);
+        return picked;
     }
 }
 
