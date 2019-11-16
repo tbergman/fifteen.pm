@@ -49,7 +49,7 @@ export function Scene({ setContentReady, colorTheme, onThemeSelect }) {
                     <BuildingsProvider>
                         <DetroitBelt
                             setContentReady={setContentReady}
-                            colors={colorTheme}
+                            theme={colorTheme}
                         />
                     </BuildingsProvider>
                 </Suspense>

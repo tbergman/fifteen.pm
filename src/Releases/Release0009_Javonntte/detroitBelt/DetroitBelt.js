@@ -8,6 +8,8 @@ import { AsteroidsSurface, generateAsteroidSurfaces, AsteroidBelt, generateAster
 import { BuildingsContext } from './BuildingsContext';
 import { generateTilesets } from './tiles';
 import { worldNeighborhoods, WorldSurface } from './World';
+// import Buildings from './Buildings';
+import BuildingInstances from './Buildings';
 
 // TODO having issue getting these values to align with those passed into generateAsteroidNeighborhoods when placing this in its own useMemo, or even the same one.
 const asteroidSurfaces = generateAsteroidSurfaces({
@@ -17,32 +19,21 @@ const asteroidSurfaces = generateAsteroidSurfaces({
     maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
 })
 
-export default function DetroitBelt({ setContentReady, colors }) {
-    const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
-    const [meshes, setMeshes] = useState();
+export default function DetroitBelt({ setContentReady, theme }) {
 
     const asteroidNeighborhoods = useMemo(() => {
         if (asteroidSurfaces) return generateAsteroidNeighborhoods(asteroidSurfaces);
     }, [asteroidSurfaces]);
 
-    useEffect(() => {
-        if (buildingsLoaded) {
-            setMeshes(generateTilesets({
-                buildings,
-                groups: [worldNeighborhoods, ...asteroidNeighborhoods],
-            }));
-            setContentReady(true)
-        }
-    }, [buildingsLoaded]);
+
 
     return <>
-        <WorldSurface geometry={worldNeighborhoods.surface} materialName={colors.surfaces} />
-        <AsteroidsSurface geometry={asteroidSurfaces.geometry} materialName={colors.surfaces} />
-        {meshes && Object.keys(meshes).map(meshName => {
-            return <primitive key={meshName}
-                object={meshes[meshName]}
-            />
-        })
-        }
+        <WorldSurface geometry={worldNeighborhoods.surface} materialName={theme.surfaces} />
+        <AsteroidsSurface geometry={asteroidSurfaces.geometry} materialName={theme.surfaces} />
+        <BuildingInstances
+            theme={theme.buildings}
+            neighborhoods={[worldNeighborhoods, ...asteroidNeighborhoods]}
+            setContentReady={setContentReady}
+        />
     </>
 }
