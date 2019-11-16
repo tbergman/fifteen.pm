@@ -80,7 +80,6 @@ class WorldNeighborhoods {
     }
 
     pickIndustrialBuildings(tile, buildings) {
-        
         const industrialBuildings = buildings.filter(building => building.name == "large_short_low_present_factory")
         // const industrialBuildings = buildings.filter(building => C.INDUSTRIAL_BUILDINGS.includes(building.name))
         return {
@@ -157,12 +156,13 @@ export const neighborhoods = {
 
 export function WorldSurface({ geometry, materialName }) {
 
-    const { tron, ground29, ornateBrass2Tiledx10, rock19 } = useContext(MaterialsContext);
+    const { tron, ground29, ornateBrass2Tiledx10, scuffedPlasticBlack, tiles60, facade12, rock19 } = useContext(MaterialsContext);
     function exteriorMaterial() {
         return {
             "ornateBrass2": ornateBrass2Tiledx10,
             "ground29": ground29,
             "rock19": rock19,
+            "scuffedPlasticBlack": facade12,
         }[materialName]
     }
     return <>

@@ -91,7 +91,7 @@ export const TRACK_THEMES = [
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
         background: new THREE.Color(0xfe8981),
         starColors: [0x0000ef, 0x111111, 0x222222],
-        surfaces: "ground29",
+        surfaces: "scuffedPlasticBlack",
         sky: "sunset",
         world: "sunset",
     },

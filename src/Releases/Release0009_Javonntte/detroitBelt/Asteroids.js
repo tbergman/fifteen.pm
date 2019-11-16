@@ -92,59 +92,34 @@ class AsteroidNeighborhoods {
 
     pickFutureBuildings(tile, buildings) {
         const presentBuildings = buildings.filter(building => building.name === "large_tall_logo_present_logo");
-        return [
-            {
-                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-                subdivisions: 1
-            },
-            {
-                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-                subdivisions: 1
-            }
-        ][THREE.Math.randInt(0, 1)]
+        return {
+            allowedBuildings: presentBuildings,
+            subdivisions: 1
+        }
     }
 
     pickSquiggleBuildings(tile, buildings) {
         const presentBuildings = buildings.filter(building => building.name === "large_tall_tower_present_penobscot");
-        return [
-            {
-                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-                subdivisions: 1
-            },
-            {
-                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-                subdivisions: 1
-            }
-        ][THREE.Math.randInt(0, 1)]
+        return {
+            allowedBuildings: presentBuildings,
+            subdivisions: 1
+        }
     }
 
     pickIndustrialBuildings(tile, buildings) {
         const presentBuildings = buildings.filter(building => building.name == "large_short_low_present_boxy");
-        // building.era === C.PRESENT);
-        return [
-            {
-                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-                subdivisions: 1
-            },
-            {
-                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-                subdivisions: 1
-            }
-        ][THREE.Math.randInt(0, 1)]
+        return {
+            allowedBuildings: presentBuildings,
+            subdivisions: 1
+        }
     }
 
     pickSunsetBuildings(tile, buildings) {
         const presentBuildings = buildings.filter(building => building.name == "large_tall_tower_present_bookcadillachotel");
-        return [
-            {
-                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-                subdivisions: 1
-            },
-            {
-                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-                subdivisions: 1
-            }
-        ][THREE.Math.randInt(0, 1)]
+        return {
+            allowedBuildings: presentBuildings,
+            subdivisions: 1
+        }
     }
 
     pickBuildings(tile, buildings) {
@@ -178,13 +153,14 @@ export const neighborhoods = {
 }
 
 export function AsteroidsSurface({ geometry, materialName }) {
-    const { tron, ground29, ornateBrass2, rock19 } = useContext(MaterialsContext);
+    const { tron, ground29, ornateBrass2, rock19, scuffedPlasticBlack } = useContext(MaterialsContext);
 
     function exteriorMaterial() {
         return {
             "ornateBrass2": ornateBrass2,
             "ground29": ground29,
             "rock19": rock19,
+            "scuffedPlasticBlack": scuffedPlasticBlack,
         }[materialName]
     }
 
