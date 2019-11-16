@@ -20,7 +20,7 @@ export function generateAsteroidSurfaces(props) {
     function _generateAsteroidCentroids({ beltRadius, numAsteroids }) {
         const centroids = [];
         const distBetweenRings = 4;
-        const closestRingRadius = 10;
+        const closestRingRadius = C.WORLD_RADIUS + 5;
         let curRingRadius = closestRingRadius;
         const satelliteSlots = 20; // potential locations on ring for satellite
         while (centroids.length < numAsteroids) {
@@ -75,31 +75,12 @@ export function generateAsteroidSurfaces(props) {
 
 
 
-
-
-export function generateAsteroidNeighborhoods(surfaces) {
-    const neighborhoods = []
-    surfaces.instances.forEach(instance => {
-        // TODO a shared type class with world neighborhood
-        neighborhoods.push({
-            numTiles: 1,//isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
-            maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
-            rules: () => true,
-            getNeighborhoodCentroids: getAsteroidNeighborhoodCentroids,
-            // centroids: this._generateAsteroidNeighborhoodCentroids(), // TODO when refactor World
-            pickBuildings: pickAsteroidBuildings,
-            surface: instance,
-        });
-    })
-    return neighborhoods;
-}
-
 export class AsteroidNeighborhoods {
-    constructor(surface){
-        this.surface=surface
-        this.numTiles=1
-        this.maxRadius=C.ASTEROID_MAX_RADIUS * 6
-        
+    constructor(surface) {
+        this.surface = surface
+        this.numTiles = 1
+        this.maxRadius = C.ASTEROID_MAX_RADIUS * 6
+
     }
 
     rules = () => true
@@ -109,7 +90,7 @@ export class AsteroidNeighborhoods {
         const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
         return centroids;
     }
-    
+
     pickBuildings(tile, buildings) {
         const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
         return [

@@ -1,23 +1,9 @@
-import React, { useRef, useMemo, useContext, useEffect, useState } from 'react';
-import * as THREE from 'three';
-
-import { randomPointsOnSphere, selectNRandomFromArray } from '../../../Utils/random';
-
+import React, { useMemo } from 'react';
 import * as C from '../constants';
-import { AsteroidsSurface, generateAsteroidSurfaces, AsteroidNeighborhoods, generateAsteroidNeighborhoods } from './Asteroids';
-// import { BuildingsContext } from './BuildingsContext';
-// import { generateTilesets } from './tiles';
-import { WorldNeighborhoods, WorldSurface, generateSphereWorldGeometry } from './World';
-// import Buildings from './Buildings';
-import BuildingInstances from './Buildings';
+import { AsteroidNeighborhoods, AsteroidsSurface, generateAsteroidSurfaces } from './Asteroids';
+import BuildingInstances from './BuildingInstances';
+import { generateSphereWorldGeometry, WorldNeighborhoods, WorldSurface } from './World';
 
-// // TODO having issue getting these values to align with those passed into generateAsteroidNeighborhoods when placing this in its own useMemo, or even the same one.
-const asteroidSurfaces = generateAsteroidSurfaces({
-    beltRadius: C.ASTEROID_BELT_RADIUS,
-    beltCenter: C.ASTEROID_BELT_CENTER,
-    numAsteroids: C.NUM_ASTEROIDS,
-    maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
-})
 
 const worldSurface = generateSphereWorldGeometry(
     C.WORLD_RADIUS,
@@ -26,14 +12,24 @@ const worldSurface = generateSphereWorldGeometry(
     C.MAX_WORLD_FACE_HEIGHT,
 )
 
+// TODO having issue getting these values to align with those passed into
+// generateAsteroidNeighborhoods when placing this in its own useMemo,
+// or even the same one.
+const asteroidSurfaces = generateAsteroidSurfaces({
+    beltRadius: C.ASTEROID_BELT_RADIUS,
+    beltCenter: C.ASTEROID_BELT_CENTER,
+    numAsteroids: C.NUM_ASTEROIDS,
+    maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
+})
+
 export default function DetroitBelt({ setContentReady, theme }) {
 
     const worldNeighborhoods = useMemo(() => new WorldNeighborhoods(worldSurface))
 
     const asteroidNeighborhoods = useMemo(() => {
-        return asteroidSurfaces.instances.map(surface => new AsteroidNeighborhoods(surface))
+        return asteroidSurfaces.instances.map(surface => new AsteroidNeighborhoods(surface));
     })
-   
+
     return <>
         <WorldSurface geometry={worldNeighborhoods.surface} materialName={theme.surfaces} />
         <AsteroidsSurface geometry={asteroidSurfaces.geometry} materialName={theme.surfaces} />
