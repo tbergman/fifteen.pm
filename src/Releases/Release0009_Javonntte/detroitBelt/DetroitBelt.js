@@ -5,9 +5,6 @@ import { BuildingsContext } from './BuildingsContext';
 import { generateTilesets } from './tiles';
 import { generateSphereWorldGeometry, WorldNeighborhoods, WorldSurface } from './World';
 
-
-
-
 // TODO having issue getting these values to align with those passed into
 // generateAsteroidNeighborhoods when placing this in its own useMemo,
 // or even the same one.
@@ -17,11 +14,9 @@ const asteroidSurfaces = generateAsteroidSurfaces({
     numAsteroids: C.NUM_ASTEROIDS,
     maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
 })
-
+const asteroidNeighborhoods = asteroidSurfaces.instances.map(surface => new AsteroidNeighborhoods(surface));
 // tmp
 const worldNeighborhoodCategories = ["squiggles"]
-
-// const worldNeighborhoods = new WorldNeighborhoods(worldSurface, "squiggles");//worldNeighborhoodCategories.map(category => new WorldNeighborhoods(worldSurface, category));
 
 const worldSurface = generateSphereWorldGeometry(
     C.WORLD_RADIUS,
@@ -43,15 +38,13 @@ export default function DetroitBelt({ setContentReady, theme }) {
 
     const worldMeshes = useMemo(() => {
         if (!buildingsLoaded) return;
-        const futureMeshes = generateTilesets({ buildings, neighborhoods: [worldNeighborhoods.future] })
-        const squiggleMeshes = generateTilesets({ buildings, neighborhoods: [worldNeighborhoods.squiggles] })
+        const futureMeshes = generateTilesets({ buildings, neighborhoods: [worldNeighborhoods.future, ...asteroidNeighborhoods] })
+        const squiggleMeshes = generateTilesets({ buildings, neighborhoods: [worldNeighborhoods.squiggles, ...asteroidNeighborhoods] })
         setContentReady(true);
         return { future: futureMeshes, squiggles: squiggleMeshes }
     }, [buildingsLoaded])
 
-    const asteroidNeighborhoods = useMemo(() => {
-        return asteroidSurfaces.instances.map(surface => new AsteroidNeighborhoods(surface));
-    })
+  
 
     useEffect(() => {
         setWorldTheme(theme.world)
