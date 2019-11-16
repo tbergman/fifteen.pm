@@ -7,7 +7,7 @@ import { generateTiles } from '../../../Utils/SphereTiles';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 
-export class WorldNeighborhoods {
+class WorldNeighborhoods {
     constructor(surface, category) {
         this.surface = surface;
         this.category = category;
@@ -118,6 +118,18 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     geometry.computeBoundingSphere();
     geometry.computeBoundingBox();
     return geometry;
+}
+
+export const surface = generateSphereWorldGeometry(
+    C.WORLD_RADIUS,
+    C.WORLD_SIDES,
+    C.WORLD_TIERS,
+    C.MAX_WORLD_FACE_HEIGHT,
+)
+
+export const neighborhoods = {
+    future: new WorldNeighborhoods(surface, "future"),
+    squiggles: new WorldNeighborhoods(surface, "squiggles")
 }
 
 export function WorldSurface({ geometry, materialName }) {

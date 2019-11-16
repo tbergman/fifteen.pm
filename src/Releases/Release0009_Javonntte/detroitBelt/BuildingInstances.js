@@ -1,28 +1,11 @@
 
-import React, { useContext, useEffect, useState } from 'react';
-import { BuildingsContext } from './BuildingsContext';
-import { generateTilesets } from './tiles';
+import React from 'react';
 
-export default function BuildingInstances({ setContentReady, neighborhoods }) {
-    const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
-    const [meshes, setMeshes] = useState();
-
-    useEffect(() => {
-        if (buildingsLoaded) {
-            setMeshes(generateTilesets({
-                buildings,
-                neighborhoods,
-            }));
-            setContentReady(true)
-        }
-    }, [buildingsLoaded, neighborhoods]);
-
-
+export default function BuildingInstances({ themeName, meshes }) {
+   
     return <>
-        {/* {
-            meshes && Object.keys(meshes).map(meshName => {
-                return <primitive key={meshName} object={meshes[meshName]} />
-            })
-        } */}
+        {Object.keys(meshes[themeName]).map(meshName => {
+            return <primitive key={meshName} object={meshes[themeName][meshName]} />
+        })}
     </>
 }

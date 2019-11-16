@@ -73,9 +73,7 @@ export function generateAsteroidSurfaces(props) {
     return surfaces;
 }
 
-
-
-export class AsteroidNeighborhoods {
+class AsteroidNeighborhoods {
     constructor(surface) {
         this.surface = surface
         this.numTiles = 1
@@ -105,6 +103,18 @@ export class AsteroidNeighborhoods {
         ][THREE.Math.randInt(0, 1)]
     }
 }
+
+// TODO having issue getting these values to align with those passed into
+// generateAsteroidNeighborhoods when placing this in its own useMemo,
+// or even the same one.
+export const surfaces = generateAsteroidSurfaces({
+    beltRadius: C.ASTEROID_BELT_RADIUS,
+    beltCenter: C.ASTEROID_BELT_CENTER,
+    numAsteroids: C.NUM_ASTEROIDS,
+    maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
+})
+
+export const neighborhoods = surfaces.instances.map(surface => new AsteroidNeighborhoods(surface));
 
 export function AsteroidsSurface({ geometry, materialName }) {
     const { tron, ground29, ornateBrass2, rock19 } = useContext(MaterialsContext);
