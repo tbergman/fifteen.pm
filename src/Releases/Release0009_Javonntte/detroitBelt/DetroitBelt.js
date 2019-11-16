@@ -6,6 +6,11 @@ import { generateTilesets } from './tiles';
 import { surface as worldSurface, neighborhoods as worldNeighborhoods, WorldSurface } from './World';
 import BuildingInstances from './BuildingInstances';
 
+const neighborhoods = {
+    future: [worldNeighborhoods.future, ...asteroidNeighborhoods.future],
+    squiggles: [worldNeighborhoods.squiggles, ...asteroidNeighborhoods.squiggles],
+    industrial: [worldNeighborhoods.industrial, ...asteroidNeighborhoods.industrial]
+}
 
 export default function DetroitBelt({ setContentReady, theme }) {
     const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
@@ -15,8 +20,9 @@ export default function DetroitBelt({ setContentReady, theme }) {
     const meshes = useMemo(() => {
         if (!buildingsLoaded) return;
         const _meshes = {
-            future: generateTilesets({ buildings, neighborhoods: [worldNeighborhoods.future, ...asteroidNeighborhoods] }),
-            squiggles: generateTilesets({ buildings, neighborhoods: [worldNeighborhoods.squiggles, ...asteroidNeighborhoods] })
+            future: generateTilesets({ buildings, neighborhoods: neighborhoods.future }),
+            squiggles: generateTilesets({ buildings, neighborhoods: neighborhoods.squiggles }),
+            industrial: generateTilesets({ buildings, neighborhoods: neighborhoods.industrial })
         }
         setContentReady(true);
         return _meshes;

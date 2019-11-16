@@ -58,7 +58,10 @@ export const BUILDING_HEIGHT_BUCKETS = [
     SHORT,
     TALL,
 ]
-
+export const INDUSTRIAL_BUILDINGS = [
+    "large_short_low_present_factory",
+    "large_short_low_present_boxy",
+]
 // TRACK INFO
 export const TRACK_THEMES = [
     // index matches track list order
@@ -103,7 +106,7 @@ export const TRACK_THEMES = [
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
         surfaces: "ornateBrass2",
         sky: "hell",
-        world: "squiggles",
+        world: "industrial",
     },
     // DAY
     {

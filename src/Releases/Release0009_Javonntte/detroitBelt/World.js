@@ -62,7 +62,7 @@ class WorldNeighborhoods {
         }
     }
 
-    pickSquigglyBuildings(tile, buildings){
+    pickNaturalBuildings(tile, buildings) {
         const squigglyBuildings = buildings.filter(building => building.name == "small_tall_twirly_future_comet_geo")
         return {
             allowedBuildings: squigglyBuildings,
@@ -70,13 +70,24 @@ class WorldNeighborhoods {
         }
     }
 
-    pickBuildings(tile, buildings){
+    pickIndustrialBuildings(tile, buildings) {
+        
+        const industrialBuildings = buildings.filter(building => building.name == "large_short_low_present_factory")
+        // const industrialBuildings = buildings.filter(building => C.INDUSTRIAL_BUILDINGS.includes(building.name))
+        return {
+            allowedBuildings: industrialBuildings,
+            subdivisions: 3,
+        }
+    }
+
+    pickBuildings(tile, buildings) {
         const pick = {
             "future": this.pickFutureBuildings,
-            "squiggles": this.pickSquigglyBuildings
+            "industrial": this.pickIndustrialBuildings,
+            "squiggles": this.pickNaturalBuildings,
+            
         }[this.category]
         const picked = pick(tile, buildings);
-        // console.log("PICKED", picked);
         return picked;
     }
 }
@@ -129,7 +140,8 @@ export const surface = generateSphereWorldGeometry(
 
 export const neighborhoods = {
     future: new WorldNeighborhoods(surface, "future"),
-    squiggles: new WorldNeighborhoods(surface, "squiggles")
+    squiggles: new WorldNeighborhoods(surface, "squiggles"),
+    industrial: new WorldNeighborhoods(surface, "industrial"),
 }
 
 export function WorldSurface({ geometry, materialName }) {

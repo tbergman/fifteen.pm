@@ -74,9 +74,10 @@ export function generateAsteroidSurfaces(props) {
 }
 
 class AsteroidNeighborhoods {
-    constructor(surface) {
-        this.surface = surface
-        this.numTiles = 1
+    constructor(surface, category) {
+        this.surface = surface;
+        this.category = category;
+        this.numTiles = 1;
         this.maxRadius = C.ASTEROID_MAX_RADIUS * 6
 
     }
@@ -89,7 +90,7 @@ class AsteroidNeighborhoods {
         return centroids;
     }
 
-    pickBuildings(tile, buildings) {
+    pickFutureBuildings(tile, buildings) {
         const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
         return [
             {
@@ -101,6 +102,45 @@ class AsteroidNeighborhoods {
                 subdivisions: 1
             }
         ][THREE.Math.randInt(0, 1)]
+    }
+
+    pickSquiggleBuildings(tile, buildings) {
+        const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
+        return [
+            {
+                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+                subdivisions: 1
+            },
+            {
+                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+                subdivisions: 1
+            }
+        ][THREE.Math.randInt(0, 1)]
+    }
+
+    pickIndustrialBuildings(tile, buildings) {
+        const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
+        return [
+            {
+                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+                subdivisions: 1
+            },
+            {
+                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+                subdivisions: 1
+            }
+        ][THREE.Math.randInt(0, 1)]
+    }
+
+    pickBuildings(tile, buildings) {
+        const pick = {
+            "future": this.pickFutureBuildings,
+            "industrial": this.pickIndustrialBuildings,
+            "squiggles": this.pickSquiggleBuildings,
+
+        }[this.category]
+        const picked = pick(tile, buildings);
+        return picked;
     }
 }
 
@@ -114,7 +154,11 @@ export const surfaces = generateAsteroidSurfaces({
     maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
 })
 
-export const neighborhoods = surfaces.instances.map(surface => new AsteroidNeighborhoods(surface));
+export const neighborhoods = {
+    future: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "future")),
+    squiggles: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "squiggles")),
+    industrial: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "industrial")),
+}
 
 export function AsteroidsSurface({ geometry, materialName }) {
     const { tron, ground29, ornateBrass2, rock19 } = useContext(MaterialsContext);
