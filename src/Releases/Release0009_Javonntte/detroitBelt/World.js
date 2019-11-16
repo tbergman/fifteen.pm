@@ -8,16 +8,11 @@ import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 
 export class WorldNeighborhoods {
-    constructor() {
+    constructor(surface) {
+        this.surface=surface;
         this.count = 100;
         this.numTiles = Math.floor(C.WORLD_RADIUS) * 2
         this.maxRadius = C.WORLD_RADIUS * 6 // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
-        this.surface = generateSphereWorldGeometry(
-            C.WORLD_RADIUS,
-            C.WORLD_SIDES,
-            C.WORLD_TIERS,
-            C.MAX_WORLD_FACE_HEIGHT,
-        )
     }
 
     onPath(centroid) {
@@ -68,7 +63,7 @@ export class WorldNeighborhoods {
 }
 
 
-function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
+export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
     // variate sphere heights
     var vertexIndex;

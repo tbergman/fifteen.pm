@@ -74,25 +74,7 @@ export function generateAsteroidSurfaces(props) {
 }
 
 
-function getAsteroidNeighborhoodCentroids({ tiles, surface }) {
-    const numCentroids = Math.max(0, surface.radius / 2);
-    const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
-    return centroids;
-}
 
-function pickAsteroidBuildings(tile, buildings) {
-    const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
-    return [
-        {
-            allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-            subdivisions: 1
-        },
-        {
-            allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-            subdivisions: 1
-        }
-    ][THREE.Math.randInt(0, 1)]
-}
 
 
 export function generateAsteroidNeighborhoods(surfaces) {
@@ -110,6 +92,37 @@ export function generateAsteroidNeighborhoods(surfaces) {
         });
     })
     return neighborhoods;
+}
+
+export class AsteroidNeighborhoods {
+    constructor(surface){
+        this.surface=surface
+        this.numTiles=1
+        this.maxRadius=C.ASTEROID_MAX_RADIUS * 6
+        
+    }
+
+    rules = () => true
+
+    getNeighborhoodCentroids({ tiles, surface }) {
+        const numCentroids = Math.max(0, surface.radius / 2);
+        const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
+        return centroids;
+    }
+    
+    pickBuildings(tile, buildings) {
+        const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
+        return [
+            {
+                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+                subdivisions: 1
+            },
+            {
+                allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
+                subdivisions: 1
+            }
+        ][THREE.Math.randInt(0, 1)]
+    }
 }
 
 export function AsteroidsSurface({ geometry, materialName }) {

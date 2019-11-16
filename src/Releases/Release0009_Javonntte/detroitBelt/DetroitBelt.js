@@ -4,14 +4,14 @@ import * as THREE from 'three';
 import { randomPointsOnSphere, selectNRandomFromArray } from '../../../Utils/random';
 
 import * as C from '../constants';
-import { AsteroidsSurface, generateAsteroidSurfaces, AsteroidBelt, generateAsteroidNeighborhoods } from './Asteroids';
+import { AsteroidsSurface, generateAsteroidSurfaces, AsteroidNeighborhoods, generateAsteroidNeighborhoods } from './Asteroids';
 // import { BuildingsContext } from './BuildingsContext';
 // import { generateTilesets } from './tiles';
-import { WorldNeighborhoods, WorldSurface } from './World';
+import { WorldNeighborhoods, WorldSurface, generateSphereWorldGeometry } from './World';
 // import Buildings from './Buildings';
 import BuildingInstances from './Buildings';
 
-// TODO having issue getting these values to align with those passed into generateAsteroidNeighborhoods when placing this in its own useMemo, or even the same one.
+// // TODO having issue getting these values to align with those passed into generateAsteroidNeighborhoods when placing this in its own useMemo, or even the same one.
 const asteroidSurfaces = generateAsteroidSurfaces({
     beltRadius: C.ASTEROID_BELT_RADIUS,
     beltCenter: C.ASTEROID_BELT_CENTER,
@@ -19,16 +19,21 @@ const asteroidSurfaces = generateAsteroidSurfaces({
     maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
 })
 
+const worldSurface = generateSphereWorldGeometry(
+    C.WORLD_RADIUS,
+    C.WORLD_SIDES,
+    C.WORLD_TIERS,
+    C.MAX_WORLD_FACE_HEIGHT,
+)
+
 export default function DetroitBelt({ setContentReady, theme }) {
 
-    const worldNeighborhoods = useMemo(() => new WorldNeighborhoods())
+    const worldNeighborhoods = useMemo(() => new WorldNeighborhoods(worldSurface))
 
     const asteroidNeighborhoods = useMemo(() => {
-        if (asteroidSurfaces) return generateAsteroidNeighborhoods(asteroidSurfaces);
-    }, [asteroidSurfaces]);
-
-
-
+        return asteroidSurfaces.instances.map(surface => new AsteroidNeighborhoods(surface))
+    })
+   
     return <>
         <WorldSurface geometry={worldNeighborhoods.surface} materialName={theme.surfaces} />
         <AsteroidsSurface geometry={asteroidSurfaces.geometry} materialName={theme.surfaces} />
