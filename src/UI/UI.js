@@ -27,6 +27,7 @@ export default function UI({
     const [overlayHasBeenClosed, setOverlayHasBeenClosed] = useState(!loadWithOverlay);
     const [firstTrackTriggered, setFirstTrackTriggered] = useState(false);
     const hasTracks = useMemo(() => content.tracks ? true : false);
+    const { playTrack } = hasTracks && usePlayer(content.tracks[0].mediaType); // make this available for pages with tracks
 
     useEffect(() => {
         console.log("OVERLAY is now", overlay)
@@ -37,7 +38,6 @@ export default function UI({
         }
     }, [overlay])
 
-    const { playTrack } = usePlayer(content.tracks[0].mediaType)
     useEffect(() => {
         if (!overlayHasBeenClosed) return;
         toggleInfoIcon(loadWithInfoIcon || overlayHasBeenClosed);

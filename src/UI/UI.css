@@ -193,9 +193,9 @@
   .overlay-header-and-controls {
     max-width: 90%; 
   } 
-  .overlay-content-item.hide-in-mobile {
+  /* .overlay-content-item.hide-in-mobile {
     display: none;
-  }
+  } */
 }
 
 
@@ -209,9 +209,9 @@
     font-size: 14px;
   }
 
-  .overlay-content-item.hide-in-mobile {
+  /* .overlay-content-item.hide-in-mobile {
     display: none;
-  }
+  } */
   /* .overlay-svg svg {
     transform: rotate(180deg) scaleY(3)
   } */
@@ -250,9 +250,9 @@
   .overlay-content {
     align-items: center;
   }
-  .overlay-content-item.hide-in-mobile {
+  /* .overlay-content-item.hide-in-mobile {
     display: none;
-  }
+  } */
   .overlay-header-message {
     font-size: 11px;
     max-height: 400px;
