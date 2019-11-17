@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { VideoPlayerContext } from "../VideoPlayerContext";
-import VideoStreamer from '../../../Utils/Video/VideoStreamer';
+import { loadVideo } from "../../../Utils/Loaders";
 
 const useVideoPlayer = () => {
 
@@ -11,6 +11,14 @@ const useVideoPlayer = () => {
       togglePlay();
     } else {
       state.videoPlayer.pause();
+      state.videoPlayer.mesh = loadVideo({ ...state.tracks[index].meta });
+      state.videoPlayer.media = state.videoPlayer.mesh.userData.media;
+      state.videoPlayer.media.visible = false;
+      state.videoPlayer.media.addEventListener("canplay", () => {
+        state.videoPlayer.media.playsinline = true;
+        state.videoPlayer.media.play();
+        state.videoPlayer.mesh.visible = true;
+      });
       // state.videoPlayer = new Video(state.tracks[index].file);
       state.videoPlayer.play();
       setState(state => ({ ...state, currentTrackIndex: index, isPlaying: true }));
@@ -37,6 +45,7 @@ const useVideoPlayer = () => {
   }
 
   return {
+    videoPlayer: state.videoPlayer,
     playTrack,
     togglePlay,
     currentTrackName: state.currentTrackIndex !== null && state.tracks[state.currentTrackIndex].name,

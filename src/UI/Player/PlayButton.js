@@ -1,10 +1,10 @@
 import React from "react"
 import './Player.css'
-import useAudioPlayer from "./hooks/useAudioPlayer";
+import usePlayer from "./hooks/usePlayer";
 import './PlayButton.css';
 
-export default function PlayButton({ color, text }) {
-    const {isPlaying, togglePlay} = useAudioPlayer();
+export default function PlayButton({ mediaType, color, text }) {
+    const {isPlaying, togglePlay} = usePlayer(mediaType);
     return (
       <div id="play-button-container">
         <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" fill={color}>

@@ -9,6 +9,7 @@ import {
 } from "./UI/Controls/Icons";
 
 import { assetPath } from "./Utils/assets";
+import { multiSourceVideo } from './Utils/Video/paths.js';
 
 export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
   "/1": "#FF69B4",
@@ -143,7 +144,7 @@ export const CONTENT = {
       overlayContent: '#fff',
       overlay: 'rgba(0, 0, 0, 0.5)',
       player: '#fff',
-      onHover: 'rgba(250, 10, 250)', 
+      onHover: 'rgba(250, 10, 250)',
     },
     instructions: [
       {
@@ -287,33 +288,43 @@ export const CONTENT = {
   },
   "/8": {
     artist: "GREEM JELLYFISH",
+    message: "Juicy Tender is an exploration of exodus and urban life. Though we leave the city in search of extraordinary experiences, we sometimes return to loneliness. Ultimately, refuge is not a place but a set of material conditions: Art, Food, Music, Mountain, Ocean, Family, Friend.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/album/juicy-tender",
     tracks: [
       {
-        title: "Juicy Tender",
-        type: "soundcloud",
-        id: "610976673",
-        secretToken: "s-7EwJv",
-        // id: "629673933",
-        // secretToken: "s-Pga8Z"
-      }
+        mediaType: 'video',
+        meta: {
+          type: 'video', // TODO do we need this here as well?
+          mimetype: 'video/mp4',
+          name: 'greem-vid1',
+          sources: multiSourceVideo('/assets/8/videos/jt-final'),
+          // geometry: new THREE.PlaneBufferGeometry(1, 1),
+          position: [0, 0, 0],
+          playbackRate: 1,
+          loop: true,
+          invert: true,
+          volume: .4,
+          muted: false,
+          angle: 0.0,
+        },
+        mesh: undefined,
+      },
     ],
-    theme: {
-      message: "Juicy Tender is an exploration of exodus and urban life. Though we leave the city in search of extraordinary experiences, we sometimes return to loneliness. Ultimately, refuge is not a place but a set of material conditions: Art, Food, Music, Mountain, Ocean, Family, Friend.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/album/juicy-tender",
-      iconColor: '#fff',
-      fillColor: 'rgba(255, 0, 0, 0.5)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [{
-        icon: MouseMove,
-        instructions: "click and drag mouse to look around"
-      },
-      {
-        icon: TwoFingerScroll,
-        instructions: "scroll to zoom"
-      },
-      ]
-    }
+    colors: {
+      logo: '#fff',
+      overlay: 'rgba(255, 0, 0, 0.5)',
+      overlayContent: '#fff',
+      player: 'rgba(255, 0, 0, 0.5)',
+      onHover: 'rgba(255, 0, 0, 0.5)',
+    },
+    instructions: [{
+      icon: MouseMove,
+      text: "click and drag mouse to look around"
+    },
+    {
+      icon: TwoFingerScroll,
+      text: "scroll to zoom"
+    }]
   },
   "/g": {
     artist: "",
