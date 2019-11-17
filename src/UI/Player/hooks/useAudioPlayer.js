@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react';
-import { AudioPlayerContext } from "./AudioPlayerContext";
-import AudioStreamer from '../../Utils/Audio/AudioStreamer'; // TODO haven't touched this in ages...
+import { AudioPlayerContext } from "../AudioPlayerContext";
+import AudioStreamer from '../../../Utils/Audio/AudioStreamer';
 
 const useAudioPlayer = () => {
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import useAudioPlayer from "./hooks";
+import useAudioPlayer from "./hooks/useAudioPlayer";
 import './TrackList.css'
 
 export default function TrackList({ tracks, defaultColor, selectedColor }) {

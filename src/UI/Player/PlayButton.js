@@ -1,6 +1,6 @@
 import React from "react"
 import './Player.css'
-import useAudioPlayer from "./hooks";
+import useAudioPlayer from "./hooks/useAudioPlayer";
 import './PlayButton.css';
 
 export default function PlayButton({ color, text }) {

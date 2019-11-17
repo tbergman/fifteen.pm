@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import useAudioPlayer from "./hooks"
+import useAudioPlayer from "./hooks/useAudioPlayer"
 import PlayButton from "./PlayButton";
 import TrackList from "./TrackList";
 import "./Player.css";

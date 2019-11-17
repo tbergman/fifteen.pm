@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useAudioPlayer from '../../UI/Player/hooks';
+import useAudioPlayer from '../../UI/Player/hooks/useAudioPlayer';
 import '../Release.css';
 import Scene from './Scene';
 

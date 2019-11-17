@@ -3,7 +3,7 @@ import { useFrame, useLoader, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import useAudioPlayer from '../../../UI/Player/hooks';
+import useAudioPlayer from '../../../UI/Player/hooks/useAudioPlayer';
 import { useKeyPress } from '../../../Utils/hooks';
 import * as C from '../constants';
 import Chassis from './Chassis';
