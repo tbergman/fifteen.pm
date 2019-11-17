@@ -13,12 +13,8 @@ export default function Release({ }) {
     const [contentReady, setContentReady] = useState(false);
     const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA["679771262"].theme);
 
-    // useEffect(() => {
-    //     setContent(CONTENT[window.location.pathname])
-    // }, []);
-
     useEffect(() => {
-        if (currentTrackId) setColorTheme(C.TRACK_METADATA[currentTrackId].theme);
+        setColorTheme(C.TRACK_METADATA[currentTrackId].theme);
     }, [currentTrackId])
 
     function onTrackSelect(trackId) {
@@ -31,7 +27,7 @@ export default function Release({ }) {
         content.colors = colorTheme.UIColors;
     }, [colorTheme])
 
-    return <>{content &&
+    return <>{content && colorTheme &&
         <>
             <UI contentReady={contentReady} content={content} />
             <JavonntteCanvas

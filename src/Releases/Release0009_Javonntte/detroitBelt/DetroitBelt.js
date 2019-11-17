@@ -9,7 +9,9 @@ export default function DetroitBelt({ setContentReady, theme }) {
     const [worldReady, setWorldReady] = useState(false);
     const [asteroidsReady, setAsteroidsReady] = useState(false);
 
-    useEffect(() => setThemeName(theme.name), [theme])
+    useEffect(() => {
+        setThemeName(theme.name)
+    }, [theme])
 
     useEffect(() => {
         if (asteroidsReady && worldReady) setContentReady(true);

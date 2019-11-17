@@ -35,7 +35,7 @@ export const CONTENT = {
     purchaseLink: "https://fifteenpm.bandcamp.com/track/wun-4-jas",
     tracks: [
       {
-        title: "Wun 4 Jas",
+        name: "Wun 4 Jas",
         id: "466084773",
         type: "soundcloud"
       }
@@ -233,7 +233,7 @@ export const CONTENT = {
     purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
     tracks: [
       {
-        title: "GOLDEN GROOVE",
+        name: "GOLDEN GROOVE",
         id: "565459281",
         type: "soundcloud"
       }
