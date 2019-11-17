@@ -1,20 +1,18 @@
+import debounce from "lodash/debounce";
 import React, { Component, Fragment } from "react";
 import * as THREE from "three";
-import { isMobile } from "../../Utils/BrowserDetection";
-import debounce from "lodash/debounce";
 import GLTFLoader from "three-gltf-loader";
+import { isMobile } from "../../Utils/BrowserDetection";
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
-import { loadVideo, loadImage, loadGLTF } from "../../Utils/Loaders";
+import { loadGLTF, loadImage, loadVideo } from "../../Utils/Loaders";
 import * as C from "./constants";
 // import "../Release.css";
 import "./scene.css";
-import { CONTENT } from "../../Content";
 import {
-  assetPath4Images,
+assetPath4Images,
   // sleep,
   keyPressIsFirstPersonControls
 } from "./utils";
-import LegacyMenu from "../../UI/LegacyMenu/LegacyMenu";
 
 export default class Scene extends Component {
   constructor() {
@@ -67,7 +65,6 @@ export default class Scene extends Component {
     // hasEntered: false,
     chillinStart: new Date(),
     hasActivatedFirstPersonControls: false,
-    curTrackId: CONTENT[window.location.pathname].tracks[0].id
   };
 
   componentDidMount() {

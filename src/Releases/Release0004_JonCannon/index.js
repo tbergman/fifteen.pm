@@ -12,7 +12,6 @@ export default function Release0004_JonCannon({ }) {
     setHasEnteredWorld(true)
   }
 
-
   return (
     <MusicPlayerProvider tracks={content.tracks}>
       <UI content={content} onOverlayHasBeenClosed={onOverlayHasBeenClosed} />

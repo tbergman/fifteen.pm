@@ -26,12 +26,6 @@ export default function UI({
     const [overlayHasBeenClosed, setOverlayHasBeenClosed] = useState(!loadWithOverlay);
     const hasTracks = useMemo(() => content.tracks ? true : false);
 
-    const {initFirstTrack} = useMusicPlayer();
-
-    useEffect(() => {
-        initFirstTrack();
-    }, [])
-
     useEffect(() => {
         if (!overlay && !overlayHasBeenClosed) {
             setOverlayHasBeenClosed(true);
