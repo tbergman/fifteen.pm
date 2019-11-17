@@ -1,15 +1,19 @@
 
-import React, { useContext } from 'react';
+import React, { useMemo, useContext } from 'react';
 import * as THREE from 'three';
 import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
 import { randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
 import * as C from '../constants';
+import { FUTURE, HELL, DAY, SUNSET } from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
+import BuildingInstances from './BuildingInstances';
+import { generateTilesets } from './tiles';
+import { BuildingsContext } from './BuildingsContext';
 
 // TODO buildings should be grabbed in the provider since they are different
 // than world geoms so it's the same number of total instances no matter how i slice it and there's no need to try and combine world vs asteroid instances
 // then this can become a component again
-export function generateAsteroidSurfaces(props) {
+function generateAsteroidSurfaces(props) {
     const surfaces = {
         geometry: undefined,
         instances: [],
@@ -74,12 +78,11 @@ export function generateAsteroidSurfaces(props) {
 }
 
 class AsteroidNeighborhoods {
-    constructor(surface, category) {
+    constructor(surface, theme) {
         this.surface = surface;
-        this.category = category;
+        this.theme = theme;
         this.numTiles = 1;
         this.maxRadius = C.ASTEROID_MAX_RADIUS * 6
-
     }
 
     rules = () => true
@@ -90,79 +93,28 @@ class AsteroidNeighborhoods {
         return centroids;
     }
 
-    pickFutureBuildings(tile, buildings) {
-        const presentBuildings = buildings.filter(building => building.name === "large_tall_logo_present_logo");
-        return {
-            allowedBuildings: presentBuildings,
-            subdivisions: 1
-        }
-    }
-
-    pickSquiggleBuildings(tile, buildings) {
-        const presentBuildings = buildings.filter(building => building.name === "large_tall_tower_present_penobscot");
-        return {
-            allowedBuildings: presentBuildings,
-            subdivisions: 1
-        }
-    }
-
-    pickIndustrialBuildings(tile, buildings) {
-        const presentBuildings = buildings.filter(building => building.name == "large_short_low_present_boxy");
-        return {
-            allowedBuildings: presentBuildings,
-            subdivisions: 1
-        }
-    }
-
-    pickSunsetBuildings(tile, buildings) {
-        const presentBuildings = buildings.filter(building => building.name == "large_tall_tower_present_bookcadillachotel");
-        return {
-            allowedBuildings: presentBuildings,
-            subdivisions: 1
-        }
-    }
 
     pickBuildings(tile, buildings) {
-        const pick = {
-            "future": this.pickFutureBuildings,
-            "industrial": this.pickIndustrialBuildings,
-            "squiggles": this.pickSquiggleBuildings,
-            "sunset": this.pickSunsetBuildings,
-
-        }[this.category]
-        const picked = pick(tile, buildings);
-        return picked;
+        return {
+            allowedBuildings: buildings.filter(building => {
+                return C.ASTEROID_BUILDING_CATEGORIES[this.theme].includes(building.name)
+            }),
+            subdivisions: 1,
+        }
     }
 }
 
-// TODO having issue getting these values to align with those passed into
-// generateAsteroidNeighborhoods when placing this in its own useMemo,
-// or even the same one.
-export const surfaces = generateAsteroidSurfaces({
-    beltRadius: C.ASTEROID_BELT_RADIUS,
-    beltCenter: C.ASTEROID_BELT_CENTER,
-    numAsteroids: C.NUM_ASTEROIDS,
-    maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
-})
 
-export const neighborhoods = {
-    future: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "future")),
-    squiggles: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "squiggles")),
-    industrial: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "industrial")),
-    sunset: surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, "sunset")),
-}
 
-export function AsteroidsSurface({ geometry, materialName }) {
+export function AsteroidsSurface({ geometry, themeName }) {
     const { tron, ground29, ornateBrass2, rock19, scuffedPlasticBlack } = useContext(MaterialsContext);
 
-    function exteriorMaterial() {
-        return {
-            "ornateBrass2": ornateBrass2,
-            "ground29": ground29,
-            "rock19": rock19,
-            "scuffedPlasticBlack": scuffedPlasticBlack,
-        }[materialName]
-    }
+    const exteriorMaterial = useMemo(() => ({
+        hell: ornateBrass2,
+        night: ground29,
+        day: rock19,
+        sunset: scuffedPlasticBlack,
+    }))
 
     return <>
         <group>
@@ -172,7 +124,7 @@ export function AsteroidsSurface({ geometry, materialName }) {
             />
             <mesh
                 geometry={geometry}
-                material={exteriorMaterial()}
+                material={exteriorMaterial[themeName]}
                 receiveShadow
             />
         </group>
@@ -180,3 +132,36 @@ export function AsteroidsSurface({ geometry, materialName }) {
     </>
 }
 
+export function Asteroids({ themeName }) {
+    const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
+    // TODO having issue getting these values to align with those passed into
+    // generateAsteroidNeighborhoods when placing this in its own useMemo,
+    // or even the same one.
+    const [surfaces, meshes] = useMemo(() => {
+        if (!buildingsLoaded) return [];
+        const _surfaces = generateAsteroidSurfaces({
+            beltRadius: C.ASTEROID_BELT_RADIUS,
+            beltCenter: C.ASTEROID_BELT_CENTER,
+            numAsteroids: C.NUM_ASTEROIDS,
+            maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
+        })
+        const _meshes = {}
+        C.THEME_NAMES.forEach(themeName => {
+            const neighborhoods = _surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, themeName))
+
+            _meshes[themeName] = generateTilesets({ buildings, neighborhoods });
+        })
+        return [_surfaces, _meshes];
+    }, [buildingsLoaded])
+
+    return (
+        <>
+            {meshes &&
+                <>
+                    <AsteroidsSurface geometry={surfaces.geometry} themeName={themeName} />
+                    <BuildingInstances themeName={themeName} meshes={meshes} />
+                </>
+            }
+        </>
+    )
+}

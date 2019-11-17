@@ -58,18 +58,25 @@ export const BUILDING_HEIGHT_BUCKETS = [
     SHORT,
     TALL,
 ]
-export const INDUSTRIAL_BUILDINGS = [
-    "large_short_low_present_factory",
-    "large_short_low_present_boxy",
-]
-export const SUNSET_BUILDINGS = [
-    "medium_tall_tower_present_talltower"
-]
+// Theme names
+export const NIGHT = "night"
+export const SUNSET = "sunset"
+export const HELL = "hell"
+export const DAY = "day"
+
+export const ASTEROID_BUILDING_CATEGORIES = {
+    night: ["medium_tall_tower_present_talltower", "large_tall_logo_present_logo"],
+    sunset: ["medium_tall_tower_present_talltower"],
+    day: ["medium_tall_tower_present_talltower"],
+    hell: ["medium_tall_tower_present_talltower"],
+}
+
 // TRACK INFO
 export const TRACK_THEMES = [
     // index matches track list order
     // NIGHT
     {
+        name: NIGHT,
         UIColors: CONTENT["/9"].colors,
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
         background: new THREE.Color(0x000000),
@@ -81,6 +88,7 @@ export const TRACK_THEMES = [
 
     // SUNSET
     {
+        name: SUNSET,
         UIColors: {
             logo: '#f00',
             overlay: '#f00',
@@ -97,6 +105,7 @@ export const TRACK_THEMES = [
     },
     // HELL
     {
+        name: HELL,
         UIColors: {
             logo: '#0f0',
             overlay: '#0f0',
@@ -113,6 +122,7 @@ export const TRACK_THEMES = [
     },
     // DAY
     {
+        name: DAY,
         UIColors: {
             logo: '#0f0',
             overlay: '#0f0',
@@ -128,6 +138,8 @@ export const TRACK_THEMES = [
         world: "squiggles",
     },
 ]
+
+export const THEME_NAMES = TRACK_THEMES.map(theme => theme.name);
 
 export const TRACK_METADATA = (() => {
     const lookup = {};
