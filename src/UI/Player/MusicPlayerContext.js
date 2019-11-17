@@ -19,6 +19,7 @@ const MusicPlayerProvider = ({tracks, ...props}) => {
     audioPlayer: new Audio(loadedTracks[0].file),
     tracks: loadedTracks,
     currentTrackIndex: 0,
+    currentTrackName: loadedTracks[0].name,
     isPlaying: false,
   });
   

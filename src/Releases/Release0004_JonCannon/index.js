@@ -8,15 +8,10 @@ export default function Release0004_JonCannon({ }) {
   const content = useMemo(() => CONTENT[window.location.pathname]);
   const [hasEnteredWorld, setHasEnteredWorld] = useState(false);
 
-  function onOverlayHasBeenClosed(){
-    setHasEnteredWorld(true)
-  }
-
   return (
     <MusicPlayerProvider tracks={content.tracks}>
-      <UI content={content} onOverlayHasBeenClosed={onOverlayHasBeenClosed} />
+      <UI content={content} onOverlayHasBeenClosed={() => setHasEnteredWorld(true)} />
       <Canvas hasEnteredWorld={hasEnteredWorld} />
     </MusicPlayerProvider>
   );
 }
-

@@ -39,6 +39,7 @@ const useMusicPlayer = () => {
   }
 
   return {
+    // state, // passing entire state for class-component scenes
     playTrack,
     togglePlay,
     currentTrackName: state.currentTrackIndex !== null && state.tracks[state.currentTrackIndex].name,

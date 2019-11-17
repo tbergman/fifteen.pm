@@ -123,17 +123,17 @@ export const CONTENT = {
     purchaseLink: "https://fifteenpm.bandcamp.com/album/ep-1",
     tracks: [
       {
-        title: "Nothing (Blood)",
+        name: "Nothing (Blood)",
         id: "507660189",
         type: "soundcloud"
       },
       {
-        title: "Miracle Center",
+        name: "Miracle Center",
         id: "513518607",
         type: "soundcloud"
       },
       {
-        title: "Finesse",
+        name: "Finesse",
         id: "513518595",
         type: "soundcloud"
       }
@@ -142,8 +142,8 @@ export const CONTENT = {
       logo: '#fff',
       overlayContent: '#fff',
       overlay: 'rgba(0, 0, 0, 0.5)',
-      player: 'rgba(0, 0, 0, 0.5)',
-      onHover: '#fff', 
+      player: '#fff',
+      onHover: 'rgba(250, 10, 250)', 
     },
     instructions: [
       {
