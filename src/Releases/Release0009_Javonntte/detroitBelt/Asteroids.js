@@ -1,14 +1,13 @@
 
-import React, { useMemo, useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import * as THREE from 'three';
 import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
 import { randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
 import * as C from '../constants';
-import { FUTURE, HELL, DAY, SUNSET } from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 import BuildingInstances from './BuildingInstances';
-import { generateTilesets } from './tiles';
 import { BuildingsContext } from './BuildingsContext';
+import { generateTilesets } from './tiles';
 
 // TODO buildings should be grabbed in the provider since they are different
 // than world geoms so it's the same number of total instances no matter how i slice it and there's no need to try and combine world vs asteroid instances
@@ -139,18 +138,21 @@ export function Asteroids({ themeName }) {
     // or even the same one.
     const [surfaces, meshes] = useMemo(() => {
         if (!buildingsLoaded) return [];
+
         const _surfaces = generateAsteroidSurfaces({
             beltRadius: C.ASTEROID_BELT_RADIUS,
             beltCenter: C.ASTEROID_BELT_CENTER,
             numAsteroids: C.NUM_ASTEROIDS,
             maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
         })
+
         const _meshes = {}
         C.THEME_NAMES.forEach(themeName => {
             const neighborhoods = _surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, themeName))
 
             _meshes[themeName] = generateTilesets({ buildings, neighborhoods });
         })
+
         return [_surfaces, _meshes];
     }, [buildingsLoaded])
 

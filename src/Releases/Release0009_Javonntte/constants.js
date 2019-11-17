@@ -71,6 +71,38 @@ export const ASTEROID_BUILDING_CATEGORIES = {
     hell: ["medium_tall_tower_present_talltower"],
 }
 
+export const WORLD_BUILDING_CATEGORIES = {
+    night: [
+        "medium_short_diamond_future_diamondhull_geo001",
+        "medium_tall_diamond_future_diamondhull_geo",
+        "medium_tall_diamond_future_disco1",
+        "medium_tall_diamond_future_shinyhull1",
+        "medium_tall_diamond_future_unlithull_geo",
+        "medium_tall_diamond_future_unlithull_geo001",
+        "medium_tall_ribbony_future_celvinyl_geo003",
+        "medium_tall_ribbony_future_celvinyl_geo002",
+        "medium_tall_tower_future_needle7",
+        "small_short_twirly_future_disco1_small_cactus",
+        "small_short_twirly_future_disco1_small_worm",
+        "small_tall_diamond_future_diamondhull_geo002",
+        "small_tall_diamond_future_toongeo1",
+        "small_tall_tower_future_needle3",
+        "small_tall_tower_future_needle4",
+        "small_tall_tower_future_needle6",
+        "small_tall_tower_future_lightwire1",
+        "small_tall_twirly_future_comet_geo",
+    ],
+    sunset: [
+        "medium_tall_tower_present_talltower",
+    ],
+    day: [
+        "small_tall_twirly_future_comet_geo"
+    ],
+    hell: [
+        "large_short_low_present_factory"
+    ]
+}
+
 // TRACK INFO
 export const TRACK_THEMES = [
     // index matches track list order

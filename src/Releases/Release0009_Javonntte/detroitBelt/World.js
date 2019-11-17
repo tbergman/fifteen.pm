@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
-import { useResource } from 'react-three-fiber';
+import React, { useContext, useMemo } from 'react';
 import * as THREE from 'three';
-import { isMobile } from '../../../Utils/BrowserDetection';
 import { randomPointsOnSphere } from '../../../Utils/random';
-import { generateTiles } from '../../../Utils/SphereTiles';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
+import BuildingInstances from './BuildingInstances';
+import { BuildingsContext } from './BuildingsContext';
+import {generateTilesets} from './tiles';
 
 class WorldNeighborhoods {
-    constructor(surface, category) {
+    constructor(surface, theme) {
         this.surface = surface;
-        this.category = category;
+        this.theme = theme;
         this.count = 100;
         this.numTiles = Math.floor(C.WORLD_RADIUS) * 2
         this.maxRadius = C.WORLD_RADIUS * 6 // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
@@ -42,62 +42,15 @@ class WorldNeighborhoods {
         return centroids;
     }
 
-    pickFutureBuildings(tile, buildings) {
-        const futureBuildings = buildings.filter(building => building.era == C.FUTURE);
-        const area = tile.triangle.getArea();
-        if (area > 14) {
-            return {
-                allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
-                subdivisions: 3
-            }
-        } else {
-            return [{
-                allowedBuildings: futureBuildings.filter(building => building.footprint === C.SMALL),
-                subdivisions: 6
-            },
-            {
-                allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
-                subdivisions: 1
-            }][THREE.Math.randInt(0, 1)]
-        }
-    }
-
-    pickSunsetBuildings(tile, buildings){
-        
-        const sunsetBuildings = buildings.filter(building => C.SUNSET_BUILDINGS.includes(building.name))
-        return {
-            allowedBuildings: sunsetBuildings,
-            subdivisions: 6,
-        }
-    }
-
-    pickNaturalBuildings(tile, buildings) {
-        const squigglyBuildings = buildings.filter(building => building.name == "small_tall_twirly_future_comet_geo")
-        return {
-            allowedBuildings: squigglyBuildings,
-            subdivisions: 6,
-        }
-    }
-
-    pickIndustrialBuildings(tile, buildings) {
-        const industrialBuildings = buildings.filter(building => building.name == "large_short_low_present_factory")
-        // const industrialBuildings = buildings.filter(building => C.INDUSTRIAL_BUILDINGS.includes(building.name))
-        return {
-            allowedBuildings: industrialBuildings,
-            subdivisions: 3,
-        }
-    }
-
     pickBuildings(tile, buildings) {
-        const pick = {
-            "future": this.pickFutureBuildings,
-            "industrial": this.pickIndustrialBuildings,
-            "squiggles": this.pickNaturalBuildings,
-            "sunset": this.pickSunsetBuildings,
-            
-        }[this.category]
-        const picked = pick(tile, buildings);
-        return picked;
+        const area = tile.triangle.getArea();
+        const subdivisions = area > 14 ? 3 : 6;
+        return {
+            allowedBuildings: buildings.filter(building => {
+                return C.WORLD_BUILDING_CATEGORIES[this.theme].includes(building.name)
+            }),
+            subdivisions: subdivisions,
+        }
     }
 }
 
@@ -140,31 +93,16 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     return geometry;
 }
 
-export const surface = generateSphereWorldGeometry(
-    C.WORLD_RADIUS,
-    C.WORLD_SIDES,
-    C.WORLD_TIERS,
-    C.MAX_WORLD_FACE_HEIGHT,
-)
+export function WorldSurface({ geometry, themeName }) {
 
-export const neighborhoods = {
-    future: new WorldNeighborhoods(surface, "future"),
-    squiggles: new WorldNeighborhoods(surface, "squiggles"),
-    industrial: new WorldNeighborhoods(surface, "industrial"),
-    sunset: new WorldNeighborhoods(surface, "sunset"),
-}
+    const { tron, ground29, ornateBrass2Tiledx10, facade12, rock19 } = useContext(MaterialsContext);
 
-export function WorldSurface({ geometry, materialName }) {
-
-    const { tron, ground29, ornateBrass2Tiledx10, scuffedPlasticBlack, tiles60, facade12, rock19 } = useContext(MaterialsContext);
-    function exteriorMaterial() {
-        return {
-            "ornateBrass2": ornateBrass2Tiledx10,
-            "ground29": ground29,
-            "rock19": rock19,
-            "scuffedPlasticBlack": facade12,
-        }[materialName]
-    }
+    const exteriorMaterial = useMemo(() => ({
+        hell: ornateBrass2Tiledx10,
+        night: ground29,
+        day: rock19,
+        sunset: facade12,
+    }))
     return <>
         <group>
             <mesh
@@ -173,10 +111,40 @@ export function WorldSurface({ geometry, materialName }) {
             />
             <mesh
                 geometry={geometry}
-                material={exteriorMaterial()}
+                material={exteriorMaterial[themeName]}
                 receiveShadow
             />
         </group>
     </>
 }
 
+export function World({ themeName }) {
+    const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
+
+    const [surface, meshes] = useMemo(() => {
+        if (!buildingsLoaded) return [];
+        const _surface = generateSphereWorldGeometry(
+            C.WORLD_RADIUS,
+            C.WORLD_SIDES,
+            C.WORLD_TIERS,
+            C.MAX_WORLD_FACE_HEIGHT,
+        )
+        const _meshes = {}
+        C.THEME_NAMES.forEach(themeName => {
+            const _neighborhoods = new WorldNeighborhoods(_surface, themeName);
+            _meshes[themeName] = generateTilesets({ buildings, neighborhoods: [_neighborhoods] });
+        })
+        return [_surface, _meshes]
+    }, [buildingsLoaded]);
+
+    return (
+        <>
+            {meshes &&
+                <>
+                    <WorldSurface geometry={surface} themeName={themeName} />
+                    <BuildingInstances meshes={meshes} themeName={themeName} />
+                </>
+            }
+        </>
+    )
+}
