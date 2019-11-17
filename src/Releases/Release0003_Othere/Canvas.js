@@ -5,7 +5,7 @@ import Scene from './Scene';
 
 
 export default function Canvas({ }) {
-    const { isPlaying, audioStream, currentTime } = useMusicPlayer();
+    const { isPlaying, audioStream, currentTime, audioPlayer } = useMusicPlayer();
     const [audioAttributes, setAudioAttributes] = useState();
 
     useEffect(() => {
@@ -35,7 +35,7 @@ export default function Canvas({ }) {
 
     return <Scene
         isPlaying={isPlaying}
-        currentTrackTime={currentTime}
+        audioPlayer={audioPlayer}
         audioStream={audioStream}
         audioAttributes={audioAttributes}
     />

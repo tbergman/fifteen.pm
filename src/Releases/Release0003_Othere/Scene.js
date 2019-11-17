@@ -97,7 +97,6 @@ export default class Scene extends PureComponent {
     }
 
     componentDidMount() {
-        console.log('on mount', this.props);
         window.addEventListener("resize", this.onWindowResize, false);
         window.addEventListener("mousemove", this.onMouseMove, false);
         window.addEventListener("touchstart", this.onTouch, false);
@@ -546,11 +545,10 @@ export default class Scene extends PureComponent {
 
     // This is called in the render loop
     renderOrbs = () => {
-        const { currentTime, audioStream, audioAttributes } = this.props;
-        // let currentTime = this.audioElement.currentTime;
-        this.renderByTrackSection(currentTime);
+        const { audioStream, audioAttributes, audioPlayer } = this.props;
+        this.renderByTrackSection(audioPlayer.currentTime);
         if (!audioStream || audioStream.deactivated || !audioAttributes) {
-            this.renderOrbsSansAnalyser(currentTime);
+            this.renderOrbsSansAnalyser(audioPlayer.currentTime);
         } else {
             this.renderOrbsWithAnalyser();
         }
