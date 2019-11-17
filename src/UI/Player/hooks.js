@@ -3,8 +3,19 @@ import { MusicPlayerContext } from "./MusicPlayerContext";
 import AudioStreamer from '../../Utils/Audio/AudioStreamer'; // TODO haven't touched this in ages...
 
 const useMusicPlayer = () => {
-  
+
   const [state, setState] = useContext(MusicPlayerContext);
+  
+  // useEffect(() => {
+  //   if (!("ontouchstart" in document.documentElement)) {
+  //     document.documentElement.className += "no-touch";
+  //   }
+  // }, [])
+
+  function initFirstTrack(){
+    state.audioPlayer = new Audio(state.tracks[0].file); 
+  }
+
 
   function playTrack(index) {
     if (index === state.currentTrackIndex) {
@@ -41,6 +52,7 @@ const useMusicPlayer = () => {
   return {
     playTrack,
     togglePlay,
+    initFirstTrack: initFirstTrack,
     currentTrackName: state.currentTrackIndex !== null && state.tracks[state.currentTrackIndex].name,
     currentTrackId: state.currentTrackIndex !== null && state.tracks[state.currentTrackIndex].id,
     trackList: state.tracks,

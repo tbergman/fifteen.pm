@@ -16,11 +16,12 @@ const MusicPlayerProvider = ({tracks, ...props}) => {
     })
   })
   const [state, setState] = useState({
-    audioPlayer: new Audio(),
+    audioPlayer: new Audio(loadedTracks[0].file),
     tracks: loadedTracks,
-    currentTrackIndex: null,
+    currentTrackIndex: 0,
     isPlaying: false,
   });
+  
   return (
     <MusicPlayerContext.Provider value={[state, setState]}>
       {props.children}

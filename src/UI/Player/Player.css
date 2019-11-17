@@ -9,6 +9,16 @@
     margin-right: 20px;
 }
 
+.no-touch #playlist li:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.no-touch .button:hover {
+    opacity: 1;
+    border-color: transparent transparent transparent #FFFFFF;
+}
+
 @media screen and (max-width: 28em) {
     #play-button-container {
         top: -10px;
