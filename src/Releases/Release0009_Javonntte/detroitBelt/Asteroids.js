@@ -22,7 +22,7 @@ function generateAsteroidSurfaces(props) {
 
     function _generateAsteroidCentroids({ beltRadius, numAsteroids }) {
         const centroids = [];
-        const distBetweenRings = 4;
+        const distBetweenRings = 8;
         const closestRingRadius = C.WORLD_RADIUS + 5;
         let curRingRadius = closestRingRadius;
         const satelliteSlots = 20; // potential locations on ring for satellite

@@ -123,17 +123,20 @@ export function World({ themeName, setReady }) {
 
     const [surface, meshes] = useMemo(() => {
         if (!buildingsLoaded) return [];
+       
         const _surface = generateSphereWorldGeometry(
             C.WORLD_RADIUS,
             C.WORLD_SIDES,
             C.WORLD_TIERS,
             C.MAX_WORLD_FACE_HEIGHT,
         )
+        
         const _meshes = {}
         C.THEME_NAMES.forEach(themeName => {
             const _neighborhoods = new WorldNeighborhoods(_surface, themeName);
             _meshes[themeName] = generateTilesets({ buildings, neighborhoods: [_neighborhoods] });
         })
+        
         return [_surface, _meshes]
     }, [buildingsLoaded]);
 
