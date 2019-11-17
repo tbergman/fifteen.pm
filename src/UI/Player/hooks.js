@@ -1,10 +1,10 @@
 import { useContext, useEffect } from 'react';
-import { MusicPlayerContext } from "./MusicPlayerContext";
+import { AudioPlayerContext } from "./AudioPlayerContext";
 import AudioStreamer from '../../Utils/Audio/AudioStreamer'; // TODO haven't touched this in ages...
 
-const useMusicPlayer = () => {
+const useAudioPlayer = () => {
 
-  const [state, setState] = useContext(MusicPlayerContext);
+  const [state, setState] = useContext(AudioPlayerContext);
 
   function playTrack(index) {
     if (index === state.currentTrackIndex) {
@@ -39,7 +39,6 @@ const useMusicPlayer = () => {
   }
 
   return {
-    // state, // passing entire state for class-component scenes
     playTrack,
     togglePlay,
     currentTrackName: state.currentTrackIndex !== null && state.tracks[state.currentTrackIndex].name,
@@ -55,4 +54,4 @@ const useMusicPlayer = () => {
   }
 };
 
-export default useMusicPlayer;
+export default useAudioPlayer;

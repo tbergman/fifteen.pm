@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CONTENT } from '../../Content';
-import useMusicPlayer from '../../UI/Player/hooks';
+import useAudioPlayer from '../../UI/Player/hooks';
 import UI from '../../UI/UI';
 import JavonntteCanvas from './Canvas';
 import * as C from './constants';
@@ -8,7 +8,7 @@ import { cloneDeep } from 'lodash';
 
 
 export default function Release({ }) {
-    const { playTrack, currentTrackId } = useMusicPlayer();
+    const { playTrack, currentTrackId } = useAudioPlayer();
     const [content, setContent] = useState(cloneDeep(CONTENT[window.location.pathname]));
     const [contentReady, setContentReady] = useState(false);
     const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA["679771262"].theme);

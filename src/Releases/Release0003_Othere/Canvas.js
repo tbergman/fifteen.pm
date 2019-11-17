@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import useMusicPlayer from '../../UI/Player/hooks';
+import useAudioPlayer from '../../UI/Player/hooks';
 import '../Release.css';
 import Scene from './Scene';
 
 
 export default function Canvas({ }) {
-    const { isPlaying, audioStream, currentTime, audioPlayer } = useMusicPlayer();
+    const { isPlaying, audioStream, currentTime, audioPlayer } = useAudioPlayer();
     const [audioAttributes, setAudioAttributes] = useState();
 
     useEffect(() => {

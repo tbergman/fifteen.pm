@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import useMusicPlayer from "./hooks";
+import useAudioPlayer from "./hooks";
 import './TrackList.css'
 
 export default function TrackList({ tracks, defaultColor, selectedColor }) {
-  const { currentTrackName, playTrack } = useMusicPlayer();
+  const { currentTrackName, playTrack } = useAudioPlayer();
 
   return (tracks.length > 1 ?
     <div id="tracklist">

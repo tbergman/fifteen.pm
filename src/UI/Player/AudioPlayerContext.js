@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { formatSoundcloudSrc } from "../../Utils/Audio/SoundcloudUtils"
 
-const MusicPlayerContext = React.createContext([{}, () => {}]);
+const AudioPlayerContext = React.createContext([{}, () => {}]);
 
-const MusicPlayerProvider = ({tracks, ...props}) => {
+const AudioPlayerProvider = ({tracks, ...props}) => {
   const loadedTracks = useMemo(() => {
     return tracks.map(track => {
       return {
@@ -24,10 +24,10 @@ const MusicPlayerProvider = ({tracks, ...props}) => {
   });
   
   return (
-    <MusicPlayerContext.Provider value={[state, setState]}>
+    <AudioPlayerContext.Provider value={[state, setState]}>
       {props.children}
-    </MusicPlayerContext.Provider>
+    </AudioPlayerContext.Provider>
   );
 };
 
-export { MusicPlayerContext, MusicPlayerProvider };
+export { AudioPlayerContext, AudioPlayerProvider };

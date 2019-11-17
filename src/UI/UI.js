@@ -5,7 +5,7 @@ import Navigation from './Navigation';
 import Overlay from './Overlay/Overlay';
 import Player from './Player/Player';
 import './UI.css';
-import useMusicPlayer from './Player/hooks';
+import useAudioPlayer from './Player/hooks';
 
 
 export default function UI({

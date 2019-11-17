@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { CONTENT } from "../../Content";
 import UI from '../../UI/UI';
-import { MusicPlayerProvider } from '../../UI/Player/MusicPlayerContext';
+import { AudioPlayerProvider } from '../../UI/Player/AudioPlayerContext';
 import Canvas from './Canvas';
 
 export default function Release0007_JonFay({ }) {
@@ -9,10 +9,10 @@ export default function Release0007_JonFay({ }) {
   const [contentReady, setContentReady] = useState(false);
 
   return (
-    <MusicPlayerProvider tracks={content.tracks}>
+    <AudioPlayerProvider tracks={content.tracks}>
       <UI content={content} contentReady={contentReady} />
       <Canvas contentReady={contentReady} onContentReady={() => setContentReady(true) } />
-    </MusicPlayerProvider>
+    </AudioPlayerProvider>
   );
 }
 

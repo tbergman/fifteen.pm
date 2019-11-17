@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { CONTENT } from "../../Content";
 import UI from '../../UI/UI';
-import { MusicPlayerProvider } from '../../UI/Player/MusicPlayerContext';
+import { AudioPlayerProvider } from '../../UI/Player/AudioPlayerContext';
 import Canvas from './Canvas';
 
 export default function Release0004_JonCannon({ }) {
@@ -9,9 +9,9 @@ export default function Release0004_JonCannon({ }) {
   const [hasEnteredWorld, setHasEnteredWorld] = useState(false);
 
   return (
-    <MusicPlayerProvider tracks={content.tracks}>
+    <AudioPlayerProvider tracks={content.tracks}>
       <UI content={content} onOverlayHasBeenClosed={() => setHasEnteredWorld(true)} />
       <Canvas hasEnteredWorld={hasEnteredWorld} />
-    </MusicPlayerProvider>
+    </AudioPlayerProvider>
   );
 }

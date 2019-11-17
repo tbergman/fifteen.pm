@@ -1,6 +1,6 @@
 import React from 'react';
 import { Canvas } from 'react-three-fiber';
-import { MusicPlayerContext } from '../../UI/Player/MusicPlayerContext';
+import { AudioPlayerContext } from '../../UI/Player/AudioPlayerContext';
 import { Scene } from './Scene';
 
 export default function JavonntteCanvas({ setContentReady, colorTheme, onThemeSelect }) {
@@ -10,7 +10,7 @@ export default function JavonntteCanvas({ setContentReady, colorTheme, onThemeSe
         // There's more than one way to solve this and some room for clean-up but this does the job.
         // https://github.com/konvajs/react-konva/issues/188#issuecomment-478302062
         // https://github.com/react-spring/react-three-fiber/issues/114
-        <MusicPlayerContext.Consumer>
+        <AudioPlayerContext.Consumer>
             {
                 value => (
                     <Canvas
@@ -24,16 +24,16 @@ export default function JavonntteCanvas({ setContentReady, colorTheme, onThemeSe
                             // gl.setPixelRatio(window.devicePixelRatio * 1.5);
                         }}
                     >
-                        <MusicPlayerContext.Provider value={value}>
+                        <AudioPlayerContext.Provider value={value}>
                             <Scene
                                 setContentReady={setContentReady}
                                 colorTheme={colorTheme}
                                 onThemeSelect={onThemeSelect}
                             />
-                        </MusicPlayerContext.Provider>
+                        </AudioPlayerContext.Provider>
                     </Canvas>
                 )}
-        </MusicPlayerContext.Consumer>
+        </AudioPlayerContext.Consumer>
     )
 }
 

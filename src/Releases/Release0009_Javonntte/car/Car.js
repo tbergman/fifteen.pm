@@ -3,7 +3,7 @@ import { useFrame, useLoader, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import useMusicPlayer from '../../../UI/Player/hooks';
+import useAudioPlayer from '../../../UI/Player/hooks';
 import { useKeyPress } from '../../../Utils/hooks';
 import * as C from '../constants';
 import Chassis from './Chassis';
@@ -40,7 +40,7 @@ function Car({
     const delta = useRef();
     const speed = useRef();
     // using a filter for left and right arrow press
-    const { audioStream } = useMusicPlayer();
+    const { audioStream } = useAudioPlayer();
 
     useEffect(() => {
         if (!speed.current) speed.current = 20;
