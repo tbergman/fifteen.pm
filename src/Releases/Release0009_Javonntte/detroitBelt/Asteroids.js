@@ -1,5 +1,5 @@
 
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
 import { randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
@@ -131,7 +131,7 @@ export function AsteroidsSurface({ geometry, themeName }) {
     </>
 }
 
-export function Asteroids({ themeName }) {
+export function Asteroids({ themeName, setReady }) {
     const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
     // TODO having issue getting these values to align with those passed into
     // generateAsteroidNeighborhoods when placing this in its own useMemo,
@@ -155,6 +155,10 @@ export function Asteroids({ themeName }) {
 
         return [_surfaces, _meshes];
     }, [buildingsLoaded])
+
+    useEffect(() => {
+        if (meshes) setReady(true);
+    }, [meshes])
 
     return (
         <>

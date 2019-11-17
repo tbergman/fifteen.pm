@@ -1,11 +1,11 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
 import { randomPointsOnSphere } from '../../../Utils/random';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 import BuildingInstances from './BuildingInstances';
 import { BuildingsContext } from './BuildingsContext';
-import {generateTilesets} from './tiles';
+import { generateTilesets } from './tiles';
 
 class WorldNeighborhoods {
     constructor(surface, theme) {
@@ -118,7 +118,7 @@ export function WorldSurface({ geometry, themeName }) {
     </>
 }
 
-export function World({ themeName }) {
+export function World({ themeName, setReady }) {
     const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
 
     const [surface, meshes] = useMemo(() => {
@@ -136,6 +136,10 @@ export function World({ themeName }) {
         })
         return [_surface, _meshes]
     }, [buildingsLoaded]);
+
+    useEffect(() => {
+        if (meshes) setReady(true);
+    }, [meshes])
 
     return (
         <>

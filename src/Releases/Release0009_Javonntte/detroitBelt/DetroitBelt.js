@@ -6,16 +6,18 @@ import { World } from './World';
 export default function DetroitBelt({ setContentReady, theme }) {
 
     const [themeName, setThemeName] = useState();
-    
-    // TODO determine proper set content ready callbacks + logic 
+    const [worldReady, setWorldReady] = useState(false);
+    const [asteroidsReady, setAsteroidsReady] = useState(false);
+
     useEffect(() => {
-        setContentReady(true);
-    });
+        if (asteroidsReady && worldReady) setContentReady(true);
+    }, [asteroidsReady]);
+
 
     useEffect(() => setThemeName(theme.name), [theme])
 
     return <>
-        <Asteroids themeName={themeName} />
-        <World themeName={themeName} />
+        <Asteroids themeName={themeName} setReady={setAsteroidsReady} />
+        <World themeName={themeName} setReady={setWorldReady} />
     </>
 }
