@@ -104,7 +104,6 @@ class AsteroidNeighborhoods {
 }
 
 
-
 export function AsteroidsSurface({ geometry, themeName }) {
     const { tron, ground29, ornateBrass2, rock19, scuffedPlasticBlack } = useContext(MaterialsContext);
 

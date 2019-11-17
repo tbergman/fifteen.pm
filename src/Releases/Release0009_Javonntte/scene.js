@@ -36,7 +36,7 @@ export function Scene({ setContentReady, colorTheme, onThemeSelect }) {
             <FixedLights />
             <MaterialsProvider>
                 <Stars radius={2} colors={colorTheme.starColors} />
-                <Sky theme={colorTheme.sky} scale={1500} />
+                <Sky theme={colorTheme.name} scale={1500} />
                 <Suspense fallback={null}>
                     <Road
                         closed={true}
