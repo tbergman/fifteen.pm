@@ -16,10 +16,10 @@ const AudioPlayerProvider = ({tracks, ...props}) => {
     })
   })
   const [state, setState] = useState({
-    audioPlayer: new Audio(loadedTracks[0].file),
+    audioPlayer: new Audio(),
     tracks: loadedTracks,
-    currentTrackIndex: 0,
-    currentTrackName: loadedTracks[0].name,
+    currentTrackIndex: null,
+    currentTrackName: null,
     isPlaying: false,
   });
   

@@ -11,9 +11,12 @@ export default function Release({ }) {
     const { playTrack, currentTrackId } = useAudioPlayer();
     const [content, setContent] = useState(cloneDeep(CONTENT[window.location.pathname]));
     const [contentReady, setContentReady] = useState(false);
-    const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA["679771262"].theme);
+
+    console.log('track_metadata', C.TRACK_METADATA)
+    const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA[C.TRACK_LOOKUP["life"]].theme);
 
     useEffect(() => {
+        if (!currentTrackId) return;
         setColorTheme(C.TRACK_METADATA[currentTrackId].theme);
     }, [currentTrackId])
 

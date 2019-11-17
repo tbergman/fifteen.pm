@@ -2,6 +2,7 @@ import { useContext, useEffect } from 'react';
 import { AudioPlayerContext } from "../AudioPlayerContext";
 import AudioStreamer from '../../../Utils/Audio/AudioStreamer';
 
+// TODO autoAdvance track like LegacyPlayer
 const useAudioPlayer = () => {
 
   const [state, setState] = useContext(AudioPlayerContext);
@@ -11,7 +12,7 @@ const useAudioPlayer = () => {
       togglePlay();
     } else {
       state.audioPlayer.pause();
-      state.audioPlayer = new Audio(state.tracks[index].file);
+      state.audioPlayer =   new Audio(state.tracks[index].file);
       state.audioPlayer.crossOrigin = "anonymous";
       state.audioStream = new AudioStreamer(state.audioPlayer);
       state.audioPlayer.play();

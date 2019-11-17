@@ -19,17 +19,16 @@ const useVideoPlayer = () => {
         state.videoPlayer.media.play();
         state.videoPlayer.mesh.visible = true;
       });
-      // state.videoPlayer = new Video(state.tracks[index].file);
       state.videoPlayer.play();
       setState(state => ({ ...state, currentTrackIndex: index, isPlaying: true }));
     }
   }
 
   function togglePlay() {
-    console.log("VIDEO PLAYER", state.videoPlayer)
     if (state.isPlaying) {
       state.videoPlayer.media.pause();
     } else {
+      state.videoPlayer.media.visible = true;
       state.videoPlayer.media.play();
     }
     setState(state => ({ ...state, isPlaying: !state.isPlaying }));

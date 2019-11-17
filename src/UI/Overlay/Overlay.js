@@ -17,7 +17,7 @@ export default function Overlay({
     onToggle,
 }) {
     const [isOpen, setIsOpen] = useState(loadWithOverlayOpen ? true : false);
-    const [afterOpen, setAfterOpen] = useState(false); // loads opened or closed, there is no after.
+    const [afterOpen, setAfterOpen] = useState(false); // loads opened or closed, after open is a unique separate state.
     const ref = useRef();
 
     useEffect(() => {

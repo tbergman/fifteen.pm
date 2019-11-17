@@ -5,6 +5,7 @@ import Navigation from './Navigation';
 import Overlay from './Overlay/Overlay';
 import Player from './Player/Player';
 import './UI.css';
+import usePlayer from './Player/hooks/usePlayer';
 
 export default function UI({
     content,
@@ -14,7 +15,9 @@ export default function UI({
     loadWithOverlay = true,
     loadWithInfoIcon = false,
     loadWithPlayer = false,
-    onOverlayHasBeenClosed = () => {},
+    // A common pattern is to manage initial scene state
+    // around overlay being closed the first time.
+    onOverlayHasBeenClosed = () => { },
 }) {
     const logo = useState(loadWithLogo ? true : false);
     const navigation = useState(loadWithNavigation ? true : false);
@@ -22,16 +25,21 @@ export default function UI({
     const [infoIcon, toggleInfoIcon] = useState(loadWithInfoIcon ? true : false);
     const [overlay, toggleOverlay] = useState(loadWithOverlay ? true : false);
     const [overlayHasBeenClosed, setOverlayHasBeenClosed] = useState(!loadWithOverlay);
+    const [firstTrackTriggered, setFirstTrackTriggered] = useState(false);
     const hasTracks = useMemo(() => content.tracks ? true : false);
 
     useEffect(() => {
+        console.log("OVERLAY is now", overlay)
+        console.log("overlayHasBeenClosed is now", overlayHasBeenClosed)
         if (!overlay && !overlayHasBeenClosed) {
             setOverlayHasBeenClosed(true);
             onOverlayHasBeenClosed();
         }
     }, [overlay])
 
+    const { playTrack } = usePlayer(content.tracks[0].mediaType)
     useEffect(() => {
+        if (!overlayHasBeenClosed) return;
         toggleInfoIcon(loadWithInfoIcon || overlayHasBeenClosed);
         togglePlayer(loadWithPlayer || overlayHasBeenClosed && hasTracks);
     }, [overlayHasBeenClosed])
@@ -50,7 +58,14 @@ export default function UI({
                 overlayContentColor={content.colors.overlayContent}
                 loadWithOverlayOpen={loadWithOverlay}
                 shouldUpdateOverlay={overlay}
-                onToggle={() => toggleOverlay(!overlay)}
+                onToggle={(e) => {
+                    e.preventDefault();
+                    toggleOverlay(!overlay);
+                    if (!firstTrackTriggered && hasTracks) {
+                        playTrack(0);
+                        setFirstTrackTriggered(true);
+                    }
+                }}
             />
             <div className="footer">
                 {player && <Player
