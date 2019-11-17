@@ -7,7 +7,7 @@ const useVideoPlayer = () => {
   const [state, setState] = useContext(VideoPlayerContext);
 
   function playTrack(index) {
-    if (index === state.currentTrackIndex) {
+    if (index === state.currentTrackIndex && state.videoPlayer.media) {
       togglePlay();
     } else {
       state.videoPlayer.pause();
@@ -26,10 +26,11 @@ const useVideoPlayer = () => {
   }
 
   function togglePlay() {
+    console.log("VIDEO PLAYER", state.videoPlayer)
     if (state.isPlaying) {
-      state.videoPlayer.pause();
+      state.videoPlayer.media.pause();
     } else {
-      state.videoPlayer.play();
+      state.videoPlayer.media.play();
     }
     setState(state => ({ ...state, isPlaying: !state.isPlaying }));
   }

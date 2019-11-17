@@ -8,6 +8,7 @@ import {
   SlowLoad
 } from "./UI/Controls/Icons";
 
+import * as THREE from 'three';
 import { assetPath } from "./Utils/assets";
 import { multiSourceVideo } from './Utils/Video/paths.js';
 
@@ -298,7 +299,7 @@ export const CONTENT = {
           mimetype: 'video/mp4',
           name: 'greem-vid1',
           sources: multiSourceVideo('/assets/8/videos/jt-final'),
-          // geometry: new THREE.PlaneBufferGeometry(1, 1),
+          geometry: new THREE.PlaneBufferGeometry(1, 1),
           position: [0, 0, 0],
           playbackRate: 1,
           loop: true,
