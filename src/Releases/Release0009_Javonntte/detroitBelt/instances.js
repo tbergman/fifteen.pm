@@ -14,7 +14,7 @@ function updateCluster(cluster, normal, centroid, index, vector3) {
     obj3.rotation.z += THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI); // random rotation of the objs
 
     // scale
-    // obj3.scale(Math.random() + .5, Math.random() + .5, Math.random() + .5);
+    obj3.scale.set(Math.random() + .5, Math.random() + .5, Math.random() + .5);
     
     // apply transform
     obj3.updateMatrix();
