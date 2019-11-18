@@ -1,25 +1,24 @@
 import * as THREE from 'three';
-import instancedMesh from 'three-instanced-mesh';
-instancedMesh(THREE);
 
 
-function updateCluster(cluster, normal, centroid, index, vector3, color) {
+function updateCluster(cluster, normal, centroid, index, vector3) {
+    const obj3 = new THREE.Object3D();
+
     // position
     const yOffset = -normal.y * .5;
-    cluster.setPositionAt(index, vector3.set(centroid.x, centroid.y + yOffset, centroid.z));
+    obj3.position.set(centroid.x, centroid.y + yOffset, centroid.z);
+    
     // rotation
-    var obj = new THREE.Object3D();
-    obj.lookAt(normal);
-    obj.rotation.z += THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI); // random rotation of the objs
-    obj.updateMatrix();
-    const quaternion = new THREE.Quaternion().setFromRotationMatrix(obj.matrix);
-    cluster.setQuaternionAt(index, quaternion);
+    obj3.lookAt(normal);
+    obj3.rotation.y += Math.PI ;
+    obj3.rotation.z += THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI); // random rotation of the objs
+
     // scale
-    cluster.setScaleAt(index, vector3.set(Math.random() + .5, Math.random() + .5, Math.random() + .5));
-    if (color) {
-        color.setHSL(Math.random(), 0.5, 0.5);
-        cluster.setColorAt(index, color);
-    }
+    // obj3.scale(Math.random() + .5, Math.random() + .5, Math.random() + .5);
+    
+    // apply transform
+    obj3.updateMatrix();
+    cluster.setMatrixAt(index, obj3.matrix);
 }
 
 export function createInstance(instances) {
@@ -27,15 +26,14 @@ export function createInstance(instances) {
     const cluster = new THREE.InstancedMesh(
         instances[0].geometry,
         instances[0].material,
-        totalInstances,              // instance count
-        false,                       // is it dynamic
-        instances[0].randColor,                       // color
+        totalInstances,
     );
-    var _v3 = new THREE.Vector3();
-    const _color = instances[0].randColor ? new THREE.Color() : null;
+    const _v3 = new THREE.Vector3();
+    // const _m4 = new THREE.Matrix4();
     for (let i = 0; i < totalInstances; i++) {
-        updateCluster(cluster, instances[i].normal, instances[i].centroid, i, _v3, _color)
+        updateCluster(cluster, instances[i].normal, instances[i].centroid, i, _v3)
     }
     cluster.castShadow = true;
+    cluster.frustumCulled = false;
     return cluster;
 }

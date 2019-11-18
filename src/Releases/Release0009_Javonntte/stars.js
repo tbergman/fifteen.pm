@@ -21,8 +21,8 @@ export default function Stars({ radius, colors }) {
         vertex.multiplyScalar(r);
         vertices2.push(vertex.x, vertex.y, vertex.z);
     }
-    starsGeometry[0].addAttribute('position', new THREE.Float32BufferAttribute(vertices1, 3));
-    starsGeometry[1].addAttribute('position', new THREE.Float32BufferAttribute(vertices2, 3));
+    starsGeometry[0].setAttribute('position', new THREE.Float32BufferAttribute(vertices1, 3));
+    starsGeometry[1].setAttribute('position', new THREE.Float32BufferAttribute(vertices2, 3));
 
     const starsMaterials = [
         new THREE.PointsMaterial({ color: colors[0], size: 1, sizeAttenuation: false }),

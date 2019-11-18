@@ -66,7 +66,7 @@ export const DAY = "day"
 
 export const ASTEROID_BUILDING_CATEGORIES = {
     night: ["medium_tall_tower_present_talltower", "large_tall_logo_present_logo"],
-    sunset: ["medium_tall_tower_present_talltower"],
+    sunset: ["small_tall_diamond_future_diamondhull_geo002"],
     day: ["medium_tall_tower_present_talltower"],
     hell: ["medium_tall_tower_present_talltower"],
 }
