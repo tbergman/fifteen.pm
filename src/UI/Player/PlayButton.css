@@ -40,8 +40,8 @@
     font-size: 25px;
     font-weight: bold;
     letter-spacing: 9px;
-    fill: #ffffff;
-    stroke: #ffffff;
+    /* fill: #ffffff; */
+    /* stroke: #ffffff; */
 }
 
 #play-button-container svg {

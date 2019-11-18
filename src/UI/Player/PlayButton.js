@@ -14,7 +14,7 @@ export default function PlayButton({ mediaType, color, text }) {
           <circle cx="100" cy="100" r="50" fill="none" stroke="none" />
           <g>
             <use xlinkHref="#circlePath" fill="none" />
-            <text fill="#000" stroke="red">
+            <text fill="red" stroke={color}>
               <textPath xlinkHref="#circlePath" fill={color}>{text}</textPath>
             </text>
           </g>

@@ -27,7 +27,8 @@ export const CONTENT = {
     colors: {
       logo: 'white',
       overlayContent: 'white',
-      overlay: 'rgba(0, 255, 0, 0.5)',
+      overlay: 'rgba(0, 50, 200, 0.5)',
+      navigation: 'white',
       onHover: 'rgba(0, 0, 0, 0.5)',
     }
   },
@@ -47,6 +48,7 @@ export const CONTENT = {
       overlay: 'rgba(255,105,180, 1)',
       overlayContent: '#fff',
       player: 'rgba(255,105,180, 1)',
+      navigation: 'rgba(255,105,180, 1)',
       onHover: '#fff',
     },
     instructions: [
@@ -71,7 +73,8 @@ export const CONTENT = {
       logo: 'white',
       overlayContent: 'white',
       overlay: 'rgba(127, 0, 255, 0.5)',
-      player: 'rgba(127, 0, 255, 0.5)',
+      player: 'white',
+      navigation: 'white',
       onHover: 'rgba(240, 0, 255, 0.75)',
       instructions: [
         {
@@ -102,6 +105,7 @@ export const CONTENT = {
       player: 'red',
       overlay: 'red',
       overlayContent: 'white',
+      navigation: 'red',
       onHover: 'gray',
       instructions: [
         {
@@ -145,6 +149,7 @@ export const CONTENT = {
       overlayContent: '#fff',
       overlay: 'rgba(0, 0, 0, 0.5)',
       player: '#fff',
+      navigation: '#fff',
       onHover: 'rgba(250, 10, 250)',
     },
     instructions: [
@@ -190,6 +195,7 @@ export const CONTENT = {
       overlayContent: '#fff',
       overlay: 'rgba(40, 47, 175, 1)',
       player: '#fff',
+      navigation: 'rgba(40, 47, 175, 1)',
       onHover: 'rgba(40, 47, 175, 1)',
     },
     instructions: [
@@ -219,6 +225,7 @@ export const CONTENT = {
       overlay: 'rgba(127, 0, 255, 0.4)',
       overlayContent: '#fff',
       player: 'rgba(127, 0, 255, 0.4)',
+      navigation:'rgba(250, 0, 255, 0.4)',
       onHover: 'rgba(127, 0, 255, 0.4)',
     },
     instructions: [
@@ -244,6 +251,7 @@ export const CONTENT = {
       overlayContent: '#fff',
       overlay: 'rgba(255, 102, 0, 0.4)',
       player: 'rgba(255, 102, 0, 0.4)',
+      navigation: 'rgba(255, 102, 0, 0.4)',
       onHover: 'rgba(255, 102, 0, 0.4)',
     },
     instructions: [
@@ -315,6 +323,7 @@ export const CONTENT = {
       overlay: 'rgba(255, 0, 0, 0.5)',
       overlayContent: '#fff',
       player: 'rgba(255, 0, 0, 0.5)',
+      navigation: '#fff', 
       onHover: 'rgba(255, 0, 0, 0.5)',
     },
     instructions: [{
@@ -386,6 +395,7 @@ export const CONTENT = {
       overlay: '#0f0',
       overlayContent: '#fff',
       player: '#0f0',
+      navigation: '#0f0', 
       onHover: '#fff9',
     },
     instructions: [
