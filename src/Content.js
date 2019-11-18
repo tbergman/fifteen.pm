@@ -396,7 +396,7 @@ export const CONTENT = {
       overlayContent: '#fff',
       player: '#0f0',
       navigation: '#0f0', 
-      onHover: '#fff9',
+      onHover: '#fff',
     },
     instructions: [
       {

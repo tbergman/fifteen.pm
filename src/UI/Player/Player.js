@@ -1,17 +1,9 @@
-import React, { useEffect } from "react";
-import usePlayer from "./hooks/usePlayer"
+import React from "react";
 import PlayButton from "./PlayButton";
-import TrackList from "./TrackList";
 import "./Player.css";
-import { isSafari, isMobile } from '../../Utils/BrowserDetection';
+import TrackList from "./TrackList";
 
-export default function Player({ artist, tracks, playerColor, selectedColor, playOnLoad = true }) {
-  const { playTrack } = usePlayer(tracks[0].mediaType); // assumption: no multi-media playlist
-
-  useEffect(() => {
-    // if (playOnLoad && !isMobile) playTrack(0);
-  }, [])
-
+export default function Player({ artist, tracks, playerColor, selectedColor }) {
   return (
     <div id="player-container">
       <PlayButton

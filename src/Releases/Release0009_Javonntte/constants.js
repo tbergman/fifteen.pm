@@ -65,7 +65,7 @@ export const HELL = "hell"
 export const DAY = "day"
 
 export const ASTEROID_BUILDING_CATEGORIES = {
-    night: ["medium_tall_tower_present_talltower", "large_tall_logo_present_logo"],
+    night: ["medium_large_tall_low_michigancentralstation", "large_tall_logo_present_logo"],
     sunset: ["small_tall_diamond_future_diamondhull_geo002"],
     day: ["medium_tall_tower_present_talltower"],
     hell: ["medium_tall_tower_present_talltower"],
