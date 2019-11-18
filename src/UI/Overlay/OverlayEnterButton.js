@@ -14,6 +14,7 @@ export default function OverlayEnterButton({ color, onClick, hasBeenClosed, cont
             "LOADING",
         ]
     })
+    
     const [text, setText] = useState(ENTER);
 
     useEffect(() => {

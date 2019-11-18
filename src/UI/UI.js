@@ -27,11 +27,10 @@ export default function UI({
     const [overlayHasBeenClosed, setOverlayHasBeenClosed] = useState(!loadWithOverlay);
     const [firstTrackTriggered, setFirstTrackTriggered] = useState(false);
     const hasTracks = useMemo(() => content.tracks ? true : false);
-    const { playTrack } = hasTracks && usePlayer(content.tracks[0].mediaType); // make this available for pages with tracks
+    // make playTrack available for pages with tracks
+    const { playTrack } = hasTracks && usePlayer(content.tracks[0].mediaType);
 
     useEffect(() => {
-        console.log("OVERLAY is now", overlay)
-        console.log("overlayHasBeenClosed is now", overlayHasBeenClosed)
         if (!overlay && !overlayHasBeenClosed) {
             setOverlayHasBeenClosed(true);
             onOverlayHasBeenClosed();
@@ -48,7 +47,7 @@ export default function UI({
         <>
             {logo && <Logo color={content.colors.logo} />}
             {navigation && <Navigation color={content.colors.default} />}
-            <Overlay
+            {overlay && <Overlay
                 hasBeenClosed={overlayHasBeenClosed}
                 contentReady={contentReady}
                 message={content.message}
@@ -56,8 +55,6 @@ export default function UI({
                 purchaseLink={content.purchaseLink}
                 overlayColor={content.colors.overlay}
                 overlayContentColor={content.colors.overlayContent}
-                loadWithOverlayOpen={loadWithOverlay}
-                shouldUpdateOverlay={overlay}
                 onToggle={(e) => {
                     e.preventDefault();
                     toggleOverlay(!overlay);
@@ -66,7 +63,7 @@ export default function UI({
                         setFirstTrackTriggered(true);
                     }
                 }}
-            />
+            />}
             <div className="footer">
                 {player && <Player
                     artist={content.artist}

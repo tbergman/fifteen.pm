@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Modal from "react-modal";
+import React from 'react';
 import './Overlay.css';
 import OverlayContent from './OverlayContent';
 import OverlaySVG from './OverlaySVG';
@@ -12,47 +11,20 @@ export default function Overlay({
     purchaseLink,
     overlayColor,
     overlayContentColor,
-    loadWithOverlayOpen,
-    shouldUpdateOverlay,
     onToggle,
 }) {
-    const [isOpen, setIsOpen] = useState(loadWithOverlayOpen ? true : false);
-    const [afterOpen, setAfterOpen] = useState(false); // loads opened or closed, after open is a unique separate state.
-    const ref = useRef();
-
-    useEffect(() => {
-        if (afterOpen || (!loadWithOverlayOpen && shouldUpdateOverlay)) setIsOpen(!isOpen)
-    }, [shouldUpdateOverlay])
-
-    return <>
-        <div ref={ref} className="modal">
-            <Modal
-                isOpen={isOpen}
-                appElement={ref.current}
-                onAfterOpen={() => setAfterOpen(true)}
-                onRequestClose={() => setIsOpen(false)}
-                shouldCloseOnOverlayClick={true}
-                ariaHideApp={false}
-                className="overlay-modal"
-                style={{
-                    overlay: { backgroundColor: "transparent" } // for the built-in react-modal overlay style
-                }}
-            >
-                <>
-                    <OverlayContent
-                        hasBeenClosed={hasBeenClosed}
-                        contentReady={contentReady}
-                        instructions={instructions}
-                        purchaseLink={purchaseLink}
-                        message={message}
-                        color={overlayContentColor}
-                        onToggle={onToggle}
-                    />
-                    <OverlaySVG
-                        color={overlayColor}
-                    />
-                </>
-            </Modal>
-        </div >
-    </>;
+    return <div className="overlay-modal">
+        <OverlayContent
+            hasBeenClosed={hasBeenClosed}
+            contentReady={contentReady}
+            instructions={instructions}
+            purchaseLink={purchaseLink}
+            message={message}
+            color={overlayContentColor}
+            onToggle={onToggle}
+        />
+        <OverlaySVG
+            color={overlayColor}
+        />
+    </div>
 }
