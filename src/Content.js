@@ -170,64 +170,63 @@ export const CONTENT = {
   },
   "/5": {
     artist: "PLEBEIAN",
-    textModel: assetPath("5/objects/text.gltf"),
+    message: "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/album/heaven",
     tracks: [
       {
-        title: "Heaven",
+        name: "Heaven",
         id: "514219014",
         type: "soundcloud"
       },
       {
-        title: "Bullseye",
+        name: "Bullseye",
         id: "514219020",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/album/heaven",
-      iconColor: '#fff',
-      fillColor: 'rgba(40, 47, 175, 1)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: MouseMove,
-          instructions: "click and drag mouse to look around"
-        },
-        {
-          icon: TwoFingerScroll,
-          instructions: "scroll to zoom"
-        }
-      ]
-    }
+    colors: {
+
+      logo: '#fff',
+      overlayContent: '#fff',
+      overlay: 'rgba(40, 47, 175, 1)',
+      player: '#fff',
+      onHover: 'rgba(40, 47, 175, 1)',
+    },
+    instructions: [
+      {
+        icon: MouseMove,
+        text: "click and drag mouse to look around"
+      },
+      {
+        icon: TwoFingerScroll,
+        text: "scroll to zoom"
+      }
+    ]
   },
   "/6": {
     artist: "VVEISS",
-    textModel: assetPath("6/objects/text.gltf"),
+    message: "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/track/escape-velocity",
     tracks: [
       {
-        title: "ESCAPE VELOCITY",
+        name: "ESCAPE VELOCITY",
         id: "529074519",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/escape-velocity",
-      iconColor: '#fff',
-      fillColor: 'rgba(127, 0, 255, 0.4)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: MouseMove,
-          instructions: "move mouse to look around"
-        }
-      ]
-    }
+    colors: {
+      logo: '#fff',
+      overlay: 'rgba(127, 0, 255, 0.4)',
+      overlayContent: '#fff',
+      player: 'rgba(127, 0, 255, 0.4)',
+      onHover: 'rgba(127, 0, 255, 0.4)',
+    },
+    instructions: [
+      {
+        icon: MouseMove,
+        text: "move mouse to look around"
+      }
+    ]
   },
   "/7": {
     artist: "JON FAY",
