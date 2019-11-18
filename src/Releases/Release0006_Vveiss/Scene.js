@@ -1,14 +1,11 @@
-import React, { Component, Fragment } from 'react';
-import { CONTENT } from "../../Content";
-import { loadGLTF } from "../../Utils/Loaders";
+import React, { Component } from 'react';
 import * as THREE from "three";
-import { assetPath } from "../../Utils/assets";
-import GLTFLoader from "three-gltf-loader";
 import { Lensflare, LensflareElement } from 'three-full';
+import GLTFLoader from "three-gltf-loader";
+import { assetPath } from "../../Utils/assets";
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
-// import { OrbitControls } from "../../Utils/OrbitControls";
+import { loadGLTF } from "../../Utils/Loaders";
 import { CONSTANTS } from "../Release0006_Vveiss/constants";
-import LegacyMenu from '../../UI/LegacyMenu/LegacyMenu';
 
 export const assetPath6 = (p) => {
   return assetPath("6/" + p);
