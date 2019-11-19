@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { cloneDeep } from 'lodash';
 
 
 export function cryptoRandom(arrayLength) {
@@ -7,7 +8,6 @@ export function cryptoRandom(arrayLength) {
 }
 
 
-// TODO this would suck for huge arrays
 export function randomArrayVal(array) {
     const randInt = THREE.Math.randInt(0, array.length - 1);
     return array[randInt];
@@ -26,7 +26,8 @@ export function shuffleArray(a) {
     return a;
 }
 
-export function selectNRandomFromArray(arr, numElts) {
+
+export function selectNRandomFromArray(arr, numElts, canShuffleArray=true) {
     let newArr = [];
     if (arr.length < numElts) {
         for (let i = 0; i < numElts - arr.length; i++) {
@@ -34,7 +35,9 @@ export function selectNRandomFromArray(arr, numElts) {
         }
         arr.push(...newArr);
     }
-    const shuffled = shuffleArray(arr);
+    // more performant to allow shuffling
+    const shuffleArr = canShuffleArray ? arr : cloneDeep(arr);
+    const shuffled = shuffleArray(shuffleArr);
     if (shuffled.length > numElts) {
         return shuffled.slice(0, numElts);
     } else {

@@ -12,7 +12,6 @@ export default function Release({ }) {
     const [content, setContent] = useState(cloneDeep(CONTENT[window.location.pathname]));
     const [contentReady, setContentReady] = useState(false);
 
-    console.log('track_metadata', C.TRACK_METADATA)
     const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA[C.TRACK_LOOKUP["life"]].theme);
 
     useEffect(() => {

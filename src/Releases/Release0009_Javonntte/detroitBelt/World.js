@@ -1,11 +1,12 @@
 import React, { useContext, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
-import { randomPointsOnSphere } from '../../../Utils/random';
+import { randomPointsOnSphere, randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 import BuildingInstances from './BuildingInstances';
 import { BuildingsContext } from './BuildingsContext';
 import { generateTilesets } from './tiles';
+import { faceCentroid } from '../../../Utils/geometry';
 
 class WorldNeighborhoods {
     constructor(surface, theme) {
@@ -57,6 +58,7 @@ class WorldNeighborhoods {
 
 export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
+    // geometry.scale(2, 1, 1);
     // variate sphere heights
     var vertexIndex;
     var vertexVector = new THREE.Vector3();
@@ -118,25 +120,45 @@ export function WorldSurface({ geometry, themeName }) {
     </>
 }
 
+function WorldLights({ surface }) {
+    const faces = surface.faces;
+    console.log("faces", faces)
+    const vertices = surface.vertices;
+    const numLights = 10;
+    const canShuffleArray = false;
+    const randFaces = selectNRandomFromArray(faces, numLights, canShuffleArray);
+    const centroids = randFaces.map(face => faceCentroid(face, vertices).add(face.normal.multiplyScalar(3)))
+
+    return <>
+        {centroids.map((centroid, idx) => {
+            return <pointLight
+            key={idx}
+            position={centroid}
+            color={[0x0f0, 0xffa500][THREE.Math.randInt(0, 1)]}
+            />
+        })}
+    </>
+}
+
 export function World({ themeName, setReady }) {
     const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
 
     const [surface, meshes] = useMemo(() => {
         if (!buildingsLoaded) return [];
-       
+
         const _surface = generateSphereWorldGeometry(
             C.WORLD_RADIUS,
             C.WORLD_SIDES,
             C.WORLD_TIERS,
             C.MAX_WORLD_FACE_HEIGHT,
         )
-        
+
         const _meshes = {}
         C.THEME_NAMES.forEach(themeName => {
             const _neighborhoods = new WorldNeighborhoods(_surface, themeName);
             _meshes[themeName] = generateTilesets({ buildings, neighborhoods: [_neighborhoods] });
         })
-        
+
         return [_surface, _meshes]
     }, [buildingsLoaded]);
 
@@ -149,6 +171,7 @@ export function World({ themeName, setReady }) {
             {meshes &&
                 <>
                     <WorldSurface geometry={surface} themeName={themeName} />
+                    <WorldLights surface={surface} />
                     <BuildingInstances meshes={meshes} themeName={themeName} />
                 </>
             }

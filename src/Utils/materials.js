@@ -33,7 +33,7 @@ function cloudEnvMap() {
 			'bluecloud_ft.jpg',
 			'bluecloud_lf.jpg',
 			'bluecloud_rt.jpg',
-		'bluecloud_up.jpg',
+			'bluecloud_up.jpg',
 		]);
 }
 
@@ -199,23 +199,22 @@ export function FoamGripMaterial({ materialRef, ...props }) {
 
 	// const textureCube = loader.load(Array(6).fill('Barce_Rooftop.png'));
 	return <meshPhongMaterial
-		{...props}
 		ref={materialRef}
 		lights
 		receiveShadow
 		castShadow
 		map={colorMap}
 		color={props.color || 0xffffff}
-		specular={0xf0f000}
+		specular={props.specular || 0xf0f000}
 		shininess={100}
 		skinning={true}
 		normalMap={normalMap}
 		aoMap={aoMap}
 		specularMap={specularMap}
 		envMap={envMapCube}
-		refractionRatio={1.0}
+		refractionRatio={props.refractionRatio || 1.0}
 		combine={THREE.AddOperation}
-
+		{...props}
 	/>
 }
 
@@ -301,7 +300,6 @@ export function Ground29Material({ materialRef, ...props }) {
 
 	// return <meshStandardMaterial
 	return <meshStandardMaterial
-		{...props}
 		ref={materialRef}
 		lights
 		// wireframeLineWidth={10}
@@ -318,6 +316,7 @@ export function Ground29Material({ materialRef, ...props }) {
 		displacementScale={props.displacementScale || .01} // TODO play around
 		displacementBias={props.displacementBias || 0}//-.01}
 		displacementMap={displacementMap}
+		{...props}
 	/>
 }
 
@@ -367,7 +366,7 @@ export function Facade04Material({ materialRef, ...props }) {
 	});
 
 	return <meshStandardMaterial
-		
+
 		ref={materialRef}
 		lights
 		receiveShadow
@@ -620,7 +619,7 @@ export function Rock19({ materialRef, ...props }) {
 		normalMap={normalMap}
 		roughnessMap={roughnessMap}
 		envMap={envMap}
-		{...props}	
+		{...props}
 	// roughness={-1} // invert roughness to get glossiness
 	/>
 }
@@ -656,7 +655,7 @@ export function OrnateBrass2({ materialRef, ...props }) {
 	/>
 }
 
-export function SunsetGradient({materialRef, ...props}){
+export function SunsetGradient({ materialRef, ...props }) {
 	return <shaderMaterial
 		ref={materialRef}
 		vertexShader={simpleVertex}
@@ -665,7 +664,7 @@ export function SunsetGradient({materialRef, ...props}){
 	/>;
 }
 
-export function NightGradient({materialRef, ...props}){
+export function NightGradient({ materialRef, ...props }) {
 	return <shaderMaterial
 		ref={materialRef}
 		vertexShader={simpleVertex}
@@ -675,7 +674,7 @@ export function NightGradient({materialRef, ...props}){
 }
 
 
-export function HellGradient({materialRef, ...props}){
+export function HellGradient({ materialRef, ...props }) {
 	return <shaderMaterial
 		ref={materialRef}
 		vertexShader={simpleVertex}
@@ -684,7 +683,7 @@ export function HellGradient({materialRef, ...props}){
 	/>;
 }
 
-export function DayGradient({materialRef, ...props}){
+export function DayGradient({ materialRef, ...props }) {
 	return <shaderMaterial
 		ref={materialRef}
 		vertexShader={simpleVertex}

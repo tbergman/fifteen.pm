@@ -44,7 +44,8 @@ export function Scene({ setContentReady, colorTheme, onThemeSelect }) {
                         radius={2}
                         radiusSegments={4}
                     >
-                        <Car onThemeSelect={onThemeSelect} />
+                        <Car
+                            onThemeSelect={onThemeSelect} headlightsColor={colorTheme.headlights} />
                     </Road>
                     <BuildingsProvider>
                         <DetroitBelt
@@ -54,7 +55,7 @@ export function Scene({ setContentReady, colorTheme, onThemeSelect }) {
                     </BuildingsProvider>
                 </Suspense>
                 <BloomFilmEffect />
-            </MaterialsProvider>
+            </MaterialsProvider >
         </>
     );
 }

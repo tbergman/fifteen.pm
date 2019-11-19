@@ -72,7 +72,7 @@ const MaterialsProvider = ({ ...props }) => {
 
     return <MaterialsContext.Provider value={{ loaded, ...materials }}>
         <FoamGripMaterial materialRef={foamGripPurpleRef} color={0xff00af} specular={0x00ff00} />
-        <FoamGripMaterial materialRef={foamGripSilverRef} color={0x0000af} />
+        <FoamGripMaterial materialRef={foamGripSilverRef} specular={0x000} refractionRatio={0.0} color={0x000} />
         <FoamGripMaterial materialRef={foamGripBlackRef} color="black" />
         <CloudMaterial materialRef={cloudRef} emissive={0xd4af37} />
         <Windows1Material materialRef={windows1Ref} />
@@ -82,7 +82,7 @@ const MaterialsProvider = ({ ...props }) => {
         <Metal03Material materialRef={metal03Ref} textureRepeat={{ x: 2, y: 2 }} />
         <Metal03Material materialRef={metal03BlackRef} color="black" />
         <Tiles60 materialRef={tiles60Ref} />
-        <Tiles36 materialRef={tiles36Ref} shininess={100} />
+        <Tiles36 materialRef={tiles36Ref} shininess={100} color="black" />
         <Rock19 materialRef={rock19Ref} displacementScale={0.05} />
         <OrnateBrass2 materialRef={ornateBrass2Ref} textureRepeat={{x: 2, y: 2}} color="black" />
         <OrnateBrass2 materialRef={ornateBrass2Tiledx10Ref} textureRepeat={{x: 10, y: 10}} color="black" />
@@ -91,7 +91,7 @@ const MaterialsProvider = ({ ...props }) => {
         <ScuffedPlasticMaterial materialRef={scuffedPlasticGlowingRef} color="yellow" emissive="pink" />
         <BlackLeather12 materialRef={blackLeather12Ref} />
         <TronMaterial materialRef={tronRef} side={THREE.BackSide} />
-        <Ground29Material materialRef={ground29Ref} />
+        <Ground29Material materialRef={ground29Ref} color={0x000} />
         <SunsetGradient materialRef={sunsetRef} side={THREE.BackSide} />
         <NightGradient materialRef={nightRef} side={THREE.BackSide} />
         <HellGradient materialRef={hellRef} side={THREE.Backside} />

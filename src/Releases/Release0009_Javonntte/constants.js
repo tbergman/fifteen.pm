@@ -116,6 +116,7 @@ export const TRACK_THEMES = [
         surfaces: "ground29",
         sky: "night",
         world: "future",
+        headlights: 0xffffb3,
     },
 
     // SUNSET
@@ -131,6 +132,7 @@ export const TRACK_THEMES = [
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
         background: new THREE.Color(0xfe8981),
         starColors: [0x0000ef, 0x111111, 0x222222],
+        headlights: 0xf00,
     },
     // HELL
     {
@@ -145,6 +147,7 @@ export const TRACK_THEMES = [
         fog: new THREE.FogExp2(0xff0000, 0.0025),
         background: new THREE.Color(0xff0000),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+        headlights: 0xf00,
     },
     // DAY
     {
@@ -159,6 +162,7 @@ export const TRACK_THEMES = [
         fog: new THREE.FogExp2(0xffffff, 0.00005),
         background: new THREE.Color(0xffffff),
         starColors: [0x555555, 0x333333, 0x1a1a1a],
+        headlights: 0xf00,
     },
 ]
 

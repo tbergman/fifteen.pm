@@ -13,9 +13,8 @@ import Headlights from './Headlights';
 import SteeringWheel from './SteeringWheel';
 
 function Car({
-    dashCamRef,
+    headlightsColor,
     road,
-    roadOffset,
     onThemeSelect,
 }) {
 
@@ -47,7 +46,6 @@ function Car({
         if (!delta.current) delta.current = .005;
         if (!offset.current) offset.current = 0;
     })
-
 
     const updateSpeed = () => {
         if (accelerationPressed) {
@@ -116,7 +114,6 @@ function Car({
     }
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
-    // TODO how to break up this logic?
     useFrame(() => {
         updateSpeed();
         // TODO these floats as constants relative to world radius
@@ -130,7 +127,6 @@ function Car({
         }
     })
 
-    // TODO render order to make sure the car's always in front https://discourse.threejs.org/t/always-render-mesh-on-top-of-another/120/5
     return <group ref={carRef}>
         {car &&
             <>
@@ -138,7 +134,7 @@ function Car({
                 <Dashboard gltf={gltf} onThemeSelect={onThemeSelect} />
                 <Chassis gltf={gltf} />
                 <SteeringWheel gltf={gltf} rotation={car.rotation} />
-                <Headlights />
+                <Headlights color={headlightsColor} />
                 {/* This pointlight makes the dash and chassis look good... */}
                 <pointLight
                     position={[.8, -.75, 1.5]}
