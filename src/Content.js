@@ -392,10 +392,10 @@ export const CONTENT = {
     ],
     colors: {
       logo: '#0f0',
+      navigation: '#0f0', 
       overlay: '#0f0',
       overlayContent: '#fff',
       player: '#0f0',
-      navigation: '#0f0', 
       onHover: '#fff',
     },
     instructions: [
