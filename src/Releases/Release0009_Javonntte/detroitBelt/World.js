@@ -120,25 +120,6 @@ export function WorldSurface({ geometry, themeName }) {
     </>
 }
 
-function WorldLights({ surface }) {
-    const faces = surface.faces;
-    const vertices = surface.vertices;
-    const numLights = 6;
-    const canShuffleArray = false;
-    const randFaces = selectNRandomFromArray(faces, numLights, canShuffleArray);
-    const centroids = randFaces.map(face => faceCentroid(face, vertices).add(face.normal.multiplyScalar(3)))
-
-    return <>
-        {centroids.map((centroid, idx) => {
-            return <pointLight
-                key={idx}
-                position={centroid}
-                color={[0x0f0, 0xffa500][THREE.Math.randInt(0, 1)]}
-            />
-        })}
-    </>
-}
-
 export function World({ themeName, setReady }) {
     const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
 
@@ -170,7 +151,6 @@ export function World({ themeName, setReady }) {
             {meshes &&
                 <>
                     <WorldSurface geometry={surface} themeName={themeName} />
-                    <WorldLights surface={surface} />
                     <BuildingInstances meshes={meshes} themeName={themeName} />
                 </>
             }

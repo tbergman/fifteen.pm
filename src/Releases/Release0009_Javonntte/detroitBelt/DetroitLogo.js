@@ -21,12 +21,9 @@ export default function DetroitLogo({ }) {
 
     return (
         <>
-          
-                
-                    <mesh ref={logoRef} material={foamGripPurple} position={[0, 0, -5]} >
-                        <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
-                    </mesh>
-          
+            <mesh ref={logoRef} material={foamGripPurple} position={[0, 0, -5]} >
+                <bufferGeometry attach="geometry" {...gltf.__$[1].geometry} />
+            </mesh>
         </>
     )
 }
