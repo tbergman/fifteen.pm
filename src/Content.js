@@ -366,7 +366,7 @@ export const CONTENT = {
   },
   "/9": {
     artist: "JAVONNTTE",
-    message: "In the year 4182 all of Detroit Cloud City goes wild for City Lights, an early 21st century EP by Javonntte pulled off some bricked drives in the archives.",
+    message: "In the year 2182, all of Detroit Asteroid Belt goes wild for the 22nd century sounds of house master Javonntte after his 'City Life' EP is pulled off some bricked drives in the archives.",
     purchaseLink: "TODO",
     tracks: [
       {

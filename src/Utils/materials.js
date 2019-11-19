@@ -642,7 +642,7 @@ export function PockedStone2({ materialRef, ...props }) {
 		colorMap={albedoMap}
 		aoMap={aoMap}
 		bumpMap={heightMap}
-		displacementMap={heightMap}
+		// displacementMap={heightMap}
 		// displacementBias={1}
 		// displacementScale={3}
 		normalMap={normalMap}
