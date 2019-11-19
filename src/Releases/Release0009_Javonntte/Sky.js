@@ -8,7 +8,7 @@ export default function Sky({ theme, scale }) {
         return {
             night: night,
             sunset: sunset,
-            hell: dream,
+            dream: dream,
             natural: natural,
         }
     })

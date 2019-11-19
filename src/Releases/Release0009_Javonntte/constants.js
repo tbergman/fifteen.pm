@@ -61,14 +61,14 @@ export const BUILDING_HEIGHT_BUCKETS = [
 // Theme names
 export const NIGHT = "night"
 export const SUNSET = "sunset"
-export const HELL = "hell"
+export const DREAM = "dream"
 export const NATURAL = "natural"
 
 export const ASTEROID_BUILDING_CATEGORIES = {
     night: ["medium_large_tall_low_michigancentralstation", "large_tall_logo_present_logo"],
     sunset: ["small_tall_diamond_future_diamondhull_geo002"],
     natural: ["medium_tall_tower_present_talltower"],
-    hell: ["medium_tall_tower_present_talltower"],
+    dream: ["medium_tall_tower_present_talltower"],
 }
 
 export const WORLD_BUILDING_CATEGORIES = {
@@ -98,7 +98,7 @@ export const WORLD_BUILDING_CATEGORIES = {
     natural: [
         "small_tall_twirly_future_comet_geo"
     ],
-    hell: [
+    dream: [
         "large_short_low_present_factory",
         "large_tall_tower_present_penobscot",
         "large_tall_low_present_michigancentralstation",
@@ -111,7 +111,7 @@ export const WORLD_TILE_SUBDIVISIONS = {
     night: (area) => area > 14 ? 3 : 6,
     sunset: (area) => area > 14 ? 3 : 6,
     natural: (area) => area > 14 ? 3 : 6,
-    hell: (area) => 1,
+    dream: (area) => 1,
 }
 
 // TRACK INFO
@@ -147,7 +147,7 @@ export const TRACK_THEMES = [
     },
     // DREAM
     {
-        name: HELL,
+        name: DREAM,
         UIColors: {
             logo: '#0f0',
             overlay: '#0f0',

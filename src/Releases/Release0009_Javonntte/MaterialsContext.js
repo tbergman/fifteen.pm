@@ -100,7 +100,7 @@ const MaterialsProvider = ({ ...props }) => {
         <PockedStone2 materialRef={pockedStone2Ref} />
         <SunsetGradient materialRef={sunsetRef} side={THREE.BackSide} />
         <NightGradient materialRef={nightRef} side={THREE.BackSide} />
-        <DreamGradient materialRef={dreamRef} side={THREE.Backside} />
+        <DreamGradient materialRef={dreamRef} side={THREE.BackSide} />
         <DayGradient materialRef={naturalRef} side={THREE.BackSide} />
         {props.children}
     </MaterialsContext.Provider>

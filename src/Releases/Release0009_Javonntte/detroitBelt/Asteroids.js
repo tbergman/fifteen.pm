@@ -108,7 +108,7 @@ export function AsteroidsSurface({ geometry, themeName }) {
     const { tron, ground29Purple, ornateBrass2, rock19, scuffedPlasticBlack } = useContext(MaterialsContext);
 
     const exteriorMaterial = useMemo(() => ({
-        hell: ornateBrass2,
+        dream: ornateBrass2,
         night: ground29Purple,
         natural: rock19,
         sunset: scuffedPlasticBlack,

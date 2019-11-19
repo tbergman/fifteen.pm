@@ -100,7 +100,7 @@ export function WorldSurface({ geometry, themeName }) {
     const { tron, ground29Purple, pockedStone2, ground29Black, rock19 } = useContext(MaterialsContext);
 
     const exteriorMaterial = useMemo(() => ({
-        hell: pockedStone2,
+        dream: pockedStone2,
         night: ground29Black,
         natural: rock19,
         sunset: ground29Purple,
