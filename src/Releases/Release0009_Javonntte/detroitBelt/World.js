@@ -123,7 +123,7 @@ export function WorldSurface({ geometry, themeName }) {
 function WorldLights({ surface }) {
     const faces = surface.faces;
     const vertices = surface.vertices;
-    const numLights = 10;
+    const numLights = 6;
     const canShuffleArray = false;
     const randFaces = selectNRandomFromArray(faces, numLights, canShuffleArray);
     const centroids = randFaces.map(face => faceCentroid(face, vertices).add(face.normal.multiplyScalar(3)))

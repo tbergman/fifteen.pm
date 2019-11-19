@@ -66,7 +66,8 @@ export const ASTEROID_BUILDING_CATEGORIES = {
     night: ["medium_large_tall_low_michigancentralstation", "large_tall_logo_present_logo"],
     sunset: ["small_tall_diamond_future_diamondhull_geo002"],
     natural: ["medium_tall_tower_present_talltower"],
-    dream: ["medium_tall_tower_present_talltower"],
+    dream: ["medium_tall_tower_present_talltower", "small_short_twirly_future_disco1_small_cactus",
+    "small_short_twirly_future_disco1_small_worm",],
 }
 
 export const WORLD_BUILDING_CATEGORIES = {
@@ -80,8 +81,6 @@ export const WORLD_BUILDING_CATEGORIES = {
         "medium_tall_ribbony_future_celvinyl_geo003",
         "medium_tall_ribbony_future_celvinyl_geo002",
         "medium_tall_tower_future_needle7",
-        "small_short_twirly_future_disco1_small_cactus",
-        "small_short_twirly_future_disco1_small_worm",
         "small_tall_diamond_future_diamondhull_geo002",
         "small_tall_diamond_future_toongeo1",
         "small_tall_tower_future_needle3",
@@ -101,7 +100,9 @@ export const WORLD_BUILDING_CATEGORIES = {
         "large_tall_tower_present_penobscot",
         "large_tall_low_present_michigancentralstation",
         // "large_tall_tower_present_bookcadillachotel",
-        "large_short_low_present_boxy"
+        "large_short_low_present_boxy",
+        // "large_tall_logo_present_logo"
+        
     ]
 }
 

@@ -22,7 +22,6 @@ const BuildingsProvider = ({ ...props }) => {
     const {
         loaded: materialsLoaded,
         metal03,
-        foamGripSilver,
         foamGripPurple,
         scuffedPlasticBlack,
         facade10,
