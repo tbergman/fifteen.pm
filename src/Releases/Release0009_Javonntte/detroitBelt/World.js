@@ -122,7 +122,6 @@ export function WorldSurface({ geometry, themeName }) {
 
 function WorldLights({ surface }) {
     const faces = surface.faces;
-    console.log("faces", faces)
     const vertices = surface.vertices;
     const numLights = 10;
     const canShuffleArray = false;
@@ -132,9 +131,9 @@ function WorldLights({ surface }) {
     return <>
         {centroids.map((centroid, idx) => {
             return <pointLight
-            key={idx}
-            position={centroid}
-            color={[0x0f0, 0xffa500][THREE.Math.randInt(0, 1)]}
+                key={idx}
+                position={centroid}
+                color={[0x0f0, 0xffa500][THREE.Math.randInt(0, 1)]}
             />
         })}
     </>

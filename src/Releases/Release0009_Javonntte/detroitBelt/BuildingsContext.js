@@ -61,7 +61,7 @@ const BuildingsProvider = ({ ...props }) => {
             "small_tall_tower_future_needle6": { material: ornateBrass2 },
             "small_tall_tower_future_lightwire1": { material: ornateBrass2 },
             "small_tall_tower_present_needle": { material: scuffedPlasticBlack },
-            "small_tall_twirly_future_comet_geo": { material: tiles36 },
+            "small_tall_twirly_future_comet_geo": { material: metal03 },
         }
     });
 
