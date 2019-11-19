@@ -14,7 +14,7 @@ function updateCluster(cluster, normal, centroid, index, vector3) {
     obj3.rotation.z += THREE.Math.randFloat(-2 * Math.PI, 2 * Math.PI); // random rotation of the objs
 
     // scale
-    obj3.scale.set(Math.random() + .5, Math.random() + .5, Math.random() + .5);
+    obj3.scale.set(Math.random() + .01, Math.random() + .01, Math.random() + .01);
     
     // apply transform
     obj3.updateMatrix();
@@ -29,7 +29,6 @@ export function createInstance(instances) {
         totalInstances,
     );
     const _v3 = new THREE.Vector3();
-    // const _m4 = new THREE.Matrix4();
     for (let i = 0; i < totalInstances; i++) {
         updateCluster(cluster, instances[i].normal, instances[i].centroid, i, _v3)
     }

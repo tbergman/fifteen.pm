@@ -33,6 +33,7 @@
     position: relative;
     overflow: hidden;
     top: 10px;
+    z-index: 1000;
 }
 
 #play-button-container text {

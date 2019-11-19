@@ -434,8 +434,7 @@ export function Windows1Material({ materialRef, ...props }) {
 	/>
 }
 
-export function TronMaterial({ materialRef, bpm, side, color }) {
-
+export function TronMaterial({ materialRef, side, color }) {
 	color = color || 0xffffff;
 	materialRef = materialRef ? materialRef : useRef().current;
 	const { clock, size } = useThree();
@@ -445,7 +444,7 @@ export function TronMaterial({ materialRef, bpm, side, color }) {
 		uniforms.current = {
 			uTime: { value: 0 },
 			uResolution: { value: new THREE.Vector2(size.width, size.length) },
-			uBPM: { value: bpm },
+			uBPM: { value: 120 },
 			uBaseColor: { value: new THREE.Vector3(baseColor.r, baseColor.g, baseColor.g) },
 		}
 	}, []);
@@ -455,9 +454,9 @@ export function TronMaterial({ materialRef, bpm, side, color }) {
 		uniforms.current.uTime.value = clock.oldTime;
 	});
 
-	useEffect(() => {
-		if (uniforms.current.uBPM) uniforms.current.uBPM.value = bpm;
-	}, [bpm])
+	// useEffect(() => {
+	// 	if (uniforms.current.uBPM) uniforms.current.uBPM.value = bpm;
+	// }, [bpm])
 
 	return <shaderMaterial
 		ref={materialRef}

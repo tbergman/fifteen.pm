@@ -9,8 +9,6 @@ export const BUILDINGS_URL = assetPath9("objects/structures/buildings.glb");
 export const CAR_URL = assetPath9("objects/car/car.glb");
 export const LOGO_URL = assetPath9("objects/logo/logo.glb");
 
-console.log("IS MOBILE", isMobile);
-
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
 export const WORLD_RADIUS = 48;
@@ -128,6 +126,7 @@ export const TRACK_THEMES = [
         sky: "night",
         world: "future",
         headlights: 0xffffb3,
+        
     },
 
     // SUNSET
@@ -138,6 +137,7 @@ export const TRACK_THEMES = [
             overlay: '#f00',
             overlayContent: '#f0f',
             player: '#aaa',
+            info: '#aaa',
             navigation: '#0f0',
             onHover: '#0ff',
         },
@@ -155,6 +155,7 @@ export const TRACK_THEMES = [
             overlayContent: '#fff',
             player: '#0a0',
             navigation: '#0a0',
+            info: '#0a0',
             onHover: '#fff9',
         },
         // fog: new THREE.FogExp2(0x000000, 0.00000025),
@@ -172,6 +173,7 @@ export const TRACK_THEMES = [
             overlayContent: '#fff',
             navigation: '#faf',
             player: '#faf',
+            info: '#faf',
             onHover: '#fff9',
         },
         fog: new THREE.FogExp2(0xffffff, 0.00005),
@@ -193,6 +195,13 @@ export const TRACK_METADATA = (() => {
     });
     return lookup;
 })();
+
+export const TRACK_ID_LOOKUP = {
+    "679771262": 0,
+    "693475855": 1,
+    "679771259": 2,
+    "679771253": 3,
+}
 
 export const TRACK_LOOKUP = {
     "life": "679771262",

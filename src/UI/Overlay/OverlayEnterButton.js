@@ -31,7 +31,7 @@ export default function OverlayEnterButton({ color, onClick, hasBeenClosed, cont
         <div className="enter-container">
             <button
                 type="button"
-                style={{ color: color }}
+                style={{ color: color, borderColor: color }}
                 onClick={text == LOADING ? null : onClick}
             >
                 {text}

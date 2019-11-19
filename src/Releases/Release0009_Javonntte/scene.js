@@ -16,13 +16,13 @@ import { MaterialsProvider } from './MaterialsContext';
 import DetroitBelt from './detroitBelt/DetroitBelt';
 import Sky from './Sky';
 
-export function Scene({ setContentReady, colorTheme, onThemeSelect }) {
+export function Scene({ setContentReady, theme, onThemeSelect }) {
     const { scene, camera } = useThree();
 
     useEffect(() => {
         // scene.background = colorTheme.background;
-        scene.fog = colorTheme.fog;
-    }, [colorTheme])
+        scene.fog = theme.fog;
+    }, [theme])
 
     return (
         <>
@@ -35,8 +35,8 @@ export function Scene({ setContentReady, colorTheme, onThemeSelect }) {
             /> */}
             <FixedLights />
             <MaterialsProvider>
-                <Stars radius={2} colors={colorTheme.starColors} />
-                <Sky theme={colorTheme.name} scale={1500} />
+                <Stars radius={2} colors={theme.starColors} />
+                <Sky theme={theme.name} scale={1500} />
                 <Suspense fallback={null}>
                     <Road
                         closed={true}
@@ -45,12 +45,12 @@ export function Scene({ setContentReady, colorTheme, onThemeSelect }) {
                         radiusSegments={4}
                     >
                         <Car
-                            onThemeSelect={onThemeSelect} headlightsColor={colorTheme.headlights} />
+                            onThemeSelect={onThemeSelect} headlightsColor={theme.headlights} />
                     </Road>
                     <BuildingsProvider>
                         <DetroitBelt
                             setContentReady={setContentReady}
-                            theme={colorTheme}
+                            theme={theme}
                         />
                     </BuildingsProvider>
                 </Suspense>

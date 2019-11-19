@@ -4,37 +4,32 @@ import useAudioPlayer from '../../UI/Player/hooks/useAudioPlayer';
 import UI from '../../UI/UI';
 import JavonntteCanvas from './Canvas';
 import * as C from './constants';
-import { cloneDeep } from 'lodash';
 
 
 export default function Release({ }) {
     const { playTrack, currentTrackId } = useAudioPlayer();
-    const [content, setContent] = useState(cloneDeep(CONTENT[window.location.pathname]));
+    const [content, setContent] = useState(CONTENT[window.location.pathname]);
     const [contentReady, setContentReady] = useState(false);
-
-    const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA[C.TRACK_LOOKUP["life"]].theme);
+    const [theme, setTheme] = useState(C.TRACK_METADATA[C.TRACK_LOOKUP["life"]].theme);
 
     useEffect(() => {
         if (!currentTrackId) return;
-        setColorTheme(C.TRACK_METADATA[currentTrackId].theme);
+        const metadata = C.TRACK_METADATA[currentTrackId];
+        content.colors = metadata.theme.UIColors;
+        setTheme(metadata.theme);
     }, [currentTrackId])
 
     function onTrackSelect(trackId) {
-        const metadata = C.TRACK_METADATA[trackId]
-        setColorTheme(metadata.theme);
-        playTrack(metadata.index)
+        const trackIndex = C.TRACK_ID_LOOKUP[trackId];
+        playTrack(trackIndex)
     }
 
-    useEffect(() => {
-        content.colors = colorTheme.UIColors;
-    }, [colorTheme])
-
-    return <>{content && colorTheme &&
+    return <>{content && theme &&
         <>
             <UI contentReady={contentReady} content={content} />
             <JavonntteCanvas
                 setContentReady={setContentReady}
-                colorTheme={colorTheme}
+                theme={theme}
                 onThemeSelect={onTrackSelect}
             />
         </>

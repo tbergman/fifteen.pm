@@ -72,7 +72,7 @@ export default function UI({
                     tracks={content.tracks}
                 />}
                 {infoIcon && <InfoIcon
-                    color={content.colors.default}
+                    color={content.colors.info}
                     hasPlayer={player}
                     hasTrackList={player && content.tracks.length > 1}
                     onClick={(e) => {

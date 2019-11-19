@@ -42,6 +42,7 @@ export default function Dashboard({ gltf, onThemeSelect }) {
                     key={buttonName}
                     onClick={e => {
                         const trackShorthand = buttonName.split("button_")[1];
+                        console.log("HOOO EEE CLICKY CLICK CLICK CLICKATY CLACK CLACK")
                         onThemeSelect(C.TRACK_LOOKUP[trackShorthand])
                     }}
                     material={selectedButton === buttonName ? selectedButtonMaterial : defaultButtonMaterial}

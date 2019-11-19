@@ -30,6 +30,7 @@ export const CONTENT = {
       overlay: 'rgba(0, 50, 200, 0.5)',
       navigation: 'white',
       onHover: 'rgba(0, 0, 0, 0.5)',
+      info: 'white',
     }
   },
   "/1": {
@@ -50,6 +51,7 @@ export const CONTENT = {
       player: 'rgba(255,105,180, 1)',
       navigation: 'rgba(255,105,180, 1)',
       onHover: '#fff',
+      info: 'rgba(255,105,180, 1)',
     },
     instructions: [
       {
@@ -76,6 +78,7 @@ export const CONTENT = {
       player: 'white',
       navigation: 'white',
       onHover: 'rgba(240, 0, 255, 0.75)',
+      info: 'white',
       instructions: [
         {
           icon: MouseMove,
@@ -107,21 +110,22 @@ export const CONTENT = {
       overlayContent: 'white',
       navigation: 'red',
       onHover: 'gray',
-      instructions: [
-        {
-          icon: Hover,
-          text: "hover over inner orb to activate filter"
-        },
-        {
-          icon: MouseMove,
-          text: "click and drag mouse to look around"
-        },
-        {
-          icon: TwoFingerScroll,
-          text: "scroll to zoom and fly through filter"
-        }
-      ]
-    }
+      info: 'red',
+    },
+    instructions: [
+      {
+        icon: Hover,
+        text: "hover over inner orb to activate filter"
+      },
+      {
+        icon: MouseMove,
+        text: "click and drag mouse to look around"
+      },
+      {
+        icon: TwoFingerScroll,
+        text: "scroll to zoom and fly through filter"
+      }
+    ]
   },
   "/4": {
     artist: "JON CANNON",
@@ -151,6 +155,7 @@ export const CONTENT = {
       player: '#fff',
       navigation: '#fff',
       onHover: 'rgba(250, 10, 250)',
+      info: '#fff',
     },
     instructions: [
       {
@@ -197,6 +202,7 @@ export const CONTENT = {
       player: '#fff',
       navigation: 'rgba(40, 47, 175, 1)',
       onHover: 'rgba(40, 47, 175, 1)',
+      info: '#fff',
     },
     instructions: [
       {
@@ -225,8 +231,9 @@ export const CONTENT = {
       overlay: 'rgba(127, 0, 255, 0.4)',
       overlayContent: '#fff',
       player: 'rgba(127, 0, 255, 0.4)',
-      navigation:'rgba(250, 0, 255, 0.4)',
+      navigation: 'rgba(250, 0, 255, 0.4)',
       onHover: 'rgba(127, 0, 255, 0.4)',
+      info: 'rgba(127, 0, 255, 0.4)',
     },
     instructions: [
       {
@@ -253,6 +260,7 @@ export const CONTENT = {
       player: 'rgba(255, 102, 0, 0.4)',
       navigation: 'rgba(255, 102, 0, 0.4)',
       onHover: 'rgba(255, 102, 0, 0.4)',
+      info: 'rgba(255, 102, 0, 0.4)',
     },
     instructions: [
       {
@@ -323,8 +331,9 @@ export const CONTENT = {
       overlay: 'rgba(255, 0, 0, 0.5)',
       overlayContent: '#fff',
       player: 'rgba(255, 0, 0, 0.5)',
-      navigation: '#fff', 
+      navigation: '#fff',
       onHover: 'rgba(255, 0, 0, 0.5)',
+      info: 'rgba(255, 0, 0, 0.5)',
     },
     instructions: [{
       icon: MouseMove,
@@ -392,11 +401,12 @@ export const CONTENT = {
     ],
     colors: {
       logo: '#0f0',
-      navigation: '#0f0', 
-      overlay: '#0f0',
-      overlayContent: '#fff',
+      navigation: '#0f0',
+      overlay: 'rgba(0, 255, 0, .8)',
+      overlayContent: '#000',
       player: '#0f0',
       onHover: '#fff',
+      info: '#0f0',
     },
     instructions: [
       {
