@@ -45,7 +45,7 @@ class WorldNeighborhoods {
 
     pickBuildings(tile, buildings) {
         const area = tile.triangle.getArea();
-        const subdivisions = area > 14 ? 3 : 6;
+        const subdivisions = C.WORLD_TILE_SUBDIVISIONS[this.theme](area)
         return {
             allowedBuildings: buildings.filter(building => {
                 return C.WORLD_BUILDING_CATEGORIES[this.theme].includes(building.name)
@@ -97,13 +97,13 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
 
 export function WorldSurface({ geometry, themeName }) {
 
-    const { tron, ground29, ornateBrass2Tiledx10, facade12, rock19 } = useContext(MaterialsContext);
+    const { tron, ground29Purple, pockedStone2, ground29Black, rock19 } = useContext(MaterialsContext);
 
     const exteriorMaterial = useMemo(() => ({
-        hell: ornateBrass2Tiledx10,
-        night: ground29,
+        hell: pockedStone2,
+        night: ground29Black,
         day: rock19,
-        sunset: facade12,
+        sunset: ground29Purple,
     }))
     return <>
         <group>

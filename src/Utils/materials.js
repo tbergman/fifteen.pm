@@ -15,7 +15,7 @@ import nightGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/n
 /* eslint import/no-webpack-loader-syntax: off */
 import dayGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/dayGradientFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
-import hellGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/hellGradientFragment.glsl';
+import dreamGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/dreamGradientFragment.glsl';
 
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
@@ -624,6 +624,37 @@ export function Rock19({ materialRef, ...props }) {
 	/>
 }
 
+export function PockedStone2({ materialRef, ...props }) {
+	// https://freepbr.com/materials/pocked-stone-pbr-material/
+	const [aoMap, albedoMap, heightMap, metalnesslMap, normalMap, roughnessMap, envMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const aoMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2_Ambient_Occlusion.png"));
+		const albedoMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2-albedo.png"));
+		const heightMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2-height.png"));
+		const metalnesslMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2-metalness.png"));
+		const normalMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2-normal.png"));
+		const roughnessMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2-roughness.png"));
+		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
+		const textureMaps = [aoMap, albedoMap, heightMap, metalnesslMap, normalMap, roughnessMap, envMap];
+		return tileTextureMaps(textureMaps, props);
+	});
+	return <meshStandardMaterial
+		ref={materialRef}
+		colorMap={albedoMap}
+		aoMap={aoMap}
+		bumpMap={heightMap}
+		displacementMap={heightMap}
+		// displacementBias={1}
+		// displacementScale={3}
+		normalMap={normalMap}
+		roughnessMap={roughnessMap}
+		// roughness={10}
+		metalnessMap={metalnesslMap}
+		envMap={envMap}
+		{...props}
+	/>
+}
+
 export function OrnateBrass2({ materialRef, ...props }) {
 	// https://freepbr.com/materials/ornate-brass-2/
 	const [albedoMap, aoMap, heightMap, metallicMap, normalMap, roughnessMap, envMap] = useMemo(() => {
@@ -674,11 +705,11 @@ export function NightGradient({ materialRef, ...props }) {
 }
 
 
-export function HellGradient({ materialRef, ...props }) {
+export function DreamGradient({ materialRef, ...props }) {
 	return <shaderMaterial
 		ref={materialRef}
 		vertexShader={simpleVertex}
-		fragmentShader={hellGradientFragmentShader}
+		fragmentShader={dreamGradientFragmentShader}
 		{...props}
 	/>;
 }

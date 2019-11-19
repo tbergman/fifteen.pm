@@ -105,11 +105,11 @@ class AsteroidNeighborhoods {
 
 
 export function AsteroidsSurface({ geometry, themeName }) {
-    const { tron, ground29, ornateBrass2, rock19, scuffedPlasticBlack } = useContext(MaterialsContext);
+    const { tron, ground29Purple, ornateBrass2, rock19, scuffedPlasticBlack } = useContext(MaterialsContext);
 
     const exteriorMaterial = useMemo(() => ({
         hell: ornateBrass2,
-        night: ground29,
+        night: ground29Purple,
         day: rock19,
         sunset: scuffedPlasticBlack,
     }))

@@ -20,7 +20,7 @@ export function Scene({ setContentReady, colorTheme, onThemeSelect }) {
     const { scene, camera } = useThree();
 
     useEffect(() => {
-        scene.background = colorTheme.background;
+        // scene.background = colorTheme.background;
         scene.fog = colorTheme.fog;
     }, [colorTheme])
 

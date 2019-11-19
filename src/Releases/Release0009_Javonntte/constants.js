@@ -99,8 +99,19 @@ export const WORLD_BUILDING_CATEGORIES = {
         "small_tall_twirly_future_comet_geo"
     ],
     hell: [
-        "large_short_low_present_factory"
+        "large_short_low_present_factory",
+        "large_tall_tower_present_penobscot",
+        "large_tall_low_present_michigancentralstation",
+        // "large_tall_tower_present_bookcadillachotel",
+        "large_short_low_present_boxy"
     ]
+}
+
+export const WORLD_TILE_SUBDIVISIONS = {
+    night: (area) => area > 14 ? 3 : 6,
+    sunset: (area) => area > 14 ? 3 : 6,
+    day: (area) => area > 14 ? 3 : 6,
+    hell: (area) => 1,
 }
 
 // TRACK INFO
@@ -134,7 +145,7 @@ export const TRACK_THEMES = [
         starColors: [0x0000ef, 0x111111, 0x222222],
         headlights: 0xf00,
     },
-    // HELL
+    // DREAM
     {
         name: HELL,
         UIColors: {
@@ -144,8 +155,9 @@ export const TRACK_THEMES = [
             player: '#0a0',
             onHover: '#fff9',
         },
-        fog: new THREE.FogExp2(0xff0000, 0.0025),
-        background: new THREE.Color(0xff0000),
+        // fog: new THREE.FogExp2(0x000000, 0.00000025),
+        fog: new THREE.FogExp2(0xffffff, 0.00005),
+        background: new THREE.Color(0x00000),
         starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
         headlights: 0xf00,
     },
@@ -160,7 +172,7 @@ export const TRACK_THEMES = [
             onHover: '#fff9',
         },
         fog: new THREE.FogExp2(0xffffff, 0.00005),
-        background: new THREE.Color(0xffffff),
+        // background: new THREE.Color(0xffffff),
         starColors: [0x555555, 0x333333, 0x1a1a1a],
         headlights: 0xf00,
     },

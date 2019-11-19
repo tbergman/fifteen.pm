@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useResource } from 'react-three-fiber';
-import { BlackLeather12, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, OrnateBrass2, Rock19, ScuffedPlasticMaterial, Tiles36, Tiles60, Windows1Material, TronMaterial, Ground29Material, SunsetGradient, NightGradient, HellGradient, DayGradient } from '../../Utils/materials';
+import { BlackLeather12, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, OrnateBrass2, Rock19, ScuffedPlasticMaterial, Tiles36, Tiles60, Windows1Material, TronMaterial, Ground29Material, SunsetGradient, NightGradient, DreamGradient as DreamGradient, DayGradient, PockedStone2 } from '../../Utils/materials';
 
 const MaterialsContext = React.createContext([{}, () => { }]);
 
@@ -30,10 +30,12 @@ const MaterialsProvider = ({ ...props }) => {
     const [scuffedPlasticGlowingRef, scuffedPlasticGlowing] = useResource();
     const [blackLeather12Ref, blackLeather12] = useResource();
     const [tronRef, tron] = useResource();
-    const [ground29Ref, ground29] = useResource();
+    const [ground29PurpleRef, ground29Purple] = useResource();
+    const [ground29BlackRef, ground29Black] = useResource();
+    const [pockedStone2Ref, pockedStone2] = useResource();
     const [sunsetRef, sunset] = useResource();
     const [nightRef, night] = useResource();
-    const [hellRef, hell] = useResource();
+    const [dreamRef, dream] = useResource();
     const [dayRef, day] = useResource();
 
     const materials = {
@@ -57,10 +59,12 @@ const MaterialsProvider = ({ ...props }) => {
         scuffedPlasticBlack,
         blackLeather12,
         tron,
-        ground29,
+        ground29Purple,
+        ground29Black,
+        pockedStone2,
         sunset,
         night,
-        hell,
+        dream,
         day,
     }
 
@@ -91,10 +95,12 @@ const MaterialsProvider = ({ ...props }) => {
         <ScuffedPlasticMaterial materialRef={scuffedPlasticGlowingRef} color="yellow" emissive="pink" />
         <BlackLeather12 materialRef={blackLeather12Ref} />
         <TronMaterial materialRef={tronRef} side={THREE.BackSide} />
-        <Ground29Material materialRef={ground29Ref} color={0x000} />
+        <Ground29Material materialRef={ground29PurpleRef} color={0xf0f} />
+        <Ground29Material materialRef={ground29BlackRef} color={0x000} />
+        <PockedStone2 materialRef={pockedStone2Ref} />
         <SunsetGradient materialRef={sunsetRef} side={THREE.BackSide} />
         <NightGradient materialRef={nightRef} side={THREE.BackSide} />
-        <HellGradient materialRef={hellRef} side={THREE.Backside} />
+        <DreamGradient materialRef={dreamRef} side={THREE.Backside} />
         <DayGradient materialRef={dayRef} side={THREE.BackSide} />
         {props.children}
     </MaterialsContext.Provider>
