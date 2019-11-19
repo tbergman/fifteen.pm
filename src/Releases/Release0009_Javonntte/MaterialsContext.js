@@ -36,7 +36,7 @@ const MaterialsProvider = ({ ...props }) => {
     const [sunsetRef, sunset] = useResource();
     const [nightRef, night] = useResource();
     const [dreamRef, dream] = useResource();
-    const [dayRef, day] = useResource();
+    const [naturalRef, natural] = useResource();
 
     const materials = {
         cloud,
@@ -65,7 +65,7 @@ const MaterialsProvider = ({ ...props }) => {
         sunset,
         night,
         dream,
-        day,
+        natural,
     }
 
     useEffect(() => {
@@ -101,7 +101,7 @@ const MaterialsProvider = ({ ...props }) => {
         <SunsetGradient materialRef={sunsetRef} side={THREE.BackSide} />
         <NightGradient materialRef={nightRef} side={THREE.BackSide} />
         <DreamGradient materialRef={dreamRef} side={THREE.Backside} />
-        <DayGradient materialRef={dayRef} side={THREE.BackSide} />
+        <DayGradient materialRef={naturalRef} side={THREE.BackSide} />
         {props.children}
     </MaterialsContext.Provider>
 }

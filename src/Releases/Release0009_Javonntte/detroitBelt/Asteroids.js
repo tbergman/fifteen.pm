@@ -110,7 +110,7 @@ export function AsteroidsSurface({ geometry, themeName }) {
     const exteriorMaterial = useMemo(() => ({
         hell: ornateBrass2,
         night: ground29Purple,
-        day: rock19,
+        natural: rock19,
         sunset: scuffedPlasticBlack,
     }))
 

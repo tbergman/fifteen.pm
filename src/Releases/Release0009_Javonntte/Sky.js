@@ -2,14 +2,14 @@ import React, { useContext, useMemo } from 'react';
 import { MaterialsContext } from './MaterialsContext';
 
 export default function Sky({ theme, scale }) {
-    const { sunset, night, dream, day } = useContext(MaterialsContext);
+    const { sunset, night, dream, natural } = useContext(MaterialsContext);
     
     const materials = useMemo(() => {
         return {
             night: night,
             sunset: sunset,
             hell: dream,
-            day: day,
+            natural: natural,
         }
     })
 

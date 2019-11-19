@@ -102,7 +102,7 @@ export function WorldSurface({ geometry, themeName }) {
     const exteriorMaterial = useMemo(() => ({
         hell: pockedStone2,
         night: ground29Black,
-        day: rock19,
+        natural: rock19,
         sunset: ground29Purple,
     }))
     return <>

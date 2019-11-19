@@ -340,7 +340,7 @@ export default class Scene extends Component {
       let roomDepth = 4000;
   
       // TODO there must be a way to use a box, I haven't figured out what to google
-      // TODO before sunday: make a for loop or map lol
+      // TODO make a for loop or map lol
       let floorPhysPos = new CANNON.Vec3(0, roomYPos, 0);
       let floorAxis = new CANNON.Vec3(1, 0, 0);
       let floorAngle = -Math.PI / 2;
