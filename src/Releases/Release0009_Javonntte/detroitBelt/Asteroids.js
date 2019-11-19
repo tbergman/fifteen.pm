@@ -40,13 +40,13 @@ function generateAsteroidSurfaces(props) {
         const noiseSphere = new NoiseSphereGeometry(
             radius,
             10, // sides
-            Math.floor(Math.max(radius * Math.random(), radius * 2)), // tiers
+            10,//Math.floor(Math.max(radius * Math.random(), radius * 2)), // tiers
             {
                 centroid: centroid,
                 seed: Math.floor(Math.random() * 1000),
-                noiseWidth: 5,
-                noiseHeight: 5,
-                scale: { x: Math.random() * 1.5, y: 1, z: 1 }
+                noiseWidth: 1,
+                noiseHeight: 1,
+                scale: { x: Math.random() * 1.5, y: Math.random() * 1.5, z: Math.random() * 1.5 }
             })
         noiseSphere.verticesNeedUpdate = true;
         noiseSphere.computeBoundingSphere();
