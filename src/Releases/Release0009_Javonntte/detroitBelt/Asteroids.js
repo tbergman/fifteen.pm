@@ -44,8 +44,8 @@ function generateAsteroidSurfaces(props) {
             {
                 centroid: centroid,
                 seed: Math.floor(Math.random() * 1000),
-                noiseWidth: 25,
-                noiseHeight: 25,
+                noiseWidth: 5,
+                noiseHeight: 5,
                 scale: { x: Math.random() * 1.5, y: 1, z: 1 }
             })
         noiseSphere.verticesNeedUpdate = true;
