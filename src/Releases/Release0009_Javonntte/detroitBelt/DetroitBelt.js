@@ -1,7 +1,7 @@
-import { default as React, useEffect, useState } from 'react';
+import { default as React, useEffect, useState, Suspense } from 'react';
 import { Asteroids } from './Asteroids';
 import { World } from './World';
-
+import DetroitLogo from './DetroitLogo';
 
 export default function DetroitBelt({ setContentReady, theme }) {
 
@@ -20,5 +20,8 @@ export default function DetroitBelt({ setContentReady, theme }) {
     return <>
         <Asteroids themeName={themeName} setReady={setAsteroidsReady} />
         <World themeName={themeName} setReady={setWorldReady} />
+        <Suspense>
+            <DetroitLogo />
+        </Suspense>
     </>
 }

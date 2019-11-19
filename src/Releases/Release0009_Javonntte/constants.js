@@ -24,14 +24,6 @@ export const WORLD_ROAD_PATH = (() => {
     return points.slice(0, points.length - 2); // don't overlap the loop (rm last elt)
 })();
 
-// LOGO
-// TODO use world radius?
-export const LOGO_POS = new THREE.Vector3(
-    -500,
-    -300,
-    0,
-)
-
 // ASTEROID CONSTANTS
 // This is divided by the window inner width in the constant below so movile screens have smaller surfacess
 export const NUM_ASTEROIDS = 33;
@@ -63,7 +55,7 @@ export const DREAM = "dream"
 export const NATURAL = "natural"
 
 export const ASTEROID_BUILDING_CATEGORIES = {
-    night: ["medium_large_tall_low_michigancentralstation", "large_tall_logo_present_logo"],
+    night: ["medium_large_tall_low_michigancentralstation"],
     sunset: ["small_tall_diamond_future_diamondhull_geo002"],
     natural: ["medium_tall_tower_present_talltower"],
     dream: ["medium_tall_tower_present_talltower", "small_short_twirly_future_disco1_small_cactus",

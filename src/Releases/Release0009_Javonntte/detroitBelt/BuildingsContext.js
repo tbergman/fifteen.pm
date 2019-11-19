@@ -34,7 +34,7 @@ const BuildingsProvider = ({ ...props }) => {
         return {
             "large_short_low_present_boxy": { material: scuffedPlasticBlack },
             "large_short_low_present_factory": { material: scuffedPlasticBlack },
-            "large_tall_logo_present_logo": { material: scuffedPlasticBlack },
+            // "large_tall_logo_present_logo": { material: scuffedPlasticBlack },
             "large_tall_low_present_michigancentralstation": { material: scuffedPlasticBlack },
             "large_tall_tower_present_bookcadillachotel": { material: scuffedPlasticBlack },
             "large_tall_tower_present_penobscot": { material: scuffedPlasticBlack },

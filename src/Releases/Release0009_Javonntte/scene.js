@@ -9,7 +9,6 @@ import Road from './Road';
 import { World } from './detroitBelt/World';
 import { BloomFilmEffect } from '../../Utils/Effects';
 import Stars from './Stars';
-import DetroitLogo from './DetroitLogo';
 import { Controls } from './controls';
 import { BuildingsProvider } from './detroitBelt/BuildingsContext';
 import { MaterialsProvider } from './MaterialsContext';
