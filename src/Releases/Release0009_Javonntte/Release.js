@@ -11,6 +11,7 @@ export default function Release({ }) {
     const [content, setContent] = useState(CONTENT[window.location.pathname]);
     const [contentReady, setContentReady] = useState(false);
     const [theme, setTheme] = useState(C.TRACK_METADATA[C.TRACK_LOOKUP["life"]].theme);
+    const [useDashCam, setUseDashCam] = useState(false);
 
     useEffect(() => {
         if (!currentTrackId) return;
@@ -26,11 +27,16 @@ export default function Release({ }) {
 
     return <>{content && theme &&
         <>
-            <UI contentReady={contentReady} content={content} />
+            <UI
+                contentReady={contentReady}
+                content={content}
+                onOverlayHasBeenClosed={() => setUseDashCam(true)}
+            />
             <JavonntteCanvas
                 setContentReady={setContentReady}
                 theme={theme}
                 onThemeSelect={onTrackSelect}
+                useDashCam={useDashCam}
             />
         </>
     }</>

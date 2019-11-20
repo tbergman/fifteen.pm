@@ -16,6 +16,8 @@ function Car({
     headlightsColor,
     road,
     onThemeSelect,
+    setCarReady,
+    useDashCam,
 }) {
 
     const gltf = useLoader(GLTFLoader, C.CAR_URL, loader => {
@@ -42,10 +44,16 @@ function Car({
     const { audioStream } = useAudioPlayer();
 
     useEffect(() => {
+        if (car) setCarReady(true)
+    }, [car])
+
+
+    useEffect(() => {
         if (!speed.current) speed.current = 20;
         if (!delta.current) delta.current = .005;
         if (!offset.current) offset.current = 0;
     })
+
 
     const updateSpeed = () => {
         if (accelerationPressed) {
@@ -130,7 +138,7 @@ function Car({
     return <group ref={carRef}>
         {car &&
             <>
-                <DashCam />
+                <DashCam useDashCam={useDashCam} />
                 <Dashboard gltf={gltf} onThemeSelect={onThemeSelect} />
                 <Chassis gltf={gltf} />
                 <SteeringWheel gltf={gltf} rotation={car.rotation} />

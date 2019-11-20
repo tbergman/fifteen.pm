@@ -3,7 +3,7 @@ import { Canvas } from 'react-three-fiber';
 import { AudioPlayerContext } from '../../UI/Player/AudioPlayerContext';
 import { Scene } from './Scene';
 
-export default function JavonntteCanvas({ setContentReady, theme, onThemeSelect }) {
+export default function JavonntteCanvas({ setContentReady, theme, onThemeSelect, useDashCam }) {
 
     return (
         // Unfortunately some gymnastics required here to pass music player context through canvas.
@@ -30,6 +30,7 @@ export default function JavonntteCanvas({ setContentReady, theme, onThemeSelect 
                                 setContentReady={setContentReady}
                                 theme={theme}
                                 onThemeSelect={onThemeSelect}
+                                useDashCam={useDashCam}
                             />
                         </AudioPlayerContext.Provider>
                     </Canvas>

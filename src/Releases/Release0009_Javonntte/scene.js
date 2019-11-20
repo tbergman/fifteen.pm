@@ -15,13 +15,18 @@ import { MaterialsProvider } from './MaterialsContext';
 import DetroitBelt from './detroitBelt/DetroitBelt';
 import Sky from './Sky';
 
-export function Scene({ setContentReady, theme, onThemeSelect }) {
+export function Scene({ setContentReady, theme, onThemeSelect, useDashCam }) {
     const { scene, camera } = useThree();
+    const [detroitBeltReady, setDetroitBeltReady] = useState(false);
+    const [carReady, setCarReady] = useState(false);
 
     useEffect(() => {
-        // scene.background = colorTheme.background;
         scene.fog = theme.fog;
     }, [theme])
+
+    useEffect(() => {
+        if (detroitBeltReady && carReady) setContentReady(true);
+    }, [detroitBeltReady, carReady])
 
     return (
         <>
@@ -44,11 +49,15 @@ export function Scene({ setContentReady, theme, onThemeSelect }) {
                         radiusSegments={4}
                     >
                         <Car
-                            onThemeSelect={onThemeSelect} headlightsColor={theme.headlights} />
+                            onThemeSelect={onThemeSelect}
+                            headlightsColor={theme.headlights}
+                            setCarReady={setCarReady}
+                            useDashCam={useDashCam}
+                        />
                     </Road>
                     <BuildingsProvider>
                         <DetroitBelt
-                            setContentReady={setContentReady}
+                            setDetroitBeltReady={setDetroitBeltReady}
                             theme={theme}
                         />
                     </BuildingsProvider>

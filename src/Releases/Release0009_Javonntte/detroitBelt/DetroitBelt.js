@@ -3,7 +3,7 @@ import { Asteroids } from './Asteroids';
 import { World } from './World';
 import DetroitLogo from './DetroitLogo';
 
-export default function DetroitBelt({ setContentReady, theme }) {
+export default function DetroitBelt({ setDetroitBeltReady, theme }) {
 
     const [themeName, setThemeName] = useState();
     const [worldReady, setWorldReady] = useState(false);
@@ -14,7 +14,7 @@ export default function DetroitBelt({ setContentReady, theme }) {
     }, [theme])
 
     useEffect(() => {
-        if (asteroidsReady && worldReady) setContentReady(true);
+        if (asteroidsReady && worldReady) setDetroitBeltReady(true);
     }, [worldReady, asteroidsReady]);
 
     return <>

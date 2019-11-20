@@ -3,11 +3,11 @@ import * as THREE from 'three';
 import { useFrame, useThree } from 'react-three-fiber';
 import isMobile from '../../../Utils/BrowserDetection';
 
-export default function DashCam({ }) {
+export default function DashCam({ useDashCam }) {
     const ref = useRef()
     const { aspect, size, setDefaultCamera } = useThree();
     const [looking, setLooking] = useState(false);
-    
+
     useEffect(() => {
         window.addEventListener("touchmove", look, false);
         window.addEventListener("mousemove", look, false);
@@ -52,10 +52,11 @@ export default function DashCam({ }) {
 
     // Make the camera known to the system
     useEffect(() => {
+        if (!useDashCam) return;
         ref.current.aspect = aspect;
         ref.current.updateMatrixWorld()
         setDefaultCamera(ref.current);
-    }, [])
+    }, [useDashCam])
 
     // Update it every frame
     useFrame(() => ref.current.updateMatrixWorld())
