@@ -11,7 +11,7 @@ export default function OverlayEnterButton({ color, onClick, hasBeenClosed, cont
         return [
             "ENTER",
             "CLOSE",
-            "LOADING",
+            "LOADING...",
         ]
     })
     
