@@ -46,7 +46,7 @@ function generateAsteroidSurfaces(props) {
                 seed: Math.floor(Math.random() * 1000),
                 noiseWidth: 1,
                 noiseHeight: 1,
-                scale: { x: Math.random() * 1.5, y: Math.random() * 1.5, z: Math.random() * 1.5 }
+                scale: { x: Math.random() * 1.5, y: 1, z: 1 }
             })
         noiseSphere.verticesNeedUpdate = true;
         noiseSphere.computeBoundingSphere();
@@ -80,14 +80,14 @@ class AsteroidNeighborhoods {
     constructor(surface, theme) {
         this.surface = surface;
         this.theme = theme;
-        this.numTiles = 1;
+        this.numTiles = 3;
         this.maxRadius = C.ASTEROID_MAX_RADIUS * 6
     }
 
     rules = () => true
 
     getNeighborhoodCentroids({ tiles, surface }) {
-        const numCentroids = Math.max(0, surface.radius / 2);
+        const numCentroids = Math.min(3, surface.radius / 2);
         const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
         return centroids;
     }
@@ -98,7 +98,7 @@ class AsteroidNeighborhoods {
             allowedBuildings: buildings.filter(building => {
                 return C.ASTEROID_BUILDING_CATEGORIES[this.theme].includes(building.name)
             }),
-            subdivisions: 1,
+            subdivisions: 3,
         }
     }
 }

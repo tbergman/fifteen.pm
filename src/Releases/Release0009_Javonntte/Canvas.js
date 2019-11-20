@@ -21,7 +21,8 @@ export default function JavonntteCanvas({ setContentReady, theme, onThemeSelect 
                             gl.gammaInput = true;
                             gl.gammaOutput = true;
                             gl.antialias = true;
-                            // gl.setPixelRatio(window.devicePixelRatio * 1.5);
+                            // IMPORTANT: Turn this on for development!
+                            gl.debug.checkShaderErrors = false;
                         }}
                     >
                         <AudioPlayerContext.Provider value={value}>

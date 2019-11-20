@@ -53,7 +53,7 @@ export function Scene({ setContentReady, theme, onThemeSelect }) {
                         />
                     </BuildingsProvider>
                 </Suspense>
-                <BloomFilmEffect />
+                {theme.usePostProcessing && <BloomFilmEffect />}
             </MaterialsProvider >
         </>
     );
