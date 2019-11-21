@@ -101,7 +101,7 @@ function Car({
     const spinRight = () => {
         car.position.y += normal.y * 2;
         car.rotation.z += .01;
-        audioStream.filter.frequency.value = Math.min(Math.abs(car.position.y), 22050);
+        audioStream.filter.frequency.value = Math.max(100, Math.min(Math.abs(car.position.y), 22050));
         audioStream.filter.Q.value = 11;
     }
 
