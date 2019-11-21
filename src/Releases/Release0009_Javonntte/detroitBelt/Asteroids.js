@@ -20,10 +20,8 @@ function generateAsteroidSurfaces(props) {
 
     const asteroidsGeom = new THREE.Geometry();
 
-    function _generateAsteroidCentroids({ beltRadius, numAsteroids }) {
+    function _generateAsteroidCentroids({ beltRadius, numAsteroids, distBetweenRings, closestRingRadius }) {
         const centroids = [];
-        const distBetweenRings = 8;
-        const closestRingRadius = C.WORLD_RADIUS + 5;
         let curRingRadius = closestRingRadius;
         const satelliteSlots = 20; // potential locations on ring for satellite
         while (centroids.length < numAsteroids) {
@@ -143,6 +141,8 @@ export function Asteroids({ themeName, setReady }) {
             beltCenter: C.ASTEROID_BELT_CENTER,
             numAsteroids: C.NUM_ASTEROIDS,
             maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
+            distBetweenRings: C.ASTEROID_DIST_BETWEEN_RINGS,
+            closestRingRadius: C.ASTEROID_CLOSEST_RING_RADIUS,
         })
 
         const _meshes = {}

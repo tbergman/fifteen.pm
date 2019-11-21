@@ -5,13 +5,13 @@ import * as C from './constants';
 import { randomPointsOnSphere, randomArrayVal, selectNRandomFromArray } from '../../Utils/random';
 
 function StreetLights({ }) {
-    const numLights = 6;
+    const numLights = 5;
     const step = Math.floor(C.WORLD_ROAD_PATH.length/numLights);
     const points = [];
     for (let i=0; i<C.WORLD_ROAD_PATH.length; i+=step){
         const curPoint = C.WORLD_ROAD_PATH[i];
         const yOffset = curPoint.y < 0 ? -2 : 2;
-        const xOffset = curPoint.x < 0 ? -2 : 2;
+        // const xOffset = curPoint.x < 0 ? -2 : 2;
         points.push([curPoint.x, curPoint.y + yOffset, curPoint.z]);
     }
     

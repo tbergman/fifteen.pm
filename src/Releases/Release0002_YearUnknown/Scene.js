@@ -21,7 +21,7 @@ service.pins = pinsFormation[0]
 
 export default class Scene extends Component {
     constructor() {
-      super();
+      super()
       this.bpm = 145;
       this.beatTime = (60 / 145) * 1000;
   

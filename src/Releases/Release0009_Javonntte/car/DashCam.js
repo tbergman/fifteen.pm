@@ -65,7 +65,7 @@ export default function DashCam({ useDashCam }) {
             ref={ref}
             aspect={size.width / size.height}
             radius={(size.width + size.height) / 4}
-            fov={55}
+            fov={50}
             near={.01}
             position={[0, .068, .15]}
             onUpdate={self => self.updateProjectionMatrix()}

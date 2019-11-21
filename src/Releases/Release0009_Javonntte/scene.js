@@ -50,7 +50,7 @@ export function Scene({ setContentReady, theme, onThemeSelect, useDashCam }) {
                     >
                         <Car
                             onThemeSelect={onThemeSelect}
-                            headlightsColor={theme.headlights}
+                            headlightsColors={theme.headlights}
                             setCarReady={setCarReady}
                             useDashCam={useDashCam}
                         />
@@ -62,7 +62,7 @@ export function Scene({ setContentReady, theme, onThemeSelect, useDashCam }) {
                         />
                     </BuildingsProvider>
                 </Suspense>
-                {theme.usePostProcessing && <BloomFilmEffect />}
+                <BloomFilmEffect />
             </MaterialsProvider >
         </>
     );

@@ -42,7 +42,7 @@ const BuildingsProvider = ({ ...props }) => {
             "medium_tall_ribbony_future_celvinyl_geo003": { material: scuffedPlasticBlack },
             // "medium_tall_ribbony_future_celvinyl_geo002": { material: scuffedPlasticBlack },
             "medium_tall_tower_present_talltower": { material: facade10 },
-            "medium_tall_tower_present_broderick": { material: facade12 },
+            // "medium_tall_tower_present_broderick": { material: facade12 },
             "medium_tall_tower_present_fancytower": { material: facade10 },
             "medium_tall_tower_present_tower": { material: tiles36 },
             "medium_tall_tower_future_needle7": { material: scuffedPlasticBlack },

@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { CONTENT } from '../../Content';
-import { isMobile } from '../../Utils/BrowserDetection'
 import { assetPath9 } from './utils';
 
 
@@ -15,9 +14,8 @@ export const WORLD_RADIUS = 48;
 export const MAX_WORLD_FACE_HEIGHT = 1;
 export const WORLD_SIDES = 24;
 export const WORLD_TIERS = 24;
-export const WORLD_BUILDING_CORRIDOR_WIDTH = isMobile ? 20 : 20;
-export const WORLD_ROAD_WIDTH = isMobile ? WORLD_RADIUS / 7 : WORLD_RADIUS / 7;
-export const MAX_ROAD_ELEVATION = WORLD_RADIUS + 8;
+export const WORLD_BUILDING_CORRIDOR_WIDTH = 10;
+export const WORLD_ROAD_WIDTH = WORLD_RADIUS / 11;
 export const WORLD_ROAD_PATH = (() => {
     const circle = new THREE.CircleGeometry(WORLD_RADIUS, WORLD_RADIUS);
     const points = circle.vertices.reverse(); // reverse it so driver is going in expected dir
@@ -27,9 +25,10 @@ export const WORLD_ROAD_PATH = (() => {
 // ASTEROID CONSTANTS
 // This is divided by the window inner width in the constant below so movile screens have smaller surfacess
 export const NUM_ASTEROIDS = 20;
-export const ASTEROID_MAX_RADIUS = WORLD_RADIUS / 3;
-export const ASTEROID_BELT_RADIUS = WORLD_RADIUS * 8;
-
+export const ASTEROID_MAX_RADIUS = WORLD_RADIUS / 5;
+export const ASTEROID_BELT_RADIUS = WORLD_RADIUS * 5;
+export const ASTEROID_DIST_BETWEEN_RINGS = 3;
+export const ASTEROID_CLOSEST_RING_RADIUS = WORLD_RADIUS + 5;
 // BUILDING
 // model geometry categories
 export const LARGE = "large";
@@ -56,7 +55,7 @@ export const NATURAL = "natural"
 
 export const ASTEROID_BUILDING_CATEGORIES = {
     night: [
-        "small_tall_diamond_future_toongeo1",
+        // "small_tall_diamond_future_toongeo1",
     ],
     sunset: [
     ],
@@ -69,13 +68,13 @@ export const ASTEROID_BUILDING_CATEGORIES = {
 
 export const WORLD_BUILDING_CATEGORIES = {
     night: [
-        "medium_tall_ribbony_future_celvinyl_geo003",
-        "medium_tall_diamond_future_shinyhull1",
-        "medium_tall_tower_future_needle7",
-        "small_tall_tower_future_needle3",
+        // "medium_tall_ribbony_future_celvinyl_geo003",
+        // "medium_tall_diamond_future_shinyhull1",
+        // "medium_tall_tower_future_needle7",
+        // "small_tall_tower_future_needle3",
         "small_tall_tower_future_needle4",
         "small_tall_tower_future_needle6",
-        "small_tall_tower_future_lightwire1",
+        // "small_tall_tower_future_lightwire1",
     ],
     sunset: [
         "medium_tall_tower_present_talltower",
@@ -91,8 +90,17 @@ export const WORLD_BUILDING_CATEGORIES = {
     ]
 }
 
+// options are 6,3,1
 export const WORLD_TILE_SUBDIVISIONS = {
-    night: (area) => area > 14 ? 3 : 6,
+    night: (area) => {
+        if (area < 6) {
+            return 1
+        } else if (area < 8) {
+            return 3;
+        } else {
+            return 6;
+        }
+    },
     sunset: (area) => area > 14 ? 3 : 6,
     natural: (area) => area > 14 ? 3 : 6,
     dream: (area) => 1,
@@ -101,6 +109,25 @@ export const WORLD_TILE_SUBDIVISIONS = {
 // TRACK INFO
 export const TRACK_THEMES = [
     // index matches track list order
+    // DREAM
+    {
+        name: DREAM,
+        UIColors: {
+            logo: '#ee82ee',
+            overlay: 'rgb(238,130,238, .8)',
+            overlayContent: '#000',
+            player: '#ee82ee',
+            navigation: '#ee82ee',
+            info: '#ee82ee',
+            onHover: '#fff',
+        },
+        // fog: new THREE.FogExp2(0x000000, 0.00000025),
+        fog: new THREE.FogExp2(0xffffff, 0.00005),
+        background: new THREE.Color(0x00000),
+        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
+        headlights: [0xff0000, 0x0000ff],
+        usePostProcessing: true,
+    },
     // NIGHT
     {
         name: NIGHT,
@@ -111,7 +138,7 @@ export const TRACK_THEMES = [
         surfaces: "ground29",
         sky: "night",
         world: "future",
-        headlights: 0xffffb3,
+        headlights: [0xffff4d, 0xffff4d],//ffffb3,
         usePostProcessing: false, // too intense for initial load
     },
 
@@ -130,26 +157,7 @@ export const TRACK_THEMES = [
         fog: new THREE.FogExp2(0xefd1b5, 0.0025),
         background: new THREE.Color(0xfe8981),
         starColors: [0x0000ef, 0x111111, 0x222222],
-        headlights: 0xf00,
-        usePostProcessing: true,
-    },
-    // DREAM
-    {
-        name: DREAM,
-        UIColors: {
-            logo: '#ee82ee',
-            overlay: 'rgb(238,130,238, .8)',
-            overlayContent: '#000',
-            player: '#ee82ee',
-            navigation: '#ee82ee',
-            info: '#ee82ee',
-            onHover: '#fff',
-        },
-        // fog: new THREE.FogExp2(0x000000, 0.00000025),
-        fog: new THREE.FogExp2(0xffffff, 0.00005),
-        background: new THREE.Color(0x00000),
-        starColors: [0xffffff, 0xfffff0, 0xf9f1f1],
-        headlights: 0xf00,
+        headlights: [0xff0000, 0x0000ff],
         usePostProcessing: true,
     },
     // NATURAL
@@ -167,7 +175,7 @@ export const TRACK_THEMES = [
         fog: new THREE.FogExp2(0xffffff, 0.00005),
         // background: new THREE.Color(0xffffff),
         starColors: [0x555555, 0x333333, 0x1a1a1a],
-        headlights: 0xf00,
+        headlights: [0xff0000, 0x0000ff],
         usePostProcessing: true,
     },
 ]

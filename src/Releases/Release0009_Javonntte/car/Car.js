@@ -13,7 +13,7 @@ import Headlights from './Headlights';
 import SteeringWheel from './SteeringWheel';
 
 function Car({
-    headlightsColor,
+    headlightsColors,
     road,
     onThemeSelect,
     setCarReady,
@@ -142,7 +142,7 @@ function Car({
                 <Dashboard gltf={gltf} onThemeSelect={onThemeSelect} />
                 <Chassis gltf={gltf} />
                 <SteeringWheel gltf={gltf} rotation={car.rotation} />
-                <Headlights color={headlightsColor} />
+                <Headlights colors={headlightsColors} />
                 {/* This pointlight makes the dash and chassis look good... */}
                 {/* <pointLight
                     position={[.8, -.75, 1.5]}
