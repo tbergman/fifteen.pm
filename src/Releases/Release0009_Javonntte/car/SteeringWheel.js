@@ -11,15 +11,6 @@ export default function SteeringWheel({ gltf, rotation }) {
         return gltf.__$.filter(elt => C.STEERING_WHEEL_PARTS.includes(elt.name))
     })
 
-    // const wheelMaterial = useMemo(() => {
-    //     return {
-    //         "gloves": foamGrip,
-    //         "sleeves": foamGrip,
-    //         "wheel": foamGrip,
-    //         "wheel_internal": metal03,
-    //     }
-    // })
-
     useFrame(() => {
         if (!wheel) return;
         wheel.rotation.z = rotation.z * .1;

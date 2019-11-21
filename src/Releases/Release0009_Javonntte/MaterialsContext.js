@@ -11,12 +11,9 @@ const MaterialsProvider = ({ ...props }) => {
     const [loaded, setLoaded] = useState(false);
 
     const [foamGripPurpleRef, foamGripPurple] = useResource();
-    const [foamGripBlackRef, foamGripBlack] = useResource();
     const [facade10Ref, facade10] = useResource();
-    const [facade12Ref, facade12] = useResource();
     const [metal03Ref, metal03] = useResource();
     const [metal03BlackRef, metal03Black] = useResource();
-    const [tiles36Ref, tiles36] = useResource();
     const [rock19Ref, rock19] = useResource();
     const [ornateBrass2Ref, ornateBrass2] = useResource();
     const [scuffedPlasticRedRef, scuffedPlasticRed] = useResource();
@@ -33,12 +30,9 @@ const MaterialsProvider = ({ ...props }) => {
 
     const materials = {
         foamGripPurple,
-        foamGripBlack,
         facade10,
-        facade12,
         metal03,
         metal03Black,
-        tiles36,
         rock19,
         ornateBrass2,
         scuffedPlasticRed,
@@ -62,12 +56,9 @@ const MaterialsProvider = ({ ...props }) => {
 
     return <MaterialsContext.Provider value={{ loaded, ...materials }}>
         <FoamGripMaterial materialRef={foamGripPurpleRef} color={0xff00af} specular={0x00ff00} />
-        <FoamGripMaterial materialRef={foamGripBlackRef} color="black" />
         <Facade10Material materialRef={facade10Ref} shininess={100} color={0x00000f} textureRepeat={{ x: 1, y: 1 }} />
-        <Facade12Material materialRef={facade12Ref} />
         <Metal03Material materialRef={metal03Ref} textureRepeat={{ x: 2, y: 2 }} />
         <Metal03Material materialRef={metal03BlackRef} color="black" />
-        <Tiles36 materialRef={tiles36Ref} shininess={100} color="black" />
         <Rock19 materialRef={rock19Ref} displacementScale={0.05} />
         <OrnateBrass2 materialRef={ornateBrass2Ref} textureRepeat={{ x: 1, y: 1 }} color="black" />
         <ScuffedPlasticMaterial materialRef={scuffedPlasticRedRef} />

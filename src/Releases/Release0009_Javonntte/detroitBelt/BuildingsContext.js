@@ -25,9 +25,6 @@ const BuildingsProvider = ({ ...props }) => {
         foamGripPurple,
         scuffedPlasticBlack,
         facade10,
-        facade12,
-        tiles36,
-        metal03Black,
         ornateBrass2 } = useContext(MaterialsContext)
 
     const attributes = useMemo(() => {
@@ -43,12 +40,12 @@ const BuildingsProvider = ({ ...props }) => {
             // "medium_tall_ribbony_future_celvinyl_geo002": { material: scuffedPlasticBlack },
             "medium_tall_tower_present_talltower": { material: facade10 },
             // "medium_tall_tower_present_broderick": { material: facade12 },
-            "medium_tall_tower_present_fancytower": { material: facade10 },
-            "medium_tall_tower_present_tower": { material: tiles36 },
+            // "medium_tall_tower_present_fancytower": { material: facade10 },
+            // "medium_tall_tower_present_tower": { material: tiles36 },
             "medium_tall_tower_future_needle7": { material: scuffedPlasticBlack },
             "small_short_twirly_future_disco1_small_cactus": { material: scuffedPlasticBlack },
             "small_short_twirly_future_disco1_small_worm": { material: foamGripPurple },
-            "small_tall_diamond_future_diamondhull_geo002": { material: metal03 },
+            // "small_tall_diamond_future_diamondhull_geo002": { material: metal03 },
             "small_tall_diamond_future_toongeo1": { material: scuffedPlasticBlack },
             "small_tall_tower_future_needle3": { material: ornateBrass2 },
             "small_tall_tower_future_needle4": { material: ornateBrass2 },
