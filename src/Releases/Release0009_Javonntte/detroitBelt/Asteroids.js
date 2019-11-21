@@ -8,6 +8,7 @@ import { MaterialsContext } from '../MaterialsContext';
 import BuildingInstances from './BuildingInstances';
 import { BuildingsContext } from './BuildingsContext';
 import { generateTilesets } from './tiles';
+import { cloneDeep } from 'lodash';
 
 // TODO buildings should be grabbed in the provider since they are different
 // than world geoms so it's the same number of total instances no matter how i slice it and there's no need to try and combine world vs asteroid instances
@@ -76,7 +77,13 @@ function generateAsteroidSurfaces(props) {
 
 class AsteroidNeighborhoods {
     constructor(surface, theme) {
-        this.surface = surface;
+        this.surface = {}
+        // limit the number of faces that are actually used to generate neighborhoods for performance
+        this.surface.faces = surface.faces.slice(0, 10);
+        this.surface.vertices = surface.vertices.slice(0, 20);
+        console.log(surface);
+        this.surface.radius = surface.radius;
+
         this.theme = theme;
         this.numTiles = 3;
         this.maxRadius = C.ASTEROID_MAX_RADIUS * 6
