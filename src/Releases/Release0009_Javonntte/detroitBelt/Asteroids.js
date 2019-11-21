@@ -81,9 +81,7 @@ class AsteroidNeighborhoods {
         // limit the number of faces that are actually used to generate neighborhoods for performance
         this.surface.faces = surface.faces.slice(0, 10);
         this.surface.vertices = surface.vertices.slice(0, 20);
-        console.log(surface);
         this.surface.radius = surface.radius;
-
         this.theme = theme;
         this.numTiles = 3;
         this.maxRadius = C.ASTEROID_MAX_RADIUS * 6

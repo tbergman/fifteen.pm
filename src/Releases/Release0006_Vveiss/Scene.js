@@ -345,7 +345,6 @@ export default class Scene extends Component {
   shootPhurbas() {
     const { camera, cameraVector, phurba } = this;
     // camera.getWorldDirection(cameraVector);
-    // console.log("SHOOT PHURBA!!")
     // const combo = CONSTANTS.phurbaCombos[THREE.Math.randInt(0, CONSTANTS.phurbaCombos.length - 1)];
     const start = new THREE.Vector3(
       THREE.Math.randInt(-1.5, 1.5),
@@ -508,7 +507,6 @@ export default class Scene extends Component {
         camera.position.x += step;
       } else if (camera.position.y < 59) { // goes 67 // so in total, we go 152.5 units /1.59 units every second... 25 frames per second // .0636 steps an animation frame
         camera.position.y += step;
-        console.log(camera.position);
       } else {
         this.state.mode = ORBITING;
         this.state.strobeOn = false;

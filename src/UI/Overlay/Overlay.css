@@ -38,10 +38,7 @@
     .overlay-header-and-controls {
         max-width: 90%;
     }
-    /* .overlay-content-item.hide-in-mobile {
-        display: none;
-    } */
-}
+ }
 
 /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
 
