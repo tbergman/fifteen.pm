@@ -55,7 +55,6 @@ export const NATURAL = "natural"
 
 export const ASTEROID_BUILDING_CATEGORIES = {
     night: [
-        // "small_tall_diamond_future_toongeo1",
     ],
     sunset: [
     ],
@@ -68,13 +67,8 @@ export const ASTEROID_BUILDING_CATEGORIES = {
 
 export const WORLD_BUILDING_CATEGORIES = {
     night: [
-        // "medium_tall_ribbony_future_celvinyl_geo003",
-        // "medium_tall_diamond_future_shinyhull1",
-        // "medium_tall_tower_future_needle7",
-        // "small_tall_tower_future_needle3",
         "small_tall_tower_future_needle4",
         "small_tall_tower_future_needle6",
-        // "small_tall_tower_future_lightwire1",
     ],
     sunset: [
         "medium_tall_tower_present_talltower",
