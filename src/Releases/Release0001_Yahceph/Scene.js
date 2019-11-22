@@ -5,7 +5,7 @@ import waterVertexShader from '!raw-loader!glslify-loader!../../Shaders/water1Ve
 import debounce from 'lodash/debounce';
 import React, { Fragment, PureComponent } from 'react';
 import * as THREE from "three";
-import { GPUComputationRenderer } from "three-full";
+import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer";
 import { SimplexNoise } from "three/examples/jsm/math/SimplexNoise";
 
 

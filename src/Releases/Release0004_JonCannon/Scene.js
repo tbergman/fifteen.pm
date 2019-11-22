@@ -3,10 +3,9 @@ import React, { Component, Fragment } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { isMobile } from "../../Utils/BrowserDetection";
-import { FirstPersonControls } from "../../Utils/FirstPersonControls";
+import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls";
 import { loadGLTF, loadImage, loadVideo } from "../../Utils/Loaders";
 import * as C from "./constants";
-// import "../Release.css";
 import "./scene.css";
 import {
   assetPath4Images,
@@ -62,7 +61,6 @@ export default class Scene extends Component {
     hasChilled: false,
     isLoaded: false,
     chillinTime: 0,
-    // hasEntered: false,
     chillinStart: new Date(),
     hasActivatedFirstPersonControls: false,
   };

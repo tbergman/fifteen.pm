@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import * as THREE from 'three';
 import { MarchingCubes, EffectComposer, ShaderPass, FXAAShader, HorizontalTiltShiftShader, VerticalTiltShiftShader, RenderPass } from 'three-full';
-import { OrbitControls } from '../Utils/OrbitControls';
+import { OrbitControls } from 'jsm/../Utils/OrbitControls';
 import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import './HomeMobile.css';
@@ -50,7 +50,6 @@ class HomeMobile extends Component {
     this.vblur = new ShaderPass(VerticalTiltShiftShader);
     this.renderModel = new RenderPass(this.scene, this.camera);
     this.composer = new EffectComposer(this.renderer, this.renderTarget);
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
   }
 
 
@@ -85,10 +84,6 @@ class HomeMobile extends Component {
       camera.position.set(0, 10, 5);
       camera.rotation.x = 0.4;
       camera.rotation.z = 0.1;
-
-      // CONTROLS
-      controls.target.set(0, 2, 0);
-      controls.update();
 
       // LIGHTS
       light.position.set(0.5, 0.5, 1);

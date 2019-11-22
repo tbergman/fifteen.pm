@@ -5,7 +5,7 @@ import { Reflector } from 'three/examples/jsm/objects/Reflector';
 import { Water } from 'three/examples/jsm/objects/Water2';
 import { assetPath } from "../../Utils/assets";
 import { loadGLTF } from "../../Utils/Loaders";
-import { OrbitControls } from "../../Utils/OrbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import '../Release.css';
 import { CONSTANTS } from "./constants";
 import { cameraViews } from "./Utils/cameraViews";

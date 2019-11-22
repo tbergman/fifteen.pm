@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { Lensflare, LensflareElement } from 'three-full';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { assetPath } from "../../Utils/assets";
-import { FirstPersonControls } from "../../Utils/FirstPersonControls";
+import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls";
 import { loadGLTF } from "../../Utils/Loaders";
 import { CONSTANTS } from "../Release0006_Vveiss/constants";
 

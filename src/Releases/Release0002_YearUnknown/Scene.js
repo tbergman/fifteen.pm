@@ -5,7 +5,7 @@ import * as THREE from 'three';
 import * as TWEEN from 'three-tween';
 import { isMobile } from "../../Utils/BrowserDetection";
 import { cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth } from "../../Utils/Cloth";
-import { OrbitControls } from "../../Utils/OrbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { service } from "../../Utils/service";
 import '../Release.css';
 
