@@ -19,8 +19,6 @@ const WORLD_FACES = WORLD_SIDES * WORLD_TIERS;
 export const WORLD_SMALL_TILE = WORLD_SURFACE_AREA / WORLD_FACES * .3;
 export const WORLD_MEDIUM_TILE = WORLD_SURFACE_AREA / WORLD_FACES * .5;
 export const WORLD_LARGE_TILE = WORLD_SURFACE_AREA / WORLD_FACES * .75;
-export const WORLD_BUILDING_CORRIDOR_WIDTH = 100;
-export const WORLD_ROAD_WIDTH = WORLD_RADIUS / 11;
 export const WORLD_ROAD_PATH = (() => {
     const circle = new THREE.CircleGeometry(WORLD_RADIUS, WORLD_RADIUS);
     const points = circle.vertices.reverse(); // reverse it so driver is going in expected dir
@@ -85,7 +83,7 @@ export const WORLD_BUILDING_CATEGORIES = {
         "large_short_low_present_factory",
         "large_tall_tower_present_penobscot",
         "large_tall_low_present_michigancentralstation",
-        "large_short_low_present_boxy",
+        // "large_short_low_present_boxy",
     ]
 }
 

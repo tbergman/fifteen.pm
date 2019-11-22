@@ -19,14 +19,48 @@ class WorldNeighborhoods {
         this.maxRadius = C.WORLD_RADIUS * 6 // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
     }
 
+    worldRoadWidth = () => {
+        switch (this.theme) {
+            case C.NIGHT: {
+                return C.WORLD_RADIUS / 11
+            }
+            case C.SUNSET: {
+                return C.WORLD_RADIUS / 11
+            }
+            case C.DREAM: {
+                return C.WORLD_RADIUS / 11
+            }
+            case C.NATURAL: {
+                return C.WORLD_RADIUS / 11
+            }
+        }
+    }
+
+    worldBuildingCorriderWidth = () => {
+        switch (this.theme) {
+            case C.NIGHT: {
+                return C.WORLD_RADIUS
+            }
+            case C.SUNSET: {
+                return C.WORLD_RADIUS
+            }
+            case C.DREAM: {
+                return C.WORLD_RADIUS / 5
+            }
+            case C.NATURAL: {
+                return C.WORLD_RADIUS
+            }
+        }
+    }
+
     onPath(centroid) {
         return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
-            .filter(distFromPoint => distFromPoint < C.WORLD_ROAD_WIDTH)
+            .filter(distFromPoint => distFromPoint < this.worldRoadWidth())
             .length > 0;
     }
     tooClose(centroid) {
         return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
-            .filter(distFromPoint => distFromPoint > C.WORLD_BUILDING_CORRIDOR_WIDTH)
+            .filter(distFromPoint => distFromPoint > this.worldBuildingCorriderWidth())
             .length == C.WORLD_ROAD_PATH.length;
     }
 
@@ -40,46 +74,34 @@ class WorldNeighborhoods {
     // options are 6,3,1,0
     subdivisions = (tile) => {
         const area = tile.triangle.getArea();
-        // console.log("ARAE,", area);
-
-        switch (this.theme) {
-            case C.NIGHT: {
-                if (area < C.WORLD_SMALL_TILE) {
-                    return 1
-                } else if (area < C.WORLD_MEDIUM_TILE) {
-                    return Math.random() > .75 ? 3 : 0;
-                } else {
-                    return Math.random() > .75 ? 6 : 0;
-                }
+        if (this.theme == C.NIGHT) {
+            if (area < C.WORLD_SMALL_TILE) {
+                return 1
+            } else if (area < C.WORLD_MEDIUM_TILE) {
+                return Math.random() > .75 ? 3 : 0;
+            } else {
+                return Math.random() > .75 ? 6 : 0;
             }
-            case C.SUNSET: (area) => {
-                if (area < C.WORLD_SMALL_TILE) {
-                    return 1
-                } else if (area < C.WORLD_MEDIUM_TILE) {
-                    return Math.random() > .75 ? 3 : 0;
-                } else {
-                    return Math.random() > .75 ? 6 : 0;
-                }
+        }
+        if (this.theme == C.SUNSET) {
+            if (area < C.WORLD_SMALL_TILE) {
+                return 1
+            } else if (area < C.WORLD_MEDIUM_TILE) {
+                return Math.random() > .75 ? 3 : 0;
+            } else {
+                return Math.random() > .75 ? 6 : 0;
             }
-            case C.NATURAL: (area) => {
-                if (area < C.WORLD_SMALL_TILE) {
-                    return 6;
-                } else {
-                    return 3;
-                }
-            }
-            // detroit buildings
-            case C.DREAM: {
-                if (area < C.WORLD_SMALL_TILE) {
-                    // console.log("SMAL", area)
-                    return 0;
-                } else if (area < C.WORLD_MEDIUM_TILE) {
-                    // console.log("MED", area)
-                    return Math.random() > .5 ? 0 : 1;
-                } else {
-                    // console.log("LARG", area)
-                    return 1;
-                }
+        }
+        if (this.theme == C.NATURAL) {
+            return 6;
+        }
+        // detroit buildings
+        if (this.theme == C.DREAM) {
+            // return 6;
+            if (area < C.WORLD_SMALL_TILE) {
+                return 0;
+            } else {
+                return Math.random() > .5 ? 0 : 1;
             }
         }
     }
