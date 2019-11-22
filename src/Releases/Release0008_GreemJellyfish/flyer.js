@@ -10,7 +10,7 @@ import { CONTENT } from '../../Content'
 import Player from '../../UI/Player/Player'
 import '../../UI/Player/Player.css';
 import { OrbitControls } from "../../Utils/OrbitControls";
-import GLTFLoader from 'three-gltf-loader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { CONSTANTS } from "./flyerConstants.js";
 
 /* eslint import/no-webpack-loader-syntax: off */

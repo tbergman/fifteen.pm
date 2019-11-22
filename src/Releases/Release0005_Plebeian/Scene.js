@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import * as THREE from "three";
-import GLTFLoader from "three-gltf-loader";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Reflector } from 'three/examples/jsm/objects/Reflector';
+import { Water } from 'three/examples/jsm/objects/Water2';
 import { assetPath } from "../../Utils/assets";
 import { loadGLTF } from "../../Utils/Loaders";
 import { OrbitControls } from "../../Utils/OrbitControls";
-import { Water2 } from "../../Utils/Water2";
 import '../Release.css';
 import { CONSTANTS } from "./constants";
 import { cameraViews } from "./Utils/cameraViews";
@@ -38,6 +38,7 @@ export default class Scene extends Component {
         this.manager = new THREE.LoadingManager();
         this.loader = new GLTFLoader(this.manager);
         this.cubeTextureLoader = new THREE.CubeTextureLoader();
+        this.textureLoader = new THREE.TextureLoader();
         // Create an empty scene and define a fog for it
         this.scene = new THREE.Scene();
         // Store the position of the mouse
@@ -106,12 +107,14 @@ export default class Scene extends Component {
             flowY: 1
         };
         var waterGeometry = new THREE.PlaneBufferGeometry(50, 50);
-        this.water = new Water2(waterGeometry, {
+        this.water = new Water(waterGeometry, {
             color: params.color,
             scale: params.scale,
             flowDirection: new THREE.Vector2(params.flowX, params.flowY),
             textureWidth: 512,
-            textureHeight: 512
+            textureHeight: 512,
+            normalMap0: this.textureLoader.load('assets/shared/images/water/textures/water/Water_1_M_Normal.jpg'),
+            normalMap1: this.textureLoader.load('assets/shared/images/water/textures/water/Water_2_M_Normal.jpg'),
         });
         this.water.position.y = .1;
         this.water.rotation.x = Math.PI * -0.5;
@@ -182,7 +185,6 @@ export default class Scene extends Component {
         var geometry = new THREE.Geometry();
         geometry.vertices = this.curve.getPoints(this.numTubeSegments);
         this.splineMesh = new THREE.Line(geometry, new THREE.LineBasicMaterial());
-        this.textureLoader = new THREE.TextureLoader();
         const textures = {
             "galaxy": {
                 url: assetPath5('images/blue_purple.jpg')

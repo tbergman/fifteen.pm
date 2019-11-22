@@ -1,7 +1,7 @@
 import debounce from "lodash/debounce";
 import React, { Component, Fragment } from "react";
 import * as THREE from "three";
-import GLTFLoader from "three-gltf-loader";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { isMobile } from "../../Utils/BrowserDetection";
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 import { loadGLTF, loadImage, loadVideo } from "../../Utils/Loaders";
@@ -9,7 +9,7 @@ import * as C from "./constants";
 // import "../Release.css";
 import "./scene.css";
 import {
-assetPath4Images,
+  assetPath4Images,
   // sleep,
   keyPressIsFirstPersonControls
 } from "./utils";

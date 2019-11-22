@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as THREE from "three";
 import { Lensflare, LensflareElement } from 'three-full';
-import GLTFLoader from "three-gltf-loader";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { assetPath } from "../../Utils/assets";
 import { FirstPersonControls } from "../../Utils/FirstPersonControls";
 import { loadGLTF } from "../../Utils/Loaders";

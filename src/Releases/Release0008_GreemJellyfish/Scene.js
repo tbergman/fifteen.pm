@@ -10,12 +10,12 @@ import debounce from 'lodash/debounce';
 import React, { Component } from 'react';
 import * as THREE from "three";
 import { OrbitControls } from 'three-full';
-import GLTFLoader from 'three-gltf-loader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import '../../UI/Player/Player.css';
 import { isIE } from "../../Utils/BrowserDetection.js";
 import { loadGLTF } from "../../Utils/Loaders";
 import { initFoamGripMaterial, initPinkRockMaterial, initPinkShinyMaterial, initRockMaterial, initTransluscentMaterial } from "../../Utils/materials.js";
-import { Water2 } from "../../Utils/Water2";
+import { Water } from 'three/examples/jsm/objects/Water2';
 import '../Release.css';
 import { ALEXA, CONSTANTS, DENNIS, FALLING, FOREST, OFFICE, REBECCA, TRACK_SECTIONS } from "./constants.js";
 import { assetPath8 } from "./utils.js";
@@ -72,7 +72,7 @@ export default class Scene extends Component {
         // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
-        this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, .1, 1500);
+        this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, .01, 1500);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio)
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -269,12 +269,14 @@ export default class Scene extends Component {
             flowY: 1
         };
         const waterGeometry = new THREE.PlaneBufferGeometry(50, 50);
-        const water = new Water2(waterGeometry, {
+        const water = new Water(waterGeometry, {
             color: params.color,
             scale: params.scale,
             flowDirection: new THREE.Vector2(params.flowX, params.flowY),
             textureWidth: 512,
-            textureHeight: 512
+            textureHeight: 512,
+            normalMap0: this.textureLoader.load('assets/shared/images/water/textures/water/Water_1_M_Normal.jpg'),
+            normalMap1: this.textureLoader.load('assets/shared/images/water/textures/water/Water_2_M_Normal.jpg'),
         });
         water.position.y = .2;
         water.rotation.x = Math.PI * -0.5;
@@ -616,9 +618,9 @@ export default class Scene extends Component {
             //         useAuxMediaOnly={true}
             //         legacyPlayer={true}
             //     /> */}
-                <div className="release">
-                    <div ref={(element) => this.container = element} />
-                </div>
+            <div className="release">
+                <div ref={(element) => this.container = element} />
+            </div>
             // </Fragment>
         );
     }

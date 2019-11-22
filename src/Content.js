@@ -330,10 +330,10 @@ export const CONTENT = {
       logo: '#fff',
       overlay: 'rgba(255, 0, 0, 0.5)',
       overlayContent: '#fff',
-      player: 'rgba(255, 0, 0, 0.5)',
+      player: '#fff',
       navigation: '#fff',
       onHover: 'rgba(255, 0, 0, 0.5)',
-      info: 'rgba(255, 0, 0, 0.5)',
+      info: '#fff',
     },
     instructions: [{
       icon: MouseMove,

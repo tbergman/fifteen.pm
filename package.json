@@ -88,7 +88,6 @@
     "recompose": "^0.30.0",
     "three": "^0.110.0",
     "three-full": "^17.1.0",
-    "three-gltf-loader": "^1.103.0",
     "three-tween": "^1.0.0"
   },
   "jest": {
