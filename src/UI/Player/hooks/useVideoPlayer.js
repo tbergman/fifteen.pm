@@ -11,13 +11,13 @@ const useVideoPlayer = () => {
       togglePlay();
     } else {
       state.videoPlayer.pause();
-      state.videoPlayer.mesh = loadVideo({ ...state.tracks[index].meta });
+      state.videoPlayer.mesh = loadVideo({ videoElement: state.videoPlayer, ...state.tracks[index].meta });
       state.videoPlayer.media = state.videoPlayer.mesh.userData.media;
-      state.videoPlayer.media.visible = false;
+      // state.videoPlayer.media.visible = false;
       state.videoPlayer.media.addEventListener("canplay", () => {
-        state.videoPlayer.media.playsinline = true;
+        // state.videoPlayer.media.playsinline = true;
         state.videoPlayer.media.play();
-        state.videoPlayer.mesh.visible = true;
+        // state.videoPlayer.mesh.visible = true;
       });
       state.videoPlayer.play();
       setState(state => ({ ...state, currentTrackIndex: index, isPlaying: true }));

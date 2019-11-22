@@ -573,19 +573,6 @@ export default class Scene extends Component {
         }
     }
 
-    // // anything that needs to change in an active section
-    // updateTrackSectionDeltas() {
-    //     const { controls, clock } = this;
-    //     const { section } = this.state;
-    //     if (section.location === FALLING) {
-    //         // this.updateBlobMateral();
-    //     }
-    //     if (section.location === FOREST) {
-    //     }
-    //     if (section.location === OFFICE) {
-    //     }
-    // }
-
     updateSpriteMaterial(location) {
         const { sprites, materials } = this;
         for (let i = 0; i < sprites.length; i++) {
@@ -603,25 +590,14 @@ export default class Scene extends Component {
         controls.update(clock.getDelta());
         this.updateSpriteAnimations();
         this.updateTrackSectionState();
-        // this.updateTrackSectionDeltas();
         renderer.render(scene, camera);
     }
 
     render() {
         return (
-            // // <Fragment>
-            //     {/* <LegacyMenu
-            //         content={CONTENT[window.location.pathname]}
-            //         menuIconFillColor={CONTENT[window.location.pathname].theme.iconColor}
-            //         mediaRef={el => this.mediaElement = el}
-            //         auxMedia={CONSTANTS.auxMedia}
-            //         useAuxMediaOnly={true}
-            //         legacyPlayer={true}
-            //     /> */}
             <div className="release">
                 <div ref={(element) => this.container = element} />
             </div>
-            // </Fragment>
         );
     }
 }

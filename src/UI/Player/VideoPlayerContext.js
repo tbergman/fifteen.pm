@@ -9,8 +9,8 @@ const VideoPlayerProvider = ({ tracks, ...props }) => {
   const [state, setState] = useState({
     videoPlayer: videoPlayer,
     tracks: tracks,
-    currentTrackIndex: 0,
-    currentTrackName: tracks[0].name,
+    currentTrackIndex: null,
+    currentTrackName: null,
     isPlaying: false,
   });
 

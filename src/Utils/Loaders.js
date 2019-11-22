@@ -36,12 +36,12 @@ export const loadImage = ({ geometry, url, name, invert, position, rotateX, rota
 
 //  initialize an object of type 'video'
 export const loadVideo = ({
-  geometry, url, name, position, loop,
+  videoElement, geometry, url, name, position, loop,
   muted, mimetype, invert, volume, sources,
   computeBoundingSphere, playbackRate,
   rotateX, rotateY, rotateZ, repeat }) => {
   // initialize video element
-  let videoElement = document.createElement('video');
+  videoElement = videoElement || document.createElement('video');
   videoElement.codecs = "avc1.4D401E, mp4a.40.2";
   videoElement.playsInline = true;
   videoElement.post = "https://dummyimage.com/320x240/ffffff/fff";
@@ -67,8 +67,6 @@ export const loadVideo = ({
     texture.repeat.y = repeat.y;
     texture.wrapS = THREE.ClampToEdgeWrapping;
     texture.wrapT = THREE.ClampToEdgeWrapping;
-    // texture.wrapS = THREE.RepeatWrapping;
-    // texture.wrapT = THREE.RepeatWrapping;
   }
 
   texture.minFilter = THREE.LinearFilter;
