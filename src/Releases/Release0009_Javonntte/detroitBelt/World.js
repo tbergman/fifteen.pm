@@ -8,6 +8,8 @@ import { BuildingsContext } from './BuildingsContext';
 import { generateTilesets } from './tiles';
 import { faceCentroid } from '../../../Utils/geometry';
 
+
+
 class WorldNeighborhoods {
     constructor(surface, theme) {
         this.surface = surface;
@@ -35,6 +37,53 @@ class WorldNeighborhoods {
         return !this.onPath(neighbor.centroid) && !this.tooClose(neighbor.centroid)
     }
 
+    // options are 6,3,1,0
+    subdivisions = (tile) => {
+        const area = tile.triangle.getArea();
+        // console.log("ARAE,", area);
+
+        switch (this.theme) {
+            case C.NIGHT: {
+                if (area < C.WORLD_SMALL_TILE) {
+                    return 1
+                } else if (area < C.WORLD_MEDIUM_TILE) {
+                    return Math.random() > .75 ? 3 : 0;
+                } else {
+                    return Math.random() > .75 ? 6 : 0;
+                }
+            }
+            case C.SUNSET: (area) => {
+                if (area < C.WORLD_SMALL_TILE) {
+                    return 1
+                } else if (area < C.WORLD_MEDIUM_TILE) {
+                    return Math.random() > .75 ? 3 : 0;
+                } else {
+                    return Math.random() > .75 ? 6 : 0;
+                }
+            }
+            case C.NATURAL: (area) => {
+                if (area < C.WORLD_SMALL_TILE) {
+                    return 6;
+                } else {
+                    return 3;
+                }
+            }
+            // detroit buildings
+            case C.DREAM: {
+                if (area < C.WORLD_SMALL_TILE) {
+                    // console.log("SMAL", area)
+                    return 0;
+                } else if (area < C.WORLD_MEDIUM_TILE) {
+                    // console.log("MED", area)
+                    return Math.random() > .5 ? 0 : 1;
+                } else {
+                    // console.log("LARG", area)
+                    return 1;
+                }
+            }
+        }
+    }
+
     getNeighborhoodCentroids({ surface }) {
         const sphereCenter = new THREE.Vector3();
         surface.boundingBox.getCenter(sphereCenter);
@@ -44,13 +93,12 @@ class WorldNeighborhoods {
     }
 
     pickBuildings(tile, buildings) {
-        const area = tile.triangle.getArea();
-        const subdivisions = C.WORLD_TILE_SUBDIVISIONS[this.theme](area)
+        const n = this.subdivisions(tile);
         return {
             allowedBuildings: buildings.filter(building => {
                 return C.WORLD_BUILDING_CATEGORIES[this.theme].includes(building.name)
             }),
-            subdivisions: subdivisions,
+            subdivisions: n
         }
     }
 }
@@ -143,14 +191,17 @@ export function World({ themeName, setReady }) {
     }, [buildingsLoaded]);
 
     useEffect(() => {
-        if (meshes) setReady(true);
+        if (meshes && buildingsLoaded) setReady(true);
     }, [meshes])
 
     return (
         <>
             {meshes &&
                 <>
-                    <WorldSurface geometry={surface} themeName={themeName} />
+                    <WorldSurface
+                        geometry={surface}
+                        themeName={themeName}
+                    />
                     <BuildingInstances meshes={meshes} themeName={themeName} />
                 </>
             }

@@ -1,9 +1,9 @@
 
 
 import React, { useEffect, useState } from 'react';
-import * as THREE from 'three';
 import { useResource } from 'react-three-fiber';
-import { BlackLeather12, CloudMaterial, Facade04Material, Facade10Material, Facade12Material, FoamGripMaterial, Metal03Material, OrnateBrass2, Rock19, ScuffedPlasticMaterial, Tiles36, Tiles60, Windows1Material, TronMaterial, Ground29Material, SunsetGradient, NightGradient, DreamGradient as DreamGradient, DayGradient, PockedStone2 } from '../../Utils/materials';
+import * as THREE from 'three';
+import { DayGradient, DreamGradient, Facade10Material, FoamGripMaterial, Ground29Material, Metal03Material, NightGradient, OrnateBrass2, PockedStone2, Rock19, ScuffedPlasticMaterial, SunsetGradient, TronMaterial } from '../../Utils/materials';
 
 const MaterialsContext = React.createContext([{}, () => { }]);
 
@@ -77,3 +77,4 @@ const MaterialsProvider = ({ ...props }) => {
 }
 
 export { MaterialsContext, MaterialsProvider };
+

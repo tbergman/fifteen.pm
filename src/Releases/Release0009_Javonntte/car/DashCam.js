@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame, useThree } from 'react-three-fiber';
-import isMobile from '../../../Utils/BrowserDetection';
+import { isMobile } from '../../../Utils/BrowserDetection';
 
 export default function DashCam({ useDashCam }) {
     const ref = useRef()

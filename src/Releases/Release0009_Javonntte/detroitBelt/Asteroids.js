@@ -143,7 +143,6 @@ export function Asteroids({ themeName, setReady }) {
 
         const _surfaces = generateAsteroidSurfaces({
             beltRadius: C.ASTEROID_BELT_RADIUS,
-            beltCenter: C.ASTEROID_BELT_CENTER,
             numAsteroids: C.NUM_ASTEROIDS,
             maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
             distBetweenRings: C.ASTEROID_DIST_BETWEEN_RINGS,
@@ -161,7 +160,7 @@ export function Asteroids({ themeName, setReady }) {
     }, [buildingsLoaded])
 
     useEffect(() => {
-        if (meshes) setReady(true);
+        if (meshes && buildingsLoaded) setReady(true);
     }, [meshes])
 
     return (

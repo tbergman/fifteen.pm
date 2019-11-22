@@ -11,10 +11,15 @@ export const LOGO_URL = assetPath9("objects/logo/logo.glb");
 // WORLD
 export const WORLD_CENTER = new THREE.Vector3();
 export const WORLD_RADIUS = 48;
+export const WORLD_SURFACE_AREA = 4 * Math.PI * Math.pow(WORLD_RADIUS, 2);
 export const MAX_WORLD_FACE_HEIGHT = 1;
 export const WORLD_SIDES = 24;
 export const WORLD_TIERS = 24;
-export const WORLD_BUILDING_CORRIDOR_WIDTH = 10;
+const WORLD_FACES = WORLD_SIDES * WORLD_TIERS;
+export const WORLD_SMALL_TILE = WORLD_SURFACE_AREA / WORLD_FACES * .3;
+export const WORLD_MEDIUM_TILE = WORLD_SURFACE_AREA / WORLD_FACES * .5;
+export const WORLD_LARGE_TILE = WORLD_SURFACE_AREA / WORLD_FACES * .75;
+export const WORLD_BUILDING_CORRIDOR_WIDTH = 100;
 export const WORLD_ROAD_WIDTH = WORLD_RADIUS / 11;
 export const WORLD_ROAD_PATH = (() => {
     const circle = new THREE.CircleGeometry(WORLD_RADIUS, WORLD_RADIUS);
@@ -82,22 +87,6 @@ export const WORLD_BUILDING_CATEGORIES = {
         "large_tall_low_present_michigancentralstation",
         "large_short_low_present_boxy",
     ]
-}
-
-// options are 6,3,1
-export const WORLD_TILE_SUBDIVISIONS = {
-    night: (area) => {
-        if (area < 6) {
-            return 1
-        } else if (area < 8) {
-            return 3;
-        } else {
-            return 6;
-        }
-    },
-    sunset: (area) => area > 14 ? 3 : 6,
-    natural: (area) => area > 14 ? 3 : 6,
-    dream: (area) => 1,
 }
 
 // TRACK INFO

@@ -47,6 +47,7 @@ function formatElement({ triangle, normal, centroid, building }) {
 }
 
 function formatN({ buildings, normal, centroid, triangle, n }) {
+    if (n == 0) return [];
     if (n === 1) return [formatElement({ normal, centroid, building: randomArrayVal(buildings) })]
     const subdividedTriangle = subdivideTriangle(triangle);
     const randBuildings = selectNRandomFromArray(buildings, n)
