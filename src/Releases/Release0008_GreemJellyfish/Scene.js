@@ -9,10 +9,9 @@ import simpleVertexShader from '!raw-loader!glslify-loader!../../Shaders/simpleV
 import debounce from 'lodash/debounce';
 import React, { Component } from 'react';
 import * as THREE from "three";
-import { OrbitControls } from 'three-full';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import '../../UI/Player/Player.css';
-import { isIE } from "../../Utils/BrowserDetection.js";
 import { loadGLTF } from "../../Utils/Loaders";
 import { initFoamGripMaterial, initPinkRockMaterial, initPinkShinyMaterial, initRockMaterial, initTransluscentMaterial } from "../../Utils/materials.js";
 import { Water } from 'three/examples/jsm/objects/Water2';

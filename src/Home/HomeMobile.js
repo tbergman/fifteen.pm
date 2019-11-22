@@ -1,7 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import * as THREE from 'three';
-import { MarchingCubes, EffectComposer, ShaderPass, FXAAShader, HorizontalTiltShiftShader, VerticalTiltShiftShader, RenderPass } from 'three-full';
-import { OrbitControls } from 'jsm/../Utils/OrbitControls';
+import {
+  MarchingCubes,
+  EffectComposer,
+  ShaderPass,
+  FXAAShader,
+  HorizontalTiltShiftShader,
+  VerticalTiltShiftShader,
+  RenderPass
+} from 'three-full';
 import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import './HomeMobile.css';
@@ -128,7 +135,7 @@ class HomeMobile extends Component {
       window.addEventListener('resize', onWindowResize, false);
       window.addEventListener('mousemove', this.onMouseMove, false);
       window.addEventListener("touchstart", this.onMouseMove, false);
-      window.addEventListener("touchmove", this.onMouseMove, false);  
+      window.addEventListener("touchmove", this.onMouseMove, false);
     }
 
     const onWindowResize = debounce((event) => {
@@ -228,24 +235,24 @@ class HomeMobile extends Component {
 
   renderReleaseas() {
     return (<div className="releases-list">
-        <ul>
-          <li> Releases </li>
-          <li><a href="/1">Yahceph</a></li>
-          <li><a href="/2">Year Unknown</a></li>
-          <li><a href="/3">Othere</a></li>
-          <li><a href="/4">Jon Cannon</a></li>
-          <li><a href="/5">Plebeian</a></li>
-          <li><a href="/6">vveiss</a></li>
-          <li><a href="/7">Jon Fay</a></li>
-          <li><a href="/8">Greem Jellyfish</a></li>
-          <li><a href="/9">Javonntte</a></li> 
-        </ul>
+      <ul>
+        <li> Releases </li>
+        <li><a href="/1">Yahceph</a></li>
+        <li><a href="/2">Year Unknown</a></li>
+        <li><a href="/3">Othere</a></li>
+        <li><a href="/4">Jon Cannon</a></li>
+        <li><a href="/5">Plebeian</a></li>
+        <li><a href="/6">vveiss</a></li>
+        <li><a href="/7">Jon Fay</a></li>
+        <li><a href="/8">Greem Jellyfish</a></li>
+        <li><a href="/9">Javonntte</a></li>
+      </ul>
     </div>);
   }
 
   render() {
     return (
-      <Fragment> 
+      <Fragment>
         {!this.state.overlayOpen && this.renderReleaseas()}
         <div ref={element => this.container = element} />
       </Fragment>
