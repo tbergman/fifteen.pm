@@ -372,8 +372,10 @@ export const CONTENT = {
       {
         name: "City Life",
         type: "soundcloud",
-        id: "679771262",
-        secretToken: "s-pqcS4",
+        // id: "679771262",
+        // secretToken: "s-pqcS4",
+        id: "719286427",
+        secretToken: "s-h5W7g",
         bpm: "120",
       },
       {
