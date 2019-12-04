@@ -12,7 +12,7 @@ export function Scene({}) {
 
   return (
     <>
-      <FixedLights />
+      <ambientLight color={0xffffff} intensity={1.0} />
       <Suspense fallback={null}>
         <Frog />
       </Suspense>
