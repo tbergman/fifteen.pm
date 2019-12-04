@@ -7,10 +7,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 extend({ OrbitControls });
 
 const Controls = props => {
-  const { camera } = useThree();
+  const { camera, gl } = useThree();
   const controls = useRef();
   useRender(() => controls.current && controls.current.update());
-  return <orbitControls ref={controls} args={[camera]} {...props} />;
+  return <orbitControls ref={controls} args={[camera, gl.domElement]} {...props} />;
 };
 
 export default function AlienDCanvas({}) {

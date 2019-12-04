@@ -1,8 +1,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { FixedLights } from "./lights";
 import { useThree } from "react-three-fiber";
-import Frog from "./frog";
-import Frog2 from "./Frog2";
+import Frog from "./Frog";
 import { MaterialsProvider } from "./MaterialsContext";
 
 export function Scene({}) {
@@ -18,8 +17,7 @@ export function Scene({}) {
         <FixedLights />
         <ambientLight color={0xffffff} intensity={1.0} />
         <Suspense fallback={null}>
-          {/* <Frog /> */}
-          <Frog2 />
+          <Frog />
         </Suspense>
       </MaterialsProvider>
     </>
