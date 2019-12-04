@@ -34,6 +34,7 @@ export default function Frog(props) {
   var amount = 10;
   const dummy = new THREE.Object3D();
   useFrame(() => {
+    // from: https://threejs.org/examples/?q=suza#webgl_instancing_suzanne
     if (mesh) {
       var time = Date.now() * 0.001;
       mesh.rotation.x = Math.sin(time / 4);
