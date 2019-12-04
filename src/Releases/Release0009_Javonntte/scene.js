@@ -9,23 +9,24 @@ import Road from './Road';
 import { World } from './detroitBelt/World';
 import { BloomFilmEffect } from '../../Utils/Effects';
 import Stars from './Stars';
-import DetroitLogo from './DetroitLogo';
 import { Controls } from './controls';
 import { BuildingsProvider } from './detroitBelt/BuildingsContext';
-import {MaterialsProvider} from './MaterialsContext';
+import { MaterialsProvider } from './MaterialsContext';
 import DetroitBelt from './detroitBelt/DetroitBelt';
+import Sky from './Sky';
 
-export function Scene({ colorTheme, onTrackSelect }) {
+export function Scene({ setContentReady, theme, onThemeSelect, useDashCam }) {
     const { scene, camera } = useThree();
+    const [detroitBeltReady, setDetroitBeltReady] = useState(false);
+    const [carReady, setCarReady] = useState(false);
 
     useEffect(() => {
-        scene.background = colorTheme.background;
-        scene.fog = colorTheme.fog;
-    }, [colorTheme])
+        scene.fog = theme.fog;
+    }, [theme])
 
     useEffect(() => {
-        // camera.position.set([0, 0, 0]);     
-    })
+        if (detroitBeltReady && carReady) setContentReady(true);
+    }, [detroitBeltReady, carReady])
 
     return (
         <>
@@ -33,30 +34,36 @@ export function Scene({ colorTheme, onTrackSelect }) {
                 // curCamera={camera}
                 movementSpeed={5000}
                 rollSpeed={Math.PI * .5}
-                autoForward={false}
-                dragToLook={false}
+            // autoForward={false}
+            // dragToLook={false}
             /> */}
             <FixedLights />
             <MaterialsProvider>
-            <Suspense fallback={null}>
-                <Road
-                    closed={true}
-                    extrusionSegments={10}
-                    radius={2}
-                    radiusSegments={4}
-                >
-                    <Car onTrackSelect={onTrackSelect} />
-                </Road>
-                {/* <DetroitLogo /> */}
-                <BuildingsProvider>
-                    <DetroitBelt colors={colorTheme} />
-                </BuildingsProvider>
-
-            </Suspense>
-
-            <Stars radius={C.ASTEROID_BELT_RADIUS / 40} colors={colorTheme.starColors} />
-            {/* <BloomFilmEffect /> */}
-            </MaterialsProvider>
+                <Stars radius={2} colors={theme.starColors} />
+                <Sky theme={theme.name} scale={1500} />
+                <Suspense fallback={null}>
+                    <Road
+                        closed={true}
+                        extrusionSegments={10}
+                        radius={2}
+                        radiusSegments={4}
+                    >
+                        <Car
+                            onThemeSelect={onThemeSelect}
+                            headlightsColors={theme.headlights}
+                            setCarReady={setCarReady}
+                            useDashCam={useDashCam}
+                        />
+                    </Road>
+                    <BuildingsProvider>
+                        <DetroitBelt
+                            setDetroitBeltReady={setDetroitBeltReady}
+                            theme={theme}
+                        />
+                    </BuildingsProvider>
+                </Suspense>
+                <BloomFilmEffect />
+            </MaterialsProvider >
         </>
     );
 }

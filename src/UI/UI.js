@@ -5,15 +5,19 @@ import Navigation from './Navigation';
 import Overlay from './Overlay/Overlay';
 import Player from './Player/Player';
 import './UI.css';
-
+import usePlayer from './Player/hooks/usePlayer';
 
 export default function UI({
     content,
+    contentReady = true,
     loadWithLogo = true,
     loadWithNavigation = true,
     loadWithOverlay = true,
     loadWithInfoIcon = false,
     loadWithPlayer = false,
+    // A common pattern is to manage initial scene state
+    // around overlay being closed the first time.
+    onOverlayHasBeenClosed = () => { },
 }) {
     const logo = useState(loadWithLogo ? true : false);
     const navigation = useState(loadWithNavigation ? true : false);
@@ -21,13 +25,20 @@ export default function UI({
     const [infoIcon, toggleInfoIcon] = useState(loadWithInfoIcon ? true : false);
     const [overlay, toggleOverlay] = useState(loadWithOverlay ? true : false);
     const [overlayHasBeenClosed, setOverlayHasBeenClosed] = useState(!loadWithOverlay);
-    const hasTracks = useMemo(() => content.tracks ? true : false); // TODO will this work with multiple releases?
+    const [firstTrackTriggered, setFirstTrackTriggered] = useState(false);
+    const hasTracks = useMemo(() => content.tracks ? true : false);
+    // make playTrack available for pages with tracks
+    const { playTrack } = hasTracks && usePlayer(content.tracks[0].mediaType);
 
     useEffect(() => {
-        if (!overlay && !overlayHasBeenClosed) setOverlayHasBeenClosed(true);
+        if (!overlay && !overlayHasBeenClosed) {
+            setOverlayHasBeenClosed(true);
+            onOverlayHasBeenClosed();
+        }
     }, [overlay])
 
     useEffect(() => {
+        if (!overlayHasBeenClosed) return;
         toggleInfoIcon(loadWithInfoIcon || overlayHasBeenClosed);
         togglePlayer(loadWithPlayer || overlayHasBeenClosed && hasTracks);
     }, [overlayHasBeenClosed])
@@ -35,17 +46,24 @@ export default function UI({
     return (
         <>
             {logo && <Logo color={content.colors.logo} />}
-            {navigation && <Navigation color={content.colors.default} />}
-            <Overlay
+            {navigation && <Navigation color={content.colors.navigation} />}
+            {overlay && <Overlay
+                hasBeenClosed={overlayHasBeenClosed}
+                contentReady={contentReady}
                 message={content.message}
                 instructions={content.instructions}
                 purchaseLink={content.purchaseLink}
                 overlayColor={content.colors.overlay}
                 overlayContentColor={content.colors.overlayContent}
-                loadWithOverlayOpen={loadWithOverlay}
-                shouldUpdateOverlay={overlay}
-                onToggle={() => toggleOverlay(!overlay)}
-            />
+                onToggle={(e) => {
+                    e.preventDefault();
+                    toggleOverlay(!overlay);
+                    if (!firstTrackTriggered && hasTracks) {
+                        playTrack(0);
+                        setFirstTrackTriggered(true);
+                    }
+                }}
+            />}
             <div className="footer">
                 {player && <Player
                     artist={content.artist}
@@ -54,7 +72,7 @@ export default function UI({
                     tracks={content.tracks}
                 />}
                 {infoIcon && <InfoIcon
-                    color={content.colors.default}
+                    color={content.colors.info}
                     hasPlayer={player}
                     hasTrackList={player && content.tracks.length > 1}
                     onClick={(e) => {

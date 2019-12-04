@@ -7,7 +7,16 @@ import skinningVertexShader from '!raw-loader!glslify-loader!../Shaders/skinning
 /* eslint import/no-webpack-loader-syntax: off */
 import tronFragmentShader from '!raw-loader!glslify-loader!../Shaders/tronFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
+import sunsetGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/sunsetGradientFragment.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
 import vsDepthVertex from '!raw-loader!glslify-loader!../Shaders/vsDepthVertex.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import nightGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/nightGradientFragment.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import dayGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/dayGradientFragment.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import dreamGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/dreamGradientFragment.glsl';
+
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
@@ -190,23 +199,22 @@ export function FoamGripMaterial({ materialRef, ...props }) {
 
 	// const textureCube = loader.load(Array(6).fill('Barce_Rooftop.png'));
 	return <meshPhongMaterial
-		{...props}
 		ref={materialRef}
 		lights
 		receiveShadow
 		castShadow
 		map={colorMap}
 		color={props.color || 0xffffff}
-		specular={0xf0f000}
+		specular={props.specular || 0xf0f000}
 		shininess={100}
 		skinning={true}
 		normalMap={normalMap}
 		aoMap={aoMap}
 		specularMap={specularMap}
 		envMap={envMapCube}
-		refractionRatio={1.0}
+		refractionRatio={props.refractionRatio || 1.0}
 		combine={THREE.AddOperation}
-
+		{...props}
 	/>
 }
 
@@ -292,7 +300,6 @@ export function Ground29Material({ materialRef, ...props }) {
 
 	// return <meshStandardMaterial
 	return <meshStandardMaterial
-		{...props}
 		ref={materialRef}
 		lights
 		// wireframeLineWidth={10}
@@ -309,6 +316,7 @@ export function Ground29Material({ materialRef, ...props }) {
 		displacementScale={props.displacementScale || .01} // TODO play around
 		displacementBias={props.displacementBias || 0}//-.01}
 		displacementMap={displacementMap}
+		{...props}
 	/>
 }
 
@@ -358,7 +366,7 @@ export function Facade04Material({ materialRef, ...props }) {
 	});
 
 	return <meshStandardMaterial
-		
+
 		ref={materialRef}
 		lights
 		receiveShadow
@@ -426,8 +434,7 @@ export function Windows1Material({ materialRef, ...props }) {
 	/>
 }
 
-export function TronMaterial({ materialRef, bpm, side, color }) {
-
+export function TronMaterial({ materialRef, side, color }) {
 	color = color || 0xffffff;
 	materialRef = materialRef ? materialRef : useRef().current;
 	const { clock, size } = useThree();
@@ -437,7 +444,7 @@ export function TronMaterial({ materialRef, bpm, side, color }) {
 		uniforms.current = {
 			uTime: { value: 0 },
 			uResolution: { value: new THREE.Vector2(size.width, size.length) },
-			uBPM: { value: bpm },
+			uBPM: { value: 120 },
 			uBaseColor: { value: new THREE.Vector3(baseColor.r, baseColor.g, baseColor.g) },
 		}
 	}, []);
@@ -447,9 +454,9 @@ export function TronMaterial({ materialRef, bpm, side, color }) {
 		uniforms.current.uTime.value = clock.oldTime;
 	});
 
-	useEffect(() => {
-		if (uniforms.current.uBPM) uniforms.current.uBPM.value = bpm;
-	}, [bpm])
+	// useEffect(() => {
+	// 	if (uniforms.current.uBPM) uniforms.current.uBPM.value = bpm;
+	// }, [bpm])
 
 	return <shaderMaterial
 		ref={materialRef}
@@ -611,8 +618,39 @@ export function Rock19({ materialRef, ...props }) {
 		normalMap={normalMap}
 		roughnessMap={roughnessMap}
 		envMap={envMap}
-		{...props}	
+		{...props}
 	// roughness={-1} // invert roughness to get glossiness
+	/>
+}
+
+export function PockedStone2({ materialRef, ...props }) {
+	// https://freepbr.com/materials/pocked-stone-pbr-material/
+	const [aoMap, albedoMap, heightMap, metalnesslMap, normalMap, roughnessMap, envMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const aoMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2_Ambient_Occlusion.png"));
+		const albedoMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2-albedo.png"));
+		const heightMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2-height.png"));
+		const metalnesslMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2-metalness.png"));
+		const normalMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2-normal.png"));
+		const roughnessMap = textureLoader.load(assetPathShared("textures/pocked-stone2/Pocked-stone2-roughness.png"));
+		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
+		const textureMaps = [aoMap, albedoMap, heightMap, metalnesslMap, normalMap, roughnessMap, envMap];
+		return tileTextureMaps(textureMaps, props);
+	});
+	return <meshStandardMaterial
+		ref={materialRef}
+		colorMap={albedoMap}
+		aoMap={aoMap}
+		bumpMap={heightMap}
+		// displacementMap={heightMap}
+		// displacementBias={1}
+		// displacementScale={3}
+		normalMap={normalMap}
+		roughnessMap={roughnessMap}
+		// roughness={10}
+		metalnessMap={metalnesslMap}
+		envMap={envMap}
+		{...props}
 	/>
 }
 
@@ -634,6 +672,7 @@ export function OrnateBrass2({ materialRef, ...props }) {
 		ref={materialRef}
 		map={albedoMap}
 		aoMap={aoMap}
+		color={props.color || "white"}
 		// specular={0xf0f000}
 		shininess={1}
 		heightMap={heightMap}
@@ -644,4 +683,41 @@ export function OrnateBrass2({ materialRef, ...props }) {
 		envMap={envMap}
 	// roughness={-1} // invert roughness to get glossiness
 	/>
+}
+
+export function SunsetGradient({ materialRef, ...props }) {
+	return <shaderMaterial
+		ref={materialRef}
+		vertexShader={simpleVertex}
+		fragmentShader={sunsetGradientFragmentShader}
+		{...props}
+	/>;
+}
+
+export function NightGradient({ materialRef, ...props }) {
+	return <shaderMaterial
+		ref={materialRef}
+		vertexShader={simpleVertex}
+		fragmentShader={nightGradientFragmentShader}
+		{...props}
+	/>;
+}
+
+
+export function DreamGradient({ materialRef, ...props }) {
+	return <shaderMaterial
+		ref={materialRef}
+		vertexShader={simpleVertex}
+		fragmentShader={dreamGradientFragmentShader}
+		{...props}
+	/>;
+}
+
+export function DayGradient({ materialRef, ...props }) {
+	return <shaderMaterial
+		ref={materialRef}
+		vertexShader={simpleVertex}
+		fragmentShader={dayGradientFragmentShader}
+		{...props}
+	/>;
 }

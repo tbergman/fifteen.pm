@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState, useContext } from 'react';
 import { useFrame, useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import useMusicPlayer from '../../../UI/Player/hooks';
+import useAudioPlayer from '../../../UI/Player/hooks/useAudioPlayer';
 import { MaterialsContext } from '../MaterialsContext';
 import * as C from '../constants';
 
-export default function Dashboard({ gltf, onTrackSelect }) {
-    const { currentTrackName } = useMusicPlayer();
+export default function Dashboard({ gltf, onThemeSelect }) {
+    const { currentTrackName } = useAudioPlayer();
     const { scuffedPlasticGlowing: selectedButtonMaterial,
         scuffedPlasticRed: defaultButtonMaterial } = useContext(MaterialsContext);
 
@@ -42,7 +42,7 @@ export default function Dashboard({ gltf, onTrackSelect }) {
                     key={buttonName}
                     onClick={e => {
                         const trackShorthand = buttonName.split("button_")[1];
-                        onTrackSelect(C.TRACK_LOOKUP[trackShorthand])
+                        onThemeSelect(C.TRACK_LOOKUP[trackShorthand])
                     }}
                     material={selectedButton === buttonName ? selectedButtonMaterial : defaultButtonMaterial}
                 >

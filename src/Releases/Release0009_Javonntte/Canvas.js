@@ -1,15 +1,16 @@
 import React from 'react';
 import { Canvas } from 'react-three-fiber';
-import { MusicPlayerContext } from '../../UI/Player/MusicPlayerContext';
+import { AudioPlayerContext } from '../../UI/Player/AudioPlayerContext';
 import { Scene } from './Scene';
 
-export default function JavonntteCanvas({ colorTheme, onTrackSelect }) {
+export default function JavonntteCanvas({ setContentReady, theme, onThemeSelect, useDashCam }) {
+
     return (
         // Unfortunately some gymnastics required here to pass music player context through canvas.
         // There's more than one way to solve this and some room for clean-up but this does the job.
         // https://github.com/konvajs/react-konva/issues/188#issuecomment-478302062
         // https://github.com/react-spring/react-three-fiber/issues/114
-        <MusicPlayerContext.Consumer>
+        <AudioPlayerContext.Consumer>
             {
                 value => (
                     <Canvas
@@ -20,15 +21,21 @@ export default function JavonntteCanvas({ colorTheme, onTrackSelect }) {
                             gl.gammaInput = true;
                             gl.gammaOutput = true;
                             gl.antialias = true;
-                            // gl.setPixelRatio(window.devicePixelRatio * 1.5);
+                            // IMPORTANT: Turn this on for development!
+                            gl.debug.checkShaderErrors = false;
                         }}
                     >
-                        <MusicPlayerContext.Provider value={value}>
-                            <Scene colorTheme={colorTheme} onTrackSelect={onTrackSelect} />
-                        </MusicPlayerContext.Provider>
+                        <AudioPlayerContext.Provider value={value}>
+                            <Scene
+                                setContentReady={setContentReady}
+                                theme={theme}
+                                onThemeSelect={onThemeSelect}
+                                useDashCam={useDashCam}
+                            />
+                        </AudioPlayerContext.Provider>
                     </Canvas>
                 )}
-        </MusicPlayerContext.Consumer>
+        </AudioPlayerContext.Consumer>
     )
 }
 

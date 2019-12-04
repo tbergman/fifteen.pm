@@ -2,7 +2,7 @@ import debounce from 'lodash/debounce';
 import React, { PureComponent } from 'react';
 import * as THREE from "three";
 import { isMobile } from "../../Utils/BrowserDetection";
-import { OrbitControls } from "../../Utils/OrbitControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import '../Release.css';
 
 const BPM = 130;
@@ -26,7 +26,6 @@ const RADIUS = 280;
 // Some moments in the song (in seconds)
 const INTRO_START = -1;
 const INTRO_END = 77;
-// const BASS_ENTERS = 0;
 const MID_ENTERS = 15;
 const TREBLE_ENTERS = 29;
 
@@ -37,7 +36,6 @@ const INTERLUDE_2_END = 167;
 const INTERLUDE_3_START = 242;
 const INTERLUDE_3_END = 247;
 const OUTRO_START = 306;
-// const CAN_U_HEAR = 169;
 const SONG_LENGTH = 328;
 const USE_ORBIT_CONTROLS_ON_MOBILE = true;
 
@@ -97,12 +95,10 @@ export default class Scene extends PureComponent {
     }
 
     componentDidMount() {
-        console.log('on mount', this.props);
         window.addEventListener("resize", this.onWindowResize, false);
         window.addEventListener("mousemove", this.onMouseMove, false);
         window.addEventListener("touchstart", this.onTouch, false);
         window.addEventListener("touchend", this.onTouchEnd, false);
-        // window.addEventListener("load", this.onLoad, false);
         this.init();
         this.animate();
     }
@@ -111,7 +107,6 @@ export default class Scene extends PureComponent {
         this.initOrbs();
         this.initRaycaster();
         this.initOrbitContols();
-        // this.initGridHelper();
         this.container.appendChild(this.renderer.domElement);
     }
 
@@ -128,26 +123,6 @@ export default class Scene extends PureComponent {
         this.scene.add(this.gridHelper);
     }
 
-    // initAudioProps = () => {
-    //     // this.audioStream = new AudioStreamer(this.audioElement);
-    //     const {audioStream} = this.props;
-    //     audioStream.analyser.fftSize = 256;
-    //     this.volArray = new Uint8Array(audioStream.analyser.fftSize);
-    //     this.numVolBuckets = 4;
-    //     this.volBucketSize = this.volArray.length / this.numVolBuckets;
-    //     this.freqArray = new Uint8Array(audioStream.analyser.frequencyBinCount);
-    //     this.numFreqBuckets = 64;
-    //     this.freqBucketSize = this.freqArray.length / this.numFreqBuckets;
-    //     this.bassIndex = 0; // the vol bucket indices, assigned by freq range
-    //     this.midIndex1 = 1;
-    //     this.midIndex2 = 2;
-    //     this.trebIndex = 3;
-    //     this.bassThresh = 100;
-    //     this.midThresh = 130;
-    //     this.trebThresh = 140.0;
-    //     this.normalizingConst = 200.0;
-    // }
-
     initOrbs = () => {
         let bassParams = {
             numSpheres: 3,
@@ -157,7 +132,6 @@ export default class Scene extends PureComponent {
             numLines: 800,
             radiusScale: 1,
             scalarOffset: 1.1,
-            // makeScratchy: true,
             makeSphere: true,
             name: BASS
         };
@@ -171,7 +145,6 @@ export default class Scene extends PureComponent {
             radiusScale: 2,
             scalarOffset: 1.1,
             makeSphere: false,
-            // makeScratchy: false,
             name: MIDS
         };
 
@@ -184,21 +157,8 @@ export default class Scene extends PureComponent {
             radiusScale: 2,
             scalarOffset: 1.1,
             makeSphere: false,
-            // makeScratchy: false,
             name: TREBLE
         };
-
-        // let canUHearParams = {
-        //   numSpheres: 1,
-        //   color: 0x49fb35,
-        //   scale: 1,
-        //   radiusScale: 3,
-        //   scalarOffet: 1.1,
-        //   useCatmull: true,
-        //   name: "can_u_hear"
-        // }
-        //
-
 
         this.smoothOrbs = {
             treble: this.initOrbsGroup(trebleParams),
@@ -220,7 +180,6 @@ export default class Scene extends PureComponent {
         var material = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.0 });
         var sphere = new THREE.Mesh(geometry, material);
         sphere.name = "filterSphere";
-        // sphere.position = new THREE.Vector3();
         this.scene.add(sphere);
         // add first sphere
         this.scene.add(this.smoothOrbs.bass[0])
@@ -264,7 +223,7 @@ export default class Scene extends PureComponent {
                 vertices.push(vertex.x, vertex.y, vertex.z);
             }
         }
-        geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
         return geometry;
     }
 
@@ -279,7 +238,6 @@ export default class Scene extends PureComponent {
         window.removeEventListener("mousemove", this.onMouseMove, false);
         window.removeEventListener("touchstart", this.onTouch, false);
         window.removeEventListener("touchend", this.onTouchEnd, false);
-        // window.removeEventListener("load", this.onLoad, false);
         this.container.removeChild(this.renderer.domElement);
     }
 
@@ -289,18 +247,11 @@ export default class Scene extends PureComponent {
         this.mouseMoved = true;
     }
 
-    // onLoad = (event) => {
-    //     // only init audio props AFTER load!
-    //     // this.initAudioProps();
-    //     // this.audioStream.connect()
-    // }
-
     onMouseMove = (event) => {
         this.setMouseCoords(event.clientX, event.clientY);
     };
 
     onTouch = (event) => {
-        // event.preventDefault();
         if (event.touches) {
             this.setMouseCoords(event.touches[0].clientX, event.touches[0].clientY);
         }
@@ -308,7 +259,6 @@ export default class Scene extends PureComponent {
 
     // turn off filter if no touch
     onTouchEnd = (event) => {
-        // event.preventDefault();
         this.mouse.x = 10000;
         this.mouse.y = 10000;
     }
@@ -546,11 +496,10 @@ export default class Scene extends PureComponent {
 
     // This is called in the render loop
     renderOrbs = () => {
-        const { currentTime, audioStream, audioAttributes } = this.props;
-        // let currentTime = this.audioElement.currentTime;
-        this.renderByTrackSection(currentTime);
+        const { audioStream, audioAttributes, audioPlayer } = this.props;
+        this.renderByTrackSection(audioPlayer.currentTime);
         if (!audioStream || audioStream.deactivated || !audioAttributes) {
-            this.renderOrbsSansAnalyser(currentTime);
+            this.renderOrbsSansAnalyser(audioPlayer.currentTime);
         } else {
             this.renderOrbsWithAnalyser();
         }

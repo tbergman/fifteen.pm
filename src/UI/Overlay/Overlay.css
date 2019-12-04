@@ -38,10 +38,7 @@
     .overlay-header-and-controls {
         max-width: 90%;
     }
-    .overlay-content-item.hide-in-mobile {
-        display: none;
-    }
-}
+ }
 
 /* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
 
@@ -53,9 +50,9 @@
         padding: 0 4rem;
         font-size: 14px;
     }
-    .overlay-content-item.hide-in-mobile {
+    /* .overlay-content-item.hide-in-mobile {
         display: none;
-    }
+    } */
     /* .overlay-svg svg {
       transform: rotate(180deg) scaleY(3)
     } */
@@ -91,9 +88,9 @@
     .overlay-content {
         align-items: center;
     }
-    .overlay-content-item.hide-in-mobile {
+    /* .overlay-content-item.hide-in-mobile {
         display: none;
-    }
+    } */
     .overlay-header-message {
         font-size: 11px;
         max-height: 400px;

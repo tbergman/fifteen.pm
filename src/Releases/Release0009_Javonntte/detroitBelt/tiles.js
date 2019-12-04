@@ -47,6 +47,7 @@ function formatElement({ triangle, normal, centroid, building }) {
 }
 
 function formatN({ buildings, normal, centroid, triangle, n }) {
+    if (n == 0) return [];
     if (n === 1) return [formatElement({ normal, centroid, building: randomArrayVal(buildings) })]
     const subdividedTriangle = subdivideTriangle(triangle);
     const randBuildings = selectNRandomFromArray(buildings, n)
@@ -78,7 +79,7 @@ function generateTileFormations(buildings, neighborhood) {
     return formations;
 }
 
-export function generateInstanceAttributes(formations) {
+function generateInstanceAttributes(formations) {
     const instances = {};
     // add each geometry instance from each tile formation to the elements by name look up
     Object.keys(formations).forEach(tId => {
@@ -90,9 +91,9 @@ export function generateInstanceAttributes(formations) {
     return instances;
 }
 
-export function generateTilesets({ buildings, groups }) {
+export function generateTilesets({ buildings, neighborhoods }) {
     const instancedMeshes = {};
-    const instancesByGroup = groups.map(neighborhood => {
+    const instancesByGroup = neighborhoods.map(neighborhood => {
         // generate formations for all tiles
         const formations = generateTileFormations(buildings, neighborhood);
         return generateInstanceAttributes(formations);

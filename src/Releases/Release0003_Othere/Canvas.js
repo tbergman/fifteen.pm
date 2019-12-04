@@ -1,20 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react';
-import useMusicPlayer from '../../UI/Player/hooks';
+import React, { useEffect, useState } from 'react';
+import useAudioPlayer from '../../UI/Player/hooks/useAudioPlayer';
 import '../Release.css';
 import Scene from './Scene';
 
 
 export default function Canvas({ }) {
-    const { isPlaying, audioStream, currentTime } = useMusicPlayer();
+    const { isPlaying, audioStream, currentTime, audioPlayer } = useAudioPlayer();
     const [audioAttributes, setAudioAttributes] = useState();
-    // const [audioAttribute]
-
-
-    function initAudioAttributes() {
-        // this.audioStream = new AudioStreamer(this.audioElement);
-        if (audio.current) return;
-        audio.current = {};
-    }
 
     useEffect(() => {
         if (audioStream && !audioAttributes) {
@@ -43,7 +35,7 @@ export default function Canvas({ }) {
 
     return <Scene
         isPlaying={isPlaying}
-        currentTrackTime={currentTime}
+        audioPlayer={audioPlayer}
         audioStream={audioStream}
         audioAttributes={audioAttributes}
     />

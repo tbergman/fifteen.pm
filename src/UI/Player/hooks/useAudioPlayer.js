@@ -1,19 +1,20 @@
 import { useContext, useEffect } from 'react';
-import { MusicPlayerContext } from "./MusicPlayerContext";
-import AudioStreamer from '../../Utils/Audio/AudioStreamer'; // TODO haven't touched this in ages...
+import { AudioPlayerContext } from "../AudioPlayerContext";
+import AudioStreamer from '../../../Utils/Audio/AudioStreamer';
 
-const useMusicPlayer = () => {
-  
-  const [state, setState] = useContext(MusicPlayerContext);
+// TODO autoAdvance track like LegacyPlayer
+const useAudioPlayer = () => {
+
+  const [state, setState] = useContext(AudioPlayerContext);
 
   function playTrack(index) {
     if (index === state.currentTrackIndex) {
       togglePlay();
     } else {
       state.audioPlayer.pause();
-      state.audioPlayer = new Audio(state.tracks[index].file);
+      state.audioPlayer =   new Audio(state.tracks[index].file);
       state.audioPlayer.crossOrigin = "anonymous";
-      state.audioStream = new AudioStreamer(state.audioPlayer); // not tested yet
+      state.audioStream = new AudioStreamer(state.audioPlayer);
       state.audioPlayer.play();
       setState(state => ({ ...state, currentTrackIndex: index, isPlaying: true }));
     }
@@ -49,8 +50,9 @@ const useMusicPlayer = () => {
     playNextTrack,
     audioStream: state.audioStream,
     currentTime: state.audioPlayer.currentTime,
+    audioPlayer: state.audioPlayer,
     bpm: state.currentTrackIndex !== null && state.tracks[state.currentTrackIndex].bpm,
   }
 };
 
-export default useMusicPlayer;
+export default useAudioPlayer;

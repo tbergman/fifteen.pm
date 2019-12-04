@@ -1,79 +1,134 @@
-import React, { useContext } from 'react';
-import { useResource } from 'react-three-fiber';
+import React, { useContext, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
-import { isMobile } from '../../../Utils/BrowserDetection';
-import { randomPointsOnSphere } from '../../../Utils/random';
-import { generateTiles } from '../../../Utils/SphereTiles';
+import { randomPointsOnSphere, randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
+import BuildingInstances from './BuildingInstances';
+import { BuildingsContext } from './BuildingsContext';
+import { generateTilesets } from './tiles';
+import { faceCentroid } from '../../../Utils/geometry';
 
 
 
-function onPath(centroid) {
-    return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
-        .filter(distFromPoint => distFromPoint < C.WORLD_ROAD_WIDTH)
-        .length > 0;
-}
-function tooClose(centroid) {
-    return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
-        .filter(distFromPoint => distFromPoint > C.WORLD_BUILDING_CORRIDOR_WIDTH)
-        .length == C.WORLD_ROAD_PATH.length;
-}
-
-/*
-Return true if we should render the neighbor
-*/
-function sphereWorldNeighborhoodRules(neighbor) {
-    return !onPath(neighbor.centroid) && !tooClose(neighbor.centroid)
-}
-
-function getWorldNeighborhoodCentroids({ surface }) {
-    const sphereCenter = new THREE.Vector3();
-    surface.boundingBox.getCenter(sphereCenter);
-    const numRandPoints = C.WORLD_RADIUS * 2;
-    const centroids = randomPointsOnSphere(C.WORLD_RADIUS, sphereCenter, numRandPoints);
-    return centroids;
-}
-
-function pickWorldBuildings(tile, buildings) {
-    const futureBuildings = buildings.filter(building => building.era == C.FUTURE);
-    const area = tile.triangle.getArea();
-    if (area > 14) {
-        return {
-            allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
-            subdivisions: 3
-        }
-    } else {
-        return [{
-            allowedBuildings: futureBuildings.filter(building => building.footprint === C.SMALL),
-            subdivisions: 6
-        },
-        {
-            allowedBuildings: futureBuildings.filter(building => building.footprint == C.MEDIUM),
-            subdivisions: 1
-        }][THREE.Math.randInt(0, 1)]
+class WorldNeighborhoods {
+    constructor(surface, theme) {
+        this.surface = surface;
+        this.theme = theme;
+        this.count = 100;
+        this.numTiles = Math.floor(C.WORLD_RADIUS) * 2
+        this.maxRadius = C.WORLD_RADIUS * 6 // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
     }
-}
 
-// TODO organize
-export const worldNeighborhoods = {
-    count: 100,
-    numTiles: isMobile ? C.WORLD_RADIUS * 2 : Math.floor(C.WORLD_RADIUS) * 2,
-    maxRadius: C.WORLD_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
-    rules: sphereWorldNeighborhoodRules,
-    getNeighborhoodCentroids: getWorldNeighborhoodCentroids,
-    pickBuildings: pickWorldBuildings,
-    surface: generateSphereWorldGeometry(
-        C.WORLD_RADIUS,
-        C.WORLD_SIDES,
-        C.WORLD_TIERS,
-        C.MAX_WORLD_FACE_HEIGHT,
-    ),
+    worldRoadWidth = () => {
+        switch (this.theme) {
+            case C.NIGHT: {
+                return C.WORLD_RADIUS / 11
+            }
+            case C.SUNSET: {
+                return C.WORLD_RADIUS / 11
+            }
+            case C.DREAM: {
+                return C.WORLD_RADIUS / 11
+            }
+            case C.NATURAL: {
+                return C.WORLD_RADIUS / 11
+            }
+        }
+    }
+
+    worldBuildingCorriderWidth = () => {
+        switch (this.theme) {
+            case C.NIGHT: {
+                return C.WORLD_RADIUS
+            }
+            case C.SUNSET: {
+                return C.WORLD_RADIUS
+            }
+            case C.DREAM: {
+                return C.WORLD_RADIUS / 5
+            }
+            case C.NATURAL: {
+                return C.WORLD_RADIUS
+            }
+        }
+    }
+
+    onPath(centroid) {
+        return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
+            .filter(distFromPoint => distFromPoint < this.worldRoadWidth())
+            .length > 0;
+    }
+    tooClose(centroid) {
+        return C.WORLD_ROAD_PATH.map(pointOnPath => centroid.distanceTo(pointOnPath))
+            .filter(distFromPoint => distFromPoint > this.worldBuildingCorriderWidth())
+            .length == C.WORLD_ROAD_PATH.length;
+    }
+
+    /*
+    Return true if we should render the neighbor
+    */
+    rules(neighbor) {
+        return !this.onPath(neighbor.centroid) && !this.tooClose(neighbor.centroid)
+    }
+
+    // options are 6,3,1,0
+    subdivisions = (tile) => {
+        const area = tile.triangle.getArea();
+        if (this.theme == C.NIGHT) {
+            if (area < C.WORLD_SMALL_TILE) {
+                return 1
+            } else if (area < C.WORLD_MEDIUM_TILE) {
+                return Math.random() > .75 ? 3 : 0;
+            } else {
+                return Math.random() > .75 ? 6 : 0;
+            }
+        }
+        if (this.theme == C.SUNSET) {
+            if (area < C.WORLD_SMALL_TILE) {
+                return 1
+            } else if (area < C.WORLD_MEDIUM_TILE) {
+                return Math.random() > .75 ? 3 : 0;
+            } else {
+                return Math.random() > .75 ? 6 : 0;
+            }
+        }
+        if (this.theme == C.NATURAL) {
+            return 6;
+        }
+        // detroit buildings
+        if (this.theme == C.DREAM) {
+            // return 6;
+            if (area < C.WORLD_SMALL_TILE) {
+                return 0;
+            } else {
+                return Math.random() > .5 ? 0 : 1;
+            }
+        }
+    }
+
+    getNeighborhoodCentroids({ surface }) {
+        const sphereCenter = new THREE.Vector3();
+        surface.boundingBox.getCenter(sphereCenter);
+        const numRandPoints = C.WORLD_RADIUS * 2;
+        const centroids = randomPointsOnSphere(C.WORLD_RADIUS, sphereCenter, numRandPoints);
+        return centroids;
+    }
+
+    pickBuildings(tile, buildings) {
+        const n = this.subdivisions(tile);
+        return {
+            allowedBuildings: buildings.filter(building => {
+                return C.WORLD_BUILDING_CATEGORIES[this.theme].includes(building.name)
+            }),
+            subdivisions: n
+        }
+    }
 }
 
 
 export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     const geometry = new THREE.SphereGeometry(radius, sides, tiers);
+    // geometry.scale(2, 1, 1);
     // variate sphere heights
     var vertexIndex;
     var vertexVector = new THREE.Vector3();
@@ -110,10 +165,16 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
     return geometry;
 }
 
-export function WorldSurface({ geometry, color }) {
-    const [tronMaterialRef, tronMaterial] = useResource();
-    const [ground29MaterialRef, ground29Material] = useResource();
-    const { tron, ground29 } = useContext(MaterialsContext);
+export function WorldSurface({ geometry, themeName }) {
+
+    const { tron, ground29Purple, pockedStone2, ground29Black, rock19 } = useContext(MaterialsContext);
+
+    const exteriorMaterial = useMemo(() => ({
+        dream: pockedStone2,
+        night: ground29Black,
+        natural: rock19,
+        sunset: ground29Purple,
+    }))
     return <>
         <group>
             <mesh
@@ -122,10 +183,50 @@ export function WorldSurface({ geometry, color }) {
             />
             <mesh
                 geometry={geometry}
-                material={ground29}
+                material={exteriorMaterial[themeName]}
                 receiveShadow
             />
         </group>
     </>
 }
 
+export function World({ themeName, setReady }) {
+    const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
+
+    const [surface, meshes] = useMemo(() => {
+        if (!buildingsLoaded) return [];
+
+        const _surface = generateSphereWorldGeometry(
+            C.WORLD_RADIUS,
+            C.WORLD_SIDES,
+            C.WORLD_TIERS,
+            C.MAX_WORLD_FACE_HEIGHT,
+        )
+
+        const _meshes = {}
+        C.THEME_NAMES.forEach(themeName => {
+            const _neighborhoods = new WorldNeighborhoods(_surface, themeName);
+            _meshes[themeName] = generateTilesets({ buildings, neighborhoods: [_neighborhoods] });
+        })
+
+        return [_surface, _meshes]
+    }, [buildingsLoaded]);
+
+    useEffect(() => {
+        if (meshes && buildingsLoaded) setReady(true);
+    }, [meshes])
+
+    return (
+        <>
+            {meshes &&
+                <>
+                    <WorldSurface
+                        geometry={surface}
+                        themeName={themeName}
+                    />
+                    <BuildingInstances meshes={meshes} themeName={themeName} />
+                </>
+            }
+        </>
+    )
+}

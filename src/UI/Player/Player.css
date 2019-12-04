@@ -1,17 +1,23 @@
 #player-container {
     margin: 0%;
-    z-index: 10000;
-    /* position: absolute; */
+    /* z-index: 10000; */
     display: -ms-flexbox;
     bottom: 0;
     display: flex;
     -ms-flex-align: center;
-    /* align-items: flex-start;  */
     align-self: flex-start;
     margin-right: 20px;
 }
 
+.no-touch #playlist li:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
 
+.no-touch .button:hover {
+    opacity: 1;
+    border-color: transparent transparent transparent #FFFFFF;
+}
 
 @media screen and (max-width: 28em) {
     #play-button-container {
@@ -36,53 +42,3 @@
         word-break: break-word;
     }
 }
-
-/* ADDED from Player demo.. */
-
-/* body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-      "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-   */
-
-/* code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-      monospace;
-  }
-  
-  @media screen and (min-width: 600px) {
-    .container {
-      padding-top: 50px;
-      width: 600px !important;
-    }
-  }
-   */
-/* 
-.box {
-    display: flex !important;
-    align-items: center;
-}
-
-.song-title {
-    margin-left: 20px;
-}
-
-.controls {
-    display: flex !important;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.controls .button {
-    margin: 5px;
-}
-
-.current-track {
-    width: 80%;
-} */

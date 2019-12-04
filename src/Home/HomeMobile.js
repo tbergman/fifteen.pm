@@ -1,7 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import * as THREE from 'three';
-import { MarchingCubes, EffectComposer, ShaderPass, FXAAShader, HorizontalTiltShiftShader, VerticalTiltShiftShader, RenderPass } from 'three-full';
-import { OrbitControls } from '../Utils/OrbitControls';
+import {
+  MarchingCubes,
+  EffectComposer,
+  ShaderPass,
+  FXAAShader,
+  HorizontalTiltShiftShader,
+  VerticalTiltShiftShader,
+  RenderPass
+} from 'three-full';
 import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import './HomeMobile.css';
@@ -11,7 +18,6 @@ const MARGIN = 0;
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight - 2 * MARGIN;
 let resolution = 50;
-const numBlobs = 10;
 
 class HomeMobile extends Component {
   state = {
@@ -51,7 +57,6 @@ class HomeMobile extends Component {
     this.vblur = new ShaderPass(VerticalTiltShiftShader);
     this.renderModel = new RenderPass(this.scene, this.camera);
     this.composer = new EffectComposer(this.renderer, this.renderTarget);
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
   }
 
 
@@ -86,10 +91,6 @@ class HomeMobile extends Component {
       camera.position.set(0, 10, 5);
       camera.rotation.x = 0.4;
       camera.rotation.z = 0.1;
-
-      // CONTROLS
-      controls.target.set(0, 2, 0);
-      controls.update();
 
       // LIGHTS
       light.position.set(0.5, 0.5, 1);
@@ -134,7 +135,7 @@ class HomeMobile extends Component {
       window.addEventListener('resize', onWindowResize, false);
       window.addEventListener('mousemove', this.onMouseMove, false);
       window.addEventListener("touchstart", this.onMouseMove, false);
-      window.addEventListener("touchmove", this.onMouseMove, false);  
+      window.addEventListener("touchmove", this.onMouseMove, false);
     }
 
     const onWindowResize = debounce((event) => {
@@ -252,7 +253,7 @@ class HomeMobile extends Component {
 
   render() {
     return (
-      <Fragment> 
+      <Fragment>
         {!this.state.overlayOpen && this.renderReleaseas()}
         <div ref={element => this.container = element} />
       </Fragment>

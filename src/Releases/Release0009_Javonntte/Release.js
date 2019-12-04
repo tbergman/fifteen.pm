@@ -1,33 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { CONTENT } from '../../Content';
-import useMusicPlayer from '../../UI/Player/hooks';
+import useAudioPlayer from '../../UI/Player/hooks/useAudioPlayer';
 import UI from '../../UI/UI';
 import JavonntteCanvas from './Canvas';
 import * as C from './constants';
 
+
 export default function Release({ }) {
-    const { playTrack, currentTrackId } = useMusicPlayer();
-    const [content, setContent] = useState(false);
-    const [colorTheme, setColorTheme] = useState(C.TRACK_METADATA["679771262"].theme);
+    const { playTrack, currentTrackId } = useAudioPlayer();
+    const [content, setContent] = useState(CONTENT[window.location.pathname]);
+    const [contentReady, setContentReady] = useState(false);
+    const [theme, setTheme] = useState(C.TRACK_METADATA[C.TRACK_LOOKUP["life"]].theme);
+    const [useDashCam, setUseDashCam] = useState(false);
 
     useEffect(() => {
-        setContent(CONTENT[window.location.pathname])
-    }, []);
-
-    useEffect(() => {
-        if (currentTrackId) setColorTheme(C.TRACK_METADATA[currentTrackId].theme);
+        if (!currentTrackId) return;
+        const metadata = C.TRACK_METADATA[currentTrackId];
+        content.colors = metadata.theme.UIColors;
+        setTheme(metadata.theme);
     }, [currentTrackId])
 
     function onTrackSelect(trackId) {
-        const metadata = C.TRACK_METADATA[trackId]
-        setColorTheme(metadata.theme);
-        playTrack(metadata.index)
+        const trackIndex = C.TRACK_ID_LOOKUP[trackId];
+        playTrack(trackIndex)
     }
 
-    return <>{content &&
+    return <>{content && theme &&
         <>
-            <UI content={content} />
-            <JavonntteCanvas colorTheme={colorTheme} onTrackSelect={onTrackSelect} />
+            <UI
+                contentReady={contentReady}
+                content={content}
+                onOverlayHasBeenClosed={() => setUseDashCam(true)}
+            />
+            <JavonntteCanvas
+                setContentReady={setContentReady}
+                theme={theme}
+                onThemeSelect={onTrackSelect}
+                useDashCam={useDashCam}
+            />
         </>
     }</>
 }

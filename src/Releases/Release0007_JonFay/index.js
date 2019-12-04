@@ -1,116 +1,18 @@
-import React, { Component, Fragment } from 'react';
+import React, { useMemo, useState } from 'react';
 import { CONTENT } from "../../Content";
-import LegacyMenu from '../../UI/LegacyMenu/LegacyMenu';
-import { assetPath } from "../../Utils/assets";
-import Unity, { UnityContent } from "react-unity-webgl";
+import UI from '../../UI/UI';
+import { AudioPlayerProvider } from '../../UI/Player/AudioPlayerContext';
+import Canvas from './Canvas';
 
+export default function Release0007_JonFay({ }) {
+  const content = useMemo(() => CONTENT[window.location.pathname]);
+  const [contentReady, setContentReady] = useState(false);
 
-export const assetPath7UnityBuild = (p) => {
-  return assetPath("7/unity/Build/" + p);
+  return (
+    <AudioPlayerProvider tracks={content.tracks}>
+      <UI content={content} contentReady={contentReady} />
+      <Canvas contentReady={contentReady} onContentReady={() => setContentReady(true) } />
+    </AudioPlayerProvider>
+  );
 }
 
-export const assetPath7Images = (p) => {
-  return assetPath("7/images/" + p);
-}
-
-// To use the new UI component you'll have to employ Suspense while 
-// unity assets loads
-class Release0007_JonFay extends Component {
-  state = {
-    progression: 0,
-    unityControllerOff: false,
-    hasEntered: false,
-    loading: true
-  }
-
-  constructor(props) {
-    super(props)
-    this.unityContent = new UnityContent(
-      assetPath7UnityBuild('unity.json'),
-      assetPath7UnityBuild('UnityLoader.js'), {
-        adjustOnWindowResize: true
-      }
-    );
-
-    this.unityContent.on("progress", progression => {
-      this.setState({
-        progression: progression
-      })
-    });
-
-    this.unityContent.on("loaded", () => {
-      this.unityComponent.adjustCanvasToContainer();
-      this.lockMouseLookBeforeEntering();
-      setTimeout(() => { this.setState({ loading: false }); }, 1500);
-    });
-  };
-
-  lockMouseLookBeforeEntering() {
-    if (!this.state.hasEntered && !this.state.unityControllerOff) {
-      this.unityContent.send("ToggleController", "LockMouseLook");
-      this.setState({ unityControllerOff: true });
-    }
-  }
-
-  unlockMouseLook() {
-    this.unityContent.send("ToggleController", "UnlockMouseLook");
-    this.setState({ unityControllerOff: false });
-  }
-
-  componentDidMount() {
-    this.setWindowDimensions();
-    window.addEventListener('resize', this.onWindowResize, false);
-  }
-
-  componentDidUpdate() {
-    if (this.state.hasEntered && this.state.unityControllerOff) {
-      this.unlockMouseLook();
-    }
-  }
-
-  setWindowDimensions() {
-    this.height = window.innerHeight;
-    this.width = window.innerWidth;
-  }
-
-  onWindowResize = () => {
-    this.setWindowDimensions();
-    this.unityComponent.adjustCanvasToContainer()
-  }
-
-  renderLoadingGif = () => {
-    if (!this.state.hasEntered) {
-      return (
-        <div id={"progress-bar"}>
-          <img className="stretch" alt="" src={assetPath7Images("loading.gif")} />
-        </div>
-      );
-    }
-  };
-
-  // To use the new UI component you'll have to employ Suspense while 
-  // unity assets loads
-  render() {
-    return (
-      <Fragment>
-        <LegacyMenu
-          content={CONTENT[window.location.pathname]}
-          menuIconFillColor="black"
-          didEnterWorld={() => {
-            this.setState({ hasEntered: true });
-          }}
-          loading={this.state.loading}
-        />
-        <div className="unity-content" >
-          <Unity unityContent={this.unityContent}
-            height={this.height}
-            width={this.width}
-            ref={component => this.unityComponent = component} />
-          {this.renderLoadingGif()}
-        </div>
-      </Fragment >
-    );
-  }
-}
-
-export default Release0007_JonFay;

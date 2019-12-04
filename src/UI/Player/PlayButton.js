@@ -1,10 +1,10 @@
 import React from "react"
 import './Player.css'
-import useMusicPlayer from "./hooks";
+import usePlayer from "./hooks/usePlayer";
 import './PlayButton.css';
 
-export default function PlayButton({ color, text }) {
-    const {isPlaying, togglePlay} = useMusicPlayer();
+export default function PlayButton({ mediaType, color, text }) {
+    const {isPlaying, togglePlay} = usePlayer(mediaType);
     return (
       <div id="play-button-container">
         <svg x="0px" y="0px" width="300px" height="300px" viewBox="0 0 300 300" fill={color}>
@@ -14,7 +14,7 @@ export default function PlayButton({ color, text }) {
           <circle cx="100" cy="100" r="50" fill="none" stroke="none" />
           <g>
             <use xlinkHref="#circlePath" fill="none" />
-            <text fill="#000" stroke="red">
+            <text fill="red" stroke={color}>
               <textPath xlinkHref="#circlePath" fill={color}>{text}</textPath>
             </text>
           </g>

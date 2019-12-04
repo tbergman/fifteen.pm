@@ -1,5 +1,6 @@
-#playlist-container {
-    z-index: 999999999;
+#tracklist-container {
+    z-index: 322;
+    cursor: pointer;
     position: relative;
     /* top: -20x; */
     margin-left: 10px;
@@ -8,11 +9,11 @@
     align-items: center;
 }
 
-#playlist-container ul {
+#tracklist-container ul {
     padding: 0;
 }
 
-#playlist-container .active-track {
+#tracklist-container .active-track {
     display: flex;
     font-weight: bold;
 }
@@ -22,13 +23,13 @@
     margin-right: 10px;
 }
 
-#playlist li {
+#tracklist li {
     list-style-type: none;
     font-size: 13px;
     padding-bottom: 5px;
 }
 
-.no-touch #playlist li:hover {
+#tracklist li:hover {
     opacity: 0.5;
     cursor: pointer;
 }

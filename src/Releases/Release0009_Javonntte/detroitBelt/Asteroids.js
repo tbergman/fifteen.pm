@@ -1,15 +1,19 @@
 
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
 import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
 import { randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
+import BuildingInstances from './BuildingInstances';
+import { BuildingsContext } from './BuildingsContext';
+import { generateTilesets } from './tiles';
+import { cloneDeep } from 'lodash';
 
 // TODO buildings should be grabbed in the provider since they are different
 // than world geoms so it's the same number of total instances no matter how i slice it and there's no need to try and combine world vs asteroid instances
 // then this can become a component again
-export function generateAsteroidSurfaces(props) {
+function generateAsteroidSurfaces(props) {
     const surfaces = {
         geometry: undefined,
         instances: [],
@@ -17,10 +21,8 @@ export function generateAsteroidSurfaces(props) {
 
     const asteroidsGeom = new THREE.Geometry();
 
-    function _generateAsteroidCentroids({ beltRadius, numAsteroids }) {
+    function _generateAsteroidCentroids({ beltRadius, numAsteroids, distBetweenRings, closestRingRadius }) {
         const centroids = [];
-        const distBetweenRings = 3;
-        const closestRingRadius = 0;
         let curRingRadius = closestRingRadius;
         const satelliteSlots = 20; // potential locations on ring for satellite
         while (centroids.length < numAsteroids) {
@@ -33,16 +35,17 @@ export function generateAsteroidSurfaces(props) {
         return centroids;
     }
 
-    function _generateAsteroidNoiseSphere({ centroid, radius, sides, tiers, noiseHeight, noiseWidth }) {
+    function _generateAsteroidNoiseSphere({ centroid, radius }) {
         const noiseSphere = new NoiseSphereGeometry(
             radius,
-            sides,
-            tiers,
+            10, // sides
+            10,//Math.floor(Math.max(radius * Math.random(), radius * 2)), // tiers
             {
                 centroid: centroid,
                 seed: Math.floor(Math.random() * 1000),
-                noiseWidth: noiseWidth,
-                noiseHeight: noiseHeight,
+                noiseWidth: 1,
+                noiseHeight: 1,
+                scale: { x: Math.random() * 1.5, y: 1, z: 1 }
             })
         noiseSphere.verticesNeedUpdate = true;
         noiseSphere.computeBoundingSphere();
@@ -51,17 +54,9 @@ export function generateAsteroidSurfaces(props) {
         return noiseSphere;
     }
 
-    function _generateAsteroidInstance({ centroid, beltRadius, maxAsteroidRadius, maxAsteroidNoise }) {
+    function _generateAsteroidInstance({ centroid, beltRadius, maxAsteroidRadius }) {
         const radius = THREE.Math.randInt(maxAsteroidRadius * .75, maxAsteroidRadius);
-        const asteroidGeom = _generateAsteroidNoiseSphere({
-            centroid: centroid,
-            radius: radius,
-            // sides: Math.floor(radius),
-            sides: Math.floor(Math.max(radius * Math.random() + .5, radius)),
-            tiers: Math.floor(Math.max(radius * Math.random(), radius/2)),
-            noiseHeight: maxAsteroidNoise,
-            noiseWidth: maxAsteroidNoise,
-        })
+        const asteroidGeom = _generateAsteroidNoiseSphere({ centroid: centroid, radius: radius })
         return {
             geometry: asteroidGeom,
             faces: asteroidGeom.faces,
@@ -80,47 +75,48 @@ export function generateAsteroidSurfaces(props) {
     return surfaces;
 }
 
+class AsteroidNeighborhoods {
+    constructor(surface, theme) {
+        this.surface = {}
+        // limit the number of faces that are actually used to generate neighborhoods for performance
+        this.surface.faces = surface.faces.slice(0, 10);
+        this.surface.vertices = surface.vertices.slice(0, 20);
+        this.surface.radius = surface.radius;
+        this.theme = theme;
+        this.numTiles = 3;
+        this.maxRadius = C.ASTEROID_MAX_RADIUS * 6
+    }
 
-function getAsteroidNeighborhoodCentroids({ tiles, surface }) {
-    const numCentroids = Math.max(0, surface.radius / 2);
-    const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
-    return centroids;
-}
+    rules = () => true
 
-function pickAsteroidBuildings(tile, buildings) {
-    const presentBuildings = buildings.filter(building => building.era === C.PRESENT);
-    return [
-        {
-            allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-            subdivisions: 1
-        },
-        {
-            allowedBuildings: presentBuildings.filter(building => building.footprint == C.LARGE),
-            subdivisions: 1
+    getNeighborhoodCentroids({ tiles, surface }) {
+        const numCentroids = Math.min(3, surface.radius / 2);
+        const centroids = selectNRandomFromArray(Object.values(tiles).map(v => v), numCentroids).map(tile => tile.centroid);
+        return centroids;
+    }
+
+
+    pickBuildings(tile, buildings) {
+        return {
+            allowedBuildings: buildings.filter(building => {
+                return C.ASTEROID_BUILDING_CATEGORIES[this.theme].includes(building.name)
+            }),
+            subdivisions: 3,
         }
-    ][THREE.Math.randInt(0, 1)]
+    }
 }
 
 
-export function generateAsteroidNeighborhoods(surfaces) {
-    const neighborhoods = []
-    surfaces.instances.forEach(instance => {
-        // TODO a shared type class with world neighborhood
-        neighborhoods.push({
-            numTiles: 1,//isMobile ? C.ASTEROID_MAX_RADIUS * 2 : Math.floor(C.ASTEROID_MAX_RADIUS) * 2,
-            maxRadius: C.ASTEROID_MAX_RADIUS * 6, // Try to get this as low as possible after happy with maxSize (TODO there is probably a decent heuristic so you don't have to eyeball this)
-            rules: () => true,
-            getNeighborhoodCentroids: getAsteroidNeighborhoodCentroids,
-            // centroids: this._generateAsteroidNeighborhoodCentroids(), // TODO when refactor World
-            pickBuildings: pickAsteroidBuildings,
-            surface: instance,
-        });
-    })
-    return neighborhoods;
-}
+export function AsteroidsSurface({ geometry, themeName }) {
+    const { tron, ground29Purple, ornateBrass2, rock19, scuffedPlasticBlack } = useContext(MaterialsContext);
 
-export function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
-    const { tron, ground29 } = useContext(MaterialsContext);
+    const exteriorMaterial = useMemo(() => ({
+        dream: ornateBrass2,
+        night: ground29Purple,
+        natural: rock19,
+        sunset: scuffedPlasticBlack,
+    }))
+
     return <>
         <group>
             <mesh
@@ -129,7 +125,7 @@ export function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
             />
             <mesh
                 geometry={geometry}
-                material={ground29}
+                material={exteriorMaterial[themeName]}
                 receiveShadow
             />
         </group>
@@ -137,3 +133,44 @@ export function AsteroidsSurface({ geometry, insideColor, outsideColor }) {
     </>
 }
 
+export function Asteroids({ themeName, setReady }) {
+    const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
+    // TODO having issue getting these values to align with those passed into
+    // generateAsteroidNeighborhoods when placing this in its own useMemo,
+    // or even the same one.
+    const [surfaces, meshes] = useMemo(() => {
+        if (!buildingsLoaded) return [];
+
+        const _surfaces = generateAsteroidSurfaces({
+            beltRadius: C.ASTEROID_BELT_RADIUS,
+            numAsteroids: C.NUM_ASTEROIDS,
+            maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
+            distBetweenRings: C.ASTEROID_DIST_BETWEEN_RINGS,
+            closestRingRadius: C.ASTEROID_CLOSEST_RING_RADIUS,
+        })
+
+        const _meshes = {}
+        C.THEME_NAMES.forEach(themeName => {
+            const neighborhoods = _surfaces.instances.map(surface => new AsteroidNeighborhoods(surface, themeName))
+
+            _meshes[themeName] = generateTilesets({ buildings, neighborhoods });
+        })
+
+        return [_surfaces, _meshes];
+    }, [buildingsLoaded])
+
+    useEffect(() => {
+        if (meshes && buildingsLoaded) setReady(true);
+    }, [meshes])
+
+    return (
+        <>
+            {meshes &&
+                <>
+                    <AsteroidsSurface geometry={surfaces.geometry} themeName={themeName} />
+                    <BuildingInstances themeName={themeName} meshes={meshes} />
+                </>
+            }
+        </>
+    )
+}

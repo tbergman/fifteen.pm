@@ -1,7 +1,6 @@
 import * as THREE from "three";
 
 const rotateObject = (object, rotateX = 0, rotateY = 0, rotateZ = 0) => {
-
   rotateX = (rotateX * Math.PI) / 180;
   rotateY = (rotateY * Math.PI) / 180;
   rotateZ = (rotateZ * Math.PI) / 180;
@@ -9,13 +8,10 @@ const rotateObject = (object, rotateX = 0, rotateY = 0, rotateZ = 0) => {
   object.rotateX(rotateX);
   object.rotateY(rotateY);
   object.rotateZ(rotateZ);
-
 }
-
 
 //  initialize an object of type 'image'
 export const loadImage = ({ geometry, url, name, invert, position, rotateX, rotateY, rotateZ }) => {
-
   // create material from image texture
   let texture = new THREE.TextureLoader().load(url);
   texture.minFilter = THREE.LinearFilter;
@@ -36,12 +32,12 @@ export const loadImage = ({ geometry, url, name, invert, position, rotateX, rota
 
 //  initialize an object of type 'video'
 export const loadVideo = ({
-  geometry, url, name, position, loop,
+  videoElement, geometry, url, name, position, loop,
   muted, mimetype, invert, volume, sources,
   computeBoundingSphere, playbackRate,
   rotateX, rotateY, rotateZ, repeat }) => {
   // initialize video element
-  let videoElement = document.createElement('video');
+  videoElement = videoElement || document.createElement('video');
   videoElement.codecs = "avc1.4D401E, mp4a.40.2";
   videoElement.playsInline = true;
   videoElement.post = "https://dummyimage.com/320x240/ffffff/fff";
@@ -67,8 +63,6 @@ export const loadVideo = ({
     texture.repeat.y = repeat.y;
     texture.wrapS = THREE.ClampToEdgeWrapping;
     texture.wrapT = THREE.ClampToEdgeWrapping;
-    // texture.wrapS = THREE.RepeatWrapping;
-    // texture.wrapT = THREE.RepeatWrapping;
   }
 
   texture.minFilter = THREE.LinearFilter;
@@ -99,7 +93,6 @@ export const loadGLTF = ({ url, name, relativeScale, position, rotateX, rotateY,
     object.scene.scale.multiplyScalar(relativeScale);
     object.scene.position.set(...position);
     let child = object.scene.children[0];
-    // floaterChild.geometry.computeBoundingBox();
     child.position.set(0, 0, 0);
     object.scene.position.set(...position);
     object.name = name;

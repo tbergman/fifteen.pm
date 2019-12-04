@@ -33,6 +33,7 @@
     position: relative;
     overflow: hidden;
     top: 10px;
+    z-index: 1000;
 }
 
 #play-button-container text {
@@ -40,8 +41,8 @@
     font-size: 25px;
     font-weight: bold;
     letter-spacing: 9px;
-    fill: #ffffff;
-    stroke: #ffffff;
+    /* fill: #ffffff; */
+    /* stroke: #ffffff; */
 }
 
 #play-button-container svg {

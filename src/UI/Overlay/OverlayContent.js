@@ -12,12 +12,14 @@ import './OverlayContent.css';
 *    - action button
 */
 export default function OverlayContent({
+    hasBeenClosed,
+    contentReady,
     instructions,
     purchaseLink,
     message,
     color,
     onToggle,
-    }) {
+}) {
     return (
         <div className="overlay-content">
             <div className="overlay-header-and-controls">
@@ -26,8 +28,10 @@ export default function OverlayContent({
                 {purchaseLink && <OverlayPurchaseLink href={purchaseLink} color={color} />}
             </div>
             <OverlayEnterButton
+                hasBeenClosed={hasBeenClosed}
+                contentReady={contentReady}
                 color={color}
-                onClick={onToggle}  
+                onClick={onToggle}
             />
         </div>
     );

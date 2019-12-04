@@ -1,47 +1,27 @@
-import React, { useRef, useMemo, useContext, useEffect, useState } from 'react';
-import * as THREE from 'three';
+import { default as React, useEffect, useState, Suspense } from 'react';
+import { Asteroids } from './Asteroids';
+import { World } from './World';
+import DetroitLogo from './DetroitLogo';
 
-import { randomPointsOnSphere, selectNRandomFromArray } from '../../../Utils/random';
+export default function DetroitBelt({ setDetroitBeltReady, theme }) {
 
-import * as C from '../constants';
-import { AsteroidsSurface, generateAsteroidSurfaces, AsteroidBelt, generateAsteroidNeighborhoods } from './Asteroids';
-import { BuildingsContext } from './BuildingsContext';
-import { generateTilesets } from './tiles';
-import { worldNeighborhoods, WorldSurface } from './World';
+    const [themeName, setThemeName] = useState();
+    const [worldReady, setWorldReady] = useState(false);
+    const [asteroidsReady, setAsteroidsReady] = useState(false);
 
-// TODO having issue getting these values to align with those passed into generateAsteroidNeighborhoods when placing this in its own useMemo, or even the same one.
-const asteroidSurfaces = generateAsteroidSurfaces({
-    beltRadius: C.ASTEROID_BELT_RADIUS,
-    beltCenter: C.ASTEROID_BELT_CENTER,
-    numAsteroids: C.NUM_ASTEROIDS,
-    maxAsteroidRadius: C.ASTEROID_MAX_RADIUS,
-    maxAsteroidNoise: C.ASTEROID_MAX_FACE_NOISE,
-})
-
-export default function DetroitBelt({ colors }) {
-    const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
-    const [meshes, setMeshes] = useState();
-
-    const asteroidNeighborhoods = useMemo(() => {
-        if (asteroidSurfaces) return generateAsteroidNeighborhoods(asteroidSurfaces);
-    }, [asteroidSurfaces]);
     useEffect(() => {
-        if (buildingsLoaded) {
-            setMeshes(generateTilesets({
-                buildings,
-                groups: [worldNeighborhoods, ...asteroidNeighborhoods],
-            }));
-        }
-    }, [buildingsLoaded]);
+        setThemeName(theme.name)
+    }, [theme])
+
+    useEffect(() => {
+        if (asteroidsReady && worldReady) setDetroitBeltReady(true);
+    }, [worldReady, asteroidsReady]);
 
     return <>
-        <WorldSurface geometry={worldNeighborhoods.surface} color={colors.world} />
-        <AsteroidsSurface geometry={asteroidSurfaces.geometry} {...colors.asteroid} />
-        {meshes && Object.keys(meshes).map(meshName => {
-            return <primitive key={meshName}
-                object={meshes[meshName]}
-            />
-        })
-        }
+        <Asteroids themeName={themeName} setReady={setAsteroidsReady} />
+        <World themeName={themeName} setReady={setWorldReady} />
+        <Suspense>
+            <DetroitLogo />
+        </Suspense>
     </>
 }

@@ -1,19 +1,13 @@
-import React, { PureComponent, Fragment } from 'react';
-import * as THREE from "three";
-import { SimplexNoise } from "three-full";
-import { GPUComputationRenderer } from "three-full";
+/* eslint import/no-webpack-loader-syntax: off */
+import heightMapFragmentShader from '!raw-loader!glslify-loader!../../Shaders/water1Height.glsl';
+/* eslint import/no-webpack-loader-syntax: off */
+import waterVertexShader from '!raw-loader!glslify-loader!../../Shaders/water1Vertex.glsl';
 import debounce from 'lodash/debounce';
-import './Release.css';
+import React, { Fragment, PureComponent } from 'react';
+import * as THREE from "three";
+import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer";
+import { SimplexNoise } from "three/examples/jsm/math/SimplexNoise";
 
-import { CONTENT } from "../Content"
-import LegacyMenu from '../UI/LegacyMenu/LegacyMenu';
-import AudioStreamer from "../Utils/Audio/AudioStreamer";
-
-
-/* eslint import/no-webpack-loader-syntax: off */
-import waterVertexShader from '!raw-loader!glslify-loader!../Shaders/water1Vertex.glsl';
-/* eslint import/no-webpack-loader-syntax: off */
-import heightMapFragmentShader from '!raw-loader!glslify-loader!../Shaders/water1Height.glsl';
 
 
 const WIDTH = window.innerWidth;
@@ -29,7 +23,7 @@ const ambientLightColor = 0xFFFFFF;
 const waterColor = 0x0f5e9c;
 const waterSpecularColor = 0x111111;
 
-class Release0001_Yahceph extends PureComponent {
+export default class Scene extends PureComponent {
   constructor() {
     super();
     this.scene = new THREE.Scene();
@@ -56,7 +50,6 @@ class Release0001_Yahceph extends PureComponent {
     this.geometryRay = new THREE.PlaneBufferGeometry(WATER_BOUNDS, WATER_BOUNDS, 1, 1);
     this.meshRay = new THREE.Mesh(this.geometryRay, new THREE.MeshBasicMaterial({ color: 0xFFFFFF, visible: false }));
 
-
     this.gpuCompute = new GPUComputationRenderer(WATER_WIDTH, WATER_WIDTH, this.renderer);
     this.mousePos = new THREE.Vector2(10000, 10000);
     this.light = new THREE.PointLight(0xff0000, 4, 100);
@@ -73,7 +66,6 @@ class Release0001_Yahceph extends PureComponent {
     window.addEventListener("touchstart", this.onDocumentMouseMove, false);
     window.addEventListener("touchmove", this.onDocumentMouseMove, false);
     window.addEventListener('resize', this.onWindowResize, false);
-    window.addEventListener("load", this.onLoad, false);
     this.animate();
   }
 
@@ -84,8 +76,6 @@ class Release0001_Yahceph extends PureComponent {
     window.removeEventListener('resize', this.onWindowResize, false);
     window.removeEventListener("touchstart", this.onDocumentMouseMove, false);
     window.removeEventListener("touchmove", this.onDocumentMouseMove, false);
-    window.removeEventListener("load", this.onLoad, false);
-
     this.mount.removeChild(this.renderer.domElement);
   }
 
@@ -107,13 +97,6 @@ class Release0001_Yahceph extends PureComponent {
       this.setMouseCoords(event.clientX, event.clientY);
     }
   };
-
-  onLoad = (event) => {
-    // only init audio props AFTER load!
-    this.audioStream = new AudioStreamer(this.audioElement);
-    this.freqArray = new Uint8Array(this.audioStream.analyser.frequencyBinCount);
-    this.audioStream.connect()
-  }
 
   init = () => {
     const { camera, renderer } = this;
@@ -251,14 +234,13 @@ class Release0001_Yahceph extends PureComponent {
     this.renderScene();
   }
 
-
   renderScene = () => {
-    const { gpuCompute, renderer, camera, mouseCoords, meshRay, raycaster, freqArray, scene } = this;
+    const { audioStream, freqArray } = this.props;
+    const { gpuCompute, renderer, camera, mouseCoords, meshRay, raycaster, scene } = this;
     const uniforms = this.heightmapVariable.material.uniforms;
     if (this.mouseMoved) {
       raycaster.setFromCamera(mouseCoords, camera);
       let intersects = raycaster.intersectObject(meshRay);
-
       if (intersects.length > 0) {
         let point = intersects[0].point;
         uniforms.mousePos.value.set(point.x, point.z);
@@ -269,10 +251,10 @@ class Release0001_Yahceph extends PureComponent {
       this.mouseMoved = false;
     }
     else {
-      if (this.audioStream) {
-        this.audioStream.analyser.getByteFrequencyData(freqArray);
-        let x = this.freqArray[600];
-        let y = this.freqArray[100] - 100;
+      if (audioStream && freqArray) {
+        audioStream.analyser.getByteFrequencyData(freqArray);
+        let x = freqArray[600];
+        let y = freqArray[100] - 100;
         uniforms.mousePos.value.set(x, y)
       } else {
         let randX = THREE.Math.randInt(20, 40);
@@ -292,22 +274,13 @@ class Release0001_Yahceph extends PureComponent {
 
   render() {
     return (
-      <Fragment>
-        <LegacyMenu
-          content={CONTENT[window.location.pathname]}
-          mediaRef={el => this.audioElement = el}
-          didEnterWorld={() => { this.hasEntered = true }}
-        />
-        <div
-          className="release"
-          id="release001"
-          ref={(mount) => {
-            this.mount = mount
-          }}
-        />
-      </Fragment>
+      <div
+        className="release"
+        id="release001"
+        ref={(mount) => {
+          this.mount = mount
+        }}
+      />
     );
   }
 }
-
-export default Release0001_Yahceph;

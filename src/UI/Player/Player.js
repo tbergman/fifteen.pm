@@ -1,20 +1,21 @@
-import React, {useEffect} from "react";
-import useMusicPlayer from "./hooks"
+import React from "react";
 import PlayButton from "./PlayButton";
-import TrackList from "./TrackList";
 import "./Player.css";
+import TrackList from "./TrackList";
 
-export default function Player({ artist, tracks, playerColor, selectedColor, playOnLoad=true }) {
-  const {playTrack} = useMusicPlayer();
-  
-  useEffect(() => {
-    if (playOnLoad) playTrack(0);
-  }, [])
-
+export default function Player({ artist, tracks, playerColor, selectedColor }) {
   return (
     <div id="player-container">
-      <PlayButton color={playerColor} text={artist} />
-      <TrackList tracks={tracks} defaultColor={playerColor} selectedColor={selectedColor} />
+      <PlayButton
+        mediaType={tracks[0].mediaType}
+        color={playerColor}
+        text={artist}
+      />
+      <TrackList
+        tracks={tracks}
+        defaultColor={playerColor}
+        selectedColor={selectedColor}
+      />
     </div>
   );
 }
