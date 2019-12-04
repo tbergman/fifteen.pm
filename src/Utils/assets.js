@@ -7,3 +7,7 @@ export const assetPath = (path) => {
   }
   return `${ASSET_URL}${path}`
 }
+
+export const assetPathShared = (path) => {
+  return assetPath("shared/" + path);
+}

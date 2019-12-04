@@ -8,7 +8,9 @@ import {
   SlowLoad
 } from "./UI/Controls/Icons";
 
+import * as THREE from 'three';
 import { assetPath } from "./Utils/assets";
+import { multiSourceVideo } from './Utils/Video/paths.js';
 
 export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
   "/1": "#FF69B4",
@@ -20,254 +22,265 @@ export const TOTAL_RELEASES = 8;
 export const CONTENT = {
   "/": {
     home: true, // TODO rm
-    theme: {
-      message:
-        "fifteen.pm invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
-      iconColor: 'white',
-      navColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.5)',
-      textColor: 'white',
-    },
+    message:
+      "fifteen.pm invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
+    colors: {
+      logo: 'white',
+      overlayContent: 'white',
+      overlay: 'rgba(0, 50, 200, 0.5)',
+      navigation: 'white',
+      onHover: 'rgba(0, 0, 0, 0.5)',
+      info: 'white',
+    }
   },
   "/1": {
     artist: "YAHCEPH",
-    textModel: assetPath("1/objects/text.gltf"),
+    message: 'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
+    purchaseLink: "https://fifteenpm.bandcamp.com/track/wun-4-jas",
     tracks: [
       {
-        title: "Wun 4 Jas",
+        name: "Wun 4 Jas",
         id: "466084773",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/wun-4-jas",
-      iconColor: '#fff',
-      fillColor: 'rgba(255,105,180, 1)',
-      logoSvgFillColor: 'rgba(255,105,180, 1)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: MouseMove,
-          instructions: "move mouse to make water ripple"
-        }
-      ]
-    }
+    colors: {
+      logo: '#fff',
+      overlay: 'rgba(255,105,180, 1)',
+      overlayContent: '#fff',
+      player: 'rgba(255,105,180, 1)',
+      navigation: 'rgba(255,105,180, 1)',
+      onHover: '#fff',
+      info: 'rgba(255,105,180, 1)',
+    },
+    instructions: [
+      {
+        icon: MouseMove,
+        text: "move mouse to make water ripple"
+      }
+    ]
   },
   "/2": {
     artist: "YEAR UNKNOWN",
-    textModel: assetPath("2/objects/text.gltf"),
+    message: "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly drum disturbance.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/track/timer",
     tracks: [
       {
-        title: "Timer",
+        name: "Timer",
         id: "475418370",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly drum disturbance.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/timer",
-      iconColor: '#fff',
-      fillColor: 'rgba(127, 0, 255, 0.5)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
+    colors: {
+      logo: 'white',
+      overlayContent: 'white',
+      overlay: 'rgba(127, 0, 255, 0.5)',
+      player: 'white',
+      navigation: 'white',
+      onHover: 'rgba(240, 0, 255, 0.75)',
+      info: 'white',
+      instructions: [
         {
           icon: MouseMove,
-          instructions: "click and drag mouse to look around"
+          text: "click and drag mouse to look around"
         },
         {
           icon: TwoFingerScroll,
-          instructions: "scroll to zoom"
+          text: "scroll to zoom"
         }
       ]
     }
   },
   "/3": {
     artist: "OTHERE",
-    textModel: assetPath("3/objects/text.gltf"),
+    message:
+      "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/track/lets-beach",
     tracks: [
       {
-        title: "Let's Beach",
+        name: "Let's Beach",
         id: "482138307",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/lets-beach",
-      iconColor: 'rgba(255, 0, 0, 1)',
-      navColor: 'rgba(255, 0, 0, 1)',
-      fillColor: 'rgba(255, 0, 0, 0.7)',
-      logoSvgFillColor: 'rgba(255, 0, 0, 1)',
-      textColor: 'white',
-      controls: [
-        {
-          icon: Hover,
-          instructions: "hover over inner orb to activate filter"
-        },
-        {
-          icon: MouseMove,
-          instructions: "click and drag mouse to look around"
-        },
-        {
-          icon: TwoFingerScroll,
-          instructions: "scroll to zoom and fly through filter"
-        }
-      ]
-    }
+    colors: {
+      logo: 'red',
+      player: 'red',
+      overlay: 'red',
+      overlayContent: 'white',
+      navigation: 'red',
+      onHover: 'gray',
+      info: 'red',
+    },
+    instructions: [
+      {
+        icon: Hover,
+        text: "hover over inner orb to activate filter"
+      },
+      {
+        icon: MouseMove,
+        text: "click and drag mouse to look around"
+      },
+      {
+        icon: TwoFingerScroll,
+        text: "scroll to zoom and fly through filter"
+      }
+    ]
   },
   "/4": {
     artist: "JON CANNON",
-    textModel: assetPath("4/objects/text.gltf"),
+    message: "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/album/ep-1",
     tracks: [
       {
-        title: "Nothing (Blood)",
+        name: "Nothing (Blood)",
         id: "507660189",
         type: "soundcloud"
       },
       {
-        title: "Miracle Center",
+        name: "Miracle Center",
         id: "513518607",
         type: "soundcloud"
       },
       {
-        title: "Finesse",
+        name: "Finesse",
         id: "513518595",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/album/ep-1",
-      iconColor: '#fff',
-      fillColor: 'rgba(0, 0, 0, 0.5)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: MouseMove,
-          instructions: "move mouse to look around"
-        },
-        {
-          icon: Click,
-          instructions: "click to advance flight path"
-        },
-        {
-          icon: ArrowKeys,
-          instructions: "use arrow keys to fly around"
-        },
-        {
-          icon: NoPhone,
-          instructions: "doesn't work on phones",
-          alwaysShow: true
-        }
-      ]
-    }
+    colors: {
+      logo: '#fff',
+      overlayContent: '#fff',
+      overlay: 'rgba(0, 0, 0, 0.5)',
+      player: '#fff',
+      navigation: '#fff',
+      onHover: 'rgba(250, 10, 250)',
+      info: '#fff',
+    },
+    instructions: [
+      {
+        icon: MouseMove,
+        text: "move mouse to look around"
+      },
+      {
+        icon: Click,
+        text: "click to advance flight path"
+      },
+      {
+        icon: ArrowKeys,
+        text: "use arrow keys to fly around"
+      },
+      {
+        icon: NoPhone,
+        text: "doesn't work on phones",
+        alwaysShow: true
+      }
+    ]
+
   },
   "/5": {
     artist: "PLEBEIAN",
-    textModel: assetPath("5/objects/text.gltf"),
+    message: "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/album/heaven",
     tracks: [
       {
-        title: "Heaven",
+        name: "Heaven",
         id: "514219014",
         type: "soundcloud"
       },
       {
-        title: "Bullseye",
+        name: "Bullseye",
         id: "514219020",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/album/heaven",
-      iconColor: '#fff',
-      fillColor: 'rgba(40, 47, 175, 1)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: MouseMove,
-          instructions: "click and drag mouse to look around"
-        },
-        {
-          icon: TwoFingerScroll,
-          instructions: "scroll to zoom"
-        }
-      ]
-    }
+    colors: {
+
+      logo: '#fff',
+      overlayContent: '#fff',
+      overlay: 'rgba(40, 47, 175, 1)',
+      player: '#fff',
+      navigation: 'rgba(40, 47, 175, 1)',
+      onHover: 'rgba(40, 47, 175, 1)',
+      info: '#fff',
+    },
+    instructions: [
+      {
+        icon: MouseMove,
+        text: "click and drag mouse to look around"
+      },
+      {
+        icon: TwoFingerScroll,
+        text: "scroll to zoom"
+      }
+    ]
   },
   "/6": {
     artist: "VVEISS",
-    textModel: assetPath("6/objects/text.gltf"),
+    message: "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/track/escape-velocity",
     tracks: [
       {
-        title: "ESCAPE VELOCITY",
+        name: "ESCAPE VELOCITY",
         id: "529074519",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message:
-        "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/escape-velocity",
-      iconColor: '#fff',
-      fillColor: 'rgba(127, 0, 255, 0.4)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: MouseMove,
-          instructions: "move mouse to look around"
-        }
-      ]
-    }
+    colors: {
+      logo: '#fff',
+      overlay: 'rgba(127, 0, 255, 0.4)',
+      overlayContent: '#fff',
+      player: 'rgba(127, 0, 255, 0.4)',
+      navigation: 'rgba(250, 0, 255, 0.4)',
+      onHover: 'rgba(127, 0, 255, 0.4)',
+      info: 'rgba(127, 0, 255, 0.4)',
+    },
+    instructions: [
+      {
+        icon: MouseMove,
+        text: "move mouse to look around"
+      }
+    ]
   },
   "/7": {
     artist: "JON FAY",
-    textModel: assetPath("7/objects/text.gltf"),
+    message: "In this 22-minute meditation, Jon Fay captures the infinite pulse of the rave as it empties into the dawn.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
     tracks: [
       {
-        title: "GOLDEN GROOVE",
+        name: "GOLDEN GROOVE",
         id: "565459281",
         type: "soundcloud"
       }
     ],
-    theme: {
-      message: "In this 22-minute meditation, Jon Fay captures the infinite pulse of the rave as it empties into the dawn.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
-      iconColor: '#fff',
-      fillColor: 'rgba(255, 102, 0, 0.4)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [
-        {
-          icon: SlowLoad,
-          instructions: "takes a few seconds to load"
-        },
-        {
-          icon: ArrowKeys,
-          instructions: "use arrow keys to walk forever"
-        },
-        {
-          icon: MouseMove,
-          instructions: "move mouse to look around"
-        },
-        {
-          icon: NoPhone,
-          instructions: "doesn't work on phones",
-          alwaysShow: true
-        }
-      ]
-    }
+    colors: {
+      logo: '#fff',
+      overlayContent: '#fff',
+      overlay: 'rgba(255, 102, 0, 0.4)',
+      player: 'rgba(255, 102, 0, 0.4)',
+      navigation: 'rgba(255, 102, 0, 0.4)',
+      onHover: 'rgba(255, 102, 0, 0.4)',
+      info: 'rgba(255, 102, 0, 0.4)',
+    },
+    instructions: [
+      {
+        icon: SlowLoad,
+        text: "takes a few seconds to load"
+      },
+      {
+        icon: ArrowKeys,
+        text: "use arrow keys to walk forever"
+      },
+      {
+        icon: MouseMove,
+        text: "move mouse to look around"
+      },
+      {
+        icon: NoPhone,
+        text: "doesn't work on phones",
+        alwaysShow: true
+      }
+    ]
   },
   "/greem-and-fifteenpm-opening": {
     artist: "",
@@ -291,33 +304,45 @@ export const CONTENT = {
   },
   "/8": {
     artist: "GREEM JELLYFISH",
+    message: "Juicy Tender is an exploration of exodus and urban life. Though we leave the city in search of extraordinary experiences, we sometimes return to loneliness. Ultimately, refuge is not a place but a set of material conditions: Art, Food, Music, Mountain, Ocean, Family, Friend.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/album/juicy-tender",
     tracks: [
       {
-        title: "Juicy Tender",
-        type: "soundcloud",
-        id: "610976673",
-        secretToken: "s-7EwJv",
-        // id: "629673933",
-        // secretToken: "s-Pga8Z"
-      }
+        mediaType: 'video',
+        meta: {
+          type: 'video', // TODO do we need this here as well?
+          mimetype: 'video/mp4',
+          name: 'greem-vid1',
+          sources: multiSourceVideo('/assets/8/videos/jt-final'),
+          geometry: new THREE.PlaneBufferGeometry(1, 1),
+          position: [0, 0, 0],
+          playbackRate: 1,
+          loop: true,
+          invert: true,
+          volume: .4,
+          muted: false,
+          angle: 0.0,
+        },
+        mesh: undefined,
+      },
     ],
-    theme: {
-      message: "Juicy Tender is an exploration of exodus and urban life. Though we leave the city in search of extraordinary experiences, we sometimes return to loneliness. Ultimately, refuge is not a place but a set of material conditions: Art, Food, Music, Mountain, Ocean, Family, Friend.",
-      purchaseLink: "https://fifteenpm.bandcamp.com/album/juicy-tender",
-      iconColor: '#fff',
-      fillColor: 'rgba(255, 0, 0, 0.5)',
-      textColor: '#fff',
-      navColor: '#fff',
-      controls: [{
-        icon: MouseMove,
-        instructions: "click and drag mouse to look around"
-      },
-      {
-        icon: TwoFingerScroll,
-        instructions: "scroll to zoom"
-      },
-      ]
-    }
+    colors: {
+      logo: '#fff',
+      overlay: 'rgba(255, 0, 0, 0.5)',
+      overlayContent: '#fff',
+      player: '#fff',
+      navigation: '#fff',
+      onHover: 'rgba(255, 0, 0, 0.5)',
+      info: '#fff',
+    },
+    instructions: [{
+      icon: MouseMove,
+      text: "click and drag mouse to look around"
+    },
+    {
+      icon: TwoFingerScroll,
+      text: "scroll to zoom"
+    }]
   },
   "/g": {
     artist: "",
@@ -338,6 +363,59 @@ export const CONTENT = {
       navColor: '#fff',
       controls: []
     }
+  },
+  "/9": {
+    artist: "JAVONNTTE",
+    message: "In 2182 Detroit Asteroid Belt goes wild for the Earthy tones of house master Javonntte after his 'City Life' EP surfaces on some bricked drives in the archives.",
+    purchaseLink: "TODO",
+    tracks: [
+      {
+        name: "City Life",
+        type: "soundcloud",
+        // id: "679771262",
+        // secretToken: "s-pqcS4",
+        id: "719292745",
+        secretToken: "s-YWQPC",
+        bpm: "120",
+      },
+      {
+        name: "Swing House Madness",
+        type: "soundcloud",
+        id: "693475855",
+        secretToken: "s-qakud",
+        bpm: "120",
+      },
+      {
+        name: "Natural",
+        type: "soundcloud",
+        id: "679771259",
+        secretToken: "s-W6P06",
+        bpm: "120",
+      },
+      {
+        name: "This Dream",
+        type: "soundcloud",
+        id: "679771253",
+        secretToken: "s-XeIko",
+        bpm: "95",
+      },
+
+    ],
+    colors: {
+      logo: '#0f0',
+      navigation: '#0f0',
+      overlay: 'rgba(0, 255, 0, .8)',
+      overlayContent: '#000',
+      player: '#0f0',
+      onHover: '#fff',
+      info: '#0f0',
+    },
+    instructions: [
+      {
+        icon: ArrowKeys,
+        text: "use arrow keys to drive the hoverboard"
+      },
+    ]
   }
 };
 

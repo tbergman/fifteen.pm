@@ -2,13 +2,14 @@ import React, { PureComponent, Fragment } from 'react';
 import * as THREE from 'three';
 import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
-import GLTFLoader from 'three-gltf-loader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { loadGLTF } from '../Utils/Loaders';
 import { assetPath } from "../Utils/assets";
-import Menu from "../UI/Menu/Menu";
 import { OrbitControls } from 'three-full';
-import { initRockMaterial } from '../Releases/Release0008_GreemJellyfish/materials.js';
-import { Water2 } from "../Utils/Water2"
+import { initRockMaterial } from '../Utils/materials.js';
+import { Water } from 'three/examples/jsm/objects/Water2';
+import UI from '../UI/UI';
+import { CONTENT } from '../Content'
 
 class HomeDefault extends PureComponent {
   state = {
@@ -98,12 +99,14 @@ class HomeDefault extends PureComponent {
       flowY: 1
     };
     const waterGeometry = new THREE.PlaneBufferGeometry(50, 50);
-    const water = new Water2(waterGeometry, {
+    const water = new Water(waterGeometry, {
       color: params.color,
       scale: params.scale,
       flowDirection: new THREE.Vector2(params.flowX, params.flowY),
       textureWidth: 512,
-      textureHeight: 512
+      textureHeight: 512,
+      normalMap0: textureLoader.load('assets/shared/images/water/textures/water/Water_1_M_Normal.jpg'),
+      normalMap1: textureLoader.load('assets/shared/images/water/textures/water/Water_2_M_Normal.jpg'),
     });
     water.position.y = .1;
     water.rotation.x = Math.PI * -0.5;
@@ -134,6 +137,7 @@ class HomeDefault extends PureComponent {
         <li><a href="/6">vveiss</a></li>
         <li><a href="/7">Jon Fay</a></li>
         <li><a href="/8">Greem Jellyfish</a></li>
+        {/* <li><a href="/9">Javonntte</a></li> */}
       </ul>
     </div>);
   }
@@ -141,10 +145,7 @@ class HomeDefault extends PureComponent {
   render() {
     return (
       <Fragment>
-        <Menu
-          overlayOpen={false}
-          shouldRenderPlayer={false}
-        />
+        <UI content={CONTENT["/"]} loadWithOverlay={false} />
         {!this.state.overlayOpen && this.renderReleaseas()}
         <div className="release" ref={element => this.container = element} />
       </Fragment>

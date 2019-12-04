@@ -1,9 +1,9 @@
 .releases-list {
     background: transparent;
     position: absolute;
-    top: 20%;
+    top: 10%;
     margin-left: 5%;
-    font-size: 1.7rem;
+    font-size: 1.5rem;
 }
 
 .releases-list-title{

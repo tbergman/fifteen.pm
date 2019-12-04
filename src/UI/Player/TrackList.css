@@ -1,0 +1,35 @@
+#tracklist-container {
+    z-index: 322;
+    cursor: pointer;
+    position: relative;
+    /* top: -20x; */
+    margin-left: 10px;
+    display: flex;
+    /* align-self: flex-end; */
+    align-items: center;
+}
+
+#tracklist-container ul {
+    padding: 0;
+}
+
+#tracklist-container .active-track {
+    display: flex;
+    font-weight: bold;
+}
+
+#current-track-smiley {
+    margin-left: -17px;
+    margin-right: 10px;
+}
+
+#tracklist li {
+    list-style-type: none;
+    font-size: 13px;
+    padding-bottom: 5px;
+}
+
+#tracklist li:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}

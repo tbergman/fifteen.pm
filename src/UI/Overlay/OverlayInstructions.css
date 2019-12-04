@@ -1,0 +1,8 @@
+.overlay-instructions {
+    align-self: flex-start;
+    align-items: center;
+}
+
+.overlay-content-item.hide-in-mobile {
+    display: none;
+}
