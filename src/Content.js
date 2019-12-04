@@ -366,7 +366,7 @@ export const CONTENT = {
   },
   "/9": {
     artist: "JAVONNTTE",
-    message: "In 2182 Detroit Asteroid Belt goes wild for the Earthy tones of house master Javonntte after his 'City Life' EP surfaces on some bricked drives in the archives.",
+    message: "Detroit Asteroid Belt 2120: All sectors go wild for the Earthy tones of house master Javonntte after his 'City Life' series surfaces off some de-bricked drives in the archives.",
     purchaseLink: "TODO",
     tracks: [
       {
