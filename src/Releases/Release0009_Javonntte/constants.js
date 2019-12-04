@@ -175,14 +175,14 @@ export const TRACK_METADATA = (() => {
 })();
 
 export const TRACK_ID_LOOKUP = {
-    "679771262": 0,
+    "719292745": 0,
     "693475855": 1,
     "679771259": 2,
     "679771253": 3,
 }
 
 export const TRACK_LOOKUP = {
-    "life": "679771262",
+    "life": "719292745",
     "swing": "693475855",
     "natural": "679771259",
     "dream": "679771253",

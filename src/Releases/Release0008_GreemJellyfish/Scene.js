@@ -71,7 +71,7 @@ export default class Scene extends Component {
         // main initialization parameters
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
-        this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, .01, 1500);
+        this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, .001, 1500);
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setPixelRatio(window.devicePixelRatio)
         this.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -400,27 +400,10 @@ export default class Scene extends Component {
         firstAction.play();
     }
 
-    // muteMainAudio() {
-    //     const { mediaElement } = this;
-    //     const refreshId = setInterval(() => {
-    //         if (mediaElement) {
-    //             if (isIE) {
-    //                 mediaElement.volume = 0;
-    //             } else {
-    //                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    //                 const source = audioCtx.createMediaElementSource(mediaElement);
-    //                 const gainNode = audioCtx.createGain();
-    //                 gainNode.gain.value = 0;
-    //                 source.connect(gainNode);
-    //                 gainNode.connect(audioCtx.destination);
-    //             }
-    //             clearInterval(refreshId);
-    //         }
-    //     }, 100);
-    // }
-
     animate = () => {
-        this.frameId = window.requestAnimationFrame(this.animate);
+        setTimeout(() => {
+            this.frameId = window.requestAnimationFrame(this.animate);
+        }, 1000 / 30);
         this.renderScene();
     }
 

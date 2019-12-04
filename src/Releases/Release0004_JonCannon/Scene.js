@@ -359,11 +359,13 @@ export default class Scene extends Component {
       this.camera.position.set(holePos.x, holePos.y, holePos.z);
     }
   };
-
+  
   animate = () => {
-    this.frameId = window.requestAnimationFrame(this.animate);
+    setTimeout(() => {
+      this.frameId = window.requestAnimationFrame(this.animate);
+    }, 1000 / 30);
     this.renderScene();
-  };
+  }
 
   renderScene = () => {
     if (this.props.hasEnteredWorld) {
