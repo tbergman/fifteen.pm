@@ -15,11 +15,12 @@ import Release0006_Vveiss from "./Releases/Release0006_Vveiss/index";
 import Release0007_JonFay from "./Releases/Release0007_JonFay/index";
 import Release0008_GreemJellyfish from "./Releases/Release0008_GreemJellyfish/index";
 import Release0009_Javonntte from "./Releases/Release0009_Javonntte/index";
+import Release0010_AlienD from './Releases/Release0010_AlienD/index';
 
 ReactDOM.render(
     <Router history={history}>
-        <div>
-            <Header />
+        <div style={{width:'100%', height:'100%'}}>
+            {/* <Header /> */}
             <Route exact path="/" component={App} />
             <Route path="/1" component={Release0001_Yahceph} />
             <Route path="/2" component={Release0002_YearUnknown} />
@@ -29,7 +30,8 @@ ReactDOM.render(
             <Route path="/6" component={Release0006_Vveiss} />
             <Route path="/7" component={Release0007_JonFay} />
             <Route path="/8" component={Release0008_GreemJellyfish} />
-            {/* <Route path="/9" component={Release0009_Javonntte} /> */}
+            <Route path="/9" component={Release0009_Javonntte} />
+            <Route path="/10" component={Release0010_AlienD} />
         </div>
     </Router>,
     document.getElementById('root')
