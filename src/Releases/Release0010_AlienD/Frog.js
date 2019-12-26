@@ -28,7 +28,7 @@ export default function Frog(props) {
         geom.computeBoundingBox();
       }
     })
-    return new THREE.InstancedMesh(geom, foamGripPurple, 100);
+    return new THREE.InstancedMesh(geom, foamGripPurple, 10);
   }, [gltf])
 
   var amount = 10;
