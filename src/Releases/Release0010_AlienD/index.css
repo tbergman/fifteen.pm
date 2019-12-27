@@ -1,3 +1,25 @@
 #canvas {
     height: 100vh !important;
+    background: linear-gradient(0deg, #001c4f, #052cb8, #6ce7ff);
+    background-size: 600% 600%;
+    
+    -webkit-animation: AnimationName 7s ease infinite;
+    -moz-animation: AnimationName 7s ease infinite;
+    animation: AnimationName 7s ease infinite;
+    
+    @-webkit-keyframes AnimationName {
+        0%{background-position:0% 97%}
+        50%{background-position:100% 4%}
+        100%{background-position:0% 97%}
+    }
+    @-moz-keyframes AnimationName {
+        0%{background-position:0% 97%}
+        50%{background-position:100% 4%}
+        100%{background-position:0% 97%}
+    }
+    @keyframes AnimationName {
+        0%{background-position:0% 97%}
+        50%{background-position:100% 4%}
+        100%{background-position:0% 97%}
+    }
 }

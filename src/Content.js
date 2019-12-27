@@ -46,7 +46,7 @@ export const CONTENT = {
     ],
     colors: {
       logo: '#fff',
-      overlay: 'rgba(255,105,180, 1)',
+      overlay: 'rgba(255,105, 180, 0.5)',
       overlayContent: '#fff',
       player: 'rgba(255,105,180, 1)',
       navigation: 'rgba(255,105,180, 1)',
@@ -410,12 +410,14 @@ export const CONTENT = {
       onHover: '#fff',
       info: '#0f0',
     },
-    instructions: [
-      {
-        icon: ArrowKeys,
-        text: "use arrow keys to drive the hoverboard"
-      },
-    ]
+    instructions: [{
+      icon: MouseMove,
+      text: "click and drag mouse to look around"
+    },
+    {
+      icon: TwoFingerScroll,
+      text: "scroll to zoom"
+    }]
   },
   "/10": {
     artist: "Alien D",
@@ -445,19 +447,23 @@ export const CONTENT = {
       }
     ],
     colors: {
-      default: '#fff',
-      logo: '#fff',
-      overlay: '#000',
-      overlayContent: '#fff',
-      player: '#fff',
-      onHover: '#fff',
+      logo: 'white',
+      overlayContent: 'white',
+      overlay: 'rgba(0, 0, 0, 0.5)',
+      navigation: 'white',
+      player: 'white',
+      onHover: 'rgba(0, 0, 0, 0.5)',
+      info: 'white',
     },
-    instructions: [
-      {
-        icon: ArrowKeys,
-        text: "use arrow keys to drive the hoverboard"
-      },
-    ]
+    instructions: [{
+      icon: MouseMove,
+      text: "click and drag mouse to look around"
+    },
+    {
+      icon: TwoFingerScroll,
+      text: "scroll to zoom"
+    }
+  ]
   }
 };
 
