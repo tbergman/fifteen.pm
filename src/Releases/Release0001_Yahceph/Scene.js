@@ -253,8 +253,8 @@ export default class Scene extends PureComponent {
     else {
       if (audioStream && freqArray) {
         audioStream.analyser.getByteFrequencyData(freqArray);
-        let x = freqArray[600];
-        let y = freqArray[100] - 100;
+        let x = freqArray[60];
+        let y = freqArray[10] - 100;
         uniforms.mousePos.value.set(x, y)
       } else {
         let randX = THREE.Math.randInt(20, 40);

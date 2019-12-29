@@ -1,27 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { CONTENT } from '../../Content';
-import useAudioPlayer from '../../UI/Player/hooks/useAudioPlayer';
-import UI from '../../UI/UI';
-import AlienDCanvas from './Canvas';
-import * as C from './constants';
+import React, { useEffect, useState } from "react";
+import { CONTENT } from "../../Content";
+import UI from "../../UI/UI";
+import AlienDCanvas from "./Canvas";
 
-export default function Release({ }) {
-    const { playTrack, currentTrackId, audioStream, audioPlayer, currentTime, bpm } = useAudioPlayer();
-    const [content, setContent] = useState(false);
-    console.log(currentTrackId);
-    useEffect(() => {
-        setContent(CONTENT[window.location.pathname])
-    }, []);
-    if (audioStream) {
-        console.log("currentTime", currentTime);
-        console.log("audioStream", audioPlayer.currentTime);
-    }
+export default function Release({}) {
+  const [content, setContent] = useState(false);
 
+  useEffect(() => {
+    setContent(CONTENT[window.location.pathname]);
+  }, []);
 
-    return <>{content &&
+  return (
+    <>
+      {content && (
         <>
-            <UI content={content} />
-            <AlienDCanvas />
+          <UI content={content} />
+          <AlienDCanvas />
         </>
-    }</>
+      )}
+    </>
+  );
 }

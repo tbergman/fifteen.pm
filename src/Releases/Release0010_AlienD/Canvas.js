@@ -10,7 +10,9 @@ const Controls = props => {
   const { camera, gl } = useThree();
   const controls = useRef();
   useRender(() => controls.current && controls.current.update());
-  return <orbitControls ref={controls} args={[camera, gl.domElement]} {...props} />;
+  return (
+    <orbitControls ref={controls} args={[camera, gl.domElement]} {...props} />
+  );
 };
 
 export default function AlienDCanvas({}) {
@@ -22,7 +24,6 @@ export default function AlienDCanvas({}) {
     <AudioPlayerContext.Consumer>
       {value => (
         <Canvas id="canvas" camera={{ position: [0, 0, 2] }}>
-          
           <ambientLight intensity={0.5} />
           <spotLight intensity={0.8} position={[300, 300, 400]} />
           <AudioPlayerContext.Provider value={value}>

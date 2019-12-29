@@ -12,6 +12,7 @@ class AudioStreamer {
     this.source = undefined;
     this.streamerProps = props ? props : defaultAudioStreamerProps;
     this.analyser = this.context.createAnalyser();
+    this.analyser.fftSize = 512;
     this.filter = this.initFilter();
     this.connected = false;
     this.deactivated = isSafari;
