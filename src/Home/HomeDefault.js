@@ -65,7 +65,7 @@ class HomeDefault extends PureComponent {
     const gltfLoader = new GLTFLoader(manager);
     const textureLoader = new THREE.TextureLoader();
     const rockMaterial = initRockMaterial(textureLoader, 0xFFAFFF);
-    rockMaterial.displacementBias = -40;
+    rockMaterial.displacementBias = -30;
     const name = "forest";
     // add rocks
     const gltfParams = {
