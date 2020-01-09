@@ -21,7 +21,7 @@ export class HomeDefaultCanvas extends PureComponent {
     componentDidMount() {
         this.scene = new THREE.Scene();
         this.scene.background = new THREE.Color(0xFF0FFF);
-        this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, 1, 3000);
+        this.camera = new THREE.PerspectiveCamera(24, window.innerWidth / window.innerHeight, 1, 100);
         this.camera.position.set(2.095357312111118, 0.8505415314262585, 11.67921580831209);
         this.camera.rotation.set(-0.042438732895147505, 0.3365395324927288, 0.01402173472318894);
         this.camera.lookAt(new THREE.Vector3());
