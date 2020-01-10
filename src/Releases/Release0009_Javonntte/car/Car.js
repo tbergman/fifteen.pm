@@ -1,3 +1,4 @@
+// TODO the move-along-a-path code from three.js example here should be pulled and improved for re-use, it is a common thing to do
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useLoader, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
@@ -124,13 +125,15 @@ function Car({
     // TODO http://jsfiddle.net/krw8nwLn/66/
     useFrame(() => {
         updateSpeed();
-        // TODO these floats as constants relative to world radius
+        // TODO these floats as constants relative to world radius as opposed to using time
+        // this value is between 0 and 1
         const t = (offset.current % speed.current) / speed.current;
+        // const t = offset.current += speed.current;
         const [pos, dir] = getCurTrajectory(t);
         if (rotateLeftPressed) spinLeft();
         else if (rotateRightPressed) spinRight();
         else {
-            if (audioStream) setDefaultAudioFilter();
+            if (audioStream && audioStream.filter.Q.value != 0) setDefaultAudioFilter();
             updateCurTrajectory(t, pos, dir);
         }
     })
