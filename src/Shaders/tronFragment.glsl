@@ -19,12 +19,12 @@ float plotY(vec2 st, float pct) {
 // TODO maybe can implement a map function ?
 // https://gist.github.com/companje/29408948f1e8be54dd5733a74ca49bb9
 void main() {
-  float beatsPerSecond = uBPM / 60.;
+  float beatsPerSecond = 2.;// uBPM / 60.;
   float wavyLines = sin(vUv.x * uTime / beatsPerSecond * .1);
   
   vec3 col = vec3(0, 0, wavyLines);
 
-  float numBeats = floor(uTime) / 60. / beatsPerSecond;
+  float numBeats = 20.;//floor(uTime) / 60. / beatsPerSecond; //TODO 
 
   for (int i = 0; i < NUM_LINES; i++) {
     float pos = float(i) / float(NUM_LINES);

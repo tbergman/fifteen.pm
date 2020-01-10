@@ -22,7 +22,7 @@ export default function JavonntteCanvas({ setContentReady, theme, onThemeSelect,
                             gl.gammaOutput = true;
                             gl.antialias = true;
                             // IMPORTANT: Turn this on for development!
-                            gl.debug.checkShaderErrors = false;
+                            // gl.debug.checkShaderErrors = false;
                         }}
                     >
                         <AudioPlayerContext.Provider value={value}>
