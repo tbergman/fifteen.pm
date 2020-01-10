@@ -76,11 +76,11 @@ class WorldNeighborhoods {
         const area = tile.triangle.getArea();
         if (this.theme == C.NIGHT) {
             if (area < C.WORLD_SMALL_TILE) {
-                return 1
+                return Math.random() > .5 ? 1 : 0;
             } else if (area < C.WORLD_MEDIUM_TILE) {
                 return Math.random() > .75 ? 3 : 0;
             } else {
-                return Math.random() > .75 ? 6 : 0;
+                return Math.random() > .75 ? 3 : 0;
             }
         }
         if (this.theme == C.SUNSET) {
