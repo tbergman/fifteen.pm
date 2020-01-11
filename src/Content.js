@@ -372,33 +372,32 @@ export const CONTENT = {
       {
         name: "City Life",
         type: "soundcloud",
-        // id: "679771262",
-        // secretToken: "s-pqcS4",
-        id: "719292745",
-        secretToken: "s-YWQPC",
+        id: "742019866",
+        secretToken: "s-7AotY",
         bpm: "120",
       },
       {
         name: "Swing House Madness",
         type: "soundcloud",
-        id: "693475855",
-        secretToken: "s-qakud",
+        id: "742019875",
+        secretToken: "s-dKlsb",
         bpm: "120",
       },
       {
         name: "Natural",
         type: "soundcloud",
-        id: "679771259",
-        secretToken: "s-W6P06",
+        id: "742019860",
+        secretToken: "s-gLrd3",
         bpm: "120",
       },
       {
         name: "This Dream",
         type: "soundcloud",
-        id: "679771253",
-        secretToken: "s-XeIko",
+        id: "742019854",
+        secretToken: "s-h4Las",
         bpm: "95",
       },
+
 
     ],
     colors: {
