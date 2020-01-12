@@ -7,6 +7,7 @@
     height: 50px;
     transition: 500ms all ease;
     -webkit-transition: 500ms all ease;
+    display: none;
   }
   
   .arrow:hover {
