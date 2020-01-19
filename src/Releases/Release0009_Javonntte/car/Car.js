@@ -133,7 +133,7 @@ function Car({
         if (rotateLeftPressed) spinLeft();
         else if (rotateRightPressed) spinRight();
         else {
-            if (audioStream) setDefaultAudioFilter();
+            if (audioStream && audioStream.filter.Q.value != 0) setDefaultAudioFilter();
             updateCurTrajectory(t, pos, dir);
         }
     })
