@@ -30,13 +30,13 @@ export function Scene({ setContentReady, theme, onThemeSelect, useDashCam }) {
 
     return (
         <>
-            {/* <Controls
-                // curCamera={camera}
+            <Controls
+                curCamera={camera}
                 movementSpeed={5000}
                 rollSpeed={Math.PI * .5}
             // autoForward={false}
             // dragToLook={false}
-            /> */}
+            />
             <FixedLights />
             <MaterialsProvider>
                 <Stars radius={2} colors={theme.starColors} />

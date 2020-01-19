@@ -123,20 +123,20 @@ function Car({
     }
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
-    useFrame(() => {
-        updateSpeed();
-        // TODO these floats as constants relative to world radius as opposed to using time
-        // this value is between 0 and 1
-        const t = (offset.current % speed.current) / speed.current;
-        // const t = offset.current += speed.current;
-        const [pos, dir] = getCurTrajectory(t);
-        if (rotateLeftPressed) spinLeft();
-        else if (rotateRightPressed) spinRight();
-        else {
-            if (audioStream && audioStream.filter.Q.value != 0) setDefaultAudioFilter();
-            updateCurTrajectory(t, pos, dir);
-        }
-    })
+    // useFrame(() => {
+    //     updateSpeed();
+    //     // TODO these floats as constants relative to world radius as opposed to using time
+    //     // this value is between 0 and 1
+    //     const t = (offset.current % speed.current) / speed.current;
+    //     // const t = offset.current += speed.current;
+    //     const [pos, dir] = getCurTrajectory(t);
+    //     if (rotateLeftPressed) spinLeft();
+    //     else if (rotateRightPressed) spinRight();
+    //     else {
+    //         if (audioStream && audioStream.filter.Q.value != 0) setDefaultAudioFilter();
+    //         updateCurTrajectory(t, pos, dir);
+    //     }
+    // })
 
     return <group ref={carRef}>
         {car &&

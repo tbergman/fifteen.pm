@@ -7,26 +7,26 @@ import { isMobile } from '../../Utils/BrowserDetection';
 extend({ OrbitControls, FlyControls });
 
 
-export function Controls({curCamera, ...props}) {
+export function Controls({ curCamera, ...props }) {
     curCamera = curCamera || useThree().camera;
     const controls = useRef();
     const { gl } = useThree();
     const delta = .001;
     useFrame(() => { controls.current && controls.current.update(delta) });
     return (
-        isMobile ?
-            <orbitControls
-                ref={controls}
-                args={[curCamera]}
-                enableKeys={false}
-                enableZoom={false}
-                {...props}
-            />
-            :
-            <flyControls
-                ref={controls}
-                args={[curCamera, gl.domElement]}
-                {...props}
-            />
+        // isMobile ?
+        <orbitControls
+            ref={controls}
+            args={[curCamera, gl.domElement]}
+            // enableKeys={false}
+            // enableZoom={false}
+            {...props}
+        />
+        // :
+        // <flyControls
+        //     ref={controls}
+        //     args={[curCamera, gl.domElement]}
+        //     {...props}
+        // />
     );
 }
