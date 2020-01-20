@@ -10,6 +10,7 @@ export default function DetroitBelt({ setDetroitBeltReady, theme }) {
     const [asteroidsReady, setAsteroidsReady] = useState(false);
 
     useEffect(() => {
+        if (theme && theme.name) console.log('theme name', theme.name)
         setThemeName(theme.name)
     }, [theme])
 

@@ -1,5 +1,6 @@
 import React, { useContext, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
+import { useFrame, useResource } from 'react-three-fiber';
 import { randomPointsOnSphere, randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
@@ -136,7 +137,7 @@ export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
             seed: 12345,
             noiseWidth: 1,
             noiseHeight: maxHeight,
-            scale: { x: 1, y: 1, z: 1},
+            scale: { x: 1, y: 1, z: 1 },
         })
     noiseSphere.verticesNeedUpdate = true;
     noiseSphere.computeBoundingSphere();
@@ -171,6 +172,8 @@ export function WorldSurface({ geometry, themeName }) {
 }
 
 export function World({ themeName, setReady }) {
+    const [ref, world] = useResource();
+
     const { buildings, loaded: buildingsLoaded } = useContext(BuildingsContext);
 
     const [surface, meshes] = useMemo(() => {
@@ -196,14 +199,18 @@ export function World({ themeName, setReady }) {
         if (meshes && buildingsLoaded) setReady(true);
     }, [meshes])
 
+    useFrame(() => {
+        world.rotation.y += .001;
+    })
+
     return (
-        <>
+        <group ref={ref}>
             {meshes &&
                 <>
                     <WorldSurface geometry={surface} themeName={themeName} />
                     <BuildingInstances meshes={meshes} themeName={themeName} />
                 </>
             }
-        </>
+        </group>
     )
 }

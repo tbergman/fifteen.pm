@@ -10,18 +10,19 @@ export default function Release({ }) {
     const { playTrack, currentTrackId } = useAudioPlayer();
     const [content, setContent] = useState(CONTENT[window.location.pathname]);
     const [contentReady, setContentReady] = useState(false);
-    const [theme, setTheme] = useState(C.TRACK_METADATA[C.TRACK_LOOKUP["life"]].theme);
+    const [theme, setTheme] = useState(C.TRACK_METADATA[C.TRACK_LOOKUP["dream"]].theme);
     const [useDashCam, setUseDashCam] = useState(false);
 
     useEffect(() => {
-        if (!currentTrackId) return;
-        const metadata = C.TRACK_METADATA[currentTrackId];
-        content.colors = metadata.theme.UIColors;
-        setTheme(metadata.theme);
+        // if (!currentTrackId) return;
+        // this sets the theme on load
+        // const metadata = C.TRACK_METADATA[currentTrackId];
+        // content.colors = metadata.theme.UIColors;
+        // setTheme(metadata.theme);
     }, [currentTrackId])
 
     function onTrackSelect(trackId) {
-        const trackIndex = C.TRACK_ID_LOOKUP[trackId];
+        const trackIndex = C.TRACK_ID_LOOKUP[3];//trackId];
         playTrack(trackIndex)
     }
 
