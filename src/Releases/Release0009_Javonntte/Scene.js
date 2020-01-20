@@ -20,6 +20,11 @@ export function Scene({ setContentReady, theme, onThemeSelect, useDashCam }) {
     const [detroitBeltReady, setDetroitBeltReady] = useState(false);
     const [carReady, setCarReady] = useState(false);
 
+
+    // useEffect(() => {
+    //     camera.position.set(10, 10, 10)
+    // }, [])
+
     useEffect(() => {
         scene.fog = theme.fog;
     }, [theme])

@@ -10,11 +10,14 @@ extend({ OrbitControls, FlyControls });
 
 
 export function Controls({ curCamera, ...props }) {
-    curCamera = curCamera || useThree().camera;
-    const controls = useRef();
+    // curCamera = curCamera || useThree().camera;
+    const {camera} = useThree()
+    curCamera = camera;
+    const controlWWs = useRef();
     const [controlsGroupRef, controlsGroup] = useResource();
     const { gl } = useThree();
     const delta = .001;
+
 
     useFrame(() => {
         if (!controls.current) return;  
@@ -34,6 +37,9 @@ export function Controls({ curCamera, ...props }) {
                 args={[curCamera, gl.domElement]}
                 // enableKeys={false}
                 // enableZoom={false}
+                panSpeed={0.1}
+                zoomSpeed={0.1}
+                rotateSpeed={0.1}
                 {...props}
             >
             </orbitControls>
