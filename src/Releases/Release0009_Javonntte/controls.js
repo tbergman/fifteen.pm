@@ -13,7 +13,7 @@ export function Controls({ curCamera, ...props }) {
     // curCamera = curCamera || useThree().camera;
     const {camera} = useThree()
     curCamera = camera;
-    const controlWWs = useRef();
+    const controls = useRef();
     const [controlsGroupRef, controlsGroup] = useResource();
     const { gl } = useThree();
     const delta = .001;
