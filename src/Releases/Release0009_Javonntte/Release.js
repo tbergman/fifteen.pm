@@ -10,7 +10,7 @@ export default function Release({ }) {
     const { playTrack, currentTrackId } = useAudioPlayer();
     const [content, setContent] = useState(CONTENT[window.location.pathname]);
     const [contentReady, setContentReady] = useState(false);
-    const [theme, setTheme] = useState(C.TRACK_METADATA[C.TRACK_LOOKUP["dream"]].theme);
+    const [theme, setTheme] = useState(C.TRACK_METADATA[C.TRACK_LOOKUP["life"]].theme);
     const [useDashCam, setUseDashCam] = useState(false);
 
     useEffect(() => {
@@ -22,7 +22,7 @@ export default function Release({ }) {
     }, [currentTrackId])
 
     function onTrackSelect(trackId) {
-        const trackIndex = C.TRACK_ID_LOOKUP[3];//trackId];
+        const trackIndex = C.TRACK_ID_LOOKUP[0];//trackId];
         playTrack(trackIndex)
     }
 

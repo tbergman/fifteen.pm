@@ -11,7 +11,7 @@ extend({ OrbitControls, FlyControls });
 
 export function Controls({ curCamera, ...props }) {
     // curCamera = curCamera || useThree().camera;
-    const {camera} = useThree()
+    const { camera } = useThree()
     curCamera = camera;
     const controls = useRef();
     const [controlsGroupRef, controlsGroup] = useResource();
@@ -20,7 +20,7 @@ export function Controls({ curCamera, ...props }) {
 
 
     useFrame(() => {
-        if (!controls.current) return;  
+        if (!controls.current) return;
         // An inefficient hack where the headlights dont look in the right direction
         // since headlights are tied to car and we're not in it
         controlsGroup.position.copy(controls.current.object.position)
@@ -32,18 +32,23 @@ export function Controls({ curCamera, ...props }) {
     return (
         // isMobile ?
         <group ref={controlsGroupRef}>
-            <orbitControls
+            <flyControls
                 ref={controls}
                 args={[curCamera, gl.domElement]}
-                // enableKeys={false}
-                // enableZoom={false}
-                panSpeed={0.1}
-                zoomSpeed={0.1}
-                rotateSpeed={0.1}
                 {...props}
-            >
-            </orbitControls>
-            <Headlights colors={C.TRACK_THEMES[3].headlights} />
+            />
+            {/* // <orbitControls
+            //     ref={controls}
+            //     args={[curCamera, gl.domElement]}
+            //     // enableKeys={false}
+            //     // enableZoom={false}
+            //     panSpeed={0.1}
+            //     zoomSpeed={0.1}
+            //     rotateSpeed={0.1}
+            //     {...props}
+            // >
+            // </orbitControls> */}
+            <Headlights colors={C.TRACK_THEMES[0].headlights} />
         </group>
         // :
         // <flyControls

@@ -200,7 +200,7 @@ export function World({ themeName, setReady }) {
     }, [meshes])
 
     useFrame(() => {
-        world.rotation.y += .001;
+        world.rotation.y += .0001;
     })
 
     return (
