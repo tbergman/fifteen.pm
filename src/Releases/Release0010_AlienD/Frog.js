@@ -1,12 +1,13 @@
 import * as THREE from "three";
 import React, { useEffect, useRef, useContext, useMemo } from "react";
-import { useLoader, useFrame } from "react-three-fiber";
+import { useLoader, useFrame, useThree } from "react-three-fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { MaterialsContext } from "./MaterialsContext";
 import * as C from "./constants";
 
 export default function Frog(props) {
+
   const group = useRef();
   const gltf = useLoader(GLTFLoader, C.FROG_URL, loader => {
     const dracoLoader = new DRACOLoader();
@@ -33,34 +34,51 @@ export default function Frog(props) {
         geom.computeBoundingBox();
       }
     });
-    return new THREE.InstancedMesh(geom, foamGripSilver, count);
-  }, [gltf]);
+    let mesh = new THREE.InstancedMesh(geom, foamGripSilver, count);
 
-  const dummy = new THREE.Object3D();
-  useFrame(() => {
-    if (mesh) {
-      var time = Date.now() * 0.001;
-      mesh.rotation.x = Math.sin(time / 4);
-      mesh.rotation.y = Math.sin(time / 2);
-      var i = 0;
-      var offset = (amount - 1) / 2;
-      for (var x = 0; x < amount; x++) {
-        for (var y = 0; y < amount; y++) {
-          for (var z = 0; z < amount; z++) {
-            dummy.position.set(offset - x, offset - y, offset - z);
-            dummy.rotation.y =
-              Math.sin(x / 4 + time) +
-              Math.sin(y / 4 + time) +
-              Math.sin(z / 4 + time);
-            dummy.rotation.z = dummy.rotation.y * 2;
-            dummy.updateMatrix();
-            mesh.setMatrixAt(i++, dummy.matrix);
-          }
+    // position instanced froggies in a cube
+    var i = 0;
+    var offset = ( amount - 1 ) / 4;
+    var transform = new THREE.Object3D();
+    for ( var x = 0; x < amount; x ++ ) {
+      for ( var y = 0; y < amount; y ++ ) {
+        for ( var z = 0; z < amount; z ++ ) {
+          transform.position.set( offset - x, offset - y, offset - z );
+          transform.updateMatrix();
+          mesh.setMatrixAt( i ++, transform.matrix );
         }
       }
-      mesh.instanceMatrix.needsUpdate = true;
+    }
+    return mesh;
+  }, [gltf]);
+
+  // TODO: Maybe I should be using my own mouse vector?
+  const { camera, mouse } = useThree();
+  let raycaster = new THREE.Raycaster();
+  let rotationMatrix = new THREE.Matrix4().makeRotationY( 0.1 );
+  let instanceMatrix = new THREE.Matrix4();
+
+  useFrame(() => {
+    if (mesh) {
+      raycaster.setFromCamera( mouse, camera );
+      let intersection = raycaster.intersectObject( mesh );
+      console.log('intersection object:');
+      console.log(intersection);
+
+      if ( intersection.length > 0 ) {
+        console.log('INTERSECTION!!!!!');
+        let instanceId = intersection[ 0 ].instanceId;
+  
+        mesh.getMatrixAt( instanceId, instanceMatrix );
+        matrix.multiplyMatrices( instanceMatrix, rotationMatrix );
+  
+        mesh.setMatrixAt( instanceId, matrix );
+        mesh.instanceMatrix.needsUpdate = true;
+  
+      }
     }
   });
+
   return (
     <group ref={group} {...props}>
       <primitive name="Frogs" object={mesh} />

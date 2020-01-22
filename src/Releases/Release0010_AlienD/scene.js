@@ -29,7 +29,7 @@ export function Scene({}) {
         <FixedLights />
         <ambientLight color={0xffffff} intensity={1.0} />
         <Suspense fallback={null}>
-          <Frog amount={5} freqArray={freqArray} />
+          <Frog amount={10} />
         </Suspense>
       </MaterialsProvider>
     </>
