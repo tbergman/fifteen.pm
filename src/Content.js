@@ -377,7 +377,7 @@ export const CONTENT = {
         bpm: "120",
       },
       {
-        name: "Swing House Madness",
+        name: "S.H.M.",
         type: "soundcloud",
         id: "742019875",
         secretToken: "s-dKlsb",
