@@ -17,7 +17,7 @@ export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
   "/3": "red"
 }
 
-export const TOTAL_RELEASES = 8;
+export const TOTAL_RELEASES = 9;
 
 export const CONTENT = {
   "/": {
