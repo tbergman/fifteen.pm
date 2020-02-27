@@ -7,7 +7,7 @@ import BuildingInstances from './BuildingInstances';
 import { BuildingsContext } from './BuildingsContext';
 import { generateTilesets } from './tiles';
 import { faceCentroid } from '../../../Utils/geometry';
-
+import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
 
 
 class WorldNeighborhoods {
@@ -76,11 +76,11 @@ class WorldNeighborhoods {
         const area = tile.triangle.getArea();
         if (this.theme == C.NIGHT) {
             if (area < C.WORLD_SMALL_TILE) {
-                return 1
+                return Math.random() > .5 ? 1 : 0;
             } else if (area < C.WORLD_MEDIUM_TILE) {
                 return Math.random() > .75 ? 3 : 0;
             } else {
-                return Math.random() > .75 ? 6 : 0;
+                return Math.random() > .75 ? 3 : 0;
             }
         }
         if (this.theme == C.SUNSET) {
@@ -127,42 +127,22 @@ class WorldNeighborhoods {
 
 
 export function generateSphereWorldGeometry(radius, sides, tiers, maxHeight) {
-    const geometry = new THREE.SphereGeometry(radius, sides, tiers);
-    // geometry.scale(2, 1, 1);
-    // variate sphere heights
-    var vertexIndex;
-    var vertexVector = new THREE.Vector3();
-    var nextVertexVector = new THREE.Vector3();
-    var firstVertexVector = new THREE.Vector3();
-    var offset = new THREE.Vector3();
-    var currentTier = 1;
-    var lerpValue = 0.5;
-    var heightValue;
-    for (var j = 1; j < tiers - 2; j++) {
-        currentTier = j;
-        for (var i = 0; i < sides; i++) {
-            vertexIndex = (currentTier * sides) + 1;
-            vertexVector = geometry.vertices[i + vertexIndex].clone();
-            if (j % 2 !== 0) {
-                if (i == 0) {
-                    firstVertexVector = vertexVector.clone();
-                }
-                nextVertexVector = geometry.vertices[i + vertexIndex + 1].clone();
-                if (i == sides - 1) {
-                    nextVertexVector = firstVertexVector;
-                }
-                lerpValue = (Math.random() * (0.75 - 0.25)) + 0.25;
-                vertexVector.lerp(nextVertexVector, lerpValue);
-            }
-            heightValue = (Math.random() * maxHeight) - (maxHeight / 2);
-            offset = vertexVector.clone().normalize().multiplyScalar(heightValue);
-            geometry.vertices[i + vertexIndex] = (vertexVector.add(offset));
-        }
-    }
-    geometry.verticesNeedUpdate = true;
-    geometry.computeBoundingSphere();
-    geometry.computeBoundingBox();
-    return geometry;
+    const noiseSphere = new NoiseSphereGeometry(
+        radius,
+        sides,
+        tiers,
+        {
+            centroid: new THREE.Vector3(),
+            seed: 12345,
+            noiseWidth: 1,
+            noiseHeight: maxHeight,
+            scale: { x: 1, y: 1, z: 1},
+        })
+    noiseSphere.verticesNeedUpdate = true;
+    noiseSphere.computeBoundingSphere();
+    noiseSphere.computeBoundingBox();
+    noiseSphere.computeFaceNormals();
+    return noiseSphere;
 }
 
 export function WorldSurface({ geometry, themeName }) {
@@ -220,10 +200,7 @@ export function World({ themeName, setReady }) {
         <>
             {meshes &&
                 <>
-                    <WorldSurface
-                        geometry={surface}
-                        themeName={themeName}
-                    />
+                    <WorldSurface geometry={surface} themeName={themeName} />
                     <BuildingInstances meshes={meshes} themeName={themeName} />
                 </>
             }
