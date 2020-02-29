@@ -438,21 +438,21 @@ export const CONTENT = {
         type: "soundcloud",
         id: "708031990",
         secretToken: "s-NKawM",
-        bpm: "120"
+        bpm: 112
       },
       {
         name: "Show U",
         type: "soundcloud",
         id: "708031987",
         secretToken: "s-BnEVI",
-        bpm: "120"
+        bpm: 110
       },
       {
         name: "Cube Jazz",
         type: "soundcloud",
         id: "708031996",
         secretToken: "s-f0NWB",
-        bpm: "120"
+        bpm: 152
       }
     ],
     colors: {

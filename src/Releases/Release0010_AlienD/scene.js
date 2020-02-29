@@ -9,7 +9,7 @@ export function Scene({}) {
   const { scene, camera } = useThree();
   // using a filter for left and right arrow press
   const [freqArray, setFreqArray] = useState();
-  const { audioStream, isPlaying } = useAudioPlayer();
+  const { audioStream, isPlaying, bpm  } = useAudioPlayer();
 
   useEffect(() => {
     if (audioStream && !freqArray) {
@@ -29,7 +29,7 @@ export function Scene({}) {
         <FixedLights />
         <ambientLight color={0xffffff} intensity={1.0} />
         <Suspense fallback={null}>
-          <Frog amount={10} />
+          <Frog amount={5} bpm={bpm} audioStream={audioStream} freqArray={freqArray} />
         </Suspense>
       </MaterialsProvider>
     </>
