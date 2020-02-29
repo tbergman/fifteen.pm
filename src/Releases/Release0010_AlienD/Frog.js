@@ -5,79 +5,68 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { MaterialsContext } from "./MaterialsContext";
 import * as C from "./constants";
+import {copy, choose, calcSoundOffsetUnit} from "./utils"
 
-const choose = choices => {
-  return choices[Math.floor(Math.random() * choices.length)];
-};
-
-const copy = x => {
-  return JSON.parse(JSON.stringify(x));
-};
-const TUNES = [-500, -300, 300, 700, -1200, 900];
-
-const VOLUMES = [
-  0.11,
-  0.12,
-  0.13,
-  0.14,
-  0.15,
-  0.16,
-  0.17,
-  0.18,
-  0.19,
-  0.2,
-  0.21,
-  0.22,
-  0.27,
-  0.33,
-  0.39
-];
-
-const BEAT_DELAYS = [0.5, 1, 1.5, 2];
-let sound_sprite_offset_unit = 1.0;
 
 export default function Frog(props) {
+  // Setup
+
   const { camera, mouse } = useThree();
-  const { scale = 0.08} = props;
+  const { foamGripSilver } = useContext(MaterialsContext);
+  let {
+    amount = 10,
+    currentTrackName,
+    bpm,
+    scale = 0.08,
+    xOffset = 0.75,
+    yOffset = -0.66,
+    zOffset = 0.5
+  } = props;
+  const count = Math.pow(amount, 3);
+
+  // load in assets
+
   const gltf = useLoader(GLTFLoader, C.FROG_URL, loader => {
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath("/draco-gltf/");
     loader.setDRACOLoader(dracoLoader);
   });
 
-  // Audio
-  const listener = new THREE.AudioListener();
-  camera.add(listener);
+  const sound = useMemo(() => {
+    if (!camera || !currentTrackName) {
+      return;
+    }
+    // Audio
+    const listener = new THREE.AudioListener();
+    camera.add(listener);
 
-  const sound = new THREE.PositionalAudio(listener);
-  const audioLoader = new THREE.AudioLoader();
-  audioLoader.load(C.SOUNDS_URL, buffer => {
-    console.log(C.SOUNDS_URL);
-    sound.setBuffer(buffer);
-    sound.minDistance = C.ROLLOFF_MIN_DISTANCE;
-    sound.maxDistance = C.ROLLOFF_MAX_DISTANCE;
-    sound.rolloffFactor = C.ROLLOFF_FACTOR;
-  });
+    const sound = new THREE.PositionalAudio(listener);
+    const audioLoader = new THREE.AudioLoader();
+    let soundUrl = C.SOUND_URLS_BY_TRACK_NAME[currentTrackName];
+    console.log('GOT SOUND URL', soundUrl, "For", currentTrackName);
+    audioLoader.load(soundUrl, buffer => {
+      sound.setBuffer(buffer);
+      sound.minDistance = C.ROLLOFF_MIN_DISTANCE;
+      sound.maxDistance = C.ROLLOFF_MAX_DISTANCE;
+      sound.rolloffFactor = C.ROLLOFF_FACTOR;
+    });
+    return sound;
+  }, [camera, currentTrackName]);
 
-  const { foamGripSilver } = useContext(MaterialsContext);
-
-  let { amount = 10, freqArray, audioStream, bpm } = props;
-  const count = Math.pow(amount, 3);
-
-  const sound_offsets = useMemo(() => {
+  const soundOffsets = useMemo(() => {
     if (!bpm) {
       return;
     }
-    let sound_sprite_offset_unit = 60.0 / (bpm / 16.0);
-    console.log("OFFSET UNIT", sound_sprite_offset_unit);
-    let _offsets = [];
+    let offsets = [];
+    let soundOffsetUnit = calcSoundOffsetUnit(bpm);
     for (var i = 1; i < C.SOUND_SPRITE_NUMBER; i++) {
-      _offsets.push([sound_sprite_offset_unit * i, sound_sprite_offset_unit]);
+      offsets.push([soundOffsetUnit * i, soundOffsetUnit]);
     }
-    return _offsets;
+    return offsets;
   }, [bpm]);
 
-  const mesh = useMemo(() => {
+  // configure the geometry
+  const geom = useMemo(() => {
     if (!gltf || !scale) {
       return;
     }
@@ -91,6 +80,14 @@ export default function Frog(props) {
         geom.computeBoundingBox();
       }
     });
+    return geom;
+  }, [gltf, scale]);
+
+  // configure the InstancedMesh
+  const mesh = useMemo(() => {
+    if (!geom) {
+      return;
+    }
     let mesh = new THREE.InstancedMesh(geom, foamGripSilver, count);
 
     // position instanced froggies in a cube
@@ -100,14 +97,20 @@ export default function Frog(props) {
     for (let x = 0; x < amount; x++) {
       for (let y = 0; y < amount; y++) {
         for (let z = 0; z < amount; z++) {
-          transform.position.set(offset - x + 0.75, offset - y -0.5, offset - z + 0.66);
+          transform.position.set(
+            offset - x + xOffset,
+            offset - y + yOffset,
+            offset - z + zOffset
+          );
           transform.updateMatrix();
           mesh.setMatrixAt(i++, transform.matrix);
         }
       }
     }
     return mesh;
-  }, [gltf, scale]);
+  }, [geom]);
+
+  // Sound Interactions
 
   let matrix = new THREE.Matrix4();
   let raycaster = new THREE.Raycaster();
@@ -117,7 +120,7 @@ export default function Frog(props) {
 
   useFrame(() => {
     if (mesh) {
-      if (sound_offsets) {
+      if (soundOffsets && sound) {
         raycaster.setFromCamera(mouse, camera);
         let intersections = raycaster.intersectObject(mesh);
         if (intersections.length > 0) {
@@ -134,31 +137,32 @@ export default function Frog(props) {
             if (sound.source !== undefined) {
               sound.stop();
             }
-            sound.detune = choose(TUNES);
-            sound.volume = choose(VOLUMES);
-            let sound_offset_data = choose(sound_offsets);
-            if (sound_offset_data[0] !== Infinity) {
-              sound.offset = sound_offset_data[0];
-              sound.duration = sound_offset_data[1];
+            sound.detune = choose(C.TUNES);
+            sound.volume = choose(C.VOLUMES);
+            let soundOffset = choose(soundOffsets);
+            if (soundOffset[0] !== Infinity) {
+              sound.offset = soundOffset[0];
+              sound.duration = soundOffset[1];
             }
             sound.play();
           }
           lastInstanceId = copy(instanceId);
-        } 
+        }
       }
     }
   });
 
+  // Cube Rotation + Movement
 
   useFrame(() => {
     if (mesh) {
       var time = Date.now() * 0.001;
-      mesh.rotation.x = Math.sin( time / 4 );
-      mesh.rotation.y = Math.sin( time / 2 );
+      mesh.rotation.x = Math.sin(time / 4);
+      mesh.rotation.y = Math.sin(time / 2);
+      mesh.rotation.z = Math.sin(time / 3);
       mesh.instanceMatrix.needsUpdate = true;
     }
-    
-  })
+  });
 
   const group = useRef();
   return (
