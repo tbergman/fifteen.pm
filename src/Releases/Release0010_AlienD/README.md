@@ -12,7 +12,7 @@ Cube of frogs.
 - [x] Add movement / rotation to cube
 - [x] Prevent over-playing samples
 - [x] Randomize movements of frogs on intersection
-- [ ] vary sounds per song
+- [x] vary sounds per song
 - [ ] Add water / "murk"
 - [ ] Add other objects ?
 - [ ] Add landscape / 3d video background? 
