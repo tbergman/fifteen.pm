@@ -5,7 +5,7 @@ import Car from './car/Car';
 import * as THREE from 'three';
 import * as C from "./constants";
 import { FixedLights } from './lights';
-import Road from './Road';
+import Road from './road/Road';
 import { World } from './detroitBelt/World';
 import { BloomFilmEffect } from '../../Utils/Effects';
 import Stars from './Stars';

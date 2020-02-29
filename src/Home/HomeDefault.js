@@ -1,14 +1,8 @@
-import React, { PureComponent, Fragment } from 'react';
-import * as THREE from 'three';
+import React, { Fragment } from 'react';
+import { CONTENT } from '../Content';
 import '../Releases/Release.css';
-import debounce from 'lodash/debounce';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { loadGLTF } from '../Utils/Loaders';
-import { assetPath } from "../Utils/assets";
-import { OrbitControls } from 'three-full';
-import { initRockMaterial } from '../Utils/materials.js';
-import { Water } from 'three/examples/jsm/objects/Water2';
 import UI from '../UI/UI';
+<<<<<<< HEAD
 import { CONTENT } from '../Content'
 
 class HomeDefault extends PureComponent {
@@ -152,6 +146,17 @@ class HomeDefault extends PureComponent {
       </Fragment>
     );
   }
-}
+=======
+import { HomeDefaultCanvas } from './HomeDefaultCanvas';
+import { ReleaseList } from './ReleaseList';
 
-export default HomeDefault;
+export default function HomeDefault(props) {  
+  return (
+    <Fragment>
+      <UI content={CONTENT["/"]} loadWithOverlay={false} />
+      <ReleaseList />
+      <HomeDefaultCanvas />
+    </Fragment>
+  );
+>>>>>>> master
+}

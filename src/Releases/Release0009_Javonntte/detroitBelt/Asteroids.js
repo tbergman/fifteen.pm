@@ -167,6 +167,7 @@ export function Asteroids({ themeName, setReady }) {
         <>
             {meshes &&
                 <>
+                    {/* The surface.geometry is a single buffer geometry */}
                     <AsteroidsSurface geometry={surfaces.geometry} themeName={themeName} />
                     <BuildingInstances themeName={themeName} meshes={meshes} />
                 </>

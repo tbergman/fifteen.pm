@@ -31,7 +31,10 @@ ReactDOM.render(
             <Route path="/7" component={Release0007_JonFay} />
             <Route path="/8" component={Release0008_GreemJellyfish} />
             <Route path="/9" component={Release0009_Javonntte} />
+<<<<<<< HEAD
             <Route path="/10" component={Release0010_AlienD} />
+=======
+>>>>>>> master
         </div>
     </Router>,
     document.getElementById('root')
