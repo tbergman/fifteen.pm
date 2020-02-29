@@ -59,16 +59,12 @@ export default function Frog(props) {
   let instanceMatrix = new THREE.Matrix4();
 
   useFrame(() => {
+    let matrix = new THREE.Matrix4();
     if (mesh) {
       raycaster.setFromCamera( mouse, camera );
       let intersection = raycaster.intersectObject( mesh );
-      console.log('intersection object:');
-      console.log(intersection);
-
       if ( intersection.length > 0 ) {
-        console.log('INTERSECTION!!!!!');
         let instanceId = intersection[ 0 ].instanceId;
-  
         mesh.getMatrixAt( instanceId, instanceMatrix );
         matrix.multiplyMatrices( instanceMatrix, rotationMatrix );
   
