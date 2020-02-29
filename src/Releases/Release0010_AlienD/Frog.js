@@ -38,6 +38,7 @@ let sound_sprite_offset_unit = 1.0;
 
 export default function Frog(props) {
   const { camera, mouse } = useThree();
+  const { scale = 0.08} = props;
   const gltf = useLoader(GLTFLoader, C.FROG_URL, loader => {
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath("/draco-gltf/");
@@ -77,14 +78,14 @@ export default function Frog(props) {
   }, [bpm]);
 
   const mesh = useMemo(() => {
-    if (!gltf) {
+    if (!gltf || !scale) {
       return;
     }
     let geom;
     gltf.scene.traverse(child => {
       if (child.isMesh) {
         geom = child.geometry;
-        geom.scale(0.08, 0.08, 0.08);
+        geom.scale(scale, scale, scale);
         geom.toNonIndexed();
         geom.computeVertexNormals();
         geom.computeBoundingBox();
@@ -99,14 +100,14 @@ export default function Frog(props) {
     for (let x = 0; x < amount; x++) {
       for (let y = 0; y < amount; y++) {
         for (let z = 0; z < amount; z++) {
-          transform.position.set(offset - x, offset - y, offset - z);
+          transform.position.set(offset - x + 0.75, offset - y -0.5, offset - z + 0.66);
           transform.updateMatrix();
           mesh.setMatrixAt(i++, transform.matrix);
         }
       }
     }
     return mesh;
-  }, [gltf]);
+  }, [gltf, scale]);
 
   let matrix = new THREE.Matrix4();
   let raycaster = new THREE.Raycaster();
@@ -147,6 +148,17 @@ export default function Frog(props) {
       }
     }
   });
+
+
+  useFrame(() => {
+    if (mesh) {
+      var time = Date.now() * 0.001;
+      mesh.rotation.x = Math.sin( time / 4 );
+      mesh.rotation.y = Math.sin( time / 2 );
+      mesh.instanceMatrix.needsUpdate = true;
+    }
+    
+  })
 
   const group = useRef();
   return (
