@@ -1,25 +1,23 @@
-#canvas {
-    height: 100vh !important;
-    background: linear-gradient(0deg, #001c4f, #052cb8, #6ce7ff);
-    background-size: 600% 600%;
-    
-    -webkit-animation: AnimationName 7s ease infinite;
-    -moz-animation: AnimationName 7s ease infinite;
-    animation: AnimationName 7s ease infinite;
-    
-    @-webkit-keyframes AnimationName {
-        0%{background-position:0% 97%}
-        50%{background-position:100% 4%}
-        100%{background-position:0% 97%}
-    }
-    @-moz-keyframes AnimationName {
-        0%{background-position:0% 97%}
-        50%{background-position:100% 4%}
-        100%{background-position:0% 97%}
-    }
-    @keyframes AnimationName {
-        0%{background-position:0% 97%}
-        50%{background-position:100% 4%}
-        100%{background-position:0% 97%}
-    }
+.background {
+  background: linear-gradient(180deg, #34042c, #ff4fd3, #270a70, #9d36f5, #0c0214);
+  background-size: 1000% 1000%;
+  -webkit-animation: jvplanetltd 60s ease infinite;
+  -moz-animation: jvplanetltd 60s ease infinite;
+  animation: jvplanetltd 60s ease infinite;
+}
+
+@-webkit-keyframes jvplanetltd {
+  0%{background-position:50% 0%}
+  50%{background-position:51% 100%}
+  100%{background-position:50% 0%}
+}
+@-moz-keyframes jvplanetltd {
+  0%{background-position:50% 0%}
+  50%{background-position:51% 100%}
+  100%{background-position:50% 0%}
+}
+@keyframes jvplanetltd {
+  0%{background-position:50% 0%}
+  50%{background-position:51% 100%}
+  100%{background-position:50% 0%}
 }

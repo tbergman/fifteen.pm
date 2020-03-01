@@ -8,7 +8,9 @@ export default function Release0010_AlienD({ }) {
     const tracks = useMemo(() => CONTENT[window.location.pathname].tracks)
     return (
         <AudioPlayerProvider tracks={tracks}>
-            <Release />
+          <div className={'background'}>
+            <Release/>
+          </div>
         </AudioPlayerProvider >
     );
 }

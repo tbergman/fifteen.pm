@@ -41,3 +41,8 @@ export const VOLUMES = [
   0.9,
   1.0
 ];
+
+
+export const MURK_DIFFUSE_TEXTURE_1_URL = assetPath10("textures/sand-big-saturated-purple.jpg");
+export const MURK_DIFFUSE_TEXTURE_2_URL = assetPath10("textures/backgrounddetailed6.jpg");
+export const MURK_DETAIL_TEXTURE_URL = assetPath10("textures/TexturesCom_DesertSand3_2x2_512_normal.jpg");

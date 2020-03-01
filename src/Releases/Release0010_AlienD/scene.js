@@ -2,6 +2,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { FixedLights } from "./lights";
 import { useThree, useFrame } from "react-three-fiber";
 import Frog from "./Frog";
+import Murk from "./Murk";
 import useAudioPlayer from "../../UI/Player/hooks/useAudioPlayer";
 import { MaterialsProvider } from "./MaterialsContext";
 
@@ -36,6 +37,7 @@ export function Scene({}) {
             freqArray={freqArray}
             currentTrackName={currentTrackName}
           />
+          {/* <Murk/> */}
         </Suspense>
       </MaterialsProvider>
     </>
