@@ -13,6 +13,23 @@ export const copy = x => {
   return JSON.parse(JSON.stringify(x));
 };
 
-export const calcSoundOffsetUnit = bpm => {
-  return 60.0 / (bpm / C.SOUND_OFFSET_UNIT);
+export const calcSoundOffsetUnit = (bpm, barsPerSample) => {
+  return 60.0 / (bpm / barsPerSample);
 };
+
+export const genSoundOffsets = (numSamples, barsPerSample, bpm) => {
+  let offsets = [];
+  let soundOffsetUnit = calcSoundOffsetUnit(bpm, barsPerSample);
+  for (var i = 0; i < numSamples; i++) {
+    offsets.push([soundOffsetUnit * i, soundOffsetUnit]);
+  }
+  return offsets;
+}
+
+export const map = (value, start1, stop1, start2, stop2) => {
+  return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))
+}
+
+export const lerp =  (start, end, amt) => {
+  return (1 - amt) * start + amt * end
+}

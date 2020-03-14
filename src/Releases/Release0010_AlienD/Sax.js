@@ -1,0 +1,89 @@
+import * as THREE from "three";
+import React, {useMemo } from "react";
+import { useLoader, useFrame, useThree } from "react-three-fiber";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import * as C from "./constants";
+import {choose, genSoundOffsets} from "./utils"
+
+export default function Sax(props) {
+  const { scale = 0.5, bpm } = props;
+  // Setup
+  let raycaster = new THREE.Raycaster();
+
+  // load in assets
+
+  const gltf = useLoader(GLTFLoader, C.SAX_OBJECT_URL);
+  const { camera, mouse, clock } = useThree();
+
+  // configure the geometry
+  const mesh = useMemo(() => {
+    if (!gltf) {
+      return;
+    }
+    let mesh;
+    gltf.scene.traverse(child => {
+      if (child.isMesh) {
+        mesh = child;
+        mesh.geometry.scale(scale, scale, scale);
+        mesh.geometry.toNonIndexed();
+        mesh.geometry.computeVertexNormals();
+      }
+    });
+    return mesh;
+  }, [gltf]);
+
+
+  const saxSounds = useMemo(() => {
+    if (!camera) {
+      return;
+    }
+    // Audio
+    const listener = new THREE.AudioListener();
+    camera.add(listener);
+
+    const sound = new THREE.PositionalAudio(listener);
+    const audioLoader = new THREE.AudioLoader();
+    audioLoader.load(C.SAX_SOUNDS_URL, buffer => {
+      sound.setBuffer(buffer);
+      sound.minDistance = C.SAX_SOUNDS_ROLLOFF_MIN_DISTANCE;
+      sound.maxDistance = C.SAX_SOUNDS_ROLLOFF_MAX_DISTANCE;
+      sound.rolloffFactor = C.SAX_SOUNDS_ROLLOFF_FACTOR;
+    });
+    return sound;
+  }, [camera]);
+
+  const soundOffsets = useMemo(() => {
+    if (!bpm) {
+      return;
+    }
+    return genSoundOffsets(C.SAX_SOUNDS_NUM_SAMPLES, C.SAX_SOUNDS_BARS_PER_SAMPLE, bpm);
+  }, [bpm]);
+
+  let startCycle = clock.getElapsedTime();
+  useFrame(() => {
+    if (mesh && saxSounds) {
+      let now = clock.getElapsedTime();
+      let timeDiff = now - startCycle;
+      if (soundOffsets && saxSounds && saxSounds.source !== undefined) {
+        raycaster.setFromCamera(mouse, camera);
+        let intersections = raycaster.intersectObject(mesh);
+        if (intersections.length > 0) {
+          if (timeDiff >= C.SAX_SOUNDS_DEBOUNCE) {
+            saxSounds.stop();
+            let soundOffset = choose(soundOffsets);
+            if (soundOffset[0] !== Infinity) {
+              saxSounds.offset = soundOffset[0];
+              saxSounds.duration = soundOffset[1];
+            }
+            console.log('HERE!')
+            saxSounds.play();
+            startCycle = clock.getElapsedTime();
+          }
+        }
+      }
+    }
+  });
+
+
+  return <primitive name="Sax" object={mesh} position={0,0,0} />;
+}

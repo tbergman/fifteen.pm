@@ -13,8 +13,14 @@ Cube of frogs.
 - [x] Prevent over-playing samples
 - [x] Randomize movements of frogs on intersection
 - [x] vary sounds per song
-- [ ] Add water / "murk"
-- [ ] Add other objects ?
-- [ ] Add landscape / 3d video background? 
-- [ ] Add plastic bags ?
+- Make Saxophone
+- Make Mosquitoes
 
+- Digital Murk as Terrain - Responsive To Frequencies in the Music 
+- Saxophone Black Hole / Fitler 
+- Mosquitoes Fly Around / Make Noise 
+- Mosquitoes "Swarm" at Certain Moments 
+- Mosquitoes Swarm out of Saxophone.
+- Add Show U Sounds 
+- Add Easter Egg Sounds
+- 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { FixedLights } from "./lights";
 import { useThree, useFrame } from "react-three-fiber";
-import Frog from "./Frog";
+import FrogCube from "./FrogCube";
+import Sky from "./Sky";
 import useAudioPlayer from "../../UI/Player/hooks/useAudioPlayer";
-import { MaterialsProvider } from "./MaterialsContext";
 
 export function Scene({}) {
   const { scene, camera } = useThree();
@@ -25,19 +25,18 @@ export function Scene({}) {
 
   return (
     <>
-      <MaterialsProvider>
-        <FixedLights />
-        <ambientLight color={0xffffff} intensity={1.0} />
-        <Suspense fallback={null}>
-          <Frog
-            amount={5}
-            bpm={bpm}
-            audioStream={audioStream}
-            freqArray={freqArray}
-            currentTrackName={currentTrackName}
-          />
-        </Suspense>
-      </MaterialsProvider>
+      <FixedLights />
+      <ambientLight color={0xffffff} intensity={1.0} />
+      <Suspense fallback={null}>
+        <Sky/>
+        <FrogCube
+          amount={5}
+          bpm={bpm}
+          audioStream={audioStream}
+          freqArray={freqArray}
+          currentTrackName={currentTrackName}
+        />
+      </Suspense>
     </>
   );
 }

@@ -23,7 +23,7 @@ export default function AlienDCanvas({}) {
     // https://github.com/react-spring/react-three-fiber/issues/114
     <AudioPlayerContext.Consumer>
       {value => (
-        <Canvas id="canvas" camera={{ position: [0, 0, 2] }}>
+        <Canvas id="canvas" camera={{ position: [0, 0, -50] }}>
           <ambientLight intensity={0.5} />
           <spotLight intensity={0.8} position={[300, 300, 400]} />
           <AudioPlayerContext.Provider value={value}>

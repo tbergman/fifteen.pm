@@ -1,48 +1,21 @@
-import { assetPath10 } from './utils';
+import { assetPath10 } from "./utils";
 
 // ASSETS
-export const FROG_URL = assetPath10("objects/frog.glb");
-export const BOSS_FROG_URL = assetPath10("objects/SAPO.glb");
-export const SOUNDS_URL = assetPath10("sounds/frog-sprites-2.wav");
-export const SOUND_URLS_BY_TRACK_NAME = {
-  'Frog Shirt': assetPath10("sounds/frog-sprites-2.wav"),
-  'Show U': assetPath10("sounds/showu-sprites-1-25-55bpm.wav"),
-  'Cube Jazz': assetPath10("sounds/sax-sprites-1-25-76bpm.wav")
-};
-export const SOUND_SPRITE_NUMBER=25;
-export const SOUND_OFFSET_UNIT=16;
-export const ROLLOFF_FACTOR = 10;
-export const ROLLOFF_MIN_DISTANCE = 1;
-export const ROLLOFF_MAX_DISTANCE = 500;
-
-export const TUNES = [-500, -300, 300, 700, -1200, 900];
-
-export const VOLUMES = [
-  0.11,
-  0.12,
-  0.13,
-  0.14,
-  0.15,
-  0.16,
-  0.17,
-  0.18,
-  0.19,
-  0.2,
-  0.21,
-  0.22,
-  0.27,
-  0.33,
-  0.39,
-  0.5,
-  0.55,
-  0.66,
-  0.75,
-  0.8,
-  0.9,
-  1.0
-];
-
-
-export const MURK_DIFFUSE_TEXTURE_1_URL = assetPath10("textures/sand-big-saturated-purple.jpg");
-export const MURK_DIFFUSE_TEXTURE_2_URL = assetPath10("textures/backgrounddetailed6.jpg");
-export const MURK_DETAIL_TEXTURE_URL = assetPath10("textures/TexturesCom_DesertSand3_2x2_512_normal.jpg");
+export const FROG_OBJECT_URL = assetPath10("objects/frog/scene.gltf");
+export const FROG_SOUNDS_URL = assetPath10("sounds/frog-sprites-2.wav");
+export const FROG_SOUNDS_NUM_SAMPLES = 16;
+export const FROG_SOUNDS_BARS_PER_SAMPLE = 16;
+export const FROG_SOUNDS_ROLLOFF_FACTOR = 10;
+export const FROG_SOUNDS_ROLLOFF_MIN_DISTANCE = 1000;
+export const FROG_SOUNDS_ROLLOFF_MAX_DISTANCE = 10000;
+export const FROG_SOUNDS_NOTES = [-500, -300, 300, 700, -1200, 900];
+export const FROG_SOUNDS_VOLUMES = [1.0];
+export const SAX_OBJECT_URL = assetPath10("objects/baritone_sax/scene.gltf");
+export const SAX_SOUNDS_URL = assetPath10("sounds/sax-sprites-1-25-76bpm.wav");
+export const SAX_SOUNDS_NUM_SAMPLES = 16;
+export const SAX_SOUNDS_BARS_PER_SAMPLE = 16;
+export const SAX_SOUNDS_ROLLOFF_FACTOR = 10;
+export const SAX_SOUNDS_ROLLOFF_MIN_DISTANCE = 1;
+export const SAX_SOUNDS_ROLLOFF_MAX_DISTANCE = 500;
+export const SAX_SOUNDS_DEBOUNCE = 2.5;
+export const MURK_TEXTURE_URL = assetPath10("textures/pallete6.png");
