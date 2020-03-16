@@ -15,6 +15,7 @@ export default function UI({
     loadWithOverlay = true,
     loadWithInfoIcon = false,
     loadWithPlayer = false,
+    renderPlayer = true,
     // A common pattern is to manage initial scene state
     // around overlay being closed the first time.
     onOverlayHasBeenClosed = () => { },
@@ -53,6 +54,7 @@ export default function UI({
                 message={content.message}
                 instructions={content.instructions}
                 purchaseLink={content.purchaseLink}
+                purchaseLinkText={content.purchaseLinkText}
                 overlayColor={content.colors.overlay}
                 overlayContentColor={content.colors.overlayContent}
                 onToggle={(e) => {
@@ -65,7 +67,7 @@ export default function UI({
                 }}
             />}
             <div className="footer">
-                {player && <Player
+                {renderPlayer && player && <Player
                     artist={content.artist}
                     playerColor={content.colors.player}
                     selectedColor={content.colors.onHover}

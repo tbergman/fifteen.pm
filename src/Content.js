@@ -356,28 +356,9 @@ export const CONTENT = {
   "/club": {
     artist: "CLUB FIFTEEN.PM",
     message: "Welcome to the Club.",
-    purchaseLinkText: "BUY ME",
-    purchaseLink: "https://fifteenpm.bandcamp.com/album/juicy-tender",
-    tracks: [
-      {
-        mediaType: 'video',
-        meta: {
-          type: 'video', // TODO do we need this here as well?
-          mimetype: 'video/mp4',
-          name: 'greem-vid1',
-          sources: multiSourceVideo('/assets/8/videos/jt-final'),
-          geometry: new THREE.PlaneBufferGeometry(1, 1),
-          position: [0, 0, 0],
-          playbackRate: 1,
-          loop: true,
-          invert: true,
-          volume: .4,
-          muted: false,
-          angle: 0.0,
-        },
-        mesh: undefined,
-      },
-    ],
+    purchaseLinkText: "TIP THE ARTIST",
+    purchaseLink: "https://venmo.com/abelsonlive",
+    liveStreamVideoId: '5rYXcmVSeBU',
     colors: {
       logo: '#fff',
       overlay: 'rgba(255, 0, 0, 0.5)',

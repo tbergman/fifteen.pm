@@ -16,6 +16,7 @@ export default function OverlayContent({
     contentReady,
     instructions,
     purchaseLink,
+    purchaseLinkText,
     message,
     color,
     onToggle,
@@ -25,7 +26,7 @@ export default function OverlayContent({
             <div className="overlay-header-and-controls">
                 <OverlayMessage message={message} color={color} />
                 {instructions && <OverlayInstructions instructions={instructions} color={color} />}
-                {purchaseLink && <OverlayPurchaseLink href={purchaseLink} color={color} />}
+                {purchaseLink && <OverlayPurchaseLink href={purchaseLink} color={color} text={purchaseLinkText} />}
             </div>
             <OverlayEnterButton
                 hasBeenClosed={hasBeenClosed}

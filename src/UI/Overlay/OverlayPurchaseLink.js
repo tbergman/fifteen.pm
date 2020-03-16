@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function OverlayPurchaseLink({ href, color }) {
+export default function OverlayPurchaseLink({ href, color, text }) {
     return (
         <div className="overlay-content-item">
             <div className="overlay-content-icon">
@@ -26,7 +26,7 @@ export default function OverlayPurchaseLink({ href, color }) {
                     style={{
                         color: color
                     }}
-                >buy me
+                > {text}
             </a>
             </div>
         </div>
