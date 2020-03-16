@@ -9,7 +9,7 @@ export default function Club({ }) {
     return (
         <>
             <UI content={content} renderPlayer={false} loadWithNavigation={false}/>
-            <Canvas />
+            <Canvas content={content} />
         </>
     );
 }
