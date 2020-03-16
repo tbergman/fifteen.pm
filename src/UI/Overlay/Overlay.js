@@ -9,6 +9,7 @@ export default function Overlay({
     message,
     instructions,
     purchaseLink,
+    purchaseLinkText,
     overlayColor,
     overlayContentColor,
     onToggle,
@@ -19,6 +20,7 @@ export default function Overlay({
             contentReady={contentReady}
             instructions={instructions}
             purchaseLink={purchaseLink}
+            purchaseLinkText={purchaseLinkText}
             message={message}
             color={overlayContentColor}
             onToggle={onToggle}
