@@ -36,6 +36,7 @@ export const CONTENT = {
   "/1": {
     artist: "YAHCEPH",
     message: 'Yahceph\'s production debut, "wun 4 jas", is composed of voice memos and buoyant pads floating somewhere between him and Jasmine, the namesake of this ode.',
+    purchaseLinkText: "BUY ME",
     purchaseLink: "https://fifteenpm.bandcamp.com/track/wun-4-jas",
     tracks: [
       {
@@ -63,6 +64,7 @@ export const CONTENT = {
   "/2": {
     artist: "YEAR UNKNOWN",
     message: "Jen Fong (Year Unknown) serves up frenetic, glitch-fueled footwork on this otherworldly drum disturbance.",
+    purchaseLinkText: "BUY ME",
     purchaseLink: "https://fifteenpm.bandcamp.com/track/timer",
     tracks: [
       {
@@ -95,7 +97,8 @@ export const CONTENT = {
     artist: "OTHERE",
     message:
       "Abbi Press makes buoyant, soul-inflected tunes by day. As Othere, she explores the darker, corporeal corners of her sound.",
-    purchaseLink: "https://fifteenpm.bandcamp.com/track/lets-beach",
+    purchaseLinkText: "BUY ME",
+      purchaseLink: "https://fifteenpm.bandcamp.com/track/lets-beach",
     tracks: [
       {
         name: "Let's Beach",
@@ -130,6 +133,7 @@ export const CONTENT = {
   "/4": {
     artist: "JON CANNON",
     message: "Jon Cannon's haunting house ballads are a product of his habitat: the long drag of Myrtle-Broadway where fluorescent-lit stores stock life's essentials.",
+    purchaseLinkText: "BUY ME",
     purchaseLink: "https://fifteenpm.bandcamp.com/album/ep-1",
     tracks: [
       {
@@ -181,6 +185,7 @@ export const CONTENT = {
   "/5": {
     artist: "PLEBEIAN",
     message: "Plebeian’s toolbox rattles with chains, ball-bearings and loose screws on these slammin’ single-takes of industrial techno.",
+    purchaseLinkText: "BUY ME",
     purchaseLink: "https://fifteenpm.bandcamp.com/album/heaven",
     tracks: [
       {
@@ -218,6 +223,7 @@ export const CONTENT = {
   "/6": {
     artist: "VVEISS",
     message: "Dagger at the ready, vveiss plumbs virtual depths, carving out a subsonic ceremony of refracting rhythms.",
+    purchaseLinkText: "BUY ME",
     purchaseLink: "https://fifteenpm.bandcamp.com/track/escape-velocity",
     tracks: [
       {
@@ -245,6 +251,7 @@ export const CONTENT = {
   "/7": {
     artist: "JON FAY",
     message: "In this 22-minute meditation, Jon Fay captures the infinite pulse of the rave as it empties into the dawn.",
+    purchaseLinkText: "BUY ME",
     purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
     tracks: [
       {
@@ -294,6 +301,7 @@ export const CONTENT = {
     ],
     theme: {
       message: "DUR DUR DUR DUR DUR DUR DUR DUR",
+      purchaseLinkText: "BUY ME",
       purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
       iconColor: '#fff',
       fillColor: 'rgba(255, 0, 0, 0.5)',
@@ -305,6 +313,50 @@ export const CONTENT = {
   "/8": {
     artist: "GREEM JELLYFISH",
     message: "Juicy Tender is an exploration of exodus and urban life. Though we leave the city in search of extraordinary experiences, we sometimes return to loneliness. Ultimately, refuge is not a place but a set of material conditions: Art, Food, Music, Mountain, Ocean, Family, Friend.",
+    purchaseLinkText: "BUY ME",
+    purchaseLink: "https://fifteenpm.bandcamp.com/album/juicy-tender",
+    tracks: [
+      {
+        mediaType: 'video',
+        meta: {
+          type: 'video', // TODO do we need this here as well?
+          mimetype: 'video/mp4',
+          name: 'greem-vid1',
+          sources: multiSourceVideo('/assets/8/videos/jt-final'),
+          geometry: new THREE.PlaneBufferGeometry(1, 1),
+          position: [0, 0, 0],
+          playbackRate: 1,
+          loop: true,
+          invert: true,
+          volume: .4,
+          muted: false,
+          angle: 0.0,
+        },
+        mesh: undefined,
+      },
+    ],
+    colors: {
+      logo: '#fff',
+      overlay: 'rgba(255, 0, 0, 0.5)',
+      overlayContent: '#fff',
+      player: '#fff',
+      navigation: '#fff',
+      onHover: 'rgba(255, 0, 0, 0.5)',
+      info: '#fff',
+    },
+    instructions: [{
+      icon: MouseMove,
+      text: "click and drag mouse to look around"
+    },
+    {
+      icon: TwoFingerScroll,
+      text: "scroll to zoom"
+    }]
+  },
+  "/club": {
+    artist: "CLUB FIFTEEN.PM",
+    message: "Welcome to the Club.",
+    purchaseLinkText: "BUY ME",
     purchaseLink: "https://fifteenpm.bandcamp.com/album/juicy-tender",
     tracks: [
       {
@@ -356,6 +408,7 @@ export const CONTENT = {
     ],
     theme: {
       message: "DUR DUR DUR DUR DUR DUR DUR DUR",
+      purchaseLinkText: "BUY ME",
       purchaseLink: "https://fifteenpm.bandcamp.com/track/golden-groove",
       iconColor: '#fff',
       fillColor: 'rgba(255, 0, 0, 0.5)',
@@ -367,6 +420,7 @@ export const CONTENT = {
   "/9": {
     artist: "JAVONNTTE",
     message: "Detroit Asteroid Belt 2120: All sectors go wild for the Earthy tones of house master Javonntte after his 'City Life' series surfaces off some de-bricked drives in the archives.",
+    purchaseLinkText: "BUY ME",
     purchaseLink: "TODO",
     tracks: [
       {
