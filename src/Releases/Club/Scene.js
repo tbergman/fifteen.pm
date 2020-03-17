@@ -5,7 +5,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer';
-import YTPlayer from "yt-player";
 import "../../UI/Player/Player.css";
 import "../Release.css";
 import { CONSTANTS, OFFICE } from "./constants.js";
