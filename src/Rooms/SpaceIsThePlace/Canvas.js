@@ -1,5 +1,5 @@
 import React from 'react';
-import '../Release.css';
+import '../Room.css';
 import Scene from './Scene';
 
 export default function Canvas(content) {

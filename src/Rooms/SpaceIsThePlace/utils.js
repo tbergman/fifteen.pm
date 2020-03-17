@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import { assetPath } from "../../Utils/assets";
 
 export const assetPathClub = (p) => {

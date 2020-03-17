@@ -353,7 +353,7 @@ export const CONTENT = {
       text: "scroll to zoom"
     }]
   },
-  "/club": {
+  "/space-is-the-place": {
     artist: "CLUB FIFTEEN.PM",
     message: "Welcome to the Club.",
     purchaseLinkText: "TIP THE ARTIST",
