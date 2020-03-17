@@ -95,7 +95,7 @@ export default class Scene extends Component {
     this.iframe.style.height = '720px';
     this.iframe.style.backgroundColor = '#ffffff';
 
-    this.iframe.src = [ 'http://www.youtube.com/embed/', this.content.liveStreamVideoId, '?controls=0&disablekb=1&iv_load_policy=3&fs=0&modestbranding=1&showinfo=0&cc_load_policy=0&autoplay=1&origin=http://', window.location.hostname ].join( '' );
+    this.iframe.src = [ 'https://www.youtube.com/embed/', this.content.liveStreamVideoId, '?controls=0&disablekb=1&iv_load_policy=3&fs=0&modestbranding=1&showinfo=0&cc_load_policy=0&autoplay=1&origin=https://', window.location.hostname ].join( '' );
     this.iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
     this.iframe3D = new CSS3DObject( this.iframe );
     this.iframe3D.position.set(0, 1000,  0);
@@ -148,7 +148,6 @@ export default class Scene extends Component {
 
   renderScene = () => {
     this.controls.update();
-    console.log(this.camera.position);
     this.rendererGL.render(this.sceneGL, this.camera);
     this.rendererCSS.render(this.sceneCSS, this.camera);
   };
