@@ -358,7 +358,7 @@ export const CONTENT = {
     message: "Welcome to the Club.",
     purchaseLinkText: "TIP THE ARTIST",
     purchaseLink: "https://venmo.com/abelsonlive",
-    liveStreamVideoId: 'W3c6Hd1CLeY',
+    liveStreamVideoId: '82g80JF1U7g',
     colors: {
       logo: '#fff',
       overlay: 'rgba(255, 0, 0, 0.5)',
