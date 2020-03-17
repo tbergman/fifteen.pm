@@ -5,7 +5,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer';
-
+import YTPlayer from "yt-player";
 import "../../UI/Player/Player.css";
 import "../Release.css";
 import { CONSTANTS, OFFICE } from "./constants.js";
@@ -15,7 +15,6 @@ export default class Scene extends Component {
 
   componentDidMount() {
     this.init();
-    console.log(this.props);
     window.addEventListener("touchmove", this.onTouchMove, false);
     window.addEventListener("resize", this.onWindowResize, false);
     this.animate();
@@ -41,8 +40,6 @@ export default class Scene extends Component {
     cancelAnimationFrame(this.frameId);
   };
 
-  // onDocumentMouseMove() {
-  // }
 
   onWindowResize = debounce(() => {
     const width = window.innerWidth;
@@ -54,53 +51,105 @@ export default class Scene extends Component {
 
   init() {
     // this.scene.background = new THREE.Color(0xFF0FFF);
-    
+    this.content = this.props.content.content;
+
     // main initialization parameters
-    var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-    var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 5000;
+    this.SCREEN_WIDTH = window.innerWidth;
+    this.SCREEN_HEIGHT = window.innerHeight;
+    var VIEW_ANGLE = 45, ASPECT = this.SCREEN_WIDTH / this.SCREEN_HEIGHT, NEAR = 1, FAR = 5000;
     this.camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
-    this.camera.position.set( 0, 1000, 0 );
+    this.camera.position.set( 0, -500, 100 );
+    this.initCSSContext();
+    this.initGLContext();
+    this.initLivestream();
+    this.initFloor();
+    this.initControls();
+    
+  }
+
+  initGLContext = () => {
+    // Setup CSS Rendering
+    this.sceneGL = new THREE.Scene();
+    this.rendererGL = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    this.rendererGL.setPixelRatio(window.devicePixelRatio);
+    this.rendererGL.setSize(this.SCREEN_WIDTH, this.SCREEN_HEIGHT);
+    this.container.appendChild(this.rendererGL.domElement);
+  }
+
+  initCSSContext = () => {
+    // Setup CSS Rendering
     this.sceneCSS = new THREE.Scene();
-    this.rendererCSS	= new CSS3DRenderer(SCREEN_WIDTH, SCREEN_HEIGHT );
-    this.rendererCSS.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-    // this.rendererCSS.domElement.style.position	= 'absolute';
-    // this.rendererCSS.domElement.style.top	= 0;
-    // this.rendererCSS.domElement.style.margin	= 0;
-    // this.rendererCSS.domElement.style.padding	= 0;
+    this.rendererCSS	= new CSS3DRenderer(this.SCREEN_WIDTH, this.SCREEN_HEIGHT );
+    this.rendererCSS.setSize( this.SCREEN_WIDTH, this.SCREEN_HEIGHT );
+    this.rendererCSS.domElement.style.position	= 'absolute';
+    this.rendererCSS.domElement.style.top	= 0;
+    this.rendererCSS.domElement.style.margin	= 0;
+    this.rendererCSS.domElement.style.padding	= 0;
     this.container.appendChild(this.rendererCSS.domElement);
+  }
 
-    this.controls = new OrbitControls( this.camera, this.rendererCSS.domElement );
-
+  initLivestream = () => {
     // Live stream
     this.iframe	= document.createElement('iframe')
-    this.iframe.style.width = '480px';
-    this.iframe.style.height = '360px';
-    this.iframe.style.border = '1px';
+    this.iframe.style.width = '1080px';
+    this.iframe.style.height = '720px';
     this.iframe.style.backgroundColor = '#ffffff';
 
-    this.iframe.src = [ 'http://www.youtube.com/embed/', this.props.content.liveStreamVideoID, '?controls=0' ].join( '' );
+    this.iframe.src = [ 'http://www.youtube.com/embed/', this.content.liveStreamVideoId, '?controls=0&disablekb=1&iv_load_policy=3&fs=0&modestbranding=1&showinfo=0&cc_load_policy=0&autoplay=1&origin=http://', window.location.hostname ].join( '' );
+    this.iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
     this.iframe3D = new CSS3DObject( this.iframe );
-    this.iframe3D.position.set(0, 0,  0);
+    this.iframe3D.position.set(0, 1000,  0);
+    this.iframe3D.rotation.x = Math.PI / 2;
+    this.sceneCSS.add(this.iframe3D);
     this.camera.lookAt(this.iframe3D);
-    this.iframe3D.rotation.x = -Math.PI / 2;
-    this.sceneCSS.add(this.iframe3D)
+  }
 
+  initFloor() {
+    // FLOOR
+    this.floorTexture = new THREE.ImageUtils.loadTexture(assetPathClub('images/checkerboard.jpg'));
+    this.floorTexture.wrapS = this.floorTexture.wrapT = THREE.RepeatWrapping; 
+    this.floorTexture.repeat.set( 10, 10 );
+    this.floorMaterial = new THREE.MeshBasicMaterial( { map: this.floorTexture, side: THREE.DoubleSide } );
+    this.floorGeometry = new THREE.PlaneGeometry(2000, 2000, 10, 10);
+    this.floor = new THREE.Mesh(this.floorGeometry, this.floorMaterial);
+    this.floor.position.set(0, 200, 0);
+    this.floor.rotation.z = -Math.PI / 2;
+    this.sceneGL.add(this.floor);
+  }
 
-    // Grid Helper 
-    var size = 10;
-    var divisions = 10;
-    var gridHelper = new THREE.GridHelper( size, divisions );
-    this.sceneCSS.add(gridHelper);
+  initLights() {
+    var directionalLight = new THREE.DirectionalLight(0xffffff);
+    directionalLight.position.set(1, 1, 1).normalize();
+    this.sceneGL.add(directionalLight);
+    var pointLight = new THREE.PointLight(0xffffff);
+    this.pointLight = pointLight;
+    this.sceneGL.add(this.pointLight);
+  }
+
+  initControls = () => {
+    this.controls = new OrbitControls( this.camera, this.container );
+  }
+
+  updateLights() {
+    const { clock, pointLight } = this;
+    pointLight.userData.angle -= 0.025;
+    let lightIntensity =
+      0.75 + 0.25 * Math.cos(clock.getElapsedTime() * Math.PI);
+    pointLight.position.x = 10 + 10 * Math.sin(pointLight.userData.angle);
+    pointLight.position.y = 10 + 10 * Math.cos(pointLight.userData.angle);
+    pointLight.color.setHSL(lightIntensity, 1.0, 0.5);
+    return lightIntensity;
   }
 
   animate = () => {
     requestAnimationFrame( this.animate );
     this.renderScene();
-    console.log(this.camera.position)
   };
 
   renderScene = () => {
     this.controls.update();
+    console.log(this.camera.position);
+    this.rendererGL.render(this.sceneGL, this.camera);
     this.rendererCSS.render(this.sceneCSS, this.camera);
   };
 
@@ -109,6 +158,7 @@ export default class Scene extends Component {
       <div className="release">
         <div ref={element => (this.container = element)} />
       </div>
+
     );
   }
 }

@@ -45,6 +45,9 @@ module.exports = {
     },
     devServer: {
         hot: true,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
         inline: true,
         contentBase: ['./src', './public'],
         historyApiFallback: true,

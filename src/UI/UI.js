@@ -16,6 +16,7 @@ export default function UI({
     loadWithInfoIcon = false,
     loadWithPlayer = false,
     renderPlayer = true,
+    renderNavigation = true,
     // A common pattern is to manage initial scene state
     // around overlay being closed the first time.
     onOverlayHasBeenClosed = () => { },
@@ -47,7 +48,7 @@ export default function UI({
     return (
         <>
             {logo && <Logo color={content.colors.logo} />}
-            {navigation && <Navigation color={content.colors.navigation} />}
+            {renderNavigation && navigation && <Navigation color={content.colors.navigation} />}
             {overlay && <Overlay
                 hasBeenClosed={overlayHasBeenClosed}
                 contentReady={contentReady}
