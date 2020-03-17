@@ -1,37 +1,33 @@
-import React, { Suspense, useEffect, useState } from 'react';
-import { useResource, useThree, useFrame } from 'react-three-fiber';
-import { Asteroids } from './detroitBelt/Asteroids';
-import Car from './car/Car';
-import * as THREE from 'three';
-import * as C from "./constants";
-import { FixedLights } from './lights';
-import Road from './road/Road';
-import { World } from './detroitBelt/World';
-import { BloomFilmEffect } from '../../Utils/Effects';
-import Stars from './Stars';
-import { Controls } from './controls';
-import { BuildingsProvider } from './detroitBelt/BuildingsContext';
-import { MaterialsProvider } from './MaterialsContext';
-import DetroitBelt from './detroitBelt/DetroitBelt';
-import Sky from './Sky';
-import Hall from './Hall';
-import debounce from "lodash/debounce";
-import React, { Component } from "react";
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { CSS3DObject, CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer';
+import React, { Suspense, useRef } from 'react';
+import { useThree, extend, useFrame } from 'react-three-fiber';
 import "../../UI/Player/Player.css";
 import "../Room.css";
-import { assetPathClub } from "./utils.js";
+import { MaterialsProvider } from './MaterialsContext';
+import Stars from '../../Utils/Stars';
+import Hall from './Hall';
 
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+extend({ OrbitControls })
 
-export function Scene({ content }) {
-  const { scene, camera } = useThree();
-  return (
-    <MaterialsProvider>
+const Controls = props => {
+  const { camera, gl } = useThree()
+  const controls = useRef()
+  useFrame(() => controls.current && controls.current.update())
+  return <orbitControls ref={controls} args={[camera, gl.domElement]} {...props} />
+}
 
-    </MaterialsProvider>
-  )
+export default function Scene({ content, ...props }) {
+  
+  return (<>
+    <Controls enableDamping rotateSpeed={0.3} dampingFactor={0.1} />
+
+    {/* <MaterialsProvider> */}
+    {/* <Suspense fallback={null}> */}
+    <Stars radius={2} colors={[0xffffff, 0xfffff0, 0xf9f1f1]} />
+    {/* <Hall /> */}
+    {/* </Suspense> */}
+    {/* </MaterialsProvider> */}
+  </>)
 }
 
 

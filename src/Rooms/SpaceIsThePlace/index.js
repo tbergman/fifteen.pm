@@ -1,15 +1,15 @@
 import React, { useMemo } from 'react';
 import { CONTENT } from "../../Content";
-import { VideoPlayerProvider } from '../../UI/Player/VideoPlayerContext';
 import UI from '../../UI/UI';
-import Canvas from './Canvas';
+import SpaceIsThePlaceCanvas from './Canvas';
+import './index.css';
 
-export default function SpaceIsThePlaceRoom({ }) {
+export default function Room_SpaceIsThePlace({ }) {
     const content = useMemo(() => CONTENT[window.location.pathname]);
     return (
         <>
-            <UI content={content} renderPlayer={false} loadWithNavigation={false}/>
-            <Canvas content={content} />
+            <UI content={content} renderPlayer={false} loadWithNavigation={false} />
+            <SpaceIsThePlaceCanvas content={content} />
         </>
     );
 }

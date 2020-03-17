@@ -18,7 +18,7 @@ const MaterialsProvider = ({ ...props }) => {
         const loadedMats = allMats.filter(mat => mat);
         setLoaded(allMats.length == loadedMats.length);
     })
-
+    
     return <MaterialsContext.Provider value={{ loaded, ...materials }}>
         <FoamGripMaterial materialRef={foamGripPurpleRef} color={0xff00af} specular={0x00ff00} />
         {props.children}
