@@ -3,7 +3,7 @@ import '../Room.css';
 import Scene from './Scene';
 import { Canvas } from 'react-three-fiber';
 
-export default function SpaceIsThePlaceCanvas(content) {
+export default function SpaceIsThePlaceCanvas({content, hasEnteredWorld}) {
   return (
     <Canvas
       id="canvas"
@@ -15,7 +15,7 @@ export default function SpaceIsThePlaceCanvas(content) {
         gl.antialias = true;
       }}
     >
-      <Scene content={content} />
+      <Scene content={content} hasEnteredWorld={hasEnteredWorld} />
     </Canvas>
   )
 }

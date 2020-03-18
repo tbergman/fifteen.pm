@@ -1,10 +1,13 @@
-import React, { Suspense, useRef } from 'react';
+import React, { Suspense, useRef, useResource, } from 'react';
 import { useThree, extend, useFrame } from 'react-three-fiber';
 import "../../UI/Player/Player.css";
 import "../Room.css";
 import { MaterialsProvider } from './MaterialsContext';
 import Stars from '../../Utils/Stars';
 import Hall from './Hall';
+import LiveStreamScreen from './LiveStreamScreen'
+import { LIVESTREAM_URL } from './constants'
+
 
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 extend({ OrbitControls })
@@ -16,14 +19,18 @@ const Controls = props => {
   return <orbitControls ref={controls} args={[camera, gl.domElement]} {...props} />
 }
 
-export default function Scene({ content, ...props }) {
-  
+
+
+export default function Scene({ content, hasEnteredWorld, ...props }) {
+
+
   return (<>
     <Controls enableDamping rotateSpeed={0.3} dampingFactor={0.1} />
 
     {/* <MaterialsProvider> */}
     {/* <Suspense fallback={null}> */}
     <Stars radius={2} colors={[0xffffff, 0xfffff0, 0xf9f1f1]} />
+    <LiveStreamScreen src={LIVESTREAM_URL} size={10} position={[0,0,0]} play={hasEnteredWorld}/> 
     {/* <Hall /> */}
     {/* </Suspense> */}
     {/* </MaterialsProvider> */}
