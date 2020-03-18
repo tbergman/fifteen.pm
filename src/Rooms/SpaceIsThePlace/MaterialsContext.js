@@ -16,6 +16,7 @@ const MaterialsProvider = ({ ...props }) => {
     useEffect(() => {
         const allMats = Object.values(materials);
         const loadedMats = allMats.filter(mat => mat);
+        console.log("allMats:", allMats, "\nloadedMats:", loadedMats)
         setLoaded(allMats.length == loadedMats.length);
     })
     

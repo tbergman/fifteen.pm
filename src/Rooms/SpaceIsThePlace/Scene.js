@@ -17,16 +17,16 @@ const Controls = props => {
 }
 
 export default function Scene({ content, ...props }) {
-  
+
   return (<>
     <Controls enableDamping rotateSpeed={0.3} dampingFactor={0.1} />
-
-    {/* <MaterialsProvider> */}
-    {/* <Suspense fallback={null}> */}
-    <Stars radius={2} colors={[0xffffff, 0xfffff0, 0xf9f1f1]} />
-    {/* <Hall /> */}
-    {/* </Suspense> */}
-    {/* </MaterialsProvider> */}
+    <ambientLight />
+    <MaterialsProvider>
+      <Stars radius={2} colors={[0xffffff, 0xfffff0, 0xf9f1f1]} />
+      <Suspense fallback={null}>
+        <Hall />
+      </Suspense>
+    </MaterialsProvider>
   </>)
 }
 
