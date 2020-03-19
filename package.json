@@ -73,6 +73,7 @@
     "babel-polyfill": "^6.26.0",
     "cannon": "^0.6.2",
     "glslify-loader": "^2.0.0",
+    "hls.js": "^0.13.2",
     "jest-cli": "^24.7.0",
     "lodash": "^4.17.15",
     "raw-loader": "^2.0.0",
