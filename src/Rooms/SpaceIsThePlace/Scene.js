@@ -22,12 +22,10 @@ const Controls = props => {
 export default function Scene({ content, hasEnteredWorld, ...props }) {
 
   return (<>
-    <LiveStreamScreen src={LIVESTREAM_URL} size={1} position={[0, 0, 0]} play={hasEnteredWorld} />
+    <LiveStreamScreen src={LIVESTREAM_URL} size={3} position={[0, 1.5, 0]} play={hasEnteredWorld} />
     <Controls enableDamping rotateSpeed={0.3} dampingFactor={0.1} />
     <Stars radius={2} colors={[0xffffff, 0xfffff0, 0xf9f1f1]} />
-    <ambientLight />
-    <pointLight position={[10, 10, 10]} />
-    <TrackLight position={[0,1,0]} />
+    <TrackLight intensity={0.5} size={.1} position={[0,1.5,-5]} />
     <MaterialsProvider>
       <Suspense fallback={null}>
         <Hall />
