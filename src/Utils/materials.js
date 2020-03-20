@@ -17,12 +17,13 @@ import dayGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/day
 /* eslint import/no-webpack-loader-syntax: off */
 import dreamGradientFragmentShader from '!raw-loader!glslify-loader!../Shaders/dreamGradientFragment.glsl';
 
+
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { assetPathShared } from "./assets.js";
 import { hexToRgb } from './colors';
-
+import { TranslucentShader } from 'three/examples/jsm/shaders/TranslucentShader.js';
 
 function cloudEnvMap() {
 	return new THREE.CubeTextureLoader()
@@ -42,6 +43,7 @@ function tileTextureMaps(textureMaps, props) {
 	return textureMaps.map(textureMap => {
 		const repeat = props.textureRepeat || { x: 1, y: 1 };
 		textureMap.wrapS = THREE.RepeatWrapping;
+		textureMap.wrapT = THREE.RepeatWrapping;
 		textureMap.offset.set(0, 0);
 		textureMap.repeat.set(repeat.x, repeat.y);
 		return textureMap;
@@ -720,4 +722,89 @@ export function DayGradient({ materialRef, ...props }) {
 		fragmentShader={dayGradientFragmentShader}
 		{...props}
 	/>;
+}
+
+export function LinedCement({ materialRef, ...props }) {
+	//https://freepbr.com/materials/lined-cement1/
+	const [albedoMap, aoMap, heightMap, metallicMap, normalMap, roughnessMap, envMap] = useMemo(() => {
+		const textureLoader = new THREE.TextureLoader();
+		const albedoMap = textureLoader.load(assetPathShared("textures/lined-cement/Lined-Cement--albedo.png"));
+		const aoMap = textureLoader.load(assetPathShared("textures/lined-cement/Lined-Cement-ao.png"));
+		const heightMap = textureLoader.load(assetPathShared("textures/lined-cement/Lined-Cement-Height.png"));
+		const metallicMap = textureLoader.load(assetPathShared("textures/lined-cement/Lined-Cement-Metallic.png"));
+		const normalMap = textureLoader.load(assetPathShared("textures/lined-cement/Lined-Cement-Normal-ogl.png"));
+		const roughnessMap = textureLoader.load(assetPathShared("textures/lined-cement/Lined-Cement-Roughness.png"));
+		const envMap = props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
+		const textureMaps = [albedoMap, aoMap, heightMap, metallicMap, normalMap, roughnessMap, envMap];
+		return tileTextureMaps(textureMaps, props);
+	})
+	return <meshStandardMaterial
+		{...props}
+		ref={materialRef}
+		// map={albedoMap}
+		aoMap={aoMap}
+		// color={props.color || "white"}
+		// heightMap={heightMap}
+		metalnessMap={metallicMap}
+		metalness={1}
+		normalMap={normalMap}
+		roughnessMap={roughnessMap}
+		envMap={envMap}
+	/>
+}
+
+export function Transluscent({ materialRef, ...props }) {
+
+
+	var loader = new THREE.TextureLoader();
+	var imgTexture = loader.load(assetPathShared("textures/transluscent/color.jpg"));
+	var thicknessTexture = loader.load(assetPathShared("textures/transluscent/thickness.jpg"));
+	imgTexture.wrapS = imgTexture.wrapT = THREE.RepeatWrapping;
+
+	var shader = TranslucentShader;
+	var uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+
+	uniforms['map'].value = imgTexture;
+
+	uniforms['diffuse'].value = new THREE.Vector3(1.0, 0.2, 0.2);
+	uniforms['shininess'].value = 500;
+
+	uniforms['thicknessMap'].value = thicknessTexture;
+	uniforms['thicknessColor'].value = new THREE.Vector3(0.5, 0.3, 0.0);
+	uniforms['thicknessDistortion'].value = 0.01;
+	uniforms['thicknessAmbient'].value = 0.55;
+	uniforms['thicknessAttenuation'].value = 2.6;
+	uniforms['thicknessPower'].value = 8.2;
+	uniforms['thicknessScale'].value = 0;
+
+
+	useEffect(() => {
+		materialRef.current.extensions.derivatives = true;
+	})
+
+	return <shaderMaterial
+		{...props}
+		ref={materialRef}
+		uniforms={uniforms}
+		vertexShader={shader.vertexShader}
+		fragmentShader={shader.fragmentShader}
+		lights={true}
+	/>
+}
+
+
+export function NaiveGlass({ materialRef, ...props }) {
+	const envMap = useMemo(() => {
+		return props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
+	}) 
+	return <meshPhongMaterial
+		ref={materialRef}
+		side={THREE.DoubleSide}
+		color={props.color || "white"}
+		shininess={props.shininess || 30}
+		opacity={props.opacity || 0.5}
+		envMap={envMap}
+		transparent={true}
+		combine={THREE.MixOperation}
+	/>
 }

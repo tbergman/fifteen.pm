@@ -2,27 +2,30 @@ import React from 'react';
 import * as THREE from 'three';
 
 // from https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_fly.html
-export default function Stars({ radius, colors }) {
+export default function Stars({ radius, colors, count, ...props }) {
+    let numStars = count || 6000;
+    const [smallsCount, bigsCount] = [Math.floor(numStars * .42), Math.floor(numStars * .58)]    
     let i, r = radius, starsGeometry = [new THREE.BufferGeometry(), new THREE.BufferGeometry()];
-    const vertices1 = [];
-    const vertices2 = [];
+    const smalls = [];
+    const bigs = [];
     const vertex = new THREE.Vector3();
-    for (i = 0; i < 2250; i++) {
+    for (i = 0; i < smallsCount; i++) {
         vertex.x = Math.random() * 2 - 1;
         vertex.y = Math.random() * 2 - 1;
         vertex.z = Math.random() * 2 - 1;
         vertex.multiplyScalar(r);
-        vertices1.push(vertex.x, vertex.y, vertex.z);
+        smalls.push(vertex.x, vertex.y, vertex.z);
     }
-    for (i = 0; i < 3500; i++) {
+    for (i = 0; i < bigsCount; i++) {
         vertex.x = Math.random() * 2 - 1;
         vertex.y = Math.random() * 2 - 1;
         vertex.z = Math.random() * 2 - 1;
         vertex.multiplyScalar(r);
-        vertices2.push(vertex.x, vertex.y, vertex.z);
+        bigs.push(vertex.x, vertex.y, vertex.z);
     }
-    starsGeometry[0].setAttribute('position', new THREE.Float32BufferAttribute(vertices1, 3));
-    starsGeometry[1].setAttribute('position', new THREE.Float32BufferAttribute(vertices2, 3));
+
+    starsGeometry[0].setAttribute('position', new THREE.Float32BufferAttribute(smalls, 3));
+    starsGeometry[1].setAttribute('position', new THREE.Float32BufferAttribute(bigs, 3));
 
     const starsMaterials = [
         new THREE.PointsMaterial({ color: colors[0], size: 1, sizeAttenuation: false }),

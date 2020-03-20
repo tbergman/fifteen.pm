@@ -1,4 +1,5 @@
 import React, { useContext, useRef, useState, useMemo } from 'react';
+import * as THREE from 'three';
 import { useLoader, useResource, useFrame } from 'react-three-fiber';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -13,35 +14,39 @@ export default function Hall({ }) {
         loader.setDRACOLoader(dracoLoader)
     })
     const [ref, room] = useResource()
-    const { foamGripPurple, pockedStone2 } = useContext(MaterialsContext);
+    const { foamGripPurple, naiveGlass, transluscent, linedCement } = useContext(MaterialsContext);
 
-    const [wall, floor, ceiling] = useMemo(() => {
+    const [wall, ceiling, floor] = useMemo(() => {
         let w, c, f;
         gltf.scene.traverse(child => {
             if (child.geometry) {
                 child.geometry.name = child.name;
                 if (child.name == "Hall_0") {
-                    w = child.geometry.clone()
+                    c = child.geometry.clone()
                 }
                 if (child.name == "Hall_1") {
-                    f = child.geometry.clone();
+                    w = child.geometry.clone();
                 }
                 if (child.name == "Hall_2") {
-                    c = child.geometry.clone();
+                    f = child.geometry.clone();
                 }
             }
         })
-        return [w, f, c]
+        if (!w || !f || !c) {
+            console.error("Didn't find Hall geometries.")
+        }
+        return [w, c, f]
     });
 
     return <group ref={ref}>
-        <mesh material={pockedStone2}>
+        <mesh material={naiveGlass}>
+            
             <bufferGeometry attach="geometry" {...wall} />
         </mesh>
-        <mesh material={foamGripPurple}>
+        <mesh material={linedCement}>
             <bufferGeometry attach="geometry" {...floor} />
         </mesh>
-        <mesh material={pockedStone2}>
+        <mesh material={linedCement}>
             <bufferGeometry attach="geometry" {...ceiling} />
         </mesh>
     </group>
