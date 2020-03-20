@@ -30,7 +30,7 @@ const MaterialsProvider = ({ ...props }) => {
         <FoamGripMaterial materialRef={foamGripPurpleRef} color={0x0000} specular={0x00ff00} side={THREE.DoubleSide} />
         <LinedCement materialRef={linedCementRef} color={"black"} side={THREE.DoubleSide} textureRepeat={{ x: 8, y: 8 }} />
         <Transluscent materialRef={transulscentRef} side={THREE.DoubleSide} />
-        <NaiveGlass materialRef={naiveGlassRef} side={THREE.DoubleSide} opacity={.4} shininess={100} color={"yellow"}/>
+        <NaiveGlass materialRef={naiveGlassRef} side={THREE.DoubleSide} opacity={.2} shininess={100} color={"blue"}/>
         {props.children}
     </MaterialsContext.Provider>
 }

@@ -741,10 +741,10 @@ export function LinedCement({ materialRef, ...props }) {
 	return <meshStandardMaterial
 		{...props}
 		ref={materialRef}
-		// map={albedoMap}
+		map={albedoMap}
 		aoMap={aoMap}
-		// color={props.color || "white"}
-		// heightMap={heightMap}
+		color={props.color || "white"}
+		heightMap={heightMap}
 		metalnessMap={metallicMap}
 		metalness={1}
 		normalMap={normalMap}
@@ -795,14 +795,18 @@ export function Transluscent({ materialRef, ...props }) {
 
 export function NaiveGlass({ materialRef, ...props }) {
 	const envMap = useMemo(() => {
-		return props.envMapURL ? textureLoader.load(envMapUrl) : cloudEnvMap();
+		const textureLoader = new THREE.TextureLoader();
+		const envMap = textureLoader.load(assetPathShared("textures/env-maps/tree.jpg"));
+		envMap.mapping = THREE.EquirectangularRefractionMapping;
+		envMap.encoding = THREE.sRGBEncoding;
+		return envMap;
 	}) 
 	return <meshPhongMaterial
 		ref={materialRef}
 		side={THREE.DoubleSide}
 		color={props.color || "white"}
 		shininess={props.shininess || 30}
-		opacity={props.opacity || 0.5}
+		opacity={props.opacity || .5}
 		envMap={envMap}
 		transparent={true}
 		combine={THREE.MixOperation}
