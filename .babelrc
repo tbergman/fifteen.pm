@@ -1,3 +1,4 @@
+//https://stackoverflow.com/questions/60633244/import-react-component-from-git-submodule-repository
 {
   "presets": [
     ["@babel/env", {
