@@ -6,7 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { loadGLTF } from '../Common/Utils/LegacyLoaders';
 import { assetPath } from "../Common/Utils/assets";
 import { OrbitControls } from 'three-full';
-import { initRockMaterial } from '../Common/Materials/materials.js';
+import { initRockMaterial } from '../Common/Materials/legacyMaterials.js';
 import { Water } from 'three/examples/jsm/objects/Water2';
 
 export class HomeDefaultCanvas extends PureComponent {
@@ -64,7 +64,7 @@ export class HomeDefaultCanvas extends PureComponent {
         const manager = new THREE.LoadingManager();
         const gltfLoader = new GLTFLoader(manager);
         const textureLoader = new THREE.TextureLoader();
-        const rockMaterial = initRockMaterial(textureLoader, 0xFFAFFF);
+        const rockMaterial = initRockMaterial(textureLoader, 0xFFAFFF, {displacementScale: 1.5});
         rockMaterial.displacementBias = -30;
         const name = "forest";
         // add rocks

@@ -13,7 +13,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import '../../Common/UI/Player/Player.css';
 import { loadGLTF } from "../../Common/Utils/LegacyLoaders";
-import { initFoamGripMaterial, initPinkRockMaterial, initPinkShinyMaterial, initRockMaterial, initTransluscentMaterial } from "../../Common/Materials/materials.js";
+import { initFoamGripMaterial, initPinkRockMaterial, initPinkShinyMaterial, initRockMaterial, initTransluscentMaterial } from "../../Common/Materials/legacyMaterials.js";
 import { Water } from 'three/examples/jsm/objects/Water2';
 import '../Release.css';
 import { ALEXA, CONSTANTS, DENNIS, FALLING, FOREST, OFFICE, REBECCA, TRACK_SECTIONS } from "./constants.js";
