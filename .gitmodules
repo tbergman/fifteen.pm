@@ -1,0 +1,3 @@
+[submodule "design-sys"]
+	path = design-sys
+	url = https://github.com/gltd/gltd-design-system
