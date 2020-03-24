@@ -4,6 +4,15 @@ const CopyPlugin = require('copy-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 
 module.exports = {
+    entry: {
+        main: './src/index.js',
+        common: './src/Common/index.js',
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+        },
+    },
     module: {
         rules: [
             {
@@ -32,7 +41,7 @@ module.exports = {
         }),
         new webpack.HotModuleReplacementPlugin(),
         new CopyPlugin([
-            { from: 'public/assets', to: 'assets'}
+            { from: 'public/assets', to: 'assets' }
         ]),
         // This is causing issues - wav and jpg and png get encoding errors 
         // new CompressionPlugin({
@@ -53,5 +62,5 @@ module.exports = {
         watchOptions: {
             poll: true
         }
-    }
+    },
 };

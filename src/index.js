@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Router, Route } from 'react-router-dom';
 import './index.css';
 import App from './App';
-import Header from './UI/Header/Header';
+import Header from './Common/UI/Header';
 import history from './history'
 import Release0001_Yahceph from "./Releases/Release0001_Yahceph/index";
 import Release0002_YearUnknown from "./Releases/Release0002_YearUnknown/index";
@@ -15,11 +15,12 @@ import Release0006_Vveiss from "./Releases/Release0006_Vveiss/index";
 import Release0007_JonFay from "./Releases/Release0007_JonFay/index";
 import Release0008_GreemJellyfish from "./Releases/Release0008_GreemJellyfish/index";
 import Release0009_Javonntte from "./Releases/Release0009_Javonntte/index";
+import { CONTENT } from './Content';
 
 ReactDOM.render(
     <Router history={history}>
         <div>
-            <Header />
+            <Header content={CONTENT} />
             <Route exact path="/" component={App} />
             <Route path="/1" component={Release0001_Yahceph} />
             <Route path="/2" component={Release0002_YearUnknown} />

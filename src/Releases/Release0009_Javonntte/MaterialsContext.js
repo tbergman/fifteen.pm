@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import { DayGradient, DreamGradient, Facade10Material, FoamGripMaterial, Ground29Material, Metal03Material, NightGradient, OrnateBrass2, PockedStone2, Rock19, ScuffedPlasticMaterial, SunsetGradient, TronMaterial } from '../../Utils/materials';
+import { DayGradient, DreamGradient, Facade10Material, FoamGripMaterial, Ground29Material, Metal03Material, NightGradient, OrnateBrass2, PockedStone2, Rock19, ScuffedPlasticMaterial, SunsetGradient, TronMaterial } from '../../Common/Materials/materials';
 
 const MaterialsContext = React.createContext([{}, () => { }]);
 

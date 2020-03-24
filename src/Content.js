@@ -6,18 +6,17 @@ import {
   ArrowKeys,
   NoPhone,
   SlowLoad
-} from "./UI/Controls/Icons";
+} from "./Common/UI/Controls/Icons";
 
 import * as THREE from 'three';
-import { assetPath } from "./Utils/assets";
-import { multiSourceVideo } from './Utils/Video/paths.js';
+import { multiSourceVideo } from './Common/Video/paths.js';
 
 export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
   "/1": "#FF69B4",
   "/3": "red"
 }
 
-export const TOTAL_RELEASES = 9;
+export const totalReleases = 9;
 
 export const CONTENT = {
   "/": {

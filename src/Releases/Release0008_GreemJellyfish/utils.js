@@ -1,4 +1,4 @@
-import { assetPath } from "../../Utils/assets";
+import { assetPath } from "../../Common/Utils/assets";
 import {CONSTANTS} from "./constants.js";
 
 export const assetPath8 = (p) => {

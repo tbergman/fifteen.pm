@@ -1,19 +1,19 @@
 /* eslint import/no-webpack-loader-syntax: off */
-import chromaFragmentShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyFragment.glsl';
+import chromaFragmentShader from '!raw-loader!glslify-loader!../../Common/Shaders/chromaKeyFragment.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
-import chromaVertexShader from '!raw-loader!glslify-loader!../../Shaders/chromaKeyVertex.glsl';
+import chromaVertexShader from '!raw-loader!glslify-loader!../../Common/Shaders/chromaKeyVertex.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
-import marchingCubeFragmentShader from '!raw-loader!glslify-loader!../../Shaders/hgSDF.glsl';
+import marchingCubeFragmentShader from '!raw-loader!glslify-loader!../../Common/Shaders/hgSDF.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
-import simpleVertexShader from '!raw-loader!glslify-loader!../../Shaders/simpleVertex.glsl';
+import simpleVertexShader from '!raw-loader!glslify-loader!../../Common/Shaders/simpleVertex.glsl';
 import debounce from 'lodash/debounce';
 import React, { Component } from 'react';
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import '../../UI/Player/Player.css';
-import { loadGLTF } from "../../Utils/Loaders";
-import { initFoamGripMaterial, initPinkRockMaterial, initPinkShinyMaterial, initRockMaterial, initTransluscentMaterial } from "../../Utils/materials.js";
+import '../../Common/UI/Player/Player.css';
+import { loadGLTF } from "../../Common/Utils/LegacyLoaders";
+import { initFoamGripMaterial, initPinkRockMaterial, initPinkShinyMaterial, initRockMaterial, initTransluscentMaterial } from "../../Common/Materials/materials.js";
 import { Water } from 'three/examples/jsm/objects/Water2';
 import '../Release.css';
 import { ALEXA, CONSTANTS, DENNIS, FALLING, FOREST, OFFICE, REBECCA, TRACK_SECTIONS } from "./constants.js";

@@ -1,15 +1,13 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import * as THREE from 'three';
 import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { loadGLTF } from '../Utils/Loaders';
-import { assetPath } from "../Utils/assets";
+import { loadGLTF } from '../Common/Utils/LegacyLoaders';
+import { assetPath } from "../Common/Utils/assets";
 import { OrbitControls } from 'three-full';
-import { initRockMaterial } from '../Utils/materials.js';
+import { initRockMaterial } from '../Common/Materials/materials.js';
 import { Water } from 'three/examples/jsm/objects/Water2';
-import UI from '../UI/UI';
-import { CONTENT } from '../Content'
 
 export class HomeDefaultCanvas extends PureComponent {
 
