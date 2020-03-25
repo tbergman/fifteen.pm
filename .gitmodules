@@ -1,3 +1,6 @@
 [submodule "src/Common"]
 	path = src/Common
-	url = https://github.com/gltd/gltd-design-system
+	url = https://github.com/gltd/gltd-common
+[submodule "src/gltd-common"]
+	path = src/gltd-common
+	url = https://github.com/gltd/gltd-common

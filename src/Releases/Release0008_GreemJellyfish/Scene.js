@@ -127,7 +127,7 @@ export default class Scene extends Component {
 
     initMaterials() {
         const { materials, textureLoader } = this;
-        materials.purpleRock = initRockMaterial(textureLoader, 0xFF0FFF);
+        materials.purpleRock = initRockMaterial(textureLoader, 0xFF0FFF, {});
         materials.foam = initFoamGripMaterial(textureLoader);
         materials.pinkShiny = initPinkShinyMaterial(textureLoader);
         materials.pinkRock = initPinkRockMaterial(textureLoader);
