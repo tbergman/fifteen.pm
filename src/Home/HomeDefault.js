@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { CONTENT } from '../Content';
 import '../Releases/Release.css';
-import UI from '../UI/UI';
+import UI from '../Common/UI/UI';
 import { HomeDefaultCanvas } from './HomeDefaultCanvas';
 import { ReleaseList } from './ReleaseList';
 

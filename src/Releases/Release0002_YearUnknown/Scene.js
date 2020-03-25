@@ -3,10 +3,9 @@ import debounce from 'lodash/debounce';
 import React, { Component } from 'react';
 import * as THREE from 'three';
 import * as TWEEN from 'three-tween';
-import { isMobile } from "../../Utils/BrowserDetection";
-import { cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth } from "../../Utils/Cloth";
+import { isMobile } from "../../Common/Utils/BrowserDetection";
+import { cloth, clothBody, clothGeometry, clothMesh, clothPhysMaterial, simulateCloth, service } from "../../Common/Utils/Cloth";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { service } from "../../Utils/service";
 import '../Release.css';
 
 /* this handles number of segments in cloth , TO DO fix this */

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Canvas } from 'react-three-fiber';
-import { AudioPlayerContext } from '../../UI/Player/AudioPlayerContext';
+import { AudioPlayerContext } from '../../Common/UI/Player/AudioPlayerContext';
 import { Scene } from './Scene';
 
 export default function JavonntteCanvas({ setContentReady, theme, onThemeSelect, useDashCam }) {

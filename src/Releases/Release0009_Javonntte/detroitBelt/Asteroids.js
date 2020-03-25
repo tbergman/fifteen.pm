@@ -1,8 +1,8 @@
 
 import React, { useContext, useEffect, useMemo } from 'react';
 import * as THREE from 'three';
-import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
-import { randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
+import NoiseSphereGeometry from '../../../Common/Utils/NoiseSphere';
+import { randomArrayVal, selectNRandomFromArray } from '../../../Common/Utils/random';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 import BuildingInstances from './BuildingInstances';

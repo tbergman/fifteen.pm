@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { extend, useFrame, useThree } from 'react-three-fiber';
 import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { isMobile } from '../../Utils/BrowserDetection';
+import { isMobile } from '../../Common/Utils/BrowserDetection';
 
 extend({ OrbitControls, FlyControls });
 

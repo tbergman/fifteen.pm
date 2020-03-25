@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import * as THREE from "three";
 import { Lensflare, LensflareElement } from 'three-full';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { assetPath } from "../../Utils/assets";
+import { assetPath } from "../../Common/Utils/assets";
 import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls";
-import { loadGLTF } from "../../Utils/Loaders";
+import { loadGLTF } from "../../Common/Utils/LegacyLoaders";
 import { CONSTANTS } from "./constants";
 
 export const assetPath6 = (p) => {

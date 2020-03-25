@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import { multiSourceVideo } from '../../Utils/Video/paths.js';
+import { multiSourceVideo } from '../../Common/Video/paths.js';
 
 export const OFFICE = "OFFICE";
 export const FOREST = "FOREST";

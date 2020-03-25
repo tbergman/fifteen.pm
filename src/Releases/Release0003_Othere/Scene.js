@@ -1,7 +1,7 @@
 import debounce from 'lodash/debounce';
 import React, { PureComponent } from 'react';
 import * as THREE from "three";
-import { isMobile } from "../../Utils/BrowserDetection";
+import { isMobile } from "../../Common/Utils/BrowserDetection";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import '../Release.css';
 
