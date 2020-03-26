@@ -4,16 +4,12 @@ import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonCont
 import { BufferGeometryUtils } from "three/examples/jsm/utils/BufferGeometryUtils";
 import { ShaderTerrain } from "../../Common/Utils/ShaderTerrain";
 import { NormalMapShader } from "../../Common/Utils/NormalMapShader";
-import { CONSTANTS } from "./constants";
-import { SHADERS } from "./shaders";
+import { SHADERS } from "./terrainShader";
 import GLTFLoader from "three-gltf-loader";
 import {
-  loadGLTF,
-  loadVideo,
   loadImage,
-  loadOBJ
 } from "../../Common/Utils/LegacyLoaders";
-import { MTLLoader, OBJLoader } from "three-obj-mtl-loader";
+import { OBJLoader } from "three-obj-mtl-loader";
 import { assetPath } from "../../Common/Utils/assets";
 
 ///////////////////////
@@ -24,33 +20,12 @@ let renderer, camera, scene, controls, manager, loader,
     cameraOrtho, sceneRenderTarget, uniformsNoise, objLoader,
     uniformsNormal, uniformsTerrain, heightMap,
     normalMap, quadTarget, directionalLight,
-    pointLight, terrain, backgroundImage, lavaLampMixer;
+    pointLight, terrain, backgroundImage;
 let SCREEN_WIDTH = window.innerWidth;
 let SCREEN_HEIGHT = window.innerHeight;
 let animDelta = 0, animDeltaDir = 1, lightVal = 0, lightDir = 1;
 let clock = new THREE.Clock();
 let updateNoise = true;
-let hourglassAxis = new THREE.Vector3(0, 0, -1);
-let hourglassRad = 0.013;
-let backgroundAxis = new THREE.Vector3(0, -1, 0);
-let backgroundRad = 0.00075;
-let lavaLampAxis = new THREE.Vector3(0, -1, 0);
-let lavaLampRad = 0.12;
-let handMirrorAxis = new THREE.Vector3(0, 1, 0);
-let handMirrorRad = 0.019;
-let vaseAxis = new THREE.Vector3(1, 0, 0);
-let vaseRad = 0.01;
-let jupiterAxis = new THREE.Vector3(0, 1, 0);
-let jupiterRad = 0.007;
-let jupiterOrbitAxis = new THREE.Vector3(0, 0, -0.9);
-let jupiterOrbitTheta = 0.03;
-let balloonOrbitAxis = new THREE.Vector3(0, -1, 0);
-let balloonOrbitTheta = 0.0075;
-let balloonAxis = new THREE.Vector3(1, 0, 1);
-let balloonRad = 0.01;
-let numBalloons = 3;
-let balloons = [];
-let gltfObjects = {};
 let mlib = {};
 const renderTarget = new THREE.WebGLRenderTarget(SCREEN_WIDTH, SCREEN_WIDTH);
 ////////
@@ -67,6 +42,13 @@ export const assetPathJV = (p) => {
 
 const init = (container) => {
 
+  // main rendererr
+  renderer = new THREE.WebGLRenderer( { alpha:true } );
+  renderer.setClearColor( 0x000000, 0 );
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
+  container.appendChild( renderer.domElement );
+
   // SCENE (RENDER TARGET)
 
   sceneRenderTarget = new THREE.Scene();
@@ -78,7 +60,7 @@ const init = (container) => {
   // CAMERA
   camera = new THREE.PerspectiveCamera( 40, SCREEN_WIDTH / SCREEN_HEIGHT, 2, 4000 );
   camera.position.set( -1262, 260, 313);
-  controls = new FirstPersonControls(camera);
+  controls = new FirstPersonControls(camera, renderer.domElement);
   controls.lookSpeed = 0.065;
   controls.movementSpeed = 66;
   controls.enabled = true;
@@ -86,7 +68,6 @@ const init = (container) => {
 
   // SCENE (FINAL)
   scene = new THREE.Scene();
-  // scene.background = new THREE.Color(0x191970)
   manager = new THREE.LoadingManager();
   loader = new GLTFLoader(manager);
   objLoader = new OBJLoader();
@@ -173,12 +154,14 @@ const init = (container) => {
   sceneRenderTarget.add( quadTarget );
 
   // TERRAIN MESH
-  let geometryTerrain = new THREE.PlaneBufferGeometry( 4500, 4500, 512, 512 );
+  let geometryTerrain = new THREE.PlaneBufferGeometry(4000, 4000, 512, 512 );
   BufferGeometryUtils.computeTangents( geometryTerrain );
   terrain = new THREE.Mesh( geometryTerrain, mlib[ 'terrain' ] );
   terrain.position.set( -600, -125, 0 );
   terrain.rotation.x = - Math.PI / 2;
   terrain.visible = false;
+
+
   scene.add( terrain );
 
   // UNIVERSE
@@ -190,16 +173,11 @@ const init = (container) => {
     invert: true,
     rotateY: 180,
     transparent: true,
-    opacity: 0.1
+    opacity: 0.1,
+    scale: 10
   })
-  backgroundImage.material.map.repeat.set(3, 1);
+  backgroundImage.material.map.repeat.set(1, 1);
   scene.add( backgroundImage );
-
-  renderer = new THREE.WebGLRenderer( { alpha:true } );
-  renderer.setClearColor( 0x000000, 0 );
-  renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( SCREEN_WIDTH, SCREEN_HEIGHT );
-  container.appendChild( renderer.domElement );
 
   // EVENTS
   onWindowResize();
@@ -233,9 +211,11 @@ const render = () => {
     uniformsTerrain[ 'uNormalScale' ].value = THREE.Math.mapLinear( valNorm, 0, 1, 0.6, 3.5 );
     if ( updateNoise ) {
       animDelta = THREE.Math.clamp( animDelta + 0.00075 * animDeltaDir, 0, 0.05 );
-      uniformsNoise[ 'time' ].value += delta * animDelta;
+      uniformsNoise[ 'time' ].value += delta * animDelta * Math.tan(delta);
       uniformsNoise[ 'offset' ].value.x += delta * 0.05;
       uniformsTerrain[ 'uOffset' ].value.x = 4 * uniformsNoise[ 'offset' ].value.x;
+      uniformsTerrain[ 'uNormalScale' ].value = Math.random();
+      uniformsTerrain[ 'shininess' ].value = 240 *  Math.sin(delta);
       quadTarget.material = mlib[ 'heightmap' ]
       renderer.setRenderTarget(renderTarget);
       renderer.render( sceneRenderTarget, cameraOrtho, heightMap, true );
