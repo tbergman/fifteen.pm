@@ -38,3 +38,7 @@ export const map = (value, start1, stop1, start2, stop2) => {
 export const lerp =  (start, end, amt) => {
   return (1 - amt) * start + amt * end
 }
+
+export const scaleTo = (x, lo, hi) => {
+  return (x - lo) / (hi - lo);
+}
