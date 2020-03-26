@@ -1,33 +1,13 @@
 import * as THREE from "three";
-import React, { useEffect, useState, Component } from "react";
+import React from "react";
 
 import { BufferGeometryUtils } from "three/examples/jsm/utils/BufferGeometryUtils";
 import { ShaderTerrain } from "../../Common/Utils/ShaderTerrain";
 import { NormalMapShader } from "../../Common/Utils/NormalMapShader";
 import { SHADERS } from "./terrainShader";
 import { useThree, useFrame, useMemo } from "react-three-fiber";
-import { assetPathJV, scaleTo } from "./utils";
-import * as C from "./constants";
+import { assetPathJV } from './utils';
 
-///////////////////
-// INITIALIZE SCENE
-
-const genRenderTargetMap = ({
-  x,
-  y,
-  minFilter,
-  magFilter,
-  format,
-  generateMipmaps = false
-}) => {
-  let target = new THREE.WebGLRenderTarget(x, y, {
-    minFilter,
-    magFilter,
-    format
-  });
-  target.texture.generateMipmaps = generateMipmaps;
-  return target;
-};
 
 export default function Terrain(props) {
   const {
@@ -35,16 +15,14 @@ export default function Terrain(props) {
     cameraOrthoNear = -10000,
     cameraOrthoFar = 10000,
     specularMapSize = 1024,
-    heightMapUniformsNoiseTime = 0.0,
-    heightMapUniformsNoiseScale = 0.7,
-    heightMapUniformsNoiseOffset = -1.3,
-    heightMapUniformsNoiseOffsetFactor = 0.05,
-    normalUniformsHeight = 0.2,
+    heightMapUniformsTime = 0.0,
+    heightMapUniformsScale = 0.7,
+    heightMapUniformsOffset = -1.3,
+    normalUniformsHeight = 0.1,
     terrainPosition = [0, 0, 0],
     terrainSize = 4000,
     terrainResolution = 512,
     terrainUniformsNormalScale = 0.25,
-    terrainUniformsNoiseOffsetFactor = 4,
     terrainUniformsEnableDiffuse1 = true,
     terrainUniformsEnableDiffuse2 = true,
     terrainUniformsEnableSpecular = true,
@@ -63,14 +41,16 @@ export default function Terrain(props) {
       "textures/terrain/TexturesCom_DesertSand3_2x2_512_normal.jpg"
     ),
     terrainRotationX = -Math.PI / 2,
-    terrainAnimDir = 1,
-    terrainAnimDeltaNormalFactor = 0.5,
-    terrainAnimDeltaHeightMapTimeFactor = 0.00075,
-    terrainAnimDeltaHeightMapTimeClamp = [0, 0.05],
-    terrainAnimUniformNormalLinearScaleRangeA = [0, 1],
-    terrainAnimUniformNormalLinearScaleRangeB = [0.6, 3.5],
-    terrainUniformsNormalScaleRange = [0.1, 0.8],
-    terrainAnimUniformNormalScale = 0.25,
+    animDir = 1,
+    animDeltaDir = 1,
+    animHeightMapTimeFactor = 0.00075,
+    animHeightMapTimeClamp = [0, 0.05],
+    animTerrainOffsetFactor = 4,
+    animNormalScaleFactor = 0.5,
+    animUniformNormalLinearScale = [0, 1, 0.6, 3.5],
+    animNormalScaleRange = [0.1, 0.8],
+    animHeightMapOffsetFactor = 0.05,
+    animUniformNormalScale = 0.25,
     terrainQuadTargetPositionZ = -500,
     terrainQuadTargetMeshHex = 0x000000,
     renderTargetX = 256,
@@ -79,230 +59,141 @@ export default function Terrain(props) {
     renderTargetMagFilter = THREE.LinearFilter,
     renderTargetFormat = THREE.RGBFormat
   } = props;
-  const { scene, camera, gl, size } = useThree();
 
-  // setup
+  const {scene, camera, gl, size} = useThree();
   let clock = new THREE.Clock();
-  gl.setClearColor(0x000000, 0);
-  gl.setPixelRatio(window.devicePixelRatio);
-  gl.setSize(size.width, size.height);
-
-  // TODO: remove (LIGHTS)
-  scene.add(new THREE.AmbientLight(0x111111, 5));
-  let directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
-  directionalLight.position.set(500, 2000, 0);
-  scene.add(directionalLight);
-  let pointLight = new THREE.PointLight(0xff4400, 1.5);
-  pointLight.position.set(0, 0, 0);
-  scene.add(pointLight);
-
-  // TEXTURE LOADER
-  // TODO: move to useLoader
-  let loadingManager = new THREE.LoadingManager(function() {
+  gl.setClearColor( 0x000000, 0 );
+  gl.setPixelRatio( window.devicePixelRatio );
+  gl.setSize( size.width, size.height );
+  
+  // TEXTURES
+  let loadingManager = new THREE.LoadingManager( function () {
     terrain.visible = true;
   });
-  let textureLoader = new THREE.TextureLoader(loadingManager);
+  let textureLoader = new THREE.TextureLoader( loadingManager );
 
   // SCENE (RENDER TARGET)
   const renderTarget = new THREE.WebGLRenderTarget(size.width, size.width);
   let sceneRenderTarget = new THREE.Scene();
+  let cameraOrtho = new THREE.OrthographicCamera( size.width / - 2, size.width / 2, size.height / 2, size.height / - 2, cameraOrthoNear, cameraOrthoFar );
+  cameraOrtho.position.set(...cameraOrthoPosition);
+  sceneRenderTarget.add( cameraOrtho );
 
-  // TODO: is this camera necessary?
-  let cameraOrtho = new THREE.OrthographicCamera(
-    size.width / -2,
-    size.width / 2,
-    size.height / 2,
-    size.height / -2,
-    cameraOrthoNear,
-    cameraOrthoFar
-  );
-  cameraOrtho.position.set(cameraOrthoPosition[0], cameraOrthoPosition[1], cameraOrthoPosition[2]);
-  sceneRenderTarget.add(cameraOrtho);
+  // LIGHTS
+  scene.add( new THREE.AmbientLight( 0x111111, 5 ) );
+  let directionalLight = new THREE.DirectionalLight( 0xffffff, 1.15 );
+  directionalLight.position.set( 500, 2000, 0 );
+  scene.add( directionalLight );
+  let pointLight = new THREE.PointLight( 0xff4400, 1.5 );
+  pointLight.position.set( 0, 0, 0 );
+  scene.add( pointLight );
 
-  // setup height map
-  let heightMap = genRenderTargetMap(
-    renderTargetX,
-    renderTargetY,
-    renderTargetMinFilter,
-    renderTargetMagFilter,
-    renderTargetFormat
-  );
-  let heightMapUniformsNoise = {
-    time: { value: heightMapUniformsNoiseTime },
-    scale: {
-      value: new THREE.Vector2(
-        heightMapUniformsNoiseScale,
-        heightMapUniformsNoiseScale
-      )
-    },
-    offset: {
-      value: new THREE.Vector2(
-        heightMapUniformsNoiseOffset,
-        heightMapUniformsNoiseOffset
-      )
-    }
+  // terrain render targets
+  let pars = { minFilter: renderTargetMinFilter, magFilter: renderTargetMagFilter, format: renderTargetFormat };
+  let heightMap = new THREE.WebGLRenderTarget( renderTargetX, renderTargetY, pars );
+  heightMap.texture.generateMipmaps = false;
+  let heightMapUniforms = {
+    time: { value: heightMapUniformsTime },
+    scale: { value: new THREE.Vector2( heightMapUniformsScale, heightMapUniformsScale ) },
+    offset: { value: new THREE.Vector2( heightMapUniformsOffset, heightMapUniformsOffset ) }
   };
 
-  // setup normal map
-  let normalMap = genRenderTargetMap(
-    renderTargetX,
-    renderTargetY,
-    renderTargetMinFilter,
-    renderTargetMagFilter,
-    renderTargetFormat
-  );
-  let normalMapUniforms = THREE.UniformsUtils.clone(NormalMapShader.uniforms);
-  normalMapUniforms.height.value = normalUniformsHeight;
-  normalMapUniforms.resolution.value.set(renderTargetX, renderTargetY);
-  normalMapUniforms.heightMap.value = heightMap.texture;
+  let normalMap = new THREE.WebGLRenderTarget( renderTargetX, renderTargetY, pars );
+  normalMap.texture.generateMipmaps = false;
 
-  // setup specular map
-  let specularMap = genRenderTargetMap(
-    specularMapSize,
-    specularMapSize,
-    renderTargetMinFilter,
-    renderTargetMagFilter,
-    renderTargetFormat
-  );
+  let normalUniforms = THREE.UniformsUtils.clone( NormalMapShader.uniforms );
+  normalUniforms.height.value = normalUniformsHeight;
+  normalUniforms.resolution.value.set( renderTargetX, renderTargetY );
+  normalUniforms.heightMap.value = heightMap.texture;
+
+  let specularMap = new THREE.WebGLRenderTarget( specularMapSize, specularMapSize, pars );
+  specularMap.texture.generateMipmaps = false;  
   specularMap.texture.wrapS = specularMap.texture.wrapT = THREE.RepeatWrapping;
 
   // TERRAIN SHADER uniform settings.
-  let terrainUniforms = THREE.UniformsUtils.clone(
-    ShaderTerrain["terrain"].uniforms
-  );
-  let terrainDiffuseTexture1 = textureLoader.load(terrainDiffuseTexture1URL);
-  terrainDiffuseTexture1.wrapS = terrainDiffuseTexture1.wrapT =
-    THREE.RepeatWrapping;
-  let terrainDiffuseTexture2 = textureLoader.load(terrainDiffuseTexture2URL);
-  terrainDiffuseTexture2.wrapS = terrainDiffuseTexture2.wrapT =
-    THREE.RepeatWrapping;
-  let terrainDetailTexture = textureLoader.load(terrainDetailTextureURL);
-  terrainDetailTexture.wrapS = terrainDetailTexture.wrapT =
-    THREE.RepeatWrapping;
-  terrainUniforms["tNormal"].value = normalMap.texture;
-  terrainUniforms["uNormalScale"].value = terrainUniformsNormalScale;
-  terrainUniforms["tDisplacement"].value = heightMap.texture;
-  terrainUniforms["tDiffuse1"].value = terrainDiffuseTexture1;
-  terrainUniforms["tDiffuse2"].value = terrainDiffuseTexture2;
-  terrainUniforms["tSpecular"].value = specularMap.texture;
-  terrainUniforms["tDetail"].value = terrainDetailTexture;
-  terrainUniforms["enableDiffuse1"].value = terrainUniformsEnableDiffuse1;
-  terrainUniforms["enableDiffuse2"].value = terrainUniformsEnableDiffuse2;
-  terrainUniforms["enableSpecular"].value = terrainUniformsEnableSpecular;
-  terrainUniforms["diffuse"].value.setHex(terrainUniformsDiffuseHex);
-  terrainUniforms["specular"].value.setHex(terrainUniformsSpecularHex);
-  terrainUniforms["shininess"].value = terrainUniformsShininess;
-  terrainUniforms[
-    "uDisplacementScale"
-  ].value = terrainUniformsDisplacementScale;
-  terrainUniforms["uRepeatOverlay"].value.set(
-    terrainUniformsRepeat,
-    terrainUniformsRepeat
-  );
-
-  // CREATE SHADERS
-  let shaderLib = {};
-  let params = [
-    [
-      "heightmap",
-      SHADERS["fragmentShaderNoise"],
-      SHADERS["vertexShader"],
-      heightMapUniformsNoise,
-      false
-    ],
-    [
-      "normal",
-      NormalMapShader.fragmentShader,
-      NormalMapShader.vertexShader,
-      normalMapUniforms,
-      false
-    ],
-    [
-      "terrain",
-      ShaderTerrain["terrain"].fragmentShader,
-      ShaderTerrain["terrain"].vertexShader,
-      terrainUniforms,
-      true
-    ]
-  ];
+  let diffuseTexture1 = textureLoader.load( terrainDiffuseTexture1URL );
+  let diffuseTexture2 = textureLoader.load( terrainDiffuseTexture2URL );
+  let detailTexture = textureLoader.load( terrainDetailTextureURL );
+  diffuseTexture1.wrapS = diffuseTexture1.wrapT = THREE.RepeatWrapping;
+  diffuseTexture2.wrapS = diffuseTexture2.wrapT = THREE.RepeatWrapping;
+  detailTexture.wrapS = detailTexture.wrapT = THREE.RepeatWrapping;
+  let terrainUniforms = THREE.UniformsUtils.clone( ShaderTerrain[ "terrain" ].uniforms );
+  terrainUniforms[ 'tNormal' ].value = normalMap.texture;
+  terrainUniforms[ 'uNormalScale' ].value = terrainUniformsNormalScale;
+  terrainUniforms[ 'tDisplacement' ].value = heightMap.texture;
+  terrainUniforms[ 'tDiffuse1' ].value = diffuseTexture1;
+  terrainUniforms[ 'tDiffuse2' ].value = diffuseTexture2;
+  terrainUniforms[ 'tSpecular' ].value = specularMap.texture;
+  terrainUniforms[ 'tDetail' ].value = detailTexture;
+  terrainUniforms[ 'enableDiffuse1' ].value = terrainUniformsEnableDiffuse1;
+  terrainUniforms[ 'enableDiffuse2' ].value = terrainUniformsEnableDiffuse2;
+  terrainUniforms[ 'enableSpecular' ].value = terrainUniformsEnableSpecular;
+  terrainUniforms[ 'diffuse' ].value.setHex( terrainUniformsDiffuseHex );
+  terrainUniforms[ 'specular' ].value.setHex( terrainUniformsSpecularHex );
+  terrainUniforms[ 'shininess' ].value = terrainUniformsShininess;
+  terrainUniforms[ 'uDisplacementScale' ].value = terrainUniformsDisplacementScale;
+  terrainUniforms[ 'uRepeatOverlay' ].value.set( terrainUniformsRepeat, terrainUniformsRepeat );
+  let shaderParams = [
+    [ 'heightmap',  SHADERS[ 'fragmentShaderNoise' ],   SHADERS[ 'vertexShader' ], heightMapUniforms, false ],
+    [ 'normal',   NormalMapShader.fragmentShader, NormalMapShader.vertexShader, normalUniforms, false ],
+    [ 'terrain',  ShaderTerrain[ "terrain" ].fragmentShader, ShaderTerrain[ "terrain" ].vertexShader, terrainUniforms, true ]
+    ];
   // build up shaders
-  for (var i = 0; i < params.length; i++) {
-    var material = new THREE.ShaderMaterial({
-      uniforms: params[i][3],
-      vertexShader: params[i][2],
-      fragmentShader: params[i][1],
-      lights: params[i][4],
+  let shaderLib = {};
+  for ( var i = 0; i < shaderParams.length; i ++ ) {
+    shaderLib[ shaderParams[ i ][ 0 ] ] = new THREE.ShaderMaterial( {
+      uniforms: shaderParams[ i ][ 3 ],
+      vertexShader: shaderParams[ i ][ 2 ],
+      fragmentShader: shaderParams[ i ][ 1 ],
+      lights: shaderParams[ i ][ 4 ],
       fog: true
-    });
-    shaderLib[params[i][0]] = material;
+      } 
+    );
   }
 
-  let terrainQuadTarget = new THREE.Mesh(
-    new THREE.PlaneBufferGeometry(size.width, size.height),
-    new THREE.MeshBasicMaterial({ color: terrainQuadTargetMeshHex })
-  );
+  let plane = new THREE.PlaneBufferGeometry( size.width, size.height );
+  let terrainQuadTarget = new THREE.Mesh( plane, new THREE.MeshBasicMaterial( { color: terrainQuadTargetMeshHex } ) );
   terrainQuadTarget.position.z = terrainQuadTargetPositionZ;
-  sceneRenderTarget.add(terrainQuadTarget);
+  sceneRenderTarget.add( terrainQuadTarget );
 
   // TERRAIN MESH
-  let geometryTerrain = new THREE.PlaneBufferGeometry(
-    terrainSize,
-    terrainSize,
-    terrainResolution,
-    terrainResolution
-  );
-  BufferGeometryUtils.computeTangents(geometryTerrain);
+  let geometryTerrain = new THREE.PlaneBufferGeometry(terrainSize, terrainSize, terrainResolution, terrainResolution );
+  BufferGeometryUtils.computeTangents( geometryTerrain );
 
-  let terrain = new THREE.Mesh(geometryTerrain, shaderLib["terrain"]);
-  terrain.position.set(
-    terrainPosition[0],
-    terrainPosition[1],
-    terrainPosition[2]
-  );
+  let terrain = new THREE.Mesh( geometryTerrain, shaderLib[ 'terrain' ] );
+  terrain.position.set(...terrainPosition);
   terrain.rotation.x = terrainRotationX;
   terrain.visible = false;
 
-  // terrain animation
-  let animVal = 0;
-  let animDelta = 0;
-  let [animLo, animHi] = terrainUniformsNormalScaleRange;
-  let animDir = terrainAnimDir
-  useFrame(() => {
-    let dx = clock.getDelta();
-    if (terrain.visible) {
-      animVal = THREE.Math.clamp(
-        animVal + terrainAnimDeltaNormalFactor * dx * animDir,
-        animLo,
-        animHi
-      );
-      let animValNorm = scaleTo(animVal, animLo, animHi)
-      terrainUniforms["uNormalScale"].value = THREE.Math.mapLinear(
-        animValNorm,
-        terrainAnimUniformNormalLinearScaleRangeA[0],
-        terrainAnimUniformNormalLinearScaleRangeA[1],
-        terrainAnimUniformNormalLinearScaleRangeB[0],
-        terrainAnimUniformNormalLinearScaleRangeB[1]
-      );
-      let [hmLo, hmHi] = terrainAnimDeltaHeightMapTimeClamp;
-      animDelta = THREE.Math.clamp(
-        animDelta + terrainAnimDeltaHeightMapTimeFactor * animDir,
-        hmLo[0],
-        hmHi[1]
-      );
-      heightMapUniformsNoise["time"].value += dx * animDelta;
-      heightMapUniformsNoise["offset"].value.x += dx * heightMapUniformsNoiseOffsetFactor;
-      terrainUniforms["uOffset"].value.x =
-        terrainUniformsNoiseOffsetFactor *
-        heightMapUniformsNoise["offset"].value.x;
-      terrainUniforms["uNormalScale"].value = terrainAnimUniformNormalScale;
-      terrainQuadTarget.material = shaderLib["heightmap"];
+
+  let animDelta = 0, animVal = 0;
+  useFrame(()=> {
+    let dt = clock.getDelta();
+    if ( terrain.visible) {
+      // update terrain uniform values
+      animVal = THREE.Math.clamp( animVal + animNormalScaleFactor * dt * animDir, ...animNormalScaleRange );
+      let valNorm = ( animVal - animNormalScaleRange[0]) / ( animNormalScaleRange[1] - animNormalScaleRange[0]);
+      terrainUniforms[ 'uNormalScale' ].value = THREE.Math.mapLinear( valNorm, ...animUniformNormalLinearScale);
+      terrainUniforms[ 'uOffset' ].value.x = animTerrainOffsetFactor * heightMapUniforms[ 'offset' ].value.x;
+      terrainUniforms[ 'uNormalScale' ].value = animUniformNormalScale;
+      terrainUniforms[ 'shininess' ].value = terrainUniforms[ 'shininess' ].value *  Math.sin(dt);
+      
+      // render terrain height map
+      animDelta = THREE.Math.clamp( animDelta + animHeightMapTimeFactor * animDeltaDir, ...animHeightMapTimeClamp);
+      heightMapUniforms[ 'time' ].value += dt * animDelta * Math.tan(dt);
+      heightMapUniforms[ 'offset' ].value.x += dt * animHeightMapOffsetFactor;
+      terrainQuadTarget.material = shaderLib[ 'heightmap' ]
       gl.setRenderTarget(renderTarget);
-      gl.render(sceneRenderTarget, cameraOrtho, heightMap, true);
-      terrainQuadTarget.material = shaderLib["normal"];
-      gl.render(sceneRenderTarget, cameraOrtho, normalMap, true);
+      gl.render( sceneRenderTarget, cameraOrtho, heightMap );
+      gl.setRenderTarget(null);
+
+      // render terrain normal map
+      gl.setRenderTarget(renderTarget)
+      terrainQuadTarget.material = shaderLib[ 'normal' ];
+      gl.render( sceneRenderTarget, cameraOrtho, normalMap );
       gl.setRenderTarget(null);
     }
   });
 
-  return <primitive object={terrain} />;
+  return <primitive object={terrain}/>;
 }

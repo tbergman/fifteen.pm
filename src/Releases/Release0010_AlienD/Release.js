@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Component} from "react";
+import React, { useEffect, useState } from "react";
 import { CONTENT } from "../../Content";
 import UI from "../../Common/UI/UI";
 import AlienDCanvas from "./Canvas";
