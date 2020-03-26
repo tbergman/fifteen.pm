@@ -5,6 +5,11 @@ export const assetPath10 = p => {
   return assetPath("10/" + p);
 };
 
+export const assetPathJV = (p) => {
+  return assetPath("jv/" + p);
+}
+
+
 export const choose = choices => {
   return choices[Math.floor(Math.random() * choices.length)];
 };

@@ -4,6 +4,7 @@ import { useThree, useFrame } from "react-three-fiber";
 import FrogCube from "./FrogCube";
 import Sky from "./Sky";
 import useAudioPlayer from "../../Common/UI/Player/hooks/useAudioPlayer";
+import Terrain from './Terrain';
 
 export function Scene({}) {
   const { scene, camera } = useThree();
@@ -25,8 +26,6 @@ export function Scene({}) {
 
   return (
     <>
-      <FixedLights />
-      <ambientLight color={0xffffff} intensity={1.0} />
       <Suspense fallback={null}>
         <Sky/>
         <FrogCube
@@ -36,6 +35,7 @@ export function Scene({}) {
           freqArray={freqArray}
           currentTrackName={currentTrackName}
         />
+        <Terrain/>
       </Suspense>
     </>
   );
