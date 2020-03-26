@@ -57,7 +57,8 @@ export default function Terrain(props) {
     renderTargetY = 256,
     renderTargetMinFilter = THREE.LinearFilter,
     renderTargetMagFilter = THREE.LinearFilter,
-    renderTargetFormat = THREE.RGBFormat
+    renderTargetFormat = THREE.RGBFormat,
+    mapTargetParams = { minFilter: renderTargetMinFilter, magFilter: renderTargetMagFilter, format: renderTargetFormat }
   } = props;
 
   const {scene, camera, gl, size} = useThree();
@@ -66,11 +67,6 @@ export default function Terrain(props) {
   gl.setPixelRatio( window.devicePixelRatio );
   gl.setSize( size.width, size.height );
   
-  // TEXTURES
-  let loadingManager = new THREE.LoadingManager( function () {
-    terrain.visible = true;
-  });
-  let textureLoader = new THREE.TextureLoader( loadingManager );
 
   // SCENE (RENDER TARGET)
   const renderTarget = new THREE.WebGLRenderTarget(size.width, size.width);
@@ -78,8 +74,15 @@ export default function Terrain(props) {
   let cameraOrtho = new THREE.OrthographicCamera( size.width / - 2, size.width / 2, size.height / 2, size.height / - 2, cameraOrthoNear, cameraOrthoFar );
   cameraOrtho.position.set(...cameraOrthoPosition);
   sceneRenderTarget.add( cameraOrtho );
+  
+  // RENDER PLANE
+  let plane = new THREE.PlaneBufferGeometry( size.width, size.height );
+  let terrainQuadTarget = new THREE.Mesh( plane, new THREE.MeshBasicMaterial( { color: terrainQuadTargetMeshHex } ) );
+  terrainQuadTarget.position.z = terrainQuadTargetPositionZ;
+  sceneRenderTarget.add( terrainQuadTarget );
 
   // LIGHTS
+  // TODO: REMOVE THESE
   scene.add( new THREE.AmbientLight( 0x111111, 5 ) );
   let directionalLight = new THREE.DirectionalLight( 0xffffff, 1.15 );
   directionalLight.position.set( 500, 2000, 0 );
@@ -88,9 +91,8 @@ export default function Terrain(props) {
   pointLight.position.set( 0, 0, 0 );
   scene.add( pointLight );
 
-  // terrain render targets
-  let pars = { minFilter: renderTargetMinFilter, magFilter: renderTargetMagFilter, format: renderTargetFormat };
-  let heightMap = new THREE.WebGLRenderTarget( renderTargetX, renderTargetY, pars );
+  // HEIGHT MAP TARGET
+  let heightMap = new THREE.WebGLRenderTarget( renderTargetX, renderTargetY, mapTargetParams );
   heightMap.texture.generateMipmaps = false;
   let heightMapUniforms = {
     time: { value: heightMapUniformsTime },
@@ -98,25 +100,32 @@ export default function Terrain(props) {
     offset: { value: new THREE.Vector2( heightMapUniformsOffset, heightMapUniformsOffset ) }
   };
 
-  let normalMap = new THREE.WebGLRenderTarget( renderTargetX, renderTargetY, pars );
+  // NORMAL MAP TARGET
+  let normalMap = new THREE.WebGLRenderTarget( renderTargetX, renderTargetY, mapTargetParams );
   normalMap.texture.generateMipmaps = false;
-
   let normalUniforms = THREE.UniformsUtils.clone( NormalMapShader.uniforms );
   normalUniforms.height.value = normalUniformsHeight;
   normalUniforms.resolution.value.set( renderTargetX, renderTargetY );
   normalUniforms.heightMap.value = heightMap.texture;
 
-  let specularMap = new THREE.WebGLRenderTarget( specularMapSize, specularMapSize, pars );
+  // SPECULAR MAP TARGET
+  let specularMap = new THREE.WebGLRenderTarget( specularMapSize, specularMapSize, mapTargetParams );
   specularMap.texture.generateMipmaps = false;  
   specularMap.texture.wrapS = specularMap.texture.wrapT = THREE.RepeatWrapping;
 
-  // TERRAIN SHADER uniform settings.
+  // TERRAIN TEXTURE LOADING
+  let loadingManager = new THREE.LoadingManager( function () {
+    terrain.visible = true;
+  });
+  let textureLoader = new THREE.TextureLoader( loadingManager );
   let diffuseTexture1 = textureLoader.load( terrainDiffuseTexture1URL );
   let diffuseTexture2 = textureLoader.load( terrainDiffuseTexture2URL );
   let detailTexture = textureLoader.load( terrainDetailTextureURL );
   diffuseTexture1.wrapS = diffuseTexture1.wrapT = THREE.RepeatWrapping;
   diffuseTexture2.wrapS = diffuseTexture2.wrapT = THREE.RepeatWrapping;
   detailTexture.wrapS = detailTexture.wrapT = THREE.RepeatWrapping;
+
+  // TERRAIN TEXTURE UNIFORMS
   let terrainUniforms = THREE.UniformsUtils.clone( ShaderTerrain[ "terrain" ].uniforms );
   terrainUniforms[ 'tNormal' ].value = normalMap.texture;
   terrainUniforms[ 'uNormalScale' ].value = terrainUniformsNormalScale;
@@ -133,39 +142,35 @@ export default function Terrain(props) {
   terrainUniforms[ 'shininess' ].value = terrainUniformsShininess;
   terrainUniforms[ 'uDisplacementScale' ].value = terrainUniformsDisplacementScale;
   terrainUniforms[ 'uRepeatOverlay' ].value.set( terrainUniformsRepeat, terrainUniformsRepeat );
-  let shaderParams = [
+
+  // TERRAIN MATERIALS
+  let materialParams = [
     [ 'heightmap',  SHADERS[ 'fragmentShaderNoise' ],   SHADERS[ 'vertexShader' ], heightMapUniforms, false ],
     [ 'normal',   NormalMapShader.fragmentShader, NormalMapShader.vertexShader, normalUniforms, false ],
     [ 'terrain',  ShaderTerrain[ "terrain" ].fragmentShader, ShaderTerrain[ "terrain" ].vertexShader, terrainUniforms, true ]
     ];
-  // build up shaders
-  let shaderLib = {};
-  for ( var i = 0; i < shaderParams.length; i ++ ) {
-    shaderLib[ shaderParams[ i ][ 0 ] ] = new THREE.ShaderMaterial( {
-      uniforms: shaderParams[ i ][ 3 ],
-      vertexShader: shaderParams[ i ][ 2 ],
-      fragmentShader: shaderParams[ i ][ 1 ],
-      lights: shaderParams[ i ][ 4 ],
+  
+  let materials = {};
+  for ( var i = 0; i < materialParams.length; i ++ ) {
+    materials[ materialParams[ i ][ 0 ] ] = new THREE.ShaderMaterial( {
+      uniforms: materialParams[ i ][ 3 ],
+      vertexShader: materialParams[ i ][ 2 ],
+      fragmentShader: materialParams[ i ][ 1 ],
+      lights: materialParams[ i ][ 4 ],
       fog: true
       } 
     );
   }
 
-  let plane = new THREE.PlaneBufferGeometry( size.width, size.height );
-  let terrainQuadTarget = new THREE.Mesh( plane, new THREE.MeshBasicMaterial( { color: terrainQuadTargetMeshHex } ) );
-  terrainQuadTarget.position.z = terrainQuadTargetPositionZ;
-  sceneRenderTarget.add( terrainQuadTarget );
-
   // TERRAIN MESH
   let geometryTerrain = new THREE.PlaneBufferGeometry(terrainSize, terrainSize, terrainResolution, terrainResolution );
   BufferGeometryUtils.computeTangents( geometryTerrain );
-
-  let terrain = new THREE.Mesh( geometryTerrain, shaderLib[ 'terrain' ] );
+  let terrain = new THREE.Mesh( geometryTerrain, materials[ 'terrain' ] );
   terrain.position.set(...terrainPosition);
   terrain.rotation.x = terrainRotationX;
   terrain.visible = false;
 
-
+  // ANIMATIONS
   let animDelta = 0, animVal = 0;
   useFrame(()=> {
     let dt = clock.getDelta();
@@ -182,16 +187,16 @@ export default function Terrain(props) {
       animDelta = THREE.Math.clamp( animDelta + animHeightMapTimeFactor * animDeltaDir, ...animHeightMapTimeClamp);
       heightMapUniforms[ 'time' ].value += dt * animDelta * Math.tan(dt);
       heightMapUniforms[ 'offset' ].value.x += dt * animHeightMapOffsetFactor;
-      terrainQuadTarget.material = shaderLib[ 'heightmap' ]
+      terrainQuadTarget.material = materials[ 'heightmap' ]
       gl.setRenderTarget(renderTarget);
       gl.render( sceneRenderTarget, cameraOrtho, heightMap );
-      gl.setRenderTarget(null);
+      gl.setRenderTarget(null); // TODO: FIGURE OUT WARNING
 
       // render terrain normal map
       gl.setRenderTarget(renderTarget)
-      terrainQuadTarget.material = shaderLib[ 'normal' ];
+      terrainQuadTarget.material = materials[ 'normal' ];
       gl.render( sceneRenderTarget, cameraOrtho, normalMap );
-      gl.setRenderTarget(null);
+      gl.setRenderTarget(null);  // TODO: FIGURE OUT WARNING
     }
   });
 
