@@ -10,17 +10,22 @@ import { assetPathJV } from "./utils";
 
 export default function Terrain(props) {
   const {
+
+    // render target settings
     cameraOrthoPosition = [0, 40, 50],
-    cameraOrthoNear = -10000,
-    cameraOrthoFar = 10000,
+    cameraOrthoNear = -1000,
+    cameraOrthoFar = 1000,
     specularMapSize = 1024,
     heightMapUniformsTime = 0.0,
     heightMapUniformsScale = 0.7,
     heightMapUniformsOffset = -1.3,
     normalUniformsHeight = 0.1,
-    terrainPosition = [0, 0, 0],
-    terrainSize = 4000,
+
+    // terrain settings
+    terrainPosition = [0, -100, -200],
+    terrainSize = 8000,
     terrainResolution = 512,
+    terrainRotationX = -Math.PI / 2,
     terrainUniformsNormalScale = 0.25,
     terrainUniformsEnableDiffuse1 = true,
     terrainUniformsEnableDiffuse2 = true,
@@ -39,7 +44,8 @@ export default function Terrain(props) {
     terrainDetailTextureURL = assetPathJV(
       "textures/terrain/TexturesCom_DesertSand3_2x2_512_normal.jpg"
     ),
-    terrainRotationX = -Math.PI / 2,
+
+    // Animation Settings
     dDir = 1,
     dDeltaDir = 1,
     dHeightMapTimeFactor = 0.00075,
@@ -64,7 +70,20 @@ export default function Terrain(props) {
     }
   } = props;
 
+  // 
   const { scene, camera, gl, size } = useThree();
+ 
+  // LIGHTS
+  // TODO: REMOVE THESE
+  scene.add(new THREE.AmbientLight(0x111111, 5));
+  let directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
+  directionalLight.position.set(500, 2000, 0);
+  scene.add(directionalLight);
+  let pointLight = new THREE.PointLight(0xff4400, 1.5);
+  pointLight.position.set(0, 0, 0);
+  scene.add(pointLight);
+  
+  
   let clock = new THREE.Clock();
   gl.setClearColor(0x000000, 0);
   gl.setPixelRatio(window.devicePixelRatio);
@@ -93,15 +112,6 @@ export default function Terrain(props) {
   terrainQuadTarget.position.z = terrainQuadTargetPositionZ;
   sceneRenderTarget.add(terrainQuadTarget);
 
-  // LIGHTS
-  // TODO: REMOVE THESE
-  scene.add(new THREE.AmbientLight(0x111111, 5));
-  let directionalLight = new THREE.DirectionalLight(0xffffff, 1.15);
-  directionalLight.position.set(500, 2000, 0);
-  scene.add(directionalLight);
-  let pointLight = new THREE.PointLight(0xff4400, 1.5);
-  pointLight.position.set(0, 0, 0);
-  scene.add(pointLight);
 
   // HEIGHT MAP TARGET
   let heightMap = new THREE.WebGLRenderTarget(

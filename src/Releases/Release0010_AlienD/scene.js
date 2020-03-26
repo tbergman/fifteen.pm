@@ -1,13 +1,11 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { FixedLights } from "./lights";
-import { useThree, useFrame } from "react-three-fiber";
+import { useFrame } from "react-three-fiber";
 import FrogCube from "./FrogCube";
 import useAudioPlayer from "../../Common/UI/Player/hooks/useAudioPlayer";
 import Terrain from './Terrain';
 
 export function Scene({}) {
-  const { scene, camera } = useThree();
-  camera.position.set(0, 260, 313);
   // using a filter for left and right arrow press
   const [freqArray, setFreqArray] = useState();
   const { audioStream, isPlaying, bpm, currentTrackName } = useAudioPlayer();

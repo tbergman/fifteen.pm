@@ -15,13 +15,14 @@ export default function FrogCube(props) {
     amount = 2,
     currentTrackName,
     bpm,
-    scale = 0.12,
-    xOffset = 0,
-    yOffset = -0,
-    zOffset = 0.5,
-    xFactor = 7,
-    yFactor = 7,
-    zFactor = 7,
+    scale = 1,
+    xOffset = 100,
+    yOffset = 100,
+    zOffset = 100,
+    xFactor = 125,
+    yFactor = 125,
+    zFactor = 125,
+    position = [-1000, 800, 0],
   } = props;
 
   // load in assets
@@ -42,14 +43,13 @@ export default function FrogCube(props) {
     // Audio
     const listener = new THREE.AudioListener();
     camera.add(listener);
-
     const sound = new THREE.PositionalAudio(listener);
     const audioLoader = new THREE.AudioLoader();
     audioLoader.load(C.FROG_SOUNDS_URL, buffer => {
-      sound.setBuffer(buffer);
-      sound.minDistance = C.FROG_SOUNDS_ROLLOFF_MIN_DISTANCE;
-      sound.maxDistance = C.FROG_SOUNDS_ROLLOFF_MAX_DISTANCE;
-      sound.rolloffFactor = C.FROG_SOUNDS_ROLLOFF_FACTOR;
+      sound.setBuffer(buffer); 
+      sound.setRefDistance(C.FROG_SOUNDS_ROLLOFF_MIN_DISTANCE)
+      sound.setMaxDistance(C.FROG_SOUNDS_ROLLOFF_MAX_DISTANCE);
+      sound.setRolloffFactor(C.FROG_SOUNDS_ROLLOFF_FACTOR)
     });
     return sound;
   }, [camera]);
@@ -140,7 +140,6 @@ export default function FrogCube(props) {
             }
             // choose a random sound / note / level
             frogSounds.detune = choose(C.FROG_SOUNDS_NOTES);
-            frogSounds.volume = choose(C.FROG_SOUNDS_VOLUMES);
             let soundOffset = choose(soundOffsets);
             if (soundOffset[0] !== Infinity) {
               frogSounds.offset = soundOffset[0];
