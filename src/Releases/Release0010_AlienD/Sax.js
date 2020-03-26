@@ -6,7 +6,7 @@ import * as C from "./constants";
 import {choose, genSoundOffsets} from "./utils"
 
 export default function Sax(props) {
-  const { scale = 0.5, bpm } = props;
+  const { scale = 10, position=[0,1000,-110], bpm, rotation=[] } = props;
   const { camera, mouse, clock } = useThree();
   let raycaster = new THREE.Raycaster();
 
@@ -26,6 +26,9 @@ export default function Sax(props) {
         mesh.geometry.computeVertexNormals();
       }
     });
+    mesh.position.set(...position)
+    mesh.rotation.y = Math.PI / 2
+    mesh.rotation.z = -0.05
     return mesh;
   }, [gltf]);
 
@@ -82,5 +85,5 @@ export default function Sax(props) {
     }
   });
 
-  return <primitive name="Sax" object={mesh} position={[0,0,0]} />;
+  return <primitive name="Sax" object={mesh}  />;
 }

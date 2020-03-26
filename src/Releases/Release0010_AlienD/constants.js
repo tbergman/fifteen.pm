@@ -7,7 +7,7 @@ export const FROG_SOUNDS_NUM_SAMPLES = 16;
 export const FROG_SOUNDS_BARS_PER_SAMPLE = 16;
 // position audio
 export const FROG_SOUNDS_ROLLOFF_FACTOR = 2;
-export const FROG_SOUNDS_ROLLOFF_MIN_DISTANCE = 100;
+export const FROG_SOUNDS_ROLLOFF_MIN_DISTANCE = 300;
 export const FROG_SOUNDS_ROLLOFF_MAX_DISTANCE = 1500;
 // random notes
 export const FROG_SOUNDS_NOTES = [-500, -300, 300, 700, -700, 900];

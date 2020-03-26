@@ -32,9 +32,9 @@ export default function Terrain(props) {
     terrainUniformsEnableSpecular = true,
     terrainUniformsDiffuseHex = 0xffffff,
     terrainUniformsSpecularHex = 0xffffff,
-    terrainUniformsShininess = 240,
-    terrainUniformsDisplacementScale = 375,
-    terrainUniformsRepeat = 8,
+    terrainUniformsShininess = 1,
+    terrainUniformsDisplacementScale = 600,
+    terrainUniformsRepeat = 16,
     terrainDiffuseTexture1URL = assetPathJV(
       "textures/terrain/sand-big-saturated-purple.jpg"
     ),

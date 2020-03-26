@@ -21,7 +21,7 @@ export default function FrogCube(props) {
     xFactor = 102,
     yFactor = 102,
     zFactor = 102,
-    position = [-601, 501, -100],
+    position = [-601, 666, -110],
   } = props;
 
   // load in assets
@@ -115,6 +115,7 @@ export default function FrogCube(props) {
   let lastInstanceId = undefined;
 
   useFrame(() => {
+    console.log(camera.position)
     if (frogCubeMesh) {
       if (soundOffsets && frogSounds) {
         raycaster.setFromCamera(mouse, camera);
