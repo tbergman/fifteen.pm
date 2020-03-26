@@ -3,7 +3,7 @@ import { CONTENT } from "../../Content";
 import UI from "../../Common/UI/UI";
 import AlienDCanvas from "./Canvas";
 
-// // Uncomment for non-functional version
+// // Uncomment for class version
 // import { renderScene } from './sceneJV';
 // export default class Release extends Component {
 
@@ -19,7 +19,7 @@ import AlienDCanvas from "./Canvas";
 //     );
 // };
 
-// functional version
+// Functional version
 export default function Release({}) {
   const [content, setContent] = useState(false);
 
