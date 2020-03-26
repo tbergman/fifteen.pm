@@ -1,15 +1,13 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
 import * as THREE from 'three';
 import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { loadGLTF } from '../Utils/Loaders';
-import { assetPath } from "../Utils/assets";
+import { loadGLTF } from '../Common/Utils/LegacyLoaders';
+import { assetPath } from "../Common/Utils/assets";
 import { OrbitControls } from 'three-full';
-import { initRockMaterial } from '../Utils/materials.js';
+import { initRockMaterial } from '../Common/Materials/legacyMaterials.js';
 import { Water } from 'three/examples/jsm/objects/Water2';
-import UI from '../UI/UI';
-import { CONTENT } from '../Content'
 
 export class HomeDefaultCanvas extends PureComponent {
 
@@ -66,7 +64,7 @@ export class HomeDefaultCanvas extends PureComponent {
         const manager = new THREE.LoadingManager();
         const gltfLoader = new GLTFLoader(manager);
         const textureLoader = new THREE.TextureLoader();
-        const rockMaterial = initRockMaterial(textureLoader, 0xFFAFFF);
+        const rockMaterial = initRockMaterial(textureLoader, 0xFFAFFF, {displacementScale: 1.5});
         rockMaterial.displacementBias = -30;
         const name = "forest";
         // add rocks

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CONTENT } from '../../Content';
-import useAudioPlayer from '../../UI/Player/hooks/useAudioPlayer';
-import UI from '../../UI/UI';
+import useAudioPlayer from '../../Common/UI/Player/hooks/useAudioPlayer';
+import UI from '../../Common/UI/UI';
 import JavonntteCanvas from './Canvas';
 import * as C from './constants';
 

@@ -12,7 +12,7 @@ import {
 import '../Releases/Release.css';
 import debounce from 'lodash/debounce';
 import './HomeMobile.css';
-import { assetPath } from "../Utils/assets";
+import { assetPath } from "../Common/Utils/assets";
 
 const MARGIN = 0;
 const SCREEN_WIDTH = window.innerWidth;

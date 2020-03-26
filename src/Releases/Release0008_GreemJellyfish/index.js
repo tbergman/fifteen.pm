@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { CONTENT } from "../../Content";
-import { VideoPlayerProvider } from '../../UI/Player/VideoPlayerContext';
-import UI from '../../UI/UI';
+import { VideoPlayerProvider } from '../../Common/UI/Player/VideoPlayerContext';
+import UI from '../../Common/UI/UI';
 import Canvas from './Canvas';
 
 export default function Release0008_GreemJellyFish({ }) {

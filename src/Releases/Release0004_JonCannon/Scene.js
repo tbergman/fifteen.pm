@@ -2,9 +2,9 @@ import debounce from "lodash/debounce";
 import React, { Component, Fragment } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { isMobile } from "../../Utils/BrowserDetection";
+import { isMobile } from "../../Common/Utils/BrowserDetection";
 import { FirstPersonControls } from "three/examples/jsm/controls/FirstPersonControls";
-import { loadGLTF, loadImage, loadVideo } from "../../Utils/Loaders";
+import { loadGLTF, loadImage, loadVideo } from "../../Common/Utils/LegacyLoaders";
 import * as C from "./constants";
 import "./scene.css";
 import {

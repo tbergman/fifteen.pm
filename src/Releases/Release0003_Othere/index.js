@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { CONTENT } from "../../Content";
-import { AudioPlayerProvider } from '../../UI/Player/AudioPlayerContext';
-import UI from '../../UI/UI';
+import { AudioPlayerProvider } from '../../Common/UI/Player/AudioPlayerContext';
+import UI from '../../Common/UI/UI';
 import Canvas from './Canvas';
 import '../Release.css';
 

@@ -1,5 +1,5 @@
 import React, { Component, Suspense } from 'react';
-import { assetPath } from "../../Utils/assets";
+import { assetPath } from "../../Common/Utils/assets";
 import Unity, { UnityContent } from "react-unity-webgl";
 
 

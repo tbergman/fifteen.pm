@@ -1,13 +1,12 @@
 import React, { useContext, useMemo, useEffect } from 'react';
 import * as THREE from 'three';
-import { randomPointsOnSphere, randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
+import { randomPointsOnSphere, randomArrayVal, selectNRandomFromArray } from '../../../Common/Utils/random';
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
 import BuildingInstances from './BuildingInstances';
 import { BuildingsContext } from './BuildingsContext';
 import { generateTilesets } from './tiles';
-import { faceCentroid } from '../../../Utils/geometry';
-import NoiseSphereGeometry from '../../../Utils/NoiseSphere';
+import NoiseSphereGeometry from '../../../Common/Utils/NoiseSphere';
 
 
 class WorldNeighborhoods {

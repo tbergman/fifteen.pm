@@ -1,19 +1,8 @@
 import React, { useRef } from "react";
-import { Canvas, extend, useThree, useRender } from "react-three-fiber";
-import { AudioPlayerContext } from "../../UI/Player/AudioPlayerContext";
+import { Canvas, extend, useThree, useEffect } from "react-three-fiber";
+import { AudioPlayerContext } from "../../Common/UI/Player/AudioPlayerContext";
 import { Scene } from "./Scene";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-
-extend({ OrbitControls });
-
-const Controls = props => {
-  const { camera, gl } = useThree();
-  const controls = useRef();
-  useRender(() => controls.current && controls.current.update());
-  return (
-    <orbitControls ref={controls} args={[camera, gl.domElement]} {...props} />
-  );
-};
+import { Controls } from "./controls";
 
 export default function AlienDCanvas({}) {
   return (

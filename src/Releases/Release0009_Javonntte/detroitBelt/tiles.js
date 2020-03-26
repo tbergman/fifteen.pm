@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromVertices } from '../../../Utils/geometry';
-import { findNearest, loadKDTree } from '../../../Utils/KdTree';
-import { randomArrayVal, selectNRandomFromArray } from '../../../Utils/random';
+import { subdivideTriangle, triangleCentroid as centroidFromTriangle, triangleCentroidFromVertices as centroidFromPoints, triangleFromVertices } from '../../../Common/Utils/geometry';
+import { findNearest, loadKDTree } from '../../../Common/Utils/KdTree';
+import { randomArrayVal, selectNRandomFromArray } from '../../../Common/Utils/random';
 import { createInstance } from './instances';
-import { generateTiles } from '../../../Utils/SphereTiles';
+import { generateTiles } from '../../../Common/Utils/SphereTiles';
 
 function subdivide6(triangleComponents, centroid) {
     return [

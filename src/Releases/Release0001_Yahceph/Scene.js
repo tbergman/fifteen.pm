@@ -1,7 +1,7 @@
 /* eslint import/no-webpack-loader-syntax: off */
-import heightMapFragmentShader from '!raw-loader!glslify-loader!../../Shaders/water1Height.glsl';
+import heightMapFragmentShader from '!raw-loader!glslify-loader!../../Common/Shaders/water1Height.glsl';
 /* eslint import/no-webpack-loader-syntax: off */
-import waterVertexShader from '!raw-loader!glslify-loader!../../Shaders/water1Vertex.glsl';
+import waterVertexShader from '!raw-loader!glslify-loader!../../Common/Shaders/water1Vertex.glsl';
 import debounce from 'lodash/debounce';
 import React, { Fragment, PureComponent } from 'react';
 import * as THREE from "three";

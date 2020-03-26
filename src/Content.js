@@ -6,22 +6,16 @@ import {
   ArrowKeys,
   NoPhone,
   SlowLoad
-} from "./UI/Controls/Icons";
+} from "./Common/UI/Controls/Icons";
 
 import * as THREE from 'three';
-import { assetPath } from "./Utils/assets";
-import { multiSourceVideo } from './Utils/Video/paths.js';
-
-export const LOGO_SVG_FILL_COLOR_BY_INDEX = {
-  "/1": "#FF69B4",
-  "/3": "red"
-}
-
-export const TOTAL_RELEASES = 10;
+import { multiSourceVideo } from './Common/Video/paths.js';
 
 export const CONTENT = {
   "/": {
     home: true, // TODO rm
+    // TODO punting on a cleaner solution to handling circular navigation arrows. This just needs to be defined in first and last navigation steps (so, home, and latest release.)
+    lastIdx: 9,
     message:
       "fifteen.pm invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
     colors: {
@@ -366,8 +360,9 @@ export const CONTENT = {
   },
   "/9": {
     artist: "JAVONNTTE",
+    lastIdx: 9,
     message: "Detroit Asteroid Belt 2120: All sectors go wild for the Earthy tones of house master Javonntte after his 'City Life' series surfaces off some de-bricked drives in the archives.",
-    purchaseLink: "TODO",
+    purchaseLink: "https://fifteenpm.bandcamp.com/album/city-life",
     tracks: [
       {
         name: "City Life",

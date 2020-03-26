@@ -3,7 +3,7 @@ import { FixedLights } from "./lights";
 import { useThree, useFrame } from "react-three-fiber";
 import FrogCube from "./FrogCube";
 import Sky from "./Sky";
-import useAudioPlayer from "../../UI/Player/hooks/useAudioPlayer";
+import useAudioPlayer from "../../Common/UI/Player/hooks/useAudioPlayer";
 
 export function Scene({}) {
   const { scene, camera } = useThree();

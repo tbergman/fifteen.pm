@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CONTENT } from "../../Content";
-import UI from "../../UI/UI";
+import UI from "../../Common/UI/UI";
 import AlienDCanvas from "./Canvas";
 
 export default function Release({}) {

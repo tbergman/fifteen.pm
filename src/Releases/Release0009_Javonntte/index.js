@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { CONTENT } from '../../Content';
-import { AudioPlayerProvider } from '../../UI/Player/AudioPlayerContext';
+import { AudioPlayerProvider } from '../../Common/UI/Player/AudioPlayerContext';
 import Release from './Release';
 import "./index.css";
 

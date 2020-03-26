@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState, useContext } from 'react';
 import { useFrame, useResource } from 'react-three-fiber';
 import * as THREE from 'three';
-import useAudioPlayer from '../../../UI/Player/hooks/useAudioPlayer';
+import useAudioPlayer from '../../../Common/UI/Player/hooks/useAudioPlayer';
 import { MaterialsContext } from '../MaterialsContext';
 import * as C from '../constants';
 
