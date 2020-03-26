@@ -40,16 +40,16 @@ export default function Terrain(props) {
       "textures/terrain/TexturesCom_DesertSand3_2x2_512_normal.jpg"
     ),
     terrainRotationX = -Math.PI / 2,
-    animDir = 1,
-    animDeltaDir = 1,
-    animHeightMapTimeFactor = 0.00075,
-    animHeightMapTimeClamp = [0, 0.05],
-    animTerrainOffsetFactor = 4,
-    animNormalScaleFactor = 0.5,
-    animUniformNormalLinearScale = [0, 1, 0.6, 3.5],
-    animNormalScaleRange = [0.1, 0.8],
-    animHeightMapOffsetFactor = 0.05,
-    animUniformNormalScale = 0.25,
+    dDir = 1,
+    dDeltaDir = 1,
+    dHeightMapTimeFactor = 0.00075,
+    dHeightMapTimeClamp = [0, 0.05],
+    dTerrainOffsetFactor = 4,
+    dNormalScaleFactor = 0.5,
+    dNormalLinearScale = [0, 1, 0.6, 3.5],
+    dScaleRange = [0.1, 0.8],
+    dHeightMapOffsetFactor = 0.05,
+    dNormalScale = 0.25,
     terrainQuadTargetPositionZ = -500,
     terrainQuadTargetMeshHex = 0x000000,
     renderTargetX = 256,
@@ -228,36 +228,34 @@ export default function Terrain(props) {
   terrain.visible = false;
 
   // ANIMATIONS
-  let animDelta = 0,
-    animVal = 0;
+  let dDelta = 0,
+    dVal = 0;
   useFrame(() => {
     let dt = clock.getDelta();
     if (terrain.visible) {
       // update terrain uniform values
-      animVal = THREE.Math.clamp(
-        animVal + animNormalScaleFactor * dt * animDir,
-        ...animNormalScaleRange
+      dVal = THREE.Math.clamp(
+        dVal + dNormalScaleFactor * dt * dDir,
+        ...dScaleRange
       );
-      let valNorm =
-        (animVal - animNormalScaleRange[0]) /
-        (animNormalScaleRange[1] - animNormalScaleRange[0]);
+      let valNorm = (dVal - dScaleRange[0]) / (dScaleRange[1] - dScaleRange[0]);
       terrainUniforms["uNormalScale"].value = THREE.Math.mapLinear(
         valNorm,
-        ...animUniformNormalLinearScale
+        ...dNormalLinearScale
       );
       terrainUniforms["uOffset"].value.x =
-        animTerrainOffsetFactor * heightMapUniforms["offset"].value.x;
-      terrainUniforms["uNormalScale"].value = animUniformNormalScale;
+        dTerrainOffsetFactor * heightMapUniforms["offset"].value.x;
+      terrainUniforms["uNormalScale"].value = dNormalScale;
       terrainUniforms["shininess"].value =
         terrainUniforms["shininess"].value * Math.sin(dt);
 
       // render terrain height map
-      animDelta = THREE.Math.clamp(
-        animDelta + animHeightMapTimeFactor * animDeltaDir,
-        ...animHeightMapTimeClamp
+      dDelta = THREE.Math.clamp(
+        dDelta + dHeightMapTimeFactor * dDeltaDir,
+        ...dHeightMapTimeClamp
       );
-      heightMapUniforms["time"].value += dt * animDelta * Math.tan(dt);
-      heightMapUniforms["offset"].value.x += dt * animHeightMapOffsetFactor;
+      heightMapUniforms["time"].value += dt * dDelta * Math.tan(dt);
+      heightMapUniforms["offset"].value.x += dt * dHeightMapOffsetFactor;
       terrainQuadTarget.material = materials["heightmap"];
       gl.setRenderTarget(renderTarget);
       gl.render(sceneRenderTarget, cameraOrtho, heightMap);
