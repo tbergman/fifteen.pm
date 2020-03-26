@@ -8,6 +8,7 @@ import Terrain from './Terrain';
 
 export function Scene({}) {
   const { scene, camera } = useThree();
+  camera.position.set(0, 260, 313);
   // using a filter for left and right arrow press
   const [freqArray, setFreqArray] = useState();
   const { audioStream, isPlaying, bpm, currentTrackName } = useAudioPlayer();
@@ -27,7 +28,6 @@ export function Scene({}) {
   return (
     <>
       <Suspense fallback={null}>
-        <Sky/>
         <FrogCube
           amount={5}
           bpm={bpm}

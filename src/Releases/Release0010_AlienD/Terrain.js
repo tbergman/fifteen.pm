@@ -18,7 +18,8 @@ import { assetPathJV } from './utils';
 let animDelta = 0, animDeltaDir = 1, lightVal = 0, lightDir = 1;
 
 export default function Terrain(props) {
-  const {scene, camera, gl, size, clock} = useThree();
+  const {scene, camera, gl, size} = useThree();
+  let clock = new THREE.Clock();
   gl.setClearColor( 0x000000, 0 );
   gl.setPixelRatio( window.devicePixelRatio );
   gl.setSize( size.width, size.height );
@@ -29,7 +30,7 @@ export default function Terrain(props) {
   });
 
   // SCENE (RENDER TARGET)
-  const renderTarget = new THREE.WebGLRenderTarget(size.width, size.height);
+  const renderTarget = new THREE.WebGLRenderTarget(size.width, size.width);
   let sceneRenderTarget = new THREE.Scene();
   let cameraOrtho = new THREE.OrthographicCamera( size.width / - 2, size.width / 2, size.height / 2, size.height / - 2, - 10000, 10000 );
   cameraOrtho.position.z = 50;
@@ -135,21 +136,7 @@ export default function Terrain(props) {
   // return [terrain, shaderLib];
   // })
 
-  // UNIVERSE
-  const backgroundImage = loadImage({
-    geometry: new THREE.SphereBufferGeometry(3000, 32, 32),
-    url: assetPathJV('images/background-okeefe-edited-long.jpg'),
-    name: 'background',
-    position: [ -1262, 260, 313],
-    invert: true,
-    rotateY: 180,
-    transparent: true,
-    opacity: 0.1,
-    scale: 10
-  })
-  backgroundImage.material.map.repeat.set(1, 1);
-  scene.add( terrain );
-  scene.add( backgroundImage );
+  // scene.add( terrain );
 
   let fLow = 0.1, fHigh = 0.8;
   // terrain animation
@@ -159,22 +146,20 @@ export default function Terrain(props) {
       lightVal = THREE.Math.clamp( lightVal + 0.5 * delta * lightDir, fLow, fHigh );
       let valNorm = ( lightVal - fLow ) / ( fHigh - fLow );
       uniformsTerrain[ 'uNormalScale' ].value = THREE.Math.mapLinear( valNorm, 0, 1, 0.6, 3.5 );
-      if ( updateNoise ) {
-        animDelta = THREE.Math.clamp( animDelta + 0.00075 * animDeltaDir, 0, 0.05 );
-        uniformsNoise[ 'time' ].value += delta * animDelta * Math.tan(delta);
-        uniformsNoise[ 'offset' ].value.x += delta * 0.05;
-        uniformsTerrain[ 'uOffset' ].value.x = 4 * uniformsNoise[ 'offset' ].value.x;
-        uniformsTerrain[ 'uNormalScale' ].value = Math.random();
-        uniformsTerrain[ 'shininess' ].value = 240 *  Math.sin(delta);
-        quadTarget.material = shaderLib[ 'heightmap' ]
-        gl.setRenderTarget(renderTarget);
-        gl.render( sceneRenderTarget, cameraOrtho, heightMap, true );
-        quadTarget.material = shaderLib[ 'normal' ];
-        gl.render( sceneRenderTarget, cameraOrtho, normalMap, true );
-        gl.setRenderTarget(null);
-      }
+      animDelta = THREE.Math.clamp( animDelta + 0.00075 * animDeltaDir, 0, 0.05 );
+      uniformsNoise[ 'time' ].value += delta * animDelta * Math.tan(delta);
+      uniformsNoise[ 'offset' ].value.x += delta * 0.05;
+      uniformsTerrain[ 'uOffset' ].value.x = 4 * uniformsNoise[ 'offset' ].value.x;
+      uniformsTerrain[ 'uNormalScale' ].value = Math.random();
+      uniformsTerrain[ 'shininess' ].value = 240 *  Math.sin(delta);
+      quadTarget.material = shaderLib[ 'heightmap' ]
+      gl.setRenderTarget(renderTarget);
+      gl.render( sceneRenderTarget, cameraOrtho, heightMap, true );
+      quadTarget.material = shaderLib[ 'normal' ];
+      gl.render( sceneRenderTarget, cameraOrtho, normalMap, true );
+      gl.setRenderTarget(null);
     }
   });
 
-  return <></>;
+  return <primitive object={terrain}/>;
 }
