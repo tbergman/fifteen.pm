@@ -2,6 +2,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { FixedLights } from "./lights";
 import { useFrame } from "react-three-fiber";
 import FrogCube from "./FrogCube";
+import Sax from "./Sax";
 import useAudioPlayer from "../../Common/UI/Player/hooks/useAudioPlayer";
 import Terrain from './Terrain';
 
@@ -32,6 +33,7 @@ export function Scene({}) {
           freqArray={freqArray}
           currentTrackName={currentTrackName}
         />
+        <Sax />
         <Terrain/>
       </Suspense>
     </>

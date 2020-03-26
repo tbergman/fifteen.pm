@@ -22,8 +22,8 @@ export default function Terrain(props) {
     normalUniformsHeight = 0.1,
 
     // terrain settings
-    terrainPosition = [0, -100, -200],
-    terrainSize = 8000,
+    terrainPosition = [-100, -520, -250],
+    terrainSize = 16000,
     terrainResolution = 512,
     terrainRotationX = -Math.PI / 2,
     terrainUniformsNormalScale = 0.25,
@@ -34,7 +34,7 @@ export default function Terrain(props) {
     terrainUniformsSpecularHex = 0xffffff,
     terrainUniformsShininess = 240,
     terrainUniformsDisplacementScale = 375,
-    terrainUniformsRepeat = 4,
+    terrainUniformsRepeat = 8,
     terrainDiffuseTexture1URL = assetPathJV(
       "textures/terrain/sand-big-saturated-purple.jpg"
     ),
@@ -233,7 +233,6 @@ export default function Terrain(props) {
   );
   BufferGeometryUtils.computeTangents(geometryTerrain);
   let terrain = new THREE.Mesh(geometryTerrain, materials["terrain"]);
-  terrain.position.set(...terrainPosition);
   terrain.rotation.x = terrainRotationX;
   terrain.visible = false;
 
@@ -279,5 +278,5 @@ export default function Terrain(props) {
     }
   });
 
-  return <primitive object={terrain} />;
+  return <primitive object={terrain} position={terrainPosition} />;
 }

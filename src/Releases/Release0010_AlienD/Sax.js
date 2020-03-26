@@ -7,15 +7,12 @@ import {choose, genSoundOffsets} from "./utils"
 
 export default function Sax(props) {
   const { scale = 0.5, bpm } = props;
-  // Setup
+  const { camera, mouse, clock } = useThree();
   let raycaster = new THREE.Raycaster();
 
-  // load in assets
+  // load in the saxophone
 
   const gltf = useLoader(GLTFLoader, C.SAX_OBJECT_URL);
-  const { camera, mouse, clock } = useThree();
-
-  // configure the geometry
   const mesh = useMemo(() => {
     if (!gltf) {
       return;
@@ -32,7 +29,6 @@ export default function Sax(props) {
     return mesh;
   }, [gltf]);
 
-
   const saxSounds = useMemo(() => {
     if (!camera) {
       return;
@@ -45,9 +41,9 @@ export default function Sax(props) {
     const audioLoader = new THREE.AudioLoader();
     audioLoader.load(C.SAX_SOUNDS_URL, buffer => {
       sound.setBuffer(buffer);
-      sound.minDistance = C.SAX_SOUNDS_ROLLOFF_MIN_DISTANCE;
-      sound.maxDistance = C.SAX_SOUNDS_ROLLOFF_MAX_DISTANCE;
-      sound.rolloffFactor = C.SAX_SOUNDS_ROLLOFF_FACTOR;
+      sound.setRefDistance(C.SAX_SOUNDS_ROLLOFF_MIN_DISTANCE);
+      sound.setMaxDistance(C.SAX_SOUNDS_ROLLOFF_MAX_DISTANCE);
+      sound.setRolloffFactor(C.SAX_SOUNDS_ROLLOFF_FACTOR);
     });
     return sound;
   }, [camera]);
@@ -60,6 +56,8 @@ export default function Sax(props) {
   }, [bpm]);
 
   let startCycle = clock.getElapsedTime();
+
+  // Sound Animation
   useFrame(() => {
     if (mesh && saxSounds) {
       let now = clock.getElapsedTime();
@@ -84,6 +82,5 @@ export default function Sax(props) {
     }
   });
 
-
-  return <primitive name="Sax" object={mesh} position={0,0,0} />;
+  return <primitive name="Sax" object={mesh} position={[0,0,0]} />;
 }

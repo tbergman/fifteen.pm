@@ -13,16 +13,15 @@ export default function FrogCube(props) {
   const { camera, mouse } = useThree();
   let {
     amount = 2,
-    currentTrackName,
     bpm,
-    scale = 1,
-    xOffset = 100,
-    yOffset = 100,
-    zOffset = 100,
-    xFactor = 125,
-    yFactor = 125,
-    zFactor = 125,
-    position = [-1000, 800, 0],
+    scale = 1.42,
+    xOffset = 63,
+    yOffset = 63,
+    zOffset = 63,
+    xFactor = 102,
+    yFactor = 102,
+    zFactor = 102,
+    position = [-601, 501, -100],
   } = props;
 
   // load in assets
@@ -32,9 +31,6 @@ export default function FrogCube(props) {
     dracoLoader.setDecoderPath("/draco-gltf/");
     loader.setDRACOLoader(dracoLoader);
   });
-
-  // const gltf = useLoader(GLTFLoader, C.SAX_URL)
-
 
   const frogSounds = useMemo(() => {
     if (!camera) {
@@ -168,7 +164,7 @@ export default function FrogCube(props) {
   const group = useRef();
   return (
     <group ref={group} {...props}>
-      <primitive name="Frogs" object={frogCubeMesh} />
+      <primitive name="Frogs" object={frogCubeMesh} position={position} />
     </group>
   );
 };
