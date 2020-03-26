@@ -89,6 +89,8 @@
     "simplex-noise": "^2.4.0",
     "three": "^0.111.0",
     "three-full": "^17.1.0",
+    "three-gltf-loader": "^1.111.0",
+    "three-obj-mtl-loader": "^1.0.3",
     "three-tween": "^1.0.0"
   },
   "jest": {

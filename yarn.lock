@@ -8551,6 +8551,16 @@ three-full@^17.1.0:
   resolved "https://registry.yarnpkg.com/three-full/-/three-full-17.1.0.tgz#ecab0ff39c76c94530cda50d40fb9d66b2141701"
   integrity sha512-rVZczsQvi3FT7dgbnanwGP0TRXT0DZd25SYqqsc26PJpmAaEb09I/hAWp+i1lI2GzbT0tM/4kSWlkVgj4XycPw==
 
+three-gltf-loader@^1.111.0:
+  version "1.111.0"
+  resolved "https://registry.yarnpkg.com/three-gltf-loader/-/three-gltf-loader-1.111.0.tgz#169a90242199ddaefd6f18f8900d13bd2536e832"
+  integrity sha512-f2d6J5sMEC+dvRcpRjE8g9vqtvpNfnR7bgd+R7Y0dj2mmHwKN5luKe/WYA0Z9+j7mhjla/AC5DGxdXsu8wFhug==
+
+three-obj-mtl-loader@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/three-obj-mtl-loader/-/three-obj-mtl-loader-1.0.3.tgz#2901efd5b77cce29b61733c63f196432ee653667"
+  integrity sha512-0z7BfyG6vYPY9RvxJvL4rq8PbNrF42Kn4zxeqTfeDzJN++2oKbtCQhxHs5vLULnDuCRTEyDFf5TYvO+1vnJ7KQ==
+
 three-tween@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/three-tween/-/three-tween-1.0.0.tgz#da69bbbcccf321bfb8356358c594ceb1f0a7fd66"
