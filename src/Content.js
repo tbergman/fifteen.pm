@@ -413,8 +413,8 @@
     }, 
     "/10": {
         artist: "Alien D",
-        message: "work the cube",
-        purchaseLink: "TODO",
+        message: "Dan Creahan of Sweat Equity takes us on a hypnotic, chugging ride through the digital murk",
+        purchaseLink: "https://fifteenpm.bandcamp.com/album/jazzin-the-cube",
         tracks: [
           {
             name: "Cube Jazz",
@@ -450,12 +450,16 @@
         instructions: [
           {
             icon: MouseMove,
-            text: "click and drag mouse to look around"
+            text: "click and drag mouse to rotate around the cube"
           },
           {
-            icon: TwoFingerScroll,
-            text: "scroll to zoom"
-          }
+            icon: Hover,
+            text: 'mouse over frogs to make noise'
+          },
+          {
+            icon: ArrowKeys,
+            text: 'use arrows to move around'
+          },
         ]
       }
   };

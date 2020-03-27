@@ -9,7 +9,6 @@ import {copy, choose, genSoundOffsets} from "./utils"
 
 export default function FrogCube(props) {
   // Setup
-
   const [frogMovingForward, setFrogMovingForward] = useState(true)
 
   const { camera, mouse } = useThree();
@@ -23,7 +22,7 @@ export default function FrogCube(props) {
     xFactor = 100,
     yFactor = 100,
     zFactor = 100,
-    position = [-600, 530, -100],
+    position = [-600, 530, 0],
   } = props;
 
   // load in assets
@@ -168,8 +167,10 @@ export default function FrogCube(props) {
       }
 
       if (frogCubeMesh.position.x <= C.FROG_CUBE_MIN_X) {
+        console.log('back')
         setFrogMovingForward(false) 
       } else if (frogCubeMesh.position.x >= C.FROG_CUBE_MAX_X) {
+        console.log('fwd')
         setFrogMovingForward(true)
       }
     }

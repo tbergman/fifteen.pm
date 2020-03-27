@@ -5,8 +5,23 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as C from "./constants";
 import {choose, genSoundOffsets} from "./utils"
 
+const rotateAboutPoint = (obj, point, axis, theta, pointIsWorld) => {
+  pointIsWorld = (pointIsWorld === undefined) ? false : pointIsWorld;
+  if (pointIsWorld) {
+    obj.parent.localToWorld(obj.position); // compensate for world coordinate
+  }
+  obj.position.sub(point); // remove the offset
+  obj.position.applyAxisAngle(axis, theta); // rotate the POSITION
+  obj.position.add(point); // re-add the offset
+  if (pointIsWorld) {
+    obj.parent.worldToLocal(obj.position); // undo world coordinates compensation
+  }
+  obj.rotateOnAxis(axis, theta); // rotate the OBJECT
+}
+
+
 export default function Sax(props) {
-  const { scale = 10, position=[0,1000,-110], bpm, rotation=[] } = props;
+  const { scale = 10, position=[0, 1000, 300], bpm, rotation=[] } = props;
   const { camera, mouse, clock } = useThree();
   let raycaster = new THREE.Raycaster();
 
@@ -85,5 +100,22 @@ export default function Sax(props) {
     }
   });
 
+  // Sax Movment 
+  let point = new THREE.Vector3( -1262, 600, 313);
+  let saxOrbitAxis = new THREE.Vector3(0, -1, 0);
+  let saxOrbitTheta = 0.0075;
+  let saxAxis = new THREE.Vector3(1, 0, );
+  useFrame(() => {
+      if (mesh !== undefined) {
+        mesh.rotateOnAxis(saxAxis, 0.01);
+        rotateAboutPoint(
+          mesh,
+          point,    
+          saxOrbitAxis,
+          saxOrbitTheta,
+          true);
+      }
+  })
+  
   return <primitive name="Sax" object={mesh}  />;
 }

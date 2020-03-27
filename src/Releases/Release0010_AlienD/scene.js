@@ -31,7 +31,7 @@ export function Scene({}) {
     <>
       <Suspense fallback={null}>
         <FrogCube
-          amount={4}
+          amount={5}
           bpm={bpm}
           audioStream={audioStream}
           freqArray={freqArray}
