@@ -3,29 +3,26 @@ import { FixedLights } from "./lights";
 import { useFrame } from "react-three-fiber";
 import FrogCube from "./FrogCube";
 import Sax from "./Sax";
+import Sky from "./Sky";
 import useAudioPlayer from "../../Common/UI/Player/hooks/useAudioPlayer";
 import Terrain from './Terrain';
+import { THEMES } from './constants';
 
 export function Scene({}) {
   // using a filter for left and right arrow press
   const [freqArray, setFreqArray] = useState();
-  const { audioStream, isPlaying, bpm, currentTrackName } = useAudioPlayer();
-
+  const { audioStream, isPlaying, bpm, currentTrackName, currentTrackId} = useAudioPlayer();
+  const [theme, setTheme] = useState(THEMES['Frog Shirt']);
   useEffect(() => {
-    if (audioStream && !freqArray) {
-      setFreqArray(new Uint8Array(audioStream.analyser.frequencyBinCount));
+    if (currentTrackName) {
+      setTheme(THEMES[currentTrackName])
     }
-  }, [isPlaying]);
-
-  useFrame(() => {
-    if (audioStream && freqArray) {
-      audioStream.analyser.getByteFrequencyData(freqArray);
-    }
-  });
+  }, [currentTrackName]);
 
   return (
     <>
       <Suspense fallback={null}>
+        <Sky {...theme.sky}/>
         <FrogCube
           amount={5}
           bpm={bpm}
@@ -33,8 +30,8 @@ export function Scene({}) {
           freqArray={freqArray}
           currentTrackName={currentTrackName}
         />
-        <Sax />
-        <Terrain/>
+        {/* <Sax /> */}
+        <Terrain {...theme.terrain}/>
       </Suspense>
     </>
   );

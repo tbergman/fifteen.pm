@@ -36,13 +36,13 @@ export default function Terrain(props) {
     terrainUniformsDisplacementScale = 600,
     terrainUniformsRepeat = 16,
     terrainDiffuseTexture1URL = assetPathJV(
-      "textures/terrain/sand-big-saturated-purple.jpg"
+      "textures/terrain/rug1.jpg"
     ),
     terrainDiffuseTexture2URL = assetPathJV(
-      "textures/terrain/backgrounddetailed6.jpg"
+      "textures/backgrounddetailed6.jpg"
     ),
     terrainDetailTextureURL = assetPathJV(
-      "textures/terrain/TexturesCom_DesertSand3_2x2_512_normal.jpg"
+      "textures/grasslight-big-nm.jpg"
     ),
 
     // Animation Settings
