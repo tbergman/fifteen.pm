@@ -460,6 +460,10 @@
             icon: ArrowKeys,
             text: 'use arrows to move around'
           },
+          {
+            icon: TwoFingerScroll,
+            text: "scroll to zoom"
+          }
         ]
       }
   };
