@@ -26,8 +26,11 @@ export function Controls({ curCamera, ...props }) {
     <orbitControls
       ref={controls}
       args={[curCamera, gl.domElement]}
-      enableKeys={false}
-      enableZoom={true}
+      enableKeys={true}
+      enanbleZoom={false}
+      minPolarAngle={Math.PI / 2.1}
+      maxPolarAngle={ Math.PI /2.5}
+      keyPanSpeed={21.0}
       {...props}
     />
   );

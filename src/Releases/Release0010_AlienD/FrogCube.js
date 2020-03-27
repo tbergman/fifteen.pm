@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import React, { useEffect, useRef, useContext, useMemo } from "react";
+import React, { useEffect, useRef, useContext, useMemo, useState } from "react";
 import { useLoader, useFrame, useThree } from "react-three-fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
@@ -10,18 +10,20 @@ import {copy, choose, genSoundOffsets} from "./utils"
 export default function FrogCube(props) {
   // Setup
 
+  const [frogMovingForward, setFrogMovingForward] = useState(true)
+
   const { camera, mouse } = useThree();
   let {
     amount = 2,
     bpm,
-    scale = 1.42,
-    xOffset = 63,
-    yOffset = 63,
-    zOffset = 63,
-    xFactor = 102,
-    yFactor = 102,
-    zFactor = 102,
-    position = [-601, 666, -110],
+    scale = 1.44,
+    xOffset = 75,
+    yOffset = 75,
+    zOffset = 75,
+    xFactor = 100,
+    yFactor = 100,
+    zFactor = 100,
+    position = [-600, 530, -100],
   } = props;
 
   // load in assets
@@ -100,6 +102,7 @@ export default function FrogCube(props) {
       }
     }
     frogMesh.rotation.x = THREE.Math.degToRad(180);
+    mesh.position.set(...position);
     return mesh;
   }, [frogMesh, amount]);
 
@@ -158,13 +161,24 @@ export default function FrogCube(props) {
       // frogCubeMesh.rotation.y = Math.sin(time / 2);
       frogCubeMesh.rotation.z = Math.sin(time / 3);
       frogCubeMesh.instanceMatrix.needsUpdate = true;
+      if (frogMovingForward) {
+        frogCubeMesh.position.x  -= C.FROG_CUBE_SPEED;
+      } else {
+        frogCubeMesh.position.x += C.FROG_CUBE_SPEED
+      }
+
+      if (frogCubeMesh.position.x <= C.FROG_CUBE_MIN_X) {
+        setFrogMovingForward(false) 
+      } else if (frogCubeMesh.position.x >= C.FROG_CUBE_MAX_X) {
+        setFrogMovingForward(true)
+      }
     }
   });
 
   const group = useRef();
   return (
     <group ref={group} {...props}>
-      <primitive name="Frogs" object={frogCubeMesh} position={position} />
+      <primitive name="Frogs" object={frogCubeMesh}/>
     </group>
   );
 };

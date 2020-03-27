@@ -22,7 +22,7 @@ export default function Terrain(props) {
     normalUniformsHeight = 0.1,
 
     // terrain settings
-    terrainPosition = [-100, -520, -250],
+    terrainPosition = [-100, -1000, -250],
     terrainSize = 16000,
     terrainResolution = 512,
     terrainRotationX = -Math.PI / 2,
@@ -33,7 +33,7 @@ export default function Terrain(props) {
     terrainUniformsDiffuseHex = 0xffffff,
     terrainUniformsSpecularHex = 0xffffff,
     terrainUniformsShininess = 1,
-    terrainUniformsDisplacementScale = 600,
+    terrainUniformsDisplacementScale = 1000,
     terrainUniformsRepeat = 16,
     terrainDiffuseTexture1URL = assetPathJV(
       "textures/terrain/rug1.jpg"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { FixedLights } from "./lights";
-import { useFrame } from "react-three-fiber";
+import { useFrame, useThree } from "react-three-fiber";
 import FrogCube from "./FrogCube";
 import Sax from "./Sax";
 import Sky from "./Sky";
@@ -12,25 +12,32 @@ export function Scene({}) {
   // using a filter for left and right arrow press
   const [freqArray, setFreqArray] = useState();
   const { audioStream, isPlaying, bpm, currentTrackName, currentTrackId} = useAudioPlayer();
-  const [theme, setTheme] = useState(THEMES['Frog Shirt']);
+  const {camera} = useThree();
+  const [theme, setTheme] = useState(THEMES['Cube Jazz']);
+  
   useEffect(() => {
     if (currentTrackName) {
       setTheme(THEMES[currentTrackName])
     }
   }, [currentTrackName]);
+  
+  useEffect(() => {
+    if (camera) {
+      camera.position.set( ...theme.camera.position );
+    }
+  }, [camera])
 
   return (
     <>
       <Suspense fallback={null}>
-        <Sky {...theme.sky}/>
         <FrogCube
-          amount={5}
+          amount={4}
           bpm={bpm}
           audioStream={audioStream}
           freqArray={freqArray}
           currentTrackName={currentTrackName}
         />
-        {/* <Sax /> */}
+        <Sax />
         <Terrain {...theme.terrain}/>
       </Suspense>
     </>
