@@ -444,7 +444,7 @@
           overlay: "rgba(0, 0, 0, 0.5)",
           navigation: "white",
           player: "white",
-          onHover: "rgba(0, 0, 0, 0.5)",
+          onHover: "red",
           info: "white"
         },
         instructions: [
