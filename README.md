@@ -7,6 +7,12 @@
 
 [fifteen.pm](https://fifteen.pm) is a record label dedicated to creating online spaces for sound. Releases comprise one or more tracks presented through an interactive website. Our sites lean heavily on HTML5 and WebGL and their design and construction are a collaborative effort between the artist and the label. We believe that these sites are a unique and novel alternative to music being presented online as content in congested streams.
 
+## Clone with submodules
+
+```
+git clone --recurse-submodules https://github.com/gltd/fifteen.pm
+```
+
 ## Release Asset Management
 
 We store all assets for releases under [`public/assets/releases/`](public/assets/releases). We version all assets under this path with [`git-lfs`](https://git-lfs.github.com/), or as otherwise defined in [`.gitattributes`](.gitattributes).
