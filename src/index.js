@@ -15,6 +15,7 @@ import Release0006_Vveiss from "./Releases/Release0006_Vveiss/index";
 import Release0007_JonFay from "./Releases/Release0007_JonFay/index";
 import Release0008_GreemJellyfish from "./Releases/Release0008_GreemJellyfish/index";
 import Release0009_Javonntte from "./Releases/Release0009_Javonntte/index";
+import Release0011_JWords from "./Releases/Release0011_JWords/index";
 import { CONTENT } from './Content';
 
 ReactDOM.render(
@@ -31,6 +32,7 @@ ReactDOM.render(
             <Route path="/7" component={Release0007_JonFay} />
             <Route path="/8" component={Release0008_GreemJellyfish} />
             <Route path="/9" component={Release0009_Javonntte} />
+            <Route path="/11" component={Release0011_JWords} />
         </div>
     </Router>,
     document.getElementById('root')

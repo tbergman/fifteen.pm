@@ -360,7 +360,6 @@ export const CONTENT = {
   },
   "/9": {
     artist: "JAVONNTTE",
-    lastIdx: 9,
     message: "Detroit Asteroid Belt 2120: All sectors go wild for the Earthy tones of house master Javonntte after his 'City Life' series surfaces off some de-bricked drives in the archives.",
     purchaseLink: "https://fifteenpm.bandcamp.com/album/city-life",
     tracks: [
@@ -410,6 +409,21 @@ export const CONTENT = {
         text: "use arrow keys to drive the hoverboard"
       },
     ]
+  },
+  "/11": {
+    artist: "JWORDS",
+    message: "",
+    purchaseLink: "",
+    lastIdx: 10,
+    instructions: [],
+    colors: {},
+    tracks: [{
+      name: "This Dream",
+      type: "soundcloud",
+      id: "742019854",
+      secretToken: "s-h4Las",
+      bpm: "95",
+    }],
   }
 };
 
