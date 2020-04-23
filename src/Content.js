@@ -471,8 +471,21 @@ export const CONTENT = {
     message: "",
     purchaseLink: "",
     lastIdx: 10,
-    instructions: [],
-    colors: {},
+    instructions: [
+      {
+        icon: ArrowKeys,
+        text: "use arrow keys to drive the hoverboard"
+      },
+    ],
+    colors: {
+      logo: '#0f0',
+      navigation: '#0f0',
+      overlay: 'rgba(0, 255, 0, .8)',
+      overlayContent: '#000',
+      player: '#0f0',
+      onHover: '#fff',
+      info: '#0f0',
+    },
     tracks: [{
       name: "This Dream",
       type: "soundcloud",
