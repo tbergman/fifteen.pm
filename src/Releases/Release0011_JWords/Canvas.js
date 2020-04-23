@@ -27,9 +27,8 @@ export default function JWordsCanvas({ }) {
                         }}
                     >
                         <AudioPlayerContext.Provider value={value}>
-                            <FixedLights />
+                            
                             <Suspense fallback={null}>
-
                                 <Scene />
                             </Suspense>
                         </AudioPlayerContext.Provider>
