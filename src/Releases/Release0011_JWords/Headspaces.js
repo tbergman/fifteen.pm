@@ -40,22 +40,28 @@ export default function Headspaces({ }) {
         })
         return [head1, head2];
     });
-    useFrame(() => {
-        if (!headspaces) return;
-        headspaces.rotation.y += .01;
-    })
+    // useFrame(() => {
+    //     if (!headspaces) return;
+    //     headspaces.rotation.y += .01;
+    // })
 
     useFrame(() => {
         if (!head2Group) return;
+        head2Group.rotation.y += .01;
         if (Math.abs(head2Group.rotation.x % .1) < .01) {
+            head2Mesh.visible = true
             head2Mesh.material = head2.material
+        } else if (Math.abs(head2Group.rotation.x % .1) > .9){
+            head2Mesh.visible = false
         } else {
+            head2Mesh.visible = true
             head2Mesh.material = foamGripPurple
         }
     })
 
     useFrame(() => {
         if (!head1Group) return;
+        head1Group.rotation.x += .01;
         if (Math.abs(head1Group.rotation.y % .1) < .1) {
             head1Mesh.material = head1.material
         } else {
