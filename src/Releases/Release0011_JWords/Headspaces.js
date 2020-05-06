@@ -9,40 +9,49 @@ import useYScroll from '../../Common/Scroll/useYScroll'
 import useXScroll from '../../Common/Scroll/useXScroll'
 
 export default function Headspaces({ }) {
-    const [y] = useYScroll([-100, 2400], { domTarget: window })
+    const [y] = useYScroll([-2400, 2400], { domTarget: window })
     const [ref, headspaces] = useResource()
     const { foamGripPurple } = useContext(MaterialsContext);
-    const gltf = useLoader(GLTFLoader, C.HEADSPACE_1_PATH, loader => {
+    const gltf = useLoader(GLTFLoader, C.HEADSPACE_4_PATH, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
     })
-    const geometry = useMemo(() => {
-        let geometry;
+    const [head1, head2] = useMemo(() => {
+        let head1, head2;
         console.log("BACK AGAIN... only load me once! ")
         gltf.scene.traverse(child => {
-
-            if (child.type == "Mesh") {
-                console.log("MESH", child)
-                geometry = child.geometry.clone();
-            } else {
-                console.log("OTHER", child)
+            console.log("NAME", child.name)
+            if (child.name == "head1") {
+                console.log("NAME", child.name)
+                head1 = child.geometry.clone();
             }
-
+            if (child.name == "head2") {
+                head2 = child.geometry.clone();
+            }
         })
-        return geometry;
+        return [head1, head2];
     });
     useFrame(() => {
         if (!headspaces) return;
         headspaces.rotation.y += .01;
     })
     return (
-        <a.group ref={ref} rotation-y={y.interpolate(y => (y/ 750) * 25)}>
+        <group ref={ref}>
             {headspaces &&
-                <mesh material={foamGripPurple} onUpdate={self => console.log("WTF", self)}>
-                    <bufferGeometry attach="geometry" {...geometry} />
-                </mesh>
+                <>
+                    <a.group rotation-y={y.to(y => y / 200)}>
+                        <mesh material={foamGripPurple} >
+                            <bufferGeometry attach="geometry" {...head1} />
+                        </mesh>
+                    </a.group>
+                    <a.group rotation-x={y.to(y => y / 200)}>
+                        <mesh material={foamGripPurple} >
+                            <bufferGeometry attach="geometry" {...head2} />
+                        </mesh>
+                    </a.group>
+                </>
             }
-        </a.group>
+        </group>
     );
 }
