@@ -7,8 +7,7 @@ import Controls from './Controls';
 export function Scene({ setSceneReady }) {
     const {camera} = useThree();    
     useEffect(() => {
-        // camera.position.z = 0.25
-camera.position.z = 1
+        camera.position.z = 0.33
     })
     return (
         <>
