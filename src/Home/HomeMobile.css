@@ -4,6 +4,7 @@
     top: 10%;
     margin-left: 5%;
     font-size: 1.5rem;
+    z-index: 1;
 }
 
 .releases-list-title{
