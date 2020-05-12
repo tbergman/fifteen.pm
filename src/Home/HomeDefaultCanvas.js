@@ -1,6 +1,6 @@
 import React from 'react';
 import { Canvas } from 'react-three-fiber';
-import Scene from './HomeDefaultScene';
+import HomeDefaultScene from './HomeDefaultScene';
 
 export function HomeDefaultCanvas({ }) {
     return (
@@ -17,7 +17,7 @@ export function HomeDefaultCanvas({ }) {
             }}
         >
             )}
-            <Scene />
+            <HomeDefaultScene />
         </Canvas>
     )
 }
