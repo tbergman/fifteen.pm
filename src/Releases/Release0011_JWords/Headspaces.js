@@ -17,7 +17,7 @@ export default function Headspaces({ }) {
     const [head2MeshRef, head2Mesh] = useResource();
     const { foamGripPurple } = useContext(MaterialsContext);
     const { head1Mat, head2Mat } = useContext(MaterialsContext);
-    const gltf = useLoader(GLTFLoader, C.HEADSPACE_4_PATH, loader => {
+    const gltf = useLoader(GLTFLoader, C.HEADSPACE_8_PATH, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
@@ -26,6 +26,7 @@ export default function Headspaces({ }) {
         let head1, head2;
         console.log("BACK AGAIN... only load me once! ")
         gltf.scene.traverse(child => {
+            console.log(child.name)
             if (child.type == "Mesh") {
                 // child.material.transparent = true;
                 // child.material.opacity = .9;
@@ -33,14 +34,25 @@ export default function Headspaces({ }) {
                 // console.log(child.material)
                 // child.material = sunsetGradientNoise;
             }
-            if (child.name == "head1") {
-                head1 = child;
+            if (child.name == "Head_0"){
+                head1 = child
+                console.log("find it in here", head1.material)
+                console.log("head1Mat", head1Mat)
+                console.log("head1.material.map", head1.material.map)
+                if (head1.material.map){
+                    head1Mat.uniforms.map = {value: head1.material.map}
+                }
+                
                 head1.material = head1Mat
             }
-            if (child.name == "head2") {
-                head2 = child;
-                head2.material = head2Mat;
-            }
+            // if (child.name == "head1") {
+            //     head1 = child;
+            //     head1.material = head1Mat
+            // }
+            // if (child.name == "head2") {
+            //     head2 = child;
+            //     head2.material = head2Mat;
+            // }
         })
         return [head1, head2];
     });
@@ -82,11 +94,11 @@ export default function Headspaces({ }) {
                             <bufferGeometry attach="geometry" {...head1.geometry} />
                         </mesh>
                     </a.group>
-                    <a.group ref={head2GroupRef} rotation-x={y.to(y => y / 200)}>
+                    {/* <a.group ref={head2GroupRef} rotation-x={y.to(y => y / 200)}>
                         <mesh ref={head2MeshRef} material={head2.material} >
                             <bufferGeometry attach="geometry" {...head2.geometry} />
                         </mesh>
-                    </a.group>
+                    </a.group> */}
                 </>
             }
 
