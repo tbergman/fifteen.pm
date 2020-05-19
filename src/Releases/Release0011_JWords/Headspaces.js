@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useMemo, Suspense } from 'react';
+import React, { useEffect, useMemo, useContext, Suspense } from 'react';
 import { useLoader, useResource, useFrame } from 'react-three-fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
@@ -16,6 +16,7 @@ export default function Headspaces({ }) {
     const [head1MeshRef, head1Mesh] = useResource();
     const [head2MeshRef, head2Mesh] = useResource();
     const { foamGripPurple } = useContext(MaterialsContext);
+    const { head1Mat, head2Mat } = useContext(MaterialsContext);
     const gltf = useLoader(GLTFLoader, C.HEADSPACE_4_PATH, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
@@ -25,17 +26,20 @@ export default function Headspaces({ }) {
         let head1, head2;
         console.log("BACK AGAIN... only load me once! ")
         gltf.scene.traverse(child => {
-            if (child.type == "Mesh"){
-                child.material.transparent = true;
-                child.material.opacity = .9;
-                child.material.wireframe = true;
-                console.log(child.material)
+            if (child.type == "Mesh") {
+                // child.material.transparent = true;
+                // child.material.opacity = .9;
+                // child.material.wireframe = true;
+                // console.log(child.material)
+                // child.material = sunsetGradientNoise;
             }
             if (child.name == "head1") {
                 head1 = child;
+                head1.material = head1Mat
             }
             if (child.name == "head2") {
                 head2 = child;
+                head2.material = head2Mat;
             }
         })
         return [head1, head2];
@@ -47,26 +51,26 @@ export default function Headspaces({ }) {
 
     useFrame(() => {
         if (!head2Group) return;
-        head2Group.rotation.y += .01;
-        if (Math.abs(head2Group.rotation.x % .1) < .01) {
-            head2Mesh.visible = true
-            head2Mesh.material = head2.material
-        } else if (Math.abs(head2Group.rotation.x % .1) > .9){
-            head2Mesh.visible = false
-        } else {
-            head2Mesh.visible = true
-            head2Mesh.material = foamGripPurple
-        }
+        // head2Group.rotation.y -= .01;
+        // if (Math.abs(head2Group.rotation.x % .1) < .01) {
+        //     head2Mesh.visible = true
+        //     head2Mesh.material = head2.material
+        // } else if (Math.abs(head2Group.rotation.x % .1) > .9){
+        //     head2Mesh.visible = false
+        // } else {
+        //     head2Mesh.visible = true
+        //     head2Mesh.material = foamGripPurple
+        // }
     })
 
     useFrame(() => {
         if (!head1Group) return;
-        head1Group.rotation.x += .01;
-        if (Math.abs(head1Group.rotation.y % .1) < .1) {
-            head1Mesh.material = head1.material
-        } else {
-            head1Mesh.material = foamGripPurple
-        }
+        // head1Group.rotation.y += .01;
+        // if (Math.abs(head1Group.rotation.y % .1) < .1) {
+        //     head1Mesh.material = head1.material
+        // } else {
+        //     head1Mesh.material = foamGripPurple
+        // }
     })
 
     return (
@@ -85,6 +89,7 @@ export default function Headspaces({ }) {
                     </a.group>
                 </>
             }
+
         </group>
     );
 }
