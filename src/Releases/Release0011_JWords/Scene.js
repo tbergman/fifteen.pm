@@ -4,13 +4,14 @@ import { useThree, useFrame } from 'react-three-fiber';
 import { Headspaces } from './Headspaces';
 import { MaterialsProvider } from './MaterialsContext';
 import Controls from './Controls';
+import Room from './Room';
 
 export function Scene({ setSceneReady }) {
     const { camera, scene } = useThree();
     useEffect(() => {
-        camera.position.z = 0.33
+        camera.position.z = 0.25
         // camera.fov = 200
-        // camera.near = .00000000o
+        // camera.near = .000000001
         scene.background = new THREE.Color(0x781D7F)
     })
     // useFrame(() => {
@@ -21,6 +22,7 @@ export function Scene({ setSceneReady }) {
             {/* <Controls /> */}
             <ambientLight />
             <MaterialsProvider>
+                <Room />
                 <Headspaces />
             </MaterialsProvider>
         </>

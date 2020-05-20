@@ -1,11 +1,13 @@
 
 
 import React, { useEffect, useState } from 'react';
+import * as THREE from 'three';
 import { useResource } from 'react-three-fiber';
 import FoamGrip from '../../Common/Materials/FoamGrip';
 import Noise from '../../Common/Materials/Noise';
 import { assetPath } from '../../Common/Utils/assets';
 // import {SunsetGradient} from '../../Common/Materials/SunsetGradient';
+import TronMaterial2 from '../../Common/Materials/TronMaterial2';
 
 const MaterialsContext = React.createContext([{}, () => { }]);
 
@@ -15,12 +17,12 @@ const MaterialsProvider = ({ ...props }) => {
     const [foamGripPurpleRef, foamGripPurple] = useResource();
     const [head1MatRef, head1Mat] = useResource();
     const [head2MatRef, head2Mat] = useResource();
-    const [transparentLineRef, transparentLine] = useResource();
+    const [tron2Ref, tron2] = useResource();
     const materials = {
         foamGripPurple,
         head1Mat,
         head2Mat,
-        transparentLine,
+        tron2,
     }
 
     useEffect(() => {
@@ -30,11 +32,20 @@ const MaterialsProvider = ({ ...props }) => {
     })
 
     return <MaterialsContext.Provider value={{ loaded, ...materials }}>
-        <FoamGrip materialRef={foamGripPurpleRef} color={0xff00af} specular={0x00ff00} />
+        <TronMaterial2
+            materialRef={tron2Ref}
+            side={THREE.BackSide}
+        />
+        <FoamGrip
+            materialRef={foamGripPurpleRef}
+            color={0xff00af}
+            specular={0x00ff00}
+            side={THREE.BackSide}
+        />
         <Noise
             materialRef={head1MatRef}
             noiseScale={.35}
-            timeScale={.00011}
+            timeScale={.00009}
             wireframe={false}
             imagePath={assetPath("11/objects/headspace8/texture.png")}
         />

@@ -18,6 +18,7 @@ export function Headspaces({ }) {
     const [head1MeshRef, head1Mesh] = useResource();
     const [head2MeshRef, head2Mesh] = useResource();
     // const [wireframeRef, useWireframe] = useResource();
+    
     const { foamGripPurple } = useContext(MaterialsContext);
     const { head1Mat, head2Mat } = useContext(MaterialsContext);
     const gltf = useLoader(GLTFLoader, C.HEADSPACE_9_PATH, loader => {
