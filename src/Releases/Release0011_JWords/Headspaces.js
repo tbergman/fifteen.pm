@@ -8,16 +8,19 @@ import { a } from '@react-spring/three'
 import useYScroll from '../../Common/Scroll/useYScroll'
 import useXScroll from '../../Common/Scroll/useXScroll'
 
-export default function Headspaces({ }) {
+
+export function Headspaces({ }) {
+    // export default function Headspaces({ }) {
     const [y] = useYScroll([-2400, 2400], { domTarget: window })
     const [ref, headspaces] = useResource()
     const [head1GroupRef, head1Group] = useResource()
     const [head2GroupRef, head2Group] = useResource();
     const [head1MeshRef, head1Mesh] = useResource();
     const [head2MeshRef, head2Mesh] = useResource();
+    // const [wireframeRef, useWireframe] = useResource();
     const { foamGripPurple } = useContext(MaterialsContext);
     const { head1Mat, head2Mat } = useContext(MaterialsContext);
-    const gltf = useLoader(GLTFLoader, C.HEADSPACE_8_PATH, loader => {
+    const gltf = useLoader(GLTFLoader, C.HEADSPACE_9_PATH, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
@@ -34,15 +37,14 @@ export default function Headspaces({ }) {
                 // console.log(child.material)
                 // child.material = sunsetGradientNoise;
             }
-            if (child.name == "Head_0"){
+            if (child.name == "Object_0") {
                 head1 = child
-                console.log("find it in here", head1.material)
-                console.log("head1Mat", head1Mat)
-                console.log("head1.material.map", head1.material.map)
-                if (head1.material.map){
-                    head1Mat.uniforms.map = {value: head1.material.map}
+                if (head1.material.map) {
+                    // passing the map in here to copy it directly from the
+                    // gltf, which gets initialized after the material 
+                    head1Mat.uniforms.map = { value: head1.material.map }
                 }
-                
+
                 head1.material = head1Mat
             }
             // if (child.name == "head1") {
@@ -60,6 +62,7 @@ export default function Headspaces({ }) {
     //     if (!headspaces) return;
     //     headspaces.rotation.y += .01;
     // })
+
 
     useFrame(() => {
         if (!head2Group) return;

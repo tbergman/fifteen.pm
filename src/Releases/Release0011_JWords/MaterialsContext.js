@@ -15,11 +15,12 @@ const MaterialsProvider = ({ ...props }) => {
     const [foamGripPurpleRef, foamGripPurple] = useResource();
     const [head1MatRef, head1Mat] = useResource();
     const [head2MatRef, head2Mat] = useResource();
-
+    const [transparentLineRef, transparentLine] = useResource();
     const materials = {
         foamGripPurple,
         head1Mat,
-        head2Mat
+        head2Mat,
+        transparentLine,
     }
 
     useEffect(() => {
@@ -30,8 +31,14 @@ const MaterialsProvider = ({ ...props }) => {
 
     return <MaterialsContext.Provider value={{ loaded, ...materials }}>
         <FoamGrip materialRef={foamGripPurpleRef} color={0xff00af} specular={0x00ff00} />
-        <Noise materialRef={head1MatRef} timeScale={.000075} imagePath={assetPath("11/objects/headspace8/texture.png")} />
-        <Noise materialRef={head2MatRef} timeScale={.0001} imagePath={assetPath("11/objects/headspace6/texture_png.png")} />
+        <Noise
+            materialRef={head1MatRef}
+            noiseScale={.35}
+            timeScale={.00011}
+            wireframe={false}
+            imagePath={assetPath("11/objects/headspace8/texture.png")}
+        />
+        <Noise materialRef={head2MatRef} noiseScale={1.} timeScale={.000075} imagePath={assetPath("11/objects/headspace6/texture_png.png")} />
         {props.children}
     </MaterialsContext.Provider>
 }
