@@ -46,6 +46,7 @@ const MaterialsProvider = ({ ...props }) => {
             materialRef={head1MatRef}
             noiseScale={.35}
             timeScale={.00009}
+            alpha={.5}
             wireframe={false}
             imagePath={assetPath("11/objects/headspace8/texture.png")}
         />

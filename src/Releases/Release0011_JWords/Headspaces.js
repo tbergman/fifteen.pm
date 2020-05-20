@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useContext, Suspense } from 'react';
-import { useLoader, useResource, useFrame } from 'react-three-fiber';
+import { useLoader, useResource, useFrame, useThree } from 'react-three-fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import * as C from './constants';
@@ -13,12 +13,13 @@ export function Headspaces({ }) {
     // export default function Headspaces({ }) {
     const [y] = useYScroll([-2400, 2400], { domTarget: window })
     const [ref, headspaces] = useResource()
+    const { mouse } = useThree();
     const [head1GroupRef, head1Group] = useResource()
     const [head2GroupRef, head2Group] = useResource();
     const [head1MeshRef, head1Mesh] = useResource();
     const [head2MeshRef, head2Mesh] = useResource();
     // const [wireframeRef, useWireframe] = useResource();
-    
+
     const { foamGripPurple } = useContext(MaterialsContext);
     const { head1Mat, head2Mat } = useContext(MaterialsContext);
     const gltf = useLoader(GLTFLoader, C.HEADSPACE_9_PATH, loader => {
@@ -59,10 +60,15 @@ export function Headspaces({ }) {
         })
         return [head1, head2];
     });
-    // useFrame(() => {
-    //     if (!headspaces) return;
-    //     headspaces.rotation.y += .01;
-    // })
+
+    useFrame(() => {
+        if (!headspaces) return;
+        headspaces.rotation.y += .01;
+        headspaces.position.x = mouse.x / 6.;
+        headspaces.position.y = mouse.y / 6.;
+    })
+
+
 
 
     useFrame(() => {
