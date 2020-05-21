@@ -1,15 +1,14 @@
 import React, { useEffect, useMemo, useContext, Suspense } from 'react';
 import { useLoader, useResource, useFrame, useThree } from 'react-three-fiber';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import * as C from './constants';
-import { MaterialsContext } from './MaterialsContext';
+
+import * as C from '../constants';
+import { MaterialsContext } from '../MaterialsContext';
 import { a } from '@react-spring/three'
-import useYScroll from '../../Common/Scroll/useYScroll'
-import useXScroll from '../../Common/Scroll/useXScroll'
+import useYScroll from '../../../Common/Scroll/useYScroll'
+import useXScroll from '../../../Common/Scroll/useXScroll'
 
 
-export function Headspaces({ }) {
+export default function Reflect({ gltf }) {
     // export default function Headspaces({ }) {
     const [y] = useYScroll([-2400, 2400], { domTarget: window })
     const [ref, headspaces] = useResource()
@@ -22,11 +21,7 @@ export function Headspaces({ }) {
 
     const { foamGripPurple } = useContext(MaterialsContext);
     const { head1Mat, head2Mat } = useContext(MaterialsContext);
-    const gltf = useLoader(GLTFLoader, C.HEADSPACE_9_PATH, loader => {
-        const dracoLoader = new DRACOLoader()
-        dracoLoader.setDecoderPath('/draco-gltf/')
-        loader.setDRACOLoader(dracoLoader)
-    })
+   
     const [head1, head2] = useMemo(() => {
         let head1, head2;
         console.log("BACK AGAIN... only load me once! ")
@@ -67,9 +62,6 @@ export function Headspaces({ }) {
         headspaces.position.x = mouse.x / 6.;
         headspaces.position.y = mouse.y / 6.;
     })
-
-
-
 
     useFrame(() => {
         if (!head2Group) return;

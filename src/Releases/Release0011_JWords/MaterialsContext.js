@@ -17,12 +17,16 @@ const MaterialsProvider = ({ ...props }) => {
     const [foamGripPurpleRef, foamGripPurple] = useResource();
     const [head1MatRef, head1Mat] = useResource();
     const [head2MatRef, head2Mat] = useResource();
-    const [tron2Ref, tron2] = useResource();
+    const [purpleTron2Ref, purpleTron2] = useResource();
+    const [darkTron2Ref, darkTron2] = useResource();
+    const [bwTron2Ref, bwTron2] = useResource();
     const materials = {
         foamGripPurple,
         head1Mat,
         head2Mat,
-        tron2,
+        purpleTron2,
+        darkTron2,
+        bwTron2,
     }
 
     useEffect(() => {
@@ -33,8 +37,19 @@ const MaterialsProvider = ({ ...props }) => {
 
     return <MaterialsContext.Provider value={{ loaded, ...materials }}>
         <TronMaterial2
-            materialRef={tron2Ref}
+            materialRef={purpleTron2Ref}
+            colorOffset={new THREE.Vector3(0, .9, 0.6)}
             side={THREE.BackSide}
+        />
+        <TronMaterial2
+            materialRef={darkTron2Ref}
+            side={THREE.BackSide}
+            colorOffset={new THREE.Vector3(0, 1., 0.)}
+        />
+        <TronMaterial2
+            materialRef={bwTron2Ref}
+            side={THREE.BackSide}
+            colorOffset={new THREE.Vector3(.9, 0.,0.6)}
         />
         <FoamGrip
             materialRef={foamGripPurpleRef}

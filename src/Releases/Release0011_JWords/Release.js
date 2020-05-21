@@ -7,7 +7,7 @@ export default function Release({ }) {
     
     return <>
         <>
-            {/* <UI content={CONTENT[window.location.pathname]} /> */}
+            <UI content={CONTENT[window.location.pathname]} />
             <JWordsCanvas />
         </>
     }</>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { useThree, useFrame } from 'react-three-fiber';
-import { Headspaces } from './Headspaces';
+import Headspaces from './headspaces/Headspaces';
 import { MaterialsProvider } from './MaterialsContext';
 import Controls from './Controls';
 import Room from './Room';

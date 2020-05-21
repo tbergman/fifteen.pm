@@ -22,7 +22,7 @@ export default function JWordsCanvas({ }) {
                             gl.gammaInput = true;
                             gl.gammaOutput = true;
                             gl.antialias = true;
-                            // IMPORTANT: Turn this on for development!
+                            // IMPORTANT: Comment this out during development!
                             // gl.debug.checkShaderErrors = false;
                         }}
                     >

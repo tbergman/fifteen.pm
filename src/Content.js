@@ -486,13 +486,29 @@ export const CONTENT = {
       onHover: '#fff',
       info: '#0f0',
     },
-    tracks: [{
-      name: "This Dream",
-      type: "soundcloud",
-      id: "742019854",
-      secretToken: "s-h4Las",
-      bpm: "95",
-    }],
+    tracks: [
+      {
+        name: "Remedy",
+        type: "soundcloud",
+        id: "708031996",
+        secretToken: "s-f0NWB",
+        bpm: 152
+      },
+      {
+        name: "Fear",
+        type: "soundcloud",
+        id: "708031990",
+        secretToken: "s-NKawM",
+        bpm: 112
+      },
+      {
+        name: "Radio Freak",
+        type: "soundcloud",
+        id: "708031987",
+        secretToken: "s-BnEVI",
+        bpm: 110
+      },
+    ],
   }
 };
 
