@@ -16,12 +16,15 @@ export const REFLECT = "reflect"
 export const PURPLE_TRON2 = "purpleTron2"
 export const DARK_TRON2 = "darkTron2"
 export const BW_TRON2 = "bwTron2"
+export const FIRST_TRACK = REMEDY
 
 // e.g.
 export const TRACKS_CONFIG = {}
 TRACKS_CONFIG[REMEDY] = {
     steps: [
         { time: 0, headspace: EXPLODE, complexity: "small", dynamics: "flat", room: PURPLE_TRON2 },
+        { time: 1, headspace: EXPLODE, complexity: "small", dynamics: "flat", room: BW_TRON2 },
+        { time: 3, headspace: EXPLODE, complexity: "small", dynamics: "flat", room: DARK_TRON2 },
         { time: 14, headspace: SPIN, complexity: "small", dynamics: "flat", room: BW_TRON2 },
         { time: 21, headspace: EXPLODE, complexity: "small", dynamics: "flat", room: PURPLE_TRON2 },
         { time: 35, headspace: SPIN, complexity: "medium", dynamics: "flat", room: PURPLE_TRON2 },
