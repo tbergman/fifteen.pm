@@ -5,13 +5,9 @@ import { MaterialsContext } from './MaterialsContext';
 import useAudioPlayer from '../../Common/UI/Player/hooks/useAudioPlayer';
 import * as C from './constants';
 
-export default function Room({ }) {
+export default function Room({ stepIdx }) {
     const { purpleTron2, darkTron2, bwTron2 } = useContext(MaterialsContext);
-    // TODO track logic can go up one parent and be passed in
-    const [stepIdx, setStepIdx] = useState(0);
-    const [numSteps, setNumSteps] = useState(C.TRACKS_CONFIG[C.FIRST_TRACK].steps.length)
     const { currentTrackName, currentTime, audioPlayer } = useAudioPlayer();
-
     const [material, setMaterial] = useState()
 
     function _setMaterial(materialName) {
@@ -37,18 +33,8 @@ export default function Room({ }) {
 
     useEffect(() => {
         if (!currentTrackName) return;
-        setNumSteps(C.TRACKS_CONFIG[currentTrackName].steps.length);
-        setStepIdx(0);
         _setMaterial(C.TRACKS_CONFIG[currentTrackName].steps[0].room);
     }, [currentTrackName])
-
-    useFrame(() => {
-        if (!currentTrackName) return;
-        const nextStepIdx = stepIdx >= numSteps ? 0 : stepIdx + 1;
-        const nextStepTime = C.TRACKS_CONFIG[currentTrackName].steps[nextStepIdx].time
-        if (audioPlayer.currentTime > nextStepTime)
-            setStepIdx(nextStepIdx)
-    });
 
     return (
         <>
