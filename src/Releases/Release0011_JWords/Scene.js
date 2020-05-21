@@ -12,9 +12,9 @@ export function Scene({ setSceneReady }) {
     const { camera, scene } = useThree();
     const [stepIdx, setStepIdx] = useState(0);
     const [numSteps, setNumSteps] = useState(C.TRACKS_CONFIG[C.FIRST_TRACK].steps.length)
-    
+
     const { currentTrackName, currentTime, audioPlayer } = useAudioPlayer();
-    
+
     // global scene params
     useEffect(() => {
         camera.position.z = 0.25
@@ -45,7 +45,7 @@ export function Scene({ setSceneReady }) {
             <ambientLight />
             <MaterialsProvider>
                 <Room stepIdx={stepIdx} />
-                <Headspaces />
+                <Headspaces stepIdx={stepIdx} />
             </MaterialsProvider>
         </>
     );

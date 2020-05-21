@@ -1,13 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import * as THREE from 'three';
-import { useFrame } from 'react-three-fiber';
-import { MaterialsContext } from './MaterialsContext';
 import useAudioPlayer from '../../Common/UI/Player/hooks/useAudioPlayer';
 import * as C from './constants';
+import { MaterialsContext } from './MaterialsContext';
 
 export default function Room({ stepIdx }) {
     const { purpleTron2, darkTron2, bwTron2 } = useContext(MaterialsContext);
-    const { currentTrackName, currentTime, audioPlayer } = useAudioPlayer();
+    const { currentTrackName } = useAudioPlayer();
     const [material, setMaterial] = useState()
 
     function _setMaterial(materialName) {
@@ -23,7 +21,7 @@ export default function Room({ stepIdx }) {
     }
 
     useEffect(() => {
-        if (!material) setMaterial(purpleTron2);
+        if (!material) _setMaterial(C.TRACKS_CONFIG[C.FIRST_TRACK].steps[0].room);
     })
 
     useEffect(() => {
