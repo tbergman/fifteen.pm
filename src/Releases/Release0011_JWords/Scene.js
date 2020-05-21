@@ -10,6 +10,7 @@ import * as C from './constants';
 
 export function Scene({ setSceneReady }) {
     const { camera, scene } = useThree();
+    const [step, setStep] = useState(C.TRACKS_CONFIG[C.FIRST_TRACK].steps[0]);
     const [stepIdx, setStepIdx] = useState(0);
     const [numSteps, setNumSteps] = useState(C.TRACKS_CONFIG[C.FIRST_TRACK].steps.length)
 
@@ -18,10 +19,13 @@ export function Scene({ setSceneReady }) {
     // global scene params
     useEffect(() => {
         camera.position.z = 0.25
-        // camera.fov = 200
-        // camera.near = .000000001
         scene.background = new THREE.Color(0x781D7F)
     })
+
+    useEffect(() => {
+        if (!currentTrackName) return;
+        setStep(C.TRACKS_CONFIG[currentTrackName].steps[stepIdx]);
+    }, [stepIdx])
 
     // reset step info per track
     useEffect(() => {
@@ -44,7 +48,7 @@ export function Scene({ setSceneReady }) {
             {/* <Controls /> */}
             <ambientLight />
             <MaterialsProvider>
-                <Room stepIdx={stepIdx} />
+                <Room step={step} stepIdx={stepIdx} />
                 <Headspaces stepIdx={stepIdx} />
             </MaterialsProvider>
         </>

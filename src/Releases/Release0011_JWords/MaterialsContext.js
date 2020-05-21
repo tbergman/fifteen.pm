@@ -15,18 +15,20 @@ const MaterialsProvider = ({ ...props }) => {
     const [loaded, setLoaded] = useState(false);
 
     const [foamGripPurpleRef, foamGripPurple] = useResource();
-    const [head1MatRef, head1Mat] = useResource();
+    const [noise1Ref, noise1] = useResource();
     const [head2MatRef, head2Mat] = useResource();
     const [purpleTron2Ref, purpleTron2] = useResource();
     const [darkTron2Ref, darkTron2] = useResource();
     const [bwTron2Ref, bwTron2] = useResource();
+    const [wireframeyRef, wireframey] = useResource();
     const materials = {
-        foamGripPurple,
-        head1Mat,
-        head2Mat,
         purpleTron2,
         darkTron2,
         bwTron2,
+        noise1,
+        head2Mat,
+        foamGripPurple,
+        wireframey,
     }
 
     useEffect(() => {
@@ -49,7 +51,7 @@ const MaterialsProvider = ({ ...props }) => {
         <TronMaterial2
             materialRef={bwTron2Ref}
             side={THREE.BackSide}
-            colorOffset={new THREE.Vector3(.9, 0.,0.6)}
+            colorOffset={new THREE.Vector3(.9, 0., 0.6)}
         />
         <FoamGrip
             materialRef={foamGripPurpleRef}
@@ -57,8 +59,9 @@ const MaterialsProvider = ({ ...props }) => {
             specular={0x00ff00}
             side={THREE.BackSide}
         />
+        <meshStandardMaterial materialRef={wireframeyRef} wireframe={true} />
         <Noise
-            materialRef={head1MatRef}
+            materialRef={noise1Ref}
             noiseScale={.35}
             timeScale={.00009}
             alpha={.5}

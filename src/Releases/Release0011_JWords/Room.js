@@ -3,7 +3,7 @@ import useAudioPlayer from '../../Common/UI/Player/hooks/useAudioPlayer';
 import * as C from './constants';
 import { MaterialsContext } from './MaterialsContext';
 
-export default function Room({ stepIdx }) {
+export default function Room({ step, stepIdx }) {
     const { purpleTron2, darkTron2, bwTron2 } = useContext(MaterialsContext);
     const { currentTrackName } = useAudioPlayer();
     const [material, setMaterial] = useState()
@@ -21,17 +21,17 @@ export default function Room({ stepIdx }) {
     }
 
     useEffect(() => {
-        if (!material) _setMaterial(C.TRACKS_CONFIG[C.FIRST_TRACK].steps[0].room);
+        if (!material) _setMaterial(step.room);
     })
 
     useEffect(() => {
         if (!currentTrackName) return;
-        _setMaterial(C.TRACKS_CONFIG[currentTrackName].steps[stepIdx].room);
+        _setMaterial(step.room);
     }, [stepIdx])
 
     useEffect(() => {
         if (!currentTrackName) return;
-        _setMaterial(C.TRACKS_CONFIG[currentTrackName].steps[0].room);
+        _setMaterial(step.room);
     }, [currentTrackName])
 
     return (

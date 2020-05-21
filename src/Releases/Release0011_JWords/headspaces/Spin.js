@@ -21,7 +21,7 @@ export default function Spin({gltf }) {
     // const [wireframeRef, useWireframe] = useResource();
 
     const { foamGripPurple } = useContext(MaterialsContext);
-    const { head1Mat, head2Mat } = useContext(MaterialsContext);
+    const { noise1, head2Mat } = useContext(MaterialsContext);
  
     const [head1, head2] = useMemo(() => {
         let head1, head2;
@@ -40,14 +40,14 @@ export default function Spin({gltf }) {
                 if (head1.material.map) {
                     // passing the map in here to copy it directly from the
                     // gltf, which gets initialized after the material 
-                    head1Mat.uniforms.map = { value: head1.material.map }
+                    noise1.uniforms.map = { value: head1.material.map }
                 }
 
-                head1.material = head1Mat
+                head1.material = noise1
             }
             // if (child.name == "head1") {
             //     head1 = child;
-            //     head1.material = head1Mat
+            //     head1.material = noise1
             // }
             // if (child.name == "head2") {
             //     head2 = child;
@@ -59,7 +59,8 @@ export default function Spin({gltf }) {
 
     useFrame(() => {
         if (!headspaces) return;
-        headspaces.rotation.y -= .01;
+        headspaces.rotation.y -= .1;
+        headspaces.rotation.x += .3;
         headspaces.position.x = mouse.x / 6.;
         headspaces.position.y = mouse.y / 6.;
     })
