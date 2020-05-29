@@ -35,14 +35,26 @@ export default function Reflect({ gltf }) {
                 // child.material = sunsetGradientNoise;
             }
             if (child.name == "Object_0") {
-                head1 = child
+                console.log("WE GOT HEAD1", child)
+                head1 = child.clone()
                 if (head1.material.map) {
                     // passing the map in here to copy it directly from the
                     // gltf, which gets initialized after the material 
-                    noise1.uniforms.map = { value: head1.material.map }
+                    // noise1.uniforms.map = { value: head1.material.map }
                 }
 
-                head1.material = noise1
+                // head1.material = noise1
+
+                head2 = child.clone()
+                if (head2.material.map) {
+                    // passing the map in here to copy it directly from the
+                    // gltf, which gets initialized after the material 
+                    // noise2.uniforms.map = { value: head2.material.map }
+                }
+
+                // head2.material = noise1
+ 
+
             }
             // if (child.name == "head1") {
             //     head1 = child;

@@ -6,6 +6,7 @@ export const HEADSPACE_3_PATH = assetPath("11/objects/headspace3/main.glb");
 export const HEADSPACE_4_PATH = assetPath("11/objects/headspace4/main.gltf");
 export const HEADSPACE_8_PATH = assetPath("11/objects/headspace8/main.gltf");
 export const HEADSPACE_9_PATH = assetPath("11/objects/headspace9/main.glb");
+export const HEADSPACE_10_PATH = assetPath("11/objects/headspace10/main.glb");
 
 export const REMEDY = "Remedy"
 export const FEAR = "Fear"
@@ -27,11 +28,11 @@ export const FIRST_TRACK = REMEDY
 export const TRACKS_CONFIG = {}
 TRACKS_CONFIG[REMEDY] = {
     steps: [
-        { time: 0, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 0, headspace: REFLECT, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
         // TODO rm me
-        { time: 1, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: FOAM_GRIP_PURPLE, room: BW_TRON2 },
+        // { time: 1, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: FOAM_GRIP_PURPLE, room: BW_TRON2 },
         // TODO rm me
-        { time: 3, headspace: REFLECT, complexity: "small", dynamics: "flat", headmat: WIREFRAMEY, room: DARK_TRON2 },
+        // { time: 3, headspace: REFLECT, complexity: "small", dynamics: "flat", headmat: WIREFRAMEY, room: DARK_TRON2 },
         { time: 14, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: BW_TRON2 },
         { time: 21, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
         { time: 35, headspace: SPIN, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },

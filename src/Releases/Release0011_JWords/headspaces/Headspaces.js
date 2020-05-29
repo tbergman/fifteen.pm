@@ -27,13 +27,19 @@ export default function Headspaces({ stepIdx, ...props }) {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
-    })
+    });
+
+    const lowPolyOneFace = useLoader(GLTFLoader, C.HEADSPACE_10_PATH, loader => {
+        const dracoLoader = new DRACOLoader()
+        dracoLoader.setDecoderPath('/draco-gltf/')
+        loader.setDRACOLoader(dracoLoader)
+    });
 
     return (
         <>
             {headspace == C.EXPLODE && <Explode gltf={lowPolyTwoFace} />}
             {headspace == C.SPIN && <Spin gltf={lowPolyTwoFace} />}
-            {headspace == C.REFLECT && <Reflect gltf={lowPolyTwoFace} />}
+            {headspace == C.REFLECT && <Reflect gltf={lowPolyOneFace} />}
         </>
     )
 }
