@@ -21,12 +21,12 @@ export default function Reflect({ gltf }) {
 
     const { foamGripPurple } = useContext(MaterialsContext);
     const { noise1, head2Mat } = useContext(MaterialsContext);
-   
+
     const [head1, head2] = useMemo(() => {
         let head1, head2;
-        console.log("BACK AGAIN... only load me once! ")
+        // console.log("BACK AGAIN... only load me once! ")
         gltf.scene.traverse(child => {
-            console.log(child.name)
+            // console.log(child.name)
             if (child.type == "Mesh") {
                 // child.material.transparent = true;
                 // child.material.opacity = .9;
@@ -35,7 +35,6 @@ export default function Reflect({ gltf }) {
                 // child.material = sunsetGradientNoise;
             }
             if (child.name == "Object_0") {
-                console.log("WE GOT HEAD1", child)
                 head1 = child.clone()
                 if (head1.material.map) {
                     // passing the map in here to copy it directly from the
@@ -51,9 +50,12 @@ export default function Reflect({ gltf }) {
                     // gltf, which gets initialized after the material 
                     // noise2.uniforms.map = { value: head2.material.map }
                 }
+                head1.position.set([0, -5, 0])
+                head2.position.set([0, 5, 0])
+
 
                 // head2.material = noise1
- 
+
 
             }
             // if (child.name == "head1") {
@@ -103,16 +105,18 @@ export default function Reflect({ gltf }) {
         <group ref={ref}>
             {headspaces &&
                 <>
-                    <a.group ref={head1GroupRef} rotation-y={y.to(y => y / 200)}>
+                    {/* <a.group ref={head1GroupRef} rotation-y={y.to(y => y / 200)}> */}
+                    <a.group ref={head1GroupRef} >
                         <mesh ref={head1MeshRef} material={head1.material} >
                             <bufferGeometry attach="geometry" {...head1.geometry} />
                         </mesh>
                     </a.group>
-                    {/* <a.group ref={head2GroupRef} rotation-x={y.to(y => y / 200)}>
+                    {/* <a.group ref={head1GroupRef} rotation-y={y.to(y => y / 200)}> */}
+                    <a.group ref={head2GroupRef} >
                         <mesh ref={head2MeshRef} material={head2.material} >
                             <bufferGeometry attach="geometry" {...head2.geometry} />
                         </mesh>
-                    </a.group> */}
+                    </a.group>
                 </>
             }
 

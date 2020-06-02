@@ -22,10 +22,10 @@ export default function Explode({ gltf }) {
     // This initializes all gltf headspaces to be used by Explode, Spin, or Reflect.
     const [head1, head2] = useMemo(() => {
         let head1, head2;
-        console.log("BACK AGAIN... only load me once! ")
+        // console.log("BACK AGAIN... only load me once! ")
 
         gltf.scene.traverse(child => {
-            console.log(child.name)
+            // console.log(child.name)
             if (child.type == "Mesh") {
                 // child.material.transparent = true;
                 // child.material.opacity = .9;

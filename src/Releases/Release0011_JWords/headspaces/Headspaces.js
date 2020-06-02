@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useLoader } from 'react-three-fiber';
+import { useLoader, useFrame } from 'react-three-fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import Explode from './Explode';
@@ -13,16 +13,22 @@ export default function Headspaces({ stepIdx, ...props }) {
     const { audioStream, currentTime, currentTrackName } = useAudioPlayer();
     const [headspace, setHeadspace] = useState(C.TRACKS_CONFIG[C.REMEDY].steps[0].headspace)
 
-    useEffect(() => {
-        if (!currentTrackName) return;
-        setHeadspace(C.TRACKS_CONFIG[currentTrackName].steps[0].headspace);
-    }, [currentTrackName])
+    // // ensu
+    // useEffect(() => {
+    //     if (!currentTrackName) return;
+    //     if (!headspace) {
+    //         setHeadspace(C.TRACKS_CONFIG[currentTrackName].steps[0].headspace);
+    //     }
+    // }, [currentTrackName])
 
     useEffect(() => {
         if (!currentTrackName) return;
+
+        console.log("SETTING HEADSPACE", stepIdx)
         setHeadspace(C.TRACKS_CONFIG[currentTrackName].steps[stepIdx].headspace)
     }, [stepIdx])
 
+    
     const lowPolyTwoFace = useLoader(GLTFLoader, C.HEADSPACE_9_PATH, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')

@@ -22,11 +22,6 @@ export function Scene({ setSceneReady }) {
         scene.background = new THREE.Color(0x781D7F)
     })
 
-    useEffect(() => {
-        if (!currentTrackName) return;
-        setStep(C.TRACKS_CONFIG[currentTrackName].steps[stepIdx]);
-    }, [stepIdx])
-
     // reset step info per track
     useEffect(() => {
         if (!currentTrackName) return;
@@ -34,13 +29,21 @@ export function Scene({ setSceneReady }) {
         setStepIdx(0);
     }, [currentTrackName])
 
-    // manage current stepIdx
+    // set current step
+    useEffect(() => {
+        if (!currentTrackName) return;
+        setStep(C.TRACKS_CONFIG[currentTrackName].steps[stepIdx]);
+    }, [stepIdx])
+
+    // manage step advancement with nextStepidx
     useFrame(() => {
         if (!currentTrackName) return;
-        const nextStepIdx = stepIdx >= numSteps ? 0 : stepIdx + 1;
+        if (stepIdx + 1 == numSteps) return;
+        const nextStepIdx = stepIdx + 1;
         const nextStepTime = C.TRACKS_CONFIG[currentTrackName].steps[nextStepIdx].time
-        if (audioPlayer.currentTime > nextStepTime)
+        if (audioPlayer.currentTime > nextStepTime) {
             setStepIdx(nextStepIdx)
+        }
     });
 
     return (
