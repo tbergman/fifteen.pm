@@ -11,24 +11,23 @@ import * as C from '../constants';
 export default function Headspaces({ stepIdx, ...props }) {
 
     const { audioStream, currentTime, currentTrackName } = useAudioPlayer();
-    const [headspace, setHeadspace] = useState(C.TRACKS_CONFIG[C.REMEDY].steps[0].headspace)
+    const [headspace, setHeadspace] = useState(C.TRACKS_CONFIG[C.FIRST_TRACK].steps[0].headspace)
 
     // // ensu
-    // useEffect(() => {
-    //     if (!currentTrackName) return;
-    //     if (!headspace) {
-    //         setHeadspace(C.TRACKS_CONFIG[currentTrackName].steps[0].headspace);
-    //     }
-    // }, [currentTrackName])
+    useEffect(() => {
+        if (!currentTrackName) return;
+        if (!headspace) {
+            setHeadspace(C.TRACKS_CONFIG[currentTrackName].steps[0].headspace);
+        }
+    }, [currentTrackName])
 
     useEffect(() => {
         if (!currentTrackName) return;
-
         console.log("SETTING HEADSPACE", stepIdx)
         setHeadspace(C.TRACKS_CONFIG[currentTrackName].steps[stepIdx].headspace)
     }, [stepIdx])
 
-    
+
     const lowPolyTwoFace = useLoader(GLTFLoader, C.HEADSPACE_9_PATH, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
@@ -43,6 +42,7 @@ export default function Headspaces({ stepIdx, ...props }) {
 
     return (
         <>
+            {/* <Explode gltf={lowPolyTwoFace} /> */}
             {headspace == C.EXPLODE && <Explode gltf={lowPolyTwoFace} />}
             {headspace == C.SPIN && <Spin gltf={lowPolyTwoFace} />}
             {headspace == C.REFLECT && <Reflect gltf={lowPolyOneFace} />}

@@ -16,7 +16,6 @@ const MaterialsProvider = ({ ...props }) => {
 
     const [foamGripPurpleRef, foamGripPurple] = useResource();
     const [noise1Ref, noise1] = useResource();
-    const [head2MatRef, head2Mat] = useResource();
     const [purpleTron2Ref, purpleTron2] = useResource();
     const [darkTron2Ref, darkTron2] = useResource();
     const [bwTron2Ref, bwTron2] = useResource();
@@ -26,7 +25,6 @@ const MaterialsProvider = ({ ...props }) => {
         darkTron2,
         bwTron2,
         noise1,
-        head2Mat,
         foamGripPurple,
         wireframey,
     }
@@ -63,12 +61,10 @@ const MaterialsProvider = ({ ...props }) => {
         <Noise
             materialRef={noise1Ref}
             noiseScale={.35}
-            timeScale={.00009}
             alpha={.5}
             wireframe={false}
-            imagePath={assetPath("11/objects/headspace8/texture.png")}
+            // imagePath={assetPath("11/objects/headspace8/texture.png")}
         />
-        <Noise materialRef={head2MatRef} noiseScale={1.} timeScale={.000075} imagePath={assetPath("11/objects/headspace6/texture_png.png")} />
         {props.children}
     </MaterialsContext.Provider>
 }

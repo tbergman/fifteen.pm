@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useThree, useFrame } from 'react-three-fiber';
 import useAudioPlayer from '../../Common/UI/Player/hooks/useAudioPlayer';
@@ -13,6 +13,7 @@ export function Scene({ setSceneReady }) {
     const [step, setStep] = useState(C.TRACKS_CONFIG[C.FIRST_TRACK].steps[0]);
     const [stepIdx, setStepIdx] = useState(0);
     const [numSteps, setNumSteps] = useState(C.TRACKS_CONFIG[C.FIRST_TRACK].steps.length)
+    console.log(step)
 
     const { currentTrackName, currentTime, audioPlayer } = useAudioPlayer();
 
@@ -27,12 +28,14 @@ export function Scene({ setSceneReady }) {
         if (!currentTrackName) return;
         setNumSteps(C.TRACKS_CONFIG[currentTrackName].steps.length);
         setStepIdx(0);
+        console.log("stepIdx", stepIdx)
     }, [currentTrackName])
 
     // set current step
     useEffect(() => {
         if (!currentTrackName) return;
         setStep(C.TRACKS_CONFIG[currentTrackName].steps[stepIdx]);
+        console.log(step)
     }, [stepIdx])
 
     // manage step advancement with nextStepidx
@@ -42,9 +45,19 @@ export function Scene({ setSceneReady }) {
         const nextStepIdx = stepIdx + 1;
         const nextStepTime = C.TRACKS_CONFIG[currentTrackName].steps[nextStepIdx].time
         if (audioPlayer.currentTime > nextStepTime) {
+            console.log("SETTING STEP IDX")
             setStepIdx(nextStepIdx)
         }
     });
+
+    // const { clock } = useThree();
+    // useFrame(() => {    
+    //     if (clock && clock.elapsedTime > 3 && stepIdx < 2) {
+    //         console.log("SETTING STEP IDX", stepIdx + 1)
+    //         setStepIdx(stepIdx + 1)
+    //     }
+    // });
+
 
     return (
         <>
