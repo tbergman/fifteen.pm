@@ -490,23 +490,23 @@ export const CONTENT = {
       {
         name: "Remedy",
         type: "soundcloud",
-        id: "708031996",
-        secretToken: "s-f0NWB",
-        bpm: 152
+        id: "832516708",
+        secretToken: "s-90RRPxAlMoP",
+        bpm: 136,
       },
       {
         name: "Fear",
         type: "soundcloud",
-        id: "708031990",
-        secretToken: "s-NKawM",
-        bpm: 112
+        id: "832516702",
+        secretToken: "s-WYBrSlRSqz8",
+        bpm: 140,
       },
       {
         name: "Radio Freak",
         type: "soundcloud",
-        id: "708031987",
-        secretToken: "s-BnEVI",
-        bpm: 110
+        id: "832516690",
+        secretToken: "s-WFObAbCzVsZ",
+        bpm: 138,
       },
     ],
   }

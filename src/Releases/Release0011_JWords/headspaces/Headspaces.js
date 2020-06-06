@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useLoader, useFrame } from 'react-three-fiber';
+import { useLoader, useFrame, useResource , useThree} from 'react-three-fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import Explode from './Explode';
@@ -9,7 +9,8 @@ import useAudioPlayer from "../../../Common/UI/Player/hooks/useAudioPlayer";
 import * as C from '../constants';
 
 export default function Headspaces({ stepIdx, ...props }) {
-
+    const {mouse} = useThree();
+    const [ref, headspaces] = useResource()
     const { audioStream, currentTime, currentTrackName } = useAudioPlayer();
     const [headspace, setHeadspace] = useState(C.TRACKS_CONFIG[C.FIRST_TRACK].steps[0].headspace)
 
@@ -40,12 +41,21 @@ export default function Headspaces({ stepIdx, ...props }) {
         loader.setDRACOLoader(dracoLoader)
     });
 
+    useFrame(() => {
+        if (!headspaces) return;
+        headspaces.position.x = mouse.x / 6.;
+        headspaces.position.y = mouse.y / 6.;
+    })
+
     return (
-        <>
-            {/* <Explode gltf={lowPolyTwoFace} /> */}
-            {headspace == C.EXPLODE && <Explode gltf={lowPolyTwoFace} />}
-            {headspace == C.SPIN && <Spin gltf={lowPolyTwoFace} />}
-            {headspace == C.REFLECT && <Reflect gltf={lowPolyOneFace} />}
-        </>
+        <group ref={ref}>
+            {headspaces &&
+                <>
+                    {headspace == C.EXPLODE && <Explode gltf={lowPolyTwoFace} />}
+                    {headspace == C.SPIN && <Spin gltf={lowPolyTwoFace} />}
+                    {headspace == C.REFLECT && <Reflect gltf={lowPolyOneFace} />}
+                </>
+            }
+        </group>
     )
 }

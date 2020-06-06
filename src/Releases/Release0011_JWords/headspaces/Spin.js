@@ -12,7 +12,7 @@ import useXScroll from '../../../Common/Scroll/useXScroll'
 export default function Spin({gltf }) {
     // export default function Headspaces({ }) {
     const [y] = useYScroll([-2400, 2400], { domTarget: window })
-    const [ref, headspaces] = useResource()
+    
     const { mouse } = useThree();
     const [head1GroupRef, head1Group] = useResource()
     const [head2GroupRef, head2Group] = useResource();
@@ -57,13 +57,7 @@ export default function Spin({gltf }) {
         return [head1, head2];
     });
 
-    useFrame(() => {
-        if (!headspaces) return;
-        headspaces.rotation.y -= .1;
-        headspaces.rotation.x += .3;
-        headspaces.position.x = mouse.x / 6.;
-        headspaces.position.y = mouse.y / 6.;
-    })
+
 
     useFrame(() => {
         if (!head2Group) return;
@@ -90,8 +84,8 @@ export default function Spin({gltf }) {
     })
 
     return (
-        <group ref={ref}>
-            {headspaces &&
+        
+            
                 <>
                     <a.group ref={head1GroupRef} rotation-y={y.to(y => y / 200)}>
                         <mesh ref={head1MeshRef} material={head1.material} >
@@ -104,8 +98,8 @@ export default function Spin({gltf }) {
                         </mesh>
                     </a.group> */}
                 </>
-            }
+            
 
-        </group>
+
     );
 }

@@ -28,32 +28,17 @@ export const WIREFRAMEY = "wireframey"
 export const TRACKS_CONFIG = {}
 TRACKS_CONFIG[REMEDY] = {
     steps: [
-        { time: 0, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: BW_TRON2 },
-        // TODO rm me
-        { time: 2, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: FOAM_GRIP_PURPLE, room: BW_TRON2 },
-        // TODO rm me
-        { time: 3, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        // TODO rm me
-        { time: 4, headspace: REFLECT, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        // TODO rm me
-        { time: 5, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: FOAM_GRIP_PURPLE, room: BW_TRON2 },
-        // TODO rm me
-        { time: 6, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-       
-
-
-        // TODO rm me
-        // { time: 3, headspace: REFLECT, complexity: "small", dynamics: "flat", headmat: WIREFRAMEY, room: DARK_TRON2 },
-        // { time: 14, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: BW_TRON2 },
-        // { time: 21, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        // { time: 35, headspace: SPIN, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        // { time: 42, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        // { time: 49, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        // { time: 63, headspace: REFLECT, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        // { time: 70, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        // { time: 75, headspace: EXPLODE, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        // { time: 91, headspace: SPIN, complexity: "large", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        // { time: 176, headspace: EXPLODE, complexity: "large", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 0, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: BW_TRON2 },
+        { time: 14, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: BW_TRON2 },
+        { time: 21, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 35, headspace: SPIN, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 42, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 49, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 63, headspace: REFLECT, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 70, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 75, headspace: EXPLODE, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 91, headspace: SPIN, complexity: "large", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 176, headspace: EXPLODE, complexity: "large", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
     ]
 }
 TRACKS_CONFIG[FEAR] = {

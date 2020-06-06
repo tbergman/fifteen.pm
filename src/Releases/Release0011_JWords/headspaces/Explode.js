@@ -33,8 +33,6 @@ export default function Explode({ gltf }) {
                     // gltf, which gets initialized after the material 
                     noise1.uniforms.map = { value: head1.material.map }
                 }
-
-
             }
         })
         return head1;
@@ -52,17 +50,13 @@ export default function Explode({ gltf }) {
     //     headspaces.position.y = mouse.y / 6.;
     // })
 
-    const start = useMemo(() => Date.now());
-
-
-
     return (
         <group ref={ref}>
             {headspaces &&
                 <>
                     {/* <a.group ref={head1GroupRef} rotation-y={y.to(y => y / 200)}> */}
                     <group ref={head1GroupRef}>
-                        <mesh ref={head1MeshRef} material={head1.material} >
+                        <mesh ref={head1MeshRef} material={head1.material}  >
                             <bufferGeometry attach="geometry" {...head1.geometry} />
                         </mesh>
                     </group>
