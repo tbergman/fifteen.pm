@@ -17,19 +17,18 @@ export const EXPLODE = "explode"
 export const SPIN = "spin"
 export const REFLECT = "reflect"
 export const PURPLE_TRON2 = "purpleTron2"
-export const DARK_TRON2 = "darkTron2"
-export const BW_TRON2 = "bwTron2"
+export const BLACK_BG = "blackBG"
+export const ORANGE_TRON2 = "orangeTron2"
 export const NOISE1 = "noise1"
-export const FOAM_GRIP_PURPLE = "foamGripPurple"
+export const NAIVE_GLASS = "naiveGlass"
 export const WIREFRAMEY = "wireframey"
-
 
 // e.g.
 export const TRACKS_CONFIG = {}
 TRACKS_CONFIG[REMEDY] = {
     steps: [
-        { time: 0, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: BW_TRON2 },
-        { time: 14, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: BW_TRON2 },
+        { time: 0, headspace: REFLECT, complexity: "small", dynamics: "flat", headmat: WIREFRAMEY, room: PURPLE_TRON2 },
+        { time: 14, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: ORANGE_TRON2 },
         { time: 21, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
         { time: 35, headspace: SPIN, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
         { time: 42, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
@@ -43,7 +42,7 @@ TRACKS_CONFIG[REMEDY] = {
 }
 TRACKS_CONFIG[FEAR] = {
     steps: [
-        { time: 0, headspace: SPIN, complexity: "small", dynamics: "decreasing", headmat: NOISE1, room: DARK_TRON2 },
+        { time: 0, headspace: SPIN, complexity: "small", dynamics: "decreasing", headmat: NOISE1, room: BLACK_BG },
         { time: 15, headspace: SPIN, complexity: "small", dynamics: "increasing", headmat: NOISE1, room: PURPLE_TRON2 },
         { time: 27, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
         { time: 41, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
@@ -56,7 +55,7 @@ TRACKS_CONFIG[FEAR] = {
 }
 TRACKS_CONFIG[RADIO_FREAK] = {
     steps: [
-        { time: 0, headspace: REFLECT, complexity: "small", dynamics: "flat", headmat: NOISE1, room: BW_TRON2 },
+        { time: 0, headspace: REFLECT, complexity: "small", dynamics: "flat", headmat: NOISE1, room: ORANGE_TRON2 },
         { time: 15, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
         { time: 22, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
         { time: 27, headspace: REFLECT, complexity: "small", dynamics: "increasing", headmat: NOISE1, room: PURPLE_TRON2 },

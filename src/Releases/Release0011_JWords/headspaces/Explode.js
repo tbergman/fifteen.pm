@@ -23,7 +23,6 @@ export default function Explode({ gltf }) {
     const head1 = useMemo(() => {
         let head1;
         gltf.scene.traverse(child => {
-            // console.log(child.name)
             if (child.type == "Mesh") {
             }
             if (child.name == "Object_0") {

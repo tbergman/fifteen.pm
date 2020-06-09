@@ -1,12 +1,8 @@
-
-
 import React, { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useResource } from 'react-three-fiber';
-import FoamGrip from '../../Common/Materials/FoamGrip';
 import Noise from '../../Common/Materials/Noise';
 import { assetPath } from '../../Common/Utils/assets';
-// import {SunsetGradient} from '../../Common/Materials/SunsetGradient';
 import TronMaterial2 from '../../Common/Materials/TronMaterial2';
 import NaiveGlass from '../../Common/Materials/NaiveGlass';
 
@@ -15,21 +11,20 @@ const MaterialsContext = React.createContext([{}, () => { }]);
 const MaterialsProvider = ({ ...props }) => {
     const [loaded, setLoaded] = useState(false);
 
-    const [foamGripPurpleRef, foamGripPurple] = useResource();
     const [noise1Ref, noise1] = useResource();
-    const [purpleTron2Ref, purpleTron2] = useResource();
-    const [darkTron2Ref, darkTron2] = useResource();
-    const [bwTron2Ref, bwTron2] = useResource();
     const [wireframeyRef, wireframey] = useResource();
+    const [purpleTron2Ref, purpleTron2] = useResource();
+    const [blackBGRef, blackBG] = useResource();
+    const [orangeTron2Ref, orangeTron2] = useResource();
     const [naiveGlassRef, naiveGlass] = useResource();
+
     const materials = {
         purpleTron2,
-        darkTron2,
-        bwTron2,
+        blackBG,
+        orangeTron2,
         noise1,
-        foamGripPurple,
-        wireframey,
         naiveGlass,
+        wireframey,
     }
 
     useEffect(() => {
@@ -41,35 +36,32 @@ const MaterialsProvider = ({ ...props }) => {
     return <MaterialsContext.Provider value={{ loaded, ...materials }}>
         <TronMaterial2
             materialRef={purpleTron2Ref}
-            colorOffset={new THREE.Vector3(0, .1, 0.2)}
             side={THREE.BackSide}
+            colorOffset={new THREE.Vector3(0.5, -0.2, 0.5)}
+        />
+        <meshBasicMaterial
+            ref={blackBGRef}
+            side={THREE.BackSide}
+            color={new THREE.Color("black")}
         />
         <TronMaterial2
-            materialRef={darkTron2Ref}
-            side={THREE.BackSide}
-            colorOffset={new THREE.Vector3(0, 1., 0.)}
-        />
-        <TronMaterial2
-            materialRef={bwTron2Ref}
+            materialRef={orangeTron2Ref}
             side={THREE.BackSide}
             colorOffset={new THREE.Vector3(.1, 0., 0.1)}
         />
-        <FoamGrip
-            materialRef={foamGripPurpleRef}
-            color={0xff00af}
-            specular={0x00ff00}
-            side={THREE.BackSide}
-        />
-        <meshStandardMaterial materialRef={wireframeyRef} wireframe={true} />
         <NaiveGlass
             materialRef={naiveGlassRef}
+            envMapURL={assetPath("11/textures/env-maps/old-cathedral-jamescastle-24128368@N00_49318613712.jpg")}
+        />
+        <meshStandardMaterial
+            ref={wireframeyRef}
+            wireframe={false}
         />
         <Noise
             materialRef={noise1Ref}
             noiseScale={.35}
             alpha={.5}
             wireframe={false}
-            // imagePath={assetPath("11/objects/headspace8/texture.png")}
         />
         {props.children}
     </MaterialsContext.Provider>

@@ -1,16 +1,12 @@
-import React, { useEffect, useMemo, useContext, Suspense } from 'react';
+import { a } from '@react-spring/three';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
+import { useFrame, useResource, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
-import { useLoader, useResource, useFrame, useThree } from 'react-three-fiber';
-
-import * as C from '../constants';
+import useYScroll from '../../../Common/Scroll/useYScroll';
 import { MaterialsContext } from '../MaterialsContext';
-import { a } from '@react-spring/three'
-import useYScroll from '../../../Common/Scroll/useYScroll'
-import useXScroll from '../../../Common/Scroll/useXScroll'
-import cloudEnvMap from '../../../Common/Materials/utils.js';
 
-export default function Reflect({ gltf }) {
-    // export default function Headspaces({ }) {
+
+export default function Reflect({ gltf, material }) {
     const [head1y] = useYScroll([-2400, 2400], { domTarget: window });
     const [head2y] = useYScroll([-2400, 2400], { domTarget: window });
     const [ref, headspaces] = useResource()
@@ -19,26 +15,23 @@ export default function Reflect({ gltf }) {
     const [head2GroupRef, head2Group] = useResource();
     const [head1MeshRef, head1Mesh] = useResource();
     const [head2MeshRef, head2Mesh] = useResource();
-    // const [wireframeRef, useWireframe] = useResource();
 
+    const { naiveGlass } = useContext(MaterialsContext);
 
-    const { foamGripPurple, naiveGlass } = useContext(MaterialsContext);
-    const { noise1, head2Mat } = useContext(MaterialsContext);
-
-    const [head1, head2] = useMemo(() => {
-        let head1, head2;
+    const [head1, head2, originalMap] = useMemo(() => {
+        let head1, head2, originalMap;
         gltf.scene.traverse(child => {
             if (child.name == "Object_0") {
-                const originalMap = child.material.map;
-                child.material = naiveGlass;
-                child.material.envMap = cloudEnvMap;
-                child.material.map = originalMap;
+                // const originalMap = child.material.map;
+                // child.material = naiveGlass;
+                // child.material.map = originalMap;
+                originalMap = child.material.map
                 head1 = child.clone()
                 head2 = child.clone()
             }
         })
-        return [head1, head2];
-    });
+        return [head1, head2, originalMap];
+    }, [gltf]);
 
     useFrame(() => {
         if (!headspaces) return;
@@ -52,24 +45,25 @@ export default function Reflect({ gltf }) {
     //     head1Group.position.x = 100
     // }, [head1Group])
 
-    useFrame(() => {
-        if (!head2Group) return;
-        // head2Group.rotation.y -= .01;
-        // if (Math.abs(head2Group.rotation.x % .1) < .01) {
-        //     head2Mesh.visible = true
-        //     head2Mesh.material = head2.material
-        // } else if (Math.abs(head2Group.rotation.x % .1) > .9){
-        //     head2Mesh.visible = false
-        // } else {
-        //     head2Mesh.visible = true
-        //     head2Mesh.material = foamGripPurple
-        // }
-    })
+    // useFrame(() => {
+    // if (!head2Group) return;
+    // head2Group.rotation.y -= .01;
+    // if (Math.abs(head2Group.rotation.x % .1) < .01) {
+    //     head2Mesh.visible = true
+    //     head2Mesh.material = head2.material
+    // } else if (Math.abs(head2Group.rotation.x % .1) > .9){
+    //     head2Mesh.visible = false
+    // } else {
+    //     head2Mesh.visible = true
+    //     head2Mesh.material = foamGripPurple
+    // }
+    // })
 
-    useEffect(() => {
-        if (!head2Group) return;
-        // head2Group.rotation.y = THREE.Math.degToRad(180);
-    }, [head2Group])
+    // useEffect(() => {
+    //     if (!head2Group) return;
+    //     // head2Group.rotation.y = THREE.Math.degToRad(180);
+    // }, [head2Group])
+
 
     // useEffect(() => {
     //     if (!head1Group || !head2Group) return;
@@ -82,18 +76,23 @@ export default function Reflect({ gltf }) {
         head2Group.rotation.y = head1Group.rotation.y - THREE.Math.degToRad(180);
     })
 
+    useEffect(() => {
+        if (!material) return;
+        material.map = originalMap;
+    }, [material])
+
     return (
         <group ref={ref}>
             {headspaces &&
                 <>
                     <a.group ref={head1GroupRef} position-x={.1} rotation-y={head1y.to(head1y => head1y / 200)}>
-                        <mesh ref={head1MeshRef} material={head1.material} >
+                        <mesh ref={head1MeshRef} material={material}>
                             <bufferGeometry attach="geometry" {...head1.geometry} />
                         </mesh>
                     </a.group>
 
                     <a.group ref={head2GroupRef} position-x={-.1}>
-                        <mesh ref={head2MeshRef} material={head2.material} >
+                        <mesh ref={head2MeshRef} material={material} >
                             <bufferGeometry attach="geometry" {...head2.geometry} />
                         </mesh>
                     </a.group>

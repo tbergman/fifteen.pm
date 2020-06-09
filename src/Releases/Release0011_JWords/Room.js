@@ -1,20 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
 import useAudioPlayer from '../../Common/UI/Player/hooks/useAudioPlayer';
 import * as C from './constants';
-import { MaterialsContext } from './MaterialsContext';
+import { MaterialsContext, setMaterial } from './MaterialsContext';
 
 export default function Room({ step, stepIdx }) {
-    const { purpleTron2, darkTron2, bwTron2 } = useContext(MaterialsContext);
     const { currentTrackName } = useAudioPlayer();
     const [material, setMaterial] = useState()
 
-    function _setMaterial(materialName) {
+    const { purpleTron2, blackBG, orangeTron2 } = useContext(MaterialsContext);
+
+    function _setMaterial(materialName, setter) {
         if (materialName == C.PURPLE_TRON2) {
             setMaterial(purpleTron2)
-        } else if (materialName == C.DARK_TRON2) {
-            setMaterial(darkTron2)
-        } else if (materialName == C.BW_TRON2) {
-            setMaterial(bwTron2)
+        } else if (materialName == C.BLACK_BG) {
+            setMaterial(blackBG)
+        } else if (materialName == C.ORANGE_TRON2) {
+            setMaterial(orangeTron2)
         } else {
             console.error("no match for materialName", materialName);
         }
