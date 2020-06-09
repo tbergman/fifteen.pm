@@ -27,7 +27,7 @@ export const WIREFRAMEY = "wireframey"
 export const TRACKS_CONFIG = {}
 TRACKS_CONFIG[REMEDY] = {
     steps: [
-        { time: 0, headspace: REFLECT, complexity: "small", dynamics: "flat", headmat: WIREFRAMEY, room: PURPLE_TRON2 },
+        { time: 0, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: WIREFRAMEY, room: BLACK_BG },
         { time: 14, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: ORANGE_TRON2 },
         { time: 21, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
         { time: 35, headspace: SPIN, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },

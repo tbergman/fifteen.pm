@@ -22,9 +22,6 @@ export default function Reflect({ gltf, material }) {
         let head1, head2, originalMap;
         gltf.scene.traverse(child => {
             if (child.name == "Object_0") {
-                // const originalMap = child.material.map;
-                // child.material = naiveGlass;
-                // child.material.map = originalMap;
                 originalMap = child.material.map
                 head1 = child.clone()
                 head2 = child.clone()
@@ -35,41 +32,9 @@ export default function Reflect({ gltf, material }) {
 
     useFrame(() => {
         if (!headspaces) return;
-        headspaces.rotation.y += .01;
-        // headspaces.rotation.y -= .1;
-        headspaces.rotation.x += .03;
+        headspaces.rotation.y += .001;
+        headspaces.rotation.x += .003;
     })
-
-    // useEffect(() => {
-    //     if (!head1Group) return;
-    //     head1Group.position.x = 100
-    // }, [head1Group])
-
-    // useFrame(() => {
-    // if (!head2Group) return;
-    // head2Group.rotation.y -= .01;
-    // if (Math.abs(head2Group.rotation.x % .1) < .01) {
-    //     head2Mesh.visible = true
-    //     head2Mesh.material = head2.material
-    // } else if (Math.abs(head2Group.rotation.x % .1) > .9){
-    //     head2Mesh.visible = false
-    // } else {
-    //     head2Mesh.visible = true
-    //     head2Mesh.material = foamGripPurple
-    // }
-    // })
-
-    // useEffect(() => {
-    //     if (!head2Group) return;
-    //     // head2Group.rotation.y = THREE.Math.degToRad(180);
-    // }, [head2Group])
-
-
-    // useEffect(() => {
-    //     if (!head1Group || !head2Group) return;
-    //     head2Group.position.x = -.1
-    //     head2Group.rotation.y = THREE.Math.degToRad(180)
-    // }, [head1Group])
 
     useFrame(() => {
         if (!head2Group || !head1Group) return;
@@ -77,9 +42,9 @@ export default function Reflect({ gltf, material }) {
     })
 
     useEffect(() => {
-        if (!material) return;
+        if (!material || !originalMap) return;
         material.map = originalMap;
-    }, [material])
+    }, [material, originalMap])
 
     return (
         <group ref={ref}>

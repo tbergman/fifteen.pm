@@ -55,7 +55,9 @@ const MaterialsProvider = ({ ...props }) => {
         />
         <meshStandardMaterial
             ref={wireframeyRef}
-            wireframe={false}
+            transparent={true}
+            opacity={.9}
+            wireframe={true}
         />
         <Noise
             materialRef={noise1Ref}
