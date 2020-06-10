@@ -40,7 +40,8 @@ export const LARGE = "large"
 export const TRACKS_CONFIG = {}
 TRACKS_CONFIG[REMEDY] = {
     steps: [
-        { time: 0, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material1: WIREFRAMEY1, room: BLACK_BG },
+        { time: 0, headspace: ASYMMETRICAL, complexity: MEDIUM, dynamics: "flat", material1: NOISE1, material2: NOISE2, room: PURPLE_TRON2 },
+        { time: 0, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material1: NOISE1, room: BLACK_BG },
         // { time: 2, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
         // { time: 3, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NAIVE_GLASS, room: PURPLE_TRON2 },
         // { time: 4, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
@@ -54,41 +55,41 @@ TRACKS_CONFIG[REMEDY] = {
         // { time: 10, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: ORANGE_TRON2 },
         // { time: 11, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
 
-        // // { time: 14, headspace: SPIN, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        // { time: 21, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        // { time: 35, headspace: ASYMMETRICAL, complexity: MEDIUM, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        // { time: 42, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        // { time: 49, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        // { time: 63, headspace: SYMMETRICAL, complexity: MEDIUM, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        // { time: 70, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        // { time: 75, headspace: SINGLE, complexity: MEDIUM, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        // { time: 91, headspace: ASYMMETRICAL, complexity: LARGE, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        // { time: 176, headspace: SINGLE, complexity: LARGE, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        // { time: 14, headspace: SPIN, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 21, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 35, headspace: ASYMMETRICAL, complexity: MEDIUM, dynamics: "flat", material1: NOISE1, material2: NOISE2, room: PURPLE_TRON2 },
+        { time: 42, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 49, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material1: NOISE1, material2: NAIVE_GLASS2, room: PURPLE_TRON2 },
+        { time: 63, headspace: SYMMETRICAL, complexity: MEDIUM, dynamics: "flat", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 70, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material1: NOISE1, material2: NOISE2, room: PURPLE_TRON2 },
+        { time: 75, headspace: SINGLE, complexity: MEDIUM, dynamics: "flat", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 91, headspace: ASYMMETRICAL, complexity: LARGE, dynamics: "flat", material1: NOISE1, material2: NOISE2, room: PURPLE_TRON2 },
+        { time: 176, headspace: SINGLE, complexity: LARGE, dynamics: "flat", material1: NOISE1, room: PURPLE_TRON2 },
     ]
 }
 TRACKS_CONFIG[FEAR] = {
     steps: [
-        { time: 0, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "decreasing", material: NOISE1, room: BLACK_BG },
-        { time: 15, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "increasing", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 27, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 41, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 48, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "increasing", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 61, headspace: ASYMMETRICAL, complexity: MEDIUM, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 83, headspace: SINGLE, complexity: LARGE, dynamics: "decreasing", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 137, headspace: SYMMETRICAL, complexity: LARGE, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 155, headspace: ASYMMETRICAL, complexity: LARGE, dynamics: "decreasing", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 0, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "decreasing", material1: NOISE1, material2: NOISE2, room: BLACK_BG },
+        { time: 15, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "increasing", material: NOISE1, material2: NOISE2, room: PURPLE_TRON2 },
+        { time: 27, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 41, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", materia1: NOISE1, material2: WIREFRAMEY2, room: PURPLE_TRON2 },
+        { time: 48, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "increasing", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 61, headspace: ASYMMETRICAL, complexity: MEDIUM, dynamics: "flat", material1: NOISE1, material2: NOISE2, room: PURPLE_TRON2 },
+        { time: 83, headspace: SINGLE, complexity: LARGE, dynamics: "decreasing", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 137, headspace: SYMMETRICAL, complexity: LARGE, dynamics: "flat", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 155, headspace: ASYMMETRICAL, complexity: LARGE, dynamics: "decreasing", material1: NOISE1, material2: NOISE2, room: PURPLE_TRON2 },
     ]
 }
 TRACKS_CONFIG[RADIO_FREAK] = {
     steps: [
-        { time: 0, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: ORANGE_TRON2 },
-        { time: 15, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 22, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 27, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "increasing", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 58, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 103, headspace: SINGLE, complexity: MEDIUM, dynamics: "increasing", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 166, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 220, headspace: SINGLE, complexity: MEDIUM, dynamics: "increasing", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 0, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material1: NOISE1, room: ORANGE_TRON2 },
+        { time: 15, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 22, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material1: NOISE1, material2: NOISE2, room: PURPLE_TRON2 },
+        { time: 27, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "increasing", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 58, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material1: NOISE1, material2: NOISE2, room: PURPLE_TRON2 },
+        { time: 103, headspace: SINGLE, complexity: MEDIUM, dynamics: "increasing", material1: NOISE1, room: PURPLE_TRON2 },
+        { time: 166, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material1: NOISE1, material2: NOISE2, room: PURPLE_TRON2 },
+        { time: 220, headspace: SINGLE, complexity: MEDIUM, dynamics: "increasing", material1: NOISE1, room: PURPLE_TRON2 },
     ]
 }
 //

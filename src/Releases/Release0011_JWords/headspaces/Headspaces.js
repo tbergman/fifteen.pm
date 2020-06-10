@@ -101,6 +101,18 @@ export default function Headspaces({ step }) {
                             complexity={C.SMALL}
                         />
                     }
+                    {headspaceName == _headspaceName({ headspace: C.SINGLE, complexity: C.MEDIUM, material1: C.NOISE1 }) &&
+                        <Single
+                            head={oneFace[C.NOISE1]}
+                            complexity={C.MEDIUM}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.SINGLE, complexity: C.LARGE, material1: C.NOISE1 }) &&
+                        <Single
+                            head={oneFace[C.NOISE1]}
+                            complexity={C.LARGE}
+                        />
+                    }
                     {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.SMALL, material1: C.NAIVE_GLASS1, material2: C.NAIVE_GLASS2 }) &&
                         <Asymmetrical
                             head1={oneFace[C.NAIVE_GLASS1]}
@@ -115,6 +127,13 @@ export default function Headspaces({ step }) {
                             complexity={C.SMALL}
                         />
                     }
+                    {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.SMALL, material1: C.NOISE1, material2: C.NAIVE_GLASS2 }) &&
+                        <Asymmetrical
+                            head1={oneFace[C.NOISE1]}
+                            head2={twoFace[C.NAIVE_GLASS2]}
+                            complexity={C.SMALL}
+                        />
+                    }
                     {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.SMALL, material1: C.NOISE1, material2: C.NOISE2 }) &&
                         <Asymmetrical
                             head1={oneFace[C.NOISE1]}
@@ -122,10 +141,30 @@ export default function Headspaces({ step }) {
                             complexity={C.SMALL}
                         />
                     }
+                    {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.MEDIUM, material1: C.NOISE1, material2: C.NOISE2 }) &&
+                        <Asymmetrical
+                            head1={oneFace[C.NOISE1]}
+                            head2={twoFace[C.NOISE2]}
+                            complexity={C.MEDIUM}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.LARGE, material1: C.NOISE1, material2: C.NOISE2 }) &&
+                        <Asymmetrical
+                            head1={oneFace[C.NOISE1]}
+                            head2={twoFace[C.NOISE2]}
+                            complexity={C.LARGE}
+                        />
+                    }
                     {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.SMALL, material1: C.NOISE1 }) &&
                         <Symmetrical
                             head={oneFace[C.NOISE1]}
                             complexity={C.SMALL}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.MEDIUM, material1: C.NOISE1 }) &&
+                        <Symmetrical
+                            head={oneFace[C.NOISE1]}
+                            complexity={C.MEDIUM}
                         />
                     }
                     {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.SMALL, material1: C.NAIVE_GLASS1 }) &&

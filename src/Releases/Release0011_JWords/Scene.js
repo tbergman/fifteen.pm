@@ -44,6 +44,7 @@ export function Scene({ setSceneReady }) {
         if (audioPlayer.currentTime > nextStepTime) {
             console.log("ADVANCING TO STEP", nextStepIdx)
             setStepIdx(nextStepIdx)
+            console.log("STEP?", step)
         }
     });
 
