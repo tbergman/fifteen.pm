@@ -29,11 +29,11 @@ export const HEAD_MATERIALS = [NOISE1, NAIVE_GLASS, WIREFRAMEY]
 export const TRACKS_CONFIG = {}
 TRACKS_CONFIG[REMEDY] = {
     steps: [
-        { time: 0, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: BLACK_BG },
-        { time: 2, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
-        { time: 3, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NAIVE_GLASS, room: PURPLE_TRON2 },
-        { time: 4, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
-        { time: 6, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
+        { time: 0, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
+        // { time: 2, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
+        // { time: 3, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NAIVE_GLASS, room: PURPLE_TRON2 },
+        // { time: 4, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
+        // { time: 6, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
         // { time: 4, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
         // { time: 5, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: ORANGE_TRON2 },
         // { time: 6, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: BLACK_BG },

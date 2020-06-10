@@ -22,13 +22,13 @@ function _extractHeadParts(gltf, materials) {
             head = child.clone()
             for (const name of materialNames) {
                 headMaterials[name] = materials[name]
+                // assign the original image map to the material so we can see jen
                 if (name == C.NOISE1) {
-                    console.log("NOISE!", headMaterials[name])
-                    headMaterials[name].uniforms.map = child.material.map.clone()
+                    headMaterials[name].uniforms.map = { value: child.material.map }
                 } else {
-                    headMaterials[name].map = child.material.map.clone()
+                    headMaterials[name].map = child.material.map;
                 }
-                
+
             }
         }
     })
@@ -37,55 +37,28 @@ function _extractHeadParts(gltf, materials) {
 
 export default function Headspaces({ step }) {
     const [ref, headspaces] = useResource()
-    const [explodeSmallFlatNoise1PurpleTronRef, explodeSmallFlatNoise1PurpleTron] = useResource();
-    const { audioStream, currentTime, currentTrackName } = useAudioPlayer();
+    const { currentTrackName } = useAudioPlayer();
     const [headspaceName, setHeadspaceName] = useState(_headspaceName(C.TRACKS_CONFIG[C.FIRST_TRACK].steps[0]))
     const materials = useContext(MaterialsContext);
-    const [material, setMaterial] = useState()
     const lowPolyTwoFace = useLoader(GLTFLoader, C.HEADSPACE_9_PATH, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
     });
+
     const lowPolyOneFace = useLoader(GLTFLoader, C.HEADSPACE_10_PATH, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
         loader.setDRACOLoader(dracoLoader)
     });
-    console.log("MATERIALS!", materials)
-    const oneFace = useMemo(() => _extractHeadParts(lowPolyOneFace, materials), [lowPolyOneFace]);
 
+    const oneFace = useMemo(() => _extractHeadParts(lowPolyOneFace, materials), [lowPolyOneFace]);
     const twoFace = useMemo(() => _extractHeadParts(lowPolyTwoFace, materials), [lowPolyTwoFace]);
 
 
-
-    // function _setMaterial(materialName) {
-    //     console.log("SET MATERIAL:", materialName)
-    //     if (materialName == C.NOISE1) {
-    //         setMaterial(noise1)
-    //     } else if (materialName == C.NAIVE_GLASS) {
-    //         setMaterial(naiveGlass)
-    //     } else if (materialName == C.WIREFRAMEY) {
-    //         // TODO grab the maps after gltf load so we can assign them at this step
-    //         setMaterial(wireframey)
-    //     } else {
-    //         console.error("no match for materialName", materialName);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     if (!material) _setMaterial(step.headmat);
-    // })
-
-    // useEffect(() => {
-    //     console.log("HEADSPACE NAME", headspaceName)
-    // }, [headspaceName])
-
     useEffect(() => {
         if (!currentTrackName) return;
-        console.log("STEP!", step)
         setHeadspaceName(_headspaceName(step))
-        // _setMaterial(step.headmat);
     }, [step])
 
     return (
@@ -106,6 +79,13 @@ export default function Headspaces({ step }) {
                             material={oneFace.materials[C.NAIVE_GLASS]}
                         />
                     }
+                    {headspaceName == _headspaceName({ headspace: C.SINGLE, complexity: C.SMALL, material: C.WIREFRAMEY }) &&
+                        <Single
+                            mesh={oneFace.mesh}
+                            complexity={C.SMALL}
+                            material={oneFace.materials[C.WIREFRAMEY]}
+                        />
+                    }
                     {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.SMALL, material: C.WIREFRAMEY }) &&
                         <Asymmetrical
                             mesh1={oneFace.mesh}
@@ -116,7 +96,7 @@ export default function Headspaces({ step }) {
                         />
 
                     }
-                      {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.SMALL, material: C.NOISE1 }) &&
+                    {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.SMALL, material: C.NOISE1 }) &&
                         <Asymmetrical
                             mesh1={oneFace.mesh}
                             mesh2={twoFace.mesh}

@@ -8,7 +8,6 @@ export default function Single({ mesh, complexity, material }) {
     const [ref, headspaces] = useResource()
     const [head1GroupRef, head1Group] = useResource()
     const [head1MeshRef, head1Mesh] = useResource();
-console.log("HERE W# ARE SINGLE, ", mesh, material)
 
     useFrame(() => {
         if (!headspaces) return;
