@@ -26,12 +26,12 @@ export function Scene({ setSceneReady }) {
     useEffect(() => {
         if (!currentTrackName) return;
         setNumSteps(C.TRACKS_CONFIG[currentTrackName].steps.length);
-        setStepIdx(0);
     }, [currentTrackName])
 
     // set current step
     useEffect(() => {
         if (!currentTrackName) return;
+        console.log('THE STEP IDX IS NOW', stepIdx)
         setStep(C.TRACKS_CONFIG[currentTrackName].steps[stepIdx]);
     }, [stepIdx])
 
@@ -42,18 +42,10 @@ export function Scene({ setSceneReady }) {
         const nextStepIdx = stepIdx + 1;
         const nextStepTime = C.TRACKS_CONFIG[currentTrackName].steps[nextStepIdx].time
         if (audioPlayer.currentTime > nextStepTime) {
+            console.log("ADVANCING TO STEP", nextStepIdx)
             setStepIdx(nextStepIdx)
         }
     });
-
-    // const { clock } = useThree();
-    // useFrame(() => {    
-    //     if (clock && clock.elapsedTime > 3 && stepIdx < 2) {
-    //         console.log("SETTING STEP IDX", stepIdx + 1)
-    //         setStepIdx(stepIdx + 1)
-    //     }
-    // });
-
 
     return (
         <>
@@ -61,7 +53,7 @@ export function Scene({ setSceneReady }) {
             <ambientLight />
             <MaterialsProvider>
                 <Room step={step} stepIdx={stepIdx} />
-                <Headspaces step={step} stepIdx={stepIdx} />
+                <Headspaces step={step} />
             </MaterialsProvider>
         </>
     );

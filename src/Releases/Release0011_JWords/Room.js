@@ -6,39 +6,22 @@ import { MaterialsContext, setMaterial } from './MaterialsContext';
 export default function Room({ step, stepIdx }) {
     const { currentTrackName } = useAudioPlayer();
     const [material, setMaterial] = useState()
-
     const { purpleTron2, blackBG, orangeTron2 } = useContext(MaterialsContext);
-
-    function _setMaterial(materialName, setter) {
-        if (materialName == C.PURPLE_TRON2) {
-            setMaterial(purpleTron2)
-        } else if (materialName == C.BLACK_BG) {
-            setMaterial(blackBG)
-        } else if (materialName == C.ORANGE_TRON2) {
-            setMaterial(orangeTron2)
-        } else {
-            console.error("no match for materialName", materialName);
-        }
-    }
-
-    useEffect(() => {
-        if (!material) _setMaterial(step.room);
-    })
-
-    useEffect(() => {
-        if (!currentTrackName) return;
-        _setMaterial(step.room);
-    }, [stepIdx])
-
-    useEffect(() => {
-        if (!currentTrackName) return;
-        _setMaterial(step.room);
-    }, [currentTrackName])
 
     return (
         <>
-            {material &&
-                <mesh scale={[10, 10, 10]} position={[0, 0, 0,]} material={material}>
+            {step.room == C.BLACK_BG &&
+                <mesh scale={[10, 10, 10]} position={[0, 0, 0,]} material={blackBG}>
+                    <sphereBufferGeometry attach="geometry" />
+                </mesh >
+            }
+            {step.room == C.PURPLE_TRON2 &&
+                <mesh scale={[10, 10, 10]} position={[0, 0, 0,]} material={purpleTron2}>
+                    <sphereBufferGeometry attach="geometry" />
+                </mesh >
+            }
+            {step.room == C.ORANGE_TRON2 &&
+                <mesh scale={[10, 10, 10]} position={[0, 0, 0,]} material={orangeTron2}>
                     <sphereBufferGeometry attach="geometry" />
                 </mesh >
             }

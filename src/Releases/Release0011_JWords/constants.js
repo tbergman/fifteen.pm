@@ -13,55 +13,71 @@ export const REMEDY = "Remedy"
 export const FEAR = "Fear"
 export const RADIO_FREAK = "Radio Freak"
 export const FIRST_TRACK = REMEDY
-export const EXPLODE = "explode"
-export const SPIN = "spin"
-export const REFLECT = "reflect"
+export const SINGLE = "single"
+export const ASYMMETRICAL = "asymmetrical"
+export const SYMMETRICAL = "symmetrical"
 export const PURPLE_TRON2 = "purpleTron2"
 export const BLACK_BG = "blackBG"
 export const ORANGE_TRON2 = "orangeTron2"
 export const NOISE1 = "noise1"
 export const NAIVE_GLASS = "naiveGlass"
 export const WIREFRAMEY = "wireframey"
-
-// e.g.
+export const SMALL = "small"
+export const MEDIUM = "medium"
+export const LARGE = "large"
+export const HEAD_MATERIALS = [NOISE1, NAIVE_GLASS, WIREFRAMEY]
 export const TRACKS_CONFIG = {}
 TRACKS_CONFIG[REMEDY] = {
     steps: [
-        { time: 0, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: WIREFRAMEY, room: BLACK_BG },
-        { time: 14, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: ORANGE_TRON2 },
-        { time: 21, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 35, headspace: SPIN, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 42, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 49, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 63, headspace: REFLECT, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 70, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 75, headspace: EXPLODE, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 91, headspace: SPIN, complexity: "large", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 176, headspace: EXPLODE, complexity: "large", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 0, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: BLACK_BG },
+        { time: 2, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 3, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NAIVE_GLASS, room: PURPLE_TRON2 },
+        { time: 4, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
+        { time: 6, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
+        // { time: 4, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
+        // { time: 5, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: ORANGE_TRON2 },
+        // { time: 6, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: BLACK_BG },
+        // { time: 7, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
+        // { time: 8, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: ORANGE_TRON2 },
+        // { time: 9, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
+        // { time: 10, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: ORANGE_TRON2 },
+        // { time: 11, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+
+        // // { time: 14, headspace: SPIN, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        // { time: 21, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        // { time: 35, headspace: ASYMMETRICAL, complexity: MEDIUM, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        // { time: 42, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        // { time: 49, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        // { time: 63, headspace: SYMMETRICAL, complexity: MEDIUM, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        // { time: 70, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        // { time: 75, headspace: SINGLE, complexity: MEDIUM, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        // { time: 91, headspace: ASYMMETRICAL, complexity: LARGE, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        // { time: 176, headspace: SINGLE, complexity: LARGE, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
     ]
 }
 TRACKS_CONFIG[FEAR] = {
     steps: [
-        { time: 0, headspace: SPIN, complexity: "small", dynamics: "decreasing", headmat: NOISE1, room: BLACK_BG },
-        { time: 15, headspace: SPIN, complexity: "small", dynamics: "increasing", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 27, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 41, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 48, headspace: REFLECT, complexity: "small", dynamics: "increasing", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 61, headspace: SPIN, complexity: "medium", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 83, headspace: EXPLODE, complexity: "large", dynamics: "decreasing", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 137, headspace: REFLECT, complexity: "large", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 155, headspace: SPIN, complexity: "large", dynamics: "decreasing", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 0, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "decreasing", material: NOISE1, room: BLACK_BG },
+        { time: 15, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "increasing", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 27, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 41, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 48, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "increasing", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 61, headspace: ASYMMETRICAL, complexity: MEDIUM, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 83, headspace: SINGLE, complexity: LARGE, dynamics: "decreasing", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 137, headspace: SYMMETRICAL, complexity: LARGE, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 155, headspace: ASYMMETRICAL, complexity: LARGE, dynamics: "decreasing", material: NOISE1, room: PURPLE_TRON2 },
     ]
 }
 TRACKS_CONFIG[RADIO_FREAK] = {
     steps: [
-        { time: 0, headspace: REFLECT, complexity: "small", dynamics: "flat", headmat: NOISE1, room: ORANGE_TRON2 },
-        { time: 15, headspace: EXPLODE, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 22, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 27, headspace: REFLECT, complexity: "small", dynamics: "increasing", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 58, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 103, headspace: EXPLODE, complexity: "medium", dynamics: "increasing", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 166, headspace: SPIN, complexity: "small", dynamics: "flat", headmat: NOISE1, room: PURPLE_TRON2 },
-        { time: 220, headspace: EXPLODE, complexity: "medium", dynamics: "increasing", headmat: NOISE1, room: PURPLE_TRON2 },
+        { time: 0, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: ORANGE_TRON2 },
+        { time: 15, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 22, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 27, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "increasing", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 58, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 103, headspace: SINGLE, complexity: MEDIUM, dynamics: "increasing", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 166, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: NOISE1, room: PURPLE_TRON2 },
+        { time: 220, headspace: SINGLE, complexity: MEDIUM, dynamics: "increasing", material: NOISE1, room: PURPLE_TRON2 },
     ]
 }
+//
