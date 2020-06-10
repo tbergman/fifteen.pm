@@ -107,9 +107,21 @@ export default function Headspaces({ step }) {
                             complexity={C.MEDIUM}
                         />
                     }
+                    {headspaceName == _headspaceName({ headspace: C.SINGLE, complexity: C.MEDIUM, material1: C.NAIVE_GLASS1 }) &&
+                        <Single
+                            head={oneFace[C.NAIVE_GLASS1]}
+                            complexity={C.MEDIUM}
+                        />
+                    }
                     {headspaceName == _headspaceName({ headspace: C.SINGLE, complexity: C.LARGE, material1: C.NOISE1 }) &&
                         <Single
                             head={oneFace[C.NOISE1]}
+                            complexity={C.LARGE}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.SINGLE, complexity: C.LARGE, material1: C.NAIVE_GLASS1 }) &&
+                        <Single
+                            head={oneFace[C.NAIVE_GLASS1]}
                             complexity={C.LARGE}
                         />
                     }
@@ -165,6 +177,30 @@ export default function Headspaces({ step }) {
                         <Symmetrical
                             head={oneFace[C.NOISE1]}
                             complexity={C.MEDIUM}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.MEDIUM, material1: C.NOISE1 }) &&
+                        <Symmetrical
+                            head={oneFace[C.NOISE1]}
+                            complexity={C.MEDIUM}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.MEDIUM, material1: C.WIREFRAMEY1 }) &&
+                        <Symmetrical
+                            head={oneFace[C.WIREFRAMEY1]}
+                            complexity={C.MEDIUM}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.MEDIUM, material1: C.NAIVE_GLASS1 }) &&
+                        <Symmetrical
+                            head={oneFace[C.NAIVE_GLASS1]}
+                            complexity={C.MEDIUM}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.LARGE, material1: C.NOISE1 }) &&
+                        <Symmetrical
+                            head={oneFace[C.NOISE1]}
+                            complexity={C.LARGE}
                         />
                     }
                     {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.SMALL, material1: C.NAIVE_GLASS1 }) &&

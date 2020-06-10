@@ -19,6 +19,23 @@ export default function Asymmetrical({ head1, head2, complexity}) {
     const [head2MeshRef, head2Mesh] = useResource();
 
 
+    useEffect(() => {
+        if (!head1Group) return;
+        if (complexity == C.SMALL) {
+            head1Group.scale.x *= .0075;
+            head1Group.scale.y *= .0075;
+            head1Group.scale.z *= .0075;
+        } else if (complexity == C.MEDIUM) {
+            head1Group.scale.x = 1.;
+            head1Group.scale.y = 1.;
+            head1Group.scale.z = 1.;
+        } else if (complexity == C.LARGE) {
+            head1Group.scale.x *= 10.6;
+            head1Group.scale.y *= 10.6;
+            head1Group.scale.z *= 10.5;
+        }
+    }, [complexity, head1Group])
+    
     useFrame(() => {
         if (!head2Group) return;
         head2Group.rotation.y -= .01;
