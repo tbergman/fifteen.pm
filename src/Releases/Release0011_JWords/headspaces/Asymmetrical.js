@@ -11,7 +11,7 @@ import useXScroll from '../../../Common/Scroll/useXScroll'
 import { cloudEnvMap } from '../../../Common/Materials/utils.js';
 
 
-export default function Asymmetrical({ mesh1, mesh2, complexity, material1, material2 }) {
+export default function Asymmetrical({ head1, head2, complexity}) {
     const [y] = useYScroll([-2400, 2400], { domTarget: window })
     const [head1GroupRef, head1Group] = useResource()
     const [head2GroupRef, head2Group] = useResource();
@@ -32,13 +32,13 @@ export default function Asymmetrical({ mesh1, mesh2, complexity, material1, mate
     return (
         <>
             <a.group ref={head1GroupRef} scale={[2., 2., 2.]} position={[0, 0, -.1]} rotation-y={y.to(y => y / 200)}>
-                <mesh ref={head1MeshRef} material={material1} >
-                    <bufferGeometry attach="geometry" {...mesh1.geometry} />
+                <mesh ref={head1MeshRef} material={head1.material} >
+                    <bufferGeometry attach="geometry" {...head1.geometry} />
                 </mesh>
             </a.group>
             <a.group ref={head2GroupRef} scale={[3., 3., 3.,]} position={[0, 0, .1]} rotation-x={y.to(y => y / 100)}>
-                <mesh ref={head2MeshRef} material={material2} >
-                    <bufferGeometry attach="geometry" {...mesh2.geometry} />
+                <mesh ref={head2MeshRef} material={head2.material} >
+                    <bufferGeometry attach="geometry" {...head2.geometry} />
                 </mesh>
             </a.group>
         </>

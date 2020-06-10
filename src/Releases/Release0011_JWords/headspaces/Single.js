@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useFrame, useResource } from 'react-three-fiber';
 import useYScroll from '../../../Common/Scroll/useYScroll';
 
-export default function Single({ mesh, complexity, material }) {
+export default function Single({ head, complexity }) {
     const [head1y] = useYScroll([-2400, 2400], { domTarget: window });
     const [ref, headspaces] = useResource()
     const [head1GroupRef, head1Group] = useResource()
@@ -19,8 +19,8 @@ export default function Single({ mesh, complexity, material }) {
     return (
         <group ref={ref}>
             <a.group ref={head1GroupRef} rotation-y={head1y.to(head1y => head1y / 200)} >
-                <mesh ref={head1MeshRef} material={material} position={[0, 0, 0.05]}  >
-                    <bufferGeometry attach="geometry" {...mesh.geometry} />
+                <mesh ref={head1MeshRef} material={head.material} position={[0, 0, 0.05]}  >
+                    <bufferGeometry attach="geometry" {...head.geometry} />
                 </mesh>
             </a.group>
         </group>

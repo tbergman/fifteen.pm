@@ -9,27 +9,38 @@ export const HEADSPACE_9_PATH = assetPath("11/objects/headspace9/main.glb");
 export const HEADSPACE_10_PATH = assetPath("11/objects/headspace10/main.glb");
 
 
+// tracks
 export const REMEDY = "Remedy"
 export const FEAR = "Fear"
 export const RADIO_FREAK = "Radio Freak"
 export const FIRST_TRACK = REMEDY
+// headspace components
 export const SINGLE = "single"
 export const ASYMMETRICAL = "asymmetrical"
 export const SYMMETRICAL = "symmetrical"
+// background materials
 export const PURPLE_TRON2 = "purpleTron2"
 export const BLACK_BG = "blackBG"
 export const ORANGE_TRON2 = "orangeTron2"
+// headspace materials
 export const NOISE1 = "noise1"
-export const NAIVE_GLASS = "naiveGlass"
-export const WIREFRAMEY = "wireframey"
+export const NAIVE_GLASS1 = "naiveGlass1"
+export const WIREFRAMEY1 = "wireframey1"
+export const HEAD_MATERIALS1 = [NOISE1, NAIVE_GLASS1, WIREFRAMEY1]
+export const NOISE2 = "noise2"
+export const NAIVE_GLASS2 = "naiveGlass2"
+export const WIREFRAMEY2 = "wireframey2"
+export const HEAD_MATERIALS2 = [NOISE2, NAIVE_GLASS2, WIREFRAMEY2]
+
+// headspace 'sizes' -- open to interpretation
 export const SMALL = "small"
 export const MEDIUM = "medium"
 export const LARGE = "large"
-export const HEAD_MATERIALS = [NOISE1, NAIVE_GLASS, WIREFRAMEY]
+
 export const TRACKS_CONFIG = {}
 TRACKS_CONFIG[REMEDY] = {
     steps: [
-        { time: 0, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
+        { time: 0, headspace: SYMMETRICAL, complexity: SMALL, dynamics: "flat", material1: WIREFRAMEY1, room: BLACK_BG },
         // { time: 2, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },
         // { time: 3, headspace: SINGLE, complexity: SMALL, dynamics: "flat", material: NAIVE_GLASS, room: PURPLE_TRON2 },
         // { time: 4, headspace: ASYMMETRICAL, complexity: SMALL, dynamics: "flat", material: WIREFRAMEY, room: BLACK_BG },

@@ -6,15 +6,14 @@ import useYScroll from '../../../Common/Scroll/useYScroll';
 import { MaterialsContext } from '../MaterialsContext';
 
 
-export default function Symmetrical({ mesh, material }) {
+export default function Symmetrical({ head, material }) {
     const [head1y] = useYScroll([-2400, 2400], { domTarget: window });
     const [ref, headspaces] = useResource()
     const [head1GroupRef, head1Group] = useResource()
     const [head2GroupRef, head2Group] = useResource();
     const [head1MeshRef, head1Mesh] = useResource();
     const [head2MeshRef, head2Mesh] = useResource();
-    console.log("DID SOMETHING CHANGE??", mesh, material)
-
+    
     // useFrame(() => {
     //     if (!headspaces) return;
     //     headspaces.rotation.y += .001;
@@ -30,16 +29,16 @@ export default function Symmetrical({ mesh, material }) {
         <group ref={ref}>
             {/* <group ref={head1GroupRef} position-x={.1}> */}
             <a.group ref={head1GroupRef} position-x={.1} rotation-y={head1y.to(head1y => head1y / 200)}>
-                <mesh ref={head1MeshRef} material={material}>
-                    <bufferGeometry attach="geometry" {...mesh.geometry} />
+                <mesh ref={head1MeshRef} material={head.material}>
+                    <bufferGeometry attach="geometry" {...head.geometry} />
                 </mesh>
                 {/* </group> */}
             </a.group>
 
             <a.group ref={head2GroupRef} position-x={-.1}>
                 {/* <group ref={head2GroupRef} position-x={-.1}> */}
-                <mesh ref={head2MeshRef} material={material} >
-                    <bufferGeometry attach="geometry" {...mesh.geometry} />
+                <mesh ref={head2MeshRef} material={head.material} >
+                    <bufferGeometry attach="geometry" {...head.geometry} />
                 </mesh>
             </a.group>
             {/* </group> */}
