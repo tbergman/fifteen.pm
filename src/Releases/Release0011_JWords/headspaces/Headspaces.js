@@ -1,14 +1,13 @@
-import React, { useState, useContext, useMemo, useEffect } from 'react';
-import { useLoader, useFrame, useResource, useThree } from 'react-three-fiber';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useLoader, useResource } from 'react-three-fiber';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import Single from './Single';
-import Asymmetrical from './Asymmetrical';
-import Symmetrical from './Symmetrical';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import useAudioPlayer from "../../../Common/UI/Player/hooks/useAudioPlayer";
 import * as C from '../constants';
 import { MaterialsContext } from '../MaterialsContext';
-import { cloneDeep } from "lodash";
+import Asymmetrical from './Asymmetrical';
+import Single from './Single';
+import Symmetrical from './Symmetrical';
 
 function _headspaceName({ headspace, complexity, material1, material2 }) {
     if (material2) {
@@ -18,21 +17,19 @@ function _headspaceName({ headspace, complexity, material1, material2 }) {
     }
 }
 
-function _extractHeadParts(gltf, materials, materialNames) {
+function _extractHead(gltf, materials, materialNames) {
     const head = {}
     gltf.scene.traverse(child => {
         if (child.name == "Object_0") {
             for (const name of materialNames) {
                 head[name] = child.clone()
                 head[name].material = materials[name]
-                // headMaterials[name] = materials[name]
                 // assign the original image map to the material so we can see jen
                 if (name == C.NOISE1) {
                     head[name].material.uniforms.map = { value: child.material.map }
                 } else {
                     head[name].material.map = child.material.map;
                 }
-
             }
         }
     })
@@ -61,12 +58,12 @@ export default function Headspaces({ step }) {
         loader.setDRACOLoader(dracoLoader)
     });
 
-    const oneFace = useMemo(() => _extractHeadParts(
+    const oneFace = useMemo(() => _extractHead(
         lowPolyOneFace,
         { noise1, naiveGlass1, wireframey1 },
         C.HEAD_MATERIALS1,
     ), [lowPolyOneFace]);
-    const twoFace = useMemo(() => _extractHeadParts(
+    const twoFace = useMemo(() => _extractHead(
         lowPolyTwoFace,
         { noise2, naiveGlass2, wireframey2 },
         C.HEAD_MATERIALS2,
@@ -75,6 +72,7 @@ export default function Headspaces({ step }) {
 
     useEffect(() => {
         if (!currentTrackName) return;
+        console.log("STEP!", step)
         setHeadspaceName(_headspaceName(step))
     }, [step])
 
@@ -125,6 +123,12 @@ export default function Headspaces({ step }) {
                             complexity={C.LARGE}
                         />
                     }
+                    {headspaceName == _headspaceName({ headspace: C.SINGLE, complexity: C.LARGE, material1: C.WIREFRAMEY1 }) &&
+                        <Single
+                            head={oneFace[C.WIREFRAMEY1]}
+                            complexity={C.LARGE}
+                        />
+                    }
                     {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.SMALL, material1: C.NAIVE_GLASS1, material2: C.NAIVE_GLASS2 }) &&
                         <Asymmetrical
                             head1={oneFace[C.NAIVE_GLASS1]}
@@ -153,9 +157,30 @@ export default function Headspaces({ step }) {
                             complexity={C.SMALL}
                         />
                     }
+                    {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.SMALL, material1: C.NOISE1, material2: C.WIREFRAMEY2 }) &&
+                        <Asymmetrical
+                            head1={oneFace[C.NOISE1]}
+                            head2={twoFace[C.WIREFRAMEY2]}
+                            complexity={C.SMALL}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.SMALL, material1: C.NAIVE_GLASS1, material2: C.NOISE2 }) &&
+                        <Asymmetrical
+                            head1={oneFace[C.NAIVE_GLASS1]}
+                            head2={twoFace[C.NOISE2]}
+                            complexity={C.SMALL}
+                        />
+                    }
                     {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.MEDIUM, material1: C.NOISE1, material2: C.NOISE2 }) &&
                         <Asymmetrical
                             head1={oneFace[C.NOISE1]}
+                            head2={twoFace[C.NOISE2]}
+                            complexity={C.MEDIUM}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.ASYMMETRICAL, complexity: C.MEDIUM, material1: C.WIREFRAMEY1, material2: C.NOISE2 }) &&
+                        <Asymmetrical
+                            head1={oneFace[C.WIREFRAMEY1]}
                             head2={twoFace[C.NOISE2]}
                             complexity={C.MEDIUM}
                         />
@@ -165,6 +190,18 @@ export default function Headspaces({ step }) {
                             head1={oneFace[C.NOISE1]}
                             head2={twoFace[C.NOISE2]}
                             complexity={C.LARGE}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.SMALL, material1: C.NAIVE_GLASS1 }) &&
+                        <Symmetrical
+                            head={oneFace[C.NAIVE_GLASS1]}
+                            complexity={C.SMALL}
+                        />
+                    }
+                    {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.SMALL, material1: C.WIREFRAMEY1 }) &&
+                        <Symmetrical
+                            head={oneFace[C.WIREFRAMEY1]}
+                            complexity={C.SMALL}
                         />
                     }
                     {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.SMALL, material1: C.NOISE1 }) &&
@@ -201,18 +238,6 @@ export default function Headspaces({ step }) {
                         <Symmetrical
                             head={oneFace[C.NOISE1]}
                             complexity={C.LARGE}
-                        />
-                    }
-                    {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.SMALL, material1: C.NAIVE_GLASS1 }) &&
-                        <Symmetrical
-                            head={oneFace[C.NAIVE_GLASS1]}
-                            complexity={C.SMALL}
-                        />
-                    }
-                    {headspaceName == _headspaceName({ headspace: C.SYMMETRICAL, complexity: C.SMALL, material1: C.WIREFRAMEY1 }) &&
-                        <Symmetrical
-                            head={oneFace[C.WIREFRAMEY1]}
-                            complexity={C.SMALL}
                         />
                     }
                 </>

@@ -18,7 +18,6 @@ export default function Asymmetrical({ head1, head2, complexity}) {
     const [head1MeshRef, head1Mesh] = useResource();
     const [head2MeshRef, head2Mesh] = useResource();
 
-
     useEffect(() => {
         if (!head1Group) return;
         if (complexity == C.SMALL) {

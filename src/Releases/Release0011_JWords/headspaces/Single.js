@@ -1,4 +1,5 @@
 import { a } from '@react-spring/three';
+import * as THREE from 'three';
 import React, { useEffect } from 'react';
 import { useFrame, useResource } from 'react-three-fiber';
 import useYScroll from '../../../Common/Scroll/useYScroll';
@@ -6,9 +7,14 @@ import * as C from '../constants';
 
 export default function Single({ head, complexity }) {
     const [head1y] = useYScroll([-2400, 2400], { domTarget: window });
-    const [ref, headspaces] = useResource()
+    const [ref, headspace] = useResource()
     const [head1GroupRef, head1Group] = useResource()
     const [head1MeshRef, head1Mesh] = useResource();
+
+useEffect(() => {
+    if (!headspace) return;
+    headspace.rotation.y += THREE.Math.degToRad(90);
+}, [headspace])
 
     useEffect(() => {
         if (!head1Group) return;
@@ -28,9 +34,10 @@ export default function Single({ head, complexity }) {
     }, [complexity, head1Group])
 
     useFrame(() => {
-        if (!headspaces) return;
-        headspaces.rotation.y -= .002;
-        headspaces.rotation.z += .003;
+        if (!headspace) return;
+        headspace.rotation.x += .00001;
+        headspace.rotation.y += .008;
+        headspace.rotation.z += .0001;
     })
 
 

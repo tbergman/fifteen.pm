@@ -14,7 +14,7 @@ export function Scene({ setSceneReady }) {
     const [stepIdx, setStepIdx] = useState(0);
     const [numSteps, setNumSteps] = useState(C.TRACKS_CONFIG[C.FIRST_TRACK].steps.length)
 
-    const { currentTrackName, currentTime, audioPlayer } = useAudioPlayer();
+    const { currentTrackName, audioPlayer } = useAudioPlayer();
 
     // global scene params
     useEffect(() => {
@@ -31,7 +31,6 @@ export function Scene({ setSceneReady }) {
     // set current step
     useEffect(() => {
         if (!currentTrackName) return;
-        console.log('THE STEP IDX IS NOW', stepIdx)
         setStep(C.TRACKS_CONFIG[currentTrackName].steps[stepIdx]);
     }, [stepIdx])
 
@@ -42,9 +41,7 @@ export function Scene({ setSceneReady }) {
         const nextStepIdx = stepIdx + 1;
         const nextStepTime = C.TRACKS_CONFIG[currentTrackName].steps[nextStepIdx].time
         if (audioPlayer.currentTime > nextStepTime) {
-            console.log("ADVANCING TO STEP", nextStepIdx)
             setStepIdx(nextStepIdx)
-            console.log("STEP?", step)
         }
     });
 
