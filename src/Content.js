@@ -467,13 +467,13 @@ export const CONTENT = {
   },
   "/11": {
     artist: "JWORDS",
-    message: "",
+    message: "Nice nice nice",
     purchaseLink: "",
     lastIdx: 10,
     instructions: [
       {
-        icon: ArrowKeys,
-        text: "use arrow keys to drive the hoverboard"
+        icon: TwoFingerScroll,
+        text: "scroll the headspace"
       },
     ],
     colors: {
