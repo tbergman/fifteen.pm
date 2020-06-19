@@ -467,8 +467,8 @@ export const CONTENT = {
   },
   "/11": {
     artist: "JWORDS",
-    message: "Nice nice nice",
-    purchaseLink: "",
+    message: "A 3D scan of JWords headspace from the tail-end of pre-Covid times. Watch it go to dust, and come into being again.",
+    purchaseLink: "https://fifteenpm.bandcamp.com/album/dancepackvol-2",
     lastIdx: 10,
     instructions: [
       {
