@@ -508,6 +508,61 @@ export const CONTENT = {
         bpm: 138,
       },
     ],
+  },
+  "/12": {
+    artist: "HEIDI SABERTOOTH",
+    message: "Yah",
+    purchaseLink: "TODO",
+    tracks: [
+      {
+        name: "Cube Jazz",
+        type: "soundcloud",
+        id: "708031996",
+        secretToken: "s-f0NWB",
+        bpm: 152
+      },
+      {
+        name: "Frog Shirt",
+        type: "soundcloud",
+        id: "708031990",
+        secretToken: "s-NKawM",
+        bpm: 112
+      },
+      {
+        name: "Show U",
+        type: "soundcloud",
+        id: "708031987",
+        secretToken: "s-BnEVI",
+        bpm: 110
+      },
+    ],
+    colors: {
+      logo: "white",
+      overlayContent: "white",
+      overlay: "rgba(0, 0, 0, 0.5)",
+      navigation: "white",
+      player: "white",
+      onHover: "red",
+      info: "white"
+    },
+    instructions: [
+      {
+        icon: MouseMove,
+        text: "click and drag mouse to rotate around the cube"
+      },
+      {
+        icon: Hover,
+        text: 'mouse over frogs to make noise'
+      },
+      {
+        icon: ArrowKeys,
+        text: 'use arrows to move around'
+      },
+      {
+        icon: TwoFingerScroll,
+        text: "scroll to zoom"
+      }
+    ]
   }
 };
 
