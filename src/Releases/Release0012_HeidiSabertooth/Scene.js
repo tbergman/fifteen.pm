@@ -49,9 +49,6 @@ function TheHair() {
     )
 }
 
-useFrame(() => {
-    
-})
 
 export function Scene({ }) {
     return (
