@@ -1,6 +1,7 @@
 
 import React, { Suspense, useEffect, useState } from 'react';
-import { useLoader, useResource, useFrame } from 'react-three-fiber';
+import * as THREE from 'three';
+import { useLoader, useResource, useFrame, useThree } from 'react-three-fiber';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { a } from '@react-spring/three';
@@ -8,14 +9,28 @@ import useYScroll from '../../Common/Scroll/useYScroll';
 
 import * as C from './constants.js'
 
-function _extractHairMesh(gltf, materials, materialNames) {
-    let hair = {}
+
+
+
+function _extractTheHairElements(gltf) {
+    let mesh, skeleton, rootBone = {}
     gltf.scene.traverse(child => {
         if (child.name == "Hair07") {
-            hair = child.clone()
+            mesh = child.clone()
+            console.log("MESH >GEOMETRY", mesh.geometry)
+        }
+        if (child.name == "Bone002") {
+            rootBone = child.clone()
+            const bones = [rootBone];
+            rootBone.traverse(child => {
+                bones.push(child)
+            })
+            skeleton = new THREE.Skeleton(bones);
         }
     })
-    return hair;
+    mesh.add(rootBone);
+    mesh.bind(skeleton);
+    return mesh;
 }
 
 function TheHair() {
@@ -23,6 +38,8 @@ function TheHair() {
     const [hairy] = useYScroll([-2400, 2400], { domTarget: window });
     const [hairLoaded, setHairLoaded] = useState(false);
     const [theHairMesh, setTheHairMesh] = useState();
+    const { scene, clock } = useThree();
+    const [theHairSkeleton, setTheHairSkeleton] = useState()
     const theHair = useLoader(GLTFLoader, C.THE_HAIR, loader => {
         const dracoLoader = new DRACOLoader()
         dracoLoader.setDecoderPath('/draco-gltf/')
@@ -33,9 +50,21 @@ function TheHair() {
     useEffect(() => {
         if (!theHair) return
         console.log("HAIR LOADED!", theHair)
-        setTheHairMesh(_extractHairMesh(theHair))
+        const mesh = _extractTheHairElements(theHair)
+        console.log("MESH", mesh)
+        const skeletonHelper = new THREE.SkeletonHelper(mesh);
+        skeletonHelper.material.linewidth = 2;
+        scene.add(skeletonHelper);
+        setTheHairMesh(mesh)
         setHairLoaded(true)
     }, [theHair])
+
+    useFrame((state, delta) => {
+        for (let i = 0; i < theHairMesh.skeleton.bones.length; i++) {
+            theHairMesh.skeleton.bones[i].position.z = Math.sin(clock.elapsedTime) * 10 / theHairMesh.skeleton.bones.length;
+        }
+    })
+
     return (<>
         {hairLoaded &&
             <group>
@@ -51,6 +80,11 @@ function TheHair() {
 
 
 export function Scene({ }) {
+    const { camera } = useThree();
+    useEffect(() => {
+        camera.position.z = 1
+        camera.position.y = 1.5
+    }, [])
     return (
         <>
             <ambientLight />
