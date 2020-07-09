@@ -26,6 +26,13 @@ export function Scene({ setSceneReady }) {
     useEffect(() => {
         if (!currentTrackName) return;
         setNumSteps(C.TRACKS_CONFIG[currentTrackName].steps.length);
+        const prevStepIdx = stepIdx
+        setStepIdx(0)
+        // if someone switches tracks before the step gets to step 1, need to
+        // set step manually here
+        if (prevStepIdx == 0) {
+            setStep(C.TRACKS_CONFIG[currentTrackName].steps[stepIdx]);
+        }
     }, [currentTrackName])
 
     // set current step
