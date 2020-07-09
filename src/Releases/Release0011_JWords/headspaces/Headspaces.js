@@ -72,7 +72,6 @@ export default function Headspaces({ step }) {
 
     useEffect(() => {
         if (!currentTrackName) return;
-        console.log("STEP!", step)
         setHeadspaceName(_headspaceName(step))
     }, [step])
 
