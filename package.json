@@ -69,6 +69,7 @@
     "webpack-manifest-plugin": "^2.0.4"
   },
   "dependencies": {
+    "@react-spring/core": "^9.0.0-beta.33",
     "@react-spring/three": "^9.0.0-beta.33",
     "animejs": "^3.0.1",
     "babel-polyfill": "^6.26.0",
