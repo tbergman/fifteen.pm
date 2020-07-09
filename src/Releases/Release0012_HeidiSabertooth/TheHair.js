@@ -1,74 +1,34 @@
-import React, { Suspense, useEffect, useState } from 'react';
-import * as THREE from 'three';
-import { useLoader, useResource, useFrame, useThree } from 'react-three-fiber';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { a } from '@react-spring/three';
-import useYScroll from '../../Common/Scroll/useYScroll';
+/*
+auto-generated with modifications by: https://github.com/react-spring/gltfjsx
+*/
 import * as C from './constants.js'
+import * as THREE from 'three'
+import React, { useRef, useState, useEffect } from 'react'
+import { useLoader, useFrame } from 'react-three-fiber'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { draco } from 'drei'
 
-function _extractTheHairElements(gltf) {
-    let mesh, skeleton, rootBone = {}
-    gltf.scene.traverse(child => {
-        if (child.name == "Hair07") {
-            mesh = child.clone()
-            console.log("MESH >GEOMETRY", mesh.geometry)
-        }
-        if (child.name == "Bone002") {
-            rootBone = child.clone()
-            const bones = [rootBone];
-            rootBone.traverse(child => {
-                bones.push(child)
-            })
-            skeleton = new THREE.Skeleton(bones);
-        }
-    })
-    mesh.add(rootBone);
-    mesh.bind(skeleton);
-    return mesh;
-}
+export default function TheHair(props) {
+    const group = useRef()
+    const { nodes, materials, animations } = useLoader(GLTFLoader, C.THE_HAIR, draco('/draco-gltf/'))
 
-export default function TheHair() {
-    const [hairy] = useYScroll([-2400, 2400], { domTarget: window });
-    const [hairLoaded, setHairLoaded] = useState(false);
-    const [theHairMesh, setTheHairMesh] = useState();
-    const { scene, clock } = useThree();
-    const [theHairSkeleton, setTheHairSkeleton] = useState()
-    const theHair = useLoader(GLTFLoader, C.THE_HAIR, loader => {
-        const dracoLoader = new DRACOLoader()
-        dracoLoader.setDecoderPath('/draco-gltf/')
-        loader.setDRACOLoader(dracoLoader)
-    });
-
+    const actions = useRef()
+    const [mixer] = useState(() => new THREE.AnimationMixer())
+    useFrame((state, delta) => mixer.update(delta))
     useEffect(() => {
-        if (!theHair) return
-        const mesh = _extractTheHairElements(theHair)
-        const skeletonHelper = new THREE.SkeletonHelper(mesh);
-        skeletonHelper.material.linewidth = 2;
-        scene.add(skeletonHelper);
-        setTheHairMesh(mesh)
-        setHairLoaded(true)
-
-        // animation
-        const mixer = new THREE.AnimationMixer(theHair);
-
-    }, [theHair])
-
-    useFrame((state, delta) => {
-        for (let i = 0; i < theHairMesh.skeleton.bones.length; i++) {
-            theHairMesh.skeleton.bones[i].position.z = Math.sin(clock.elapsedTime) * 10 / theHairMesh.skeleton.bones.length;
+        console.log("ANIMATIONS", animations)
+        actions.current = {
+            Action: mixer.clipAction(animations[0], group.current),
         }
-    })
-
-    return (<>
-        {hairLoaded &&
-            <group>
-                <a.group rotation-y={hairy.to(hairy => hairy / 200)} >
-                    <mesh material={theHairMesh.material} position={[0, 0, 0.05]}  >
-                        <bufferGeometry attach="geometry" {...theHairMesh.geometry} />
-                    </mesh>
-                </a.group>
-            </group>
-        }</>
+        return () => animations.forEach((clip) => mixer.uncacheClip(clip))
+    }, [])
+    useEffect(() => void mixer.clipAction(animations[0], group.current).play(), [])
+    return (
+        <group ref={group} {...props} dispose={null}>
+            <primitive object={nodes.Bone} />
+            <primitive object={nodes.BottomIKBone} />
+            <primitive object={nodes.MiddleIKBone} />
+            <skinnedMesh material={materials.lambert53SG} geometry={nodes.Hair07.geometry} skeleton={nodes.Hair07.skeleton} />
+        </group>
     )
 }
