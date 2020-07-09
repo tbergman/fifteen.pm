@@ -15,6 +15,7 @@ export function ReleaseList(props) {
             <li><a href="/8">Greem Jellyfish</a></li>
             <li><a href="/9">Javonntte</a></li>
             <li><a href="/10">Alien D</a></li>
+            <li><a href="/11">J-Words</a></li>
         </ul>
     </div>;
 }
