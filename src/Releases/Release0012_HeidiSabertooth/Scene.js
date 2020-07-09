@@ -1,20 +1,27 @@
 import React, { Suspense, useEffect, useState } from 'react';
-import {useThree} from 'react-three-fiber';
+import { useThree, extend } from 'react-three-fiber';
 import TheHair from './TheHair.js';
-
+import { MaterialsProvider } from './MaterialsContext';
+// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+// extend({ OrbitControls })
+import Orbit from '../../Common/Controls/Orbit';
 
 export function Scene({ }) {
     const { camera } = useThree();
+    const [controllerOn, setControllerOn] = useState(false)
     useEffect(() => {
-        camera.position.z = 1
-        camera.position.y = 1.5
+        camera.position.z = 2
+        camera.position.y = 2.5
     }, [])
     return (
         <>
             <ambientLight />
-            <Suspense fallback={null} >
-                <TheHair />
-            </Suspense>
+            <Orbit />
+            <MaterialsProvider>
+                <Suspense fallback={null} >
+                    <TheHair />
+                </Suspense>
+            </MaterialsProvider>
         </>
     )
 }
