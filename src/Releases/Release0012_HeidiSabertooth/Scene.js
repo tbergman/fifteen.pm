@@ -5,6 +5,7 @@ import { MaterialsProvider } from './MaterialsContext';
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // extend({ OrbitControls })
 import Orbit from '../../Common/Controls/Orbit';
+import GuapxX from './GuapxX.js';
 
 export function Scene({ }) {
     const { camera } = useThree();
@@ -19,7 +20,9 @@ export function Scene({ }) {
             <Orbit />
             <MaterialsProvider>
                 <Suspense fallback={null} >
-                    <TheHair />
+                    <GuapxX>
+                        <TheHair />
+                    </GuapxX>
                 </Suspense>
             </MaterialsProvider>
         </>

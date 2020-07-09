@@ -20,10 +20,21 @@ export default function TheHair(props) {
         actions.current = {
             Action: mixer.clipAction(animations[0], group.current),
         }
+        console.log("HAIR LOADED")
         return () => animations.forEach((clip) => mixer.uncacheClip(clip))
-    
+
     }, [])
     useEffect(() => void mixer.clipAction(animations[0], group.current).play(), [])
+    useFrame(() => {
+        if (!group.current) return;
+        console.log(group.current.position)
+        //     // group.current.position.set(props.position)
+        //     group.current.position.z = 0
+        //     group.current.position.y = 0
+        //     group.current.position.z = 0
+        //     // console.log("hair position", group.current.position)
+        //     // console.log("incoming prop position", props.position)
+    })
     return (
         <group ref={group} {...props} dispose={null}>
             <primitive object={nodes.Bone} />
