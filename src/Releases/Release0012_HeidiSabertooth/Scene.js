@@ -1,14 +1,17 @@
 import React, { Suspense, useEffect, useState } from 'react';
-import { useThree, extend } from 'react-three-fiber';
+import { useThree, extend, useResource } from 'react-three-fiber';
 import TheHair from './TheHair.js';
 import { MaterialsProvider } from './MaterialsContext';
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // extend({ OrbitControls })
 import Orbit from '../../Common/Controls/Orbit';
 import GuapxX from './GuapxX.js';
+import Alien1 from './Alien1.js';
 
 export function Scene({ }) {
     const { camera } = useThree();
+    const [alienARef, alienA] = useResource()
+    const [alienBRef, alienB] = useResource()
     const [controllerOn, setControllerOn] = useState(false)
     useEffect(() => {
         camera.position.z = 2
@@ -20,9 +23,12 @@ export function Scene({ }) {
             <Orbit />
             <MaterialsProvider>
                 <Suspense fallback={null} >
-                    <GuapxX>
+                    {/* <GuapxX>
                         <TheHair />
-                    </GuapxX>
+                    </GuapxX> */}
+                    <Alien1 ref={alienARef} position={[3, -2, 0]} />
+                    <Alien1 ref={alienBRef} position={[0, 2, 0]} />
+
                 </Suspense>
             </MaterialsProvider>
         </>

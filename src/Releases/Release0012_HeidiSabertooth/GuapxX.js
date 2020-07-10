@@ -23,7 +23,6 @@ export default function GuapxX(props) {
     actions.current = {
       'Armature|mixamo.com|Layer0.001': mixer.clipAction(animations[0], group.current),
     }
-    console.log("NODES", nodes)
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])
   useEffect(() => void mixer.clipAction(animations[0], group.current).play(), [])
