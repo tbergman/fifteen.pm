@@ -12,7 +12,7 @@ import Dashboard from './Dashboard';
 import DashCam from './DashCam';
 import Headlights from './Headlights';
 import SteeringWheel from './SteeringWheel';
-import { useObjectAlongTubeGeometry, updateCurTrajectory } from '../../../Common/Animations/SplineAnimator.js'
+import { useObjectAlongTubeGeometry } from '../../../Common/Animations/SplineAnimator.js'
 function Car({
     headlightsColors,
     road,
@@ -27,7 +27,7 @@ function Car({
         loader.setDRACOLoader(dracoLoader)
     })
     const [carRef, car] = useResource();
-    const {normal, binormal, offset, delta, speed, getCurTrajectory} = useObjectAlongTubeGeometry({object: car, tubeGeometry: road})
+    const {normal, binormal, offset, delta, speed, getCurTrajectory, updateCurTrajectory} = useObjectAlongTubeGeometry({object: car, tubeGeometry: road})
     
     const accelerationPressed = useKeyPress('ArrowUp');
     const slowDownPressed = useKeyPress('ArrowDown');
@@ -90,17 +90,12 @@ function Car({
         // this value is between 0 and 1
         const t = (offset.current % speed.current) / speed.current;
         // const t = offset.current += speed.current;
-        const { pos, dir } = getCurTrajectory({
-            t,
-            offset,
-            delta,
-            tubeGeometry: road,
-        });
+        const { pos, dir } = getCurTrajectory(t);
         if (rotateLeftPressed) spinLeft();
         else if (rotateRightPressed) spinRight();
         else {
             if (audioStream && audioStream.filter.Q.value != 0) setDefaultAudioFilter();
-            updateCurTrajectory({t, pos, dir, normal, object: car, tubeGeometry: road});
+            updateCurTrajectory({t, pos, dir});
         }
     })
 
