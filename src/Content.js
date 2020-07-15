@@ -21,7 +21,7 @@ export const CONTENT = {
     colors: {
       logo: 'white',
       overlayContent: 'white',
-      overlay: 'rgba(0, 50, 200, 0.8)',
+      overlay: 'rgba(0, 50, 200, 0.9)',
       navigation: 'white',
       onHover: 'rgba(0, 0, 0, 0.5)',
       info: 'white',
