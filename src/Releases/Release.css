@@ -1,7 +1,43 @@
-.release {
-    width: 100%;
+.releases-list {
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 10% 0 10% 5%;
+    font-size: 1.5rem;
+    z-index: 2;
     height: 100%;
-    overflow: hidden;
-    -webkit-overflow-scrolling: touch;
-    cursor: pointer;
+    overflow-y:scroll;
+}
+
+.releases-list::-webkit-scrollbar {
+    display: none;
+}
+  
+.releases-list {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.releases-list-title{
+    margin-left: 14.5%;
+}
+
+.releases-list ul {
+    padding-bottom: 50px;
+    margin-bottom: 100px;
+    list-style: none;
+}
+
+.releases-list ul li:first-child {
+    border-bottom: 2px solid #ffffff;
+    margin-bottom: 10px;
+}
+
+.releases-list ul li {
+    padding: 5px 0;
+}
+
+.releases-list ul li a:hover{
+    border-bottom: 2px solid #ffffff;
 }
