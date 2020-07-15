@@ -12,7 +12,7 @@ import Dashboard from './Dashboard';
 import DashCam from './DashCam';
 import Headlights from './Headlights';
 import SteeringWheel from './SteeringWheel';
-import { getCurTrajectory, updateCurTrajectory } from '../../../Common/Animations/SplineAnimator.js'
+import { useObjectAlongTubeGeometry, updateCurTrajectory } from '../../../Common/Animations/SplineAnimator.js'
 function Car({
     headlightsColors,
     road,
@@ -27,20 +27,13 @@ function Car({
         loader.setDRACOLoader(dracoLoader)
     })
     const [carRef, car] = useResource();
-    const [normal, binormal] = useMemo(() => {
-        return [
-            new THREE.Vector3(),
-            new THREE.Vector3(),
-        ]
-    });
+    const {normal, binormal, offset, delta, speed, getCurTrajectory} = useObjectAlongTubeGeometry({object: car, tubeGeometry: road})
+    
     const accelerationPressed = useKeyPress('ArrowUp');
     const slowDownPressed = useKeyPress('ArrowDown');
     const rotateLeftPressed = useKeyPress('ArrowLeft');
     const rotateRightPressed = useKeyPress('ArrowRight');
-    // driving units
-    const offset = useRef();
-    const delta = useRef();
-    const speed = useRef();
+    
     // using a filter for left and right arrow press
     const { audioStream } = useAudioPlayer();
 
@@ -49,12 +42,7 @@ function Car({
     }, [car])
 
 
-    useEffect(() => {
-        if (!speed.current) speed.current = 20;
-        if (!delta.current) delta.current = .005;
-        if (!offset.current) offset.current = 0;
-    })
-
+    
 
     const updateSpeed = () => {
         if (accelerationPressed) {
@@ -106,8 +94,6 @@ function Car({
             t,
             offset,
             delta,
-            binormal,
-            normal,
             tubeGeometry: road,
         });
         if (rotateLeftPressed) spinLeft();
