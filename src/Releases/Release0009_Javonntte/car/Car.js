@@ -1,11 +1,10 @@
 // TODO the move-along-a-path code from three.js example here should be pulled and improved for re-use, it is a common thing to do
 import React, { useEffect, useMemo, useRef } from 'react';
 import { useFrame, useLoader, useResource, useThree } from 'react-three-fiber';
-import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import useAudioPlayer from '../../../Common/UI/Player/hooks/useAudioPlayer';
-import { useKeyPress } from '../../../Common/Utils/hooks';
+
 import * as C from '../constants';
 import Chassis from './Chassis';
 import Dashboard from './Dashboard';
@@ -27,12 +26,18 @@ function Car({
         loader.setDRACOLoader(dracoLoader)
     })
     const [carRef, car] = useResource();
-    const {normal, binormal, offset, delta, speed, getCurTrajectory, updateCurTrajectory} = useObjectAlongTubeGeometry({object: car, tubeGeometry: road})
+    const {
+        normal,
+        binormal,
+        offset,
+        delta,
+        speed,
+        getCurTrajectory,
+        updateCurTrajectory,
+        arrowLeftPressed,
+        arrowRightPressed,
+    } = useObjectAlongTubeGeometry({object: car, tubeGeometry: road})
     
-    const accelerationPressed = useKeyPress('ArrowUp');
-    const slowDownPressed = useKeyPress('ArrowDown');
-    const rotateLeftPressed = useKeyPress('ArrowLeft');
-    const rotateRightPressed = useKeyPress('ArrowRight');
     
     // using a filter for left and right arrow press
     const { audioStream } = useAudioPlayer();
@@ -40,27 +45,6 @@ function Car({
     useEffect(() => {
         if (car) setCarReady(true)
     }, [car])
-
-
-    
-
-    const updateSpeed = () => {
-        if (accelerationPressed) {
-            if (delta.current < .05 && speed.current > 1) {
-                speed.current -= .1;
-            }
-        }
-        if (slowDownPressed) {
-            if (delta.current >= 0) {
-                speed.current += .1;
-                delta.current -= .001;
-            }
-            if (delta.current < 0) {
-                delta.current = 0;
-            }
-
-        }
-    }
 
     const spinLeft = () => {
         car.position.y -= normal.y * 2;
@@ -85,14 +69,13 @@ function Car({
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
     useFrame(() => {
-        updateSpeed();
         // TODO these floats as constants relative to world radius as opposed to using time
         // this value is between 0 and 1
-        const t = (offset.current % speed.current) / speed.current;
+        
         // const t = offset.current += speed.current;
-        const { pos, dir } = getCurTrajectory(t);
-        if (rotateLeftPressed) spinLeft();
-        else if (rotateRightPressed) spinRight();
+        const { pos, dir, t } = getCurTrajectory();
+        if (arrowLeftPressed) spinLeft();
+        else if (arrowRightPressed) spinRight();
         else {
             if (audioStream && audioStream.filter.Q.value != 0) setDefaultAudioFilter();
             updateCurTrajectory({t, pos, dir});
