@@ -28,17 +28,11 @@ function Car({
     const [carRef, car] = useResource();
     const {
         normal,
-        binormal,
-        offset,
-        delta,
-        speed,
-        getCurTrajectory,
-        updateCurTrajectory,
         arrowLeftPressed,
         arrowRightPressed,
-    } = useObjectAlongTubeGeometry({object: car, tubeGeometry: road})
-    
-    
+    } = useObjectAlongTubeGeometry({ object: car, tubeGeometry: road })
+
+
     // using a filter for left and right arrow press
     const { audioStream } = useAudioPlayer();
 
@@ -66,20 +60,10 @@ function Car({
         audioStream.filter.Q.value = 0;
     }
 
-
-    // TODO http://jsfiddle.net/krw8nwLn/66/
     useFrame(() => {
-        // TODO these floats as constants relative to world radius as opposed to using time
-        // this value is between 0 and 1
-        
-        // const t = offset.current += speed.current;
-        const { pos, dir, t } = getCurTrajectory();
         if (arrowLeftPressed) spinLeft();
         else if (arrowRightPressed) spinRight();
-        else {
-            if (audioStream && audioStream.filter.Q.value != 0) setDefaultAudioFilter();
-            updateCurTrajectory({t, pos, dir});
-        }
+        else if (audioStream && audioStream.filter.Q.value != 0) setDefaultAudioFilter();
     })
 
     return <group ref={carRef}>
