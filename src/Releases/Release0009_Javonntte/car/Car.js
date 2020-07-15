@@ -12,7 +12,7 @@ import Dashboard from './Dashboard';
 import DashCam from './DashCam';
 import Headlights from './Headlights';
 import SteeringWheel from './SteeringWheel';
-import {getCurTrajectory} from '../../../Common/Animations/SplineAnimator.js'
+import { getCurTrajectory, updateCurTrajectory } from '../../../Common/Animations/SplineAnimator.js'
 function Car({
     headlightsColors,
     road,
@@ -94,16 +94,6 @@ function Car({
         audioStream.filter.Q.value = 0;
     }
 
-    const updateCurTrajectory = (t, pos, dir) => {
-        car.position.copy(pos);
-        // Using arclength for stablization in look ahead.
-        const lookAt = road.parameters.path.getPointAt((t + 30 / road.parameters.path.getLength()) % 1);
-        // Camera Orientation 2 - up orientation via normal
-        lookAt.copy(pos).add(dir);
-        car.matrix.lookAt(car.position, lookAt, normal);
-        car.rotation.setFromRotationMatrix(car.matrix);
-        // car.rotation.z += Math.PI / 12; // TODO added code - can it be baked into matrix rotation?
-    }
 
     // TODO http://jsfiddle.net/krw8nwLn/66/
     useFrame(() => {
@@ -112,12 +102,19 @@ function Car({
         // this value is between 0 and 1
         const t = (offset.current % speed.current) / speed.current;
         // const t = offset.current += speed.current;
-        const [pos, dir] = getCurTrajectory(t);
+        const { pos, dir } = getCurTrajectory({
+            t,
+            offset,
+            delta,
+            binormal,
+            normal,
+            tubeGeometry: road,
+        });
         if (rotateLeftPressed) spinLeft();
         else if (rotateRightPressed) spinRight();
         else {
             if (audioStream && audioStream.filter.Q.value != 0) setDefaultAudioFilter();
-            updateCurTrajectory(t, pos, dir);
+            updateCurTrajectory({t, pos, dir, normal, object: car, tubeGeometry: road});
         }
     })
 
