@@ -9,15 +9,16 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { draco } from 'drei'
 import * as C from './constants.js';
 import { MaterialsContext } from './MaterialsContext';
-import TheHair from './TheHair.js'
+import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
 
-export default function GuapxX(props) {
+export default function GuapxX({ catwalk, ...props }) {
   const group = useRef()
   const [guapxXMeshRef, guapxXMesh] = useResource()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.GUAPX_X, draco('/draco-gltf/'))
   const { polishedSpeckledMarbleTop } = useContext(MaterialsContext);
   const actions = useRef()
   const [mixer] = useState(() => new THREE.AnimationMixer())
+  useObjectAlongTubeGeometry({ object: group.current, tubeGeometry: catwalk })
   useFrame((state, delta) => mixer.update(delta))
   useEffect(() => {
     actions.current = {
@@ -26,15 +27,9 @@ export default function GuapxX(props) {
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])
   useEffect(() => void mixer.clipAction(animations[0], group.current).play(), [])
-  useFrame(() => {
-    if (!guapxXMesh) return;
-    // console.log(nodes.HeadTop.position)
-    // console.log(nodes.Ch43_Mesh003.skeleton.bones[0].position)
-  })
   return (
     <group ref={group} {...props} dispose={null}>
-
-      <group rotation={[0, 0, Math.PI / 2]} scale={[1, 1, 1]}>
+      <group rotation={[0, 0, Math.PI / 2]}>
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
           ref={guapxXMeshRef}
@@ -44,7 +39,6 @@ export default function GuapxX(props) {
         >
           {props.children}
         </skinnedMesh>
-
       </group>
     </group>
   )

@@ -10,27 +10,15 @@ import { draco } from 'drei'
 import * as C from './constants'
 import { MaterialsContext } from './MaterialsContext';
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
-export default function Alien1(props) {
+
+export default function Alien1({catwalk, ...props}) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.ALIEN1, draco('/draco-gltf/'))
   const [skinnedAlien1MeshRef, skinnedAlien1Mesh] = useResource()
   const { polishedSpeckledMarbleTop } = useContext(MaterialsContext);
   const actions = useRef()
   const [mixer] = useState(() => new THREE.AnimationMixer())
-
-  const tubeGeometry = useMemo(() => {
-    const circle = new THREE.CircleGeometry(4, 4);
-    const points = circle.vertices.reverse(); // reverse it so driver is going in expected dir
-    const steps = points.slice(0, points.length - 2); // don't overlap the loop (rm last elt)
-    var closedSpline = new THREE.CatmullRomCurve3(steps);
-    closedSpline.closed = true;
-    closedSpline.curveType = 'catmullrom';
-    const extrusionSegments = 10
-    const radius = 2
-    const radiusSegments = 4
-    return new THREE.TubeBufferGeometry(closedSpline, extrusionSegments, radius, radiusSegments, closedSpline.closed);
-  })
-  const { } = useObjectAlongTubeGeometry({ object: group.current, tubeGeometry })
+  useObjectAlongTubeGeometry({ object: group.current, tubeGeometry: catwalk })
   useFrame((state, delta) => mixer.update(delta))
   useEffect(() => {
     actions.current = {
