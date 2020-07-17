@@ -27,13 +27,9 @@ export default function Alien1({catwalk, ...props}) {
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])
   useEffect(() => void mixer.clipAction(animations[0], group.current).play(), [])
-  useEffect(() => {
-    if (!skinnedAlien1Mesh) return
-    console.log('skinned alient mesh pos', skinnedAlien1Mesh.position)
-  })
   return (
     <group ref={group} {...props} dispose={null}>
-      <group rotation={[Math.PI / 2, 0, 0]}>
+      <group rotation={[Math.PI / 2, 0, 0]} position={[2,1,2]}>
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
           ref={skinnedAlien1MeshRef}

@@ -29,7 +29,7 @@ export default function GuapxX({ catwalk, ...props }) {
   useEffect(() => void mixer.clipAction(animations[0], group.current).play(), [])
   return (
     <group ref={group} {...props} dispose={null}>
-      <group rotation={[0, 0, Math.PI / 2]}>
+      <group>
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
           ref={guapxXMeshRef}
