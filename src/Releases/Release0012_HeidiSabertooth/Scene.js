@@ -26,8 +26,10 @@ export function Scene({ }) {
                     {/* <GuapxX>
                         <TheHair />
                     </GuapxX> */}
-                    <Alien1 ref={alienARef} position={[3, -2, 0]} />
-                    <Alien1 ref={alienBRef} position={[0, 2, 0]} />
+                    {/* <GuapxX ref={alienARef} /> */}
+                    <Alien1 />
+                    {/* <Alien1 ref={alienARef} /> */}
+                    {/* <Alien1 ref={alienBRef} position={[0, 2, 0]} /> */}
 
                 </Suspense>
             </MaterialsProvider>
