@@ -29,7 +29,7 @@ export default function Alien1({catwalk, ...props}) {
   useEffect(() => void mixer.clipAction(animations[0], group.current).play(), [])
   return (
     <group ref={group} {...props} dispose={null}>
-      <group rotation={[Math.PI / 2, 0, 0]} position={[2,1,2]}>
+      <group rotation={[THREE.Math.degToRad(-90),THREE.Math.degToRad(-90),0]}>
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
           ref={skinnedAlien1MeshRef}

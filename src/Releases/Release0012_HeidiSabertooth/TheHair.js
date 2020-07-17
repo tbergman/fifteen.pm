@@ -17,7 +17,12 @@ export default function TheHair({ catwalk, ...props }) {
     const [theHairMeshRef, theHairMesh] = useResource()
     const actions = useRef()
     const [mixer] = useState(() => new THREE.AnimationMixer())
-    useObjectAlongTubeGeometry({ object: group.current, tubeGeometry: catwalk })
+    useObjectAlongTubeGeometry({
+        object: group.current,
+        tubeGeometry: catwalk,
+        offset: 5.,
+        flipOnZ: true,
+    })
     useFrame((state, delta) => mixer.update(delta))
     useEffect(() => {
         actions.current = {
@@ -28,15 +33,18 @@ export default function TheHair({ catwalk, ...props }) {
     useEffect(() => void mixer.clipAction(animations[0], group.current).play(), [])
     return (
         <group ref={group} {...props} dispose={null}>
-            <primitive object={nodes.Bone} />
-            <primitive object={nodes.BottomIKBone} />
-            <primitive object={nodes.MiddleIKBone} />
-            <skinnedMesh
-                ref={theHairMeshRef}
-                material={polishedSpeckledMarbleTop}
-                geometry={nodes.Hair07.geometry}
-                skeleton={nodes.Hair07.skeleton}
-            />
+            <group rotation={[0, THREE.Math.degToRad(180), 0]} >
+                <primitive object={nodes.Bone} />
+                <primitive object={nodes.BottomIKBone} />
+                <primitive object={nodes.MiddleIKBone} />
+                <skinnedMesh
+                    ref={theHairMeshRef}
+
+                    material={polishedSpeckledMarbleTop}
+                    geometry={nodes.Hair07.geometry}
+                    skeleton={nodes.Hair07.skeleton}
+                />
+            </group>
         </group>
     )
 }

@@ -30,7 +30,7 @@ function Car({
         normal,
         arrowLeftPressed,
         arrowRightPressed,
-    } = useObjectAlongTubeGeometry({ object: car, tubeGeometry: road })
+    } = useObjectAlongTubeGeometry({ object: car, tubeGeometry: road, flipOnZ: true })
 
 
     // using a filter for left and right arrow press

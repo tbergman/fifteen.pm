@@ -9,25 +9,17 @@ export default function Catwalk({ extrusionSegments, radius, radiusSegments, ...
     const [catwalk, setCatwalk] = useState()
     const [platform, setPlatform] = useState()
     useEffect(() => {
-        const radiusSegments = radiusSegments ? radiusSegments : 100
-        // const geometry = new THREE.CircleGeometry(1, radiusSegments);
-        // console.log('geom', geometry)
-        // const points = geometry.vertices.reverse(); // reverse it so driver is going in expected dir
-        // const steps = points.slice(0, points.length - 2); // don't overlap the loop (rm last elt)
-        // const steps = 
-        // var curve = new THREE.QuadraticBezierCurve3(
         const steps = [
             new THREE.Vector3(-5, 0, 0),
             new THREE.Vector3(10, 7.5, 0),
             new THREE.Vector3(5, 0, 0),
         ]
-        // );
         var closedSpline = new THREE.CatmullRomCurve3(steps);
         closedSpline.closed = true;
         closedSpline.curveType = 'catmullrom';
-        const extrusionSegments = extrusionSegments ? extrusionSegments : radiusSegments
-        console.log("RADIUS", radius)
-        radius = radius ? radius : .1
+        radius = radius ? radius : 1
+        radiusSegments = radiusSegments ? radiusSegments : 100
+        extrusionSegments = extrusionSegments ? extrusionSegments : radiusSegments
         const tubeGeometry = new THREE.TubeBufferGeometry(closedSpline, extrusionSegments, radius, radiusSegments, closedSpline.closed);
         setCatwalk(tubeGeometry)
     }, [])

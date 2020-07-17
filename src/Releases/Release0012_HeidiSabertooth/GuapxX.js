@@ -21,8 +21,8 @@ export default function GuapxX({ catwalk, ...props }) {
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
-    speed: 1.7,
-    offset: 0,
+    speed: 10,
+    offset: 5,
   })
   useFrame((state, delta) => mixer.update(delta))
   useEffect(() => {
