@@ -11,12 +11,14 @@ import Alien1 from './Alien1.js';
 import Catwalk from './Catwalk.js';
 
 export function Scene({ }) {
-    const { camera } = useThree();
+    const { camera, scene } = useThree();
     useEffect(() => {
         camera.position.z = 2
         camera.position.y = 2.5
+        var axesHelper = new THREE.AxesHelper(105);
+        scene.add(axesHelper);
     }, [])
-    
+
     return (
         <>
             <ambientLight />
@@ -24,8 +26,7 @@ export function Scene({ }) {
             <MaterialsProvider>
                 <Suspense fallback={null} >
                     <Catwalk
-                    radius={.2}
-
+                        radius={1}
                     >
                         <TheHair />
                         <GuapxX />

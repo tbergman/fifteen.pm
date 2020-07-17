@@ -18,7 +18,12 @@ export default function GuapxX({ catwalk, ...props }) {
   const { polishedSpeckledMarbleTop } = useContext(MaterialsContext);
   const actions = useRef()
   const [mixer] = useState(() => new THREE.AnimationMixer())
-  useObjectAlongTubeGeometry({ object: group.current, tubeGeometry: catwalk })
+  useObjectAlongTubeGeometry({
+    object: group.current,
+    tubeGeometry: catwalk,
+    speed: 1.7,
+    offset: 0,
+  })
   useFrame((state, delta) => mixer.update(delta))
   useEffect(() => {
     actions.current = {
@@ -29,9 +34,10 @@ export default function GuapxX({ catwalk, ...props }) {
   useEffect(() => void mixer.clipAction(animations[0], group.current).play(), [])
   return (
     <group ref={group} {...props} dispose={null}>
-      <group>
+      <group rotation={[THREE.Math.degToRad(-90),THREE.Math.degToRad(-90),0]}>
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
+        
           ref={guapxXMeshRef}
           material={polishedSpeckledMarbleTop}
           geometry={nodes.Ch43_Mesh003.geometry}
