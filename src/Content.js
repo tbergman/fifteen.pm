@@ -515,21 +515,21 @@ export const CONTENT = {
     purchaseLink: "TODO",
     tracks: [
       {
-        name: "Cube Jazz",
+        name: "Inside Out",
         type: "soundcloud",
         id: "708031996",
         secretToken: "s-f0NWB",
         bpm: 152
       },
       {
-        name: "Frog Shirt",
+        name: "High On Mate",
         type: "soundcloud",
         id: "708031990",
         secretToken: "s-NKawM",
         bpm: 112
       },
       {
-        name: "Show U",
+        name: "Looking For Roses",
         type: "soundcloud",
         id: "708031987",
         secretToken: "s-BnEVI",

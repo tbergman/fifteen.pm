@@ -11,7 +11,8 @@ import * as C from './constants.js';
 import { MaterialsContext } from './MaterialsContext';
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
 
-export default function GuapxX({ catwalk, ...props }) {
+export default function GuapxX({ catwalk, offset, speed }) {
+  console.log("catwalk,", catwalk, "offset", offset, "speed", speed)
   const group = useRef()
   const [guapxXMeshRef, guapxXMesh] = useResource()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.GUAPX_X, draco('/draco-gltf/'))
@@ -21,8 +22,8 @@ export default function GuapxX({ catwalk, ...props }) {
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
-    speed: 10,
-    offset: 5,
+    speed: speed,
+    offset: offset,
   })
   useFrame((state, delta) => mixer.update(delta))
   useEffect(() => {
@@ -33,17 +34,15 @@ export default function GuapxX({ catwalk, ...props }) {
   }, [])
   useEffect(() => void mixer.clipAction(animations[0], group.current).play(), [])
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group ref={group} dispose={null}>
       <group rotation={[THREE.Math.degToRad(-90),THREE.Math.degToRad(-90),0]}>
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
-        
           ref={guapxXMeshRef}
           material={polishedSpeckledMarbleTop}
-          geometry={nodes.Ch43_Mesh003.geometry}
+          geometry={nodes.Ch43_Mesh003.geometry.clone()}
           skeleton={nodes.Ch43_Mesh003.skeleton}
         >
-          {props.children}
         </skinnedMesh>
       </group>
     </group>
