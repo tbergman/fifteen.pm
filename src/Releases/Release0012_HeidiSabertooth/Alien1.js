@@ -12,7 +12,7 @@ import { MaterialsContext } from './MaterialsContext';
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
 import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js';
 
-export default function Alien1({catwalk, offset, animationName, ...props}) {
+export default function Alien1({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.ALIEN1, draco('/draco-gltf/'))
 
@@ -35,28 +35,32 @@ export default function Alien1({catwalk, offset, animationName, ...props}) {
   }, [])
   return (
     <group ref={group} {...props} dispose={null}>
-      <group scale={[.01, .01, .01]} rotation={[THREE.Math.degToRad(0),THREE.Math.degToRad(-180),THREE.Math.degToRad(90)]}>
-      <primitive object={nodes.mixamorigHips} />
-      <skinnedMesh
-        material={polishedSpeckledMarbleTop}
-        geometry={nodes.Body_Bodymesh.geometry}
-        skeleton={nodes.Body_Bodymesh.skeleton}
-      />
-      <skinnedMesh
-        material={polishedSpeckledMarbleTop}
-        geometry={nodes.Cylinder.geometry}
-        skeleton={nodes.Cylinder.skeleton}
-      />
-      <skinnedMesh
-        material={polishedSpeckledMarbleTop}
-        geometry={nodes.default_defaultmesh.geometry}
-        skeleton={nodes.default_defaultmesh.skeleton}
-      />
-      <skinnedMesh
-        material={polishedSpeckledMarbleTop}
-        geometry={nodes.Eyelashes_Eyelashesmesh.geometry}
-        skeleton={nodes.Eyelashes_Eyelashesmesh.skeleton}
-      />
+      <group
+        position={[-1, 0, 0]}
+        scale={[.01, .01, .01]}
+        rotation={[THREE.Math.degToRad(0), THREE.Math.degToRad(-180), THREE.Math.degToRad(90)]}
+      >
+        <primitive object={nodes.mixamorigHips} />
+        <skinnedMesh
+          material={polishedSpeckledMarbleTop}
+          geometry={nodes.Body_Bodymesh.geometry}
+          skeleton={nodes.Body_Bodymesh.skeleton}
+        />
+        <skinnedMesh
+          material={polishedSpeckledMarbleTop}
+          geometry={nodes.Cylinder.geometry}
+          skeleton={nodes.Cylinder.skeleton}
+        />
+        <skinnedMesh
+          material={polishedSpeckledMarbleTop}
+          geometry={nodes.default_defaultmesh.geometry}
+          skeleton={nodes.default_defaultmesh.skeleton}
+        />
+        <skinnedMesh
+          material={polishedSpeckledMarbleTop}
+          geometry={nodes.Eyelashes_Eyelashesmesh.geometry}
+          skeleton={nodes.Eyelashes_Eyelashesmesh.skeleton}
+        />
       </group>
     </group>
   )

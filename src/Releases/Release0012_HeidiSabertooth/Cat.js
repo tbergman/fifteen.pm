@@ -10,7 +10,7 @@ import { draco } from 'drei'
 import * as C from './constants.js';
 import { MaterialsContext } from './MaterialsContext';
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
-import {useAnimationSequence} from '../../Common/Animations/AnimationSequence.js';
+import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js';
 
 export default function Cat({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
@@ -22,7 +22,7 @@ export default function Cat({ catwalk, offset, animationName, ...props }) {
     // speed: speed,
     offset: offset,
   })
-  
+
   const { actions, mixer } = useAnimationSequence({ animationName })
 
   useEffect(() => {
@@ -36,7 +36,10 @@ export default function Cat({ catwalk, offset, animationName, ...props }) {
 
   return (
     <group ref={group} {...props} dispose={null}>
-      <group rotation={[THREE.Math.degToRad(-90), THREE.Math.degToRad(-90), 0]}>
+      <group
+        position={[-1, 0, 0]}
+        rotation={[THREE.Math.degToRad(-90), THREE.Math.degToRad(-90), 0]}
+      >
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
           material={polishedSpeckledMarbleTop}

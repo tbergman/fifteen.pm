@@ -39,12 +39,14 @@ export function Scene({ }) {
             <MaterialsProvider>
                 <Suspense fallback={null} >
                     <Catwalk
-                        radius={1}
+                        radius={.6}
+                        radiusSegments={2}
+                        extrusionSegments={40}
                     >
-                        <Heidi animationName={animationName} offset={2} />
-                        <GuapxBoxX animationName={animationName} offset={3} />
-                        <Alien1 animationName={animationName} offset={4} />
-                        <Cat animationName={animationName} offset={5} />
+                        <Heidi animationName={animationName} offset={5} />
+                        <GuapxBoxX animationName={animationName} offset={10} />
+                        <Alien1 animationName={animationName} offset={15} />
+                        <Cat animationName={animationName} offset={20} />
                     </Catwalk>
                 </Suspense>
             </MaterialsProvider>

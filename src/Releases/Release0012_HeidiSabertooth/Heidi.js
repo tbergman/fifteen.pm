@@ -34,7 +34,11 @@ export default function Heidi({ catwalk, offset, animationName, ...props }) {
   }, [])
   return (
     <group ref={group} {...props} dispose={null}>
-      <group scale={[.01,.01,.01]}rotation={[THREE.Math.degToRad(0),THREE.Math.degToRad(-180),THREE.Math.degToRad(90)]} >
+      <group
+        position={[-1, 0, 0]}
+        scale={[.01, .01, .01]}
+        rotation={[THREE.Math.degToRad(0), THREE.Math.degToRad(-180), THREE.Math.degToRad(90)]}
+      >
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
           material={polishedSpeckledMarbleTop}

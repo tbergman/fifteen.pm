@@ -12,7 +12,7 @@ import { MaterialsContext } from './MaterialsContext';
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
 import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js';
 
-export default function GuapxBoxX({catwalk, offset, animationName, ...props}) {
+export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.GUAPXBOX_X, draco('/draco-gltf/'))
   const { polishedSpeckledMarbleTop } = useContext(MaterialsContext);
@@ -34,34 +34,38 @@ export default function GuapxBoxX({catwalk, offset, animationName, ...props}) {
   }, [])
   return (
     <group ref={group} {...props} dispose={null}>
-      <group scale={[.01, .01, .01]} rotation={[THREE.Math.degToRad(0),THREE.Math.degToRad(-180),THREE.Math.degToRad(90)]}>
-      <primitive object={nodes.mixamorigHips} />
-      <skinnedMesh
-        material={polishedSpeckledMarbleTop}
-        geometry={nodes.Ch43_Mesh.geometry}
-        skeleton={nodes.Ch43_Mesh.skeleton}
-      />
-      <skinnedMesh
-        material={polishedSpeckledMarbleTop}
-        geometry={nodes.Cube_Cube001.geometry}
-        skeleton={nodes.Cube_Cube001.skeleton}
-      />
-      <skinnedMesh material={polishedSpeckledMarbleTop} geometry={nodes.Plane.geometry} skeleton={nodes.Plane.skeleton} />
-      <skinnedMesh
-        material={polishedSpeckledMarbleTop}
-        geometry={nodes.Plane001.geometry}
-        skeleton={nodes.Plane001.skeleton}
-      />
-      <skinnedMesh
-        material={polishedSpeckledMarbleTop}
-        geometry={nodes.Plane002.geometry}
-        skeleton={nodes.Plane002.skeleton}
-      />
-      <skinnedMesh
-        material={polishedSpeckledMarbleTop}
-        geometry={nodes.Plane003.geometry}
-        skeleton={nodes.Plane003.skeleton}
-      />
+      <group
+        position={[-1, 0, 0]}
+        scale={[.01, .01, .01]}
+        rotation={[THREE.Math.degToRad(0), THREE.Math.degToRad(-180), THREE.Math.degToRad(90)]} {...props}
+      >
+        <primitive object={nodes.mixamorigHips} />
+        <skinnedMesh
+          material={polishedSpeckledMarbleTop}
+          geometry={nodes.Ch43_Mesh.geometry}
+          skeleton={nodes.Ch43_Mesh.skeleton}
+        />
+        <skinnedMesh
+          material={polishedSpeckledMarbleTop}
+          geometry={nodes.Cube_Cube001.geometry}
+          skeleton={nodes.Cube_Cube001.skeleton}
+        />
+        <skinnedMesh material={polishedSpeckledMarbleTop} geometry={nodes.Plane.geometry} skeleton={nodes.Plane.skeleton} />
+        <skinnedMesh
+          material={polishedSpeckledMarbleTop}
+          geometry={nodes.Plane001.geometry}
+          skeleton={nodes.Plane001.skeleton}
+        />
+        <skinnedMesh
+          material={polishedSpeckledMarbleTop}
+          geometry={nodes.Plane002.geometry}
+          skeleton={nodes.Plane002.skeleton}
+        />
+        <skinnedMesh
+          material={polishedSpeckledMarbleTop}
+          geometry={nodes.Plane003.geometry}
+          skeleton={nodes.Plane003.skeleton}
+        />
       </group>
     </group>
   )
