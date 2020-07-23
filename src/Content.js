@@ -517,22 +517,22 @@ export const CONTENT = {
       {
         name: "Inside Out",
         type: "soundcloud",
-        id: "708031996",
-        secretToken: "s-f0NWB",
-        bpm: 152
+        id: "862855786",
+        secretToken: "s-jBUPqKXtkmh",
+        bpm: 999
       },
       {
         name: "High On Mate",
         type: "soundcloud",
-        id: "708031990",
-        secretToken: "s-NKawM",
-        bpm: 112
+        id: "862855783",
+        secretToken: "s-8Ac9QyayEtV",
+        bpm: 999
       },
       {
         name: "Looking For Roses",
         type: "soundcloud",
-        id: "708031987",
-        secretToken: "s-BnEVI",
+        id: "862855780",
+        secretToken: "s-krM6xurN6cV",
         bpm: 110
       },
     ],

@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, Suspense, useEffect, useState } from 'react';
 import * as THREE from 'three';
-import { useThree, extend, useResource } from 'react-three-fiber';
+import { useThree, extend, useFrame, useResource } from 'react-three-fiber';
 import TheHair from './TheHair.js';
 import { MaterialsProvider } from './MaterialsContext';
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -12,20 +12,25 @@ import Alien1 from './Alien1.js';
 import Cat from './Cat.js';
 import Heidi from './Heidi.js';
 import Catwalk from './Catwalk.js';
+import Stars from '../../Common/Utils/Stars';
 import * as C from './constants';
 
 export function Scene({ }) {
-    const { camera, scene } = useThree();
+    const { camera, scene, clock } = useThree();
     const { currentTrackName } = useAudioPlayer();
     const [animationName, setAnimationName] = useState()
 
     useEffect(() => {
-        camera.position.z = 2
-        camera.position.y = 2.5
-        var axesHelper = new THREE.AxesHelper(105);
-        scene.add(axesHelper);
+        camera.position.set(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION])
     }, [])
 
+    useFrame(() => {
+        if (clock.elapsedTime.toFixed(2) % 2 == 0) {
+            const randIdx = THREE.Math.randInt(0, Object.keys(C.CAMERA_POSITIONS).length - 1)
+            const randKey = Object.keys(C.CAMERA_POSITIONS)[randIdx]
+            camera.position.set(...C.CAMERA_POSITIONS[randKey])
+        }
+    })
 
     useEffect(() => {
         if (!currentTrackName) return
@@ -36,6 +41,7 @@ export function Scene({ }) {
         <>
             <ambientLight />
             <Orbit />
+            <Stars />
             <MaterialsProvider>
                 <Suspense fallback={null} >
                     <Catwalk
