@@ -10,13 +10,14 @@ import Orbit from '../../Common/Controls/Orbit';
 import GuapxX from './GuapxX.js';
 import Alien1 from './Alien1.js';
 import Cat from './Cat.js';
+import Heidi from './Heidi.js';
 import Catwalk from './Catwalk.js';
 import * as C from './constants';
 
 export function Scene({ }) {
     const { camera, scene } = useThree();
     const { currentTrackName } = useAudioPlayer();
-    const [animationName, setAnimationName] = useState(C.ANIMATION_TRACK_CROSSWALK[C.FIRST_TRACK])
+    const [animationName, setAnimationName] = useState()
     
     useEffect(() => {
         camera.position.z = 2
@@ -40,7 +41,8 @@ export function Scene({ }) {
                     <Catwalk
                         radius={1}
                     >
-                        <Cat animationName={animationName} />
+                        <Cat offset={5} animationName={animationName} />
+                        <Heidi animationName={animationName} />
                         {/* <TheHair /> */}
                         {/* <GuapxX offset={1.9} speed={1}/> */}
                         {/* <Alien1 /> */}

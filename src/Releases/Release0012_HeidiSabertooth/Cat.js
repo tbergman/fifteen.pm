@@ -10,22 +10,20 @@ import { draco } from 'drei'
 import * as C from './constants.js';
 import { MaterialsContext } from './MaterialsContext';
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
+import {useAnimationSequence} from '../../Common/Animations/AnimationSequence.js';
 
 export default function Cat({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.CAT, draco('/draco-gltf/'))
   const { polishedSpeckledMarbleTop } = useContext(MaterialsContext);
-  const actions = useRef()
-  const [prevAction, setPrevAction] = useState()
-  const [curAction, setCurAction] = useState()
-  const [mixer] = useState(() => new THREE.AnimationMixer())
-  useFrame((state, delta) => mixer.update(delta))
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
     // speed: speed,
     offset: offset,
   })
+  
+  const { actions, mixer } = useAnimationSequence({ animationName })
 
   useEffect(() => {
     actions.current = {
@@ -36,22 +34,6 @@ export default function Cat({ catwalk, offset, animationName, ...props }) {
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])
 
-  useEffect(() => {
-    if (curAction){
-      console.log("SET PREV ACTION to", curAction._clip.name)
-    }
-
-    setPrevAction(curAction)
-    console.log("SET CUR ACTION to", animationName)
-    setCurAction(actions.current[animationName])
-  }, [animationName])
-
-  useEffect(() => {
-    console.log("CUR ACTION", curAction)
-    if (!curAction) return
-    if (prevAction) prevAction.stop()
-    curAction.play()
-  }, [curAction])
   return (
     <group ref={group} {...props} dispose={null}>
       <group rotation={[THREE.Math.degToRad(-90), THREE.Math.degToRad(-90), 0]}>
