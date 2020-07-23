@@ -7,7 +7,7 @@ import { MaterialsProvider } from './MaterialsContext';
 // extend({ OrbitControls })
 import useAudioPlayer from '../../Common/UI/Player/hooks/useAudioPlayer';
 import Orbit from '../../Common/Controls/Orbit';
-import GuapxX from './GuapxX.js';
+import GuapxBoxX from './GuapxBoxX.js';
 import Alien1 from './Alien1.js';
 import Cat from './Cat.js';
 import Heidi from './Heidi.js';
@@ -18,14 +18,14 @@ export function Scene({ }) {
     const { camera, scene } = useThree();
     const { currentTrackName } = useAudioPlayer();
     const [animationName, setAnimationName] = useState()
-    
+
     useEffect(() => {
         camera.position.z = 2
         camera.position.y = 2.5
         var axesHelper = new THREE.AxesHelper(105);
         scene.add(axesHelper);
     }, [])
-    
+
 
     useEffect(() => {
         if (!currentTrackName) return
@@ -41,11 +41,10 @@ export function Scene({ }) {
                     <Catwalk
                         radius={1}
                     >
-                        <Cat offset={5} animationName={animationName} />
-                        <Heidi animationName={animationName} />
-                        {/* <TheHair /> */}
-                        {/* <GuapxX offset={1.9} speed={1}/> */}
-                        {/* <Alien1 /> */}
+                        <Heidi animationName={animationName} offset={2} />
+                        <GuapxBoxX animationName={animationName} offset={3} />
+                        <Alien1 animationName={animationName} offset={4} />
+                        <Cat animationName={animationName} offset={5} />
                     </Catwalk>
                 </Suspense>
             </MaterialsProvider>
