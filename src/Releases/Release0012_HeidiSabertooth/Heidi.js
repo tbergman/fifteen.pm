@@ -15,7 +15,7 @@ import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.
 export default function Heidi({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.HEIDI, draco('/draco-gltf/'))
-  const { polishedSpeckledMarbleTop } = useContext(MaterialsContext);
+  const { polishedSpeckledMarbleTop, naiveGlass: clothing } = useContext(MaterialsContext);
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
@@ -41,6 +41,10 @@ export default function Heidi({ catwalk, offset, animationName, ...props }) {
       >
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
+        lights={true}
+        castShadow={true}
+        receiveShadow={true}
+        
           material={polishedSpeckledMarbleTop}
           geometry={nodes.Body_Bodymesh.geometry}
           skeleton={nodes.Body_Bodymesh.skeleton}
@@ -56,39 +60,42 @@ export default function Heidi({ catwalk, offset, animationName, ...props }) {
           skeleton={nodes.Eyelashes_Eyelashesmesh.skeleton}
         />
         <skinnedMesh material={polishedSpeckledMarbleTop} geometry={nodes.Hair07.geometry} skeleton={nodes.Hair07.skeleton} />
-        <skinnedMesh material={polishedSpeckledMarbleTop} geometry={nodes.Torus.geometry} skeleton={nodes.Torus.skeleton} />
+        <skinnedMesh material={clothing}
+          geometry={nodes.Torus.geometry}
+          skeleton={nodes.Torus.skeleton}
+        />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing}
           geometry={nodes.Torus001.geometry}
           skeleton={nodes.Torus001.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing}
           geometry={nodes.Torus002_Torus004.geometry}
           skeleton={nodes.Torus002_Torus004.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing}
           geometry={nodes.Torus003.geometry}
           skeleton={nodes.Torus003.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing}
           geometry={nodes.Torus004_Torus006.geometry}
           skeleton={nodes.Torus004_Torus006.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing}
           geometry={nodes.Torus005.geometry}
           skeleton={nodes.Torus005.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing}
           geometry={nodes.Torus006_Torus008.geometry}
           skeleton={nodes.Torus006_Torus008.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing}
           geometry={nodes.Torus007.geometry}
           skeleton={nodes.Torus007.skeleton}
         />

@@ -24,13 +24,13 @@ export function Scene({ }) {
         camera.position.set(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION])
     }, [])
 
-    useFrame(() => {
-        if (clock.elapsedTime.toFixed(2) % 2 == 0) {
-            const randIdx = THREE.Math.randInt(0, Object.keys(C.CAMERA_POSITIONS).length - 1)
-            const randKey = Object.keys(C.CAMERA_POSITIONS)[randIdx]
-            camera.position.set(...C.CAMERA_POSITIONS[randKey])
-        }
-    })
+    // useFrame(() => {
+    //     if (clock.elapsedTime.toFixed(2) % 2 == 0) {
+    //         const randIdx = THREE.Math.randInt(0, Object.keys(C.CAMERA_POSITIONS).length - 1)
+    //         const randKey = Object.keys(C.CAMERA_POSITIONS)[randIdx]
+    //         camera.position.set(...C.CAMERA_POSITIONS[randKey])
+    //     }
+    // })
 
     useEffect(() => {
         if (!currentTrackName) return
