@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useContext, useRef, useState } from 'react';
-import { useThree, useFrame } from 'react-three-fiber';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { MaterialsContext } from './MaterialsContext';
 
-function CatwalkLight({ position }) {
+function CatwalkLight({ position, color, intensity}) {
     const ref = useRef();
     const { scene } = useThree();
     useEffect(() => {
@@ -19,13 +19,14 @@ function CatwalkLight({ position }) {
         ref={ref}
         position={position}
         castShadow={true}
-        intensity={1}
+        intensity={intensity}
+        color={color}
     />
 }
 
 export default function Catwalk({ extrusionSegments, radius, radiusSegments, ...props }) {
     const ref = useRef();
-    const { wireframe, pockedStone2, platformPolishedSpeckledMarbleTop, linedCement } = useContext(MaterialsContext);
+    const { platformPolishedSpeckledMarbleTop } = useContext(MaterialsContext);
     const catwalk = useMemo(() => {
         const steps = [
             new THREE.Vector3(-5, -1.25, 0),
@@ -48,17 +49,14 @@ export default function Catwalk({ extrusionSegments, radius, radiusSegments, ...
     const childrenRef = useRef();
     useFrame(() => {
         // TODO (jeremy) this speed should change per track
-        pockedStone2.colorMap.offset.x -= .005;
-        // linedCement.map.offset.x -= .001;
+        platformPolishedSpeckledMarbleTop.map.offset.x -= .005;
     })
     const setRefs = useRef(new Map()).current
     const { children } = props
     return <group ref={ref}>
-        <mesh lights={true} receiveShadow={true} geometry={catwalk} material={platformPolishedSpeckledMarbleTop} />
-        <CatwalkLight position={[0, 1.95, 0]} />
-        {/* <CatwalkLight position={[-10, 5, 0]} />
-        <CatwalkLight position={[5, -5, 0]} /> 
-        <CatwalkLight position={[10, -5, 0]} /> */}
+        <mesh lights={true} receiveShadow={true} geometry={catwalk} material={platformPolishedSpeckledMarbleTop} scale={[1,1,2]} />
+        <CatwalkLight position={[0, 1.95, 0]} color={"blue"} intensity={1} />
+        <CatwalkLight position={[0, -1.95, 0]} color={"yellow"} intensity={1} />
         <group ref={childrenRef}>
             {React.Children.map(children, child => {
                 return React.cloneElement(

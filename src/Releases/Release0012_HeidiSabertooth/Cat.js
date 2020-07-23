@@ -19,7 +19,6 @@ export default function Cat({ catwalk, offset, animationName, ...props }) {
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
-    // speed: speed,
     offset: offset,
   })
 
@@ -41,6 +40,11 @@ export default function Cat({ catwalk, offset, animationName, ...props }) {
         rotation={[THREE.Math.degToRad(-90), THREE.Math.degToRad(-90), 0]}
       >
         <primitive object={nodes.mixamorigHips} />
+        <skinnedMesh
+          material={polishedSpeckledMarbleTop}
+          geometry={nodes.clothes.geometry}
+          skeleton={nodes.clothes.skeleton}
+        />
         <skinnedMesh
           material={polishedSpeckledMarbleTop}
           geometry={nodes.Object_10001_Mesh_0001.geometry}

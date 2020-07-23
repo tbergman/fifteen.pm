@@ -1,12 +1,8 @@
 import React, { useMemo, useRef, Suspense, useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { useThree, extend, useFrame, useResource } from 'react-three-fiber';
-import TheHair from './TheHair.js';
 import { MaterialsProvider } from './MaterialsContext';
-// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-// extend({ OrbitControls })
 import useAudioPlayer from '../../Common/UI/Player/hooks/useAudioPlayer';
-import Orbit from '../../Common/Controls/Orbit';
 import GuapxBoxX from './GuapxBoxX.js';
 import Alien1 from './Alien1.js';
 import Cat from './Cat.js';
@@ -14,21 +10,26 @@ import Heidi from './Heidi.js';
 import Catwalk from './Catwalk.js';
 import Stars from '../../Common/Utils/Stars';
 import * as C from './constants';
+import Flying from '../../Common/Controls/Flying';
+
 
 export function Scene({ }) {
-    const { camera, scene, clock } = useThree();
+    const { camera, scene, clock, gl } = useThree();
     const { currentTrackName } = useAudioPlayer();
     const [animationName, setAnimationName] = useState()
 
     useEffect(() => {
-        camera.position.set(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION])
+        camera.position.set(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].position)
+        console.log(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].lookAt)
+        camera.lookAt(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].lookAt)
     }, [])
-
+    // useFrame(() => console.log(camera.position))
     // useFrame(() => {
     //     if (clock.elapsedTime.toFixed(2) % 2 == 0) {
     //         const randIdx = THREE.Math.randInt(0, Object.keys(C.CAMERA_POSITIONS).length - 1)
     //         const randKey = Object.keys(C.CAMERA_POSITIONS)[randIdx]
-    //         camera.position.set(...C.CAMERA_POSITIONS[randKey])
+    //         camera.position.set(...C.CAMERA_POSITIONS[randKey].position)
+    //         camera.lookAt(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].lookAt)
     //     }
     // })
 
@@ -40,7 +41,7 @@ export function Scene({ }) {
     return (
         <>
             <ambientLight />
-            <Orbit />
+            <Flying />
             <Stars />
             <MaterialsProvider>
                 <Suspense fallback={null} >
