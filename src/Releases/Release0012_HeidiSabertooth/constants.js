@@ -22,3 +22,23 @@ export const CAMERA_POSITIONS = {
     "split": { position: [8.059123795293685, -0.10436603058191879, -0.06187434400353934], lookAt: [0, 0, 0] },
 }
 
+export const TRACKS_CONFIG = {
+    "Inside Out": {
+        steps: [
+            {time: 0, cameraPos: FIRST_CAMERA_POSITION},
+            {time: 3, cameraPos: "side"},
+        ]
+    },
+    "High On Mate": {
+        steps: [
+            {time: 0, cameraPos: FIRST_CAMERA_POSITION},
+            {time: 3, cameraPos: "floorMid"},
+        ]
+    },
+    "Looking For Roses": {
+        steps: [
+            {time: 0, cameraPos: "wide"},
+            {time: 3, cameraPos: "side"},
+        ]
+    }
+}

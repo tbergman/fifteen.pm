@@ -55,8 +55,8 @@ export default function Catwalk({ extrusionSegments, radius, radiusSegments, ...
     const { children } = props
     return <group ref={ref}>
         <mesh lights={true} receiveShadow={true} geometry={catwalk} material={platformPolishedSpeckledMarbleTop} scale={[1,1,2]} />
-        <CatwalkLight position={[0, 1.95, 0]} color={"blue"} intensity={1} />
-        <CatwalkLight position={[0, -1.95, 0]} color={"yellow"} intensity={1} />
+        <CatwalkLight position={[0, 2., 0]} color={"yellow"} intensity={1} />
+        <CatwalkLight position={[0, -2., 0]} color={"yellow"} intensity={1} />
         <group ref={childrenRef}>
             {React.Children.map(children, child => {
                 return React.cloneElement(

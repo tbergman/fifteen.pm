@@ -11,18 +11,28 @@ import Catwalk from './Catwalk.js';
 import Stars from '../../Common/Utils/Stars';
 import * as C from './constants';
 import Flying from '../../Common/Controls/Flying';
-
+import { useTrackStepSequence } from '../../Common/Sequencing/TrackStepSequencing'
 
 export function Scene({ }) {
     const { camera, scene, clock, gl } = useThree();
     const { currentTrackName } = useAudioPlayer();
     const [animationName, setAnimationName] = useState()
+    const { step, stepIdx } = useTrackStepSequence({
+        tracks: C.TRACKS_CONFIG,
+        firstTrack: C.FIRST_TRACK,
+    })
 
     useEffect(() => {
         camera.position.set(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].position)
-        console.log(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].lookAt)
         camera.lookAt(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].lookAt)
     }, [])
+
+
+    useEffect(() => {
+        camera.position.set(...C.CAMERA_POSITIONS[step.cameraPos].position)
+        camera.lookAt(...C.CAMERA_POSITIONS[step.cameraPos].lookAt)
+    }, [step, stepIdx])
+
     // useFrame(() => console.log(camera.position))
     // useFrame(() => {
     //     if (clock.elapsedTime.toFixed(2) % 2 == 0) {
