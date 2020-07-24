@@ -11,7 +11,7 @@ import Catwalk from './Catwalk.js';
 import Stars from '../../Common/Utils/Stars';
 import * as C from './constants';
 import Flying from '../../Common/Controls/Flying';
-import Screen from './Screen';
+import BlackholeSun from './BlackholeSun';
 import { useTrackStepSequence } from '../../Common/Sequencing/TrackStepSequencing'
 
 export function Scene({ }) {
@@ -42,13 +42,13 @@ export function Scene({ }) {
 
     return (
         <>
-            <ambientLight />
+            {/* <ambientLight intensity={.0001} args={[0x404040, .001]} /> */}
             <Flying
                 rollSpeed={Math.PI * 2}
             />
             <Stars />
             <MaterialsProvider>
-                <Screen />
+                <BlackholeSun />
                 <Suspense fallback={null} >
                     <Catwalk
                         radius={.6}

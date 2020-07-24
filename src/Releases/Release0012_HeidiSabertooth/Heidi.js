@@ -15,11 +15,15 @@ import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.
 export default function Heidi({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.HEIDI, draco('/draco-gltf/'))
-  const { polishedSpeckledMarbleTop, naiveGlass: clothing } = useContext(MaterialsContext);
+  const {
+    polishedSpeckledMarbleTop: body,
+    naiveGlass2: clothing2,
+    naiveGlass: clothing,
+    naiveGlass2: eyes,
+  } = useContext(MaterialsContext);
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
-    // speed: speed,
     offset: offset,
   })
   const { actions, mixer } = useAnimationSequence({ animationName })
@@ -41,36 +45,35 @@ export default function Heidi({ catwalk, offset, animationName, ...props }) {
       >
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
-        lights={true}
-        castShadow={true}
-        receiveShadow={true}
-        
-          material={polishedSpeckledMarbleTop}
+          lights={true}
+          castShadow={true}
+          receiveShadow={true}
+          material={body}
           geometry={nodes.Body_Bodymesh.geometry}
           skeleton={nodes.Body_Bodymesh.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={eyes}
           geometry={nodes.default_defaultmesh.geometry}
           skeleton={nodes.default_defaultmesh.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={eyes}
           geometry={nodes.Eyelashes_Eyelashesmesh.geometry}
           skeleton={nodes.Eyelashes_Eyelashesmesh.skeleton}
         />
-        <skinnedMesh material={polishedSpeckledMarbleTop} geometry={nodes.Hair07.geometry} skeleton={nodes.Hair07.skeleton} />
-        <skinnedMesh material={clothing}
+        <skinnedMesh material={body} geometry={nodes.Hair07.geometry} skeleton={nodes.Hair07.skeleton} />
+        <skinnedMesh material={clothing2}
           geometry={nodes.Torus.geometry}
           skeleton={nodes.Torus.skeleton}
         />
         <skinnedMesh
-          material={clothing}
+          material={clothing2}
           geometry={nodes.Torus001.geometry}
           skeleton={nodes.Torus001.skeleton}
         />
         <skinnedMesh
-          material={clothing}
+          material={clothing2}
           geometry={nodes.Torus002_Torus004.geometry}
           skeleton={nodes.Torus002_Torus004.skeleton}
         />
@@ -85,17 +88,17 @@ export default function Heidi({ catwalk, offset, animationName, ...props }) {
           skeleton={nodes.Torus004_Torus006.skeleton}
         />
         <skinnedMesh
-          material={clothing}
+          material={clothing2}
           geometry={nodes.Torus005.geometry}
           skeleton={nodes.Torus005.skeleton}
         />
         <skinnedMesh
-          material={clothing}
+          material={clothing2}
           geometry={nodes.Torus006_Torus008.geometry}
           skeleton={nodes.Torus006_Torus008.skeleton}
         />
         <skinnedMesh
-          material={clothing}
+          material={clothing2}
           geometry={nodes.Torus007.geometry}
           skeleton={nodes.Torus007.skeleton}
         />

@@ -16,7 +16,7 @@ export const FIRST_CAMERA_POSITION = "floorHigh"
 export const CAMERA_POSITIONS = {
     "wide": { position: [-2.2504463506184993, 2.868375043915486, 10.95079874726515], lookAt: [0, 0, 0] },
     "floorMid": { position: [3.9038521003481264, 1.3686621524209956, -0.07793609444684252], lookAt: [0, 0, 0] },
-    "floorHigh": { position: [4.1437982940586195, 2.32204293872141785, 0.013147959502974958], lookAt: [0, 4, 0] },
+    "floorHigh": { position: [4.1437982940586195, 2.0, 0.013147959502974958], lookAt: [0, 3, 0] },
     "side": { position: [3.457559, -0.434766259, 5.96748884], lookAt: [0, 0, 0] },
     "top": { position: [0.000003892542295841119, -3.9306783940759447, 5.47467480983172e-7], lookAt: [0, 0, 0] },
     "split": { position: [8.059123795293685, -0.10436603058191879, -0.06187434400353934], lookAt: [0, 0, 0] },
@@ -26,7 +26,8 @@ export const TRACKS_CONFIG = {
     "Inside Out": {
         steps: [
             {time: 0, cameraPos: FIRST_CAMERA_POSITION},
-            {time: 3, cameraPos: "side"},
+            // {time: 3, cameraPos: "side"},
+            // {time: 4, cameraPos: "floorHigh"}
         ]
     },
     "High On Mate": {

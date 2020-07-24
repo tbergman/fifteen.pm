@@ -15,7 +15,11 @@ import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.
 export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.GUAPXBOX_X, draco('/draco-gltf/'))
-  const { polishedSpeckledMarbleTop } = useContext(MaterialsContext);
+  const {
+    polishedSpeckledMarbleTop: body,
+    polishedSpeckledMarbleTop: clothing,
+    naiveGlass: clothing2,
+  } = useContext(MaterialsContext);
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
@@ -41,28 +45,28 @@ export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) 
       >
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={body}
           geometry={nodes.Ch43_Mesh.geometry}
           skeleton={nodes.Ch43_Mesh.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing}
           geometry={nodes.Cube_Cube001.geometry}
           skeleton={nodes.Cube_Cube001.skeleton}
         />
-        <skinnedMesh material={polishedSpeckledMarbleTop} geometry={nodes.Plane.geometry} skeleton={nodes.Plane.skeleton} />
+        <skinnedMesh material={clothing2} geometry={nodes.Plane.geometry} skeleton={nodes.Plane.skeleton} />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing2}
           geometry={nodes.Plane001.geometry}
           skeleton={nodes.Plane001.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing2}
           geometry={nodes.Plane002.geometry}
           skeleton={nodes.Plane002.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing2}
           geometry={nodes.Plane003.geometry}
           skeleton={nodes.Plane003.skeleton}
         />

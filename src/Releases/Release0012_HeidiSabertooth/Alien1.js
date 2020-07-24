@@ -12,15 +12,15 @@ import { MaterialsContext } from './MaterialsContext';
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
 import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js';
 
+
 export default function Alien1({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.ALIEN1, draco('/draco-gltf/'))
 
-  const { polishedSpeckledMarbleTop } = useContext(MaterialsContext);
+  const { polishedSpeckledMarbleTop:body, naiveGlass2: clothing , naiveGlass: eyelashes, naiveGlass2: eyes} = useContext(MaterialsContext);
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
-    // speed: speed,
     offset: offset,
   })
   const { actions, mixer } = useAnimationSequence({ animationName })
@@ -42,22 +42,22 @@ export default function Alien1({ catwalk, offset, animationName, ...props }) {
       >
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={body}
           geometry={nodes.Body_Bodymesh.geometry}
           skeleton={nodes.Body_Bodymesh.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing}
           geometry={nodes.Cylinder.geometry}
           skeleton={nodes.Cylinder.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={eyes}
           geometry={nodes.default_defaultmesh.geometry}
           skeleton={nodes.default_defaultmesh.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={eyelashes}
           geometry={nodes.Eyelashes_Eyelashesmesh.geometry}
           skeleton={nodes.Eyelashes_Eyelashesmesh.skeleton}
         />

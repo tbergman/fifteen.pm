@@ -15,7 +15,7 @@ import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.
 export default function Cat({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.CAT, draco('/draco-gltf/'))
-  const { polishedSpeckledMarbleTop } = useContext(MaterialsContext);
+  const { polishedSpeckledMarbleTop: body, naiveGlass: clothing, naiveGlass: eyes } = useContext(MaterialsContext);
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
@@ -41,32 +41,32 @@ export default function Cat({ catwalk, offset, animationName, ...props }) {
       >
         <primitive object={nodes.mixamorigHips} />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={clothing}
           geometry={nodes.clothes.geometry}
           skeleton={nodes.clothes.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={body}
           geometry={nodes.Object_10001_Mesh_0001.geometry}
           skeleton={nodes.Object_10001_Mesh_0001.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={eyes}
           geometry={nodes.Object_11001_Mesh_1001.geometry}
           skeleton={nodes.Object_11001_Mesh_1001.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={eyes}
           geometry={nodes.Object_12001_Mesh_2001.geometry}
           skeleton={nodes.Object_12001_Mesh_2001.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={body}
           geometry={nodes.Object_14001_Mesh_4001.geometry}
           skeleton={nodes.Object_14001_Mesh_4001.skeleton}
         />
         <skinnedMesh
-          material={polishedSpeckledMarbleTop}
+          material={body}
           geometry={nodes.Object_15001_Mesh_5001.geometry}
           skeleton={nodes.Object_15001_Mesh_5001.skeleton}
         />
