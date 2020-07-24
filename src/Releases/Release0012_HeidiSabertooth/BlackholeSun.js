@@ -10,7 +10,7 @@ export default function BlackholeSun({ position =[0,0,0], rotation = [0, THREE.M
 
     return <group>
         <mesh material={sunflare} position={position} rotation={rotation}  >
-            <sphereBufferGeometry attach="geometry" args={[5, 32, 32]} />
+            <sphereBufferGeometry attach="geometry" args={[6, 32, 32]} />
         </mesh>
     </group>
 

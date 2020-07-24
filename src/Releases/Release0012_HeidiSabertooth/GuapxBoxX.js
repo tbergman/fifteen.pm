@@ -54,7 +54,11 @@ export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) 
           geometry={nodes.Cube_Cube001.geometry}
           skeleton={nodes.Cube_Cube001.skeleton}
         />
-        <skinnedMesh material={clothing2} geometry={nodes.Plane.geometry} skeleton={nodes.Plane.skeleton} />
+        <skinnedMesh
+          material={clothing2}
+          geometry={nodes.Plane.geometry}
+          skeleton={nodes.Plane.skeleton}
+        />
         <skinnedMesh
           material={clothing2}
           geometry={nodes.Plane001.geometry}

@@ -17,8 +17,8 @@ export default function Heidi({ catwalk, offset, animationName, ...props }) {
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.HEIDI, draco('/draco-gltf/'))
   const {
     polishedSpeckledMarbleTop: body,
-    naiveGlass2: clothing2,
-    naiveGlass: clothing,
+    naiveGlass2: clothing,
+    naiveGlass: jewelry,
     naiveGlass2: eyes,
   } = useContext(MaterialsContext);
   useObjectAlongTubeGeometry({
@@ -62,18 +62,23 @@ export default function Heidi({ catwalk, offset, animationName, ...props }) {
           geometry={nodes.Eyelashes_Eyelashesmesh.geometry}
           skeleton={nodes.Eyelashes_Eyelashesmesh.skeleton}
         />
-        <skinnedMesh material={body} geometry={nodes.Hair07.geometry} skeleton={nodes.Hair07.skeleton} />
-        <skinnedMesh material={clothing2}
+        <skinnedMesh
+          material={body}
+          geometry={nodes.Hair07.geometry}
+          skeleton={nodes.Hair07.skeleton}
+        />
+        <skinnedMesh
+          material={clothing}
           geometry={nodes.Torus.geometry}
           skeleton={nodes.Torus.skeleton}
         />
         <skinnedMesh
-          material={clothing2}
+          material={clothing}
           geometry={nodes.Torus001.geometry}
           skeleton={nodes.Torus001.skeleton}
         />
         <skinnedMesh
-          material={clothing2}
+          material={jewelry}
           geometry={nodes.Torus002_Torus004.geometry}
           skeleton={nodes.Torus002_Torus004.skeleton}
         />
@@ -88,17 +93,17 @@ export default function Heidi({ catwalk, offset, animationName, ...props }) {
           skeleton={nodes.Torus004_Torus006.skeleton}
         />
         <skinnedMesh
-          material={clothing2}
+          material={clothing}
           geometry={nodes.Torus005.geometry}
           skeleton={nodes.Torus005.skeleton}
         />
         <skinnedMesh
-          material={clothing2}
+          material={clothing}
           geometry={nodes.Torus006_Torus008.geometry}
           skeleton={nodes.Torus006_Torus008.skeleton}
         />
         <skinnedMesh
-          material={clothing2}
+          material={clothing}
           geometry={nodes.Torus007.geometry}
           skeleton={nodes.Torus007.skeleton}
         />
