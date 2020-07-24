@@ -6,7 +6,8 @@ import FoamGrip from '../../Common/Materials/FoamGrip';
 import NaiveGlass from '../../Common/Materials/NaiveGlass';
 import PolishedSpeckledMarbleTop from '../../Common/Materials/PolishedSpeckledMarbleTop';
 import ScuffedPlastic from '../../Common/Materials/ScuffedPlastic';
-
+import { TronMaterial } from '../../Common/Materials/TronMaterial';
+import { Sunflare } from '../../Common/Materials/Sunflare';
 const MaterialsContext = React.createContext([{}, () => { }]);
 
 const MaterialsProvider = ({ ...props }) => {
@@ -18,7 +19,9 @@ const MaterialsProvider = ({ ...props }) => {
     const [scuffedPlasticRedRef, scuffedPlasticRed] = useResource();
     const [naiveGlassRef, naiveGlass] = useResource();
     const [discoBall01Ref, discoBall01] = useResource();
-    
+    const [tronRef, tron] = useResource();
+    const [sunflareRef, sunflare] = useResource();
+
     const materials = {
         polishedSpeckledMarbleTop,
         wireframe,
@@ -27,6 +30,8 @@ const MaterialsProvider = ({ ...props }) => {
         scuffedPlasticRed,
         naiveGlass,
         discoBall01,
+        tron,
+        sunflare,
     }
 
     useEffect(() => {
@@ -46,10 +51,15 @@ const MaterialsProvider = ({ ...props }) => {
             textureRepeat={{ x: 8, y: 8 }}
             side={THREE.BackSide}
         />
+        <Sunflare
+            materialRef={sunflareRef}
+            transparent={true}
+        />
         <FoamGrip
             materialRef={foamGripRef}
             color={0xff00af}
             specular={0x00ff00}
+            side={THREE.DoubleSide}
         />
         <ScuffedPlastic
             materialRef={scuffedPlasticRedRef}
@@ -68,6 +78,9 @@ const MaterialsProvider = ({ ...props }) => {
         <DiscoBall01
             materialRef={discoBall01Ref}
             skinning={true}
+        />
+        <TronMaterial
+            materialRef={tronRef}
         />
         {props.children}
     </MaterialsContext.Provider>

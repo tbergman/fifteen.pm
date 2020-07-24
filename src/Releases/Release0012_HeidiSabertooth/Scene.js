@@ -1,7 +1,7 @@
-import React, { useMemo, useRef, Suspense, useEffect, useState } from 'react';
+import React, { useMemo, useRef, Suspense, useEffect, useContext, useState } from 'react';
 import * as THREE from 'three';
 import { useThree, extend, useFrame, useResource } from 'react-three-fiber';
-import { MaterialsProvider } from './MaterialsContext';
+import { MaterialsProvider, MaterialsContext } from './MaterialsContext';
 import useAudioPlayer from '../../Common/UI/Player/hooks/useAudioPlayer';
 import GuapxBoxX from './GuapxBoxX.js';
 import Alien1 from './Alien1.js';
@@ -11,6 +11,7 @@ import Catwalk from './Catwalk.js';
 import Stars from '../../Common/Utils/Stars';
 import * as C from './constants';
 import Flying from '../../Common/Controls/Flying';
+import Screen from './Screen';
 import { useTrackStepSequence } from '../../Common/Sequencing/TrackStepSequencing'
 
 export function Scene({ }) {
@@ -31,17 +32,8 @@ export function Scene({ }) {
     useEffect(() => {
         camera.position.set(...C.CAMERA_POSITIONS[step.cameraPos].position)
         camera.lookAt(...C.CAMERA_POSITIONS[step.cameraPos].lookAt)
-    }, [step, stepIdx])
+    }, [step])
 
-    // useFrame(() => console.log(camera.position))
-    // useFrame(() => {
-    //     if (clock.elapsedTime.toFixed(2) % 2 == 0) {
-    //         const randIdx = THREE.Math.randInt(0, Object.keys(C.CAMERA_POSITIONS).length - 1)
-    //         const randKey = Object.keys(C.CAMERA_POSITIONS)[randIdx]
-    //         camera.position.set(...C.CAMERA_POSITIONS[randKey].position)
-    //         camera.lookAt(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].lookAt)
-    //     }
-    // })
 
     useEffect(() => {
         if (!currentTrackName) return
@@ -51,9 +43,12 @@ export function Scene({ }) {
     return (
         <>
             <ambientLight />
-            <Flying />
+            <Flying
+                rollSpeed={Math.PI * 2}
+            />
             <Stars />
             <MaterialsProvider>
+                <Screen />
                 <Suspense fallback={null} >
                     <Catwalk
                         radius={.6}
