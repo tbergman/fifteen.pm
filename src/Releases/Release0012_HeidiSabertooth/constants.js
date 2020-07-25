@@ -25,21 +25,24 @@ export const CAMERA_POSITIONS = {
 export const TRACKS_CONFIG = {
     "Inside Out": {
         steps: [
-            {time: 0, cameraPos: FIRST_CAMERA_POSITION},
+            // todo (jeremy) actionName is just demonstrating, these aren't the actions we'd want here
+            {time: 0, cameraPos: FIRST_CAMERA_POSITION, actionName: "insideout"},
+            {time: 3, cameraPos: FIRST_CAMERA_POSITION, actionName: "mate"}, 
+            {time: 5, cameraPos: FIRST_CAMERA_POSITION, actionName: "rose3"}, 
             // {time: 3, cameraPos: "side"},
             // {time: 4, cameraPos: "floorHigh"}
         ]
     },
     "High On Mate": {
         steps: [
-            {time: 0, cameraPos: FIRST_CAMERA_POSITION},
-            {time: 3, cameraPos: "floorMid"},
+            {time: 0, cameraPos: FIRST_CAMERA_POSITION, actionName: "mate1"},
+            {time: 3, cameraPos: "floorMid", actionName: "mate2"},
         ]
     },
     "Looking For Roses": {
         steps: [
-            {time: 0, cameraPos: "wide"},
-            {time: 3, cameraPos: "side"},
+            {time: 0, cameraPos: "wide", actionName: "roses1"},
+            {time: 3, cameraPos: "side", actionName: "roses2"},
         ]
     }
 }

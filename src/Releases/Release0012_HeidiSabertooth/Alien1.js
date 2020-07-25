@@ -11,25 +11,31 @@ import * as C from './constants.js';
 import { MaterialsContext } from './MaterialsContext';
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
 import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js';
+import { useAnimationFadeIn } from '../../Common/Animations/FadeIns.js';
 
-
-export default function Alien1({ catwalk, offset, animationName, ...props }) {
+export default function Alien1({ actionName, catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.ALIEN1, draco('/draco-gltf/'))
-
-  const { polishedSpeckledMarbleTop:body, naiveGlass2: clothing , naiveGlass: eyelashes, naiveGlass2: eyes} = useContext(MaterialsContext);
+  const { polishedSpeckledMarbleTop: body, naiveGlass: clothing, naiveGlass: eyelashes, naiveGlass2: eyes } = useContext(MaterialsContext);
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
     offset: offset,
   })
   const { actions, mixer } = useAnimationSequence({ animationName })
-
+  useAnimationFadeIn({ actions: actions.current, actionName })
   useEffect(() => {
     actions.current = {
-      insideout: mixer.clipAction(animations[0], group.current),
-      mate: mixer.clipAction(animations[1], group.current),
-      roses: mixer.clipAction(animations[2], group.current),
+      insideout1: mixer.clipAction(animations[0], group.current),
+      insideout2: mixer.clipAction(animations[1], group.current),
+      insideout3: mixer.clipAction(animations[2], group.current),
+      insideout4: mixer.clipAction(animations[3], group.current),
+      mate1: mixer.clipAction(animations[4], group.current),
+      mate2: mixer.clipAction(animations[5], group.current),
+      roses1: mixer.clipAction(animations[6], group.current),
+      roses2: mixer.clipAction(animations[7], group.current),
+      roses3: mixer.clipAction(animations[8], group.current),
+      roses4: mixer.clipAction(animations[9], group.current),
     }
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])

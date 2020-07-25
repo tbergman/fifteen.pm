@@ -12,6 +12,7 @@ import Stars from '../../Common/Utils/Stars';
 import * as C from './constants';
 import Flying from '../../Common/Controls/Flying';
 import BlackholeSun from './BlackholeSun';
+import OverheadLight from './OverheadLight';
 import { useTrackStepSequence } from '../../Common/Sequencing/TrackStepSequencing'
 
 export function Scene({ }) {
@@ -23,18 +24,13 @@ export function Scene({ }) {
         firstTrack: C.FIRST_TRACK,
     })
 
-    useEffect(() => {
+    const updateCamera = () => {
         camera.position.set(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].position)
         camera.lookAt(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].lookAt)
-    }, [])
+    }
 
-
-    useEffect(() => {
-        camera.position.set(...C.CAMERA_POSITIONS[step.cameraPos].position)
-        camera.lookAt(...C.CAMERA_POSITIONS[step.cameraPos].lookAt)
-    }, [step])
-
-
+    useEffect(() => updateCamera(), [step])
+        
     useEffect(() => {
         if (!currentTrackName) return
         setAnimationName(C.ANIMATION_TRACK_CROSSWALK[currentTrackName])
@@ -53,12 +49,20 @@ export function Scene({ }) {
                     <Catwalk
                         radius={.6}
                         radiusSegments={2}
-                        extrusionSegments={40}
+                        extrusionSegments={80}
                     >
-                        <Heidi animationName={animationName} offset={5} />
-                        <GuapxBoxX animationName={animationName} offset={10} />
-                        <Alien1 animationName={animationName} offset={15} />
+                        <Heidi actionName={step.actionName} animationName={animationName} offset={5} />
+                        <OverheadLight offset={5} position={[.5, 0, -.5]} color={"pink"} intensity={50} />
+
                         <Cat animationName={animationName} offset={20} />
+                        <OverheadLight offset={20} position={[.25, 0, -.5]} color={"purple"} intensity={30} />
+
+                        <GuapxBoxX animationName={animationName} offset={10} />
+                        <OverheadLight offset={10} position={[.5, 0, -.5]} color={"white"} intensity={50} />
+                        
+                        <Alien1 actionName={step.actionName} animationName={animationName} offset={15} />
+                        <OverheadLight offset={15} position={[.5, 0, -.5]} color={"red"} intensity={50} />
+                        
                     </Catwalk>
                 </Suspense>
             </MaterialsProvider>

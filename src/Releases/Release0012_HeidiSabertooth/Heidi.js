@@ -2,17 +2,19 @@
 auto-generated with modifications by: https://github.com/react-spring/gltfjsx
 */
 
-import * as THREE from 'three'
-import React, { useRef, useState, useContext, useEffect } from 'react'
-import { useLoader, useFrame } from 'react-three-fiber'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { draco } from 'drei'
-import * as C from './constants.js';
-import { MaterialsContext } from './MaterialsContext';
+import React, { useContext, useEffect, useRef } from 'react'
+import { useLoader } from 'react-three-fiber'
+import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js'
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
-import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js';
+import { useAnimationFadeIn } from '../../Common/Animations/FadeIns.js';
+import * as C from './constants.js'
+import { MaterialsContext } from './MaterialsContext'
 
-export default function Heidi({ catwalk, offset, animationName, ...props }) {
+
+export default function Heidi({ actionName, catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.HEIDI, draco('/draco-gltf/'))
   const {
@@ -21,13 +23,13 @@ export default function Heidi({ catwalk, offset, animationName, ...props }) {
     naiveGlass: jewelry,
     naiveGlass2: eyes,
   } = useContext(MaterialsContext);
+  const { actions, mixer } = useAnimationSequence({ animationName })
+  useAnimationFadeIn({ actions: actions.current, actionName })
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
     offset: offset,
   })
-  const { actions, mixer } = useAnimationSequence({ animationName })
-
   useEffect(() => {
     actions.current = {
       insideout: mixer.clipAction(animations[0], group.current),
@@ -44,6 +46,7 @@ export default function Heidi({ catwalk, offset, animationName, ...props }) {
         rotation={[THREE.Math.degToRad(0), THREE.Math.degToRad(-180), THREE.Math.degToRad(90)]}
       >
         <primitive object={nodes.mixamorigHips} />
+
         <skinnedMesh
           lights={true}
           castShadow={true}
