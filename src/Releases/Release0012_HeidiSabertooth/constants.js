@@ -12,7 +12,6 @@ export const ANIMATION_TRACK_CROSSWALK = {
     "High On Mate": "mate",
     "Looking For Roses": "roses",
 }
-export const FIRST_CAMERA_POSITION = "floorHigh"
 export const CAMERA_POSITIONS = {
     "wide": { position: [-2.2504463506184993, 2.868375043915486, 10.95079874726515], lookAt: [0, 0, 0] },
     "floorMid": { position: [3.9038521003481264, 1.3686621524209956, -0.07793609444684252], lookAt: [0, 0, 0] },
@@ -25,24 +24,64 @@ export const CAMERA_POSITIONS = {
 export const TRACKS_CONFIG = {
     "Inside Out": {
         steps: [
-            // todo (jeremy) actionName is just demonstrating, these aren't the actions we'd want here
-            {time: 0, cameraPos: FIRST_CAMERA_POSITION, actionName: "insideout"},
-            {time: 3, cameraPos: FIRST_CAMERA_POSITION, actionName: "mate"}, 
-            {time: 5, cameraPos: FIRST_CAMERA_POSITION, actionName: "rose3"}, 
-            // {time: 3, cameraPos: "side"},
-            // {time: 4, cameraPos: "floorHigh"}
+            {
+                time: 0,
+                cameraPos: "wide", 
+                alien1ActionName: "insideout1",
+            },
+            {
+                time: 3,
+                cameraPos: "wide",
+                alien1ActionName: "insideout2",
+            },
+            {
+                time: 5,
+                cameraPos: "wide",
+                alien1ActionName: "insideout3",
+            },
+            {
+                time: 7,
+                cameraPos: "wide",
+                alien1ActionName: "insideout4",
+            },
         ]
     },
     "High On Mate": {
         steps: [
-            {time: 0, cameraPos: FIRST_CAMERA_POSITION, actionName: "mate1"},
-            {time: 3, cameraPos: "floorMid", actionName: "mate2"},
+            {
+                time: 0,
+                cameraPos: "split",
+                alien1ActionName: "mate1",
+            },
+            {
+                time: 3,
+                cameraPos: "floorMid",
+                alien1ActionName: "mate2",
+            },
         ]
     },
     "Looking For Roses": {
         steps: [
-            {time: 0, cameraPos: "wide", actionName: "roses1"},
-            {time: 3, cameraPos: "side", actionName: "roses2"},
+            {
+                time: 0,
+                cameraPos: "wide",
+                alien1ActionName: "roses1"
+            },
+            {
+                time: 3,
+                cameraPos: "side",
+                alien1ActionName: "roses2"
+            },
+            {
+                time: 5,
+                cameraPos: "side",
+                alien1ActionName: "roses3"
+            },
+            {
+                time: 7,
+                cameraPos: "side",
+                alien1ActionName: "roses4"
+            },
         ]
     }
 }

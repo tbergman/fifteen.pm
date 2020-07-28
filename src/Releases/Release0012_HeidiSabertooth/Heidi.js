@@ -24,7 +24,7 @@ export default function Heidi({ actionName, catwalk, offset, animationName, ...p
     naiveGlass2: eyes,
   } = useContext(MaterialsContext);
   const { actions, mixer } = useAnimationSequence({ animationName })
-  useAnimationFadeIn({ actions: actions.current, actionName })
+  // useAnimationFadeIn({ actions: actions.current, actionName })
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,

@@ -19,14 +19,14 @@ export function Scene({ }) {
     const { camera, scene, clock, gl } = useThree();
     const { currentTrackName } = useAudioPlayer();
     const [animationName, setAnimationName] = useState()
-    const { step, stepIdx } = useTrackStepSequence({
+    const { step } = useTrackStepSequence({
         tracks: C.TRACKS_CONFIG,
         firstTrack: C.FIRST_TRACK,
     })
 
     const updateCamera = () => {
-        camera.position.set(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].position)
-        camera.lookAt(...C.CAMERA_POSITIONS[C.FIRST_CAMERA_POSITION].lookAt)
+        camera.position.set(...C.CAMERA_POSITIONS[step.cameraPos].position)
+        camera.lookAt(...C.CAMERA_POSITIONS[step.cameraPos].lookAt)
     }
 
     useEffect(() => updateCamera(), [step])
@@ -51,7 +51,7 @@ export function Scene({ }) {
                         radiusSegments={2}
                         extrusionSegments={80}
                     >
-                        <Heidi actionName={step.actionName} animationName={animationName} offset={5} />
+                        <Heidi actionName={step.heidiActionName} animationName={animationName} offset={5} />
                         <OverheadLight offset={5} position={[.5, 0, -.5]} color={"pink"} intensity={50} />
 
                         <Cat animationName={animationName} offset={20} />
@@ -60,7 +60,7 @@ export function Scene({ }) {
                         <GuapxBoxX animationName={animationName} offset={10} />
                         <OverheadLight offset={10} position={[.5, 0, -.5]} color={"white"} intensity={50} />
                         
-                        <Alien1 actionName={step.actionName} animationName={animationName} offset={15} />
+                        <Alien1 actionName={step.alien1ActionName} animationName={animationName} offset={15} />
                         <OverheadLight offset={15} position={[.5, 0, -.5]} color={"red"} intensity={50} />
                         
                     </Catwalk>
