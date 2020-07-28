@@ -4,7 +4,6 @@ import ReactDOM from "react-dom";
 import { Router, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-import Header from "./Common/UI/Header";
 import history from "./history";
 import Release0001_Yahceph from "./Releases/Release0001_Yahceph/index";
 import Release0002_YearUnknown from "./Releases/Release0002_YearUnknown/index";
@@ -22,7 +21,6 @@ import { CONTENT } from "./Content";
 ReactDOM.render(
   <Router history={history}>
     <div style={{ width: "100%", height: "100%" }}>
-      <Header content={CONTENT} />
       <Route exact path="/" component={App} />
       <Route path="/1" component={Release0001_Yahceph} />
       <Route path="/2" component={Release0002_YearUnknown} />
