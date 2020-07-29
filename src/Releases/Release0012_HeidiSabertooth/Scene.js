@@ -57,7 +57,7 @@ export function Scene({ }) {
                         <Cat animationName={animationName} offset={20} />
                         <OverheadLight offset={20} position={[.25, 0, -.5]} color={"purple"} intensity={30} />
 
-                        <GuapxBoxX animationName={animationName} offset={10} />
+                        <GuapxBoxX animationName={step.guapxboxxActionName} offset={10} />
                         <OverheadLight offset={10} position={[.5, 0, -.5]} color={"white"} intensity={50} />
                         
                         <Alien1 actionName={step.alien1ActionName} animationName={animationName} offset={15} />

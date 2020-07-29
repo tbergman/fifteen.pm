@@ -28,21 +28,57 @@ export const TRACKS_CONFIG = {
                 time: 0,
                 cameraPos: "wide", 
                 alien1ActionName: "insideout1",
+                heidiActionName: "insideout1",
+                guapxboxxActionName: "insideout1"
             },
             {
-                time: 3,
+                time: 4,
                 cameraPos: "wide",
                 alien1ActionName: "insideout2",
+                heidiActionName: "insideout2",
+                guapxboxxActionName: "insideout2",
             },
             {
-                time: 5,
+                time: 8,
                 cameraPos: "wide",
                 alien1ActionName: "insideout3",
+                heidiActionName: "insideout3",
+                guapxboxxActionName: "insideout3",
             },
             {
-                time: 7,
+                time: 12,
                 cameraPos: "wide",
                 alien1ActionName: "insideout4",
+                heidiActionName: "insideout4",
+                guapxboxxActionName: "insideout2",
+            },
+            {
+                time: 16,
+                cameraPos: "wide", 
+                alien1ActionName: "insideout1",
+                heidiActionName: "insideout1",
+                guapxboxxActionName: "insideout1"
+            },
+            {
+                time: 20,
+                cameraPos: "wide",
+                alien1ActionName: "insideout2",
+                heidiActionName: "insideout2",
+                guapxboxxActionName: "insideout2",
+            },
+            {
+                time: 24,
+                cameraPos: "wide",
+                alien1ActionName: "insideout3",
+                heidiActionName: "insideout3",
+                guapxboxxActionName: "insideout3",
+            },
+            {
+                time: 28,
+                cameraPos: "wide",
+                alien1ActionName: "insideout4",
+                heidiActionName: "insideout4",
+                guapxboxxActionName: "insideout2",
             },
         ]
     },
@@ -52,11 +88,22 @@ export const TRACKS_CONFIG = {
                 time: 0,
                 cameraPos: "split",
                 alien1ActionName: "mate1",
+                heidiActionName: "mate1",
+                guapxboxxActionName: "mate1",
             },
             {
                 time: 3,
-                cameraPos: "floorMid",
+                cameraPos: "split",
                 alien1ActionName: "mate2",
+                heidiActionName: "mate2",
+                guapxboxxActionName: "mate2",
+            },
+            {
+                time: 4,
+                cameraPos: "split",
+                alien1ActionName: "mate1",
+                heidiActionName: "mate1",
+                guapxboxxActionName: "mate1",
             },
         ]
     },
@@ -65,22 +112,30 @@ export const TRACKS_CONFIG = {
             {
                 time: 0,
                 cameraPos: "wide",
-                alien1ActionName: "roses1"
+                alien1ActionName: "roses1",
+                heidiActionName: "roses1",
+                guapxboxxActionName: "roses1",
             },
             {
                 time: 3,
                 cameraPos: "side",
-                alien1ActionName: "roses2"
+                alien1ActionName: "roses2",
+                heidiActionName: "roses1",
+                guapxboxxActionName: "roses2",
             },
             {
                 time: 5,
                 cameraPos: "side",
-                alien1ActionName: "roses3"
+                alien1ActionName: "roses3",
+                heidiActionName: "roses1",
+                guapxboxxActionName: "roses3",
             },
             {
                 time: 7,
                 cameraPos: "side",
-                alien1ActionName: "roses4"
+                alien1ActionName: "roses4",
+                heidiActionName: "insideout1",
+                guapxboxxActionName: "roses2",
             },
         ]
     }

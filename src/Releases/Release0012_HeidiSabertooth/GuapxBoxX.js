@@ -27,12 +27,17 @@ export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) 
     offset: offset,
   })
   const { actions, mixer } = useAnimationSequence({ animationName })
-
   useEffect(() => {
     actions.current = {
-      insideout: mixer.clipAction(animations[0], group.current),
-      mate: mixer.clipAction(animations[1], group.current),
-      roses: mixer.clipAction(animations[2], group.current),
+      insideout1: mixer.clipAction(animations[0], group.current),
+      insideout2: mixer.clipAction(animations[1], group.current),
+      insideout3: mixer.clipAction(animations[2], group.current),
+      mate1: mixer.clipAction(animations[3], group.current),
+      mate2: mixer.clipAction(animations[4], group.current),
+      mate3: mixer.clipAction(animations[5], group.current),
+      roses1: mixer.clipAction(animations[6], group.current),
+      roses2: mixer.clipAction(animations[7], group.current),
+      roses3: mixer.clipAction(animations[8], group.current),
     }
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])

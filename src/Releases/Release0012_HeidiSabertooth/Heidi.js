@@ -24,17 +24,22 @@ export default function Heidi({ actionName, catwalk, offset, animationName, ...p
     naiveGlass2: eyes,
   } = useContext(MaterialsContext);
   const { actions, mixer } = useAnimationSequence({ animationName })
-  // useAnimationFadeIn({ actions: actions.current, actionName })
+  useAnimationFadeIn({ actions: actions.current, actionName })
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
     offset: offset,
   })
-  useEffect(() => {
+ useEffect(() => {
     actions.current = {
-      insideout: mixer.clipAction(animations[0], group.current),
-      mate: mixer.clipAction(animations[1], group.current),
-      roses: mixer.clipAction(animations[2], group.current),
+      insideout1: mixer.clipAction(animations[0], group.current),
+      insideout2: mixer.clipAction(animations[1], group.current),
+      insideout3: mixer.clipAction(animations[2], group.current),
+      insideout4: mixer.clipAction(animations[3], group.current),
+      mate1: mixer.clipAction(animations[4], group.current),
+      mate2: mixer.clipAction(animations[5], group.current),
+      mate3: mixer.clipAction(animations[6], group.current),
+      roses1: mixer.clipAction(animations[7], group.current),
     }
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])
