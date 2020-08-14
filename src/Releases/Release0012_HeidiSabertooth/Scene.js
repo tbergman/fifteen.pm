@@ -30,21 +30,27 @@ export function Scene({ }) {
     }
 
     useEffect(() => updateCamera(), [step])
-        
+
     useEffect(() => {
         if (!currentTrackName) return
         setAnimationName(C.ANIMATION_TRACK_CROSSWALK[currentTrackName])
     }, [currentTrackName])
 
+    const [fixedLightRef, fixedLight] = useResource();
+    useEffect(() => {
+        if (!fixedLight) return;
+        var helper = new THREE.PointLightHelper(fixedLight);
+        scene.add(helper);
+    })
     return (
         <>
-            {/* <ambientLight intensity={.0001} args={[0x404040, .001]} /> */}
             <Flying
                 rollSpeed={Math.PI * 2}
             />
             <Stars />
             <MaterialsProvider>
                 <BlackholeSun />
+                <pointLight ref={fixedLightRef} position={[1, 2.5, 0]} color={0x900fff} intensity={50} />
                 <Suspense fallback={null} >
                     <Catwalk
                         radius={.6}
@@ -52,21 +58,16 @@ export function Scene({ }) {
                         extrusionSegments={80}
                     >
                         <Heidi actionName={step.heidiActionName} animationName={animationName} offset={5} />
-                        {/* cool shadow */}
-                        {/* <OverheadLight offset={5} position={[.5, 0, -.5]} color={0x900fff} intensity={50} /> */}
-                        <OverheadLight offset={5} position={[.6, 0, -.5]} color={0x900fff} intensity={50} />
+                        <OverheadLight offset={5} position={[.5, 0, -.5]} color={"red"} intensity={30} />
 
                         <Cat animationName={animationName} offset={20} />
-                        {/* <OverheadLight offset={20} position={[.25, 0, -.5]} color={"purple"} intensity={30} /> */}
 
                         <Alien1 actionName={step.alien1ActionName} animationName={animationName} offset={15} />
-                        {/* <OverheadLight offset={15} position={[.5, 0, -.5]} color={"red"} intensity={1} /> */}
-                        {/* <OverheadLight offset={15} position={[.3, 0, -.5]} color={"purple"} intensity={50} /> */}
                         
                         <GuapxBoxX animationName={step.guapxboxxActionName} offset={10} />
-                        {/* <OverheadLight offset={10} position={[.5, 0, -.5]} color={"white"} intensity={50} /> */}
-                        
-                        
+                        <OverheadLight offset={11} position={[.5, 0, -.5]} color={"white"} intensity={2} />
+
+
                     </Catwalk>
                 </Suspense>
             </MaterialsProvider>

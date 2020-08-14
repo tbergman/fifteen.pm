@@ -11,12 +11,6 @@ export default function OverheadLight({ catwalk, offset, position = [0, 0, 0], c
         var helper = new THREE.PointLightHelper(light.current);
         scene.add(helper);
     })
-    // useFrame(() => {
-    //     if (!moves) return;
-    //     console.log(light.current.position)
-    //     if (light.current.position.x >= threshold) light.current.position.x = threshold
-    //     light.current.position.x += .1
-    // })
     useObjectAlongTubeGeometry({
         object: group.current,
         tubeGeometry: catwalk,

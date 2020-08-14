@@ -57,7 +57,7 @@ const [ground29Ref, ground29] = useResource();
             materialRef={polishedSpeckledMarbleTopRef}
             textureRepeat={{ x: 16, y: 16 }}
             skinning={true}
-            useEnvMap={false}
+            // useEnvMap={false}
         />
         <PolishedSpeckledMarbleTop
             materialRef={platformPolishedSpeckledMarbleTopRef}
