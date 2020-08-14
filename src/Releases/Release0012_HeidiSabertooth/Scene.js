@@ -52,16 +52,19 @@ export function Scene({ }) {
                         extrusionSegments={80}
                     >
                         <Heidi actionName={step.heidiActionName} animationName={animationName} offset={5} />
-                        <OverheadLight offset={5} position={[.5, 0, -.5]} color={"pink"} intensity={50} />
+                        {/* cool shadow */}
+                        {/* <OverheadLight offset={5} position={[.5, 0, -.5]} color={0x900fff} intensity={50} /> */}
+                        <OverheadLight offset={5} position={[.6, 0, -.5]} color={0x900fff} intensity={50} />
 
                         <Cat animationName={animationName} offset={20} />
-                        <OverheadLight offset={20} position={[.25, 0, -.5]} color={"purple"} intensity={30} />
+                        {/* <OverheadLight offset={20} position={[.25, 0, -.5]} color={"purple"} intensity={30} /> */}
 
                         <Alien1 actionName={step.alien1ActionName} animationName={animationName} offset={15} />
-                        <OverheadLight offset={15} position={[.5, 0, -.5]} color={"red"} intensity={50} />
+                        {/* <OverheadLight offset={15} position={[.5, 0, -.5]} color={"red"} intensity={1} /> */}
+                        {/* <OverheadLight offset={15} position={[.3, 0, -.5]} color={"purple"} intensity={50} /> */}
                         
                         <GuapxBoxX animationName={step.guapxboxxActionName} offset={10} />
-                        <OverheadLight offset={10} position={[.5, 0, -.5]} color={"white"} intensity={50} />
+                        {/* <OverheadLight offset={10} position={[.5, 0, -.5]} color={"white"} intensity={50} /> */}
                         
                         
                     </Catwalk>
