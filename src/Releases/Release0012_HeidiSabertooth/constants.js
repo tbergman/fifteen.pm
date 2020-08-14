@@ -102,10 +102,53 @@ export const TRACKS_CONFIG = {
                 time: 4,
                 cameraPos: "split",
                 alien1ActionName: "mate1",
+                heidiActionName: "mate3",
+                guapxboxxActionName: "mate3",
+            },
+            {
+                time: 6,
+                cameraPos: "split",
+                alien1ActionName: "mate1",
                 heidiActionName: "mate1",
                 guapxboxxActionName: "mate1",
             },
+            {
+                time: 8,
+                cameraPos: "split",
+                alien1ActionName: "mate2",
+                heidiActionName: "mate2",
+                guapxboxxActionName: "mate2",
+            },
+            {
+                time: 10,
+                cameraPos: "split",
+                alien1ActionName: "mate1",
+                heidiActionName: "mate3",
+                guapxboxxActionName: "mate3",
+            },
+            {
+                time: 12,
+                cameraPos: "split",
+                alien1ActionName: "mate1",
+                heidiActionName: "mate1",
+                guapxboxxActionName: "mate1",
+            },
+            {
+                time: 14,
+                cameraPos: "split",
+                alien1ActionName: "mate2",
+                heidiActionName: "mate2",
+                guapxboxxActionName: "mate2",
+            },
+            {
+                time: 16,
+                cameraPos: "split",
+                alien1ActionName: "mate1",
+                heidiActionName: "mate3",
+                guapxboxxActionName: "mate3",
+            },
         ]
+
     },
     "Looking For Roses": {
         steps: [
