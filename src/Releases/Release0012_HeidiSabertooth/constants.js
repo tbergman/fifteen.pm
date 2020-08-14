@@ -26,60 +26,60 @@ export const TRACKS_CONFIG = {
         steps: [
             {
                 time: 0,
-                cameraPos: "wide", 
+                cameraPos: "floorHigh", 
                 alien1ActionName: "insideout1",
                 heidiActionName: "insideout1",
                 guapxboxxActionName: "insideout1"
             },
             {
-                time: 4,
-                cameraPos: "wide",
+                time: 1,
+                cameraPos: "floorHigh",
                 alien1ActionName: "insideout2",
                 heidiActionName: "insideout2",
                 guapxboxxActionName: "insideout2",
             },
-            {
-                time: 8,
-                cameraPos: "wide",
-                alien1ActionName: "insideout3",
-                heidiActionName: "insideout3",
-                guapxboxxActionName: "insideout3",
-            },
-            {
-                time: 12,
-                cameraPos: "wide",
-                alien1ActionName: "insideout4",
-                heidiActionName: "insideout4",
-                guapxboxxActionName: "insideout2",
-            },
-            {
-                time: 16,
-                cameraPos: "wide", 
-                alien1ActionName: "insideout1",
-                heidiActionName: "insideout1",
-                guapxboxxActionName: "insideout1"
-            },
-            {
-                time: 20,
-                cameraPos: "wide",
-                alien1ActionName: "insideout2",
-                heidiActionName: "insideout2",
-                guapxboxxActionName: "insideout2",
-            },
-            {
-                time: 24,
-                cameraPos: "wide",
-                alien1ActionName: "insideout3",
-                heidiActionName: "insideout3",
-                guapxboxxActionName: "insideout3",
-            },
-            {
-                time: 28,
-                cameraPos: "wide",
-                alien1ActionName: "insideout4",
-                heidiActionName: "insideout4",
-                guapxboxxActionName: "insideout2",
-            },
+            // {
+            //     time: 8,
+            //     cameraPos: "wide",
+            //     alien1ActionName: "insideout3",
+            //     heidiActionName: "insideout3",
+            //     guapxboxxActionName: "insideout3",
+            // },
+            // {
+            //     time: 12,
+            //     cameraPos: "wide",
+            //     alien1ActionName: "insideout4",
+            //     heidiActionName: "insideout4",
+            //     guapxboxxActionName: "insideout2",
+            // },
+            // {
+            //     time: 16,
+            //     cameraPos: "wide", 
+            //     alien1ActionName: "insideout1",
+            //     heidiActionName: "insideout1",
+            //     guapxboxxActionName: "insideout1"
+            // },
+            // {
+            //     time: 20,
+            //     cameraPos: "wide",
+            //     alien1ActionName: "insideout2",
+            //     heidiActionName: "insideout2",
+            //     guapxboxxActionName: "insideout2",
+            // },
+            // {
+            //     time: 24,
+            //     cameraPos: "wide",
+            //     alien1ActionName: "insideout3",
+            //     heidiActionName: "insideout3",
+            //     guapxboxxActionName: "insideout3",
+            // },
+            // {
+            //     time: 28,
+            //     cameraPos: "wide",
+            //     alien1ActionName: "insideout4",
+            //     heidiActionName: "insideout4",
+            //     guapxboxxActionName: "insideout2",
+            // },
         ]
     },
     "High On Mate": {
