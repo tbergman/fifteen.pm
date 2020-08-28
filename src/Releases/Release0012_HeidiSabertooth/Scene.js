@@ -59,14 +59,12 @@ export function Scene({ }) {
                     >
                         <Heidi actionName={step.heidiActionName} animationName={animationName} offset={5} />
                         <OverheadLight offset={5} position={[.5, 0, -.5]} color={"red"} intensity={30} />
-
-                        <Cat animationName={animationName} offset={20} />
-
+                        
+                        <GuapxBoxX animationName={step.guapxboxxActionName} offset={20} />
                         <Alien1 actionName={step.alien1ActionName} animationName={animationName} offset={15} />
                         
-                        <GuapxBoxX animationName={step.guapxboxxActionName} offset={10} />
+                        <Cat animationName={animationName} offset={10} />
                         <OverheadLight offset={11} position={[.5, 0, -.5]} color={"white"} intensity={2} />
-
 
                     </Catwalk>
                 </Suspense>
