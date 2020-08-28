@@ -50,9 +50,9 @@ export function Scene({ }) {
     })
     return (
         <>
-            <Flying
+            {/* <Flying
                 rollSpeed={Math.PI * 2}
-            />
+            /> */}
             <Stars />
             <MaterialsProvider>
                 <BlackholeSun />
