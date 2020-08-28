@@ -15,6 +15,7 @@ import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.
 export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.GUAPXBOX_X, draco('/draco-gltf/'))
+  const [animationsLoaded, setAnimationsReady] = useState(false)
   const {
     polishedSpeckledMarbleTop: body,
     polishedSpeckledMarbleTop: clothing,
@@ -26,7 +27,7 @@ export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) 
     // speed: speed,
     offset: offset,
   })
-  const { actions, mixer } = useAnimationSequence({ animationName })
+  const { actions, mixer } = useAnimationSequence({ animationName, animationsLoaded })
   useEffect(() => {
     actions.current = {
       insideout1: mixer.clipAction(animations[0], group.current),
@@ -39,6 +40,7 @@ export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) 
       roses2: mixer.clipAction(animations[7], group.current),
       roses3: mixer.clipAction(animations[8], group.current),
     }
+    setAnimationsReady(true)
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])
   return (

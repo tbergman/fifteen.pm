@@ -17,7 +17,7 @@ import { useTrackStepSequence } from '../../Common/Sequencing/TrackStepSequencin
 
 export function Scene({ }) {
     const { camera, scene, clock, gl } = useThree();
-    const { currentTrackName } = useAudioPlayer();
+    const { currentTrackName, audioPlayer } = useAudioPlayer();
     const [animationName, setAnimationName] = useState()
     const { step } = useTrackStepSequence({
         tracks: C.TRACKS_CONFIG,
@@ -36,6 +36,12 @@ export function Scene({ }) {
         setAnimationName(C.ANIMATION_TRACK_CROSSWALK[currentTrackName])
     }, [currentTrackName])
 
+    useFrame(() => {
+        if (!audioPlayer) return
+        console.log(audioPlayer.currentTime)
+        // console.log("CAMERA:", camera.position)
+    })
+
     const [fixedLightRef, fixedLight] = useResource();
     useEffect(() => {
         if (!fixedLight) return;
@@ -50,7 +56,7 @@ export function Scene({ }) {
             <Stars />
             <MaterialsProvider>
                 <BlackholeSun />
-                <pointLight ref={fixedLightRef} position={[1, 2.5, 0]} color={0x900fff} intensity={50} />
+                {/* <pointLight ref={fixedLightRef} position={[1, 2.5, 0]} color={0x900fff} intensity={50} /> */}
                 <Suspense fallback={null} >
                     <Catwalk
                         radius={.6}

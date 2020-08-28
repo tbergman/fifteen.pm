@@ -8,8 +8,8 @@ export default function OverheadLight({ catwalk, offset, position = [0, 0, 0], c
     const light = useRef();
     const { scene } = useThree();
     useEffect(() => {
-        var helper = new THREE.PointLightHelper(light.current);
-        scene.add(helper);
+        // var helper = new THREE.PointLightHelper(light.current);
+        // scene.add(helper);
     })
     useObjectAlongTubeGeometry({
         object: group.current,
