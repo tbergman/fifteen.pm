@@ -14,7 +14,7 @@ import * as C from './constants.js'
 import { MaterialsContext } from './MaterialsContext'
 
 
-export default function Heidi({ actionName, catwalk, offset, animationName, ...props }) {
+export default function Heidi({ actionName, catwalk, offset, animationName, animationTimeScale, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.HEIDI, draco('/draco-gltf/'))
   const {
@@ -23,14 +23,14 @@ export default function Heidi({ actionName, catwalk, offset, animationName, ...p
     naiveGlass: jewelry,
     naiveGlass2: eyes,
   } = useContext(MaterialsContext);
-  const { actions, mixer } = useAnimationSequence({ animationName })
+  const { actions, mixer, setAnimationsHaveLoaded } = useAnimationSequence({ animationName, animationTimeScale })
   useAnimationFadeIn({ actions: actions.current, actionName })
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,
     offset: offset,
   })
- useEffect(() => {
+  useEffect(() => {
     actions.current = {
       insideout1: mixer.clipAction(animations[0], group.current),
       insideout2: mixer.clipAction(animations[1], group.current),
@@ -41,6 +41,7 @@ export default function Heidi({ actionName, catwalk, offset, animationName, ...p
       mate3: mixer.clipAction(animations[6], group.current),
       roses1: mixer.clipAction(animations[7], group.current),
     }
+    setAnimationsHaveLoaded(true)
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])
   return (

@@ -12,65 +12,60 @@ import Stars from '../../Common/Utils/Stars';
 import * as C from './constants';
 import Flying from '../../Common/Controls/Flying';
 import BlackholeSun from './BlackholeSun';
-import OverheadLight from './OverheadLight';
+import MovingLight from './OverheadLight';
 import { useTrackStepSequence } from '../../Common/Sequencing/TrackStepSequencing'
+import Orbit from '../../Common/Controls/Orbit';
 
 export function Scene({ }) {
     const { camera, scene, clock, gl } = useThree();
     const { currentTrackName, audioPlayer } = useAudioPlayer();
     const [animationName, setAnimationName] = useState()
-    const { step } = useTrackStepSequence({
+    const { step, prevStep } = useTrackStepSequence({
         tracks: C.TRACKS_CONFIG,
         firstTrack: C.FIRST_TRACK,
     })
-
+    const updateBackGround = () => {
+        scene.background = step.bgColor ? step.bgColor : new THREE.Color("black")
+    }
     const updateCamera = () => {
         camera.position.set(...C.CAMERA_POSITIONS[step.cameraPos].position)
         camera.lookAt(...C.CAMERA_POSITIONS[step.cameraPos].lookAt)
     }
-
-    useEffect(() => updateCamera(), [step])
-
+    useEffect(() => {
+        updateBackGround()
+        if (!step.cameraPos){
+            updateCamera()
+        }
+        
+    }, [step])
     useEffect(() => {
         if (!currentTrackName) return
         setAnimationName(C.ANIMATION_TRACK_CROSSWALK[currentTrackName])
     }, [currentTrackName])
-
-    useFrame(() => {
-        if (!audioPlayer) return
-        console.log(audioPlayer.currentTime)
-        // console.log("CAMERA:", camera.position)
-    })
-
-    const [fixedLightRef, fixedLight] = useResource();
-    useEffect(() => {
-        if (!fixedLight) return;
-        var helper = new THREE.PointLightHelper(fixedLight);
-        scene.add(helper);
-    })
     return (
         <>
-            {/* <Flying
-                rollSpeed={Math.PI * 2}
-            /> */}
+            <Orbit
+                autoRotate={step.autoRotate}
+                autoRotateSpeed={step.autoRotateSpeed ? step.autoRotateSpeed : 2.0}
+            />
             <Stars />
             <MaterialsProvider>
                 <BlackholeSun />
-                {/* <pointLight ref={fixedLightRef} position={[1, 2.5, 0]} color={0x900fff} intensity={50} /> */}
+                <pointLight position={[1, 2.5, 0]} color={0x900fff} intensity={50} />
                 <Suspense fallback={null} >
                     <Catwalk
                         radius={.6}
                         radiusSegments={2}
                         extrusionSegments={80}
                     >
-                        <Heidi actionName={step.heidiActionName} animationName={animationName} offset={5} />
-                        <OverheadLight offset={5} position={[.5, 0, -.5]} color={"red"} intensity={30} />
-                        
-                        <GuapxBoxX animationName={step.guapxboxxActionName} offset={20} />
+                        <Heidi actionName={step.heidiActionName} animationName={animationName} offset={5} animationTimeScale={step.heidiTimeScale}/>
+                        <MovingLight offset={5} position={[.5, 0, -.5]} color={"red"} intensity={30} />
+
+                        <GuapxBoxX animationName={step.guapxboxxActionName} offset={20} animationTimeScale={step.guapxboxxTimeScale} />
                         <Alien1 actionName={step.alien1ActionName} animationName={animationName} offset={15} />
-                        
+
                         <Cat animationName={animationName} offset={10} />
-                        <OverheadLight offset={11} position={[.5, 0, -.5]} color={"white"} intensity={2} />
+                        <MovingLight offset={11} position={[.5, 0, -.5]} color={"white"} intensity={2} />
 
                     </Catwalk>
                 </Suspense>

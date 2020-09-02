@@ -22,7 +22,7 @@ export default function Cat({ catwalk, offset, animationName, ...props }) {
     offset: offset,
   })
 
-  const { actions, mixer } = useAnimationSequence({ animationName })
+  const { actions, mixer, setAnimationsHaveLoaded } = useAnimationSequence({ animationName })
 
   useEffect(() => {
     actions.current = {
@@ -30,6 +30,7 @@ export default function Cat({ catwalk, offset, animationName, ...props }) {
       mate: mixer.clipAction(animations[1], group.current),
       roses: mixer.clipAction(animations[2], group.current),
     }
+    setAnimationsHaveLoaded(true)
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])
 

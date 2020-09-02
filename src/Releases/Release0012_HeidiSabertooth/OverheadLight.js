@@ -3,7 +3,7 @@ import { useFrame, useThree } from 'react-three-fiber';
 import * as THREE from 'three';
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
 
-export default function OverheadLight({ catwalk, offset, position = [0, 0, 0], color = "white", intensity = "1", moves = false, threshold = 0 }) {
+export default function MovingLight({ catwalk, offset, position = [0, 0, 0], color = "white", intensity = "1", moves = false, threshold = 0 }) {
     const group = useRef()
     const light = useRef();
     const { scene } = useThree();

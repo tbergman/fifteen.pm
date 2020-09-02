@@ -22,7 +22,7 @@ export default function Alien1({ actionName, catwalk, offset, animationName, ...
     tubeGeometry: catwalk,
     offset: offset,
   })
-  const { actions, mixer } = useAnimationSequence({ animationName })
+  const { actions, mixer, setAnimationsHaveLoaded } = useAnimationSequence({ animationName })
   useAnimationFadeIn({ actions: actions.current, actionName })
   useEffect(() => {
     actions.current = {
@@ -37,6 +37,7 @@ export default function Alien1({ actionName, catwalk, offset, animationName, ...
       roses3: mixer.clipAction(animations[8], group.current),
       roses4: mixer.clipAction(animations[9], group.current),
     }
+    setAnimationsHaveLoaded(true)
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])
   return (

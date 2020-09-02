@@ -12,10 +12,9 @@ import { MaterialsContext } from './MaterialsContext';
 import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
 import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js';
 
-export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) {
+export default function GuapxBoxX({ catwalk, offset, animationName, animationTimeScale, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.GUAPXBOX_X, draco('/draco-gltf/'))
-  const [animationsLoaded, setAnimationsReady] = useState(false)
   const {
     polishedSpeckledMarbleTop: body,
     polishedSpeckledMarbleTop: clothing,
@@ -27,7 +26,7 @@ export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) 
     // speed: speed,
     offset: offset,
   })
-  const { actions, mixer } = useAnimationSequence({ animationName, animationsLoaded })
+  const { actions, mixer, setAnimationsHaveLoaded } = useAnimationSequence({ animationName, animationTimeScale })
   useEffect(() => {
     actions.current = {
       insideout1: mixer.clipAction(animations[0], group.current),
@@ -40,7 +39,7 @@ export default function GuapxBoxX({ catwalk, offset, animationName, ...props }) 
       roses2: mixer.clipAction(animations[7], group.current),
       roses3: mixer.clipAction(animations[8], group.current),
     }
-    setAnimationsReady(true)
+    setAnimationsHaveLoaded(true)
     return () => animations.forEach((clip) => mixer.uncacheClip(clip))
   }, [])
   return (
