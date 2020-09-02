@@ -1,8 +1,8 @@
 import React from 'react';
 import { Canvas } from 'react-three-fiber';
-import HomeDefaultScene from './HomeDefaultScene';
+import HomeScene from './Scene';
 
-export function HomeDefaultCanvas({ }) {
+export function HomeCanvas({ }) {
     return (
         <Canvas
             id="canvas"
@@ -16,8 +16,7 @@ export function HomeDefaultCanvas({ }) {
                 // gl.debug.checkShaderErrors = false;
             }}
         >
-            )}
-            <HomeDefaultScene />
+            <HomeScene />
         </Canvas>
     )
 }

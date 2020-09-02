@@ -5,7 +5,7 @@ import { MaterialsContext } from './MaterialsContext';
 
 // old position  [-150, 200, 0] old rotation [0, THREE.Math.degToRad(55), 0]
 export default function BlackholeSun({ position =[0,0,0], rotation = [0, THREE.Math.degToRad(-90), 0] }) {
-    const { tron, sunflare } = useContext(MaterialsContext);
+    const { sunflare } = useContext(MaterialsContext);
 
 
     return <group>

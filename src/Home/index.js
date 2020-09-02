@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { CONTENT } from '../Content';
 import '../Releases/Release.css';
 import UI from '../Common/UI/UI';
-import { HomeDefaultCanvas } from './HomeDefaultCanvas';
+import { HomeCanvas } from './Canvas';
 import { ReleaseList } from './ReleaseList';
 
 export default function HomeDefault(props) {  
@@ -10,7 +10,7 @@ export default function HomeDefault(props) {
     <Fragment>
       <UI content={CONTENT["/"]} loadWithOverlay={false} />
       <ReleaseList />
-      <HomeDefaultCanvas />
+      <HomeCanvas />
     </Fragment>
   );
 }

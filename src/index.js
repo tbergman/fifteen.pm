@@ -23,7 +23,6 @@ import { CONTENT } from "./Content";
 ReactDOM.render(
   <Router history={history}>
     <div style={{ width: "100%", height: "100%" }}>
-      {/* <Header content={CONTENT} /> */}
       <Route exact path="/" component={App} />
       <Route path="/1" component={Release0001_Yahceph} />
       <Route path="/2" component={Release0002_YearUnknown} />

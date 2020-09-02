@@ -22,11 +22,10 @@ export default function HeidiSabertoothCanvas({ }) {
                             gl.gammaOutput = true;
                             gl.antialias = true;
                             // IMPORTANT: Comment this out during development!
-                            // gl.debug.checkShaderErrors = false;
+                            gl.debug.checkShaderErrors = false;
                         }}
                     >
                         <AudioPlayerContext.Provider value={value}>
-                            
                             <Suspense fallback={null}>
                                 <Scene />
                             </Suspense>

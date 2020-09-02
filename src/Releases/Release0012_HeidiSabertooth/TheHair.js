@@ -12,7 +12,7 @@ import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimat
 
 export default function TheHair({ catwalk, ...props }) {
     const group = useRef()
-    const { nodes, materials, animations } = useLoader(GLTFLoader, C.THE_HAIR, draco('/draco-gltf/'))
+    const { nodes, animations } = useLoader(GLTFLoader, C.THE_HAIR, draco('/draco-gltf/'))
     const { polishedSpeckledMarbleTop } = useContext(MaterialsContext);
     const [theHairMeshRef, theHairMesh] = useResource()
     const actions = useRef()
