@@ -28,14 +28,13 @@ export function Scene({ }) {
         scene.background = step.bgColor ? step.bgColor : new THREE.Color("black")
     }
     const updateCamera = () => {
-        camera.position.lerp(C.CAMERA_POSITIONS[step.cameraPos].position, .5)
+        camera.position.set(...C.CAMERA_POSITIONS[step.cameraPos].position)
         camera.lookAt(...C.CAMERA_POSITIONS[step.cameraPos].lookAt)
     }
     // init camera pos
     useEffect(() => {
         const firstStep = C.TRACKS_CONFIG[C.FIRST_TRACK].steps[0]
-        const pos = C.CAMERA_POSITIONS[firstStep.cameraPos].position
-        camera.position.set(pos.x, pos.y, pos.z)
+        camera.position.set(...C.CAMERA_POSITIONS[firstStep.cameraPos].position)
     }, [])
     useEffect(() => {
         updateBackGround()
@@ -45,6 +44,25 @@ export function Scene({ }) {
         if (!currentTrackName) return
         setAnimationName(C.ANIMATION_TRACK_CROSSWALK[currentTrackName])
     }, [currentTrackName])
+    
+    const middleTopLight = useRef();
+    const topRightLight = useRef();
+    const topLeftLight = useRef();
+    // useEffect(() => {
+    //     if (!topRightLight.current) return;
+    //     const helper = new THREE.PointLightHelper(topRightLight.current)
+    //     scene.add(helper)
+    // }, [topRightLight.current])
+    // useEffect(() => {
+    //     if (!topLeftLight.current) return;
+    //     const helper = new THREE.PointLightHelper(topLeftLight.current)
+    //     scene.add(helper)
+    // }, [topLeftLight.current])
+    // useEffect(() => {
+    //     if (!middleTopLight.current) return;
+    //     const helper = new THREE.PointLightHelper(middleTopLight.current)
+    //     scene.add(helper)
+    // }, [middleTopLight.current])
     return (
         <>
             <Orbit
@@ -54,7 +72,9 @@ export function Scene({ }) {
             <Stars />
             <MaterialsProvider>
                 <BlackholeSun />
-                <pointLight position={[1, 2.5, 0]} color={0x900fff} intensity={50} />
+                <pointLight ref={topRightLight} position={[4.5, 2.5, 0]} color={"green"} intensity={5} />
+                <pointLight ref={middleTopLight} position={[0, 2.1, 0]} color={"red"} intensity={15} />
+                <pointLight ref={topLeftLight} position={[-4.5, 2.1, 0]} color={"purple"} intensity={15} />
                 <Suspense fallback={null} >
                     <Catwalk
                         radius={.6}
@@ -62,13 +82,13 @@ export function Scene({ }) {
                         extrusionSegments={80}
                     >
                         <Heidi actionName={step.heidiActionName} animationName={animationName} offset={5} animationTimeScale={step.heidiTimeScale} />
-                        <MovingLight offset={5} position={[.5, 0, -.5]} color={"red"} intensity={30} />
+                        {/* <MovingLight offset={5} position={[.5, 0, -.5]} color={"green"} intensity={10} /> */}
 
                         <GuapxBoxX animationName={step.guapxboxxActionName} offset={20} animationTimeScale={step.guapxboxxTimeScale} />
                         <Alien1 actionName={step.alien1ActionName} animationName={animationName} offset={15} />
 
                         <Cat animationName={animationName} offset={10} />
-                        <MovingLight offset={11} position={[.5, 0, -.5]} color={"white"} intensity={2} />
+
 
                     </Catwalk>
                 </Suspense>

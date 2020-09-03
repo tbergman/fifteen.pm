@@ -7,15 +7,15 @@ import React, { useRef, useState, useContext, useEffect } from 'react'
 import { useLoader, useFrame } from 'react-three-fiber'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { draco } from 'drei'
-import * as C from './constants.js';
-import { MaterialsContext } from './MaterialsContext';
-import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
-import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js';
+import * as C from '../constants.js';
+import { MaterialsContext } from '../MaterialsContext';
+import { useObjectAlongTubeGeometry } from '../../../Common/Animations/SplineAnimator.js'
+import { useAnimationSequence } from '../../../Common/Animations/AnimationSequence.js';
 
 export default function Cat({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.CAT, draco('/draco-gltf/'))
-  const { polishedSpeckledMarbleTop: body, naiveGlass: clothing, naiveGlass: eyes } = useContext(MaterialsContext);
+  const { foamGrip: body, naiveGlass: clothing, naiveGlass: eyes } = useContext(MaterialsContext);
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,

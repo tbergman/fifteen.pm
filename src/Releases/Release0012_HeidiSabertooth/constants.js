@@ -16,14 +16,13 @@ export const CAMERA_POSITIONS = {
     "wide": { position: [-2.2504463506184993, 2.868375043915486, 10.95079874726515], lookAt: [0, 0, 0] },
     "butt": { position: [-1.440317563037257, 1.2956672647059897, -0.26250668818042233], lookAt: [0, 2, 0] },
     "floorMid": { position: [3.9038521003481264, 1.9686621524209956, -0.07793609444684252], lookAt: [0, 0, 0] },
-    "floorMidUpsideDown": { position: [-3.9038521003481264, -1.7686621524209956, 0.07793609444684252], lookAt: [0, 0, 0] },
+    "floorMid": { position: [-3.9038521003481264, -1.7686621524209956, 0.07793609444684252], lookAt: [0, 0, 0] },
     "floorHigh": { position: [4.1437982940586195, 2.4, 0.013147959502974958], lookAt: [0, 3, 0] },
     "side": { position: [3.457559, -0.434766259, 5.96748884], lookAt: [0, 0, 0] },
     "bottom": { position: [0.000003892542295841119, -3.9306783940759447, 5.47467480983172e-7], lookAt: [0, 0, 0] },
     "top": { position: [0.000003892542295841119, 3.9306783940759447, 5.47467480983172e-7], lookAt: [0, 0, 0] },
     "split": { position: [7.059123795293685, -0.20436603058191879, -0.06187434400353934], lookAt: [0, 0, 0] },
 }
-
 export const TRACKS_CONFIG = {
     "Inside Out": {
         steps: [
@@ -34,23 +33,11 @@ export const TRACKS_CONFIG = {
                 heidiActionName: "insideout1",
                 heidiTimeScale: 1.1,
                 guapxboxxActionName: "insideout1",
-            },
-            {
-                time: 7.7,
-                cameraPos: "floorHigh",
-                bgColor: new THREE.Color("white"),
-                autoRotate: true,
-            },
-            {
-                time: 7.9,
-                cameraPos: "floorHigh",
-                bgColor: new THREE.Color("yellow"),
                 autoRotate: false,
+                bgColor: new THREE.Color("black"),
             },
             {
                 time: 8,
-                cameraPos: "floorHigh",
-                bgColor: new THREE.Color("black"),
                 autoRotate: true,
             },
             {
@@ -60,12 +47,17 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 48,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
+                autoRotate: true,
+            },
+            {
+                time: 51,
+                cameraPos: "split",
                 autoRotate: true,
             },
             {
                 time: 68,
-                cameraPos: "split",
+                cameraPos: "floorMid",
                 autoRotate: false,
             },
             {
@@ -74,11 +66,11 @@ export const TRACKS_CONFIG = {
                 alien1ActionName: "insideout2",
                 heidiActionName: "insideout2",
                 guapxboxxActionName: "insideout2",
-                
+
             },
             {
                 time: 93,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 autoRotate: true,
             },
             {
@@ -102,8 +94,13 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 120,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 autoRotate: true,
+            },
+            {
+                time: 135.7,
+                cameraPos: "floorHigh",
+                autoRotate: false,
             },
             {
                 time: 136,
@@ -112,13 +109,11 @@ export const TRACKS_CONFIG = {
                 heidiActionName: "insideout1",
                 guapxboxxActionName: "insideout1",
                 autoRotate: false,
-                bgColor: new THREE.Color("white")
             },
             {
                 time: 138,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 autoRotate: true,
-                bgColor: new THREE.Color("black")
             },
             {
                 time: 156,
@@ -151,12 +146,12 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 187.5,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 autoRotate: false,
             },
             {
                 time: 202,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 alien1ActionName: "insideout3",
                 heidiActionName: "insideout3",
                 guapxboxxActionName: "insideout3",
@@ -176,6 +171,11 @@ export const TRACKS_CONFIG = {
                 alien1ActionName: "insideout1",
                 heidiActionName: "insideout1",
                 guapxboxxActionName: "insideout1",
+            },
+            {
+                time: 231.7,
+                cameraPos: "floorHigh",
+                autoRotate: false,
             },
             {
                 time: 232,
@@ -212,7 +212,6 @@ export const TRACKS_CONFIG = {
                 time: 292,
                 cameraPos: "wide",
                 autoRotate: true,
-                bgColor: new THREE.Color("white")
             },
         ]
     },
@@ -226,7 +225,6 @@ export const TRACKS_CONFIG = {
                 guapxboxxActionName: "mate1",
                 guapxboxxTimeScale: 1.33,
                 autoRotate: false,
-                bgColor: new THREE.Color("black"),
             },
             {
                 time: 40.5,
@@ -251,7 +249,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 59,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 alien1ActionName: "mate2",
                 heidiActionName: "mate2",
                 guapxboxxActionName: "mate1",
@@ -277,7 +275,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 73,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 alien1ActionName: "mate1",
                 heidiActionName: "mate3",
                 guapxboxxActionName: "mate3",
@@ -307,7 +305,6 @@ export const TRACKS_CONFIG = {
             {
                 time: 88,
                 cameraPos: "split",
-                alien1ActionName: "mate1",
                 heidiActionName: "mate1",
                 autoRotate: false,
             },
@@ -327,7 +324,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 99.7,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 alien1ActionName: "mate1",
                 heidiActionName: "mate1",
                 autoRotate: false,
@@ -397,7 +394,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 132.8,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 alien1ActionName: "mate1",
                 heidiActionName: "mate1",
                 autoRotate: true,
@@ -474,7 +471,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 192.8,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 alien1ActionName: "mate1",
                 heidiActionName: "mate2",
                 autoRotate: true,
@@ -573,7 +570,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 302.2,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 alien1ActionName: "mate1",
                 heidiActionName: "mate1",
             },
@@ -631,7 +628,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 150,
-                cameraPos: "floorMidUpsideDown",
+                cameraPos: "floorMid",
                 alien1ActionName: "roses2",
                 guapxboxxActionName: "roses2",
             },

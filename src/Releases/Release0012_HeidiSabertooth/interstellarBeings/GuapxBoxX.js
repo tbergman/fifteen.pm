@@ -7,17 +7,17 @@ import React, { useRef, useState, useContext, useEffect } from 'react'
 import { useLoader, useFrame } from 'react-three-fiber'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { draco } from 'drei'
-import * as C from './constants.js';
-import { MaterialsContext } from './MaterialsContext';
-import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
-import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js';
+import * as C from '../constants.js';
+import { MaterialsContext } from '../MaterialsContext';
+import { useObjectAlongTubeGeometry } from '../../../Common/Animations/SplineAnimator.js'
+import { useAnimationSequence } from '../../../Common/Animations/AnimationSequence.js';
 
 export default function GuapxBoxX({ catwalk, offset, animationName, animationTimeScale, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.GUAPXBOX_X, draco('/draco-gltf/'))
   const {
-    polishedSpeckledMarbleTop: body,
-    polishedSpeckledMarbleTop: clothing,
+    foamGrip: body,
+    naiveGlass: clothing,
     naiveGlass: clothing2,
   } = useContext(MaterialsContext);
   useObjectAlongTubeGeometry({

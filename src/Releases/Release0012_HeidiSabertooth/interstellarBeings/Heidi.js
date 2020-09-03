@@ -7,21 +7,22 @@ import React, { useContext, useEffect, useRef } from 'react'
 import { useLoader } from 'react-three-fiber'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
-import { useAnimationSequence } from '../../Common/Animations/AnimationSequence.js'
-import { useObjectAlongTubeGeometry } from '../../Common/Animations/SplineAnimator.js'
-import { useAnimationFadeIn } from '../../Common/Animations/FadeIns.js';
-import * as C from './constants.js'
-import { MaterialsContext } from './MaterialsContext'
+import { useAnimationSequence } from '../../../Common/Animations/AnimationSequence.js'
+import { useObjectAlongTubeGeometry } from '../../../Common/Animations/SplineAnimator.js'
+import { useAnimationFadeIn } from '../../../Common/Animations/FadeIns.js';
+import * as C from '../constants.js'
+import { MaterialsContext } from '../MaterialsContext'
 
 
 export default function Heidi({ actionName, catwalk, offset, animationName, animationTimeScale, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.HEIDI, draco('/draco-gltf/'))
   const {
-    polishedSpeckledMarbleTop: body,
-    naiveGlass2: clothing,
+    foamGrip: body,
+    // polishedSpeckledMarbleTop: body,
+    naiveGlass: clothing,
     naiveGlass: jewelry,
-    naiveGlass2: eyes,
+    naiveGlass: eyes,
   } = useContext(MaterialsContext);
   const { actions, mixer, setAnimationsHaveLoaded } = useAnimationSequence({ animationName, animationTimeScale })
   useAnimationFadeIn({ actions: actions.current, actionName })
