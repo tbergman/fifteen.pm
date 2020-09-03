@@ -3,10 +3,10 @@ import * as THREE from 'three';
 import { useThree, extend, useFrame, useResource } from 'react-three-fiber';
 import { MaterialsProvider, MaterialsContext } from './MaterialsContext';
 import useAudioPlayer from '../../Common/UI/Player/hooks/useAudioPlayer';
-import GuapxBoxX from './GuapxBoxX.js';
-import Alien1 from './Alien1.js';
-import Cat from './Cat.js';
-import Heidi from './Heidi.js';
+import GuapxBoxX from './interstellarBeings/GuapxBoxX.js';
+import Alien1 from './interstellarBeings/Alien1.js';
+import Cat from './interstellarBeings/Cat.js';
+import Heidi from './interstellarBeings/Heidi.js';
 import Catwalk from './Catwalk.js';
 import Stars from '../../Common/Utils/Stars';
 import * as C from './constants';
@@ -20,7 +20,7 @@ export function Scene({ }) {
     const { camera, scene, clock, gl } = useThree();
     const { currentTrackName, audioPlayer } = useAudioPlayer();
     const [animationName, setAnimationName] = useState()
-    const { step, prevStep } = useTrackStepSequence({
+    const { step, stepIdx, prevStep } = useTrackStepSequence({
         tracks: C.TRACKS_CONFIG,
         firstTrack: C.FIRST_TRACK,
     })
@@ -28,15 +28,18 @@ export function Scene({ }) {
         scene.background = step.bgColor ? step.bgColor : new THREE.Color("black")
     }
     const updateCamera = () => {
-        camera.position.set(...C.CAMERA_POSITIONS[step.cameraPos].position)
+        camera.position.lerp(C.CAMERA_POSITIONS[step.cameraPos].position, .5)
         camera.lookAt(...C.CAMERA_POSITIONS[step.cameraPos].lookAt)
     }
+    // init camera pos
+    useEffect(() => {
+        const firstStep = C.TRACKS_CONFIG[C.FIRST_TRACK].steps[0]
+        const pos = C.CAMERA_POSITIONS[firstStep.cameraPos].position
+        camera.position.set(pos.x, pos.y, pos.z)
+    }, [])
     useEffect(() => {
         updateBackGround()
-        if (!step.cameraPos){
-            updateCamera()
-        }
-        
+        if (prevStep && prevStep.cameraPos != step.cameraPos) updateCamera()
     }, [step])
     useEffect(() => {
         if (!currentTrackName) return
@@ -58,7 +61,7 @@ export function Scene({ }) {
                         radiusSegments={2}
                         extrusionSegments={80}
                     >
-                        <Heidi actionName={step.heidiActionName} animationName={animationName} offset={5} animationTimeScale={step.heidiTimeScale}/>
+                        <Heidi actionName={step.heidiActionName} animationName={animationName} offset={5} animationTimeScale={step.heidiTimeScale} />
                         <MovingLight offset={5} position={[.5, 0, -.5]} color={"red"} intensity={30} />
 
                         <GuapxBoxX animationName={step.guapxboxxActionName} offset={20} animationTimeScale={step.guapxboxxTimeScale} />
