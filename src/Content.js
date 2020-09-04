@@ -513,7 +513,7 @@ export const CONTENT = {
     // todo (jeremy) fix this navigation hack
     lastIdx: 12,
     message: "Heidi Sabertooth and her interstellar crew of elektroid beings warp the space-time catwalk to the power of two electro-acid supernovas and a zero-g ambient closer.",
-    purchaseLink: "https://fifteenpm.bandcamp.com/album/inside-out-ep",
+    purchaseLink: "https://buy.fifteen.pm/album/inside-out-ep",
     tracks: [
       {
         name: "Inside Out",
