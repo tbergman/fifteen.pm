@@ -20,6 +20,7 @@ export function Scene({ }) {
     const { camera, scene, clock, gl } = useThree();
     const { currentTrackName, audioPlayer } = useAudioPlayer();
     const [animationName, setAnimationName] = useState()
+    const orbit = useRef()
     const { step, stepIdx, prevStep } = useTrackStepSequence({
         tracks: C.TRACKS_CONFIG,
         firstTrack: C.FIRST_TRACK,
@@ -29,25 +30,21 @@ export function Scene({ }) {
     }
     const updateCamera = () => {
         camera.position.set(...C.CAMERA_POSITIONS[step.cameraPos].position)
-        camera.lookAt(...C.CAMERA_POSITIONS[step.cameraPos].lookAt)
+        orbit.current.target = C.CAMERA_POSITIONS[step.cameraPos].lookAt
     }
-    // init camera pos
-    useEffect(() => {
-        const firstStep = C.TRACKS_CONFIG[C.FIRST_TRACK].steps[0]
-        camera.position.set(...C.CAMERA_POSITIONS[firstStep.cameraPos].position)
-    }, [])
     useEffect(() => {
         updateBackGround()
+        if (stepIdx == 0) updateCamera()
         if (prevStep && prevStep.cameraPos != step.cameraPos) updateCamera()
     }, [step])
     useEffect(() => {
         if (!currentTrackName) return
         setAnimationName(C.ANIMATION_TRACK_CROSSWALK[currentTrackName])
     }, [currentTrackName])
-    
     const middleTopLight = useRef();
     const topRightLight = useRef();
     const topLeftLight = useRef();
+    const floorLight = useRef();
     // useEffect(() => {
     //     if (!topRightLight.current) return;
     //     const helper = new THREE.PointLightHelper(topRightLight.current)
@@ -63,9 +60,15 @@ export function Scene({ }) {
     //     const helper = new THREE.PointLightHelper(middleTopLight.current)
     //     scene.add(helper)
     // }, [middleTopLight.current])
+    // useEffect(() => {
+    //     if (!floorLight.current) return;
+    //     const helper = new THREE.PointLightHelper(floorLight.current)
+    //     scene.add(helper)
+    // }, [floorLight.current])
     return (
         <>
             <Orbit
+                passthroughRef={orbit}
                 autoRotate={step.autoRotate}
                 autoRotateSpeed={step.autoRotateSpeed ? step.autoRotateSpeed : 2.0}
             />
@@ -73,8 +76,9 @@ export function Scene({ }) {
             <MaterialsProvider>
                 <BlackholeSun />
                 <pointLight ref={topRightLight} position={[4.5, 2.5, 0]} color={"green"} intensity={5} />
-                <pointLight ref={middleTopLight} position={[0, 2.1, 0]} color={"red"} intensity={15} />
-                <pointLight ref={topLeftLight} position={[-4.5, 2.1, 0]} color={"purple"} intensity={15} />
+                <pointLight ref={middleTopLight} position={[0, 2.1, 0]} color={"red"} intensity={1} />
+                <pointLight ref={topLeftLight} position={[-4.5, 2.1, 0]} color={"purple"} intensity={1} />
+                <pointLight ref={floorLight} position={[2.5, 0, 0]} color={"green"} intensity={5} />
                 <Suspense fallback={null} >
                     <Catwalk
                         radius={.6}

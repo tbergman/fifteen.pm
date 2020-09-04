@@ -15,7 +15,7 @@ import { useAnimationSequence } from '../../../Common/Animations/AnimationSequen
 export default function Cat({ catwalk, offset, animationName, ...props }) {
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.CAT, draco('/draco-gltf/'))
-  const { foamGrip: body, naiveGlass: clothing, naiveGlass: eyes } = useContext(MaterialsContext);
+  const { polishedSpeckledMarbleTop: body, naiveGlass: clothing, naiveGlass: eyes } = useContext(MaterialsContext);
   useObjectAlongTubeGeometry({
     object: group.current,
     tubeGeometry: catwalk,

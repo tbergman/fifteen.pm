@@ -16,7 +16,7 @@ export default function GuapxBoxX({ catwalk, offset, animationName, animationTim
   const group = useRef()
   const { nodes, materials, animations } = useLoader(GLTFLoader, C.GUAPXBOX_X, draco('/draco-gltf/'))
   const {
-    foamGrip: body,
+    polishedSpeckledMarbleTop: body,
     naiveGlass: clothing,
     naiveGlass: clothing2,
   } = useContext(MaterialsContext);

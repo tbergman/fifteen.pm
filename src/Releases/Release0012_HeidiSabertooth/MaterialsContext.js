@@ -14,7 +14,7 @@ const MaterialsProvider = ({ ...props }) => {
     const [polishedSpeckledMarbleTopRef, polishedSpeckledMarbleTop] = useResource();
     const [platformPolishedSpeckledMarbleTopRef, platformPolishedSpeckledMarbleTop] = useResource();
     const [naiveGlassRef, naiveGlass] = useResource();
-    const [naiveGlass2Ref, naiveGlass2] = useResource();
+    // const [naiveGlass2Ref, naiveGlass2] = useResource();
     const [sunflareRef, sunflare] = useResource();
     const [foamGripRef, foamGrip] = useResource();
 
@@ -22,7 +22,7 @@ const MaterialsProvider = ({ ...props }) => {
         polishedSpeckledMarbleTop,
         platformPolishedSpeckledMarbleTop,
         naiveGlass,
-        naiveGlass2,
+        // naiveGlass2,
         sunflare,
         foamGrip,
     }
@@ -65,10 +65,10 @@ const MaterialsProvider = ({ ...props }) => {
             skinning={true}
             envMapURL={clothingEnv}
         />
-        <NaiveGlass
+        {/* <NaiveGlass
             materialRef={naiveGlass2Ref}
             skinning={true}
-        />
+        /> */}
         {props.children}
     </MaterialsContext.Provider>
 }

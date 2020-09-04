@@ -13,28 +13,33 @@ export const ANIMATION_TRACK_CROSSWALK = {
     "Looking For Roses": "roses",
 }
 export const CAMERA_POSITIONS = {
-    "wide": { position: [-2.2504463506184993, 2.868375043915486, 10.95079874726515], lookAt: [0, 0, 0] },
-    "butt": { position: [-1.440317563037257, 1.2956672647059897, -0.26250668818042233], lookAt: [0, 2, 0] },
-    "floorMid": { position: [3.9038521003481264, 1.9686621524209956, -0.07793609444684252], lookAt: [0, 0, 0] },
-    "floorMid": { position: [-3.9038521003481264, -1.7686621524209956, 0.07793609444684252], lookAt: [0, 0, 0] },
-    "floorHigh": { position: [4.1437982940586195, 2.4, 0.013147959502974958], lookAt: [0, 3, 0] },
-    "side": { position: [3.457559, -0.434766259, 5.96748884], lookAt: [0, 0, 0] },
-    "bottom": { position: [0.000003892542295841119, -3.9306783940759447, 5.47467480983172e-7], lookAt: [0, 0, 0] },
-    "top": { position: [0.000003892542295841119, 3.9306783940759447, 5.47467480983172e-7], lookAt: [0, 0, 0] },
-    "split": { position: [7.059123795293685, -0.20436603058191879, -0.06187434400353934], lookAt: [0, 0, 0] },
+    "wide": { position: [-2.2504463506184993, 2.868375043915486, 10.95079874726515], lookAt: new THREE.Vector3(0, 0, 0) },
+    "floorMid": { position: [3.9038521003481264, 1.3686621524209956, -0.07793609444684252], lookAt: new THREE.Vector3(0, 2, 0) },
+    "floorHigh": { position: [4.1437982940586195, 2.4, 0.013147959502974958], lookAt: new THREE.Vector3(0, 2, 0) },
+    "side": { position: [2.457559, 2.434766259, 0.5], lookAt: new THREE.Vector3(0, 1, 0) },
+    "bottom": { position: [0.000003892542295841119, -3.9306783940759447, 5.47467480983172e-7], lookAt: new THREE.Vector3(0, 0, 0) },
+    "top": { position: [0.000003892542295841119, 3.9306783940759447, 5.47467480983172e-7], lookAt: new THREE.Vector3(0, 0, 0) },
+    "split": { position: [7.059123795293685, -0.20436603058191879, -0.06187434400353934], lookAt: new THREE.Vector3(0, 0, 0) },
 }
 export const TRACKS_CONFIG = {
     "Inside Out": {
         steps: [
             {
                 time: 0,
-                cameraPos: "floorHigh",
+                cameraPos: "floorMid",
+                alien1ActionName: "roses1",
+                heidiActionName: "roses1",
+                heidiTimeScale: 1.1,
+                guapxboxxActionName: "mate2",
+                autoRotate: false,
+                bgColor: new THREE.Color("black"),
+            },
+            {
+                time: 1.5,
                 alien1ActionName: "insideout1",
                 heidiActionName: "insideout1",
                 heidiTimeScale: 1.1,
                 guapxboxxActionName: "insideout1",
-                autoRotate: false,
-                bgColor: new THREE.Color("black"),
             },
             {
                 time: 8,
@@ -42,23 +47,24 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 45,
-                cameraPos: "butt",
+                cameraPos: "top",
                 autoRotate: false,
             },
             {
                 time: 48,
-                cameraPos: "floorMid",
+                cameraPos: "floorHigh",
                 autoRotate: true,
             },
             {
                 time: 51,
                 cameraPos: "split",
-                autoRotate: true,
+                autoRotate: false,
             },
             {
                 time: 68,
                 cameraPos: "floorMid",
                 autoRotate: false,
+                autoRotateSpeed: 2
             },
             {
                 time: 84,
@@ -66,19 +72,10 @@ export const TRACKS_CONFIG = {
                 alien1ActionName: "insideout2",
                 heidiActionName: "insideout2",
                 guapxboxxActionName: "insideout2",
-
             },
             {
                 time: 93,
                 cameraPos: "floorMid",
-                autoRotate: true,
-            },
-            {
-                time: 104,
-                cameraPos: "wide",
-                alien1ActionName: "insideout3",
-                heidiActionName: "insideout3",
-                guapxboxxActionName: "insideout3",
             },
             {
                 time: 106,
@@ -87,7 +84,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 118,
-                cameraPos: "butt",
+                cameraPos: "top",
                 alien1ActionName: "insideout4",
                 heidiActionName: "insideout4",
                 guapxboxxActionName: "insideout2",
@@ -98,22 +95,17 @@ export const TRACKS_CONFIG = {
                 autoRotate: true,
             },
             {
-                time: 135.7,
-                cameraPos: "floorHigh",
-                autoRotate: false,
-            },
-            {
                 time: 136,
                 cameraPos: "bottom",
                 alien1ActionName: "insideout1",
                 heidiActionName: "insideout1",
                 guapxboxxActionName: "insideout1",
-                autoRotate: false,
+                autoRotate: true,
             },
             {
                 time: 138,
                 cameraPos: "floorMid",
-                autoRotate: true,
+                autoRotate: false,
             },
             {
                 time: 156,
@@ -121,12 +113,13 @@ export const TRACKS_CONFIG = {
                 alien1ActionName: "insideout2",
                 heidiActionName: "insideout2",
                 guapxboxxActionName: "insideout2",
-                autoRotate: false,
+                autoRotate: true,
+                autoRotateSpeed: -2,
             },
             {
-                time: 158,
+                time: 165,
                 cameraPos: "split",
-                autoRotate: true,
+                autoRotate: false
             },
             {
                 time: 172,
@@ -134,15 +127,6 @@ export const TRACKS_CONFIG = {
                 alien1ActionName: "insideout3",
                 heidiActionName: "insideout3",
                 guapxboxxActionName: "insideout3",
-                autoRotate: false,
-            },
-            {
-                time: 185,
-                cameraPos: "wide",
-                alien1ActionName: "insideout4",
-                heidiActionName: "insideout4",
-                guapxboxxActionName: "insideout2",
-                autoRotate: true,
             },
             {
                 time: 187.5,
@@ -155,7 +139,6 @@ export const TRACKS_CONFIG = {
                 alien1ActionName: "insideout3",
                 heidiActionName: "insideout3",
                 guapxboxxActionName: "insideout3",
-                autoRotate: true,
             },
             {
                 time: 224,
@@ -171,15 +154,12 @@ export const TRACKS_CONFIG = {
                 alien1ActionName: "insideout1",
                 heidiActionName: "insideout1",
                 guapxboxxActionName: "insideout1",
-            },
-            {
-                time: 231.7,
-                cameraPos: "floorHigh",
-                autoRotate: false,
+
             },
             {
                 time: 232,
                 cameraPos: "floorMid",
+                autoRotate: true,
             },
             {
                 time: 245,
@@ -187,12 +167,10 @@ export const TRACKS_CONFIG = {
                 alien1ActionName: "insideout2",
                 heidiActionName: "insideout2",
                 guapxboxxActionName: "insideout2",
-                autoRotate: true,
             },
             {
                 time: 247,
                 cameraPos: "floorHigh",
-                autoRotate: false,
             },
             {
                 time: 262,
@@ -211,7 +189,6 @@ export const TRACKS_CONFIG = {
             {
                 time: 292,
                 cameraPos: "wide",
-                autoRotate: true,
             },
         ]
     },
@@ -228,7 +205,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 40.5,
-                cameraPos: "butt",
+                cameraPos: "floorMid",
                 autoRotate: true,
             },
             {
@@ -246,13 +223,6 @@ export const TRACKS_CONFIG = {
                 alien1ActionName: "mate2",
                 heidiActionName: "mate2",
                 guapxboxxActionName: "mate2",
-            },
-            {
-                time: 59,
-                cameraPos: "floorMid",
-                alien1ActionName: "mate2",
-                heidiActionName: "mate2",
-                guapxboxxActionName: "mate1",
             },
             {
                 time: 62.3,
@@ -323,13 +293,6 @@ export const TRACKS_CONFIG = {
                 autoRotate: false,
             },
             {
-                time: 99.7,
-                cameraPos: "floorMid",
-                alien1ActionName: "mate1",
-                heidiActionName: "mate1",
-                autoRotate: false,
-            },
-            {
                 time: 103.3,
                 cameraPos: "floorHigh",
                 alien1ActionName: "mate2",
@@ -351,13 +314,6 @@ export const TRACKS_CONFIG = {
                 autoRotate: false,
             },
             {
-                time: 113,
-                cameraPos: "wide",
-                alien1ActionName: "mate2",
-                heidiActionName: "mate2",
-                autoRotate: true,
-            },
-            {
                 time: 114.6,
                 cameraPos: "floorMid",
                 alien1ActionName: "mate2",
@@ -369,20 +325,6 @@ export const TRACKS_CONFIG = {
                 cameraPos: "split",
                 alien1ActionName: "mate1",
                 heidiActionName: "mate3",
-                autoRotate: false,
-            },
-            {
-                time: 122,
-                cameraPos: "floorHigh",
-                alien1ActionName: "mate1",
-                heidiActionName: "mate1",
-                autoRotate: false,
-            },
-            {
-                time: 125.9,
-                cameraPos: "bottom",
-                alien1ActionName: "mate2",
-                heidiActionName: "mate2",
                 autoRotate: false,
             },
             {
@@ -505,7 +447,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 229,
-                cameraPos: "butt",
+                cameraPos: "top",
                 alien1ActionName: "mate1",
                 heidiActionName: "mate1",
                 autoRotate: true,
@@ -537,7 +479,7 @@ export const TRACKS_CONFIG = {
             },
             {
                 time: 265.2,
-                cameraPos: "butt",
+                cameraPos: "top",
                 alien1ActionName: "mate1",
                 heidiActionName: "mate3",
             },
