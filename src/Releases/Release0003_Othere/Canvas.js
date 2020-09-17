@@ -5,7 +5,7 @@ import Scene from './Scene';
 
 
 export default function Canvas({ }) {
-    const { isPlaying, audioStream, currentTime, audioPlayer } = useAudioPlayer();
+    const { isPlaying, audioStream, currentTime, audioPlayer } = useAudioPlayer({ enableStream:true });
     const [audioAttributes, setAudioAttributes] = useState();
 
     useEffect(() => {

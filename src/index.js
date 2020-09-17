@@ -16,6 +16,7 @@ import Release0008_GreemJellyfish from "./Releases/Release0008_GreemJellyfish/in
 import Release0009_Javonntte from "./Releases/Release0009_Javonntte/index";
 import Release0010_AlienD from "./Releases/Release0010_AlienD/index";
 import Release0011_JWords from "./Releases/Release0011_JWords/index";
+import Release0012_HeidiSabertooth from "./Releases/Release0012_HeidiSabertooth/index";
 import { CONTENT } from "./Content";
 
 ReactDOM.render(
@@ -33,6 +34,7 @@ ReactDOM.render(
       <Route path="/9" component={Release0009_Javonntte} />
       <Route path="/10" component={Release0010_AlienD} />
       <Route path="/11" component={Release0011_JWords} />
+      <Route path="/12" component={Release0012_HeidiSabertooth} />
     </div>
   </Router>,
   document.getElementById("root")

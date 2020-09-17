@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Route } from 'react-router-dom';
-import HomeDefault from './Home/HomeDefault';
+import HomeDefault from './Home';
 
 import Media from 'react-media';
 import './App.css';

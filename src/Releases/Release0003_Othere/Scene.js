@@ -512,28 +512,16 @@ export default class Scene extends PureComponent {
             (range - minFilterRange) / (maxFilterRange - minFilterRange) + targetFilterMinRange;
     }
 
+    insideInnerSphere = () => {
+        return Math.abs(this.camera.position.z) < (RADIUS + FILTER_RADIUS_BUFFER) &&
+            Math.abs(this.camera.position.x) < (RADIUS + FILTER_RADIUS_BUFFER) &&
+            Math.abs(this.camera.position.y) < (RADIUS + FILTER_RADIUS_BUFFER)
+    }
+
     applyFilter = () => {
         const { raycaster, mouse, camera, scene } = this;
         const { audioStream } = this.props;
-        if (!audioStream) return;
-        // update the picking ray with the camera and mouse position
-        raycaster.setFromCamera(mouse, camera);
-
-        //// calculate objects intersecting the picking ray
-        let intersects = raycaster.intersectObjects(scene.children);
-        let onLoPassSphere = false;
-
-        // first check if the mouse has intersected with the inner sphere
-        if (Math.abs(this.camera.position.z) < (RADIUS + FILTER_RADIUS_BUFFER) &&
-            Math.abs(this.camera.position.x) < (RADIUS + FILTER_RADIUS_BUFFER) &&
-            Math.abs(this.camera.position.y) < (RADIUS + FILTER_RADIUS_BUFFER)) {
-            let minFilterRange = 0.0;
-            let maxFilterRange = (RADIUS + FILTER_RADIUS_BUFFER);
-            let adj = Math.max(Math.abs(this.camera.position.z), Math.abs(this.camera.position.y), Math.abs(this.camera.position.x));
-            let freq = this.scaleFreq(adj, minFilterRange, maxFilterRange, FLYTHRU_MIN_FILTER_FREQ, FLYTHRU_MAX_FILTER_FREQ);
-            audioStream.filter.frequency.value = freq;
-            audioStream.filter.Q.value = FILTER_RESONANCE;
-            onLoPassSphere = true;
+        if (this.insideInnerSphere()) {
             this.scene.background = new THREE.Color(0x000000);
             for (let orbGroup in this.onOrbs) {
                 for (let orb of this.onOrbs[orbGroup]) {
@@ -547,6 +535,24 @@ export default class Scene extends PureComponent {
                     orb.material.color.setHex(orb.userData.offFilterColor);
                 }
             }
+        }
+        if (!audioStream) return;
+        // update the picking ray with the camera and mouse position
+        raycaster.setFromCamera(mouse, camera);
+
+        //// calculate objects intersecting the picking ray
+        let intersects = raycaster.intersectObjects(scene.children);
+        let onLoPassSphere = false;
+
+        // first check if the mouse has intersected with the inner sphere
+        if (insideInnerSphere()) {
+            let minfilterrange = 0.0;
+            let maxfilterrange = (radius + filter_radius_buffer);
+            let adj = Math.max(Math.abs(this.camera.position.z), Math.abs(this.camera.position.y), Math.abs(this.camera.position.x));
+            let freq = this.scaleFreq(adj, minFilterRange, maxFilterRange, FLYTHRU_MIN_FILTER_FREQ, FLYTHRU_MAX_FILTER_FREQ);
+            audioStream.filter.frequency.value = freq;
+            audioStream.filter.Q.value = FILTER_RESONANCE;
+            onLoPassSphere = true;
         }
 
         // second, check if the camera is within the radius of the inner sphere

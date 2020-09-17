@@ -4,7 +4,6 @@ import { useFrame, useLoader, useResource, useThree } from 'react-three-fiber';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import useAudioPlayer from '../../../Common/UI/Player/hooks/useAudioPlayer';
-
 import * as C from '../constants';
 import Chassis from './Chassis';
 import Dashboard from './Dashboard';
@@ -30,7 +29,7 @@ function Car({
         normal,
         arrowLeftPressed,
         arrowRightPressed,
-    } = useObjectAlongTubeGeometry({ object: car, tubeGeometry: road })
+    } = useObjectAlongTubeGeometry({ object: car, tubeGeometry: road, flipOnZ: true })
 
 
     // using a filter for left and right arrow press
@@ -44,20 +43,26 @@ function Car({
         car.position.y -= normal.y * 2;
         car.rotation.z -= .01;
         const freq = Math.max(1500 - car.position.y, 0);
-        audioStream.filter.frequency.value = freq;
-        audioStream.filter.Q.value = 11;
+        if (audioStream) {
+            audioStream.filter.frequency.value = freq;
+            audioStream.filter.Q.value = 11;
+        }
     }
 
     const spinRight = () => {
         car.position.y += normal.y * 2;
         car.rotation.z += .01;
-        audioStream.filter.frequency.value = Math.max(100, Math.min(Math.abs(car.position.y), 22050));
-        audioStream.filter.Q.value = 11;
+        if (audioStream){
+            audioStream.filter.frequency.value = Math.max(100, Math.min(Math.abs(car.position.y), 22050));
+            audioStream.filter.Q.value = 11;
+        }
     }
 
     const setDefaultAudioFilter = () => {
-        audioStream.filter.frequency.value = 22000;
-        audioStream.filter.Q.value = 0;
+        if (audioStream){
+            audioStream.filter.frequency.value = 22000;
+            audioStream.filter.Q.value = 0;
+        }        
     }
 
     useFrame(() => {

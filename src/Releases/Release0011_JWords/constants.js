@@ -8,7 +8,6 @@ export const HEADSPACE_8_PATH = assetPath("11/objects/headspace8/main.gltf");
 export const HEADSPACE_9_PATH = assetPath("11/objects/headspace9/main.glb");
 export const HEADSPACE_10_PATH = assetPath("11/objects/headspace10/main.glb");
 
-
 // tracks
 export const REMEDY = "Remedy"
 export const FEAR = "Fear"
