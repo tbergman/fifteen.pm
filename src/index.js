@@ -4,7 +4,6 @@ import ReactDOM from "react-dom";
 import { Router, Route } from "react-router-dom";
 import "./index.css";
 import App from "./App";
-// import Header from "./Common/UI/Header";
 import history from "./history";
 import Release0001_Yahceph from "./Releases/Release0001_Yahceph/index";
 import Release0002_YearUnknown from "./Releases/Release0002_YearUnknown/index";
