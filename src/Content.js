@@ -13,15 +13,15 @@ import { multiSourceVideo } from './Common/Video/paths.js';
 
 export const CONTENT = {
   "/": {
-    home: true, // TODO rm
-    // TODO punting on a cleaner solution to handling circular navigation arrows. This just needs to be defined in first and last navigation steps (so, home, and latest release.)
-    lastIdx: 9,
+    home: true, // TODO (jeremy) rm
+    // TODO (jeremy) punting on a cleaner solution to handling circular navigation arrows. This just needs to be defined in first and last navigation steps (so, home, and latest release.)
+    lastIdx: 12,
     message:
       "fifteen.pm invites musicians to expand their visions through the collaborative development of experimental websites. Curated by artists and technologists in New York City, the collective creates experiences of meaning and specificity online, in opposition to the internet of platforms, templates, and streams. Responding to music with multisensory worlds, each release imagines a new space for sound.",
     colors: {
       logo: 'white',
       overlayContent: 'white',
-      overlay: 'rgba(0, 50, 200, 0.5)',
+      overlay: 'rgba(0, 50, 200, 0.9)',
       navigation: 'white',
       onHover: 'rgba(0, 0, 0, 0.5)',
       info: 'white',
@@ -469,7 +469,6 @@ export const CONTENT = {
     artist: "JWORDS",
     message: "A 3D scan of JWords headspace from the tail-end of pre-Covid times. Watch it go to dust, and come into being again.",
     purchaseLink: "https://fifteenpm.bandcamp.com/album/dancepackvol-2",
-    lastIdx: 10,
     instructions: [
       {
         icon: TwoFingerScroll,
@@ -508,6 +507,55 @@ export const CONTENT = {
         bpm: 138,
       },
     ],
+  },
+  "/12": {
+    artist: "HEIDI SABERTOOTH",
+    // todo (jeremy) fix this navigation hack
+    lastIdx: 12,
+    message: "Heidi Sabertooth and her interstellar crew of elektroid beings warp the space-time catwalk to the power of two electro-acid supernovas and a zero-g ambient closer.",
+    purchaseLink: "https://buy.fifteen.pm/album/inside-out-ep",
+    tracks: [
+      {
+        name: "Inside Out",
+        type: "soundcloud",
+        id: "862855786",
+        secretToken: "s-jBUPqKXtkmh",
+        bpm: 128,
+      },
+      {
+        name: "High On Mate",
+        type: "soundcloud",
+        id: "862855783",
+        secretToken: "s-8Ac9QyayEtV",
+        bpm: 130,
+      },
+      {
+        name: "Looking For Roses",
+        type: "soundcloud",
+        id: "862855780",
+        secretToken: "s-krM6xurN6cV",
+        bpm: 126,
+      },
+    ],
+    colors: {
+      logo: "white",
+      overlayContent: "white",
+      overlay: "rgba(0, 0, 0, 0.5)",
+      navigation: "white",
+      player: "white",
+      onHover: "red",
+      info: "white"
+    },
+    instructions: [
+      {
+        icon: MouseMove,
+        text: "click and drag mouse to look around"
+      },
+      {
+        icon: TwoFingerScroll,
+        text: "scroll to zoom"
+      }
+    ]
   }
 };
 
